@@ -10,7 +10,8 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 
-import { ProjectsService } from './projects.service';
+import { ProjectsService } from './services/projects/projects.service';
+import { AlertService } from './services/alert/alert.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,10 @@ import { ProjectsService } from './projects.service';
       { path: 'projects', component: ProjectsComponent },
     ])
   ],
-  providers: [ProjectsService],
+  providers: [
+    ProjectsService,
+    AlertService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

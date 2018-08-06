@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project';
-import { ProjectsService } from '../../projects.service';
+import { ProjectsService } from '../../services/projects/projects.service';
+import { AlertService } from '../../services/alert/alert.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProjectTypeService } from '../../services/project-type/project-type.service';
+import { ProjectType } from '../../models/project-type';
 
 @Component({
   selector: 'app-projects',
@@ -12,34 +15,28 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class ProjectsComponent implements OnInit {
 
   public projects: Project[];
+  public projectTypes: ProjectType[];
+
   public showAddForm = false;
 
   public inputName: string;
   public inputDescription: string;
-  public inputType: string;
+  public inputType: number;
 
   closeResult: string;
-  formGroup: FormGroup;
+  selectedProject: Project;
 
-  constructor(private projectsService: ProjectsService, private modalService: NgbModal) {
+  constructor(
+    private projectsService: ProjectsService,
+    public projectTypeService: ProjectTypeService,
+    private alertsService: AlertService,
+    private modalService: NgbModal) {
 
   }
 
   ngOnInit(): void {
     this.getProjects();
-
-    this.formGroup = new FormGroup({
-      Name: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(128)
-      ]),
-      Description: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(128)
-      ])
-    });
+    this.getProjectTypes();
   }
 
   trackById(index: number, project: Project) {
@@ -51,49 +48,124 @@ export class ProjectsComponent implements OnInit {
     .subscribe(projects => this.projects = projects);
   }
 
-  deleteProject(index: number): void {
-    this.projectsService.deleteProject(this.projects[index])
-      .subscribe( project => {
-          this.projects.forEach( (item, index) => {
-            if(item.projectId === project.projectId) this.projects.splice(index,1);
+  getProjectTypes(): void {
+    this.projectTypeService.getProjectTypes()
+    .subscribe(projectTypes => this.projectTypes = projectTypes);
+  }
+
+  addProject(project: Project): void {
+    this.projectsService.addProject(project)
+        .subscribe((projectResult) => {
+          if (projectResult) {
+            this.getProjects();
+            this.alertsService.changeSuccessMessage('Project added!');
+          }
+      }, error => {
+        this.alertsService.
+          changeErrorMessage('An error occured while trying to create the Project. ' + error);
+      });
+  }
+
+  updateProject(project: Project): void {
+    this.projectsService.updateProject(project)
+      .subscribe( result => {
+        project = result;
+        this.alertsService.changeSuccessMessage('Project updated!');
+      });
+  }
+
+  deleteProject(project: Project): void {
+    this.projectsService.deleteProject(project)
+      .subscribe( projectResult => {
+          this.projects.forEach( (item, itemIndex) => {
+            if (item.projectId === projectResult.projectId) {
+              this.projects.splice(itemIndex, 1);
+              this.alertsService.changeSuccessMessage('Project deleted!');
+            }
           });
         }
       );
   }
 
   showAddModal(content): void {
-    this.inputName = null;
-    this.inputDescription = null;
-    this.inputType = null;
-
     this.open(content);
   }
 
   showUpdateModal(content, project: Project): void {
     if (project == null) { return; }
 
+    this.selectedProject = project;
     this.inputName = project.name;
     this.inputDescription = project.description;
-    this.inputType = project.type;
+    this.inputType = project.projectType.projectTypeId;
 
     this.open(content);
   }
 
+  showDeleteModal(confirm, project: Project): void {
+    if (project == null) { return; }
+
+    this.selectedProject = project;
+    this.inputName = project.name;
+    this.inputDescription = project.description;
+    this.inputType = project.projectType.projectTypeId;
+
+    this.openConfirmationDialog(confirm, this.selectedProject);
+  }
+
+  clearModalValues(): void {
+    // finally clear selecetd project
+    this.selectedProject = null;
+
+    // clear modal fields.
+    this.inputName = null;
+    this.inputDescription = null;
+    this.inputType = null;
+  }
+
   open(content) {
-    this.modalService.open(content, { centered: true }).result.then((result) => {
+    this.modalService.open(content, { centered: true, size: 'lg', windowClass: 'modal-floating' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
 
-      const newProject = new Project();
-      newProject.name = this.inputName;
-      newProject.description = this.inputDescription;
-      newProject.type = this.inputType;
+      if (this.selectedProject) {
+        const newProject = new Project();
+        newProject.projectId = this.selectedProject.projectId;
+        newProject.name = this.inputName;
+        newProject.description = this.inputDescription;
+        newProject.projectType = this.inputType;
+        this.updateProject(newProject);
+      } else {
+        const newProject = new Project();
+        newProject.name = this.inputName;
+        newProject.description = this.inputDescription;
+        newProject.projectType = this.inputType;
 
-      this.projectsService.addProject(newProject)
-        .subscribe((projectResult) => {
-          if (projectResult) { this.getProjects(); }
-      });
+        this.addProject(newProject);
+      }
+
+      this.clearModalValues();
+
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.clearModalValues();
+    });
+  }
+
+  openConfirmationDialog(content, project: Project) {
+    this.modalService.open(content, { centered: true, size: 'lg' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+
+      if (!project) {
+        return;
+      } else {
+        this.deleteProject(project);
+      }
+
+      this.clearModalValues();
+
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.clearModalValues();
     });
   }
 

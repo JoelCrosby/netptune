@@ -2,6 +2,12 @@
 
 $primary: #900C3F;
 
+$main1: #581845;
+$main2: #900C3F;
+$main3: #C70039;
+$main4: #FF5733;
+$main5: #FFC300;
+
 body {
   background: #F1F3F5 !important;
 }
@@ -24,12 +30,37 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, a {
   margin-bottom: 2rem !important;
 }
 
-$main1: #581845;
-$main2: #900C3F;
-$main3: #C70039;
-$main4: #FF5733;
-$main5: #FFC300;
+ngb-alert {
+  top: auto;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  min-height: 0rem;
+  width: 40rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+
+  .alert  {
+    vertical-align: middle;
+    border: 0px;
+    border-radius: 8px;
+    margin-bottom: 0rem;
+    -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+    box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+  }
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700,900|Roboto');
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import "node_modules/bootstrap/scss/bootstrap";
+@import "app/modals.scss";
+@import "app/loaders.scss";

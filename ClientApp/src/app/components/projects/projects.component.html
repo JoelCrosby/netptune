@@ -2,12 +2,14 @@
 
   <h1>Projects</h1>
 
-  <p *ngIf="!projects"><em>Loading...</em></p>
+  <div *ngIf="!projects">
+    <div class="lds-dual-ring"></div>
+  </div>
 
   <div class="container" *ngIf="projects">
     <ng-template #content let-c="close" let-d="dismiss">
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add new Project</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -16,23 +18,53 @@
         <form>
           <div class="form-group">
             <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Name</span>
+              </div>
               <input id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='inputName'>
             </div>
           </div>
+
           <div class="form-group">
-            <div class="input-group">
-              <input id="description" class="form-control" placeholder="Project Description" name="description" [(ngModel)]='inputDescription'>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Project Type</label>
+              </div>
+              <select id="type" class="custom-select" name="type" [(ngModel)]='inputType'>
+                  <option *ngFor="let type of projectTypes" [ngValue]="type.projectTypeId">{{type.name}}</option>
+              </select>
             </div>
           </div>
+
           <div class="form-group">
             <div class="input-group">
-              <input id="type" class="form-control" placeholder="Project Type" name="type" [(ngModel)]='inputType'>
+              <div class="input-group-prepend">
+                <span class="input-group-text">Description</span>
+              </div>
+              <textarea id="description" class="form-control" name="description" aria-label="With textarea" [(ngModel)]='inputDescription'></textarea>
             </div>
           </div>
+
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">Save Project</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">{{selectedProject ? 'Save Changes' : 'Save Project'}}</button>
+      </div>
+    </ng-template>
+
+    <ng-template #confirm let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Delete '{{selectedProject.name}}' ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg" (click)="c('Delete click')">Delete</button>
+        <button type="button" class="btn btn-secondary btn-lg" (click)="d('Cross click')">Cancel</button>
       </div>
     </ng-template>
 
@@ -43,6 +75,7 @@
         <caption>List of projects</caption>
         <thead>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Description</th>
             <th>Type</th>
@@ -51,22 +84,25 @@
         </thead>
         <tbody>
           <tr *ngFor="let project of projects; trackBy:trackById; let i=index">
-            <td><i class="fas fa-code"></i> {{ project.name }}</td>
+            <td>
+              <i class="fas fa-code"></i>
+            </td>
+            <td>{{ project.name }}</td>
             <td>{{ project.description }}</td>
-            <td>{{ project.type }}</td>
+            <td>{{ project.getTypeName }}</td>
             <td id="actions-cell">
               <div id="actions">
-                <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])'>
+                <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top" ngbTooltip="Edit Project">
                   <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button type="button" class="btn btn-secondary" id="deleteBn" (click)='deleteProject(i)'>
+                <button type="button" class="btn btn-secondary" id="deleteBn" (click)='showDeleteModal(confirm, projects[i])' placement="top" ngbTooltip="Delete Project">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
             </td>
           </tr>
           <tr *ngIf="!projects || projects.length < 1">
-            <td colspan="4">Projects Empty </td>
+            <td colspan="5">Projects Empty </td>
           </tr>
         </tbody>
       </table>

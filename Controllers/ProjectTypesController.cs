@@ -2,66 +2,66 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Data;
 using DataPlane.Models;
-using System.Diagnostics;
 
 namespace DataPlane.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectTypesController : ControllerBase
     {
         private readonly ProjectsContext _context;
 
-        public ProjectsController(ProjectsContext context)
+        public ProjectTypesController(ProjectsContext context)
         {
             _context = context;
         }
 
-        // GET: api/Projects
+        // GET: api/ProjectTypes
         [HttpGet]
-        public IEnumerable<Project> GetProjects()
+        public IEnumerable<ProjectType> GetProjectTypes()
         {
-            return _context.Projects;
+            return _context.ProjectTypes;
         }
 
-        // GET: api/Projects/5
+        // GET: api/ProjectTypes/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProject([FromRoute] int id)
+        public async Task<IActionResult> GetProjectType([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            var projectType = await _context.ProjectTypes.FindAsync(id);
 
-            if (project == null)
+            if (projectType == null)
             {
                 return NotFound();
             }
 
-            return Ok(project);
+            return Ok(projectType);
         }
 
-        // PUT: api/Projects/5
+        // PUT: api/ProjectTypes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
+        public async Task<IActionResult> PutProjectType([FromRoute] int id, [FromBody] ProjectType projectType)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != project.ProjectId)
+            if (id != projectType.ProjectTypeId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(project).State = EntityState.Modified;
+            _context.Entry(projectType).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace DataPlane.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectExists(id))
+                if (!ProjectTypeExists(id))
                 {
                     return NotFound();
                 }
@@ -79,50 +79,48 @@ namespace DataPlane.Controllers
                 }
             }
 
-            return Ok(project);
+            return NoContent();
         }
 
-        // POST: api/Projects
+        // POST: api/ProjectTypes
         [HttpPost]
-        public async Task<IActionResult> PostProject([FromBody] Project project)
+        public async Task<IActionResult> PostProjectType([FromBody] ProjectType projectType)
         {
-            Debug.WriteLine("Post request recieved");
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Projects.Add(project);
+            _context.ProjectTypes.Add(projectType);
             await _context.SaveChangesAsync();
 
-            return Ok(project);
+            return CreatedAtAction("GetProjectType", new { id = projectType.ProjectTypeId }, projectType);
         }
 
-        // DELETE: api/Projects/5
+        // DELETE: api/ProjectTypes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject([FromRoute] int id)
+        public async Task<IActionResult> DeleteProjectType([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
+            var projectType = await _context.ProjectTypes.FindAsync(id);
+            if (projectType == null)
             {
                 return NotFound();
             }
 
-            _context.Projects.Remove(project);
+            _context.ProjectTypes.Remove(projectType);
             await _context.SaveChangesAsync();
 
-            return Ok(project);
+            return Ok(projectType);
         }
 
-        private bool ProjectExists(int id)
+        private bool ProjectTypeExists(int id)
         {
-            return _context.Projects.Any(e => e.ProjectId == id);
+            return _context.ProjectTypes.Any(e => e.ProjectTypeId == id);
         }
     }
 }

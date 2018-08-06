@@ -2,12 +2,12 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Project } from './models/project';
+import { ProjectType } from '../../models/project-type';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectsService {
+export class ProjectTypeService {
 
   public httpOptions = {
     headers: new HttpHeaders({
@@ -17,25 +17,41 @@ export class ProjectsService {
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects')
+  getProjectTypes(): Observable<ProjectType[]> {
+    return this.http.get<ProjectType[]>(this.baseUrl + 'api/ProjectTypes')
     .pipe(
       catchError(this.handleError)
     );
   }
 
-  addProject(project: Project): Observable<Project> {
+  getProjectType(id: number): Observable<ProjectType> {
+    const url = `${this.baseUrl}api/ProjectTypes/${id}`;
+    return this.http.get<ProjectType>(url)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
 
-    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, this.httpOptions)
+  addProjectType(project: ProjectType): Observable<ProjectType> {
+
+    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', project, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  deleteProject(project: Project): Observable<Project> {
+  updateProjectType(project: ProjectType): Observable<ProjectType> {
+    const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
+    return this.http.put<ProjectType>(url, project, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
-    const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.delete<Project>(url)
+  deleteProjectType(project: ProjectType): Observable<ProjectType> {
+
+    const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
+    return this.http.delete<ProjectType>(url)
       .pipe(
         catchError(this.handleError)
       );
@@ -58,3 +74,4 @@ export class ProjectsService {
   }
 
 }
+

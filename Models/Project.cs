@@ -1,5 +1,7 @@
 
 
+using System.ComponentModel.DataAnnotations;
+
 namespace DataPlane.Models
 {
     public class Project
@@ -8,6 +10,7 @@ namespace DataPlane.Models
         // Primary key
         public int ProjectId { get; set; }
 
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
 
