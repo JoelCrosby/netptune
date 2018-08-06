@@ -34,7 +34,7 @@ export class ProjectsService {
 
   deleteProject(project: Project): Observable<Project> {
 
-    const url = `${this.baseUrl}projects/${project.projectId}`;
+    const url = `${this.baseUrl}api/projects/${project.projectId}`;
     return this.http.delete<Project>(url)
       .pipe(
         catchError(this.handleError)

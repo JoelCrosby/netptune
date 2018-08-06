@@ -53,7 +53,30 @@ export class ProjectsComponent implements OnInit {
 
   deleteProject(index: number): void {
     this.projectsService.deleteProject(this.projects[index])
-      .subscribe();
+      .subscribe( project => {
+          this.projects.forEach( (item, index) => {
+            if(item.projectId === project.projectId) this.projects.splice(index,1);
+          });
+        }
+      );
+  }
+
+  showAddModal(content): void {
+    this.inputName = null;
+    this.inputDescription = null;
+    this.inputType = null;
+
+    this.open(content);
+  }
+
+  showUpdateModal(content, project: Project): void {
+    if (project == null) { return; }
+
+    this.inputName = project.name;
+    this.inputDescription = project.description;
+    this.inputType = project.type;
+
+    this.open(content);
   }
 
   open(content) {

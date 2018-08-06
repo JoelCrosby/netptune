@@ -1,6 +1,6 @@
 #new-button {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+  height: 3rem;
 }
 
 td {
@@ -15,7 +15,19 @@ tr #actions {
 
 tr:hover #actions {
   display: block;
-  
+}
+
+.table-responsive {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  display: inline-table;
+}
+
+.main {
+  height: 80%;
+  position: relative;
+  width: 100%;
 }
 
 #actions-cell {
@@ -32,9 +44,11 @@ tr:hover #actions {
   }
 }
 
-.fas {
-  color: #C70039;
-  margin: 1.5rem;
+td {
+  .fas {
+    color: #C70039;
+    margin: 1.5rem;
+  }
 }
 
 #actions {

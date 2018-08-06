@@ -36,8 +36,7 @@
       </div>
     </ng-template>
 
-
-    <button type="button" class="btn btn-primary btn-lg btn-block" id="new-button" (click)='open(content)'>New Project</button>
+    <button type="button" class="btn btn-primary btn-lg btn-block" id="new-button" (click)='showAddModal(content)'>New Project</button>
 
     <div class="table-responsive">
       <table class='table table-borderless table-hover'>
@@ -47,17 +46,17 @@
             <th>Name</th>
             <th>Description</th>
             <th>Type</th>
-            <th>Actions</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let project of projects;trackBy:trackById;let i=index">
+          <tr *ngFor="let project of projects; trackBy:trackById; let i=index">
             <td><i class="fas fa-code"></i> {{ project.name }}</td>
             <td>{{ project.description }}</td>
             <td>{{ project.type }}</td>
             <td id="actions-cell">
               <div id="actions">
-                <button type="button" class="btn btn-secondary" id="editBn">
+                <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])'>
                   <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button type="button" class="btn btn-secondary" id="deleteBn" (click)='deleteProject(i)'>
