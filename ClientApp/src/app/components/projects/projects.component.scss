@@ -14,8 +14,12 @@ tr #actions {
 }
 
 tr:hover #actions {
-  display: inline;
+  display: block;
   
+}
+
+#actions-cell {
+  width: 12rem;
 }
 
 .table-hover tbody tr:hover {
