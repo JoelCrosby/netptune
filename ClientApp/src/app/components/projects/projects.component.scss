@@ -1,0 +1,47 @@
+#new-button {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+td {
+  height: 64px;
+  vertical-align: middle;
+}
+
+tr #actions {
+  display: none;
+  height: 32px;
+}
+
+tr:hover #actions {
+  display: inline;
+  
+}
+
+.table-hover tbody tr:hover {
+  td:first-child {
+    border-radius: 8px 0px 0px 8px;
+  }
+
+  td:last-child {
+    border-radius: 0px 8px 8px 0px;
+  }
+}
+
+.fas {
+  color: #C70039;
+  margin: 1.5rem;
+}
+
+#actions {
+
+  #editBn {
+    margin-right: 8px;
+  }
+
+  .fas {
+    margin: auto;
+    color: white;
+  }
+}
+

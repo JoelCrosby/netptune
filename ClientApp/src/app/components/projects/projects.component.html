@@ -1,0 +1,77 @@
+<div class="container">
+
+  <h1>Projects</h1>
+
+  <p *ngIf="!projects"><em>Loading...</em></p>
+
+  <div class="container" *ngIf="projects">
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add new Project</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <div class="input-group">
+              <input id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='inputName'>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <input id="description" class="form-control" placeholder="Project Description" name="description" [(ngModel)]='inputDescription'>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <input id="type" class="form-control" placeholder="Project Type" name="type" [(ngModel)]='inputType'>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">Save Project</button>
+      </div>
+    </ng-template>
+
+
+    <button type="button" class="btn btn-primary btn-lg btn-block" id="new-button" (click)='open(content)'>New Project</button>
+
+    <div class="table-responsive">
+      <table class='table table-borderless table-hover'>
+        <caption>List of projects</caption>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects;trackBy:trackById;let i=index">
+            <td><i class="fas fa-code"></i> {{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.type }}</td>
+            <td>
+              <div id="actions">
+                <button type="button" class="btn btn-secondary" id="editBn">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button type="button" class="btn btn-secondary" id="deleteBn" (click)='deleteProject(i)'>
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!projects || projects.length < 1">
+            <td colspan="4">Projects Empty </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

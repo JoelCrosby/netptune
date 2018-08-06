@@ -1,0 +1,59 @@
+.navbar {
+    margin-bottom: 2rem;
+}
+
+.fas {
+    color: #FFC300;
+    margin-right: 1rem;
+}
+
+.bg-dark {
+  background-color: #581845 !important;
+}
+
+.navbar {
+  height: 64px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+
+  .nav-link {
+    padding: 1.25rem;
+  }
+
+  .navbar .form-control {
+    padding: .75rem 1rem;
+    border-width: 0;
+  }
+
+  .form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .1);
+    border-radius: 0;
+  }
+
+  .form-control-dark:focus {
+    color: black;
+    background-color: white;
+  }
+
+  #search-bar {
+    margin-left: 2rem;
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+}
