@@ -34,14 +34,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\interfaces\IDisposable.ts" />
     <None Remove="ClientApp\src\app\models\project.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\Models\" />
+    <Folder Include="ClientApp\src\Models\" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\IDisposable.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\project.ts" />
   </ItemGroup>
 

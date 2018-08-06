@@ -72,24 +72,26 @@
 
     <div class="table-responsive">
       <table class='table table-borderless table-hover'>
-        <caption>List of projects</caption>
+        <caption *ngIf="projects || projects.length > 1"><strong>{{ projects.length }}</strong> projects total</caption>
         <thead>
           <tr>
             <th></th>
             <th>Name</th>
             <th>Description</th>
-            <th>Type</th>
+            <th id="type-cell">Type</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let project of projects; trackBy:trackById; let i=index">
+          <tr *ngFor="let project of projects; let i=index; trackBy:trackById;">
             <td>
-              <i class="fas fa-code"></i>
+              <span style="font-size: 1.5em;">
+                <i class="{{getFaIcon(project)}}"></i>
+              </span>
             </td>
-            <td>{{ project.name }}</td>
+            <td><strong>{{ project.name }}</strong></td>
             <td>{{ project.description }}</td>
-            <td>{{ project.getTypeName }}</td>
+            <td id="type-cell">{{ getProjectTypeName(project) }}</td>
             <td id="actions-cell">
               <div id="actions">
                 <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top" ngbTooltip="Edit Project">

@@ -4,5 +4,6 @@ export class ProjectType {
 
     public name: string;
     public description: string;
+    public typeCode: string;
 
 }

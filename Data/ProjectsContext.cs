@@ -10,7 +10,14 @@ namespace DataPlane.Data
 
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {
-            
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Project>()
+                .HasOne(e => e.ProjectType)
+                .WithMany(c => c.Projects);
         }
     }
 }

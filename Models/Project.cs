@@ -1,6 +1,7 @@
 
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataPlane.Models
 {
@@ -14,7 +15,10 @@ namespace DataPlane.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        // Navigation properties 
+        [ForeignKey("ProjectType")]
+        public int? ProjectTypeId { get; set; }
+
+        // Navigation properties
         public virtual ProjectType ProjectType { get; set; }
     }
 }

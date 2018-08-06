@@ -53,6 +53,11 @@ export class ProjectsComponent implements OnInit {
     .subscribe(projectTypes => this.projectTypes = projectTypes);
   }
 
+  getProjectTypeName(project: Project): string {
+    if (!project.projectTypeId || !this.projectTypes) { return }
+    return this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0].name;
+  }
+
   addProject(project: Project): void {
     this.projectsService.addProject(project)
         .subscribe((projectResult) => {
@@ -68,8 +73,10 @@ export class ProjectsComponent implements OnInit {
 
   updateProject(project: Project): void {
     this.projectsService.updateProject(project)
-      .subscribe( result => {
+      .subscribe(result => {
+        console.log(result);
         project = result;
+        this.getProjects();
         this.alertsService.changeSuccessMessage('Project updated!');
       });
   }
@@ -97,9 +104,16 @@ export class ProjectsComponent implements OnInit {
     this.selectedProject = project;
     this.inputName = project.name;
     this.inputDescription = project.description;
-    this.inputType = project.projectType.projectTypeId;
 
-    this.open(content);
+    this.projectTypeService.getProjectType(project.projectTypeId)
+      .subscribe(type => {
+        this.inputType = type.projectTypeId;
+        this.open(content);
+      }, Error => {
+        this.inputType = null;
+        this.open(content);
+      })
+    
   }
 
   showDeleteModal(confirm, project: Project): void {
@@ -108,7 +122,7 @@ export class ProjectsComponent implements OnInit {
     this.selectedProject = project;
     this.inputName = project.name;
     this.inputDescription = project.description;
-    this.inputType = project.projectType.projectTypeId;
+    this.inputType = project.projectTypeId;
 
     this.openConfirmationDialog(confirm, this.selectedProject);
   }
@@ -132,14 +146,13 @@ export class ProjectsComponent implements OnInit {
         newProject.projectId = this.selectedProject.projectId;
         newProject.name = this.inputName;
         newProject.description = this.inputDescription;
-        newProject.projectType = this.inputType;
+        newProject.projectTypeId = this.inputType;
         this.updateProject(newProject);
       } else {
         const newProject = new Project();
         newProject.name = this.inputName;
         newProject.description = this.inputDescription;
-        newProject.projectType = this.inputType;
-
+        newProject.projectTypeId = this.inputType;
         this.addProject(newProject);
       }
 
@@ -167,6 +180,26 @@ export class ProjectsComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       this.clearModalValues();
     });
+  }
+
+  getFaIcon(project: Project): string {
+
+    const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];
+
+    if (!type) { return; }
+
+    switch (type.typeCode) {
+      case 'node':
+        return 'fab fa-node-js';
+      case 'angular':
+        return 'fab fa-angular';
+      case 'winforms':
+        return 'fab fa-windows';
+      case 'aspcore':
+        return 'fas fa-code';
+    }
+
+    return
   }
 
   private getDismissReason(reason: any): string {
