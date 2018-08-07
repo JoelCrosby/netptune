@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Data;
 using DataPlane.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataPlane.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectTypesController : ControllerBase

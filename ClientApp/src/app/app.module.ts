@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 
 import { ProjectsService } from './services/projects/projects.service';
@@ -18,6 +19,7 @@ import { AlertService } from './services/alert/alert.service';
     AppComponent,
     NavMenuComponent,
     HomeComponent,
+    LoginComponent,
     ProjectsComponent
   ],
   imports: [
@@ -29,7 +31,9 @@ import { AlertService } from './services/alert/alert.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
-    ])
+      { path: 'login', component: LoginComponent },
+      { path: '**', component: HomeComponent },
+        ])
   ],
   providers: [
     ProjectsService,

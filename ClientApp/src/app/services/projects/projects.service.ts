@@ -3,47 +3,56 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Project } from '../../models/project';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
 
-  public httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
+  constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+  getHeaders() {
+    return { headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.authService.token.token
+      })
+    };
+  }
 
   getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects')
+    const httpOptions = this.getHeaders();
+
+    return this.http.get<Project[]>(this.baseUrl + 'api/Projects', httpOptions)
     .pipe(
       catchError(this.handleError)
     );
   }
 
   addProject(project: Project): Observable<Project> {
+    const httpOptions = this.getHeaders();
 
-    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, this.httpOptions)
+    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateProject(project: Project): Observable<Project> {
+    const httpOptions = this.getHeaders();
+
     const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.put<Project>(url, project, this.httpOptions)
+    return this.http.put<Project>(url, project, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   deleteProject(project: Project): Observable<Project> {
+    const httpOptions = this.getHeaders();
 
     const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.delete<Project>(url)
+    return this.http.delete<Project>(url, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

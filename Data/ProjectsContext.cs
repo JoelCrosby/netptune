@@ -7,6 +7,7 @@ namespace DataPlane.Data
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectType> ProjectTypes { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {

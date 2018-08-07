@@ -17,8 +17,20 @@
                 <a class="nav-link" [routerLink]='["/projects"]'>Projects</a>
             </li>
         </ul>
+
         <form class="form-inline my-2 my-lg-0" id="search-bar">
-          <input class="form-control form-control-dark w-100" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control form-control-dark w-100" type="search" placeholder="Search" aria-label="Search">
         </form>
+
+        <div ngbDropdown class="btn-group">
+            <button class="btn btn-primary dropdown-toggle" id="dropdownAccount" ngbDropdownToggle>
+                <i class="far fa-user-circle"></i>
+                <strong>Account  -  </strong> {{authService.token.displayName}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button class="dropdown-item" (click)='authService.logout()'>Log out</button>
+            </div>
+        </div>
+
     </div>
 </nav>

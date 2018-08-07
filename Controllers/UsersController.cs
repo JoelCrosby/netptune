@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Data;
 using DataPlane.Models;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DataPlane.Controllers
@@ -14,56 +14,56 @@ namespace DataPlane.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly ProjectsContext _context;
 
-        public ProjectsController(ProjectsContext context)
+        public UsersController(ProjectsContext context)
         {
             _context = context;
         }
 
-        // GET: api/Projects
+        // GET: api/Users
         [HttpGet]
-        public IEnumerable<Project> GetProjects()
+        public IEnumerable<User> GetUsers()
         {
-            return _context.Projects;
+            return _context.Users;
         }
 
-        // GET: api/Projects/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProject([FromRoute] int id)
+        public async Task<IActionResult> GetUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
 
-            if (project == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(project);
+            return Ok(user);
         }
 
-        // PUT: api/Projects/5
+        // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
+        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != project.ProjectId)
+            if (id != user.UserId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(project).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +71,7 @@ namespace DataPlane.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -81,50 +81,48 @@ namespace DataPlane.Controllers
                 }
             }
 
-            return Ok(project);
+            return NoContent();
         }
 
-        // POST: api/Projects
+        // POST: api/Users
         [HttpPost]
-        public async Task<IActionResult> PostProject([FromBody] Project project)
+        public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            Debug.WriteLine("Post request recieved");
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Projects.Add(project);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(project);
+            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
 
-        // DELETE: api/Projects/5
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Projects.Remove(project);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return Ok(project);
+            return Ok(user);
         }
 
-        private bool ProjectExists(int id)
+        private bool UserExists(int id)
         {
-            return _context.Projects.Any(e => e.ProjectId == id);
+            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }

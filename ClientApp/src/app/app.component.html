@@ -1,7 +1,14 @@
-<app-nav-menu></app-nav-menu>
-<div class='container-fluid'>
-  <div class="container main shadow-panel">
-    <router-outlet></router-outlet>
+
+<div *ngIf="!authServives.userLoggedIn  && authServives.isLoginCheckReady">
+  <app-login></app-login>
+</div>
+
+<div *ngIf="authServives.userLoggedIn">
+  <app-nav-menu></app-nav-menu>
+  <div class='container-fluid'>
+    <div class="container main shadow-panel">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 

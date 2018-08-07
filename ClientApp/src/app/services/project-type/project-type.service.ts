@@ -3,22 +3,27 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { ProjectType } from '../../models/project-type';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectTypeService {
 
-  public httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
+  getHeaders() {
+    return { headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.authService.token.token
+      })
+    };
+  }
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+  constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
   getProjectTypes(): Observable<ProjectType[]> {
-    return this.http.get<ProjectType[]>(this.baseUrl + 'api/ProjectTypes')
+    const httpOptions = this.getHeaders();
+
+    return this.http.get<ProjectType[]>(this.baseUrl + 'api/ProjectTypes', httpOptions)
     .pipe(
       catchError(this.handleError)
     );
@@ -33,25 +38,29 @@ export class ProjectTypeService {
   }
 
   addProjectType(project: ProjectType): Observable<ProjectType> {
+    const httpOptions = this.getHeaders();
 
-    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', project, this.httpOptions)
+    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', project, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   updateProjectType(project: ProjectType): Observable<ProjectType> {
+    const httpOptions = this.getHeaders();
+
     const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
-    return this.http.put<ProjectType>(url, project, this.httpOptions)
+    return this.http.put<ProjectType>(url, project, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   deleteProjectType(project: ProjectType): Observable<ProjectType> {
+    const httpOptions = this.getHeaders();
 
     const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
-    return this.http.delete<ProjectType>(url)
+    return this.http.delete<ProjectType>(url, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
