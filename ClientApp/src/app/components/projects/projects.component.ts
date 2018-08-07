@@ -54,7 +54,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjectTypeName(project: Project): string {
-    if (!project.projectTypeId || !this.projectTypes) { return }
+    if (!project.projectTypeId || !this.projectTypes) { return; }
     return this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0].name;
   }
 
@@ -105,15 +105,13 @@ export class ProjectsComponent implements OnInit {
     this.inputName = project.name;
     this.inputDescription = project.description;
 
-    this.projectTypeService.getProjectType(project.projectTypeId)
-      .subscribe(type => {
-        this.inputType = type.projectTypeId;
-        this.open(content);
-      }, Error => {
-        this.inputType = null;
-        this.open(content);
-      })
-    
+    const type = this.projectTypes.find(x => x.projectTypeId === project.projectTypeId);
+
+    if (type) {
+      this.inputType = type.projectTypeId;
+    }
+
+    this.open(content);
   }
 
   showDeleteModal(confirm, project: Project): void {
@@ -184,6 +182,8 @@ export class ProjectsComponent implements OnInit {
 
   getFaIcon(project: Project): string {
 
+    if (!this.projectTypes) { return; }
+
     const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];
 
     if (!type) { return; }
@@ -198,8 +198,6 @@ export class ProjectsComponent implements OnInit {
       case 'aspcore':
         return 'fas fa-code';
     }
-
-    return
   }
 
   private getDismissReason(reason: any): string {

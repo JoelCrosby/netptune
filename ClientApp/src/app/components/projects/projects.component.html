@@ -6,7 +6,7 @@
     <div class="lds-dual-ring"></div>
   </div>
 
-  <div class="container" *ngIf="projects">
+  <div class="container">
     <ng-template #content let-c="close" let-d="dismiss">
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h4>
@@ -71,7 +71,7 @@
     <button type="button" class="btn btn-primary btn-lg btn-block" id="new-button" (click)='showAddModal(content)'>New Project</button>
 
     <div class="table-responsive">
-      <table class='table table-borderless table-hover'>
+      <table class='table table-borderless table-hover' *ngIf="projects">
         <caption *ngIf="projects || projects.length > 1"><strong>{{ projects.length }}</strong> projects total</caption>
         <thead>
           <tr>
