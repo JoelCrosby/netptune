@@ -1,8 +1,4 @@
-import { ProjectTypeService } from '../services/project-type/project-type.service';
-
 export class Project {
-
-    constructor(private projectTypeService: ProjectTypeService = null) {}
 
     public projectId: number;
 
