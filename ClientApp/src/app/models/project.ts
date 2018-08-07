@@ -1,14 +1,6 @@
-import { ProjectType } from './project-type';
 import { ProjectTypeService } from '../services/project-type/project-type.service';
-import { IDisposable } from '../interfaces/IDisposable';
 
-export class Project implements IDisposable {
-
-    public isDirty: boolean;
-
-    markDirty(): void {
-      this.isDirty = true;
-    }
+export class Project {
 
     constructor(private projectTypeService: ProjectTypeService = null) {}
 
