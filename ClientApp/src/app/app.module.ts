@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -18,6 +19,7 @@ import { AlertService } from './services/alert/alert.service';
   declarations: [
     AppComponent,
     NavMenuComponent,
+    SideBarComponent,
     HomeComponent,
     LoginComponent,
     ProjectsComponent
