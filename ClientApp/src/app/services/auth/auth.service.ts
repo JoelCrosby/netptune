@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Token } from '../../models/token';
-import { HttpHeaders, HttpClient } from '../../../../node_modules/@angular/common/http';
-import { Router } from '../../../../node_modules/@angular/router';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'

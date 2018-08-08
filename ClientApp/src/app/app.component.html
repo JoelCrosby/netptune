@@ -5,7 +5,8 @@
 
 <div *ngIf="authServives.userLoggedIn">
   <app-nav-menu></app-nav-menu>
-  <div class='container-fluid'>
+  <app-side-bar></app-side-bar>
+  <div class='container-fluid' id="main-wrapper">
     <div class="container main shadow-panel">
       <router-outlet></router-outlet>
     </div>

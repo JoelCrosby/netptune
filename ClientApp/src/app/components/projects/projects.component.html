@@ -1,6 +1,13 @@
 <div class="container">
 
-  <h1>Projects</h1>
+  <div class="projects-header">
+      <h2>All Projects</h2>
+      <button type="button" class="btn btn-outline-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
+        <i class="fas fa-plus"></i>
+        New Project
+      </button>
+  </div>
+  
 
   <div *ngIf="!projects">
     <div class="lds-dual-ring"></div>
@@ -68,8 +75,6 @@
       </div>
     </ng-template>
 
-    <button type="button" class="btn btn-primary btn-lg btn-block" id="new-button" (click)='showAddModal(content)'>New Project</button>
-
     <div class="table-responsive">
       <table class='table table-borderless table-hover' *ngIf="projects">
         <caption *ngIf="projects || projects.length > 1"><strong>{{ projects.length }}</strong> projects total</caption>
@@ -85,13 +90,13 @@
         <tbody>
           <tr *ngFor="let project of projects; let i=index; trackBy:trackById;">
             <td>
-              <span style="font-size: 1.5em;">
+              <span class="dot" style="font-size: 1.5em;">
                 <i class="{{getFaIcon(project)}}"></i>
               </span>
             </td>
-            <td><strong>{{ project.name }}</strong></td>
-            <td>{{ project.description }}</td>
-            <td id="type-cell">{{ getProjectTypeName(project) }}</td>
+            <td class="bottom-border"><strong>{{ project.name }}</strong></td>
+            <td class="bottom-border" id="desc-cell">{{ project.description }}</td>
+            <td class="bottom-border" id="type-cell">{{ getProjectTypeName(project) }}</td>
             <td id="actions-cell">
               <div id="actions">
                 <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top" ngbTooltip="Edit Project">

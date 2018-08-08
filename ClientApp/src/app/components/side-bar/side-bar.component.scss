@@ -1,0 +1,60 @@
+@import '../../../styles.scss';
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    transition: all 0.3s;
+    margin-top: 64px;
+    padding: 0px 16px 8px;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: white;
+    color: #1D0817;
+    -webkit-box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0,0,0,0.03);
+    box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0,0,0,0.03);
+
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #F1F2F1;
+}
+
+#sidebar ul p {
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    background: $hover;
+    border-radius: 8px;
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+}
+i {
+    margin-right: 20px;
+}

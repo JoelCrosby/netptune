@@ -34,6 +34,10 @@ tr:hover #actions {
   width: 100%;
 }
 
+#desc-cell {
+  max-width: 16rem;
+}
+
 #actions-cell {
   width: 12rem;
 }
@@ -55,8 +59,7 @@ tr:hover #actions {
 
 td {
   i {
-    color: $main1;
-    margin-right: 1.5rem;
+    color: white;
   }
 }
 
@@ -80,4 +83,27 @@ td {
 
 #export-button {
   color: #6C757D;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.dot {
+  margin: 0px auto;
+  text-align:center;
+  height: 48px;
+  width: 48px;
+  padding: 0.5rem;
+  background-color: $main1;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 1.5rem;
+}
+
+.bottom-border { 
+  border-top: 0 !important;
+  border-bottom: 1px solid $hover !important;
 }
