@@ -6,6 +6,7 @@ import { AlertService } from '../../services/alert/alert.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { ProjectType } from '../../models/project-type';
+import { saveAs } from '../../../../node_modules/file-saver/FileSaver';
 
 @Component({
   selector: 'app-projects',
@@ -22,6 +23,8 @@ export class ProjectsComponent implements OnInit {
   public inputName: string;
   public inputDescription: string;
   public inputType: number;
+
+  public exportInProgress = false;
 
   closeResult: string;
   selectedProject: Project;
@@ -198,6 +201,25 @@ export class ProjectsComponent implements OnInit {
       case 'aspcore':
         return 'fas fa-code';
     }
+  }
+
+  exportProjects(): void {
+    this.exportInProgress = true;
+
+    const FileSaver = require('file-saver');
+
+    this.projectsService.getProjects().subscribe(
+      result => {
+        for (const project of result) {
+          const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];
+          project['projectType'] = type;
+        }
+
+        const blob = new Blob([JSON.stringify(result, null, '\t')], {type: 'text/plain;charset=utf-8'});
+        FileSaver.saveAs(blob, 'projects.json');
+        this.exportInProgress = false;
+      }, error => { this.exportInProgress = error != null; }
+    );
   }
 
   private getDismissReason(reason: any): string {

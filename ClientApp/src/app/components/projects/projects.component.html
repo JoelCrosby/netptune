@@ -108,6 +108,13 @@
           </tr>
         </tbody>
       </table>
+
+      <button type="button" class="btn btn-light float-right" 
+        id="export-button" (click)='exportProjects()'
+        [disabled]='exportInProgress'>
+        Export Projects
+      </button>
+
     </div>
 
   </div>
