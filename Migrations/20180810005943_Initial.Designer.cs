@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataPlane.Migrations
 {
     [DbContext(typeof(ProjectsContext))]
-    [Migration("20180807194042_addsalt")]
-    partial class addsalt
+    [Migration("20180810005943_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,18 +21,58 @@ namespace DataPlane.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DataPlane.Models.Password", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Hash")
+                        .IsRequired();
+
+                    b.Property<string>("Salt")
+                        .IsRequired();
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Passwords");
+                });
+
             modelBuilder.Entity("DataPlane.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CreatedByUserId");
+
+                    b.Property<int>("DeletedByUserId");
+
                     b.Property<string>("Description");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("OwnerId");
+
                     b.Property<int?>("ProjectTypeId");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("ProjectId");
 
@@ -43,25 +83,43 @@ namespace DataPlane.Migrations
 
             modelBuilder.Entity("DataPlane.Models.ProjectType", b =>
                 {
-                    b.Property<int>("ProjectTypeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CreatedByUserId");
+
+                    b.Property<int>("DeletedByUserId");
+
                     b.Property<string>("Description");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("OwnerId");
+
                     b.Property<string>("TypeCode");
 
-                    b.HasKey("ProjectTypeId");
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
 
                     b.ToTable("ProjectTypes");
                 });
 
             modelBuilder.Entity("DataPlane.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -71,18 +129,20 @@ namespace DataPlane.Migrations
                     b.Property<string>("EmailAddress")
                         .IsRequired();
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired();
-
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired();
-
                     b.Property<string>("Username")
                         .IsRequired();
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DataPlane.Models.Password", b =>
+                {
+                    b.HasOne("DataPlane.Models.User", "Owner")
+                        .WithOne("UserPassword")
+                        .HasForeignKey("DataPlane.Models.Password", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataPlane.Models.Project", b =>

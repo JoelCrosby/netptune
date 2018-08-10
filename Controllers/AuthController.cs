@@ -45,9 +45,10 @@ namespace DataPlane.Controllers
                 return BadRequest("Username does not exist!");
             }
 
-            var correctPassword = Util.Cryptography.GetPasswordHash(request.Password, user.PasswordSalt).Hash == user.PasswordHash;
+            var password = _context.Passwords.Where(x => x.Owner.Id == user.Id).SingleOrDefault();
+            var isCorrectPassword = Util.Cryptography.GetPasswordHash(request.Password, password.Salt).Hash == password.Hash;
 
-            if (correctPassword)
+            if (isCorrectPassword)
             {
                 var claims = new[]
                 {

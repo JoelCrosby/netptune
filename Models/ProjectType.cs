@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataPlane.Models
 {
-    public class ProjectType
+    public class ProjectType : BaseModel
     {
         // Primary key
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ProjectTypeId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -21,5 +18,6 @@ namespace DataPlane.Models
 
         // Navigation property 
         public virtual ICollection<Project> Projects { get; set; }
+
     }
 }

@@ -27,13 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180805191319_new.cs" />
-    <Compile Remove="Migrations\20180805191319_new.Designer.cs" />
-    <Compile Remove="Migrations\20180805191439_update.cs" />
-    <Compile Remove="Migrations\20180805191439_update.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="ClientApp\src\app\interfaces\IDisposable.ts" />
     <None Remove="ClientApp\src\app\models\project.ts" />
   </ItemGroup>

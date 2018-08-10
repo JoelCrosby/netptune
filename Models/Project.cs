@@ -1,11 +1,9 @@
-
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataPlane.Models
 {
-    public class Project
+    public class Project : BaseModel
     { 
 
         // Primary key
@@ -20,5 +18,6 @@ namespace DataPlane.Models
 
         // Navigation properties
         public virtual ProjectType ProjectType { get; set; }
+
     }
 }

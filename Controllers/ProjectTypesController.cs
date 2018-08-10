@@ -58,7 +58,7 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != projectType.ProjectTypeId)
+            if (id != projectType.Id)
             {
                 return BadRequest();
             }
@@ -96,7 +96,7 @@ namespace DataPlane.Controllers
             _context.ProjectTypes.Add(projectType);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectType", new { id = projectType.ProjectTypeId }, projectType);
+            return CreatedAtAction("GetProjectType", new { id = projectType.Id }, projectType);
         }
 
         // DELETE: api/ProjectTypes/5
@@ -122,7 +122,7 @@ namespace DataPlane.Controllers
 
         private bool ProjectTypeExists(int id)
         {
-            return _context.ProjectTypes.Any(e => e.ProjectTypeId == id);
+            return _context.ProjectTypes.Any(e => e.Id == id);
         }
     }
 }
