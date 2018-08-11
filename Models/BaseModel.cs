@@ -1,10 +1,10 @@
+using DataPlane.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataPlane.Models
 {
-    public abstract class BaseModel
+    public abstract class BaseModel : IBaseEntity
     {
 
         public bool IsDeleted { get; set; }
@@ -12,17 +12,14 @@ namespace DataPlane.Models
         [Timestamp]
         public byte[] Version { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTimeOffset UpdatedAt { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string ModifiedByUserId { get; set; }
+        public string DeletedByUserId { get; set; }
 
-        public int CreatedByUserId { get; set; }
-
-        public int DeletedByUserId { get; set; }
-
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
 
     }

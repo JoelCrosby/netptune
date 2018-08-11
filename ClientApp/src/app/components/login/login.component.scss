@@ -13,7 +13,6 @@
   height: 100%;
   width: 100%;
   max-width: 330px;
-  padding: 15px;
   margin: 0 auto;
 }
 .form-signin .checkbox {
@@ -40,7 +39,6 @@
   border-top-right-radius: 0;
 }
 
-.help-block {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.form-group {
+  margin-bottom: 0rem;
 }

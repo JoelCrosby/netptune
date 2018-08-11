@@ -10,6 +10,7 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 
 import { ProjectsService } from './services/projects/projects.service';
@@ -22,6 +23,7 @@ import { AlertService } from './services/alert/alert.service';
     SideBarComponent,
     HomeComponent,
     LoginComponent,
+    RegisterComponent,
     ProjectsComponent
   ],
   imports: [
@@ -34,6 +36,7 @@ import { AlertService } from './services/alert/alert.service';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
       { path: '**', component: HomeComponent },
         ])
   ],

@@ -1,16 +1,7 @@
-
-<div *ngIf="!authServives.userLoggedIn  && authServives.isLoginCheckReady">
-  <app-login></app-login>
-</div>
-
-<div *ngIf="authServives.userLoggedIn">
-  <app-nav-menu></app-nav-menu>
-  <app-side-bar></app-side-bar>
-  <div class='container-fluid' id="main-wrapper">
-    <div class="container main shadow-panel">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+<div>
+  <app-nav-menu *ngIf="authServives.userLoggedIn"></app-nav-menu>
+  <app-side-bar *ngIf="authServives.userLoggedIn"></app-side-bar>
+  <router-outlet></router-outlet>
 </div>
 
 <ngb-alert *ngIf="alertService.successMessage" type="success" (close)="alertService.successMessage = null">{{ alertService.successMessage }}</ngb-alert>

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Data;
+using DataPlane.Entites;
 using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
 

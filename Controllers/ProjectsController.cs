@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Data;
+using DataPlane.Entites;
 using DataPlane.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataPlane.Controllers
 {
@@ -17,10 +18,12 @@ namespace DataPlane.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly ProjectsContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProjectsController(ProjectsContext context)
+        public ProjectsController(ProjectsContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Projects
@@ -63,6 +66,7 @@ namespace DataPlane.Controllers
                 return BadRequest();
             }
 
+            _context.Entry(project).Entity.ModifiedByUserId = _userManager.GetUserId(HttpContext.User);
             _context.Entry(project).State = EntityState.Modified;
 
             try
@@ -88,12 +92,13 @@ namespace DataPlane.Controllers
         [HttpPost]
         public async Task<IActionResult> PostProject([FromBody] Project project)
         {
-            Debug.WriteLine("Post request recieved");
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            project.CreatedByUserId = _userManager.GetUserId(HttpContext.User);
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();

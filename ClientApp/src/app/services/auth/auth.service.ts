@@ -25,13 +25,13 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, @Inject('BASE_URL') private baseUrl: string) { }
 
-  isTokenExpired() {
+  isTokenExpired(): boolean {
 
     const tokenString = localStorage.getItem('auth_token');
     console.log('token from local storage isTokenExpired method:' + tokenString);
     if (!tokenString) {
         this.isLoginCheckReady = true;
-        return;
+        return true;
 
     }
     const token = <Token>JSON.parse(tokenString || '');
@@ -40,7 +40,7 @@ export class AuthService {
         console.log('failed parsing token:' + tokenString);
 
         this.isLoginCheckReady = true;
-        return;
+        return true;
     }
 
     const expdate = new Date(token.expires);
@@ -55,12 +55,14 @@ export class AuthService {
         this.email = token.email;
 
         console.log('token valid:' + tokenString);
-        return;
+        return false;
     }
 
     console.log('token not valid:' + tokenString);
 
     this.isLoginCheckReady = true;
+
+    return true;
   }
 
   login(email: string, password: string): void {
@@ -69,7 +71,7 @@ export class AuthService {
 
     const body = `{"username": "${email}", "password": "${password}"}`;
 
-    this.http.post<Token>(this.baseUrl + 'api/auth', body, this.httpOptions)
+    this.http.post<Token>(this.baseUrl + 'api/auth/login', body, this.httpOptions)
         .subscribe(data => {
 
             console.log(data);

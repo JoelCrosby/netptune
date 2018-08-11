@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from './services/alert/alert.service';
 import { AuthService } from './services/auth/auth.service';
+import { Router } from '../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +11,12 @@ import { AuthService } from './services/auth/auth.service';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(public alertService: AlertService, public authServives: AuthService) {}
+  constructor(public alertService: AlertService, public authServives: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authServives.isTokenExpired();
+    if (this.authServives.isTokenExpired()) {
+      this.router.navigate(['/login']);
+    }
   }
 
   getData(): void {
