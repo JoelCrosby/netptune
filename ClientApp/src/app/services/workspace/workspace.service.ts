@@ -1,14 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { Project } from '../../models/project';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '../../../../node_modules/@angular/common/http';
 import { AuthService } from '../auth/auth.service';
+import { Observable, throwError } from '../../../../node_modules/rxjs';
+import { Workspace } from '../../models/workspace';
+import { catchError } from '../../../../node_modules/rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectsService {
+export class WorkspaceService {
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
@@ -21,39 +21,29 @@ export class ProjectsService {
     };
   }
 
-  getProjects(): Observable<Project[]> {
+  getWorkspaces(): Observable<Workspace[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects', httpOptions)
+    return this.http.get<Workspace[]>(this.baseUrl + 'api/Workspaces', httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  addProject(project: Project): Observable<Project> {
+  addWorkspace(workspace: Workspace): Observable<Workspace> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, httpOptions)
+    return this.http.post<Workspace>(this.baseUrl + 'api/Workspaces', workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateProject(project: Project): Observable<Project> {
+  updateWorkspace(workspace: Workspace): Observable<Workspace> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.put<Project>(url, project, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  deleteProject(project: Project): Observable<Project> {
-    const httpOptions = this.getHeaders();
-
-    const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.delete<Project>(url, httpOptions)
+    const url = `${this.baseUrl}api/Workspaces/${workspace.workspaceId}`;
+    return this.http.put<Workspace>(url, workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

@@ -1,9 +1,9 @@
-export class ProjectType {
+export interface ProjectType {
 
-    public projectTypeId: number;
+    projectTypeId: number;
 
-    public name: string;
-    public description: string;
-    public typeCode: string;
+    name: string;
+    description: string;
+    typeCode: string;
 
 }

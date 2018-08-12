@@ -1,9 +1,9 @@
-export class Project {
+export interface Project {
 
-    public projectId: number;
+    projectId: number;
 
-    public name: string;
-    public description: string;
-    public projectTypeId: number;
+    name: string;
+    description: string;
+    projectTypeId: number;
 
 }

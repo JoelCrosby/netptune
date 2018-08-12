@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { NgForm } from '@angular/forms';
-import { Router } from '../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,7 @@ export class LoginComponent {
   email = '';
   password = '';
 
-  constructor(public authServices: AuthService, private router: Router) {}
+  constructor(public authServices: AuthService, private router: Router) { }
 
   login(loginForm: NgForm) {
     this.authServices.login(loginForm.value.mail, loginForm.value.pass);

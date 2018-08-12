@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from './services/alert/alert.service';
 import { AuthService } from './services/auth/auth.service';
-import { Router } from '../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { Router } from '../../node_modules/@angular/router';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(public alertService: AlertService, public authServives: AuthService, private router: Router) {}
+  constructor(public alertService: AlertService, public authServives: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     if (this.authServives.isTokenExpired()) {

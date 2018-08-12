@@ -17,8 +17,11 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { FlagsComponent } from './components/flags/flags.component';
 import { UsersComponent } from './components/users/users.component';
 
+import { AuthService } from './services/auth/auth.service';
 import { ProjectsService } from './services/projects/projects.service';
+import { ProjectTypeService } from './services/project-type/project-type.service';
 import { AlertService } from './services/alert/alert.service';
+import { WorkspaceService } from './services/workspace/workspace.service';
 
 @NgModule({
   declarations: [
@@ -50,10 +53,13 @@ import { AlertService } from './services/alert/alert.service';
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: '**', component: HomeComponent },
-        ])
+    ])
   ],
   providers: [
+    AuthService,
     ProjectsService,
+    ProjectTypeService,
+    WorkspaceService,
     AlertService
   ],
   bootstrap: [AppComponent]
