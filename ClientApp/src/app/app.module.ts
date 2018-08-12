@@ -12,6 +12,10 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TasksComponent } from './components/tasks/tasks.component';
+import { FlagsComponent } from './components/flags/flags.component';
+import { UsersComponent } from './components/users/users.component';
 
 import { ProjectsService } from './services/projects/projects.service';
 import { AlertService } from './services/alert/alert.service';
@@ -24,7 +28,11 @@ import { AlertService } from './services/alert/alert.service';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    DashboardComponent,
+    TasksComponent,
+    UsersComponent,
+    FlagsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,6 +43,10 @@ import { AlertService } from './services/alert/alert.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'tasks', component: TasksComponent },
+      { path: 'flags', component: FlagsComponent },
+      { path: 'users', component: UsersComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: '**', component: HomeComponent },

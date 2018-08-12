@@ -66,8 +66,18 @@ namespace DataPlane.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(project).Entity.ModifiedByUserId = _userManager.GetUserId(HttpContext.User);
-            _context.Entry(project).State = EntityState.Modified;
+            var modifiedProject = _context.Projects.Where(x => x.ProjectId == project.ProjectId).SingleOrDefault();
+
+            if (modifiedProject == null)
+            {
+                return BadRequest("Project not found");
+            }
+
+            modifiedProject.Name = project.Name;
+            modifiedProject.Description = project.Description;
+            modifiedProject.ProjectTypeId = project.ProjectTypeId;
+
+            modifiedProject.ModifiedByUserId = _userManager.GetUserId(HttpContext.User);
 
             try
             {
@@ -98,7 +108,10 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            project.CreatedByUserId = _userManager.GetUserId(HttpContext.User);
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            project.CreatedByUserId = userId;
+            project.OwnerId = userId;
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();

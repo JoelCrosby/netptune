@@ -25,11 +25,11 @@ tr:hover #actions {
   overflow-y: auto;
   display: inline-table;
 
-  min-height: 70vh;
+  min-height: 90vh;
 }
 
 .main {
-  height: 80%;
+  height: 90%;
   position: relative;
   width: 100%;
 }
@@ -89,6 +89,7 @@ td {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  margin-bottom: 2rem;
 }
 
 .dot {

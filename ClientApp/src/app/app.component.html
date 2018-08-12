@@ -1,7 +1,21 @@
-<div>
-  <app-nav-menu *ngIf="authServives.userLoggedIn"></app-nav-menu>
-  <app-side-bar *ngIf="authServives.userLoggedIn"></app-side-bar>
-  <router-outlet></router-outlet>
+<app-nav-menu *ngIf="authServives.userLoggedIn"></app-nav-menu>
+
+<div class="page-body">
+  <div id="left" class="column-fs">
+    <div class="top-left">
+    </div>
+    <div class="bottom">
+      <app-side-bar class="sidebar" *ngIf="authServives.userLoggedIn"></app-side-bar>
+    </div>
+  </div>
+  <div id="right" class="column-fs">
+    <div class="top-right">
+      
+    </div>
+    <div class="bottom">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
 
 <ngb-alert *ngIf="alertService.successMessage" type="success" (close)="alertService.successMessage = null">{{ alertService.successMessage }}</ngb-alert>

@@ -1,4 +1,58 @@
-#main-wrapper {
-    display: flex;
+@import '../variables.scss';
+
+.page-body { 
+    overflow: hidden;  /*makes the body non-scrollable (we will add scrolling to the sidebar and main content containers)*/
+    margin: 0;  /*removes default style*/
+    display: flex;  /*enables flex content for its children*/
+    box-sizing: border-box;
+    position: fixed;
+    top: 64px;
+    height: 100%;
     width: 100%;
+}
+
+.column-fs {
+    height: calc(100% - 64px);  /*allows both columns to span the full height of the browser window*/
+    display: flex;
+    flex-direction: column;  /*places the left and right headers above the bottom content*/
+}
+
+#left {
+    flex-shrink: 0;  /*makes sure that content is not cut off in a smaller browser window*/
+    width: 250px;
+    height: calc(100% - 64px);
+}
+
+#right {
+    padding: 2rem;
+    height: 100%;
+    width: 100%;
+}
+
+.top-left {
+    flex-shrink: 0;
+}
+
+.top {
+    flex-shrink: 0;
+    display: inline-flex;
+}
+
+ul {
+    display: inline-flex;
+    list-style: none;
+}
+
+.bottom {
+    flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
+    height: 100%;
+}
+
+.top-left-corner {
+    background-color: $main1;
+    width: 100%;
+    height: 100%;
+    height: 64px;
+    padding-bottom: 0px;
+    padding-top: 0px;
 }

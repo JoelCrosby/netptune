@@ -1,20 +1,20 @@
 <nav id="sidebar">
 
   <ul class="list-unstyled components">
-      <li class="active">
-          <a><i class="fas fa-columns"></i>Dashboard</a>
+      <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/dashboard"]'><i class="fas fa-columns"></i>Dashboard</a>
       </li>
-      <li>
-          <a><i class="fas fa-project-diagram"></i>Projects</a>
+      <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/projects"]'><i class="fas fa-project-diagram"></i>Projects</a>
       </li>
-      <li>
-          <a><i class="fas fa-tasks"></i>Tasks</a>
+      <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/tasks"]'><i class="fas fa-tasks"></i>Tasks</a>
       </li>
-      <li>
-          <a><i class="far fa-flag"></i>Flags</a>
+      <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/flags"]'><i class="far fa-flag"></i>Flags</a>
       </li>
-      <li>
-          <a><i class="far fa-user"></i>Users</a>
+      <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/users"]'><i class="far fa-user"></i>Users</a>
       </li>
   </ul>
 

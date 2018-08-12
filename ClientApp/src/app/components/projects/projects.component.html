@@ -1,6 +1,5 @@
-<div class='container-fluid' id="main-wrapper">
   <div class="container main shadow-panel">
-    <div class="container">
+    <div class="container-max">
 
       <div class="projects-header">
         <h2>All Projects</h2>
@@ -82,13 +81,6 @@
             <caption *ngIf="projects || projects.length > 1">
               <strong>{{ projects.length }}</strong> projects total</caption>
             <thead>
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Description</th>
-                <th id="type-cell">Type</th>
-                <th></th>
-              </tr>
             </thead>
             <tbody>
               <tr *ngFor="let project of projects; let i=index; trackBy:trackById;">
@@ -130,4 +122,3 @@
       </div>
     </div>
   </div>
-</div>

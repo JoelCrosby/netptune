@@ -1,32 +1,35 @@
 <div class="full-height">
-  <form class="form-register" #regiseterForm="ngForm" (submit)="register(regiseterForm)">
+  <form name="form" class="form-register" #registerForm="ngForm" (ngSubmit)="register(registerForm)">
     <h1 class="h3 mb-3 font-weight-normal">Create new Account</h1>
-    
-    <div class="form-group" [class.has-error]="emailControl.invalid && emailControl.touched" [class.has-success]="emailControl.valid">
-        <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" name="mail" [(ngModel)]="email" #emailControl="ngModel" required autofocus>
+
+    <div class="form-group" [class.has-error]="usernameControl.invalid && usernameControl.touched" [class.has-success]="usernameControl.valid">
+      <label for="inputEmail" class="sr-only">Username</label>
+      <input type="text" id="inputUsername" class="form-control" placeholder="Usernname" name="username" [(ngModel)]="username"
+        #usernameControl="ngModel" required>
     </div>
+
+    <div class="form-group" [class.has-error]="emailControl.invalid && emailControl.touched" [class.has-success]="emailControl.valid">
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" name="mail" [(ngModel)]="email" #emailControl="ngModel"
+        required autofocus>
+    </div>
+
 
     <div class="form-group" [class.has-error]="passControl.invalid && passControl.touched" [class.has-success]="passwordControl.valid">
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password"  name="pass" [(ngModel)]="password" #passControl="ngModel" #passwordControl="ngModel" required>
-      <div class="help-block loginErrorMessage" *ngIf="passControl.invalid && passControl.touched">Password is required</div>
+      <input type="password" id="inputPassword0" class="form-control" placeholder="Password" name="pass0" [(ngModel)]="password0"
+        #passControl="ngModel" #passwordControl="ngModel" required>
+      <div class="help-block registerErrorMessage" *ngIf="passControl.invalid && passControl.touched">Password is required</div>
       <div class="errorMessagePlaceHolder" *ngIf="!(passControl.invalid && passControl.touched)"></div>
     </div>
 
-    <div class="form-group" [class.has-error]="passControl.invalid && passControl.touched" [class.has-success]="passwordControl.valid">
+    <div class="form-group" [class.has-error]="pass1Control.invalid && pass1Control.touched" [class.has-success]="password1Control.valid">
       <label for="inputPassword" class="sr-only">Verify Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password"  name="pass" [(ngModel)]="password" #passControl="ngModel" #passwordControl="ngModel" required>
-      <div class="help-block loginErrorMessage" *ngIf="passControl.invalid && passControl.touched">Password is required</div>
-      <div class="errorMessagePlaceHolder" *ngIf="!(passControl.invalid && passControl.touched)"></div>
+      <input type="password" id="inputPassword1" class="form-control" placeholder="Confirm Password" name="pass1" [(ngModel)]="password1" 
+        #pass1Control="ngModel" #password1Control="ngModel" required>
+      <div class="errorMessagePlaceHolder" *ngIf="!(pass1Control.invalid && pass1Control.touched)"></div>
     </div>
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Remember me
-      </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="loginForm.invalid">Sign in</button>
-    <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="registerForm.invalid">Register Account</button>
   </form>
 </div>
