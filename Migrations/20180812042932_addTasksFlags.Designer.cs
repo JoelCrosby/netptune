@@ -4,14 +4,16 @@ using DataPlane.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataPlane.Migrations
 {
     [DbContext(typeof(ProjectsContext))]
-    partial class ProjectsContextModelSnapshot : ModelSnapshot
+    [Migration("20180812042932_addTasksFlags")]
+    partial class addTasksFlags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,28 +27,10 @@ namespace DataPlane.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("CreatedByUserId");
-
-                    b.Property<string>("DeletedByUserId");
-
                     b.Property<string>("Description");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedByUserId");
 
                     b.Property<string>("Name")
                         .IsRequired();
-
-                    b.Property<string>("OwnerId");
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("FlagId");
 
@@ -201,28 +185,10 @@ namespace DataPlane.Migrations
                     b.Property<string>("AssigneeId")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("CreatedByUserId");
-
-                    b.Property<string>("DeletedByUserId");
-
                     b.Property<string>("Description");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedByUserId");
 
                     b.Property<string>("Name")
                         .IsRequired();
-
-                    b.Property<string>("OwnerId");
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("FlagId");
 

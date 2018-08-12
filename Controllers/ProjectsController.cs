@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -66,7 +64,7 @@ namespace DataPlane.Controllers
                 return BadRequest();
             }
 
-            var modifiedProject = _context.Projects.Where(x => x.ProjectId == project.ProjectId).SingleOrDefault();
+            var modifiedProject = _context.Projects.SingleOrDefault(x => x.ProjectId == project.ProjectId);
 
             if (modifiedProject == null)
             {

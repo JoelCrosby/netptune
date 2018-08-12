@@ -12,4 +12,8 @@ export class SideBarComponent implements OnInit {
   ngOnInit() {
   }
 
+  toggleSideBar(): void {
+    
+  }
+
 }

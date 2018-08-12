@@ -1,67 +1,67 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DataPlane.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectTypesController : ControllerBase
+    public class FlagsController : ControllerBase
     {
         private readonly ProjectsContext _context;
 
-        public ProjectTypesController(ProjectsContext context)
+        public FlagsController(ProjectsContext context)
         {
             _context = context;
         }
 
-        // GET: api/ProjectTypes
+        // GET: api/Flags
         [HttpGet]
-        public IEnumerable<ProjectType> GetProjectTypes()
+        public IEnumerable<Flag> GetFlag()
         {
-            return _context.ProjectTypes;
+            return _context.Flag;
         }
 
-        // GET: api/ProjectTypes/5
+        // GET: api/Flags/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProjectType([FromRoute] int id)
+        public async Task<IActionResult> GetFlag([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var projectType = await _context.ProjectTypes.FindAsync(id);
+            var flag = await _context.Flag.FindAsync(id);
 
-            if (projectType == null)
+            if (flag == null)
             {
                 return NotFound();
             }
 
-            return Ok(projectType);
+            return Ok(flag);
         }
 
-        // PUT: api/ProjectTypes/5
+        // PUT: api/Flags/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjectType([FromRoute] int id, [FromBody] ProjectType projectType)
+        public async Task<IActionResult> PutFlag([FromRoute] int id, [FromBody] Flag flag)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != projectType.Id)
+            if (id != flag.FlagId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(projectType).State = EntityState.Modified;
+            _context.Entry(flag).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace DataPlane.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectTypeExists(id))
+                if (!FlagExists(id))
                 {
                     return NotFound();
                 }
@@ -82,45 +82,45 @@ namespace DataPlane.Controllers
             return NoContent();
         }
 
-        // POST: api/ProjectTypes
+        // POST: api/Flags
         [HttpPost]
-        public async Task<IActionResult> PostProjectType([FromBody] ProjectType projectType)
+        public async Task<IActionResult> PostFlag([FromBody] Flag flag)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.ProjectTypes.Add(projectType);
+            _context.Flag.Add(flag);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectType", new { id = projectType.Id }, projectType);
+            return CreatedAtAction("GetFlag", new { id = flag.FlagId }, flag);
         }
 
-        // DELETE: api/ProjectTypes/5
+        // DELETE: api/Flags/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProjectType([FromRoute] int id)
+        public async Task<IActionResult> DeleteFlag([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var projectType = await _context.ProjectTypes.FindAsync(id);
-            if (projectType == null)
+            var flag = await _context.Flag.FindAsync(id);
+            if (flag == null)
             {
                 return NotFound();
             }
 
-            _context.ProjectTypes.Remove(projectType);
+            _context.Flag.Remove(flag);
             await _context.SaveChangesAsync();
 
-            return Ok(projectType);
+            return Ok(flag);
         }
 
-        private bool ProjectTypeExists(int id)
+        private bool FlagExists(int id)
         {
-            return _context.ProjectTypes.Any(e => e.Id == id);
+            return _context.Flag.Any(e => e.FlagId == id);
         }
     }
 }

@@ -1,124 +1,124 @@
-  <div class="container main shadow-panel">
-    <div class="container-max">
+<div class="container main shadow-panel">
+  <div class="container-max">
 
-      <div class="projects-header">
-        <h2>All Projects</h2>
-        <button type="button" class="btn btn-outline-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
-          <i class="fas fa-plus"></i>
-          New Project
-        </button>
-      </div>
+    <div class="projects-header">
+      <h4>All Projects</h4>
+      <button type="button" class="btn btn-outline-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
+        <i class="fas fa-plus"></i>
+        New Project
+      </button>
+    </div>
 
 
-      <div *ngIf="!projects">
-        <div class="lds-dual-ring"></div>
-      </div>
+    <div *ngIf="!projects">
+      <div class="lds-dual-ring"></div>
+    </div>
 
-      <div class="container">
-        <ng-template #content let-c="close" let-d="dismiss">
-          <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h4>
-            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3">Name</span>
-                  </div>
-                  <input id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='inputName'>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Project Type</label>
-                  </div>
-                  <select id="type" class="custom-select" name="type" [(ngModel)]='inputType'>
-                    <option *ngFor="let type of projectTypes" [ngValue]="type.projectTypeId">{{type.name}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Description</span>
-                  </div>
-                  <textarea id="description" class="form-control" name="description" aria-label="With textarea" [(ngModel)]='inputDescription'></textarea>
-                </div>
-              </div>
-
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">{{selectedProject ? 'Save Changes' : 'Save Project'}}</button>
-          </div>
-        </ng-template>
-
-        <ng-template #confirm let-c="close" let-d="dismiss">
-          <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
-            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Delete '{{selectedProject.name}}' ?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-lg" (click)="c('Delete click')">Delete</button>
-            <button type="button" class="btn btn-secondary btn-lg" (click)="d('Cross click')">Cancel</button>
-          </div>
-        </ng-template>
-
-        <div class="table-responsive">
-          <table class='table table-borderless table-hover' *ngIf="projects">
-            <caption *ngIf="projects || projects.length > 1">
-              <strong>{{ projects.length }}</strong> projects total</caption>
-            <thead>
-            </thead>
-            <tbody>
-              <tr *ngFor="let project of projects; let i=index; trackBy:trackById;">
-                <td>
-                  <span class="dot" style="font-size: 1.5em;">
-                    <i class="{{getFaIcon(project)}}"></i>
-                  </span>
-                </td>
-                <td class="bottom-border">
-                  <strong>{{ project.name }}</strong>
-                </td>
-                <td class="bottom-border" id="desc-cell">{{ project.description }}</td>
-                <td class="bottom-border" id="type-cell">{{ getProjectTypeName(project) }}</td>
-                <td id="actions-cell">
-                  <div id="actions">
-                    <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top"
-                      ngbTooltip="Edit Project">
-                      <i class="fas fa-pencil-alt"></i>
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="deleteBn" (click)='showDeleteModal(confirm, projects[i])' placement="top"
-                      ngbTooltip="Delete Project">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngIf="!projects || projects.length < 1">
-                <td colspan="5">Projects Empty </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <button type="button" class="btn btn-light float-right" id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
-            Export Projects
+    <div class="container">
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
           </button>
-
         </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">Name</span>
+                </div>
+                <input id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='inputName'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Project Type</label>
+                </div>
+                <select id="type" class="custom-select" name="type" [(ngModel)]='inputType'>
+                  <option *ngFor="let type of projectTypes" [ngValue]="type.projectTypeId">{{type.name}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Description</span>
+                </div>
+                <textarea id="description" class="form-control" name="description" aria-label="With textarea" [(ngModel)]='inputDescription'></textarea>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">{{selectedProject ? 'Save Changes' : 'Save Project'}}</button>
+        </div>
+      </ng-template>
+
+      <ng-template #confirm let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Delete '{{selectedProject.name}}' ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-lg" (click)="c('Delete click')">Delete</button>
+          <button type="button" class="btn btn-secondary btn-lg" (click)="d('Cross click')">Cancel</button>
+        </div>
+      </ng-template>
+
+      <div class="table-responsive">
+        <table class='table table-borderless table-hover' *ngIf="projects">
+          <caption *ngIf="projects || projects.length > 1">
+            <strong>{{ projects.length }}</strong> projects total</caption>
+          <thead>
+          </thead>
+          <tbody>
+            <tr *ngFor="let project of projects; let i=index; trackBy:trackById;">
+              <td>
+                <span class="dot" style="font-size: 1.5em;">
+                  <i class="{{getFaIcon(project)}}"></i>
+                </span>
+              </td>
+              <td class="bottom-border">
+                <strong>{{ project.name }}</strong>
+              </td>
+              <td class="bottom-border" id="desc-cell">{{ project.description }}</td>
+              <td class="bottom-border" id="type-cell">{{ getProjectTypeName(project) }}</td>
+              <td id="actions-cell">
+                <div id="actions">
+                  <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top"
+                    ngbTooltip="Edit Project">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="deleteBn" (click)='showDeleteModal(confirm, projects[i])' placement="top"
+                    ngbTooltip="Delete Project">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!projects || projects.length < 1">
+              <td colspan="5">Projects Empty </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-light float-right" id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
+          Export Projects
+        </button>
 
       </div>
+
     </div>
   </div>
+</div>

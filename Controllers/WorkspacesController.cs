@@ -5,63 +5,61 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DataPlane.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectTypesController : ControllerBase
+    public class WorkspacesController : ControllerBase
     {
         private readonly ProjectsContext _context;
 
-        public ProjectTypesController(ProjectsContext context)
+        public WorkspacesController(ProjectsContext context)
         {
             _context = context;
         }
 
-        // GET: api/ProjectTypes
+        // GET: api/Workspaces
         [HttpGet]
-        public IEnumerable<ProjectType> GetProjectTypes()
+        public IEnumerable<Workspace> GetWorkspace()
         {
-            return _context.ProjectTypes;
+            return _context.Workspace;
         }
 
-        // GET: api/ProjectTypes/5
+        // GET: api/Workspaces/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProjectType([FromRoute] int id)
+        public async Task<IActionResult> GetWorkspace([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var projectType = await _context.ProjectTypes.FindAsync(id);
+            var workspace = await _context.Workspace.FindAsync(id);
 
-            if (projectType == null)
+            if (workspace == null)
             {
                 return NotFound();
             }
 
-            return Ok(projectType);
+            return Ok(workspace);
         }
 
-        // PUT: api/ProjectTypes/5
+        // PUT: api/Workspaces/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjectType([FromRoute] int id, [FromBody] ProjectType projectType)
+        public async Task<IActionResult> PutWorkspace([FromRoute] int id, [FromBody] Workspace workspace)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != projectType.Id)
+            if (id != workspace.WorkspaceId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(projectType).State = EntityState.Modified;
+            _context.Entry(workspace).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +67,7 @@ namespace DataPlane.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectTypeExists(id))
+                if (!WorkspaceExists(id))
                 {
                     return NotFound();
                 }
@@ -82,45 +80,45 @@ namespace DataPlane.Controllers
             return NoContent();
         }
 
-        // POST: api/ProjectTypes
+        // POST: api/Workspaces
         [HttpPost]
-        public async Task<IActionResult> PostProjectType([FromBody] ProjectType projectType)
+        public async Task<IActionResult> PostWorkspace([FromBody] Workspace workspace)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.ProjectTypes.Add(projectType);
+            _context.Workspace.Add(workspace);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjectType", new { id = projectType.Id }, projectType);
+            return CreatedAtAction("GetWorkspace", new { id = workspace.WorkspaceId }, workspace);
         }
 
-        // DELETE: api/ProjectTypes/5
+        // DELETE: api/Workspaces/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProjectType([FromRoute] int id)
+        public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var projectType = await _context.ProjectTypes.FindAsync(id);
-            if (projectType == null)
+            var workspace = await _context.Workspace.FindAsync(id);
+            if (workspace == null)
             {
                 return NotFound();
             }
 
-            _context.ProjectTypes.Remove(projectType);
+            _context.Workspace.Remove(workspace);
             await _context.SaveChangesAsync();
 
-            return Ok(projectType);
+            return Ok(workspace);
         }
 
-        private bool ProjectTypeExists(int id)
+        private bool WorkspaceExists(int id)
         {
-            return _context.ProjectTypes.Any(e => e.Id == id);
+            return _context.Workspace.Any(e => e.WorkspaceId == id);
         }
     }
 }

@@ -1,83 +1,104 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './variables.scss';
-
-html,body, #st-full-pg {
-  height: 100%;
-  margin: 0;
+html,
+body,
+#st-full-pg {
+    height: 100%;
+    margin: 0;
 }
 
 body {
-  background: #f1f3f5 !important;
-  height: 100%;
-  width: 100%;
-  display: inline-block;
+    background: #FAFAFA !important;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
 }
 
-body, p {
-  font-family: 'Roboto', sans-serif !important;
+body,
+p {
+    font-family: 'Ubuntu', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, a {
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 700;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+a {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.btn,
+.input-group-text,
+.form-control,
+.custom-select,
+.dropdown-menu {
+    border-radius: 0 !important;
+}
+
+.dropdown-menu .show {
+    min-width: 12rem !important;
 }
 
 .shadow-panel {
-  // -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-  // box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-  background-color: white !important;
-  -webkit-box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);
-  box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);
-
-  padding: 2rem;
-  border-radius: 8px !important;
-  margin-bottom: 2rem !important;
+    // -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+    // box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+    background-color: white !important;
+    -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    margin-bottom: 2rem !important;
 }
 
 .container-max {
-  height: 100%;
-  width: 100%;
-  padding: 1.8rem;
-  min-height: 100%;
+    height: 100%;
+    width: 100%;
+    padding: 1.8rem;
+    min-height: 100%;
 }
 
 ngb-alert {
-  top: auto;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  min-height: 0rem;
-  width: 40rem;
-  margin-bottom: 1rem;
-  margin-right: 1rem;
-
-  .alert  {
-    vertical-align: middle;
-    border: 0px;
-    border-radius: 8px;
-    margin-bottom: 0rem;
-    -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-    box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-  }
+    top: auto;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    min-height: 0rem;
+    width: 40rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    .alert {
+        vertical-align: middle;
+        border: 0px;
+        margin-bottom: 0rem;
+        -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+    }
 }
 
 .dropdown-menu {
-  border: 0px !important;
-  -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-  box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+    border: 0px !important;
+    -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
 }
 
 @keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700,900|Roboto');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "app/modals.scss";

@@ -17,6 +17,8 @@ namespace DataPlane.Entites
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectType> ProjectTypes { get; set; }
+        public DbSet<Workspace> Workspace { get; set; }
+        public DbSet<Flag> Flag { get; set; }
 
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {
@@ -32,6 +34,13 @@ namespace DataPlane.Entites
                 .HasOne(e => e.ProjectType)
                 .WithMany(c => c.Projects);
 
+            // (One-to-One) AppUser > Task
+
+            modelBuilder.Entity<AppUser>()
+                .HasMany(c => c.Tasks)
+                .WithOne(e => e.Assignee)
+                .IsRequired();
+
             // (Many-to-many) Workspace > Project
 
             modelBuilder.Entity<WorkspaceProject>()
@@ -44,7 +53,7 @@ namespace DataPlane.Entites
                 .WithMany(t => t.WorkspaceProjects)
                 .HasForeignKey(pt => pt.ProjectId);
 
-            // (Many-to-many) Workspace > User
+            // (Many-to-many) Workspace > AppUser
 
             modelBuilder.Entity<WorkspaceAppUser>()
                 .HasOne(pt => pt.Workspace)
@@ -56,7 +65,7 @@ namespace DataPlane.Entites
                 .WithMany(t => t.WorkspaceUsers)
                 .HasForeignKey(pt => pt.UserId);
 
-            // (Many-to-many) Project > User
+            // (Many-to-many) Project > AppUser
 
             modelBuilder.Entity<ProjectUser>()
                 .HasOne(pt => pt.Project)

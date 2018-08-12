@@ -1,21 +1,33 @@
 <nav id="sidebar">
 
-  <ul class="list-unstyled components">
-      <li [routerLinkActive]='["link-active"]'>
-          <a [routerLink]='["/dashboard"]'><i class="fas fa-columns"></i>Dashboard</a>
-      </li>
-      <li [routerLinkActive]='["link-active"]'>
-          <a [routerLink]='["/projects"]'><i class="fas fa-project-diagram"></i>Projects</a>
-      </li>
-      <li [routerLinkActive]='["link-active"]'>
-          <a [routerLink]='["/tasks"]'><i class="fas fa-tasks"></i>Tasks</a>
-      </li>
-      <li [routerLinkActive]='["link-active"]'>
-          <a [routerLink]='["/flags"]'><i class="far fa-flag"></i>Flags</a>
-      </li>
-      <li [routerLinkActive]='["link-active"]'>
-          <a [routerLink]='["/users"]'><i class="far fa-user"></i>Users</a>
-      </li>
-  </ul>
+    <ul class="list-unstyled components">
+        <li [routerLinkActive]='["link-active"]'>
+            <a [routerLink]='["/dashboard"]'>
+                <i class="fas fa-columns"></i>Dashboard</a>
+        </li>
+        <li [routerLinkActive]='["link-active"]'>
+            <a [routerLink]='["/projects"]'>
+                <i class="fas fa-project-diagram"></i>Projects</a>
+        </li>
+        <li [routerLinkActive]='["link-active"]'>
+            <a [routerLink]='["/tasks"]'>
+                <i class="fas fa-tasks"></i>Tasks</a>
+        </li>
+        <li [routerLinkActive]='["link-active"]'>
+            <a [routerLink]='["/flags"]'>
+                <i class="far fa-flag"></i>Flags</a>
+        </li>
+        <li [routerLinkActive]='["link-active"]'>
+            <a [routerLink]='["/users"]'>
+                <i class="far fa-user"></i>Users</a>
+        </li>
+    </ul>
 
+    <div id="spacer"></div>
+
+    <li>
+        <a id="sideBar-toggle" click='toggleSideBar()'>
+            <i class="fas fa-bars"></i>
+        </a>
+    </li>
 </nav>

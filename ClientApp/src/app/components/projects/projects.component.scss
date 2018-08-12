@@ -1,110 +1,106 @@
 @import '../../../styles.scss';
-
 #new-button {
-  margin-bottom: 0.5rem;
-  height: 3rem;
+    margin-bottom: 0.5rem;
+    height: 3rem;
 }
 
 td {
-  height: 64px;
-  vertical-align: middle;
+    height: 64px;
+    vertical-align: middle;
 }
 
 tr #actions {
-  display: none;
-  height: 32px;
+    display: none;
+    height: 32px;
 }
 
 tr:hover #actions {
-  display: block;
+    display: block;
 }
 
 .table-responsive {
-  height: 100%;
-  width: 100%;
-  overflow-y: auto;
-  display: inline-table;
-
-  min-height: 90vh;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    display: inline-table;
+    min-height: 90vh;
 }
 
 .main {
-  height: 90%;
-  position: relative;
-  width: 100%;
+    height: 90%;
+    position: relative;
+    width: 100%;
 }
 
 #desc-cell {
-  max-width: 16rem;
+    max-width: 16rem;
 }
 
 #actions-cell {
-  width: 12rem;
+    width: 12rem;
 }
 
 #type-cell {
-  width: 12rem;
-  text-align: center;
+    width: 12rem;
+    text-align: center;
 }
 
 .table-hover tbody tr:hover {
-  td:first-child {
-    border-radius: 8px 0px 0px 8px;
-  }
-
-  td:last-child {
-    border-radius: 0px 8px 8px 0px;
-  }
+    td:first-child {
+        border-radius: 0;
+    }
+    td:last-child {
+        border-radius: 0;
+    }
 }
 
 td {
-  i {
-    color: white;
-  }
+    i {
+        color: white;
+    }
 }
 
 #actions {
-
-  #editBn {
-    margin-right: 8px;
-  }
-
-  .fas {
-    margin: auto;
-    color: white;
-  }
+    #editBn {
+        margin-right: 8px;
+    }
+    .fas {
+        margin: auto;
+        color: white;
+    }
 }
 
 .input-group-prepend {
-  span, label {
-    width: 10rem;
-  }
+    span,
+    label {
+        width: 10rem;
+    }
 }
 
 #export-button {
-  color: #6C757D;
+    color: #6C757D;
 }
 
 .projects-header {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-bottom: 2rem;
 }
 
 .dot {
-  margin: 0px auto;
-  text-align:center;
-  height: 48px;
-  width: 48px;
-  padding: 0.5rem;
-  background-color: $main1;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 1.5rem;
+    margin: 0px auto;
+    text-align: center;
+    height: 48px;
+    width: 48px;
+    padding: 0.5rem;
+    background-color: $main1;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 1.5rem;
 }
 
-.bottom-border { 
-  border-top: 0 !important;
-  border-bottom: 1px solid $hover !important;
+.bottom-border {
+    border-top: 0 !important;
+    border-bottom: 1px solid $hover !important;
 }

@@ -1,6 +1,4 @@
-
 $backDropOpacity: 0.6;
-
 .modal-content {
     padding: 1rem;
     border: 0px !important;
@@ -33,7 +31,7 @@ $backDropOpacity: 0.6;
         .modal-content {
             position: fixed;
             bottom: 0;
-            border-radius: 8px 8px 0px 0px
+            border-radius: 0;
         }
     }
 }
