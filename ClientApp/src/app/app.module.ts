@@ -8,11 +8,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { HomeComponent } from './components/home/home.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProjectsComponent } from './components/projects/projects.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { WorkspacesComponent } from './components/workspaces/workspaces.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { FlagsComponent } from './components/flags/flags.component';
 import { UsersComponent } from './components/users/users.component';
@@ -28,11 +28,11 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     AppComponent,
     NavMenuComponent,
     SideBarComponent,
-    HomeComponent,
+    DashboardComponent,
     LoginComponent,
     RegisterComponent,
     ProjectsComponent,
-    DashboardComponent,
+    WorkspacesComponent,
     TasksComponent,
     UsersComponent,
     FlagsComponent
@@ -44,15 +44,16 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     ReactiveFormsModule,
     NgbModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: WorkspacesComponent, pathMatch: 'full' },
       { path: 'projects', component: ProjectsComponent },
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'workspaces', component: WorkspacesComponent },
       { path: 'tasks', component: TasksComponent },
       { path: 'flags', component: FlagsComponent },
       { path: 'users', component: UsersComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: '**', component: HomeComponent },
+      { path: '**', component: WorkspacesComponent },
     ])
   ],
   providers: [

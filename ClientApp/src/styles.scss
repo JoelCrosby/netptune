@@ -1,9 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './variables.scss';
-html,
-body,
-#st-full-pg {
+
+html, body, #st-full-pg {
     height: 100%;
     margin: 0;
 }
@@ -17,23 +16,12 @@ body {
 
 body,
 p {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6,
-a {
-    font-family: 'Ubuntu', sans-serif;
+h1, h2, h3, h4, h5, h6, 
+.h1, .h2, .h3, .h4, .h5, .h6, a {
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .btn,
@@ -56,6 +44,8 @@ a {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     padding: 2rem;
     margin-bottom: 2rem !important;
+    -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
 }
 
 .container-max {
@@ -98,8 +88,10 @@ ngb-alert {
     }
 }
 
-@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900');
+
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "app/modals.scss";
 @import "app/loaders.scss";
+@import "app/components.scss";

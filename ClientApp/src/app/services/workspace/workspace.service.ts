@@ -12,6 +12,8 @@ export class WorkspaceService {
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
+  public currentWorkspace: Workspace;
+
   getHeaders() {
     return {
       headers: new HttpHeaders({

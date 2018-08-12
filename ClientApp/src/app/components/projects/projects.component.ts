@@ -48,12 +48,12 @@ export class ProjectsComponent implements OnInit {
 
   getProjects(): void {
     this.projectsService.getProjects()
-    .subscribe(projects => this.projects = projects);
+      .subscribe(projects => this.projects = projects);
   }
 
   getProjectTypes(): void {
     this.projectTypeService.getProjectTypes()
-    .subscribe(projectTypes => this.projectTypes = projectTypes);
+      .subscribe(projectTypes => this.projectTypes = projectTypes);
   }
 
   getProjectTypeName(project: Project): string {
@@ -63,11 +63,11 @@ export class ProjectsComponent implements OnInit {
 
   addProject(project: Project): void {
     this.projectsService.addProject(project)
-        .subscribe((projectResult) => {
-          if (projectResult) {
-            this.getProjects();
-            this.alertsService.changeSuccessMessage('Project added!');
-          }
+      .subscribe((projectResult) => {
+        if (projectResult) {
+          this.getProjects();
+          this.alertsService.changeSuccessMessage('Project added!');
+        }
       }, error => {
         this.alertsService.
           changeErrorMessage('An error occured while trying to create the Project. ' + error);
@@ -86,14 +86,14 @@ export class ProjectsComponent implements OnInit {
 
   deleteProject(project: Project): void {
     this.projectsService.deleteProject(project)
-      .subscribe( projectResult => {
-          this.projects.forEach( (item, itemIndex) => {
-            if (item.projectId === projectResult.projectId) {
-              this.projects.splice(itemIndex, 1);
-              this.alertsService.changeSuccessMessage('Project deleted!');
-            }
-          });
-        }
+      .subscribe(projectResult => {
+        this.projects.forEach((item, itemIndex) => {
+          if (item.projectId === projectResult.projectId) {
+            this.projects.splice(itemIndex, 1);
+            this.alertsService.changeSuccessMessage('Project deleted!');
+          }
+        });
+      }
       );
   }
 
@@ -213,7 +213,7 @@ export class ProjectsComponent implements OnInit {
           project['projectType'] = type;
         }
 
-        const blob = new Blob([JSON.stringify(result, null, '\t')], {type: 'text/plain;charset=utf-8'});
+        const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
         FileSave.saveAs(blob, 'projects.json');
         this.exportInProgress = false;
       }, error => { this.exportInProgress = error != null; }

@@ -1,8 +1,7 @@
-@import '../../../styles.scss';
-
+@import '../../../variables.scss';
 .navbar {
     margin-bottom: 2rem;
-    letter-spacing: 2px; 
+    letter-spacing: 2px;
 }
 
 .fas {
@@ -11,70 +10,69 @@
 }
 
 .bg-dark {
-  background-color: $black2 !important;
+    background-color: $black2 !important;
 }
 
 .navbar {
-  height: 64px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-
-  .nav-link {
-    padding: 1.25rem;
-  }
-
-  .navbar .form-control {
-    padding: .75rem 1rem;
-    border-width: 0;
-  }
-
-  .form-control-dark {
-    color: #fff;
-    background-color: rgba(255, 255, 255, .1);
-    border-color: rgba(255, 255, 255, .1);
-    border-radius: 0 !important;
-  }
-
-  .form-control-dark:focus {
-    color: black;
-    background-color: white;
-  }
-
-  #search-bar {
-    margin-left: 2rem;
-    width: 100%;
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
+    height: 64px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    .nav-link {
+        padding: 1.25rem;
+    }
+    .navbar .form-control {
+        padding: .75rem 1rem;
+        border-width: 0;
+    }
+    .form-control-dark {
+        color: #fff;
+        background-color: rgba(255, 255, 255, .1);
+        border-color: rgba(255, 255, 255, .1);
+        border-radius: 0 !important;
+    }
+    .form-control-dark:focus {
+        color: black;
+        background-color: white;
+    }
+    #search-bar {
+        margin-left: 2rem;
+        width: 100%;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: white;
-  opacity: 1; /* Firefox */
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1;
+    /* Firefox */
 }
 
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: white;
+:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: white;
 }
 
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: white;
+::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: white;
 }
 
 .fa-user-circle {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 #dropdownAccount {
-  min-width: 12rem;
-  margin-left: 1.5rem;
-  background-color: $black1;
-  font-family: 'Ubuntu', sans-serif;
-  border-radius: 0 !important;
+    min-width: 12rem;
+    margin-left: 1.5rem;
+    background-color: $black1;
+    font-family: 'Source Sans Pro', sans-serif;
+    border-radius: 0 !important;
 }
 
 #dropdownAccountDrop {
-  margin-right: 0.5rem;
-  font-family: 'Ubuntu', sans-serif;
-  border-radius: 0 !important;
+    margin-right: 0.5rem;
+    font-family: 'Source Sans Pro', sans-serif;
+    border-radius: 0 !important;
 }

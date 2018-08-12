@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataPlane.Controllers
 {
@@ -15,10 +16,12 @@ namespace DataPlane.Controllers
     public class ProjectTypesController : ControllerBase
     {
         private readonly ProjectsContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProjectTypesController(ProjectsContext context)
+        public ProjectTypesController(ProjectsContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/ProjectTypes
@@ -90,6 +93,11 @@ namespace DataPlane.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var userId = _userManager.GetUserId (HttpContext.User);
+
+            projectType.CreatedByUserId = userId;
+            projectType.OwnerId = userId;
 
             _context.ProjectTypes.Add(projectType);
             await _context.SaveChangesAsync();

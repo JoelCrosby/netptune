@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataPlane.Controllers
 {
@@ -15,17 +16,19 @@ namespace DataPlane.Controllers
     public class FlagsController : ControllerBase
     {
         private readonly ProjectsContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public FlagsController(ProjectsContext context)
+        public FlagsController(ProjectsContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Flags
         [HttpGet]
         public IEnumerable<Flag> GetFlag()
         {
-            return _context.Flag;
+            return _context.Flags;
         }
 
         // GET: api/Flags/5
@@ -37,7 +40,7 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            var flag = await _context.Flag.FindAsync(id);
+            var flag = await _context.Flags.FindAsync(id);
 
             if (flag == null)
             {
@@ -91,7 +94,12 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Flag.Add(flag);
+            var userId = _userManager.GetUserId (HttpContext.User);
+
+            flag.CreatedByUserId = userId;
+            flag.OwnerId = userId;
+
+            _context.Flags.Add(flag);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFlag", new { id = flag.FlagId }, flag);
@@ -106,13 +114,13 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            var flag = await _context.Flag.FindAsync(id);
+            var flag = await _context.Flags.FindAsync(id);
             if (flag == null)
             {
                 return NotFound();
             }
 
-            _context.Flag.Remove(flag);
+            _context.Flags.Remove(flag);
             await _context.SaveChangesAsync();
 
             return Ok(flag);
@@ -120,7 +128,7 @@ namespace DataPlane.Controllers
 
         private bool FlagExists(int id)
         {
-            return _context.Flag.Any(e => e.FlagId == id);
+            return _context.Flags.Any(e => e.FlagId == id);
         }
     }
 }

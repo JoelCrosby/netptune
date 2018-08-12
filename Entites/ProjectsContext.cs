@@ -17,8 +17,8 @@ namespace DataPlane.Entites
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectType> ProjectTypes { get; set; }
-        public DbSet<Workspace> Workspace { get; set; }
-        public DbSet<Flag> Flag { get; set; }
+        public DbSet<Workspace> Workspaces { get; set; }
+        public DbSet<Flag> Flags { get; set; }
 
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {

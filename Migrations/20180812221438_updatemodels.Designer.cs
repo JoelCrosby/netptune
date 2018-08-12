@@ -4,14 +4,16 @@ using DataPlane.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataPlane.Migrations
 {
     [DbContext(typeof(ProjectsContext))]
-    partial class ProjectsContextModelSnapshot : ModelSnapshot
+    [Migration("20180812221438_updatemodels")]
+    partial class updatemodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace DataPlane.Migrations
 
                     b.HasKey("FlagId");
 
-                    b.ToTable("Flags");
+                    b.ToTable("Flag");
                 });
 
             modelBuilder.Entity("DataPlane.Models.Project", b =>
@@ -262,7 +264,7 @@ namespace DataPlane.Migrations
 
                     b.HasKey("WorkspaceId");
 
-                    b.ToTable("Workspaces");
+                    b.ToTable("Workspace");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
