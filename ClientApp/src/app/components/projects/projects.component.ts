@@ -150,12 +150,14 @@ export class ProjectsComponent implements OnInit {
         newProject.name = this.inputName;
         newProject.description = this.inputDescription;
         newProject.projectTypeId = this.inputType;
+        newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
         this.updateProject(newProject);
       } else {
         const newProject = new Project();
         newProject.name = this.inputName;
         newProject.description = this.inputDescription;
         newProject.projectTypeId = this.inputType;
+        newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
         this.addProject(newProject);
       }
 
