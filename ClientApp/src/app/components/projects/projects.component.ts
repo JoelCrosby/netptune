@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { ProjectType } from '../../models/project-type';
 import { FileSave } from '../../../../node_modules/file-saver/FileSaver';
+import { WorkspaceService } from '../../services/workspace/workspace.service';
 
 @Component({
   selector: 'app-projects',
@@ -33,6 +34,7 @@ export class ProjectsComponent implements OnInit {
     private projectsService: ProjectsService,
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
+    private workspaceService: WorkspaceService,
     private modalService: NgbModal) {
 
   }
@@ -47,7 +49,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjects(): void {
-    this.projectsService.getProjects()
+    this.projectsService.getProjects(this.workspaceService.currentWorkspace)
       .subscribe(projects => this.projects = projects);
   }
 
@@ -206,7 +208,7 @@ export class ProjectsComponent implements OnInit {
   exportProjects(): void {
     this.exportInProgress = true;
 
-    this.projectsService.getProjects().subscribe(
+    this.projectsService.getProjects(this.workspaceService.currentWorkspace).subscribe(
       result => {
         for (const project of result) {
           const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];

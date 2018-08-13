@@ -16,6 +16,7 @@ import { WorkspacesComponent } from './components/workspaces/workspaces.componen
 import { TasksComponent } from './components/tasks/tasks.component';
 import { FlagsComponent } from './components/flags/flags.component';
 import { UsersComponent } from './components/users/users.component';
+import { DescriptorsComponent } from './components/descriptors/descriptors.component';
 
 import { AuthService } from './services/auth/auth.service';
 import { ProjectsService } from './services/projects/projects.service';
@@ -35,7 +36,8 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     WorkspacesComponent,
     TasksComponent,
     UsersComponent,
-    FlagsComponent
+    FlagsComponent,
+    DescriptorsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -52,6 +54,7 @@ import { WorkspaceService } from './services/workspace/workspace.service';
       { path: 'flags', component: FlagsComponent },
       { path: 'users', component: UsersComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'descriptors', component: DescriptorsComponent },
       { path: 'register', component: RegisterComponent },
       { path: '**', component: WorkspacesComponent },
     ])

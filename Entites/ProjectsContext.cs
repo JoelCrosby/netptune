@@ -34,6 +34,10 @@ namespace DataPlane.Entites
                 .HasOne(e => e.ProjectType)
                 .WithMany(c => c.Projects);
 
+            modelBuilder.Entity<Project>()
+                .HasOne(e => e.Workspace)
+                .WithMany(c => c.Projects);
+
             // (One-to-One) AppUser > Task
 
             modelBuilder.Entity<AppUser>()

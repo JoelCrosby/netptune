@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '../../../../node_modules/@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
-import { Observable, throwError } from '../../../../node_modules/rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Workspace } from '../../models/workspace';
-import { catchError } from '../../../../node_modules/rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,12 @@ export class WorkspaceService {
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
-  public currentWorkspace: Workspace;
+  public get currentWorkspace(): Workspace {
+    return JSON.parse(localStorage.getItem('currentWorkspace'));
+  }
+  public set currentWorkspace(value: Workspace) {
+    localStorage.setItem('currentWorkspace', JSON.stringify(value));
+  }
 
   getHeaders() {
     return {

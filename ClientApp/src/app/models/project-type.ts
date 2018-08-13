@@ -7,3 +7,13 @@ export interface ProjectType {
     typeCode: string;
 
 }
+
+export class ProjectType {
+
+    public projectTypeId: number;
+
+    public name: string;
+    public description: string;
+    public typeCode: string;
+
+}

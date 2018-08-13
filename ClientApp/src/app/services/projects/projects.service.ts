@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Project } from '../../models/project';
 import { AuthService } from '../auth/auth.service';
+import { Workspace } from '../../models/workspace';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,10 @@ export class ProjectsService {
     };
   }
 
-  getProjects(): Observable<Project[]> {
+  getProjects(worspace: Workspace): Observable<Project[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects', httpOptions)
+    return this.http.get<Project[]>(this.baseUrl + 'api/Projects' + `?workspaceId=${worspace.workspaceId}`, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

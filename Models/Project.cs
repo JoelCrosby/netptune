@@ -20,8 +20,12 @@ namespace DataPlane.Models
         [ForeignKey("ProjectType")]
         public int? ProjectTypeId { get; set; }
 
+        [ForeignKey("Workspace")]
+        public int? WorkspaceId { get; set; }
+
         // Navigation properties
         public virtual ProjectType ProjectType { get; set; }
+        public virtual Workspace Workspace { get; set; }
 
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
         public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
