@@ -60,7 +60,7 @@ export class ProjectsComponent implements OnInit {
 
   getProjectTypeName(project: Project): string {
     if (!project.projectTypeId || !this.projectTypes) { return; }
-    return this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0].name;
+    return this.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
   }
 
   addProject(project: Project): void {
@@ -110,10 +110,10 @@ export class ProjectsComponent implements OnInit {
     this.inputName = project.name;
     this.inputDescription = project.description;
 
-    const type = this.projectTypes.find(x => x.projectTypeId === project.projectTypeId);
+    const type = this.projectTypes.find(x => x.id === project.projectTypeId);
 
     if (type) {
-      this.inputType = type.projectTypeId;
+      this.inputType = type.id;
     }
 
     this.open(content);
@@ -191,7 +191,7 @@ export class ProjectsComponent implements OnInit {
 
     if (!this.projectTypes) { return; }
 
-    const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];
+    const type = this.projectTypes.filter(item => item.id === project.projectTypeId)[0];
 
     if (!type) { return; }
 
@@ -213,7 +213,7 @@ export class ProjectsComponent implements OnInit {
     this.projectsService.getProjects(this.workspaceService.currentWorkspace).subscribe(
       result => {
         for (const project of result) {
-          const type = this.projectTypes.filter(item => item.projectTypeId === project.projectTypeId)[0];
+          const type = this.projectTypes.filter(item => item.id === project.projectTypeId)[0];
           project['projectType'] = type;
         }
 

@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './variables.scss';
+@import './mixins.scss';
+
+@include font-face(Google Sans, 'fonts/GoogleSans-Regular',  null, null, ttf);
 
 html, body, #st-full-pg {
     height: 100%;
@@ -16,20 +19,12 @@ body {
 
 body,
 p {
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'Google Sans', sans-serif !important;
 }
 
 h1, h2, h3, h4, h5, h6, 
 .h1, .h2, .h3, .h4, .h5, .h6, a {
-    font-family: 'Source Sans Pro', sans-serif;
-}
-
-.btn,
-.input-group-text,
-.form-control,
-.custom-select,
-.dropdown-menu {
-    border-radius: 0 !important;
+    font-family: 'Google Sans', sans-serif !important;
 }
 
 .dropdown-menu .show {
@@ -37,8 +32,6 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .shadow-panel {
-    // -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-    // box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
     background-color: white !important;
     -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
@@ -46,6 +39,7 @@ h1, h2, h3, h4, h5, h6,
     margin-bottom: 2rem !important;
     -webkit-transition: width 2s; /* Safari */
     transition: width 2s;
+    border-radius: 6px;
 }
 
 .container-max {
@@ -74,7 +68,6 @@ ngb-alert {
 }
 
 .dropdown-menu {
-    border: 0px !important;
     -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
     box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
 }
@@ -88,7 +81,14 @@ ngb-alert {
     }
 }
 
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900');
+// Sidebar width
+.open {
+    width: 320px;
+}
+
+.closed {
+    width: 68px;
+}
 
 @import "@fortawesome/fontawesome-free/css/all.css";
 @import "node_modules/bootstrap/scss/bootstrap";

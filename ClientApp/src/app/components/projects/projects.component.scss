@@ -46,20 +46,16 @@ tr:hover #actions {
     text-align: center;
 }
 
-.table-hover tbody tr:hover {
-    td:first-child {
-        border-radius: 0;
-    }
-    td:last-child {
-        border-radius: 0;
-    }
-}
-
 td {
     i {
         color: white;
     }
 }
+
+.fas {
+    margin-right: 1rem;
+}
+
 
 #actions {
     #editBn {

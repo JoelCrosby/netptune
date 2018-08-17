@@ -1,14 +1,13 @@
 @import '../../../styles.scss';
+
 #sidebar {
-    width: 320px;
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     z-index: 999;
     transition: all 0.3s;
-    margin-top: 64px;
-    padding: 0px 16px 8px;
+    padding: 0px 16px 64px;
     display: flex;
     flex-direction: column;
 }
@@ -19,12 +18,15 @@ a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    letter-spacing: 2px;
 }
 
 #sidebar {
-    /* don't forget to add all the previously mentioned styles here too */
-    background: #F6F9FA;
-    color: $black1;
+    background: $black1;
+    color: $textOnDark;
     -webkit-box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.03);
     box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.03);
     transition: all 0.3s;
@@ -50,8 +52,8 @@ a:focus {
 }
 
 #sidebar ul li a:hover {
-    background: $hover;
-    border-radius: 0px;
+    background: $hovberOnDark;
+    border-radius: 5px;
 }
 
 #sideBar-toggle {

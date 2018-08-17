@@ -28,7 +28,6 @@
         color: #fff;
         background-color: rgba(255, 255, 255, .1);
         border-color: rgba(255, 255, 255, .1);
-        border-radius: 0 !important;
     }
     .form-control-dark:focus {
         color: black;
@@ -68,11 +67,9 @@
     margin-left: 1.5rem;
     background-color: $black1;
     font-family: 'Source Sans Pro', sans-serif;
-    border-radius: 0 !important;
 }
 
 #dropdownAccountDrop {
     margin-right: 0.5rem;
     font-family: 'Source Sans Pro', sans-serif;
-    border-radius: 0 !important;
 }

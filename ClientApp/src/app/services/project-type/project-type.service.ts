@@ -37,29 +37,29 @@ export class ProjectTypeService {
     );
   }
 
-  addProjectType(project: ProjectType): Observable<ProjectType> {
+  addProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', project, httpOptions)
+    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', projectType, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateProjectType(project: ProjectType): Observable<ProjectType> {
+  updateProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
-    return this.http.put<ProjectType>(url, project, httpOptions)
+    const url = `${this.baseUrl}api/ProjectTypes/${projectType.id}`;
+    return this.http.put<ProjectType>(url, projectType, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  deleteProjectType(project: ProjectType): Observable<ProjectType> {
+  deleteProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTypes/${project.projectTypeId}`;
+    const url = `${this.baseUrl}api/ProjectTypes/${projectType.id}`;
     return this.http.delete<ProjectType>(url, httpOptions)
       .pipe(
         catchError(this.handleError)

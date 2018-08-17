@@ -17,12 +17,14 @@ import { TasksComponent } from './components/tasks/tasks.component';
 import { FlagsComponent } from './components/flags/flags.component';
 import { UsersComponent } from './components/users/users.component';
 import { DescriptorsComponent } from './components/descriptors/descriptors.component';
+import { ProjectTypesComponent } from './components/project-types/project-types.component';
 
 import { AuthService } from './services/auth/auth.service';
 import { ProjectsService } from './services/projects/projects.service';
 import { ProjectTypeService } from './services/project-type/project-type.service';
 import { AlertService } from './services/alert/alert.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
+import { TransitionService } from './services/transition/transition.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     TasksComponent,
     UsersComponent,
     FlagsComponent,
-    DescriptorsComponent
+    DescriptorsComponent,
+    ProjectTypesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -64,7 +67,8 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     ProjectsService,
     ProjectTypeService,
     WorkspaceService,
-    AlertService
+    AlertService,
+    TransitionService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,9 @@
+import { Basemodel } from './basemodel';
+
 export interface ProjectType {
 
-    projectTypeId: number;
+    id: number;
+    workspaceId: number;
 
     name: string;
     description: string;
@@ -8,9 +11,10 @@ export interface ProjectType {
 
 }
 
-export class ProjectType {
+export class ProjectType extends Basemodel {
 
-    public projectTypeId: number;
+    public id: number;
+    public workspaceId: number;
 
     public name: string;
     public description: string;

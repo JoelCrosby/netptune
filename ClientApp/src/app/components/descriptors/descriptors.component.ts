@@ -31,7 +31,7 @@ export class DescriptorsComponent implements OnInit {
   }
 
   trackById(index: number, projectType: ProjectType) {
-    return projectType.projectTypeId;
+    return projectType.id;
   }
 
   showAddModal(content): void {
@@ -44,7 +44,7 @@ export class DescriptorsComponent implements OnInit {
 
       if (this.selectedProjectType) {
         const newProjectType = new ProjectType();
-        newProjectType.projectTypeId = this.selectedProjectType.projectTypeId;
+        newProjectType.id = this.selectedProjectType.id;
         newProjectType.name = this.inputName;
         newProjectType.description = this.inputDescription;
         this.updateProjectType(newProjectType);

@@ -3,6 +3,7 @@ import { AlertService } from './services/alert/alert.service';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 import { WorkspaceService } from './services/workspace/workspace.service';
+import { TransitionService } from './services/transition/transition.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +11,13 @@ import { WorkspaceService } from './services/workspace/workspace.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'app';
 
   constructor(
     public alertService: AlertService,
     public authServives: AuthService,
     private router: Router,
-    public workspaceService: WorkspaceService) { }
+    public workspaceService: WorkspaceService,
+    public transitionService: TransitionService) { }
 
   ngOnInit(): void {
     if (this.authServives.isTokenExpired()) {

@@ -1,0 +1,112 @@
+<div class="container main shadow-panel">
+  <div class="container-max">
+
+    <div class="component-header">
+      <h4>Project Types</h4>
+      <button type="button" class="btn btn-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
+        <i class="fas fa-clipboard-list"></i>
+        New
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class='table table-borderless table-hover' *ngIf="projectTypes">
+        <caption *ngIf="projectTypes && projectTypes.length > 0">
+          <strong>{{ projectTypes.length }}</strong> project Types total
+        </caption>
+        <thead>
+        </thead>
+        <tbody>
+          <tr *ngFor="let projectType of projectTypes; let i=index; trackBy:trackById;">
+            <td>
+              <span class="dot" style="font-size: 1.5em;">
+                <i class="{{ getFaIcon(projectType) }}"></i>
+              </span>
+            </td>
+            <td>
+              <strong>{{ projectType.name }}</strong>
+            </td>
+            <td id="desc-cell">{{ projectType.description }}</td>
+            <td id="type-cell"><span class="badge badge-primary">{{ projectType.typeCode }}</span></td>
+            <td id="actions-cell">
+              <div id="actions">
+                <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projectTypes[i])' placement="top"
+                  ngbTooltip="Edit Project Type">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button type="button" class="btn btn-secondary" id="deleteBn" (click)='showDeleteModal(confirm, projectTypes[i])' placement="top"
+                  ngbTooltip="Delete Project Type">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <blockquote *ngIf="!projectTypes || projectTypes.length < 1" class="blockquote text-center">
+          <p class="mb-0">No Project Types Configured</p>
+        </blockquote>
+      </table>
+
+    </div>
+  </div>
+
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{selectedProject ? 'Edit Project Type' : 'Add new Project Type'}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon3">Name</span>
+            </div>
+            <input id="name" class="form-control" placeholder="Name" name="name" [(ngModel)]='inputName'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Description</label>
+            </div>
+            <input id="description" class="form-control" placeholder="Description" name="description" [(ngModel)]='inputDescription'>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Type Code</span>
+            </div>
+            <input id="typecode" class="form-control" placeholder="Type Code" name="typecode" [(ngModel)]='inputTypeCode'>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-lg btn-block" (click)="c('Save click')">{{selectedProject ? 'Save
+        Changes' : 'Save Project'}}</button>
+    </div>
+  </ng-template>
+
+  <ng-template #confirm let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Delete '{{selectedProjectType.name}}' ?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-lg" (click)="c('Delete click')">Delete</button>
+      <button type="button" class="btn btn-secondary btn-lg" (click)="d('Cross click')">Cancel</button>
+    </div>
+  </ng-template>

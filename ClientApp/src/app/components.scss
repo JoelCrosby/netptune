@@ -11,7 +11,12 @@
 }
 
 .card {
-    border-radius: 0;
-    border: 1px solid #829098  !important;
+    border: 0 !important;
     margin: 1rem !important;
+    border-radius: 0.3rem !important;
+}
+
+.card-footer {
+    border: 0 !important;
+    background-color: transparent;
 }

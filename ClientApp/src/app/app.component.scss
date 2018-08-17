@@ -6,21 +6,20 @@
     display: flex;  /*enables flex content for its children*/
     box-sizing: border-box;
     position: fixed;
-    top: 64px;
     height: 100%;
     width: 100%;
 }
 
 .column-fs {
-    height: calc(100% - 64px);  /*allows both columns to span the full height of the browser window*/
+    height: 100%;  /*allows both columns to span the full height of the browser window*/
     display: flex;
-    flex-direction: column;  /*places the left and right headers above the bottom content*/
+    flex-direction: column;
+    transition: all 0.3s;  /*places the left and right headers above the bottom content*/
 }
 
 #left {
     flex-shrink: 0;  /*makes sure that content is not cut off in a smaller browser window*/
-    width: 320px;
-    height: calc(100% - 64px);
+    height: 100%;
 }
 
 #right {
@@ -52,7 +51,6 @@ ul {
     background-color: $main1;
     width: 100%;
     height: 100%;
-    height: 64px;
     padding-bottom: 0px;
     padding-top: 0px;
 }

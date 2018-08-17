@@ -1,4 +1,4 @@
-<div class="container main shadow-panel">
+<div class="container main">
   <div class="container-max">
 
     <div class="component-header bottom-border">
@@ -42,7 +42,7 @@
 
       <div class="card-group">
 
-        <div class="card" *ngFor="let workspace of workspaces; let i=index; trackBy:trackById;">
+        <div class="card shadow-panel" *ngFor="let workspace of workspaces; let i=index; trackBy:trackById;">
           <div class="card-body">
             <h5 class="card-title">{{workspace.name}}</h5>
             <p class="card-text">{{workspace.description}}</p>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card shadow-panel">
           <div class="card-body">
             <h5 class="card-title">Create a new Workspace</h5>
             <p class="card-text">Worksapces allow for team collobaration on multiple projectes and are the foundation of all workflows within

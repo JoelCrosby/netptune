@@ -1,10 +1,10 @@
 <div class="container main shadow-panel">
   <div class="container-max">
 
-    <div class="component-header bottom-border">
-      <h4>All Projects</h4>
-      <button type="button" class="btn btn-outline-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
-        <i class="fas fa-plus"></i>
+    <div class="component-header">
+      <h3>All Projects</h3>
+      <button type="button" class="btn btn-primary btn-lg float-right" id="new-button" (click)='showAddModal(content)'>
+        <i class="fas fa-project-diagram"></i>
         New Project
       </button>
     </div>
@@ -78,7 +78,7 @@
 
       <div class="table-responsive">
         <table class='table table-borderless table-hover' *ngIf="projects">
-          <caption *ngIf="projects || projects.length > 1">
+          <caption *ngIf="projects && projects.length > 0">
             <strong>{{ projects.length }}</strong> projects total</caption>
           <thead>
           </thead>
@@ -89,11 +89,11 @@
                   <i class="{{getFaIcon(project)}}"></i>
                 </span>
               </td>
-              <td class="bottom-border">
+              <td>
                 <strong>{{ project.name }}</strong>
               </td>
-              <td class="bottom-border" id="desc-cell">{{ project.description }}</td>
-              <td class="bottom-border" id="type-cell">{{ getProjectTypeName(project) }}</td>
+              <td id="desc-cell">{{ project.description }}</td>
+              <td id="type-cell">{{ getProjectTypeName(project) }}</td>
               <td id="actions-cell">
                 <div id="actions">
                   <button type="button" class="btn btn-secondary" id="editBn" (click)='showUpdateModal(content, projects[i])' placement="top"
@@ -107,10 +107,10 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="!projects || projects.length < 1">
-              <td colspan="5">Projects Empty </td>
-            </tr>
           </tbody>
+          <blockquote *ngIf="!projects || projects.length < 1" class="blockquote text-center">
+              <p class="mb-0">Projects Empty</p>
+            </blockquote>
         </table>
 
         <button type="button" class="btn btn-light float-right" id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
