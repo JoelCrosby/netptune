@@ -3,11 +3,13 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { AlertService } from '../../services/alert/alert.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { ProjectType } from '../../models/project-type';
-import { FileSave } from '../../../../node_modules/file-saver/FileSaver';
+import { saveAs } from 'file-saver/FileSaver';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectDialogComponent } from './dialogs/project-dialog/project-dialog.component';
+
 
 @Component({
   selector: 'app-projects',
@@ -20,14 +22,8 @@ export class ProjectsComponent implements OnInit {
   public projectTypes: ProjectType[];
 
   public showAddForm = false;
-
-  public inputName: string;
-  public inputDescription: string;
-  public inputType: number;
-
   public exportInProgress = false;
 
-  closeResult: string;
   selectedProject: Project;
 
   constructor(
@@ -35,7 +31,8 @@ export class ProjectsComponent implements OnInit {
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    public dialog: MatDialog) {
 
   }
 
@@ -99,79 +96,57 @@ export class ProjectsComponent implements OnInit {
       );
   }
 
-  showAddModal(content): void {
-    this.open(content);
+  showAddModal(): void {
+    this.open();
   }
 
-  showUpdateModal(content, project: Project): void {
+  showUpdateModal(project: Project): void {
     if (project == null) { return; }
 
     this.selectedProject = project;
-    this.inputName = project.name;
-    this.inputDescription = project.description;
-
-    const type = this.projectTypes.find(x => x.id === project.projectTypeId);
-
-    if (type) {
-      this.inputType = type.id;
-    }
-
-    this.open(content);
+    this.open();
   }
 
-  showDeleteModal(confirm, project: Project): void {
+  showDeleteModal(project: Project): void {
     if (project == null) { return; }
 
     this.selectedProject = project;
-    this.inputName = project.name;
-    this.inputDescription = project.description;
-    this.inputType = project.projectTypeId;
-
-    this.openConfirmationDialog(confirm, this.selectedProject);
+    this.openConfirmationDialog(this.selectedProject);
   }
 
-  clearModalValues(): void {
-    // finally clear selecetd project
-    this.selectedProject = null;
+  open(): void {
 
-    // clear modal fields.
-    this.inputName = null;
-    this.inputDescription = null;
-    this.inputType = null;
-  }
+    const dialogRef = this.dialog.open(ProjectDialogComponent, {
+      width: '500px',
+      data: this.selectedProject
+    });
 
-  open(content) {
-    this.modalService.open(content, { centered: true, size: 'lg', windowClass: 'modal-floating' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
+    dialogRef.afterClosed().subscribe((result: Project) => {
+
+      if (!result) { return; }
 
       if (this.selectedProject) {
-        const newProject = new Project();
-        newProject.projectId = this.selectedProject.projectId;
-        newProject.name = this.inputName;
-        newProject.description = this.inputDescription;
-        newProject.projectTypeId = this.inputType;
-        newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
-        this.updateProject(newProject);
+
+        const updatedProject = new Project();
+        updatedProject.projectId = this.selectedProject.projectId;
+        updatedProject.name = result.name;
+        updatedProject.description = result.description;
+        updatedProject.projectTypeId = result.projectTypeId;
+        updatedProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
+        this.updateProject(updatedProject);
       } else {
         const newProject = new Project();
-        newProject.name = this.inputName;
-        newProject.description = this.inputDescription;
-        newProject.projectTypeId = this.inputType;
+        newProject.name = result.name;
+        newProject.description = result.description;
+        newProject.projectTypeId = result.projectTypeId;
+        console.log('this.inputType: ' + result.projectTypeId);
         newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
         this.addProject(newProject);
       }
-
-      this.clearModalValues();
-
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.clearModalValues();
     });
   }
 
-  openConfirmationDialog(content, project: Project) {
-    this.modalService.open(content, { centered: true, size: 'lg' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
+  openConfirmationDialog(project: Project) {
 
       if (!project) {
         return;
@@ -179,12 +154,6 @@ export class ProjectsComponent implements OnInit {
         this.deleteProject(project);
       }
 
-      this.clearModalValues();
-
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.clearModalValues();
-    });
   }
 
   getFaIcon(project: Project): string {
@@ -218,7 +187,7 @@ export class ProjectsComponent implements OnInit {
         }
 
         const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
-        FileSave.saveAs(blob, 'projects.json');
+        saveAs(blob, 'projects.json');
         this.exportInProgress = false;
       }, error => { this.exportInProgress = error != null; }
     );

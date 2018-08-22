@@ -30,7 +30,6 @@ export class AuthService {
   isTokenExpired(): boolean {
 
     const tokenString = localStorage.getItem('auth_token');
-    console.log('token from local storage isTokenExpired method:' + tokenString);
     if (!tokenString) {
         this.isLoginCheckReady = true;
         return true;
@@ -56,11 +55,8 @@ export class AuthService {
         this.userName = token.username;
         this.email = token.email;
 
-        console.log('token valid:' + tokenString);
         return false;
     }
-
-    console.log('token not valid:' + tokenString);
 
     this.isLoginCheckReady = true;
 

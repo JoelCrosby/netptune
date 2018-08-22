@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { TransitionService } from '../../services/transition/transition.service';
-import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
@@ -12,9 +12,14 @@ export class SideBarComponent implements OnInit {
 
   public sidebarStyle = 'open';
 
-  constructor(public authService: AuthService, public transitionService: TransitionService, config: NgbTooltipConfig) {
-    config.placement = 'right';
-    config.container = 'body';
+  public currentUrl: string;
+
+  constructor(
+    public authService: AuthService,
+    public transitionService: TransitionService,
+    private router: Router) {
+
+      this.router.events.subscribe((_: NavigationEnd) => this.currentUrl = _.url);
   }
 
   ngOnInit() {

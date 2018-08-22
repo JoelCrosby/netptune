@@ -5,10 +5,27 @@ import { AlertService } from '../../services/alert/alert.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+
 @Component({
   selector: 'app-workspaces',
   templateUrl: './workspaces.component.html',
-  styleUrls: ['./workspaces.component.scss']
+  styleUrls: ['./workspaces.component.scss'],
+  animations: [
+    trigger('drop-in', [
+      transition('* <=> *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(-18px)' }),
+          stagger('50ms',
+          animate('320ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0px)' }))),
+        ], { optional: true }),
+        query(':leave', animate('320ms ease-out', style({ opacity: 0, transform: 'translateY(18px)'})), {
+          optional: true
+        })
+      ])
+    ])
+  ]
 })
 export class WorkspacesComponent implements OnInit {
 
@@ -119,6 +136,12 @@ export class WorkspacesComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  inviteUsersClicked(workspace: Workspace): void {
+  }
+
+  exportDataClicked(workspace: Workspace): void {
   }
 
 }

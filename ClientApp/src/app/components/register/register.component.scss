@@ -1,53 +1,56 @@
 .full-height {
-    width: 330px;
-    height: 300px;
-    position: absolute;
-    top: 0rem;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    width: 420px;
+    height: 620px;
     margin: auto;
-  }
-  
-  .form-register {
+}
+
+.form-register {
     height: 100%;
     width: 100%;
     max-width: 330px;
     margin: 0 auto;
-  }
-  .form-register .checkbox {
+}
+
+.form-register .checkbox {
     font-weight: 400;
-  }
-  .form-register .form-control {
+}
+
+.form-register .form-control {
     position: relative;
     box-sizing: border-box;
     height: auto;
     padding: 10px;
     font-size: 16px;
-  }
-  .form-register .form-control:focus {
+}
+
+.form-register .form-control:focus {
     z-index: 2;
-  }
-  .form-register input[id="inputUsername"] {
+}
+
+.form-register input[id="inputUsername"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-  }
-  .form-register input[id="inputEmail"] {
+}
+
+.form-register input[id="inputEmail"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-  }
-  .form-register input[id="inputPassword0"] {
+}
+
+.form-register input[id="inputPassword0"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-  }
-  .form-register input[id="inputPassword1"] {
+}
+
+.form-register input[id="inputPassword1"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-  }
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 0rem;
-  }
+}

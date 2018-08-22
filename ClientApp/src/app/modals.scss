@@ -1,11 +1,16 @@
 $backDropOpacity: 0.6;
+
 .modal-content {
+    width: 80%;
     padding: 1rem;
     border: 0px !important;
     border-radius: 0.3rem 0.3rem 0rem 0rem !important;
-    -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     background-color: white !important;
+    display: flex;
+    flex-direction: column;
+
 }
 
 .modal-header {

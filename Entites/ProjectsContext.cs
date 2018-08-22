@@ -89,7 +89,9 @@ namespace DataPlane.Entites
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<int> SaveChangesAsync(
+            bool acceptAllChangesOnSuccess, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
@@ -103,7 +105,9 @@ namespace DataPlane.Entites
 
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(x => x.Entity is BaseModel && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var entities = ChangeTracker.Entries().Where(
+                x => x.Entity is BaseModel && (x.State == EntityState.Added || x.State == EntityState.Modified)
+            );
 
             foreach (var entity in entities)
             {

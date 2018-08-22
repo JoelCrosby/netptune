@@ -93,7 +93,7 @@ namespace DataPlane.Controllers
                 }
             }
 
-            return Ok(project);
+            return Ok(modifiedProject);
         }
 
         // POST: api/Projects

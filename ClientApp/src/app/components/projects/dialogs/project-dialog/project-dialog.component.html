@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h1>
+
+<form #projectForm="ngForm">
+
+  <mat-form-field class="full-width">
+    <input matInput id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='selectedName' required>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-select id="type" name="type" [(value)]='selectedProjectType'>
+      <mat-option>None</mat-option>
+      <mat-option *ngFor="let type of projectTypes" [value]="type.projectTypeId">{{type.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput id="description" class="form-control" name="description" aria-label="With textarea" [(ngModel)]='selectedDescription'></textarea>
+  </mat-form-field>
+
+</form>
+
+
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Close</button>
+  <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectForm.invalid" type="button">
+    {{selectedProject ? 'Save Changes' : 'Save Project'}}
+  </button>
+</div>

@@ -3,30 +3,30 @@
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/dashboard"]'>
-                <i class="fas fa-columns" ngbTooltip="Dashboard"></i>Dashboard</a>
+                <i class="fas fa-columns"></i>Dashboard</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/projects"]'>
-                <i class="fas fa-project-diagram" ngbTooltip="Projects"></i>Projects</a>
+                <i class="fas fa-project-diagram"></i>Projects</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/tasks"]'>
-                <i class="fas fa-tasks" ngbTooltip="Tasks"></i>Tasks</a>
+                <i class="fas fa-tasks"></i>Tasks</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/flags"]'>
-                <i class="far fa-flag" ngbTooltip="Flags"></i>Flags</a>
+                <i class="far fa-flag"></i>Flags</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/users"]'>
-                <i class="far fa-user" ngbTooltip="Users"></i>Users</a>
+                <i class="far fa-user"></i>Users</a>
         </li>
     </ul>
 
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/descriptors"]'>
-                <i class="fas fa-columns" ngbTooltip="Descriptors"></i>Descriptors</a>
+                <i class="fas fa-columns"></i>Descriptors</a>
         </li>
     </ul>
 
@@ -35,13 +35,13 @@
     <ul class="list-unstyled components">
         <li>
             <a (click)='authService.logout()' href="javascript:void(0)">
-                <i class="far fa-user" ngbTooltip="Account"></i>
+                <i class="far fa-user"></i>
                 {{authService.token.displayName}}
             </a>
         </li>
         <li>
             <a id="sideBar-toggle" (click)='transitionService.toggleSideBar()' href="javascript:void(0)">
-                <i class="fas fa-bars" ngbTooltip="Toggle"></i>
+                <i class="fas fa-bars"></i>
                 Toggle
             </a>
         </li>

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataPlane.Entites;
 using DataPlane.Models;
+using DataPlane.Models.Relationships;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +84,15 @@ namespace DataPlane.Controllers {
             workspace.OwnerId = userId;
 
             _context.Workspaces.Add (workspace);
-            await _context.SaveChangesAsync ();
+            await _context.SaveChangesAsync();
+
+            var relationship = new WorkspaceAppUser();
+            relationship.UserId = userId;
+            relationship.WorkspaceId = workspace.WorkspaceId;
+
+            workspace.WorkspaceUsers.Add(relationship);
+
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetWorkspace", new { id = workspace.WorkspaceId }, workspace);
         }

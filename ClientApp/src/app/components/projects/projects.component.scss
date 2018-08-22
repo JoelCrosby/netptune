@@ -5,66 +5,14 @@
     height: 3rem;
 }
 
-td {
-    height: 64px;
-    vertical-align: middle;
-}
-
-tr #actions {
-    display: none;
-    height: 32px;
-}
-
-tr:hover #actions {
-    display: block;
-}
-
-.table-responsive {
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-    display: inline-table;
-    min-height: 90vh;
-}
-
 .main {
     height: 90%;
     position: relative;
     width: 100%;
 }
 
-#desc-cell {
-    max-width: 16rem;
-}
-
-#actions-cell {
-    width: 12rem;
-}
-
-#type-cell {
-    width: 12rem;
-    text-align: center;
-}
-
-td {
-    i {
-        color: white;
-    }
-}
-
 .fas {
     margin-right: 1rem;
-}
-
-
-#actions {
-    #editBn {
-        margin-right: 8px;
-    }
-    .fas {
-        margin: auto;
-        color: white;
-    }
 }
 
 .input-group-prepend {
@@ -76,6 +24,7 @@ td {
 
 #export-button {
     color: #6C757D;
+    margin-top: 2rem;
 }
 
 .projects-header {
@@ -97,7 +46,6 @@ td {
     margin-right: 1.5rem;
 }
 
-.bottom-border {
-    border-top: 0 !important;
-    border-bottom: 1px solid $hover !important;
+mat-card {
+    max-width: 300px;
 }

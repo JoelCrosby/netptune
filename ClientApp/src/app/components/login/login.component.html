@@ -1,26 +1,40 @@
-<div class="full-height">
-  <form name="form" class="form-signin" #loginForm="ngForm" (ngSubmit)="loginForm.form.valid && login(loginForm)">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+<div class="full-height full-width flex-center shadow-panel" [@pull-in]="state">
+  <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
+
+    <h1 class="text-center full-width">Please sign in</h1>
+
+    <div class="form-spacer"></div>
 
     <div *ngIf="!authServices.loginError" class="errorMessagePlaceHolder">
-
     </div>
-    <div *ngIf="authServices.loginError" class="loginErrorMessageTop">{{authServices.loginError}}</div>
-
-    
-    <div class="form-group" [class.has-error]="emailControl.invalid && emailControl.touched" [class.has-success]="emailControl.valid">
-        <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" [ngClass]="{ 'is-invalid': loginForm.submitted && emailControl.invalid }" placeholder="Email address" name="mail" [(ngModel)]="email" #emailControl="ngModel" required autofocus>
+    <div *ngIf="authServices.loginError" class="loginErrorMessageTop">
+      {{authServices.loginError}}
     </div>
 
-    <div class="form-group" [class.has-error]="passControl.invalid && passControl.touched" [class.has-success]="passwordControl.valid">
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password"  name="pass" [(ngModel)]="password" #passControl="ngModel" #passwordControl="ngModel" required>
-      <div class="help-block loginErrorMessage" *ngIf="passControl.invalid && passControl.touched">Password is required</div>
-      <div class="errorMessagePlaceHolder" *ngIf="!(passControl.invalid && passControl.touched)"></div>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
+      <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="emailFormControl.hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
+      <mat-error *ngIf="passwordFormControl.hasError('required')">
+        Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-spacer"></div>
+
+    <div class="buuton-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid">Sign in</button>
+      <br>
+      <button mat-button color="primary" type="button" (click)='createAccountClicked()'>Create Account</button>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="loginForm.invalid">Sign in</button>
-    <button type="button" class="btn btn-secondary btn-lg btn-block" (click)='createAccountClicked()'>Create Account</button>
   </form>
 </div>
