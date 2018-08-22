@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{selectedProject ? 'Edit Project' : 'Add new Project'}}</h1>
+<h1 mat-dialog-title>{{ project ? 'Edit Project' : 'Add new Project'}}</h1>
 
 <form #projectForm="ngForm">
 
@@ -23,6 +23,6 @@
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Close</button>
   <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectForm.invalid" type="button">
-    {{selectedProject ? 'Save Changes' : 'Save Project'}}
+    {{ project ? 'Save Changes' : 'Save Project'}}
   </button>
 </div>

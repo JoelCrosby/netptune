@@ -26,6 +26,8 @@ import { trigger, style, transition, animate, query } from '@angular/animations'
 })
 export class RegisterComponent implements OnInit {
 
+  public state = true;
+
   constructor(public authServices: AuthService, private router: Router) { }
 
   usernameControl = new FormControl('', [
