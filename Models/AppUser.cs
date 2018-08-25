@@ -15,6 +15,6 @@ namespace DataPlane.Models
         public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
 
         public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
-        public ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

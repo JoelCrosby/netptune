@@ -23,7 +23,6 @@
 }
 
 #right {
-    padding: 2rem;
     height: 100%;
     width: 100%;
 }
@@ -45,6 +44,7 @@ ul {
 .bottom {
     flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
     height: 100%;
+    overflow-y: auto;
 }
 
 .top-left-corner {

@@ -1,40 +1,42 @@
-<div class="full-height full-width flex-center shadow-panel" [@pull-in]="state">
-  <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
+<div clas="center">
+  <div class="full-height full-width flex-center shadow-panel" [@pull-in]="state">
+    <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
 
-    <h1 class="text-center full-width">Please sign in</h1>
+      <h1 class="text-center full-width">Please sign in</h1>
 
-    <div class="form-spacer"></div>
+      <div class="form-spacer"></div>
 
-    <div *ngIf="!authServices.loginError" class="errorMessagePlaceHolder">
-    </div>
-    <div *ngIf="authServices.loginError" class="loginErrorMessageTop">
-      {{authServices.loginError}}
-    </div>
+      <div *ngIf="!authServices.loginError" class="errorMessagePlaceHolder">
+      </div>
+      <div *ngIf="authServices.loginError" class="loginErrorMessageTop">
+        {{authServices.loginError}}
+      </div>
 
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
-      <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-        Please enter a valid email address
-      </mat-error>
-      <mat-error *ngIf="emailFormControl.hasError('required')">
-        Email is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
-      <mat-error *ngIf="passwordFormControl.hasError('required')">
-        Password is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
+        <mat-error *ngIf="passwordFormControl.hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <div class="form-spacer"></div>
+      <div class="form-spacer"></div>
 
-    <div class="buuton-container">
-      <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid">Sign in</button>
-      <br>
-      <button mat-button color="primary" type="button" (click)='createAccountClicked()'>Create Account</button>
-    </div>
+      <div class="buuton-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid">Sign in</button>
+        <br>
+        <button mat-button color="primary" type="button" (click)='createAccountClicked()'>Create Account</button>
+      </div>
 
-  </form>
+    </form>
+  </div>
 </div>

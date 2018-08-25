@@ -1,8 +1,8 @@
 <div class="container main">
   <div class="container-max">
 
-    <div class="component-header">
-      <h3>All Projects</h3>
+    <div class="component-header bottom-border">
+      <h4>All Projects</h4>
       <button mat-button type="button" class="btn btn-primary btn-lg float-right" id="new-button" (click)='showAddModal()'>
         <i class="fas fa-project-diagram"></i>
         New
@@ -14,53 +14,56 @@
       <div class="lds-dual-ring"></div>
     </div>
 
-    <div class="card-container">
+    <div class="container">
 
-      <mat-card *ngFor="let project of projects; let i=index; trackBy:trackById;">
-        <mat-card-header>
-          <span class="dot" style="font-size: 1.5em;">
-            <i class="{{getFaIcon(project)}}"></i>
-          </span>
-          <mat-card-title>{{ project.name }}</mat-card-title>
-          <mat-card-subtitle>{{ getProjectTypeName(project) }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ project.description }}</p>
-        </mat-card-content>
-        <mat-card-actions>
+      <div class="card-group" [@drop-in]="workspaces">
+
+        <mat-card *ngFor="let project of projects; let i=index; trackBy:trackById;">
+          <mat-card-header>
+            <span class="dot" style="font-size: 1.5em;">
+              <i class="{{getFaIcon(project)}}"></i>
+            </span>
+            <mat-card-title>{{ project.name }}</mat-card-title>
+            <mat-card-subtitle>{{ getProjectTypeName(project) }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ project.description }}</p>
+          </mat-card-content>
+          <mat-card-actions>
             <button mat-raised-button color="primary" type="button" (click)='showUpdateModal(projects[i])'>
               Edit
             </button>
-            <button mat-raised-button color="warn" type="button" (click)='showDeleteModal(projects[i])'>
+            <button mat-button color="primary" type="button" (click)='showDeleteModal(projects[i])'>
               Delete
             </button>
 
-        </mat-card-actions>
-      </mat-card>
+          </mat-card-actions>
+        </mat-card>
+      </div>
 
     </div>
 
-      <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
-        (click)='exportProjects()' [disabled]='exportInProgress'>
-        Export Projects
-      </button>
+    <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
+      (click)='exportProjects()' [disabled]='exportInProgress'>
+      Export Projects
+    </button>
 
   </div>
 </div>
 
 
 <ng-template #confirm let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
-      <button mat-button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p>Delete '{{selectedProject.name}}' ?</p>
-    </div>
-    <div class="modal-footer">
-      <button mat-button type="button" (click)="c('Delete click')">Delete</button>
-      <button mat-button type="button" (click)="d('Cross click')">Cancel</button>
-    </div>
-  </ng-template>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
+    <button mat-button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Delete '{{selectedProject.name}}' ?</p>
+  </div>
+  <div class="modal-footer">
+    <button mat-button type="button" (click)="c('Delete click')">Delete</button>
+    <button mat-button type="button" (click)="d('Cross click')">Cancel</button>
+  </div>
+</ng-template>

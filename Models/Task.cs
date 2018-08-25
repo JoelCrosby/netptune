@@ -15,7 +15,7 @@ namespace DataPlane.Models {
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public AppUser Assignee { get; set; }
+        public virtual AppUser Assignee { get; set; }
 
     }
 }

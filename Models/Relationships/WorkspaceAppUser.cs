@@ -9,10 +9,10 @@ namespace DataPlane.Models.Relationships
     {
 
         public int WorkspaceId { get; set; }
-        public Workspace Workspace { get; set; }
+        public virtual Workspace Workspace { get; set; }
 
         public string UserId { get; set; }
-        public AppUser User { get; set; }
+        public virtual AppUser User { get; set; }
 
     }
 }

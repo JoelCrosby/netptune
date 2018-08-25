@@ -15,10 +15,18 @@ namespace DataPlane.Entites
 {
     public class ProjectsContext : IdentityDbContext
     {
+
+        // Core data models
+
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectType> ProjectTypes { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Flag> Flags { get; set; }
+
+        // relational data models
+        public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
+        public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
 
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {

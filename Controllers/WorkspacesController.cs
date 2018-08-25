@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DataPlane.Entites;
 using DataPlane.Models;
@@ -74,6 +75,7 @@ namespace DataPlane.Controllers {
         // POST: api/Workspaces
         [HttpPost]
         public async Task<IActionResult> PostWorkspace ([FromBody] Workspace workspace) {
+
             if (!ModelState.IsValid) {
                 return BadRequest (ModelState);
             }
@@ -86,13 +88,21 @@ namespace DataPlane.Controllers {
             _context.Workspaces.Add (workspace);
             await _context.SaveChangesAsync();
 
+            ClaimsPrincipal currentUser = this.User;
+            var user = await _userManager.GetUserAsync(User);
+
+            // Need to explicily load the navigation propert context.
+            // other wise the workspace.WorkspaceUsers list will return null.
+            var workspaceUsers = _context.Workspaces.Include(m => m.WorkspaceUsers).ToList();
+
             var relationship = new WorkspaceAppUser();
-            relationship.UserId = userId;
-            relationship.WorkspaceId = workspace.WorkspaceId;
+            relationship.User = (AppUser)user;
+            relationship.Workspace = workspace;
 
             workspace.WorkspaceUsers.Add(relationship);
 
             await _context.SaveChangesAsync();
+
 
             return CreatedAtAction("GetWorkspace", new { id = workspace.WorkspaceId }, workspace);
         }
