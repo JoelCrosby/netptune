@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using DataPlane.Entites;
 using DataPlane.Models;
 using DataPlane.Models.Relationships;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataPlane.Controllers {
+namespace DataPlane.Controllers 
+{
 
+    [Authorize]
     [Route ("api/[controller]")]
     [ApiController]
     public class WorkspacesController : ControllerBase {
@@ -26,8 +29,17 @@ namespace DataPlane.Controllers {
 
         // GET: api/Workspaces
         [HttpGet]
-        public IEnumerable<Workspace> GetWorkspaces () {
-            return _context.Workspaces;
+        public async Task<IEnumerable<Workspace>> GetWorkspaces () {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            // Load the relationship table.
+            _context.Workspaces.Include(m => m.WorkspaceUsers).ThenInclude(e => e.User);
+
+            // Select workspaces
+            var workspaces = _context.WorkspaceAppUsers.Where(x => x.User == user).Select(w => w.Workspace);
+
+            return workspaces.Where(x => x.IsDeleted != true);
         }
 
         // GET: api/Workspaces/5

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Project } from '../../../../models/project';
-import { ProjectType } from '../../../../models/project-type';
-import { ProjectTypeService } from '../../../../services/project-type/project-type.service';
+import { Project } from '../../../models/project';
+import { ProjectType } from '../../../models/project-type';
+import { ProjectTypeService } from '../../../services/project-type/project-type.service';
 
 @Component({
   selector: 'app-project-dialog',
@@ -31,8 +31,6 @@ export class ProjectDialogComponent implements OnInit {
         this.selectedDescription = this.project.description;
         this.selectedTypeId = this.project.projectTypeId;
       }
-
-      console.log(data);
   }
 
   close(): void {

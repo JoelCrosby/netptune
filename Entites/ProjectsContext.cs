@@ -1,12 +1,9 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using DataPlane.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using System;
-using Microsoft.AspNetCore.Identity;
-using DataPlane.Services;
 using System.Threading;
 using DataPlane.Interfaces;
 using DataPlane.Models.Relationships;
@@ -22,6 +19,7 @@ namespace DataPlane.Entites
         public DbSet<ProjectType> ProjectTypes { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Flag> Flags { get; set; }
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
@@ -131,5 +129,6 @@ namespace DataPlane.Entites
 
             }
         }
+
     }
 }

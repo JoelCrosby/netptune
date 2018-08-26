@@ -11,10 +11,10 @@ namespace DataPlane.Models
 
         public string PictureUrl { get; set; }
 
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
 
-        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
-        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
+        public virtual ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
     }
 }

@@ -28,7 +28,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<ProjectType> GetProjectTypes()
         {
-            return _context.ProjectTypes;
+            return _context.ProjectTypes.Where(x => x.IsDeleted != true);
         }
 
         // GET: api/ProjectTypes/5

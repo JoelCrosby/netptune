@@ -21,7 +21,7 @@ namespace DataPlane.Models
         // Navigation properties
         public virtual ICollection<Project> Projects { get; set; }
 
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
     }
 }

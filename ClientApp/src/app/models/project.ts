@@ -7,6 +7,7 @@ export interface Project {
 
     name: string;
     description: string;
+    repositoryUrl: string;
     projectTypeId: number;
 
 }
@@ -18,6 +19,7 @@ export class Project extends Basemodel {
 
     public name: string;
     public description: string;
+    public repositoryUrl: string;
     public projectTypeId: number;
 
 }

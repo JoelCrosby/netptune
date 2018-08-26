@@ -3,7 +3,9 @@ import { ProjectType } from '../../models/project-type';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { AlertService } from '../../services/alert/alert.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { ProjectTypeDialogComponent } from '../dialogs/project-type-dialog/project-type-dialog.component';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-project-types',
@@ -12,13 +14,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProjectTypesComponent implements OnInit {
 
-  public projectTypes: ProjectType[];
-
   public showAddForm = false;
-
-  public inputName: string;
-  public inputDescription: string;
-  public inputTypeCode: string;
 
   closeResult: string;
   selectedProjectType: ProjectType;
@@ -26,55 +22,68 @@ export class ProjectTypesComponent implements OnInit {
   constructor(
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
-    private workspaceService: WorkspaceService,
-    private modalService: NgbModal) {
+    public snackBar: MatSnackBar,
+    public dialog: MatDialog) {
 
   }
 
   ngOnInit() {
-    this.getProjectTypes();
+    this.projectTypeService.refreshProjectTypes();
   }
 
   trackById(index: number, project: ProjectType) {
     return project.id;
   }
 
-  getProjectTypes(): void {
-    this.projectTypeService.getProjectTypes()
-      .subscribe(projectTypes => this.projectTypes = projectTypes);
+  showAddModal(): void {
+    this.open();
   }
 
-  showAddModal(content): void {
-    this.open(content);
-  }
-
-  showUpdateModal(content, projectType: ProjectType): void {
+  showUpdateModal(projectType: ProjectType): void {
     if (projectType == null) { return; }
 
     this.selectedProjectType = projectType;
-    this.inputName = projectType.name;
-    this.inputDescription = projectType.description;
-    this.inputTypeCode = projectType.typeCode;
-
-    this.open(content);
+    this.open();
   }
 
-  showDeleteModal(confirm, projectType: ProjectType): void {
-    if (projectType == null) { return; }
+  deleteClicked(projectType: ProjectType) {
 
-    this.selectedProjectType = projectType;
-    this.inputName = projectType.name;
-    this.inputDescription = projectType.description;
-    this.inputTypeCode = projectType.typeCode;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Remove Workspace',
+        content: `Are you sure you wish to remove ${projectType.name}?`,
+        confirm: 'Remove'
+      }
+    });
 
-    this.openConfirmationDialog(confirm, this.selectedProjectType);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+
+      if (result) {
+        this.projectTypeService.deleteProjectType(projectType)
+          .subscribe((data: ProjectType) => {
+            projectType = data;
+            this.projectTypeService.refreshProjectTypes();
+            this.snackBar.open('Workspace Deleted.', 'Undo', {
+              duration: 3000,
+            });
+
+          }, error => {
+            this.snackBar.open('An error occured while trying to delete project type ' + error, null, {
+              duration: 2000,
+            });
+          });
+      }
+
+      this.clearModalValues();
+    });
   }
 
   addProjectType(projectType: ProjectType): void {
     this.projectTypeService.addProjectType(projectType)
       .subscribe((projectTypeResult) => {
         if (projectTypeResult) {
-          this.getProjectTypes();
+          this.projectTypeService.refreshProjectTypes();
           this.alertsService.changeSuccessMessage('Project added!');
         }
       }, error => {
@@ -104,89 +113,45 @@ export class ProjectTypesComponent implements OnInit {
       .subscribe(result => {
         console.log(result);
         projectType = result;
-        this.getProjectTypes();
+        this.projectTypeService.refreshProjectTypes();
         this.alertsService.changeSuccessMessage('Project updated!');
       });
   }
 
-  deleteProjectType(projectType: ProjectType): void {
-    this.projectTypeService.deleteProjectType(projectType)
-      .subscribe(projectTypeResult => {
-        this.projectTypes.forEach((item, itemIndex) => {
-          if (item.id === projectTypeResult.id) {
-            this.projectTypes.splice(itemIndex, 1);
-            this.alertsService.changeSuccessMessage('Project deleted!');
-          }
-        });
-      }
-      );
-  }
+  open() {
 
-  open(content) {
-    this.modalService.open(content, { centered: true, size: 'lg', windowClass: 'modal-floating' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
+    const dialogRef = this.dialog.open(ProjectTypeDialogComponent, {
+      width: '500px',
+      data: this.selectedProjectType ? this.selectedProjectType : null
+    });
+
+    dialogRef.afterClosed().subscribe((result: ProjectType) => {
+
+      if (!result) { return; }
 
       if (this.selectedProjectType) {
         const newProjectType = new ProjectType();
         newProjectType.id = this.selectedProjectType.id;
-        newProjectType.name = this.inputName;
-        newProjectType.description = this.inputDescription;
-        newProjectType.typeCode = this.inputTypeCode;
+        newProjectType.name = result.name;
+        newProjectType.description = result.description;
+        newProjectType.typeCode = result.typeCode;
         this.updateProjectType(newProjectType);
       } else {
         const newProjectType = new ProjectType();
-        newProjectType.name = this.inputName;
-        newProjectType.description = this.inputDescription;
-        newProjectType.typeCode = this.inputTypeCode;
+        newProjectType.name = result.name;
+        newProjectType.description = result.description;
+        newProjectType.typeCode = result.typeCode;
         this.addProjectType(newProjectType);
       }
 
       this.clearModalValues();
 
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.clearModalValues();
     });
-  }
-
-  openConfirmationDialog(content, projectType: ProjectType) {
-    this.modalService.open(content, { centered: true, size: 'lg' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-
-      console.log(projectType);
-
-      if (!projectType) {
-        return;
-      } else {
-        this.deleteProjectType(projectType);
-      }
-
-      this.clearModalValues();
-
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.clearModalValues();
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
   }
 
   clearModalValues(): void {
     // finally clear selecetd project
     this.selectedProjectType = null;
-
-    // clear modal fields.
-    this.inputName = null;
-    this.inputDescription = null;
-    this.inputTypeCode = null;
   }
 
 }

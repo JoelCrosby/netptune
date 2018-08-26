@@ -23,6 +23,11 @@ import { FlagsComponent } from './components/flags/flags.component';
 import { UsersComponent } from './components/users/users.component';
 import { DescriptorsComponent } from './components/descriptors/descriptors.component';
 import { ProjectTypesComponent } from './components/project-types/project-types.component';
+import { ProjectDialogComponent } from './components/dialogs/project-dialog/project-dialog.component';
+import { WorkspaceDialogComponent } from './components/dialogs/workspace-dialog/workspace-dialog.component';
+import { HeroComponent } from './componments/hero/hero.component';
+import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
+import { ProjectTypeDialogComponent } from './components/dialogs/project-type-dialog/project-type-dialog.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -31,8 +36,7 @@ import { ProjectTypeService } from './services/project-type/project-type.service
 import { AlertService } from './services/alert/alert.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { TransitionService } from './services/transition/transition.service';
-import { ProjectDialogComponent } from './components/projects/dialogs/project-dialog/project-dialog.component';
-import { HeroComponent } from './componments/hero/hero.component';
+
 
 @NgModule({
   declarations: [
@@ -50,10 +54,16 @@ import { HeroComponent } from './componments/hero/hero.component';
     DescriptorsComponent,
     ProjectTypesComponent,
     ProjectDialogComponent,
-    HeroComponent
+    HeroComponent,
+    WorkspaceDialogComponent,
+    ConfirmDialogComponent,
+    ProjectTypeDialogComponent
   ],
   entryComponents: [
-    ProjectDialogComponent
+    ProjectDialogComponent,
+    WorkspaceDialogComponent,
+    ProjectTypeDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

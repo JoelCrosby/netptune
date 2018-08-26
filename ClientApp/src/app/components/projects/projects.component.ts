@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { AlertService } from '../../services/alert/alert.service';
@@ -8,13 +7,15 @@ import { ProjectType } from '../../models/project-type';
 import { saveAs } from 'file-saver/FileSaver';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectDialogComponent } from './dialogs/project-dialog/project-dialog.component';
+import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';
+import { dropIn } from '../../animations';
 
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss']
+  styleUrls: ['./projects.component.scss'],
+  animations: [dropIn]
 })
 export class ProjectsComponent implements OnInit {
 
@@ -31,7 +32,6 @@ export class ProjectsComponent implements OnInit {
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
-    private modalService: NgbModal,
     public dialog: MatDialog) {
 
   }
@@ -191,16 +191,6 @@ export class ProjectsComponent implements OnInit {
         this.exportInProgress = false;
       }, error => { this.exportInProgress = error != null; }
     );
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
   }
 
 }

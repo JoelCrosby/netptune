@@ -2,58 +2,42 @@ import { Component, OnInit } from '@angular/core';
 import { Workspace } from '../../models/workspace';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { AlertService } from '../../services/alert/alert.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 
 import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { WorkspaceDialogComponent } from '../dialogs/workspace-dialog/workspace-dialog.component';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { ConfirmDialogComponent, ConfirmDialogOptions } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { dropIn } from '../../animations';
 
 @Component({
   selector: 'app-workspaces',
   templateUrl: './workspaces.component.html',
   styleUrls: ['./workspaces.component.scss'],
-  animations: [
-    trigger('drop-in', [
-      transition('* <=> *', [
-        query(':enter', [
-          style({ opacity: 0, transform: 'translateY(-18px)' }),
-          stagger('50ms',
-          animate('320ms ease-out',
-          style({ opacity: 1, transform: 'translateY(0px)' }))),
-        ], { optional: true }),
-        query(':leave', animate('320ms ease-out', style({ opacity: 0, transform: 'translateY(18px)'})), {
-          optional: true
-        })
-      ])
-    ])
-  ]
+  animations: [dropIn]
 })
 export class WorkspacesComponent implements OnInit {
 
-  public workspaces: Workspace[];
-
-  public inputName: string;
-  public inputDescription: string;
-
-  closeResult: string;
   selectedWorkspace: Workspace;
 
   constructor(
     public workspaceService: WorkspaceService,
     private alertsService: AlertService,
     private router: Router,
-    private modalService: NgbModal) { }
+    public snackBar: MatSnackBar,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.workspaceService.currentWorkspace = null;
-    this.getWorkspaces();
+    this.workspaceService.refreshWorkspaces();
   }
 
   trackById(index: number, workspace: Workspace) {
     return workspace.workspaceId;
   }
 
-  showAddModal(content): void {
-    this.open(content);
+  showAddModal(): void {
+    this.open();
   }
 
   goToProjectsClicked(workspace: Workspace): void {
@@ -66,27 +50,30 @@ export class WorkspacesComponent implements OnInit {
     this.router.navigate(['users']);
   }
 
-  open(content) {
-    this.modalService.open(content, { centered: true, size: 'lg', windowClass: 'modal-floating' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
+  open() {
+
+    const dialogRef = this.dialog.open(WorkspaceDialogComponent, {
+      width: '500px',
+      data: this.selectedWorkspace
+    });
+
+    dialogRef.afterClosed().subscribe((result: Workspace) => {
+
+      if (!result) { return; }
 
       if (this.selectedWorkspace) {
         const newProject = new Workspace();
         newProject.workspaceId = this.selectedWorkspace.workspaceId;
-        newProject.name = this.inputName;
-        newProject.description = this.inputDescription;
+        newProject.name = result.name;
+        newProject.description = result.description;
         this.updateWorkspace(newProject);
       } else {
         const newProject = new Workspace();
-        newProject.name = this.inputName;
-        newProject.description = this.inputDescription;
+        newProject.name = result.name;
+        newProject.description = result.description;
         this.addWorkspace(newProject);
       }
 
-      this.clearModalValues();
-
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       this.clearModalValues();
     });
   }
@@ -94,22 +81,13 @@ export class WorkspacesComponent implements OnInit {
   clearModalValues(): void {
     // finally clear selecetd project
     this.selectedWorkspace = null;
-
-    // clear modal fields.
-    this.inputName = null;
-    this.inputDescription = null;
-  }
-
-  getWorkspaces(): void {
-    this.workspaceService.getWorkspaces()
-      .subscribe(workspaces => this.workspaces = workspaces);
   }
 
   addWorkspace(workspace: Workspace): void {
     this.workspaceService.addWorkspace(workspace)
       .subscribe((projectResult) => {
         if (projectResult) {
-          this.getWorkspaces();
+          this.workspaceService.refreshWorkspaces();
           this.alertsService.changeSuccessMessage('Workspace added!');
         }
       }, error => {
@@ -123,19 +101,43 @@ export class WorkspacesComponent implements OnInit {
       .subscribe(result => {
         console.log(result);
         workspace = result;
-        this.getWorkspaces();
+        this.workspaceService.refreshWorkspaces();
         this.alertsService.changeSuccessMessage('Workspace updated!');
       });
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
+  deleteClicked(workspace: Workspace) {
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Remove Workspace',
+        content: `Are you sure you wish to remove ${workspace.name}?`,
+        confirm: 'Remove'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+
+      if (result) {
+        this.workspaceService.deleteWorkspace(workspace)
+          .subscribe((data: Workspace) => {
+            workspace = data;
+            this.workspaceService.refreshWorkspaces();
+            this.snackBar.open('Workspace Deleted.', 'Undo', {
+              duration: 3000,
+            });
+
+          }, error => {
+            this.snackBar.open('An error occured while trying to delete workspace' + error, null, {
+              duration: 2000,
+            });
+          });
+      }
+
+      this.clearModalValues();
+    });
+
   }
 
   inviteUsersClicked(workspace: Workspace): void {

@@ -10,6 +10,8 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ProjectTypeService {
 
+  public projectTypes: ProjectType[];
+
   getHeaders() {
     return { headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -19,6 +21,11 @@ export class ProjectTypeService {
   }
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
+
+  refreshProjectTypes(): void {
+    this.getProjectTypes()
+      .subscribe(projectTypes => this.projectTypes = projectTypes);
+  }
 
   getProjectTypes(): Observable<ProjectType[]> {
     const httpOptions = this.getHeaders();

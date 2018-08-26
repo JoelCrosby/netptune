@@ -3,7 +3,7 @@
 
     <div class="component-header bottom-border">
       <h4>All Projects</h4>
-      <button mat-button type="button" class="btn btn-primary btn-lg float-right" id="new-button" (click)='showAddModal()'>
+      <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
         <i class="fas fa-project-diagram"></i>
         New
       </button>
@@ -16,7 +16,7 @@
 
     <div class="container">
 
-      <div class="card-group" [@drop-in]="workspaces">
+      <div class="card-group" [@dropIn]="projects">
 
         <mat-card *ngFor="let project of projects; let i=index; trackBy:trackById;">
           <mat-card-header>
@@ -50,20 +50,3 @@
 
   </div>
 </div>
-
-
-<ng-template #confirm let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Are you sure?</h4>
-    <button mat-button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>Delete '{{selectedProject.name}}' ?</p>
-  </div>
-  <div class="modal-footer">
-    <button mat-button type="button" (click)="c('Delete click')">Delete</button>
-    <button mat-button type="button" (click)="d('Cross click')">Cancel</button>
-  </div>
-</ng-template>

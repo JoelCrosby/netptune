@@ -1,9 +1,43 @@
-<div class="container main shadow-panel">
+<div class="container main">
   <div class="container-max">
 
     <div class="component-header bottom-border">
-      <h4>Users</h4>
+      <h4>Manage Users</h4>
+      <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
+        <i class="fas fa-project-diagram"></i>
+        Invite
+      </button>
     </div>
+
+
+    <div *ngIf="!user">
+      <div class="lds-dual-ring"></div>
+    </div>
+
+    <div class="container">
+
+      <div class="card-group" [@dropIn]="user">
+
+        <mat-card *ngFor="let user of users; let i=index; trackBy:trackById;">
+          <mat-card-header>
+            <span class="dot" style="font-size: 1.5em;">
+              <i class="{{getFaIcon(project)}}"></i>
+            </span>
+            <mat-card-title>{{ user.username }}</mat-card-title>
+            <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ user.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+
+    <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
+      (click)='exportProjects()' [disabled]='exportInProgress'>
+      Export Projects
+    </button>
 
   </div>
 </div>

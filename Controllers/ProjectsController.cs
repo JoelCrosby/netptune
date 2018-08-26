@@ -28,7 +28,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<Project> GetProjects(int workspaceId)
         {
-            return _context.Projects.Where(x => x.WorkspaceId == workspaceId);
+            return _context.Projects.Where(x => x.WorkspaceId == workspaceId && x.IsDeleted != true);
         }
 
         // GET: api/Projects/5

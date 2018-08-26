@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DataPlane.Controllers
@@ -16,58 +15,56 @@ namespace DataPlane.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class FlagsController : ControllerBase
+    public class ProjectTasksController : ControllerBase
     {
         private readonly ProjectsContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public FlagsController(ProjectsContext context, UserManager<IdentityUser> userManager)
+        public ProjectTasksController(ProjectsContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        // GET: api/Flags
+        // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<Flag> GetFlag()
+        public IEnumerable<ProjectTask> GetTask()
         {
-            return _context.Flags.Where(x => x.IsDeleted != true);;
+            return _context.ProjectTasks;
         }
 
-        // GET: api/Flags/5
+        // GET: api/Tasks/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetFlag([FromRoute] int id)
+        public async Task<IActionResult> GetTask([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var flag = await _context.Flags.FindAsync(id);
+            var task = await _context.ProjectTasks.FindAsync(id);
 
-            if (flag == null)
+            if (task == null)
             {
                 return NotFound();
             }
 
-            return Ok(flag);
+            return Ok(task);
         }
 
-        // PUT: api/Flags/5
+        // PUT: api/Tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFlag([FromRoute] int id, [FromBody] Flag flag)
+        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != flag.FlagId)
+            if (id != task.ProjectTaskId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(flag).State = EntityState.Modified;
+            _context.Entry(task).State = EntityState.Modified;
 
             try
             {
@@ -75,7 +72,7 @@ namespace DataPlane.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FlagExists(id))
+                if (!TaskExists(id))
                 {
                     return NotFound();
                 }
@@ -88,50 +85,45 @@ namespace DataPlane.Controllers
             return NoContent();
         }
 
-        // POST: api/Flags
+        // POST: api/Tasks
         [HttpPost]
-        public async Task<IActionResult> PostFlag([FromBody] Flag flag)
+        public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userId = _userManager.GetUserId (HttpContext.User);
-
-            flag.CreatedByUserId = userId;
-            flag.OwnerId = userId;
-
-            _context.Flags.Add(flag);
+            _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetFlag", new { id = flag.FlagId }, flag);
+            return CreatedAtAction("GetTask", new { id = task.ProjectTaskId }, task);
         }
 
-        // DELETE: api/Flags/5
+        // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFlag([FromRoute] int id)
+        public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var flag = await _context.Flags.FindAsync(id);
-            if (flag == null)
+            var task = await _context.ProjectTasks.FindAsync(id);
+            if (task == null)
             {
                 return NotFound();
             }
 
-            _context.Flags.Remove(flag);
+            _context.ProjectTasks.Remove(task);
             await _context.SaveChangesAsync();
 
-            return Ok(flag);
+            return Ok(task);
         }
 
-        private bool FlagExists(int id)
+        private bool TaskExists(int id)
         {
-            return _context.Flags.Any(e => e.FlagId == id);
+            return _context.ProjectTasks.Any(e => e.ProjectTaskId == id);
         }
     }
 }

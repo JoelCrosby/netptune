@@ -12,11 +12,18 @@ export class WorkspaceService {
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
+  public workspaces: Workspace[];
+
   public get currentWorkspace(): Workspace {
     return JSON.parse(localStorage.getItem('currentWorkspace'));
   }
   public set currentWorkspace(value: Workspace) {
     localStorage.setItem('currentWorkspace', JSON.stringify(value));
+  }
+
+  refreshWorkspaces() {
+    this.getWorkspaces()
+      .subscribe(workspaces => this.workspaces = workspaces);
   }
 
   getHeaders() {
@@ -47,6 +54,19 @@ export class WorkspaceService {
   }
 
   updateWorkspace(workspace: Workspace): Observable<Workspace> {
+    const httpOptions = this.getHeaders();
+
+    const url = `${this.baseUrl}api/Workspaces/${workspace.workspaceId}`;
+    return this.http.put<Workspace>(url, workspace, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deleteWorkspace(workspace: Workspace): Observable<Workspace> {
+
+    workspace.isDeleted = true;
+
     const httpOptions = this.getHeaders();
 
     const url = `${this.baseUrl}api/Workspaces/${workspace.workspaceId}`;

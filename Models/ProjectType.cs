@@ -17,7 +17,7 @@ namespace DataPlane.Models
         public string TypeCode { get; set; }
 
         // Navigation property 
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Project> Projects { get; } = new List<Project>();
 
     }
 }

@@ -16,6 +16,7 @@ namespace DataPlane.Models
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        public string RepositoryUrl { get; set; }
 
         [ForeignKey("ProjectType")]
         public int? ProjectTypeId { get; set; }
@@ -27,9 +28,9 @@ namespace DataPlane.Models
         public virtual ProjectType ProjectType { get; set; }
         public virtual Workspace Workspace { get; set; }
 
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
 
-        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
     }
 }

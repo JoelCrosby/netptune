@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataPlane.Models {
-    public class Task : BaseModel {
+    public class ProjectTask : BaseModel {
 
         // Primary key
         [Key]
-        public int TaskId { get; set; }
+        public int ProjectTaskId { get; set; }
 
         [Required]
         public string Name { get; set; }
