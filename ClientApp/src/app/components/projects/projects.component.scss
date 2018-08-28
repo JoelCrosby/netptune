@@ -29,14 +29,13 @@
     margin-bottom: 2rem;
 }
 
-.dot {
+.icon {
     margin: 0px auto;
     text-align: center;
     height: 48px;
     width: 48px;
+    font-size: 2.5rem;
     padding: 0.5rem;
-    background-color: $main1;
-    border-radius: 50%;
     display: inline-block;
     margin-right: 1.5rem;
 }
@@ -83,3 +82,4 @@ mat-card-title {
     flex-direction: row;
     justify-content: space-between;
 }
+

@@ -4,25 +4,38 @@
     <div class="component-header">
       <h4>Project Types</h4>
       <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
-        <i class="fas fa-clipboard-list"></i>
+        <i class="fas fa-clipboard-list new-icon"></i>
         New
       </button>
     </div>
 
-    <mat-selection-list>
-      <mat-list-option *ngFor="let projectType of projectTypeService.projectTypes; let i=index; trackBy:trackById;">
-        <h4 matLine>{{ projectType.name }}</h4>
-        <p matLine>{{ projectType.description }}</p>
-        <div>
-          <button mat-button type="button" id="editBn" (click)='showUpdateModal(projectType)'>
-            Edit
-          </button>
-          <button mat-button type="button" id="deleteBn" (click)='deleteClicked(projectType)'>
-            Delete
-          </button>
-        </div>
-      </mat-list-option>
-    </mat-selection-list>
+    <mat-card>
+      <mat-selection-list [@dropIn]="projectTypeService.projectTypes">
+        <mat-list-option *ngFor="let projectType of projectTypeService.projectTypes; let i=index; trackBy:trackById;">
+
+          <div class="list-item-actions">
+            <div class="list-items-left">
+              <div class="list-icon">
+                <i class="{{ projectTypeService.getFaIcon(projectType)}} list-icon"></i>
+              </div>
+              <div class="list-item-text">
+                <h4 matLine>{{ projectType.name }}</h4>
+                <p matLine>{{ projectType.description }}</p>
+              </div>
+            </div>
+            <div>
+              <button mat-button type="button" id="editBn" (click)='showUpdateModal(projectType)'>
+                Edit
+              </button>
+              <button mat-button type="button" id="deleteBn" (click)='deleteClicked(projectType)'>
+                Delete
+              </button>
+            </div>
+          </div>
+
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-card>
 
   </div>
 </div>

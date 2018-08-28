@@ -9,6 +9,8 @@ import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';
 import { dropIn } from '../../animations';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { MatSnackBar } from '@angular/material';
 
 
 @Component({
@@ -18,9 +20,6 @@ import { dropIn } from '../../animations';
   animations: [dropIn]
 })
 export class ProjectsComponent implements OnInit {
-
-  public projects: Project[];
-  public projectTypes: ProjectType[];
 
   public showAddForm = false;
   public exportInProgress = false;
@@ -32,42 +31,43 @@ export class ProjectsComponent implements OnInit {
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
+    public snackBar: MatSnackBar,
     public dialog: MatDialog) {
 
   }
 
   ngOnInit(): void {
-    this.getProjects();
-    this.getProjectTypes();
+    this.refreshData();
+  }
+
+  refreshData(): void {
+    this.projectsService.refreshProjects(this.workspaceService.currentWorkspace);
+    this.projectTypeService.refreshProjectTypes();
   }
 
   trackById(index: number, project: Project) {
     return project.projectId;
   }
 
-  getProjects(): void {
-    this.projectsService.getProjects(this.workspaceService.currentWorkspace)
-      .subscribe(projects => this.projects = projects);
-  }
-
-  getProjectTypes(): void {
-    this.projectTypeService.getProjectTypes()
-      .subscribe(projectTypes => this.projectTypes = projectTypes);
-  }
-
   getProjectTypeName(project: Project): string {
-    if (!project.projectTypeId || !this.projectTypes) { return; }
-    return this.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
+    if (!project.projectTypeId || !this.projectTypeService.projectTypes) { return; }
+    return this.projectTypeService.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
   }
 
   addProject(project: Project): void {
     this.projectsService.addProject(project)
       .subscribe((projectResult) => {
         if (projectResult) {
-          this.getProjects();
-          this.alertsService.changeSuccessMessage('Project added!');
+          this.refreshData();
+          this.snackBar.open(`Project ${projectResult.name} Added!.`, null, {
+            duration: 3000,
+          });
+          this.alertsService.changeSuccessMessage(`Project ${projectResult.name} Added!.`);
         }
       }, error => {
+        this.snackBar.open('An error occured while trying to create the project. ' + error, null, {
+          duration: 2000,
+        });
         this.alertsService.
           changeErrorMessage('An error occured while trying to create the Project. ' + error);
       });
@@ -76,9 +76,8 @@ export class ProjectsComponent implements OnInit {
   updateProject(project: Project): void {
     this.projectsService.updateProject(project)
       .subscribe(result => {
-        console.log(result);
         project = result;
-        this.getProjects();
+        this.refreshData();
         this.alertsService.changeSuccessMessage('Project updated!');
       });
   }
@@ -86,14 +85,13 @@ export class ProjectsComponent implements OnInit {
   deleteProject(project: Project): void {
     this.projectsService.deleteProject(project)
       .subscribe(projectResult => {
-        this.projects.forEach((item, itemIndex) => {
+        this.projectsService.projects.forEach((item, itemIndex) => {
           if (item.projectId === projectResult.projectId) {
-            this.projects.splice(itemIndex, 1);
+            this.projectsService.projects.splice(itemIndex, 1);
             this.alertsService.changeSuccessMessage('Project deleted!');
           }
         });
-      }
-      );
+      });
   }
 
   showAddModal(): void {
@@ -104,7 +102,7 @@ export class ProjectsComponent implements OnInit {
     if (project == null) { return; }
 
     this.selectedProject = project;
-    this.open();
+    this.open(this.selectedProject);
   }
 
   showDeleteModal(project: Project): void {
@@ -114,11 +112,11 @@ export class ProjectsComponent implements OnInit {
     this.openConfirmationDialog(this.selectedProject);
   }
 
-  open(): void {
+  open(project?: Project): void {
 
     const dialogRef = this.dialog.open(ProjectDialogComponent, {
-      width: '500px',
-      data: this.selectedProject
+      width: '600px',
+      data: project
     });
 
     dialogRef.afterClosed().subscribe((result: Project) => {
@@ -143,37 +141,48 @@ export class ProjectsComponent implements OnInit {
         newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
         this.addProject(newProject);
       }
+
+      this.clearModalValues();
     });
   }
 
   openConfirmationDialog(project: Project) {
 
-      if (!project) {
-        return;
-      } else {
-        this.deleteProject(project);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '600px',
+      data: {
+        title: 'Remove Project',
+        content: `Are you sure you wish to remove ${project.name}?`,
+        confirm: 'Remove'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: Project) => {
+
+      if (result) {
+        this.projectsService.deleteProject(project)
+          .subscribe((data: Project) => {
+            project = data;
+            this.refreshData();
+            this.snackBar.open('Project Deleted.', 'Undo', {
+              duration: 3000,
+            });
+
+          }, error => {
+            this.snackBar.open('An error occured while trying to delete project' + error, null, {
+              duration: 2000,
+            });
+          });
       }
 
+      this.clearModalValues();
+
+    });
   }
 
-  getFaIcon(project: Project): string {
-
-    if (!this.projectTypes) { return; }
-
-    const type = this.projectTypes.filter(item => item.id === project.projectTypeId)[0];
-
-    if (!type) { return; }
-
-    switch (type.typeCode) {
-      case 'node':
-        return 'fab fa-node-js';
-      case 'angular':
-        return 'fab fa-angular';
-      case 'winforms':
-        return 'fab fa-windows';
-      case 'aspcore':
-        return 'fas fa-code';
-    }
+  clearModalValues(): void {
+    // finally clear selecetd project
+    this.selectedProject = null;
   }
 
   exportProjects(): void {
@@ -182,7 +191,7 @@ export class ProjectsComponent implements OnInit {
     this.projectsService.getProjects(this.workspaceService.currentWorkspace).subscribe(
       result => {
         for (const project of result) {
-          const type = this.projectTypes.filter(item => item.id === project.projectTypeId)[0];
+          const type = this.projectTypeService.projectTypes.filter(item => item.id === project.projectTypeId)[0];
           project['projectType'] = type;
         }
 

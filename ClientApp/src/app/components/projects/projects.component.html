@@ -10,7 +10,7 @@
     </div>
 
 
-    <div *ngIf="!projects">
+    <div *ngIf="!projectsService.projects">
       <div class="lds-dual-ring"></div>
     </div>
 
@@ -18,10 +18,10 @@
 
       <div class="card-group" [@dropIn]="projects">
 
-        <mat-card *ngFor="let project of projects; let i=index; trackBy:trackById;">
+        <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
           <mat-card-header>
-            <span class="dot" style="font-size: 1.5em;">
-              <i class="{{getFaIcon(project)}}"></i>
+            <span class="icon">
+              <i class="{{ projectTypeService.getFaIconById(project.projectTypeId) }}"></i>
             </span>
             <mat-card-title>{{ project.name }}</mat-card-title>
             <mat-card-subtitle>{{ getProjectTypeName(project) }}</mat-card-subtitle>
@@ -30,10 +30,10 @@
             <p>{{ project.description }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" type="button" (click)='showUpdateModal(projects[i])'>
+            <button mat-raised-button color="primary" type="button" (click)='showUpdateModal(project)'>
               Edit
             </button>
-            <button mat-button color="primary" type="button" (click)='showDeleteModal(projects[i])'>
+            <button mat-button color="primary" type="button" (click)='showDeleteModal(project)'>
               Delete
             </button>
 
@@ -43,7 +43,7 @@
 
     </div>
 
-    <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
+    <button mat-button *ngIf="projectsService.projects && projectsService.projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
       (click)='exportProjects()' [disabled]='exportInProgress'>
       Export Projects
     </button>

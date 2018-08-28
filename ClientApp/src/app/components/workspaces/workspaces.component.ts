@@ -4,10 +4,9 @@ import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { AlertService } from '../../services/alert/alert.service';
 import { Router } from '@angular/router';
 
-import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
 import { WorkspaceDialogComponent } from '../dialogs/workspace-dialog/workspace-dialog.component';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { ConfirmDialogComponent, ConfirmDialogOptions } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { dropIn } from '../../animations';
 
 @Component({

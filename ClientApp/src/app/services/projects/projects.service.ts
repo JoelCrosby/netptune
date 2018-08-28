@@ -11,7 +11,14 @@ import { Workspace } from '../../models/workspace';
 })
 export class ProjectsService {
 
+  public projects: Project[];
+
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
+
+  refreshProjects(workspace): void {
+    this.getProjects(workspace)
+      .subscribe(projects => this.projects = projects);
+  }
 
   getHeaders() {
     return {

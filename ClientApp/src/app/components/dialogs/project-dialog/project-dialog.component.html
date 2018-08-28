@@ -1,28 +1,35 @@
 <h1 mat-dialog-title>{{ project ? 'Edit Project' : 'Add new Project'}}</h1>
 
-<form #projectForm="ngForm">
+<form [formGroup]="projectFromGroup">
 
   <mat-form-field class="full-width">
-    <input matInput id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='selectedName' required>
+    <input matInput id="name" class="form-control" placeholder="Project Name" formControlName="nameFormControl" name="name" required>
+    <mat-hint>Required</mat-hint>
   </mat-form-field>
 
   <mat-form-field class="full-width">
-    <mat-select id="type" name="type" [(value)]='selectedProjectType'>
+    <mat-select id="type" name="type" placeholder="Project Type" formControlName="projectTypeFormControl">
       <mat-option>None</mat-option>
-      <mat-option *ngFor="let type of projectTypes" [value]="type.projectTypeId">{{type.name}}</mat-option>
+      <mat-option *ngFor="let type of projectTypes" [value]="type.id">{{type.name}}</mat-option>
     </mat-select>
+    <mat-hint>Required</mat-hint>
   </mat-form-field>
 
   <mat-form-field class="full-width">
-    <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea" [(ngModel)]='selectedDescription'></textarea>
+    <input matInput id="url" class="form-control" placeholder="Repository Url" formControlName="repositoryUrlFormControl" name="url">
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput id="description" class="form-control" formControlName="descriptionFormControl" placeholder="Description"
+      name="description" aria-label="With textarea"></textarea>
   </mat-form-field>
 
 </form>
 
 
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button (click)="close()">Close</button>
-  <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectForm.invalid" type="button">
+  <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectFromGroup.invalid" type="button">
     {{ project ? 'Save Changes' : 'Save Project'}}
   </button>
 </div>

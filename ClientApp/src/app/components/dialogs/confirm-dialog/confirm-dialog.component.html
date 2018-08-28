@@ -3,8 +3,8 @@
 <p *ngIf='data.content'>{{ data.content }}</p>
 
 <div mat-dialog-actions>
-  <button mat-button (click)="close()">Close</button>
-  <button mat-button color="danger" [mat-dialog-close]="getResult()" type="button">
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button color="warn" [mat-dialog-close]="getResult()" type="button">
     {{ data.confirm ? data.confirm : 'Confirm'}}
   </button>
 </div>

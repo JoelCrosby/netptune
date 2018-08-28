@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectType } from '../../models/project-type';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { AlertService } from '../../services/alert/alert.service';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ProjectTypeDialogComponent } from '../dialogs/project-type-dialog/project-type-dialog.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { dropIn } from '../../animations';
 
 @Component({
   selector: 'app-project-types',
   templateUrl: './project-types.component.html',
-  styleUrls: ['./project-types.component.scss']
+  styleUrls: ['./project-types.component.scss'],
+  animations: [dropIn]
 })
 export class ProjectTypesComponent implements OnInit {
 
@@ -43,7 +44,7 @@ export class ProjectTypesComponent implements OnInit {
     if (projectType == null) { return; }
 
     this.selectedProjectType = projectType;
-    this.open();
+    this.open(this.selectedProjectType);
   }
 
   deleteClicked(projectType: ProjectType) {
@@ -51,7 +52,7 @@ export class ProjectTypesComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
       data: {
-        title: 'Remove Workspace',
+        title: 'Remove Project Type ' + projectType.name,
         content: `Are you sure you wish to remove ${projectType.name}?`,
         confirm: 'Remove'
       }
@@ -64,12 +65,12 @@ export class ProjectTypesComponent implements OnInit {
           .subscribe((data: ProjectType) => {
             projectType = data;
             this.projectTypeService.refreshProjectTypes();
-            this.snackBar.open('Workspace Deleted.', 'Undo', {
+            this.snackBar.open('Workspace Removed.', 'Undo', {
               duration: 3000,
             });
 
           }, error => {
-            this.snackBar.open('An error occured while trying to delete project type ' + error, null, {
+            this.snackBar.open('An error occured while trying to remove project type ' + error, null, {
               duration: 2000,
             });
           });
@@ -118,11 +119,11 @@ export class ProjectTypesComponent implements OnInit {
       });
   }
 
-  open() {
+  open(projectType?: ProjectType) {
 
     const dialogRef = this.dialog.open(ProjectTypeDialogComponent, {
       width: '500px',
-      data: this.selectedProjectType ? this.selectedProjectType : null
+      data: projectType
     });
 
     dialogRef.afterClosed().subscribe((result: ProjectType) => {

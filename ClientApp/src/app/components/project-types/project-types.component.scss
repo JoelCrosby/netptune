@@ -1,8 +1,32 @@
-#new-button {
-    margin-bottom: 0.5rem;
-    height: 3rem;
+.new-icon {
+    margin-right: 1rem;
 }
 
-.fas {
+.list-icon {
     margin-right: 1rem;
+    font-size: 2rem;
+    min-width: 48px;
+    min-height: 38px;
+}
+
+.list-item-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.list-item-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.list-items-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+h4, p {
+    margin: 0;
 }

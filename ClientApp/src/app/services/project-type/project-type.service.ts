@@ -73,6 +73,29 @@ export class ProjectTypeService {
       );
   }
 
+  getFaIconById(projectTypeId: number): string {
+
+    if (!projectTypeId || !this.projectTypes) { return; }
+
+    const projectType = this.projectTypes.filter(item => item.id === projectTypeId)[0];
+
+    return this.getFaIcon(projectType);
+  }
+
+  getFaIcon(projectType: ProjectType): string {
+
+    switch (projectType.typeCode) {
+      case 'node':
+        return 'mdi mdi-nodejs nodejs';
+      case 'angular':
+        return 'mdi mdi-angular angular';
+      case 'winforms':
+        return 'mdi mdi-windows windows';
+      case 'aspcore':
+        return 'mdi mdi-visual-studio visual-studio';
+    }
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

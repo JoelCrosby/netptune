@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '../../../models/project';
 import { ProjectType } from '../../../models/project-type';
 import { ProjectTypeService } from '../../../services/project-type/project-type.service';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-project-dialog',
@@ -14,10 +15,7 @@ export class ProjectDialogComponent implements OnInit {
   public project: Project;
   public projectTypes: ProjectType[];
 
-  public selectedProjectType: string;
-  public selectedTypeId: number;
-  public selectedName: string;
-  public selectedDescription: string;
+  public selectedTypeValue: number;
 
   constructor(
     public dialogRef: MatDialogRef<ProjectDialogComponent>,
@@ -26,11 +24,40 @@ export class ProjectDialogComponent implements OnInit {
 
       if (data) {
         this.project = data;
-
-        this.selectedName = this.project.name;
-        this.selectedDescription = this.project.description;
-        this.selectedTypeId = this.project.projectTypeId;
       }
+  }
+
+  projectFromGroup = new FormGroup({
+
+    nameFormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
+
+    projectTypeFormControl: new FormControl('', [
+      Validators.required,
+    ]),
+
+    repositoryUrlFormControl: new FormControl('', [
+    ]),
+
+    descriptionFormControl: new FormControl('', [
+    ])
+
+  });
+
+  ngOnInit() {
+    this.getProjectTypes();
+
+    if (this.project) {
+
+      this.projectFromGroup.controls['nameFormControl'].setValue(this.project.name);
+      this.projectFromGroup.controls['descriptionFormControl'].setValue(this.project.description);
+      this.projectFromGroup.controls['repositoryUrlFormControl'].setValue(this.project.repositoryUrl);
+      this.projectFromGroup.controls['projectTypeFormControl'].setValue(this.project.projectTypeId);
+    } else {
+      this.projectFromGroup.reset();
+    }
   }
 
   close(): void {
@@ -44,15 +71,12 @@ export class ProjectDialogComponent implements OnInit {
       projectResult.projectId = this.project.projectId;
     }
 
-    projectResult.name = this.selectedName;
-    projectResult.description = this.selectedDescription;
-    projectResult.projectTypeId = this.selectedTypeId;
+    projectResult.name = this.projectFromGroup.controls['nameFormControl'].value;
+    projectResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
+    projectResult.repositoryUrl = this.projectFromGroup.controls['repositoryUrlFormControl'].value;
+    projectResult.projectTypeId = this.projectFromGroup.controls['projectTypeFormControl'].value;
 
     return projectResult;
-  }
-
-  ngOnInit() {
-    this.getProjectTypes();
   }
 
   getProjectTypes(): void {
