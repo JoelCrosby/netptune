@@ -25,7 +25,7 @@ import { DescriptorsComponent } from './components/descriptors/descriptors.compo
 import { ProjectTypesComponent } from './components/project-types/project-types.component';
 import { ProjectDialogComponent } from './components/dialogs/project-dialog/project-dialog.component';
 import { WorkspaceDialogComponent } from './components/dialogs/workspace-dialog/workspace-dialog.component';
-import { HeroComponent } from './componments/hero/hero.component';
+import { HeroComponent } from './components/hero/hero.component';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectTypeDialogComponent } from './components/dialogs/project-type-dialog/project-type-dialog.component';
 import { TaskDialogComponent } from './components/dialogs/task-dialog/task-dialog.component';
