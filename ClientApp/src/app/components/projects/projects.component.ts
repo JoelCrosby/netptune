@@ -21,13 +21,12 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ProjectsComponent implements OnInit {
 
-  public showAddForm = false;
   public exportInProgress = false;
 
   selectedProject: Project;
 
   constructor(
-    private projectsService: ProjectsService,
+    public projectsService: ProjectsService,
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,

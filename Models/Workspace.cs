@@ -23,5 +23,6 @@ namespace DataPlane.Models
 
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
         public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
+        public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
     }
 }

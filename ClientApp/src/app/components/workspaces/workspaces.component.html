@@ -8,7 +8,7 @@
     <div class="container">
 
 
-      <div class="card-group" [@dropIn]="workspaces">
+      <div class="card-group" [@dropIn]="workspaceService.workspaces">
 
         <mat-card *ngFor="let workspace of workspaceService.workspaces; let i=index; trackBy:trackById;">
           <mat-card-title>

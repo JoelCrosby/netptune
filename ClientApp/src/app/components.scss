@@ -1,4 +1,18 @@
 .component-header {
+    h4 {
+        font-weight: 200;
+        font-size: 2rem;
+        margin-top: 0rem;
+    }
+}
+
+.list-item-text {
+    h4 {
+        font-weight: 500;
+    }
+}
+
+.component-header {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -26,8 +40,8 @@
     width: 100%;
 }
 
-ul { 
-    list-style-type: none; 
+ul {
+    list-style-type: none;
 }
 
 .buuton-container {
@@ -56,4 +70,20 @@ ul {
     display: flex;
     align-items: center;
     vertical-align: middle;
+}
+
+.flex-row {
+    display: flex !important;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.card-actions {
+    display: flex;
+}
+
+.card-chips {
+    display: flex;
 }

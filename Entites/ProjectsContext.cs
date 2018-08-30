@@ -51,6 +51,19 @@ namespace DataPlane.Entites
                 .WithOne(e => e.Assignee)
                 .IsRequired();
 
+            // (One-to-One) Project > Task
+
+            modelBuilder.Entity<Project>()
+                .HasMany(c => c.ProjectTasks)
+                .WithOne(e => e.Project);
+
+            // (One-to-One) Workspace > Task
+
+            modelBuilder.Entity<Workspace>()
+                .HasMany(c => c.ProjectTasks)
+                .WithOne(e => e.Workspace)
+                .IsRequired();
+
             // (Many-to-many) Workspace > Project
 
             modelBuilder.Entity<WorkspaceProject>()

@@ -3,14 +3,14 @@
 
     <div class="component-header bottom-border">
       <h4>Manage Users</h4>
-      <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
+      <button mat-button type="button" class="new-button float-right" (click)='showInviteModal()'>
         <i class="fas fa-project-diagram"></i>
         Invite
       </button>
     </div>
 
 
-    <div *ngIf="!user">
+    <!-- <div *ngIf="!user">
       <div class="lds-dual-ring"></div>
     </div>
 
@@ -37,7 +37,7 @@
     <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
       (click)='exportProjects()' [disabled]='exportInProgress'>
       Export Projects
-    </button>
+    </button> -->
 
   </div>
 </div>

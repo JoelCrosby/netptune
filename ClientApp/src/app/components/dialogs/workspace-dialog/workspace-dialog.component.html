@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{selectedWorkspace ? 'Edit Workspace' : 'Add new Workspace'}}</h1>
+<h1 mat-dialog-title>{{ workspace ? 'Edit Workspace' : 'Add new Workspace'}}</h1>
 
 <form #projectForm="ngForm">
 
@@ -16,6 +16,6 @@
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Close</button>
   <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectForm.invalid" type="button">
-    {{selectedWorkspace ? 'Save Changes' : 'Save Workspace'}}
+    {{ workspace ? 'Save Changes' : 'Save Workspace'}}
   </button>
 </div>

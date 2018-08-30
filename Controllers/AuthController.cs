@@ -22,14 +22,14 @@ namespace DataPlane.Controllers
     {
         private readonly ProjectsContext _context;
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
 
         public AuthController(
             IConfiguration configuration, 
             ProjectsContext context, 
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager
             )
         {
 
@@ -121,7 +121,7 @@ namespace DataPlane.Controllers
             return BadRequest("Registration failed.");
         }
 
-        private object GenerateJwtToken(string email, IdentityUser user)
+        private object GenerateJwtToken(string email, AppUser user)
         {
             var claims = new List<Claim>
             {

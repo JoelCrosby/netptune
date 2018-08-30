@@ -28,6 +28,7 @@ import { WorkspaceDialogComponent } from './components/dialogs/workspace-dialog/
 import { HeroComponent } from './componments/hero/hero.component';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectTypeDialogComponent } from './components/dialogs/project-type-dialog/project-type-dialog.component';
+import { TaskDialogComponent } from './components/dialogs/task-dialog/task-dialog.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -36,7 +37,7 @@ import { ProjectTypeService } from './services/project-type/project-type.service
 import { AlertService } from './services/alert/alert.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { TransitionService } from './services/transition/transition.service';
-
+import { ProjectTaskService } from './services/project-task/project-task.service';
 
 @NgModule({
   declarations: [
@@ -57,13 +58,15 @@ import { TransitionService } from './services/transition/transition.service';
     HeroComponent,
     WorkspaceDialogComponent,
     ConfirmDialogComponent,
-    ProjectTypeDialogComponent
+    ProjectTypeDialogComponent,
+    TaskDialogComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
     WorkspaceDialogComponent,
     ProjectTypeDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TaskDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -93,6 +96,7 @@ import { TransitionService } from './services/transition/transition.service';
     ProjectTypeService,
     WorkspaceService,
     AlertService,
+    ProjectTaskService,
     TransitionService
   ],
   bootstrap: [AppComponent]

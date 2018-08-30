@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataPlane.Entites;
 using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataPlane.Controllers
 {
@@ -17,18 +16,21 @@ namespace DataPlane.Controllers
     [ApiController]
     public class ProjectTasksController : ControllerBase
     {
-        private readonly ProjectsContext _context;
 
-        public ProjectTasksController(ProjectsContext context)
+        private readonly ProjectsContext _context;
+        private readonly UserManager<AppUser> _userManager;
+
+        public ProjectTasksController(ProjectsContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<ProjectTask> GetTask()
+        public IEnumerable<ProjectTask> GetTasks(int workspaceId)
         {
-            return _context.ProjectTasks;
+            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId);
         }
 
         // GET: api/Tasks/5
@@ -93,6 +95,12 @@ namespace DataPlane.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            task.Workspace = _context.Workspaces.FirstOrDefault(x => x.WorkspaceId == task.Workspace.WorkspaceId);
+            task.Project = _context.Projects.FirstOrDefault(x => x.ProjectId == task.Project.ProjectId);
+
+            var user = await _userManager.GetUserAsync(User) as AppUser;
+            task.Assignee = user;
 
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();

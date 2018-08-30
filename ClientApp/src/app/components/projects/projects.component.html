@@ -16,7 +16,7 @@
 
     <div class="container">
 
-      <div class="card-group" [@dropIn]="projects">
+      <div class="card-group" [@dropIn]="projectsService.projects">
 
         <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
           <mat-card-header>
@@ -28,14 +28,28 @@
           </mat-card-header>
           <mat-card-content>
             <p>{{ project.description }}</p>
+
+
+
           </mat-card-content>
-          <mat-card-actions>
-            <button mat-raised-button color="primary" type="button" (click)='showUpdateModal(project)'>
-              Edit
-            </button>
-            <button mat-button color="primary" type="button" (click)='showDeleteModal(project)'>
-              Delete
-            </button>
+          <mat-card-actions class="flex-row space-between">
+
+            <div class="card-actions">
+              <button mat-raised-button color="primary" type="button" (click)='showUpdateModal(project)'>
+                Edit
+              </button>
+              <button mat-button color="default" type="button" (click)='showDeleteModal(project)'>
+                Delete
+              </button>
+            </div>
+
+            <div class="card-chips">
+              <mat-chip-list>
+                <mat-chip>Owner {{ project.owner }}</mat-chip>
+                <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
+                <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
+              </mat-chip-list>
+            </div>
 
           </mat-card-actions>
         </mat-card>
@@ -43,8 +57,8 @@
 
     </div>
 
-    <button mat-button *ngIf="projectsService.projects && projectsService.projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
-      (click)='exportProjects()' [disabled]='exportInProgress'>
+    <button mat-button *ngIf="projectsService.projects && projectsService.projects.length > 0" type="button" class="btn btn-light float-right"
+      id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
       Export Projects
     </button>
 

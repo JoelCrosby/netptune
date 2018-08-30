@@ -14,6 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using DataPlane.Services;
 using Microsoft.AspNetCore.Http;
+using DataPlane.Models;
 
 namespace DataPlane
 {
@@ -33,7 +34,7 @@ namespace DataPlane
             services.AddDbContext<ProjectsContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<ProjectsContext>()
                 .AddDefaultTokenProviders();
 

@@ -14,4 +14,8 @@ export class UsersComponent implements OnInit {
   ngOnInit() {
   }
 
+  showInviteModal(): void {
+
+  }
+
 }

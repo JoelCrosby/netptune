@@ -20,9 +20,9 @@ namespace DataPlane.Controllers
     public class WorkspacesController : ControllerBase {
 
         private readonly ProjectsContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public WorkspacesController (ProjectsContext context, UserManager<IdentityUser> userManager) {
+        public WorkspacesController (ProjectsContext context, UserManager<AppUser> userManager) {
             _context = context;
             _userManager = userManager;
         }

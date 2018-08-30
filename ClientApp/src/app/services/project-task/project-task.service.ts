@@ -1,18 +1,18 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { Project } from '../../models/project';
-import { AuthService } from '../auth/auth.service';
+import { HttpHeaders, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Workspace } from '../../models/workspace';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
+import { ProjectTask } from '../../models/project-task';
 import { WorkspaceService } from '../workspace/workspace.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectsService {
+export class ProjectTaskService {
 
-  public projects: Project[];
+  public tasks: ProjectTask[];
 
   constructor(
     private http: HttpClient,
@@ -20,10 +20,9 @@ export class ProjectsService {
     private workspaceService: WorkspaceService,
     @Inject('BASE_URL') private baseUrl: string) { }
 
-  refreshProjects(workspace?: Workspace): void {
-
-    this.getProjects(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe(projects => this.projects = projects);
+  refreshTasks(workspace): void {
+    this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)
+      .subscribe(Tasks => this.tasks = Tasks);
   }
 
   getHeaders() {
@@ -35,39 +34,43 @@ export class ProjectsService {
     };
   }
 
-  getProjects(worspace: Workspace): Observable<Project[]> {
+  getTasks(worspace: Workspace): Observable<ProjectTask[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects' + `?workspaceId=${worspace.workspaceId}`, httpOptions)
+    return this.http.get<ProjectTask[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.workspaceId, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  addProject(project: Project): Observable<Project> {
+  addTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, httpOptions)
+    if (!task.workspace) {
+      task.workspace = this.workspaceService.currentWorkspace;
+    }
+
+    return this.http.post<ProjectTask>(this.baseUrl + 'api/ProjectTasks', task, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateProject(project: Project): Observable<Project> {
+  updateTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.put<Project>(url, project, httpOptions)
+    const url = `${this.baseUrl}api/ProjectTasks/${task.taskId}`;
+    return this.http.put<ProjectTask>(url, ProjectTask, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  deleteProject(project: Project): Observable<Project> {
+  deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/projects/${project.projectId}`;
-    return this.http.delete<Project>(url, httpOptions)
+    const url = `${this.baseUrl}api/ProjectTasks/${task.taskId}`;
+    return this.http.delete<ProjectTask>(url, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -88,5 +91,4 @@ export class ProjectsService {
     return throwError(
       'Something bad happened; please try again later.');
   }
-
 }

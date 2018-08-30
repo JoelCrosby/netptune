@@ -16,9 +16,9 @@ namespace DataPlane.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly ProjectsContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ProjectsController(ProjectsContext context, UserManager<IdentityUser> userManager)
+        public ProjectsController(ProjectsContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;

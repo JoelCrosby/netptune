@@ -1,4 +1,4 @@
-import { Task } from './task';
+import { ProjectTask } from './project-task';
 
 export interface AppUser {
 
@@ -7,6 +7,6 @@ export interface AppUser {
 
     pictureUrl: string;
 
-    tasks: Task[];
+    tasks: ProjectTask[];
 
 }

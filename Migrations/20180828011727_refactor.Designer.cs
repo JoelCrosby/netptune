@@ -4,14 +4,16 @@ using DataPlane.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataPlane.Migrations
 {
     [DbContext(typeof(ProjectsContext))]
-    partial class ProjectsContextModelSnapshot : ModelSnapshot
+    [Migration("20180828011727_refactor")]
+    partial class refactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,26 +125,15 @@ namespace DataPlane.Migrations
 
                     b.Property<string>("OwnerId");
 
-                    b.Property<int?>("ProjectId");
-
-                    b.Property<int>("Status");
-
                     b.Property<DateTime>("UpdatedAt");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<int?>("WorkspaceId")
-                        .IsRequired();
-
                     b.HasKey("ProjectTaskId");
 
                     b.HasIndex("AssigneeId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -479,15 +470,6 @@ namespace DataPlane.Migrations
                     b.HasOne("DataPlane.Models.AppUser", "Assignee")
                         .WithMany("Tasks")
                         .HasForeignKey("AssigneeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataPlane.Models.Project", "Project")
-                        .WithMany("ProjectTasks")
-                        .HasForeignKey("ProjectId");
-
-                    b.HasOne("DataPlane.Models.Workspace", "Workspace")
-                        .WithMany("ProjectTasks")
-                        .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

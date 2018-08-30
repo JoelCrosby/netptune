@@ -3,7 +3,62 @@
 
     <div class="component-header bottom-border">
       <h4>Tasks</h4>
+      <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
+        <i class="fas fa-project-diagram"></i>
+        New
+      </button>
     </div>
+
+
+    <div *ngIf="!projectTaskService.tasks">
+      <div class="lds-dual-ring"></div>
+    </div>
+
+    <div class="container">
+
+      <div class="card-group" [@dropIn]="projectTaskService.tasks">
+
+        <mat-card *ngFor="let task of projectTaskService.tasks; let i=index; trackBy:trackById;">
+          <mat-card-header>
+            <span class="icon">
+              <i></i>
+            </span>
+            <mat-card-title>{{ task.name }}</mat-card-title>
+            <mat-card-subtitle>{{ task.detail }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+
+          </mat-card-content>
+
+          <mat-card-actions class="flex-row space-between">
+
+            <div class="card-actions">
+              <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
+                Edit
+              </button>
+              <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
+                Delete
+              </button>
+            </div>
+
+            <div class="card-chips">
+              <mat-chip-list>
+                <mat-chip>Owner {{ task.owner }}</mat-chip>
+                <mat-chip>Updated {{ task.updatedAt | date }}</mat-chip>
+                <mat-chip>Created {{ task.createdAt | date }}</mat-chip>
+              </mat-chip-list>
+            </div>
+
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+    </div>
+
+    <button mat-button *ngIf="projectTaskService.tasks && projectTaskService.tasks.length > 0" type="button" class="btn btn-light float-right"
+      id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
+      Export Projects
+    </button>
 
   </div>
 </div>
