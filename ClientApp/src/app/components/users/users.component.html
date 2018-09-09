@@ -4,40 +4,37 @@
     <div class="component-header bottom-border">
       <h4>Manage Users</h4>
       <button mat-button type="button" class="new-button float-right" (click)='showInviteModal()'>
-        <i class="fas fa-project-diagram"></i>
+        <i class="fas fa-paper-plane"></i>
         Invite
       </button>
     </div>
 
 
-    <!-- <div *ngIf="!user">
+    <div *ngIf="!userService.appUsers">
       <div class="lds-dual-ring"></div>
     </div>
 
     <div class="container">
 
-      <div class="card-group" [@dropIn]="user">
+      <div class="user-card-group" [@dropIn]="userService.appUsers">
 
-        <mat-card *ngFor="let user of users; let i=index; trackBy:trackById;">
+        <mat-card *ngFor="let user of userService.appUsers; let i=index; trackBy:trackById;">
           <mat-card-header>
-            <span class="dot" style="font-size: 1.5em;">
-              <i class="{{getFaIcon(project)}}"></i>
-            </span>
-            <mat-card-title>{{ user.username }}</mat-card-title>
+            <div mat-card-avatar class="far fa-user"></div>
+            <mat-card-title>{{ user.userName }}</mat-card-title>
             <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
           </mat-card-header>
+          <img mat-card-image src="https://picsum.photos/200?blur" />
           <mat-card-content>
-            <p>{{ user.description }}</p>
+            <mat-chip-list>
+              <mat-chip><i class="fas fa-user-check"></i> {{user.lastLoginTime | date }}</mat-chip>
+              <mat-chip><i class="fas fa-user-clock"></i> {{user.registrationDate | date }}</mat-chip>
+            </mat-chip-list>
           </mat-card-content>
         </mat-card>
       </div>
 
     </div>
-
-    <button mat-button *ngIf="projects && projects.length > 0" type="button" class="btn btn-light float-right" id="export-button"
-      (click)='exportProjects()' [disabled]='exportInProgress'>
-      Export Projects
-    </button> -->
 
   </div>
 </div>

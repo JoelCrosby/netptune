@@ -1,5 +1,6 @@
 using DataPlane.Models.Relationships;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace DataPlane.Models
@@ -10,6 +11,9 @@ namespace DataPlane.Models
         public string LastName { get; set; }
 
         public string PictureUrl { get; set; }
+
+        public virtual DateTimeOffset? LastLoginTime { get; set; }
+        public virtual DateTimeOffset?  RegistrationDate { get; set; }
 
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
         public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();

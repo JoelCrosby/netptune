@@ -71,6 +71,13 @@ namespace DataPlane.Controllers
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.Username);
 
+               if (_context.AppUsers.SingleOrDefault(x => x.Id == appUser.Id) is AppUser user)
+               {
+                   user.LastLoginTime = DateTime.UtcNow;
+                   _context.SaveChanges();
+               }
+                
+
                 return Ok(new
                 {
                     token = GenerateJwtToken(model.Username, appUser),
@@ -100,6 +107,13 @@ namespace DataPlane.Controllers
 
             if (result.Succeeded)
             {
+
+                if (_context.AppUsers.SingleOrDefault(x => x.Id == user.Id) is AppUser newUser)
+                {
+                   newUser.RegistrationDate = DateTime.UtcNow;
+                   _context.SaveChanges();
+                }
+
                 await _signInManager.SignInAsync(user, false);
 
                 return Ok(new

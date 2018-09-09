@@ -7,6 +7,7 @@ using DataPlane.Entites;
 using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using DataPlane.Interfaces;
 
 namespace DataPlane.Controllers
 {
@@ -30,7 +31,9 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<ProjectTask> GetTasks(int workspaceId)
         {
-            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId);
+            _context.ProjectTasks.IncludeBaseObjects();
+            _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
+            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId).OrderBy(x => x.SortOrder);
         }
 
         // GET: api/Tasks/5
@@ -96,11 +99,32 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            task.Workspace = _context.Workspaces.FirstOrDefault(x => x.WorkspaceId == task.Workspace.WorkspaceId);
-            task.Project = _context.Projects.FirstOrDefault(x => x.ProjectId == task.Project.ProjectId);
+            // Load the relationship tables.
+            _context.ProjectTasks.Include(m => m.Workspace).ThenInclude(e => e.Projects);
+
+            var relational = (from w in _context.Workspaces
+                                join p in _context.Projects 
+                                on new { ProjectId = task.ProjectId ?? task.Project.ProjectId } 
+                                equals new { ProjectId = p.ProjectId }
+                                where
+                                w.WorkspaceId == (task.WorkspaceId ?? task.Workspace.WorkspaceId)
+                                select new {
+                                    project = p,
+                                    workspace = w
+                                }).Take(1);
+
+            if (!relational.Any()) 
+            {
+                return BadRequest("Could not find related project or workspace!");
+            }
+
+            task.Workspace = relational.FirstOrDefault().workspace;
+            task.Project = relational.FirstOrDefault().project;
 
             var user = await _userManager.GetUserAsync(User) as AppUser;
             task.Assignee = user;
+            task.Owner = user;
+            task.CreatedByUser = user;
 
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();

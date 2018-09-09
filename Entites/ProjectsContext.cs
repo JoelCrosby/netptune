@@ -20,6 +20,7 @@ namespace DataPlane.Entites
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Flag> Flags { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
@@ -99,6 +100,11 @@ namespace DataPlane.Entites
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.ProjectUsers)
                 .HasForeignKey(pt => pt.UserId);
+
+            // Unique sort order
+            modelBuilder.Entity<ProjectTask>()
+                .HasIndex(p => p.SortOrder)
+                .IsUnique(true);
 
         }
 

@@ -28,6 +28,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<Project> GetProjects(int workspaceId)
         {
+            _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
             return _context.Projects.Where(x => x.WorkspaceId == workspaceId && x.IsDeleted != true);
         }
 

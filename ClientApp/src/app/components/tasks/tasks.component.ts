@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar, MatDialog } from '@angular/material';
-import { ProjectTaskService } from '../../services/project-task/project-task.service';
-import { AlertService } from '../../services/alert/alert.service';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { saveAs } from 'file-saver/FileSaver';
-import { ProjectTask } from '../../models/project-task';
+import { dropIn } from '../../animations';
 import { Project } from '../../models/project';
+import { ProjectTask } from '../../models/project-task';
+import { AlertService } from '../../services/alert/alert.service';
+import { ProjectTaskService } from '../../services/project-task/project-task.service';
+import { ProjectsService } from '../../services/projects/projects.service';
+import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
-import { dropIn } from '../../animations';
 
 @Component({
   selector: 'app-tasks',
@@ -24,6 +25,7 @@ export class TasksComponent implements OnInit {
 
   constructor(
     public projectTaskService: ProjectTaskService,
+    private projectsService: ProjectsService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
@@ -123,6 +125,8 @@ export class TasksComponent implements OnInit {
         const newProject = new ProjectTask();
         newProject.name = result.name;
         newProject.description = result.description;
+        newProject.projectId = result.projectId;
+        newProject.project = this.projectsService.projects.find(x => x.projectId === result.projectId);
         this.addProjectTask(newProject);
       }
 

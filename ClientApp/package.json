@@ -1,5 +1,5 @@
 {
-  "name": "DataPlane",
+  "name": "netptune",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
     "publish": "ng build --configuration=production --prod",
     "build:ssr": "npm run build -- --app=ssr --output-hashing=media",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "tslint src/*.ts -t verbose",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -47,6 +47,8 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "^6.0.115",
     "codelyzer": "^4.4.2",
+    "gulp": "^3.9.1",
+    "gulp-tslint": "^8.1.2",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^2.0.5",

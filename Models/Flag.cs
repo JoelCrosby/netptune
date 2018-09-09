@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DataPlane.Interfaces;
 
 namespace DataPlane.Models
 {
-    public class Flag : BaseModel
+    public class Flag : BaseModel, IBaseEntity
     {
 
         // Primary key

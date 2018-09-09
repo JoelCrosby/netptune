@@ -8,9 +8,15 @@ export class Basemodel {
     public updatedAt: Date;
 
     public createdByUser: AppUser;
+    public createdByUserId: string;
+
     public modifiedByUser: AppUser;
+    public modifiedByUserId: string;
+
     public deletedByUser: AppUser;
+    public deletedByUserId: string;
 
     public owner: AppUser;
+    public ownerId: string;
 
 }

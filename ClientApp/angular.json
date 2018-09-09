@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "DataPlane": {
+    "netptune": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -49,18 +49,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "DataPlane:build"
+            "browserTarget": "netptune:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "DataPlane:build:production"
+              "browserTarget": "netptune:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "DataPlane:build"
+            "browserTarget": "netptune:build"
           }
         },
         "test": {
@@ -93,7 +93,7 @@
         }
       }
     },
-    "DataPlane-e2e": {
+    "netptune-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -102,7 +102,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "DataPlane:serve"
+            "devServerTarget": "netptune:serve"
           }
         },
         "lint": {
@@ -119,7 +119,7 @@
       }
     }
   },
-  "defaultProject": "DataPlane",
+  "defaultProject": "netptune",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

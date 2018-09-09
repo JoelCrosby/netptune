@@ -4,14 +4,16 @@ using DataPlane.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataPlane.Migrations
 {
     [DbContext(typeof(ProjectsContext))]
-    partial class ProjectsContextModelSnapshot : ModelSnapshot
+    [Migration("20180907000524_Updatedatetime")]
+    partial class Updatedatetime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,9 +169,6 @@ namespace DataPlane.Migrations
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("SortOrder")
-                        .IsUnique();
 
                     b.HasIndex("WorkspaceId");
 
@@ -499,13 +498,13 @@ namespace DataPlane.Migrations
 
                     b.Property<string>("FirstName");
 
-                    b.Property<DateTimeOffset?>("LastLoginTime");
+                    b.Property<DateTimeOffset>("LastLoginTime");
 
                     b.Property<string>("LastName");
 
                     b.Property<string>("PictureUrl");
 
-                    b.Property<DateTimeOffset?>("RegistrationDate");
+                    b.Property<DateTimeOffset>("RegistrationDate");
 
                     b.ToTable("AppUser");
 

@@ -1,10 +1,11 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Project } from '../../models/project';
-import { AuthService } from '../auth/auth.service';
 import { Workspace } from '../../models/workspace';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 
 @Injectable({
@@ -18,12 +19,18 @@ export class ProjectsService {
     private http: HttpClient,
     private authService: AuthService,
     private workspaceService: WorkspaceService,
+    private userService: UserService,
     @Inject('BASE_URL') private baseUrl: string) { }
 
   refreshProjects(workspace?: Workspace): void {
 
     this.getProjects(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe(projects => this.projects = projects);
+      .subscribe((projects: Project[]) => {
+        this.projects = projects;
+        this.projects.forEach(x => {
+          this.userService.getUser(x.ownerId).subscribe(data => x.owner = data);
+        });
+      });
   }
 
   getHeaders() {

@@ -1,3 +1,4 @@
+using DataPlane.Interfaces;
 using DataPlane.Models.Relationships;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -5,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataPlane.Models
 {
-    public class Project : BaseModel
+    public class Project : BaseModel, IBaseEntity
     {
 
         // Primary key

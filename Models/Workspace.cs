@@ -1,4 +1,5 @@
-﻿using DataPlane.Models.Relationships;
+﻿using DataPlane.Interfaces;
+using DataPlane.Models.Relationships;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataPlane.Models
 {
-    public class Workspace : BaseModel
+    public class Workspace : BaseModel, IBaseEntity
     {
 
         // Primary key

@@ -1,10 +1,11 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpHeaders, HttpErrorResponse, HttpClient } from '@angular/common/http';
-import { Workspace } from '../../models/workspace';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
 import { ProjectTask } from '../../models/project-task';
+import { Workspace } from '../../models/workspace';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 
 @Injectable({
@@ -18,11 +19,17 @@ export class ProjectTaskService {
     private http: HttpClient,
     private authService: AuthService,
     private workspaceService: WorkspaceService,
+    private userService: UserService,
     @Inject('BASE_URL') private baseUrl: string) { }
 
   refreshTasks(workspace): void {
     this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe(Tasks => this.tasks = Tasks);
+      .subscribe((tasks: ProjectTask[]) => {
+        this.tasks = tasks;
+        this.tasks.forEach(x => {
+          this.userService.getUser(x.ownerId).subscribe(data => x.owner = data);
+        });
+      });
   }
 
   getHeaders() {
@@ -49,6 +56,8 @@ export class ProjectTaskService {
     if (!task.workspace) {
       task.workspace = this.workspaceService.currentWorkspace;
     }
+
+    console.log(task);
 
     return this.http.post<ProjectTask>(this.baseUrl + 'api/ProjectTasks', task, httpOptions)
       .pipe(
