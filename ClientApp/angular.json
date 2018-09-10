@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "netptune": {
+    "netpune": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -49,18 +49,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "netptune:build"
+            "browserTarget": "netpune:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "netptune:build:production"
+              "browserTarget": "netpune:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "netptune:build"
+            "browserTarget": "netpune:build"
           }
         },
         "test": {
@@ -93,7 +93,7 @@
         }
       }
     },
-    "netptune-e2e": {
+    "netpune-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -102,7 +102,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "netptune:serve"
+            "devServerTarget": "netpune:serve"
           }
         },
         "lint": {
@@ -119,7 +119,7 @@
       }
     }
   },
-  "defaultProject": "netptune",
+  "defaultProject": "netpune",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

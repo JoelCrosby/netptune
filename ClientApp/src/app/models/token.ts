@@ -10,12 +10,13 @@ export interface IToken {
 }
 
 export class Token implements IToken {
-    email = '';
-    username = '';
-    displayName = '';
-    token = '';
-    token_type = '';
+    email: string;
+    username: string;
+    displayName: string;
+    token: string;
+    token_type: string;
     expires_in = 0;
-    issued = '';
-    expires = '';
+    issued: string;
+    expires: string;
+    userId: string;
 }

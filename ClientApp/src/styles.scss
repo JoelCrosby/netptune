@@ -3,7 +3,7 @@
 @import './variables.scss';
 @import './mixins.scss';
 
-@include font-face(Google Sans, 'fonts/GoogleSans-Regular',  null, null, ttf);
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('fonts/MaterialDesign-Webfont-master/css/materialdesignicons.min.css');
@@ -61,6 +61,14 @@ h1, h2, h3, h4, h5, h6,
 .dropdown-menu {
     -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
     box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+}
+
+.draggable {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;   
+    user-select: none;
+    cursor: pointer;
 }
 
 @keyframes lds-dual-ring {

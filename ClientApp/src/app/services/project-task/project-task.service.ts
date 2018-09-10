@@ -14,6 +14,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 export class ProjectTaskService {
 
   public tasks: ProjectTask[];
+  public myTasks: ProjectTask[];
 
   constructor(
     private http: HttpClient,
@@ -25,10 +26,10 @@ export class ProjectTaskService {
   refreshTasks(workspace): void {
     this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)
       .subscribe((tasks: ProjectTask[]) => {
-        this.tasks = tasks;
-        this.tasks.forEach(x => {
-          this.userService.getUser(x.ownerId).subscribe(data => x.owner = data);
-        });
+        this.tasks.slice(0, this.tasks.length);
+        this.tasks.concat(tasks);
+
+        this.myTasks = this.tasks.filter(x => x.ownerId === this.authService.token.userId);
       });
   }
 

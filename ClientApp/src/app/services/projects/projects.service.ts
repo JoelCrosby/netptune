@@ -26,10 +26,8 @@ export class ProjectsService {
 
     this.getProjects(workspace ? workspace : this.workspaceService.currentWorkspace)
       .subscribe((projects: Project[]) => {
-        this.projects = projects;
-        this.projects.forEach(x => {
-          this.userService.getUser(x.ownerId).subscribe(data => x.owner = data);
-        });
+        this.projects.slice(0, this.projects.length);
+        this.projects.concat(projects);
       });
   }
 

@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppMaterialModule } from './app-material/app-material.module';
+
 // Components
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -28,7 +29,7 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { UsersComponent } from './components/users/users.component';
 import { WorkspacesComponent } from './components/workspaces/workspaces.component';
-import { AlertService } from './services/alert/alert.service';
+
 // Services
 import { AuthService } from './services/auth/auth.service';
 import { ProjectTaskService } from './services/project-task/project-task.service';
@@ -37,8 +38,8 @@ import { ProjectsService } from './services/projects/projects.service';
 import { TransitionService } from './services/transition/transition.service';
 import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
-
-
+import { AlertService } from './services/alert/alert.service';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { WorkspaceService } from './services/workspace/workspace.service';
     WorkspaceDialogComponent,
     ConfirmDialogComponent,
     ProjectTypeDialogComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
+    ProfileComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
@@ -88,6 +90,7 @@ import { WorkspaceService } from './services/workspace/workspace.service';
       { path: 'login', component: LoginComponent },
       { path: 'descriptors', component: DescriptorsComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: '**', component: WorkspacesComponent },
     ])
   ],

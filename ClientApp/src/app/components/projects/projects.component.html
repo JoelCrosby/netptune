@@ -2,16 +2,15 @@
   <div class="container-max">
 
     <div class="component-header bottom-border">
-      <h4>All Projects</h4>
+      <h4>All Projects </h4>
       <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
         <i class="fas fa-project-diagram"></i>
         New
       </button>
     </div>
 
-
     <div *ngIf="!projectsService.projects">
-      <div class="lds-dual-ring"></div>
+      <mat-progress-spinner mode="indeterminate">
     </div>
 
     <div class="container">

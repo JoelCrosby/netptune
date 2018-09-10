@@ -81,6 +81,7 @@ namespace DataPlane.Controllers
                 return Ok(new
                 {
                     token = GenerateJwtToken(model.Username, appUser),
+                    userId = appUser.Id,
                     username = model.Username,
                     emailaddress = appUser.Email,
                     displayName = appUser.UserName,

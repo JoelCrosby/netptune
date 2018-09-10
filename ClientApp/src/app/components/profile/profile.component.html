@@ -1,0 +1,39 @@
+<div class="container main">
+  <div class="container-max">
+
+    <div class="component-header bottom-border">
+      <h4>{{authService.userName}}</h4>
+      <button mat-button type="button" class="new-button float-right" (click)='showLogOutModal()'>
+        <i class="fas fa-project-diagram"></i>
+        Log Out
+      </button>
+    </div>
+
+    <!-- <div *ngIf="!projectsService.projects">
+      <mat-progress-spinner mode="indeterminate">
+    </div> -->
+
+    <form [formGroup]="profileFromGroup">
+
+      <mat-form-field class="full-width">
+        <input matInput id="name" class="form-control" placeholder="First Name" formControlName="firstNameFormControl" name="firstName">
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <input matInput id="name" class="form-control" placeholder="Last Name" formControlName="lastNameFormControl" name="lastName">
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <input matInput id="name" class="form-control" placeholder="Usernmae" formControlName="userNameFormControl" name="userName" required>
+        <mat-hint>Required</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <input matInput id="name" class="form-control" placeholder="Email Address" formControlName="emailFormControl" name="email" required>
+        <mat-hint>Required</mat-hint>
+      </mat-form-field>
+
+    </form>
+
+  </div>
+</div>
