@@ -59,13 +59,64 @@ namespace DataPlane.Controllers
                 return BadRequest (ModelState);
             }
 
-            var user = _context.Users.Where(x => x.Id == id);
+            var user = _context.Users.SingleOrDefault(x => x.Id == id);
 
             if (user == null) {
                 return NotFound ();
             }
 
             return Ok (user);
-        } 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(AppUser user) {
+
+            try
+            {
+                if (!ModelState.IsValid) {
+                return BadRequest (ModelState);
+                }
+
+                var updatedUser = _context.AppUsers.SingleOrDefault(x => x.Id == user.Id);
+
+                if (updatedUser == null) {
+                    return NotFound();
+                }
+
+                updatedUser.PhoneNumber = user.PhoneNumber;
+                
+                updatedUser.FirstName = user.FirstName;
+                updatedUser.LastName = user.LastName;
+
+                if (updatedUser.UserName != user.UserName)
+                {
+                    if(_context.AppUsers.Any(x => x.UserName == user.UserName))
+                    {
+                        return BadRequest("Username is already taken.");
+                    }
+
+                    updatedUser.UserName = user.UserName;
+                }
+
+                if (updatedUser.Email != user.Email)
+                {
+                    if(_context.AppUsers.Any(x => x.Email == user.Email))
+                    {
+                        return BadRequest("Email address is already registered.");
+                    }
+
+                    updatedUser.Email = user.Email;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok (updatedUser);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
+        }
     }
 }
