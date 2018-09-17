@@ -4,6 +4,7 @@ import { Project } from '../../../models/project';
 import { ProjectType } from '../../../models/project-type';
 import { ProjectTypeService } from '../../../services/project-type/project-type.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { WorkspaceService } from '../../../services/workspace/workspace.service';
 
 @Component({
   selector: 'app-project-dialog',
@@ -13,18 +14,17 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 export class ProjectDialogComponent implements OnInit {
 
   public project: Project;
-  public projectTypes: ProjectType[];
-
   public selectedTypeValue: number;
 
   constructor(
     public dialogRef: MatDialogRef<ProjectDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Project,
-    public projectTypeService: ProjectTypeService) {
+    public projectTypeService: ProjectTypeService,
+    public workspaceService: WorkspaceService) {
 
-      if (data) {
-        this.project = data;
-      }
+    if (data) {
+      this.project = data;
+    }
   }
 
   projectFromGroup = new FormGroup({
@@ -47,7 +47,7 @@ export class ProjectDialogComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.getProjectTypes();
+    this.projectTypeService.refreshProjectTypes();
 
     if (this.project) {
 
@@ -75,18 +75,14 @@ export class ProjectDialogComponent implements OnInit {
     projectResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
     projectResult.repositoryUrl = this.projectFromGroup.controls['repositoryUrlFormControl'].value;
     projectResult.projectTypeId = this.projectFromGroup.controls['projectTypeFormControl'].value;
+    projectResult.workspace = this.workspaceService.currentWorkspace;
 
     return projectResult;
   }
 
-  getProjectTypes(): void {
-    this.projectTypeService.getProjectTypes()
-      .subscribe(projectTypes => this.projectTypes = projectTypes);
-  }
-
   getProjectTypeName(project: Project): string {
-    if (!project.projectTypeId || !this.projectTypes) { return; }
-    return this.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
+    if (!project.projectTypeId || !this.projectTypeService.projectTypes) { return; }
+    return this.projectTypeService.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
   }
 
 }
