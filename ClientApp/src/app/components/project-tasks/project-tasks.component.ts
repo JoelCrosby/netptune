@@ -12,12 +12,12 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
 
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.scss'],
+  selector: 'app-project-tasks',
+  templateUrl: './project-tasks.component.html',
+  styleUrls: ['./project-tasks.component.scss'],
   animations: [dropIn]
 })
-export class TasksComponent implements OnInit {
+export class ProjectTasksComponent implements OnInit {
 
   public exportInProgress = false;
 

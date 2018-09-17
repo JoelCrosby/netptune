@@ -10,10 +10,11 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ProjectTypeService {
 
-  public projectTypes: ProjectType[];
+  public projectTypes: ProjectType[] = [];
 
   getHeaders() {
-    return { headers: new HttpHeaders({
+    return {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + this.authService.token.token
       })
@@ -24,24 +25,28 @@ export class ProjectTypeService {
 
   refreshProjectTypes(): void {
     this.getProjectTypes()
-      .subscribe(projectTypes => this.projectTypes = projectTypes);
+      .subscribe((response: ProjectType[]) => {
+
+        this.projectTypes.splice(0, this.projectTypes.length);
+        this.projectTypes.push.apply(this.projectTypes, response);
+      });
   }
 
   getProjectTypes(): Observable<ProjectType[]> {
     const httpOptions = this.getHeaders();
 
     return this.http.get<ProjectType[]>(this.baseUrl + 'api/ProjectTypes', httpOptions)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   getProjectType(id: number): Observable<ProjectType> {
     const url = `${this.baseUrl}api/ProjectTypes/${id}`;
     return this.http.get<ProjectType>(url)
-    .pipe(
-      catchError(this.handleError)
-    );
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   addProjectType(projectType: ProjectType): Observable<ProjectType> {

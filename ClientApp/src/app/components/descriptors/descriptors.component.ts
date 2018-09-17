@@ -12,8 +12,6 @@ import { ProjectTypeService } from '../../services/project-type/project-type.ser
 })
 export class DescriptorsComponent implements OnInit {
 
-  public projectTypes: ProjectType[];
-
   public inputName: string;
   public inputDescription: string;
 
@@ -73,8 +71,7 @@ export class DescriptorsComponent implements OnInit {
   }
 
   getProjectTypes(): void {
-    this.projectTypeService.getProjectTypes()
-      .subscribe(projectTypes => this.projectTypes = projectTypes);
+    this.projectTypeService.refreshProjectTypes();
   }
 
   addProjectType(projectType: ProjectType): void {

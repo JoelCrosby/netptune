@@ -4,25 +4,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { trigger, style, transition, animate, query } from '@angular/animations';
+import { pullIn } from '../../animations';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  animations: [
-    trigger('pull-in', [
-      transition('* <=> *', [
-        query(':enter', [
-          style({ opacity: 0, transform: 'translateX(-18px)' }),
-          animate('320ms ease-out'),
-          style({ opacity: 1, transform: 'translateX(0px)' }),
-        ], { optional: true }),
-        query(':leave', animate('320ms ease-out', style({ opacity: 0, transform: 'translateX(18px)'})), {
-          optional: true
-        })
-      ])
-    ])
-  ]
+  animations: [pullIn]
 })
 export class RegisterComponent implements OnInit {
 

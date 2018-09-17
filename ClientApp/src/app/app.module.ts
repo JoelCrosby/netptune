@@ -7,10 +7,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppMaterialModule } from './app-material/app-material.module';
+import { AppMaterialModule } from './modules/app-material/app-material.module';
 
 // Components
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DescriptorsComponent } from './components/descriptors/descriptors.component';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
@@ -26,7 +26,7 @@ import { ProjectTypesComponent } from './components/project-types/project-types.
 import { ProjectsComponent } from './components/projects/projects.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { TasksComponent } from './components/tasks/tasks.component';
+import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
 import { UsersComponent } from './components/users/users.component';
 import { WorkspacesComponent } from './components/workspaces/workspaces.component';
 
@@ -51,7 +51,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     RegisterComponent,
     ProjectsComponent,
     WorkspacesComponent,
-    TasksComponent,
+    ProjectTasksComponent,
     UsersComponent,
     FlagsComponent,
     DescriptorsComponent,
@@ -84,7 +84,7 @@ import { ProfileComponent } from './components/profile/profile.component';
       { path: 'projects', component: ProjectsComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'workspaces', component: WorkspacesComponent },
-      { path: 'tasks', component: TasksComponent },
+      { path: 'tasks', component: ProjectTasksComponent },
       { path: 'flags', component: FlagsComponent },
       { path: 'users', component: UsersComponent },
       { path: 'login', component: LoginComponent },
