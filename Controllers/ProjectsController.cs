@@ -7,6 +7,7 @@ using DataPlane.Entites;
 using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using DataPlane.Models.Relationships;
 
 namespace DataPlane.Controllers
 {
@@ -109,11 +110,32 @@ namespace DataPlane.Controllers
             }
 
             var userId = _userManager.GetUserId(HttpContext.User);
+            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId);
+            var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
 
             project.CreatedByUserId = userId;
             project.OwnerId = userId;
 
             _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
+
+            // Need to explicily load the navigation propert context.
+            // other wise the workspace.WorkspaceUsers list will return null.
+            _context.Projects.Include(m => m.WorkspaceProjects);
+            _context.Projects.Include(m => m.ProjectUsers);
+
+            var workspaceRelationship = new WorkspaceProject();
+            workspaceRelationship.Project = project;
+            workspaceRelationship.Workspace = workspace;
+
+            project.WorkspaceProjects.Add(workspaceRelationship);
+
+            var userRelationship = new ProjectUser();
+            userRelationship.Project = project;
+            userRelationship.User = user;
+
+            project.ProjectUsers.Add(userRelationship);
+
             await _context.SaveChangesAsync();
 
             return Ok(project);
