@@ -18,19 +18,19 @@ namespace DataPlane.Models
 
         [ForeignKey("CreatedByUser")]
         public string CreatedByUserId { get; set; }
-        public virtual AppUser CreatedByUser { get; set;}
+        public virtual AppUser CreatedByUser { get; set; }
 
         [ForeignKey("ModifiedByUser")]
         public string ModifiedByUserId { get; set; }
-        public virtual AppUser ModifiedByUser { get; set;}
+        public virtual AppUser ModifiedByUser { get; set; }
 
         [ForeignKey("DeletedByUser")]
         public string DeletedByUserId { get; set; }
-        public virtual AppUser DeletedByUser { get; set;}
+        public virtual AppUser DeletedByUser { get; set; }
 
         [ForeignKey("Owner")]
         public string OwnerId { get; set; }
-        public virtual AppUser Owner { get; set;}
+        public virtual AppUser Owner { get; set; }
 
 
     }

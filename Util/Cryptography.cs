@@ -32,7 +32,7 @@ namespace DataPlane.Util
         public static PasswordSet GetPasswordHash(string password, string salt)
         {
             // get byte array from string
-            var bytes =Convert.FromBase64String(salt);
+            var bytes = Convert.FromBase64String(salt);
 
             return GetPasswordHash(password, bytes);
         }

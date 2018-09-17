@@ -29,7 +29,8 @@ namespace DataPlane.Controllers
         public IEnumerable<Project> GetProjects(int workspaceId)
         {
             _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
-            return _context.Projects.Where(x => x.WorkspaceId == workspaceId && x.IsDeleted != true);
+            return _context.Projects.Where(x => x.WorkspaceId == workspaceId && x.IsDeleted != true)
+                .Include(x => x.ProjectType).Include(x => x.Workspace).Include(x => x.Owner);
         }
 
         // GET: api/Projects/5

@@ -31,9 +31,8 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<ProjectTask> GetTasks(int workspaceId)
         {
-            _context.ProjectTasks.IncludeBaseObjects();
-            _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
-            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId).OrderBy(x => x.SortOrder);
+            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId).OrderBy(x => x.SortOrder)
+                .Include(x => x.Assignee).Include(x => x.Project).Include(x => x.Owner);
         }
 
         // GET: api/Tasks/5
@@ -97,6 +96,11 @@ namespace DataPlane.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (task.ProjectId == null || task.Project == null) 
+            {
+                return BadRequest("Could not deter,mine the project for task.");
             }
 
             // Load the relationship tables.

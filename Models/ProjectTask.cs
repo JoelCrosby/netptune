@@ -9,7 +9,7 @@ using DataPlane.Interfaces;
 
 namespace DataPlane.Models 
 {
-    public class ProjectTask : BaseModel , IBaseEntity
+    public class ProjectTask : BaseModel, IBaseEntity
     {
 
         // Primary key

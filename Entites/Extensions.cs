@@ -13,15 +13,18 @@ namespace DataPlane.Entites
 {
     public static class Extensions
     {
-        public static void IncludeBaseObjects<T>(this IQueryable<T> queryable) where T : class
+        public static IQueryable<T> IncludeBaseObjects<T>(this IQueryable<T> queryable) where T : class
         {
             if (queryable is IQueryable<IBaseEntity> dbSet)
             {
-                dbSet.Include(m => m.CreatedByUser);
-                dbSet.Include(m => m.ModifiedByUser);
-                dbSet.Include(m => m.Owner);
-                dbSet.Include(m => m.DeletedByUser);
+                return dbSet.Include(m => m.CreatedByUser)
+                        .Include(m => m.ModifiedByUser)
+                        .Include(m => m.Owner)
+                        .Include(m => m.DeletedByUser) as IQueryable<T>;
+
             }
+
+            return null;
         }
     }
 }
