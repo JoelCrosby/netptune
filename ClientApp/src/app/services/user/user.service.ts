@@ -22,7 +22,7 @@ export class UserService {
   refreshUsers(workspace: Workspace = this.workspaceService.currentWorkspace): void {
 
     this.getUsers(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe(appUsers => { this.appUsers = appUsers; console.log(appUsers); });
+      .subscribe(appUsers => { this.appUsers = appUsers; });
   }
 
   getHeaders() {
@@ -39,7 +39,7 @@ export class UserService {
     return this.http.get<AppUser[]>(this.baseUrl + 'api/AppUsers' + `?workspaceId=${workspace.workspaceId}`, httpOptions);
   }
 
-  getUser(userId: string): Observable<AppUser> {
+  getUser(userId: string = this.authService.token.userId): Observable<AppUser> {
     const httpOptions = this.getHeaders();
     return this.http.get<AppUser>(this.baseUrl + 'api/AppUsers/' + userId, httpOptions);
   }

@@ -1,0 +1,26 @@
+@import '../../../variables.scss';
+
+.fas {
+    margin-right: 1rem;
+}
+
+form {
+    margin-top: 4em;
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.form-spacer {
+    height: 2em;
+}
+
+.form-actions {
+    button {
+        float: right;
+    }
+}
+
+.mat-form-field {
+    margin-bottom: 1.4em;
+}

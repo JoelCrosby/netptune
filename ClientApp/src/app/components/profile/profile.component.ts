@@ -3,6 +3,8 @@ import { AuthService } from '../../services/auth/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { UserService } from '../../services/user/user.service';
+import { AppUser } from '../../models/appuser';
 
 @Component({
   selector: 'app-profile',
@@ -13,6 +15,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
+    public userService: UserService,
     public dialog: MatDialog) { }
 
   profileFromGroup = new FormGroup({
@@ -36,6 +39,18 @@ export class ProfileComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.userService.getUser().subscribe((user: AppUser) => {
+
+      this.profileFromGroup.controls['firstNameFormControl'].setValue(user.firstName);
+      this.profileFromGroup.controls['lastNameFormControl'].setValue(user.lasName);
+      this.profileFromGroup.controls['userNameFormControl'].setValue(user.userName);
+      this.profileFromGroup.controls['emailFormControl'].setValue(user.email);
+
+    });
+  }
+
+  saveChangesClicked(): void {
+
   }
 
   showLogOutModal(): void {

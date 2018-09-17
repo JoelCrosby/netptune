@@ -13,8 +13,8 @@ import { WorkspaceService } from '../workspace/workspace.service';
 })
 export class ProjectTaskService {
 
-  public tasks: ProjectTask[];
-  public myTasks: ProjectTask[];
+  public tasks: ProjectTask[] = [];
+  public myTasks: ProjectTask[] = [];
 
   constructor(
     private http: HttpClient,
@@ -25,12 +25,20 @@ export class ProjectTaskService {
 
   refreshTasks(workspace): void {
     this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe((tasks: ProjectTask[]) => {
-        this.tasks.slice(0, this.tasks.length);
-        this.tasks.concat(tasks);
+      .subscribe((response: ProjectTask[]) => {
 
-        this.myTasks = this.tasks.filter(x => x.ownerId === this.authService.token.userId);
+        this.tasks.splice(0, this.tasks.length);
+        this.tasks.push.apply(this.tasks, response);
+
+        this.refreshMyTasks();
       });
+  }
+
+  refreshMyTasks(): void {
+    this.myTasks.splice(0, this.myTasks.length);
+    this.myTasks.push.apply(
+      this.myTasks, this.tasks.filter(x => x.ownerId === this.authService.token.userId)
+    );
   }
 
   getHeaders() {
@@ -58,8 +66,6 @@ export class ProjectTaskService {
       task.workspace = this.workspaceService.currentWorkspace;
     }
 
-    console.log(task);
-
     return this.http.post<ProjectTask>(this.baseUrl + 'api/ProjectTasks', task, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -69,7 +75,7 @@ export class ProjectTaskService {
   updateTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.taskId}`;
+    const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
     return this.http.put<ProjectTask>(url, ProjectTask, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -79,7 +85,7 @@ export class ProjectTaskService {
   deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.taskId}`;
+    const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
     return this.http.delete<ProjectTask>(url, httpOptions)
       .pipe(
         catchError(this.handleError)

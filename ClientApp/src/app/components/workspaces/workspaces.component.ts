@@ -98,7 +98,6 @@ export class WorkspacesComponent implements OnInit {
   updateWorkspace(workspace: Workspace): void {
     this.workspaceService.updateWorkspace(workspace)
       .subscribe(result => {
-        console.log(result);
         workspace = result;
         this.workspaceService.refreshWorkspaces();
         this.alertsService.changeSuccessMessage('Workspace updated!');

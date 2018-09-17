@@ -13,7 +13,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 })
 export class ProjectsService {
 
-  public projects: Project[];
+  public projects: Project[] = [];
 
   constructor(
     private http: HttpClient,
@@ -25,9 +25,11 @@ export class ProjectsService {
   refreshProjects(workspace?: Workspace): void {
 
     this.getProjects(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe((projects: Project[]) => {
-        this.projects.slice(0, this.projects.length);
-        this.projects.concat(projects);
+      .subscribe((response: Project[]) => {
+
+        this.projects.splice(0, this.projects.length);
+        this.projects.push.apply(this.projects, response);
+
       });
   }
 

@@ -22,9 +22,9 @@ export class TaskDialogComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectTask,
     public projectsService: ProjectsService) {
 
-      if (data) {
-        this.task = data;
-      }
+    if (data) {
+      this.task = data;
+    }
   }
 
   projectFromGroup = new FormGroup({
@@ -64,7 +64,7 @@ export class TaskDialogComponent implements OnInit {
     const taskResult = new ProjectTask();
 
     if (this.task) {
-      taskResult.taskId = this.task.taskId;
+      taskResult.projectTaskId = this.task.projectTaskId;
     }
 
     taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;

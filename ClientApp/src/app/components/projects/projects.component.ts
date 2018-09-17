@@ -136,7 +136,6 @@ export class ProjectsComponent implements OnInit {
         newProject.name = result.name;
         newProject.description = result.description;
         newProject.projectTypeId = result.projectTypeId;
-        console.log('this.inputType: ' + result.projectTypeId);
         newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
         this.addProject(newProject);
       }

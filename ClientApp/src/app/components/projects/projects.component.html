@@ -2,7 +2,7 @@
   <div class="container-max">
 
     <div class="component-header bottom-border">
-      <h4>All Projects </h4>
+      <h4>All Projects</h4>
       <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
         <i class="fas fa-project-diagram"></i>
         New
@@ -10,7 +10,7 @@
     </div>
 
     <div *ngIf="!projectsService.projects">
-      <mat-progress-spinner mode="indeterminate">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
 
     <div class="container">

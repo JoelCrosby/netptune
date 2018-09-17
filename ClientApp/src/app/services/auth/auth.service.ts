@@ -101,7 +101,6 @@ export class AuthService {
         this.http.post<Token>(this.baseUrl + 'api/auth/Register', body, this.httpOptions)
             .subscribe(data => {
 
-                console.log(data);
                 this.token.email = data.email;
                 this.token.displayName = data.displayName;
                 this.token.expires = data.expires;

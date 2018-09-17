@@ -93,7 +93,6 @@ export class DescriptorsComponent implements OnInit {
   updateProjectType(projectType: ProjectType): void {
     this.projectTypeService.updateProjectType(projectType)
       .subscribe(result => {
-        console.log(result);
         projectType = result;
         this.getProjectTypes();
         this.alertsService.changeSuccessMessage('Workspace updated!');

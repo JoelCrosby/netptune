@@ -21,6 +21,8 @@ export class TasksComponent implements OnInit {
 
   public exportInProgress = false;
 
+  displayedColumns: string[] = ['name', 'description', 'owner', 'status'];
+
   selectedTask: ProjectTask;
 
   constructor(
@@ -42,7 +44,7 @@ export class TasksComponent implements OnInit {
   }
 
   trackById(index: number, task: ProjectTask) {
-    return task.taskId;
+    return task.projectTaskId;
   }
 
   addProjectTask(task: ProjectTask): void {
@@ -73,14 +75,24 @@ export class TasksComponent implements OnInit {
       });
   }
 
-  deleteProject(task: ProjectTask): void {
+  deleteProjectTask(task: ProjectTask): void {
     this.projectTaskService.deleteTask(task)
       .subscribe(taskResult => {
+
         this.projectTaskService.tasks.forEach((item, itemIndex) => {
-          if (item.taskId === taskResult.taskId) {
+          if (item.projectTaskId === taskResult.projectTaskId) {
             this.projectTaskService.tasks.splice(itemIndex, 1);
             this.alertsService.changeSuccessMessage('Task deleted!');
+
+            this.snackBar.open('Task Deleted.', 'Undo', {
+              duration: 3000,
+            });
           }
+        });
+
+      }, error => {
+        this.snackBar.open('An error occured while trying to delete Task' + error, null, {
+          duration: 2000,
         });
       });
   }
@@ -117,7 +129,7 @@ export class TasksComponent implements OnInit {
       if (this.selectedTask) {
 
         const updatedProjectTask = new ProjectTask();
-        updatedProjectTask.taskId = this.selectedTask.taskId;
+        updatedProjectTask.projectTaskId = this.selectedTask.projectTaskId;
         updatedProjectTask.name = result.name;
         updatedProjectTask.description = result.description;
         this.updateProject(updatedProjectTask);
@@ -148,19 +160,7 @@ export class TasksComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: ProjectTask) => {
 
       if (result) {
-        this.projectTaskService.deleteTask(task)
-          .subscribe((data: ProjectTask) => {
-            task = data;
-            this.refreshData();
-            this.snackBar.open('Task Deleted.', 'Undo', {
-              duration: 3000,
-            });
-
-          }, error => {
-            this.snackBar.open('An error occured while trying to delete Task' + error, null, {
-              duration: 2000,
-            });
-          });
+        this.deleteProjectTask(task);
       }
 
       this.clearModalValues();

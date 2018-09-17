@@ -26,8 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   getData(): void {
-    // this.register();
     const token = localStorage.getItem('auth_token');
-    console.log('token from local storage:' + token);
   }
 }
