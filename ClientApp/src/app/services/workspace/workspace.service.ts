@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, Subject } from 'rxjs';
 import { Workspace } from '../../models/workspace';
 import { catchError } from 'rxjs/operators';
 
@@ -10,20 +10,33 @@ import { catchError } from 'rxjs/operators';
 })
 export class WorkspaceService {
 
-  constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
+  public onWorkspaceChanged = new Subject<Workspace>();
 
-  public workspaces: Workspace[];
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    @Inject('BASE_URL') private baseUrl: string) {
+    this.authService.onLogout.subscribe(() => {
+      this.currentWorkspace = null;
+    });
+  }
+
+  public workspaces: Workspace[] = [];
 
   public get currentWorkspace(): Workspace {
     return JSON.parse(localStorage.getItem('currentWorkspace'));
   }
   public set currentWorkspace(value: Workspace) {
     localStorage.setItem('currentWorkspace', JSON.stringify(value));
+    this.onWorkspaceChanged.next(this.currentWorkspace);
   }
 
   refreshWorkspaces() {
     this.getWorkspaces()
-      .subscribe(workspaces => this.workspaces = workspaces);
+      .subscribe(workspaces => {
+        this.workspaces.splice(0, this.workspaces.length);
+        this.workspaces.push(...workspaces);
+      });
   }
 
   getHeaders() {

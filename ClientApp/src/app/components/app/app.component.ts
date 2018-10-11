@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService } from '../../services/alert/alert.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TransitionService } from '../../services/transition/transition.service';
+import { LayoutService } from '../../services/layout/layout.service';
+import { insertRemoveSidebar } from '../../animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    insertRemoveSidebar
+  ]
 })
 export class AppComponent implements OnInit {
 
@@ -16,13 +20,11 @@ export class AppComponent implements OnInit {
     public alertService: AlertService,
     public authServives: AuthService,
     private router: Router,
-    public workspaceService: WorkspaceService,
+    public layoutService: LayoutService,
     public transitionService: TransitionService) { }
 
   ngOnInit(): void {
-    if (this.authServives.isTokenExpired()) {
-      this.router.navigate(['/login']);
-    }
+
   }
 
   getData(): void {

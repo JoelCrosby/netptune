@@ -2,8 +2,6 @@ import { Component, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { trigger, style, transition, animate, query } from '@angular/animations';
 import { pullIn } from '../../animations';
 
 @Component({

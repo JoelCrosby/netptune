@@ -29,9 +29,11 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
 import { UsersComponent } from './components/users/users.component';
 import { WorkspacesComponent } from './components/workspaces/workspaces.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
+import { AuthGuardService } from './services/auth/auth-guard.service';
 import { ProjectTaskService } from './services/project-task/project-task.service';
 import { ProjectTypeService } from './services/project-type/project-type.service';
 import { ProjectsService } from './services/projects/projects.service';
@@ -39,7 +41,7 @@ import { TransitionService } from './services/transition/transition.service';
 import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { AlertService } from './services/alert/alert.service';
-import { ProfileComponent } from './components/profile/profile.component';
+import { LayoutService } from './services/layout/layout.service';
 
 @NgModule({
   declarations: [
@@ -80,29 +82,31 @@ import { ProfileComponent } from './components/profile/profile.component';
     AppMaterialModule,
     NgbModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: WorkspacesComponent, pathMatch: 'full' },
-      { path: 'projects', component: ProjectsComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'workspaces', component: WorkspacesComponent },
-      { path: 'tasks', component: ProjectTasksComponent },
-      { path: 'flags', component: FlagsComponent },
-      { path: 'users', component: UsersComponent },
+      { path: '', component: WorkspacesComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
-      { path: 'descriptors', component: DescriptorsComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: '**', component: WorkspacesComponent },
+      { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuardService] },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardService] },
+      { path: 'workspaces', component: WorkspacesComponent, canActivate: [AuthGuardService] },
+      { path: 'tasks', component: ProjectTasksComponent, canActivate: [AuthGuardService] },
+      { path: 'flags', component: FlagsComponent, canActivate: [AuthGuardService] },
+      { path: 'users', component: UsersComponent, canActivate: [AuthGuardService] },
+      { path: 'descriptors', component: DescriptorsComponent, canActivate: [AuthGuardService] },
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
+      { path: '**', redirectTo: 'workspaces' },
     ])
   ],
   providers: [
     AuthService,
+    AuthGuardService,
     ProjectsService,
     ProjectTypeService,
     WorkspaceService,
     AlertService,
     ProjectTaskService,
     TransitionService,
-    UserService
+    UserService,
+    LayoutService
   ],
   bootstrap: [AppComponent]
 })

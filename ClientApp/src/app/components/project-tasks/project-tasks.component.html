@@ -49,7 +49,7 @@
 
     </div>
 
-    <div class="container tasks-container">
+    <div class="container tasks-container" [hidden]='projectTaskService.tasks.length < 1'>
       <h4>Backlog</h4>
 
       <mat-accordion class="tasks-accordion" [@dropIn]="projectTaskService.tasks">

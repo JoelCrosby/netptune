@@ -26,3 +26,13 @@ export const pullIn = trigger('pullIn', [
     })
   ])
 ]);
+
+export const insertRemoveSidebar = trigger('insertRemoveSidebar', [
+  transition(':enter', [
+    style({ opacity: 0, transform: 'translateX(-320px)', width: '0px' }),
+    animate('320ms ease-out', style({ opacity: 1, transform: 'translateX(0px)', width: '320px' })),
+  ]),
+  transition(':leave', [
+    animate('320ms ease-out', style({ opacity: 0, transform: 'translateX(-320px)', width: '0px' }))
+  ])
+]);

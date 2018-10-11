@@ -3,8 +3,11 @@
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/dashboard"]'>
-                <i class="fas fa-columns"></i>Dashboard</a>
+                <i class="fas fa-home"></i>{{worskspaceService.currentWorkspace?.name}}</a>
         </li>
+    </ul>
+
+    <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/projects"]'>
                 <i class="fas fa-project-diagram"></i>Projects</a>

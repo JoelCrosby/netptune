@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Token } from '../../models/token';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,8 @@ export class AuthService {
 
     public userName: string;
     public email: string;
+
+    public onLogout = new Subject<void>();
 
     public httpOptions = {
         headers: new HttpHeaders({
@@ -130,6 +133,7 @@ export class AuthService {
         localStorage.removeItem('auth_token');
         this.userLoggedIn = false;
         this.userName = null;
+        this.onLogout.next();
         this.router.navigate(['/login']);
     }
 

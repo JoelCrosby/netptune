@@ -65,7 +65,7 @@ export class ProjectTypesComponent implements OnInit {
           .subscribe((data: ProjectType) => {
             projectType = data;
             this.projectTypeService.refreshProjectTypes();
-            this.snackBar.open('Workspace Removed.', 'Undo', {
+            this.snackBar.open('Project Type removed.', 'Undo', {
               duration: 3000,
             });
 

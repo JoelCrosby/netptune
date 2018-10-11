@@ -28,7 +28,7 @@ export class ProjectsService {
       .subscribe((response: Project[]) => {
 
         this.projects.splice(0, this.projects.length);
-        this.projects.push.apply(this.projects, response);
+        this.projects.push(...response);
 
       });
   }

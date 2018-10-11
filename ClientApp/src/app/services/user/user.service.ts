@@ -11,7 +11,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 })
 export class UserService {
 
-  public appUsers: AppUser[];
+  public appUsers: AppUser[] = [];
 
   constructor(
     private http: HttpClient,
@@ -22,7 +22,10 @@ export class UserService {
   refreshUsers(workspace: Workspace = this.workspaceService.currentWorkspace): void {
 
     this.getUsers(workspace ? workspace : this.workspaceService.currentWorkspace)
-      .subscribe(appUsers => { this.appUsers = appUsers; });
+      .subscribe(appUsers => {
+        this.appUsers.splice(0, this.appUsers.length);
+        this.appUsers.push(...appUsers);
+      });
   }
 
   getHeaders() {

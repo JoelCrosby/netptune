@@ -2,11 +2,11 @@
 
 <form #projectForm="ngForm">
 
-  <mat-form-field class="full-width">
+  <mat-form-field class="full-width" appearance="fill">  
     <input matInput id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='selectedName' required>
   </mat-form-field>
 
-  <mat-form-field class="full-width">
+  <mat-form-field class="full-width" appearance="fill">
     <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea" [(ngModel)]='selectedDescription'></textarea>
   </mat-form-field>
 
