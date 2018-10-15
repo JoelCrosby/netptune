@@ -21,7 +21,12 @@ export class ProjectTaskService {
     private authService: AuthService,
     private workspaceService: WorkspaceService,
     private userService: UserService,
-    @Inject('BASE_URL') private baseUrl: string) { }
+    @Inject('BASE_URL') private baseUrl: string) {
+    this.authService.onLogout.subscribe(() => {
+      this.tasks = [];
+      this.myTasks = [];
+    });
+  }
 
   refreshTasks(workspace): void {
     this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)

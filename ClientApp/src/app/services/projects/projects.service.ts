@@ -20,7 +20,11 @@ export class ProjectsService {
     private authService: AuthService,
     private workspaceService: WorkspaceService,
     private userService: UserService,
-    @Inject('BASE_URL') private baseUrl: string) { }
+    @Inject('BASE_URL') private baseUrl: string) {
+    this.authService.onLogout.subscribe(() => {
+      this.projects = [];
+    });
+  }
 
   refreshProjects(workspace?: Workspace): void {
 
