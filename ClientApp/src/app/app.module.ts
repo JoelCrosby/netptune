@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
 
 // Components
@@ -80,7 +79,6 @@ import { LayoutService } from './services/layout/layout.service';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppMaterialModule,
-    NgbModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: WorkspacesComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
       { path: 'login', component: LoginComponent },

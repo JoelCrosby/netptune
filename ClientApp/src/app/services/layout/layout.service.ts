@@ -15,7 +15,6 @@ export class LayoutService {
       this.showSidebar = workspace ? true : false;
     });
     this.authGuardService.onNotAuthenticated.subscribe(() => {
-      console.log('onNotAuthenticated');
       this.showSidebar = false;
     });
   }

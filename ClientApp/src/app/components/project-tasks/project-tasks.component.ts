@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { saveAs } from 'file-saver/FileSaver';
+import { saveAs } from 'file-saver';
 import { dropIn } from '../../animations';
 import { Project } from '../../models/project';
 import { ProjectTask } from '../../models/project-task';

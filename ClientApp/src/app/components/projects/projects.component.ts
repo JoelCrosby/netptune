@@ -4,7 +4,7 @@ import { ProjectsService } from '../../services/projects/projects.service';
 import { AlertService } from '../../services/alert/alert.service';
 import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { ProjectType } from '../../models/project-type';
-import { saveAs } from 'file-saver/FileSaver';
+import { saveAs } from 'file-saver';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';

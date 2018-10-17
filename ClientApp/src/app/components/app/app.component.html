@@ -10,6 +10,3 @@
     </div>
   </div>
 </div>
-
-<ngb-alert *ngIf="alertService.successMessage" type="success" (close)="alertService.successMessage = null">{{ alertService.successMessage }}</ngb-alert>
-<ngb-alert *ngIf="alertService.errorMessage" type="danger" (close)="alertService.errorMessage = null">{{ alertService.errorMessage }}</ngb-alert>
