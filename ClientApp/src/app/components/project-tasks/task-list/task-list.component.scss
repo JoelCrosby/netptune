@@ -1,0 +1,28 @@
+@import '../../../../variables.scss';
+
+.input-group-prepend {
+    span,
+    label {
+        width: 10rem;
+    }
+}
+
+mat-divider {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.mat-expansion-panel-header-title {
+    flex-grow: 1 !important;
+}
+
+.mat-expansion-panel-header-description {
+    flex-grow: unset !important;
+}
+
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+    border: solid 1px #e2e2e2;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-bottom: 2px;
+}

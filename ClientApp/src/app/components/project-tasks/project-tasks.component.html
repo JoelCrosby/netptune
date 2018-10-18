@@ -16,81 +16,14 @@
     <div class="container tasks-container" [hidden]='projectTaskService.myTasks.length < 1'>
       <h4>My Tasks</h4>
 
-      <mat-accordion class="tasks-accordion" [@dropIn]="projectTaskService.myTasks">
-        <mat-expansion-panel *ngFor="let task of projectTaskService.myTasks; let i=index; trackBy:trackById;">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{ task.name }}
-            </mat-panel-title>
-            <mat-panel-description>
-              {{ task.description }}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          
-          <div class="card-chips">
-            <mat-chip-list>
-              <mat-chip>Owner {{ task.owner?.userName }}</mat-chip>
-              <mat-chip>Updated {{ task.updatedAt | date }}</mat-chip>
-              <mat-chip>Created {{ task.createdAt | date }}</mat-chip>
-            </mat-chip-list>
-          </div>
-
-          <mat-action-row>
-            <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
-              Edit
-            </button>
-            <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
-              Delete
-            </button>
-          </mat-action-row>
-
-        </mat-expansion-panel>
-      </mat-accordion>
+      <app-task-list [tasks]='projectTaskService.myTasks'></app-task-list>
 
     </div>
 
     <div class="container tasks-container" [hidden]='projectTaskService.tasks.length < 1'>
       <h4>Backlog</h4>
 
-      <mat-accordion class="tasks-accordion" [@dropIn]="projectTaskService.tasks">
-        <mat-expansion-panel *ngFor="let task of projectTaskService.tasks; let i=index; trackBy:trackById;">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{ task.name }}
-            </mat-panel-title>
-            <mat-panel-description>
-                <mat-chip-list>
-                <mat-chip color="primary">
-                  {{ task.project.name }}
-                </mat-chip>
-                <mat-chip color="accent">
-                    {{ task.assignee.userName }}
-                  </mat-chip>
-              </mat-chip-list>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          
-          <p>{{ task.description }}</p>
-
-          <div class="card-chips">
-            <mat-chip-list>
-              <mat-chip>Owner {{ task.owner?.userName }}</mat-chip>
-              <mat-chip>Updated {{ task.updatedAt | date }}</mat-chip>
-              <mat-chip>Created {{ task.createdAt | date }}</mat-chip>
-            </mat-chip-list>
-          </div>
-
-          <mat-action-row>
-            <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
-              Edit
-            </button>
-            <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
-              Delete
-            </button>
-          </mat-action-row>
-
-        </mat-expansion-panel>
-      </mat-accordion>      
+      <app-task-list [tasks]='projectTaskService.tasks'></app-task-list>
 
     </div>
 

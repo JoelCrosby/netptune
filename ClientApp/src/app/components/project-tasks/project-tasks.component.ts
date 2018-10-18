@@ -14,8 +14,7 @@ import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.componen
 @Component({
   selector: 'app-project-tasks',
   templateUrl: './project-tasks.component.html',
-  styleUrls: ['./project-tasks.component.scss'],
-  animations: [dropIn]
+  styleUrls: ['./project-tasks.component.scss']
 })
 export class ProjectTasksComponent implements OnInit {
 
@@ -43,10 +42,6 @@ export class ProjectTasksComponent implements OnInit {
     this.projectTaskService.refreshTasks(this.workspaceService.currentWorkspace);
   }
 
-  trackById(index: number, task: ProjectTask) {
-    return task.projectTaskId;
-  }
-
   addProjectTask(task: ProjectTask): void {
     this.projectTaskService.addTask(task)
       .subscribe((taskResult) => {
@@ -66,111 +61,29 @@ export class ProjectTasksComponent implements OnInit {
       });
   }
 
-  updateProject(task: ProjectTask): void {
-    this.projectTaskService.updateTask(task)
-      .subscribe(result => {
-        task = result;
-        this.refreshData();
-        this.alertsService.changeSuccessMessage('Task updated!');
-      });
-  }
-
-  deleteProjectTask(task: ProjectTask): void {
-    this.projectTaskService.deleteTask(task)
-      .subscribe(taskResult => {
-
-        this.projectTaskService.tasks.forEach((item, itemIndex) => {
-          if (item.projectTaskId === taskResult.projectTaskId) {
-            this.projectTaskService.tasks.splice(itemIndex, 1);
-            this.alertsService.changeSuccessMessage('Task deleted!');
-
-            this.snackBar.open('Task Deleted.', 'Undo', {
-              duration: 3000,
-            });
-          }
-        });
-
-      }, error => {
-        this.snackBar.open('An error occured while trying to delete Task' + error, null, {
-          duration: 2000,
-        });
-      });
-  }
-
   showAddModal(): void {
     this.open();
   }
 
-  showUpdateModal(task: ProjectTask): void {
-    if (task == null) { return; }
-
-    this.selectedTask = task;
-    this.open(this.selectedTask);
-  }
-
-  showDeleteModal(task: ProjectTask): void {
-    if (task == null) { return; }
-
-    this.selectedTask = task;
-    this.openConfirmationDialog(this.selectedTask);
-  }
-
-  open(task?: ProjectTask): void {
+  open(): void {
 
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '600px',
-      data: task
     });
 
     dialogRef.afterClosed().subscribe((result: Project) => {
 
       if (!result) { return; }
 
-      if (this.selectedTask) {
+      const newProject = new ProjectTask();
+      newProject.name = result.name;
+      newProject.description = result.description;
+      newProject.projectId = result.projectId;
+      newProject.project = this.projectsService.projects.find(x => x.projectId === result.projectId);
 
-        const updatedProjectTask = new ProjectTask();
-        updatedProjectTask.projectTaskId = this.selectedTask.projectTaskId;
-        updatedProjectTask.name = result.name;
-        updatedProjectTask.description = result.description;
-        this.updateProject(updatedProjectTask);
-      } else {
-        const newProject = new ProjectTask();
-        newProject.name = result.name;
-        newProject.description = result.description;
-        newProject.projectId = result.projectId;
-        newProject.project = this.projectsService.projects.find(x => x.projectId === result.projectId);
-        this.addProjectTask(newProject);
-      }
-
-      this.clearModalValues();
-    });
-  }
-
-  openConfirmationDialog(task: ProjectTask) {
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '600px',
-      data: {
-        title: 'Remove Task',
-        content: `Are you sure you wish to remove ${task.name}?`,
-        confirm: 'Remove'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result: ProjectTask) => {
-
-      if (result) {
-        this.deleteProjectTask(task);
-      }
-
-      this.clearModalValues();
+      this.addProjectTask(newProject);
 
     });
-  }
-
-  clearModalValues(): void {
-    // finally clear selecetd project
-    this.selectedTask = null;
   }
 
   exportProjects(): void {

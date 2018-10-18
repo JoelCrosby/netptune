@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
+import { DragulaModule } from 'ng2-dragula';
 
 // Components
 import { AppComponent } from './components/app/app.component';
@@ -41,6 +42,7 @@ import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { AlertService } from './services/alert/alert.service';
 import { LayoutService } from './services/layout/layout.service';
+import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,8 @@ import { LayoutService } from './services/layout/layout.service';
     ConfirmDialogComponent,
     ProjectTypeDialogComponent,
     TaskDialogComponent,
-    ProfileComponent
+    ProfileComponent,
+    TaskListComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
@@ -79,6 +82,7 @@ import { LayoutService } from './services/layout/layout.service';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppMaterialModule,
+    DragulaModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: WorkspacesComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
