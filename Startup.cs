@@ -1,44 +1,49 @@
+using System.Diagnostics;
+using System.Text;
+
+using DataPlane.Entites;
+using DataPlane.Models;
+using DataPlane.Services;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using DataPlane.Entites;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using DataPlane.Services;
-using Microsoft.AspNetCore.Http;
-using DataPlane.Models;
 
 namespace DataPlane
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup (IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration
+        {
+            get;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices (IServiceCollection services)
         {
 
-            services.AddDbContext<ProjectsContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
+            services.AddDbContext<ProjectsContext> (options =>
+                options.UseSqlServer (Configuration.GetConnectionString ("ProjectsDatabase")));
 
-            services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<ProjectsContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, IdentityRole> ()
+                .AddEntityFrameworkStores<ProjectsContext> ()
+                .AddDefaultTokenProviders ();
 
-            services.Configure<IdentityOptions>(options =>
+            services.Configure<IdentityOptions> (options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 8;
@@ -47,75 +52,75 @@ namespace DataPlane
                 options.Password.RequireUppercase = false;
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer (options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = "DataPlane.com",
-                        ValidAudience = "DataPlane.com",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "DataPlane.com",
+                    ValidAudience = "DataPlane.com",
+                    IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (Configuration["SecurityKey"]))
                     };
                 });
 
-            services.AddTransient<UserResolverService>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<UserResolverService> ();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor> ();
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
+            services.AddSpaStaticFiles (configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                    .AddJsonOptions(
-                        options => options.SerializerSettings.ReferenceLoopHandling = 
-                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    );
+            services.AddMvc ()
+                .SetCompatibilityVersion (CompatibilityVersion.Version_2_1)
+                .AddJsonOptions (
+                    options => options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProjectsContext identityDbContext)
+        public void Configure (IApplicationBuilder app, IHostingEnvironment env, ProjectsContext identityDbContext)
         {
-            app.UseAuthentication();
+            app.UseAuthentication ();
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment ())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage ();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                app.UseExceptionHandler ("/Error");
+                app.UseHsts ();
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            app.UseHttpsRedirection ();
+            app.UseStaticFiles ();
+            app.UseSpaStaticFiles ();
 
-            app.UseMvc(routes =>
+            app.UseMvc (routes =>
             {
-                routes.MapRoute(
+                routes.MapRoute (
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
+            app.UseSpa (spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (env.IsDevelopment ())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseAngularCliServer (npmScript: "start");
                 }
             });
 

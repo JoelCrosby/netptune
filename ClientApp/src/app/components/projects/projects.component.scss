@@ -76,6 +76,13 @@ mat-card {
     margin-right: 0.6rem;
 }
 
+.mat-card:not([class*=mat-elevation-z]) {
+    border: solid 1px #e2e2e2;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-bottom: 2px;
+}
+
 mat-card-title {
     display: flex;
     flex-direction: row;

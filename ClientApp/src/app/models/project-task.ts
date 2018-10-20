@@ -21,6 +21,7 @@ export class ProjectTask extends Basemodel {
 }
 
 export enum ProjectTaskStatus {
+    New,
     Complete,
     InProgress,
     OnHold,

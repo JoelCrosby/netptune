@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ProjectTask } from '../../../models/project-task';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ProjectTask, ProjectTaskStatus } from '../../../models/project-task';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
 import { Project } from '../../../models/project';
@@ -8,19 +8,28 @@ import { ProjectsService } from '../../../services/projects/projects.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { AlertService } from '../../../services/alert/alert.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
-import { dropIn } from '../../../animations';
+import { dropIn, toggleChip } from '../../../animations';
+import { Subscription } from 'rxjs';
+import { DragulaService } from 'ng2-dragula';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
-  animations: [dropIn]
+  animations: [dropIn, toggleChip]
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
 
   @Input() tasks: ProjectTask[];
+  @Input() dragGroupName: string;
 
   public selectedTask: ProjectTask;
+
+  subs = new Subscription();
+
+  Complete = ProjectTaskStatus.Complete;
+  InProgress = ProjectTaskStatus.InProgress;
+  Blocked = ProjectTaskStatus.OnHold;
 
   constructor(
     public dialog: MatDialog,
@@ -29,9 +38,22 @@ export class TaskListComponent implements OnInit {
     private projectsService: ProjectsService,
     private workspaceService: WorkspaceService,
     private alertsService: AlertService,
-  ) { }
+    private dragulaService: DragulaService,
+    private change: ChangeDetectorRef
+  ) {
+
+  }
 
   ngOnInit() {
+    this.subs.add(this.dragulaService.drop(this.dragGroupName)
+      .subscribe(() => {
+        this.UpdateSortOrder();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   trackById(index: number, task: ProjectTask) {
@@ -61,13 +83,45 @@ export class TaskListComponent implements OnInit {
     this.openConfirmationDialog(this.selectedTask);
   }
 
-  updateProject(task: ProjectTask): void {
-    this.projectTaskService.updateTask(task)
-      .subscribe(result => {
+  async updateProjectTask(task: ProjectTask): Promise<ProjectTask> {
+
+    try {
+      const result = await this.projectTaskService.updateTask(task).toPromise();
+
+      if (result) {
         task = result;
-        this.refreshData();
+        this.change.detectChanges();
         this.alertsService.changeSuccessMessage('Task updated!');
+        return task;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      this.snackBar.open('An error occured while trying to update the task. ' + error, null, {
+        duration: 2000,
       });
+      return null;
+    }
+
+  }
+
+  UpdateSortOrder(): void {
+    this.projectTaskService.updateSortOrder(this.tasks)
+      .subscribe((responce: ProjectTask[]) => {
+
+      });
+  }
+
+  async statusClicked(task: ProjectTask, status: ProjectTaskStatus): Promise<void> {
+
+    const oldStatus = task.status;
+
+    task.status = status;
+    const result = await this.updateProjectTask(task);
+
+    if (!result) {
+      task.status = oldStatus;
+    }
   }
 
   open(task?: ProjectTask): void {
@@ -87,7 +141,7 @@ export class TaskListComponent implements OnInit {
         updatedProjectTask.projectTaskId = this.selectedTask.projectTaskId;
         updatedProjectTask.name = result.name;
         updatedProjectTask.description = result.description;
-        this.updateProject(updatedProjectTask);
+        this.updateProjectTask(updatedProjectTask);
       } else {
         const newProject = new ProjectTask();
         newProject.name = result.name;

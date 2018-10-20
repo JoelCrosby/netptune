@@ -2,6 +2,7 @@ namespace DataPlane.Enums
 {
     public enum ProjectTaskStatus
     {
+        New,
         Complete,
         InProgress,
         OnHold,

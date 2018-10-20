@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ProjectTask } from '../../models/project-task';
+import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from '../user/user.service';
@@ -14,7 +14,14 @@ import { WorkspaceService } from '../workspace/workspace.service';
 export class ProjectTaskService {
 
   public tasks: ProjectTask[] = [];
-  public myTasks: ProjectTask[] = [];
+
+  public get myTasks(): ProjectTask[] {
+    return this.tasks.filter(x => x.assigneeId === this.authService.token.userId);
+  }
+
+  public get completedTasks(): ProjectTask[] {
+    return this.tasks.filter(x => x.status === ProjectTaskStatus.Complete);
+  }
 
   constructor(
     private http: HttpClient,
@@ -24,7 +31,6 @@ export class ProjectTaskService {
     @Inject('BASE_URL') private baseUrl: string) {
     this.authService.onLogout.subscribe(() => {
       this.tasks = [];
-      this.myTasks = [];
     });
   }
 
@@ -35,15 +41,7 @@ export class ProjectTaskService {
         this.tasks.splice(0, this.tasks.length);
         this.tasks.push.apply(this.tasks, response);
 
-        this.refreshMyTasks();
       });
-  }
-
-  refreshMyTasks(): void {
-    this.myTasks.splice(0, this.myTasks.length);
-    this.myTasks.push.apply(
-      this.myTasks, this.tasks.filter(x => x.ownerId === this.authService.token.userId)
-    );
   }
 
   getHeaders() {
@@ -81,7 +79,7 @@ export class ProjectTaskService {
     const httpOptions = this.getHeaders();
 
     const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
-    return this.http.put<ProjectTask>(url, ProjectTask, httpOptions)
+    return this.http.put<ProjectTask>(url, task, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -92,6 +90,16 @@ export class ProjectTaskService {
 
     const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
     return this.http.delete<ProjectTask>(url, httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateSortOrder(tasks: ProjectTask[]): Observable<ProjectTask[]> {
+    const httpOptions = this.getHeaders();
+
+    const url = `${this.baseUrl}api/ProjectTasks/UpdateSortOrder`;
+    return this.http.post<ProjectTask[]>(url, tasks, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

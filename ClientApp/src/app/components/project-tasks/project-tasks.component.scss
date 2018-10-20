@@ -1,5 +1,25 @@
 @import '../../../variables.scss';
 
+#task-expansion {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+#completed-container {
+    background-color: #1a0a9e21;
+    padding-top: 0.1rem;
+    border-radius: 16px;
+}
+
+.container {
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
 .main {
     height: 90%;
     position: relative;
@@ -64,4 +84,10 @@ mat-divider {
 
 h4 {
     font-weight: 100;
+}
+
+#container-header {
+    margin-left: 2rem; 
+    color: rebeccapurple;
+    cursor: pointer;
 }

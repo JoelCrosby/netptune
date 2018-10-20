@@ -1,5 +1,15 @@
 @import '../../../../variables.scss';
 
+#complete {
+    color: green;
+}
+#in-progress {
+    color: mediumslateblue;
+}
+#blocked {
+    color: red;
+}
+
 .input-group-prepend {
     span,
     label {
@@ -7,9 +17,23 @@
     }
 }
 
+.fas {
+    margin-right: 0.6rem;
+}
+
 mat-divider {
     margin-top: 2em;
     margin-bottom: 2em;
+}
+
+.mat-chip.mat-standard-chip {
+    background-color: transparent;
+    color: rgba(0,0,0,.87);
+    white-space: nowrap;
+}
+
+.mat-action-row {
+    justify-content: space-between;
 }
 
 .mat-expansion-panel-header-title {

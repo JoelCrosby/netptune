@@ -1,21 +1,21 @@
-<mat-accordion class="tasks-accordion" [@dropIn]="tasks" dragula="DRAGULA_FACTS">
+<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks">
   <mat-expansion-panel *ngFor="let task of tasks; let i=index; trackBy:trackById;">
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{ task.name }}
       </mat-panel-title>
       <mat-panel-description>
-          <mat-chip-list>
+        <mat-chip-list>
           <mat-chip color="primary">
             {{ task.project.name }}
           </mat-chip>
           <mat-chip color="accent">
-              {{ task.assignee.userName }}
-            </mat-chip>
+            {{ task.assignee.userName }}
+          </mat-chip>
         </mat-chip-list>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    
+
     <p>{{ task.description }}</p>
 
     <div class="card-chips">
@@ -27,13 +27,34 @@
     </div>
 
     <mat-action-row>
-      <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
-        Edit
-      </button>
-      <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
-        Delete
-      </button>
+
+      <div class="status-chips">
+        <mat-chip-list>
+          <mat-chip id="complete" (click)='statusClicked(task, Complete)' *ngIf="task.status !== Complete" @toggleChip>
+            <i class="fas fa-check"></i>
+            Mark Complete
+          </mat-chip>
+          <mat-chip id="in-progress"  (click)='statusClicked(task, InProgress)' *ngIf="task.status !== InProgress" @toggleChip>
+              <i class="fas fa-spinner"></i>
+            In Progress
+          </mat-chip>
+          <mat-chip id="blocked"  (click)='statusClicked(task, Blocked)' *ngIf="task.status !== Blocked" @toggleChip>
+            <i class="fas fa-minus-circle"></i>
+            Blocked
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+
+      <div class="actions">
+        <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
+          Edit
+        </button>
+        <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
+          Delete
+        </button>
+      </div>
+
     </mat-action-row>
 
   </mat-expansion-panel>
-</mat-accordion>      
+</mat-accordion>

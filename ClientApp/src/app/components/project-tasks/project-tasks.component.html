@@ -13,24 +13,35 @@
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
 
-    <div class="container tasks-container" [hidden]='projectTaskService.myTasks.length < 1'>
-      <h4>My Tasks</h4>
+    <mat-accordion class="tasks-accordion" [multi]='true' [hideToggle]='false'>
 
-      <app-task-list [tasks]='projectTaskService.myTasks'></app-task-list>
+      <div class="container tasks-container" [hidden]='projectTaskService.myTasks.length < 1'>
+        <h4 (click)='myTaskspanel.toggle()' id="container-header">My Tasks</h4>
+        <mat-expansion-panel [expanded]='true' id="task-expansion" #myTaskspanel>
+          <app-task-list [tasks]='projectTaskService.myTasks' dragGroupName="MY_PROJECT_TASKS"></app-task-list>
+        </mat-expansion-panel>
+      </div>
 
-    </div>
+      <div class="container tasks-container" [hidden]='projectTaskService.completedTasks.length < 1' id="completed-container">
+        <h4 (click)='completedTasksspanel.toggle()' id="container-header">Completed Tasks</h4>
+        <mat-expansion-panel [expanded]='true' id="task-expansion" #completedTasksspanel>
+          <app-task-list [tasks]='projectTaskService.myTasks' dragGroupName="MY_PROJECT_TASKS"></app-task-list>
+        </mat-expansion-panel>
+      </div>
 
-    <div class="container tasks-container" [hidden]='projectTaskService.tasks.length < 1'>
-      <h4>Backlog</h4>
+      <div class="container tasks-container" [hidden]='projectTaskService.tasks.length < 1'>
+        <h4 (click)='taskspanel.toggle()' id="container-header">Backlog</h4>
+        <mat-expansion-panel [expanded]='true' id="task-expansion" #taskspanel>
+          <app-task-list [tasks]='projectTaskService.tasks' dragGroupName="PROJECT_TASKS"></app-task-list>
+        </mat-expansion-panel>
+      </div>
 
-      <app-task-list [tasks]='projectTaskService.tasks'></app-task-list>
+      <button mat-button *ngIf="projectTaskService.tasks && projectTaskService.tasks.length > 0" type="button" class="btn btn-light float-right"
+        id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
+        Export Projects
+      </button>
 
-    </div>
-
-    <button mat-button *ngIf="projectTaskService.tasks && projectTaskService.tasks.length > 0" type="button" class="btn btn-light float-right"
-      id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
-      Export Projects
-    </button>
+    </mat-accordion>
 
   </div>
 </div>

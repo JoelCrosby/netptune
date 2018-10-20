@@ -36,3 +36,13 @@ export const insertRemoveSidebar = trigger('insertRemoveSidebar', [
     animate('320ms ease-out', style({ opacity: 0, transform: 'translateX(-320px)', width: '0px' }))
   ])
 ]);
+
+export const toggleChip = trigger('toggleChip', [
+  transition(':enter', [
+    style({ opacity: 0, width: 0, height: '*' }),
+    animate('320ms ease-out', style({ opacity: 1, width: '*', height: '*' })),
+  ]),
+  transition(':leave', [
+    animate('320ms ease-out', style({ opacity: 0, width: 0, height: '*' }))
+  ])
+]);

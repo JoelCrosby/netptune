@@ -8,6 +8,7 @@ using DataPlane.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using DataPlane.Interfaces;
+using System;
 
 namespace DataPlane.Controllers
 {
@@ -86,11 +87,12 @@ namespace DataPlane.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(task);
         }
 
         // POST: api/Tasks
         [HttpPost]
+        [Route("PostTask")]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
             if (!ModelState.IsValid)
@@ -160,6 +162,27 @@ namespace DataPlane.Controllers
         private bool TaskExists(int id)
         {
             return _context.ProjectTasks.Any(e => e.ProjectTaskId == id);
+        }
+
+        [HttpPost]
+        [Route("UpdateSortOrder")]
+        public async Task<IActionResult> UpdateSortOrder(ProjectTask[] tasks)
+        {
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                tasks[i].SortOrder = i;
+                _context.Entry(tasks[i]).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(tasks);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
