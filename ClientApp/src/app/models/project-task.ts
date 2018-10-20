@@ -26,5 +26,6 @@ export enum ProjectTaskStatus {
     InProgress,
     OnHold,
     UnAssigned,
-    AwaitingClassification
+    AwaitingClassification,
+    InActive
 }

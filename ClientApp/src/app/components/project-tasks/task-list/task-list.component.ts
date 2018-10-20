@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dia
 import { dropIn, toggleChip } from '../../../animations';
 import { Subscription } from 'rxjs';
 import { DragulaService } from 'ng2-dragula';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-task-list',
@@ -34,12 +35,12 @@ export class TaskListComponent implements OnInit, OnDestroy {
   constructor(
     public dialog: MatDialog,
     public snackBar: MatSnackBar,
+    public userService: UserService,
     public projectTaskService: ProjectTaskService,
     private projectsService: ProjectsService,
     private workspaceService: WorkspaceService,
     private alertsService: AlertService,
-    private dragulaService: DragulaService,
-    private change: ChangeDetectorRef
+    private dragulaService: DragulaService
   ) {
 
   }
@@ -83,6 +84,19 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.openConfirmationDialog(this.selectedTask);
   }
 
+  getStatusClass(task: ProjectTask): string {
+    switch (task.status) {
+      case ProjectTaskStatus.Complete:
+        return 'fas fa-check completed';
+      case ProjectTaskStatus.InProgress:
+        return 'fas fa-minus in-progress';
+      case ProjectTaskStatus.OnHold:
+        return 'fas fa-minus-circle blocked';
+      default:
+        return '';
+    }
+  }
+
   async updateProjectTask(task: ProjectTask): Promise<ProjectTask> {
 
     try {
@@ -90,7 +104,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
       if (result) {
         task = result;
-        this.change.detectChanges();
+        console.log('refreshing tasks');
+        this.projectTaskService.refreshTasks();
         this.alertsService.changeSuccessMessage('Task updated!');
         return task;
       } else {

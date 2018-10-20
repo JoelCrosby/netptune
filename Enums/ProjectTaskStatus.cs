@@ -7,6 +7,7 @@ namespace DataPlane.Enums
         InProgress,
         OnHold,
         UnAssigned,
-        AwaitingClassification
+        AwaitingClassification,
+        InActive
     }
 }

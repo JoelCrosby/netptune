@@ -92,7 +92,6 @@ namespace DataPlane.Controllers
 
         // POST: api/Tasks
         [HttpPost]
-        [Route("PostTask")]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
             if (!ModelState.IsValid)

@@ -5,6 +5,7 @@ import { AppUser } from '../../models/appuser';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { WorkspaceService } from '../workspace/workspace.service';
+import { UserSettings } from '../../models/user-settings';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 export class UserService {
 
   public appUsers: AppUser[] = [];
+  public settings = new UserSettings();
 
   constructor(
     private http: HttpClient,

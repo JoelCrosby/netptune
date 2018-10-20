@@ -10,6 +10,41 @@
     color: red;
 }
 
+#task-icon {
+    padding: 6px;
+    border-radius: 4px;
+    width: 16px;
+    text-align: center;
+    transition: all 400ms;
+}
+
+.completed {
+    color: darkgreen;
+    background-color: #90eec3;
+}
+
+#info-chip {
+    color: #969696;
+    height: 1.2rem;
+    background-color: #f4f4f4;
+    font-weight: 100;
+}
+
+.in-progress {
+    color: darkblue;
+    background-color: lightblue;
+}
+
+.blocked {
+    color: darkred;
+    background-color: pink;
+}
+
+.title {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 .input-group-prepend {
     span,
     label {
@@ -24,6 +59,10 @@
 mat-divider {
     margin-top: 2em;
     margin-bottom: 2em;
+}
+
+.mat-expansion-panel-header-title {
+    margin: auto;
 }
 
 .mat-chip.mat-standard-chip {

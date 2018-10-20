@@ -15,13 +15,9 @@ export class ProjectTaskService {
 
   public tasks: ProjectTask[] = [];
 
-  public get myTasks(): ProjectTask[] {
-    return this.tasks.filter(x => x.assigneeId === this.authService.token.userId);
-  }
-
-  public get completedTasks(): ProjectTask[] {
-    return this.tasks.filter(x => x.status === ProjectTaskStatus.Complete);
-  }
+  public myTasks: ProjectTask[] = [];
+  public completedTasks: ProjectTask[] = [];
+  public backlogTasks: ProjectTask[] = [];
 
   constructor(
     private http: HttpClient,
@@ -34,12 +30,16 @@ export class ProjectTaskService {
     });
   }
 
-  refreshTasks(workspace): void {
+  refreshTasks(workspace = this.workspaceService.currentWorkspace): void {
     this.getTasks(workspace ? workspace : this.workspaceService.currentWorkspace)
       .subscribe((response: ProjectTask[]) => {
 
         this.tasks.splice(0, this.tasks.length);
         this.tasks.push.apply(this.tasks, response);
+
+        this.myTasks = this.tasks.filter(x => x.assigneeId === this.authService.token.userId && x.status !== ProjectTaskStatus.Complete);
+        this.completedTasks = this.tasks.filter(x => x.status === ProjectTaskStatus.Complete);
+        this.backlogTasks = this.tasks.filter(X => X.status === ProjectTaskStatus.InActive);
 
       });
   }
