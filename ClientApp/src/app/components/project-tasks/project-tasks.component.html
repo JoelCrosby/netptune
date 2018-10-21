@@ -3,8 +3,8 @@
 
     <div class="component-header bottom-border">
       <h4>Tasks</h4>
-      <button mat-button type="button" class="new-button float-right" (click)='showAddModal()'>
-        <i class="fas fa-project-diagram"></i>
+      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showAddModal()'>
+        <i class="fas fa-plus"></i>
         New
       </button>
     </div>
@@ -15,37 +15,37 @@
 
     <mat-accordion class="tasks-accordion" [multi]='true' [hideToggle]='false'>
 
-      <div class="container tasks-container" [hidden]='projectTaskService.myTasks.length < 1'>
+      <div class="container tasks-container" [hidden]='myTasks.length === 0'>
         <h4 (click)='myTaskspanel.toggle()' id="container-header">My Tasks</h4>
         <mat-expansion-panel [expanded]='true' id="task-expansion" #myTaskspanel>
-          <app-task-list [tasks]='projectTaskService.myTasks' dragGroupName="MY_PROJECT_TASKS"></app-task-list>
+          <app-task-list [(tasks)]='myTasks' dragGroupName="PROJECT_TASKS" [identifier]="inProgressStatus"></app-task-list>
         </mat-expansion-panel>
       </div>
 
-      <div class="container tasks-container" [hidden]='projectTaskService.completedTasks.length < 1' id="completed-container">
+      <div class="container tasks-container" [hidden]='completedTasks.length === 0' id="completed-container">
         <h4 (click)='completedTasksspanel.toggle()' id="container-header">
           <i class="fas fa-clipboard-check"></i>
           Completed Tasks
         </h4>
         <mat-expansion-panel [expanded]='true' id="task-expansion" #completedTasksspanel>
-          <app-task-list [tasks]='projectTaskService.completedTasks' dragGroupName="COMPLETED_TASKS"></app-task-list>
+          <app-task-list [(tasks)]='completedTasks' dragGroupName="PROJECT_TASKS" [identifier]="completedStatus"></app-task-list>
         </mat-expansion-panel>
       </div>
 
-      <div class="container tasks-container" [hidden]='projectTaskService.tasks.length < 1' id="backlog-container">
+      <div class="container tasks-container" [hidden]='backlogTasks.length === 0' id="backlog-container">
         <h4 (click)='taskspanel.toggle()' id="container-header-dark-text">
           <i class="fas fa-th-list"></i>
           Backlog
         </h4>
         <mat-expansion-panel [expanded]='true' id="task-expansion" #taskspanel>
-          <app-task-list [tasks]='projectTaskService.backlogTasks' dragGroupName="PROJECT_TASKS"></app-task-list>
+          <app-task-list [(tasks)]='backlogTasks' dragGroupName="PROJECT_TASKS" [identifier]="backlogStatus"></app-task-list>
         </mat-expansion-panel>
       </div>
 
-      <button mat-button *ngIf="projectTaskService.tasks && projectTaskService.tasks.length > 0" type="button" class="btn btn-light float-right"
+      <!-- <button mat-button *ngIf="tasks && tasks.length > 0" type="button" class="btn btn-light float-right"
         id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
         Export Projects
-      </button>
+      </button> -->
 
     </mat-accordion>
 

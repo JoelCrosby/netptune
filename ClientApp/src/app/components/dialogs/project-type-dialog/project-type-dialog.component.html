@@ -2,22 +2,27 @@
 
 <form #projectForm="ngForm">
 
-  <mat-form-field class="full-width" appearance="fill">
-    <input matInput id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='selectedName' required>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Enter Project Type Name</mat-label> <input matInput id="name" class="form-control" placeholder="Project Type Name"
+      name="name" [(ngModel)]='selectedName' required>
   </mat-form-field>
 
-  <mat-form-field class="full-width" appearance="fill">
-    <input matInput id="typecode" class="form-control" placeholder="Type Code" name="typecode" aria-label="With textarea" [(ngModel)]='selectedTypeCode'>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Enter Type Code</mat-label>
+    <input matInput id="typecode" class="form-control" placeholder="Type Code" name="typecode" aria-label="With textarea"
+      [(ngModel)]='selectedTypeCode'>
   </mat-form-field>
 
-  <mat-form-field class="full-width" appearance="fill">
-    <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea" [(ngModel)]='selectedDescription'></textarea>
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Enter Project Type Description</mat-label>
+    <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea"
+      [(ngModel)]='selectedDescription'></textarea>
   </mat-form-field>
 
 </form>
 
 
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button (click)="close()">Close</button>
   <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectForm.invalid" type="button">
     {{ projectType ? 'Save Changes' : 'Save Project Type' }}

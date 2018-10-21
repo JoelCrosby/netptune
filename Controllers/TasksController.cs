@@ -57,7 +57,7 @@ namespace DataPlane.Controllers
 
         // PUT: api/Tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
+        public IActionResult PutTask([FromRoute] int id, [FromBody] ProjectTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -69,11 +69,20 @@ namespace DataPlane.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(task).State = EntityState.Modified;
+            var fromDb = _context.ProjectTasks.FirstOrDefault(x => x.ProjectTaskId == task.ProjectTaskId);
+
+            fromDb.Name = task.Name;
+            fromDb.Description = task.Description;
+            fromDb.Status = task.Status;
+            fromDb.SortOrder = task.SortOrder;
+            fromDb.OwnerId = task.OwnerId;
+            fromDb.AssigneeId = task.AssigneeId;
+
+            // _context.Entry(task).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {

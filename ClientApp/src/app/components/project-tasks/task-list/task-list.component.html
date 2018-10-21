@@ -1,6 +1,6 @@
-<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks">
-  <mat-expansion-panel *ngFor="let task of tasks; let i=index; trackBy:trackById;">
-    <mat-expansion-panel-header>
+<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier">
+  <mat-expansion-panel #matExpansionPanel *ngFor="let task of tasks">
+    <mat-expansion-panel-header (click)="expandPanel(matExpansionPanel, $event)" (dblclick)='matExpansionPanel.toggle()'>
       <mat-panel-title>
         <i [class]='getStatusClass(task)' id="task-icon" *ngIf="userService.settings.showTaskIcons"></i>
         <div class="title">
@@ -21,6 +21,8 @@
 
     <p>{{ task.description }}</p>
 
+    <app-editor></app-editor>
+
     <div class="card-chips">
       <mat-chip-list>
         <mat-chip id="info-chip">Owner {{ task.owner?.userName }}</mat-chip>
@@ -32,7 +34,7 @@
     <mat-action-row>
 
       <div class="status-chips">
-        <mat-chip-list>
+        <mat-chip-list id="status-chips">
           <mat-chip id="complete" (click)='statusClicked(task, Complete)' *ngIf="task.status !== Complete" @toggleChip>
             <i class="fas fa-check"></i>
             Mark Complete

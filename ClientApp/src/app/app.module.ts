@@ -1,4 +1,3 @@
-
 // Modules
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -8,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
 import { DragulaModule } from 'ng2-dragula';
+import { QuillModule } from 'ngx-quill';
 
 // Components
 import { AppComponent } from './components/app/app.component';
@@ -30,6 +30,8 @@ import { ProjectTasksComponent } from './components/project-tasks/project-tasks.
 import { UsersComponent } from './components/users/users.component';
 import { WorkspacesComponent } from './components/workspaces/workspaces.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
+import { EditorComponent } from './components/editor/editor.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -42,7 +44,7 @@ import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { AlertService } from './services/alert/alert.service';
 import { LayoutService } from './services/layout/layout.service';
-import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
+import { UtilService } from './services/util/util.service';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,8 @@ import { TaskListComponent } from './components/project-tasks/task-list/task-lis
     ProjectTypeDialogComponent,
     TaskDialogComponent,
     ProfileComponent,
-    TaskListComponent
+    TaskListComponent,
+    EditorComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
@@ -82,6 +85,7 @@ import { TaskListComponent } from './components/project-tasks/task-list/task-lis
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppMaterialModule,
+    QuillModule,
     DragulaModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: WorkspacesComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
@@ -90,13 +94,13 @@ import { TaskListComponent } from './components/project-tasks/task-list/task-lis
       { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuardService] },
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardService] },
       { path: 'workspaces', component: WorkspacesComponent, canActivate: [AuthGuardService] },
-      { path: 'tasks', component: ProjectTasksComponent, canActivate: [AuthGuardService] },
+      { path: 'tasks', component: ProjectTasksComponent, canActivate: [AuthGuardService], runGuardsAndResolvers: 'always' },
       { path: 'flags', component: FlagsComponent, canActivate: [AuthGuardService] },
       { path: 'users', component: UsersComponent, canActivate: [AuthGuardService] },
       { path: 'descriptors', component: DescriptorsComponent, canActivate: [AuthGuardService] },
       { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
-      { path: '**', redirectTo: 'workspaces' },
-    ])
+      { path: '**', redirectTo: 'workspaces' }
+    ], { onSameUrlNavigation: 'reload' })
   ],
   providers: [
     AuthService,
@@ -108,6 +112,7 @@ import { TaskListComponent } from './components/project-tasks/task-list/task-lis
     ProjectTaskService,
     TransitionService,
     UserService,
+    UtilService,
     LayoutService
   ],
   bootstrap: [AppComponent]

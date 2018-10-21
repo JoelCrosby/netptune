@@ -7,13 +7,17 @@ import { AuthGuardService } from '../auth/auth-guard.service';
   providedIn: 'root'
 })
 export class LayoutService {
-
   public showSidebar = true;
 
-  constructor(private workspaceService: WorkspaceService, private authGuardService: AuthGuardService) {
-    this.workspaceService.onWorkspaceChanged.subscribe((workspace: Workspace) => {
-      this.showSidebar = workspace ? true : false;
-    });
+  constructor(
+    private workspaceService: WorkspaceService,
+    private authGuardService: AuthGuardService
+  ) {
+    this.workspaceService.onWorkspaceChanged.subscribe(
+      (workspace: Workspace) => {
+        this.showSidebar = workspace ? true : false;
+      }
+    );
     this.authGuardService.onNotAuthenticated.subscribe(() => {
       this.showSidebar = false;
     });

@@ -1,28 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { saveAs } from 'file-saver';
-import { dropIn } from '../../animations';
 import { Project } from '../../models/project';
-import { ProjectTask } from '../../models/project-task';
+import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
 import { AlertService } from '../../services/alert/alert.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
+import { DragulaService } from 'ng2-dragula';
+import { Subscription } from 'rxjs';
+import { UtilService } from '../../services/util/util.service';
 
 @Component({
   selector: 'app-project-tasks',
   templateUrl: './project-tasks.component.html',
   styleUrls: ['./project-tasks.component.scss']
 })
-export class ProjectTasksComponent implements OnInit {
+export class ProjectTasksComponent implements OnInit, OnDestroy {
 
   public exportInProgress = false;
+  public dragGroupName = 'PROJECT_TASKS';
 
-  displayedColumns: string[] = ['name', 'description', 'owner', 'status'];
+  public selectedTask: ProjectTask;
+  public subs = new Subscription();
 
-  selectedTask: ProjectTask;
+  public completedStatus = ProjectTaskStatus.Complete;
+  public inProgressStatus = ProjectTaskStatus.InProgress;
+  public blockedStatus = ProjectTaskStatus.OnHold;
+  public backlogStatus = ProjectTaskStatus.InActive;
+
+  public myTasks: ProjectTask[] = [];
+  public completedTasks: ProjectTask[] = [];
+  public backlogTasks: ProjectTask[] = [];
 
   constructor(
     public projectTaskService: ProjectTaskService,
@@ -30,35 +40,52 @@ export class ProjectTasksComponent implements OnInit {
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
-    public dialog: MatDialog) {
+    private dragulaService: DragulaService,
+    private utilService: UtilService,
+    public dialog: MatDialog
+  ) {
+    this.subs.add(
+      this.dragulaService
+        .dropModel(this.dragGroupName)
+        .subscribe(({ el, target, source, item, sourceModel, targetModel, sourceIndex, targetIndex }) => {
 
+          const task = <ProjectTask>item;
+          if (!task) { return; }
+
+          if (target.id !== source.id && task.status !== Number(target.id)) {
+            this.projectTaskService.changeTaskStatus(task, Number(target.id));
+          }
+        })
+    );
+    this.subs.add(this.projectTaskService.taskUpdated
+      .subscribe((task: ProjectTask) => this.refreshData())
+    );
+    this.subs.add(this.projectTaskService.taskAdded
+      .subscribe((task: ProjectTask) => this.refreshData())
+    );
+    this.subs.add(this.projectTaskService.taskDeleted
+      .subscribe((task: ProjectTask) => this.refreshData())
+    );
   }
 
   ngOnInit(): void {
     this.refreshData();
   }
 
-  refreshData(): void {
-    this.projectTaskService.refreshTasks(this.workspaceService.currentWorkspace);
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
-  addProjectTask(task: ProjectTask): void {
-    this.projectTaskService.addTask(task)
-      .subscribe((taskResult) => {
-        if (taskResult) {
-          this.refreshData();
-          this.snackBar.open(`Project ${taskResult.name} Added!.`, null, {
-            duration: 3000,
-          });
-          this.alertsService.changeSuccessMessage(`Project ${taskResult.name} Added!.`);
-        }
-      }, error => {
-        this.snackBar.open('An error occured while trying to create the task. ' + error, null, {
-          duration: 2000,
-        });
-        this.alertsService.
-          changeErrorMessage('An error occured while trying to create the task. ' + error);
-      });
+  async refreshData(): Promise<void> {
+    await this.projectTaskService.refreshTasks();
+
+    this.utilService.smoothUpdate(this.myTasks, this.projectTaskService.myTasks);
+    this.utilService.smoothUpdate(this.completedTasks, this.projectTaskService.completedTasks);
+    this.utilService.smoothUpdate(this.backlogTasks, this.projectTaskService.backlogTasks);
+  }
+
+  async addProjectTask(task: ProjectTask): Promise<void> {
+    await this.projectTaskService.addProjectTask(task);
   }
 
   showAddModal(): void {
@@ -66,14 +93,14 @@ export class ProjectTasksComponent implements OnInit {
   }
 
   open(): void {
-
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '600px',
+      width: '600px'
     });
 
     dialogRef.afterClosed().subscribe((result: Project) => {
-
-      if (!result) { return; }
+      if (!result) {
+        return;
+      }
 
       const newProject = new ProjectTask();
       newProject.name = result.name;
@@ -82,7 +109,6 @@ export class ProjectTasksComponent implements OnInit {
       newProject.project = this.projectsService.projects.find(x => x.projectId === result.projectId);
 
       this.addProjectTask(newProject);
-
     });
   }
 
@@ -94,8 +120,10 @@ export class ProjectTasksComponent implements OnInit {
         const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, 'projects.json');
         this.exportInProgress = false;
-      }, error => { this.exportInProgress = error != null; }
+      },
+      error => {
+        this.exportInProgress = error != null;
+      }
     );
   }
-
 }

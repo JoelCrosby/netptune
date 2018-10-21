@@ -2,11 +2,13 @@
 
 <form #projectForm="ngForm">
 
-  <mat-form-field class="full-width" appearance="fill">  
-    <input matInput id="name" class="form-control" placeholder="Project Name" name="name" [(ngModel)]='selectedName' required>
+  <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Enter Workspace Name</mat-label>
+    <input matInput id="name" class="form-control" placeholder="Workspace Name" name="name" [(ngModel)]='selectedName' required>
   </mat-form-field>
 
-  <mat-form-field class="full-width" appearance="fill">
+  <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Enter Workspace Summary</mat-label>
     <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea" [(ngModel)]='selectedDescription'></textarea>
   </mat-form-field>
 

@@ -14,7 +14,7 @@
           {{authServices.loginError}}
         </div>
 
-        <mat-form-field class="full-width" appearance="fill">
+        <mat-form-field class="full-width" appearance="outline">
           <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
             Please enter a valid email address
@@ -24,7 +24,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="full-width" appearance="fill">
+        <mat-form-field class="full-width" appearance="outline">
           <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
           <mat-error *ngIf="passwordFormControl.hasError('required')">
             Password is <strong>required</strong>

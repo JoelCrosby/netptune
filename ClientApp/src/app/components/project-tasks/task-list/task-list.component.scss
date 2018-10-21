@@ -1,4 +1,4 @@
-@import '../../../../variables.scss';
+@import '../../../../styles/variables.scss';
 
 #complete {
     color: green;
@@ -16,6 +16,10 @@
     width: 16px;
     text-align: center;
     transition: all 400ms;
+}
+
+.card-chips {
+    justify-content: flex-end;
 }
 
 .completed {
