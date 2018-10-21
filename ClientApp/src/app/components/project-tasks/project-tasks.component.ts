@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatSnackBar, MatExpansionPanel } from '@angular/material';
 import { saveAs } from 'file-saver';
+import { DragulaService } from 'ng2-dragula';
+import { Subscription, merge } from 'rxjs';
 import { Project } from '../../models/project';
 import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
-import { AlertService } from '../../services/alert/alert.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
+import { UtilService } from '../../services/util/util.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
-import { DragulaService } from 'ng2-dragula';
-import { Subscription } from 'rxjs';
-import { UtilService } from '../../services/util/util.service';
+import { startWith, mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-tasks',
@@ -34,10 +34,15 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
   public completedTasks: ProjectTask[] = [];
   public backlogTasks: ProjectTask[] = [];
 
+  public taskspanel: MatExpansionPanel;
+
+  public dragStart$ = this.dragulaService.drag(this.dragGroupName).pipe(mapTo(true));
+  public dragEnd$ = this.dragulaService.dragend(this.dragGroupName).pipe(mapTo(false));
+  public isDragging$ = merge(this.dragStart$, this.dragEnd$).pipe(startWith(false));
+
   constructor(
     public projectTaskService: ProjectTaskService,
     private projectsService: ProjectsService,
-    private alertsService: AlertService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
     private dragulaService: DragulaService,

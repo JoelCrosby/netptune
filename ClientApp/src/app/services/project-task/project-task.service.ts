@@ -44,7 +44,12 @@ export class ProjectTaskService {
 
     this.utilService.smoothUpdate(
       this.myTasks,
-      this.tasks.filter(x => x.assigneeId === this.authService.token.userId && x.status !== ProjectTaskStatus.Complete)
+      this.tasks.filter(
+        x =>
+          x.assigneeId === this.authService.token.userId &&
+          x.status !== ProjectTaskStatus.Complete &&
+          x.status !== ProjectTaskStatus.InActive
+      )
     );
     this.utilService.smoothUpdate(
       this.backlogTasks,

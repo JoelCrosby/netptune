@@ -1,4 +1,4 @@
-<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier">
+<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier" [class.expanded]='dragExpaneded'>
   <mat-expansion-panel #matExpansionPanel *ngFor="let task of tasks">
     <mat-expansion-panel-header (click)="expandPanel(matExpansionPanel, $event)" (dblclick)='matExpansionPanel.toggle()'>
       <mat-panel-title>
@@ -63,4 +63,11 @@
     </mat-action-row>
 
   </mat-expansion-panel>
+
+  <mat-expansion-panel id='placeholder' *ngIf='dragExpaneded'>
+    <mat-expansion-panel-header>
+
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
 </mat-accordion>

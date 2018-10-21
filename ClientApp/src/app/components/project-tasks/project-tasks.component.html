@@ -17,7 +17,7 @@
 
       <div class="container tasks-container" [hidden]='myTasks.length === 0'>
         <h4 (click)='myTaskspanel.toggle()' id="container-header">My Tasks</h4>
-        <mat-expansion-panel [expanded]='true' id="task-expansion" #myTaskspanel>
+        <mat-expansion-panel [expanded]='(isDragging$ | async) || true' id="task-expansion" #myTaskspanel>
           <app-task-list [(tasks)]='myTasks' dragGroupName="PROJECT_TASKS" [identifier]="inProgressStatus"></app-task-list>
         </mat-expansion-panel>
       </div>
@@ -27,18 +27,18 @@
           <i class="fas fa-clipboard-check"></i>
           Completed Tasks
         </h4>
-        <mat-expansion-panel [expanded]='true' id="task-expansion" #completedTasksspanel>
+        <mat-expansion-panel [expanded]='(isDragging$ | async) || true' id="task-expansion" #completedTasksspanel>
           <app-task-list [(tasks)]='completedTasks' dragGroupName="PROJECT_TASKS" [identifier]="completedStatus"></app-task-list>
         </mat-expansion-panel>
       </div>
 
-      <div class="container tasks-container" [hidden]='backlogTasks.length === 0' id="backlog-container">
+      <div class="container tasks-container" id="backlog-container">
         <h4 (click)='taskspanel.toggle()' id="container-header-dark-text">
           <i class="fas fa-th-list"></i>
           Backlog
         </h4>
-        <mat-expansion-panel [expanded]='true' id="task-expansion" #taskspanel>
-          <app-task-list [(tasks)]='backlogTasks' dragGroupName="PROJECT_TASKS" [identifier]="backlogStatus"></app-task-list>
+        <mat-expansion-panel [expanded]='(isDragging$ | async) || true' id="task-expansion" #taskspanel>
+          <app-task-list [(tasks)]='backlogTasks' dragGroupName="PROJECT_TASKS" [identifier]="backlogStatus" [dragExpaneded]='isDragging$ | async'></app-task-list>
         </mat-expansion-panel>
       </div>
 

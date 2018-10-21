@@ -18,14 +18,11 @@ import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.compo
   animations: [dropIn, toggleChip]
 })
 export class TaskListComponent implements OnInit {
-  @Input()
-  tasks: ProjectTask[];
 
-  @Input()
-  dragGroupName: string;
-
-  @Input()
-  identifier: string;
+  @Input() tasks: ProjectTask[];
+  @Input() dragGroupName: string;
+  @Input() identifier: string;
+  @Input() dragExpaneded: boolean;
 
   public selectedTask: ProjectTask;
 

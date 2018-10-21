@@ -93,3 +93,14 @@ mat-divider {
     box-shadow: none;
     margin-bottom: 2px;
 }
+
+.mat-expanded .expanded {
+    min-height: 8rem;
+}
+
+#placeholder {
+    background-color: transparent;
+    color: transparent;
+    border: 0;
+    height: 0px;
+}
