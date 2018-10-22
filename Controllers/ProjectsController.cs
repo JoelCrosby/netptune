@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Entites;
-using DataPlane.Models;
+using Netptune.Entites;
+using Netptune.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using DataPlane.Models.Relationships;
+using Netptune.Models.Relationships;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -30,8 +30,9 @@ namespace DataPlane.Controllers
         public IEnumerable<Project> GetProjects(int workspaceId)
         {
             _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
-            return _context.Projects.Where(x => x.WorkspaceId == workspaceId && x.IsDeleted != true)
-                .Include(x => x.ProjectType).Include(x => x.Workspace).Include(x => x.Owner);
+            return _context.Projects.Where(
+                x => x.WorkspaceId == workspaceId && !x.IsDeleted)
+                    .Include(x => x.ProjectType).Include(x => x.Workspace).Include(x => x.Owner);
         }
 
         // GET: api/Projects/5
@@ -62,12 +63,12 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != project.ProjectId)
+            if (id != project.Id)
             {
                 return BadRequest();
             }
 
-            var modifiedProject = _context.Projects.SingleOrDefault(x => x.ProjectId == project.ProjectId);
+            var modifiedProject = _context.Projects.SingleOrDefault(x => x.Id == project.Id);
 
             if (modifiedProject == null)
             {
@@ -110,7 +111,7 @@ namespace DataPlane.Controllers
             }
 
             var userId = _userManager.GetUserId(HttpContext.User);
-            var workspace = _context.Workspaces.SingleOrDefault(x => x.WorkspaceId == project.WorkspaceId);
+            var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == project.WorkspaceId);
             var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
 
             project.CreatedByUserId = userId;
@@ -119,7 +120,7 @@ namespace DataPlane.Controllers
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
-            // Need to explicily load the navigation propert context.
+            // Need to explicily load the navigation property context.
             // other wise the workspace.WorkspaceUsers list will return null.
             _context.Projects.Include(m => m.WorkspaceProjects);
             _context.Projects.Include(m => m.ProjectUsers);
@@ -164,7 +165,7 @@ namespace DataPlane.Controllers
 
         private bool ProjectExists(int id)
         {
-            return _context.Projects.Any(e => e.ProjectId == id);
+            return _context.Projects.Any(e => e.Id == id);
         }
 
     }

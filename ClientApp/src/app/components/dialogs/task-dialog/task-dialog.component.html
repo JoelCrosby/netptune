@@ -13,7 +13,7 @@
     <mat-label>Task Project</mat-label>
     <mat-select id="type" name="type" placeholder="Project" formControlName="projectFormControl">
       <mat-option>None</mat-option>
-      <mat-option *ngFor="let project of projectsService.projects" [value]="project.projectId">{{ project.name }}</mat-option>
+      <mat-option *ngFor="let project of projectsService.projects" [value]="project.id">{{ project.name }}</mat-option>
     </mat-select>
   </mat-form-field>
 

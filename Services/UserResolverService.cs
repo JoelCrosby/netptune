@@ -1,8 +1,8 @@
-﻿using DataPlane.Models;
+﻿using Netptune.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-namespace DataPlane.Services
+namespace Netptune.Services
 {
     public class UserResolverService
     {

@@ -89,6 +89,8 @@ export class ProjectTypeService {
 
   getFaIcon(projectType: ProjectType): string {
 
+    if (!projectType) { return null; }
+
     switch (projectType.typeCode) {
       case 'node':
         return 'mdi mdi-nodejs nodejs';

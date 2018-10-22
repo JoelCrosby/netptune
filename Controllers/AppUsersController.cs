@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DataPlane.Entites;
+using Netptune.Entites;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -11,9 +11,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
-using DataPlane.Models;
+using Netptune.Models;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -26,7 +26,7 @@ namespace DataPlane.Controllers
         private readonly UserManager<AppUser> _userManager;
 
         public AppUsersController(
-            IConfiguration configuration, 
+            IConfiguration configuration,
             ProjectsContext context, 
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager

@@ -1,16 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar, MatExpansionPanel } from '@angular/material';
+import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { saveAs } from 'file-saver';
 import { DragulaService } from 'ng2-dragula';
-import { Subscription, merge } from 'rxjs';
-import { Project } from '../../models/project';
+import { merge, Subscription } from 'rxjs';
+import { mapTo, startWith } from 'rxjs/operators';
 import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { UtilService } from '../../services/util/util.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
-import { startWith, mapTo } from 'rxjs/operators';
+import { AuthService } from '../../services/auth/auth.service';
+
+
 
 @Component({
   selector: 'app-project-tasks',
@@ -47,6 +49,7 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
     public snackBar: MatSnackBar,
     private dragulaService: DragulaService,
     private utilService: UtilService,
+    private authService: AuthService,
     public dialog: MatDialog
   ) {
     this.subs.add(
@@ -102,18 +105,20 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
       width: '600px'
     });
 
-    dialogRef.afterClosed().subscribe((result: Project) => {
+    dialogRef.afterClosed().subscribe((result: ProjectTask) => {
       if (!result) {
         return;
       }
 
-      const newProject = new ProjectTask();
-      newProject.name = result.name;
-      newProject.description = result.description;
-      newProject.projectId = result.projectId;
-      newProject.project = this.projectsService.projects.find(x => x.projectId === result.projectId);
+      const newProjectTask = new ProjectTask();
+      newProjectTask.name = result.name;
+      newProjectTask.description = result.description;
+      newProjectTask.projectId = result.projectId;
+      newProjectTask.workspaceId = this.workspaceService.currentWorkspace.id;
+      newProjectTask.project = this.projectsService.projects.find(x => x.id === result.id);
+      newProjectTask.assigneeId = this.authService.token.userId;
 
-      this.addProjectTask(newProject);
+      this.addProjectTask(newProjectTask);
     });
   }
 

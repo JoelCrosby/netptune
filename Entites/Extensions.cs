@@ -1,15 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using DataPlane.Interfaces;
-using DataPlane.Models.Relationships;
+using Netptune.Interfaces;
 
-namespace DataPlane.Entites
+namespace Netptune.Entites
 {
     public static class Extensions
     {

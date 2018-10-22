@@ -60,6 +60,11 @@ small {
     border: solid 4px #e2e2e2 !important;
 }
 
+.mat-select-panel:not([class*=mat-elevation-z]) {
+    border-radius: 8px !important;
+    border: solid 2px #e2e2e2 !important;
+}
+
 .mat-form-field-appearance-outline .mat-form-field-outline {
     color: #e2e2e2 !important;
 }

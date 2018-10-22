@@ -1,22 +1,17 @@
-﻿using DataPlane.Interfaces;
-using DataPlane.Models.Relationships;
-using System;
+﻿using Netptune.Models.Relationships;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
-    public class Workspace : BaseModel, IBaseEntity
+    public class Workspace : BaseModel
     {
 
-        // Primary key
-        [Key]
-        public int WorkspaceId { get; set; }
-
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(1024)]
         public string Description { get; set; }
 
         // Navigation properties

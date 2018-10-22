@@ -1,9 +1,9 @@
-import { Component, OnInit, Optional, Inject } from '@angular/core';
-import { ProjectTask } from '../../../models/project-task';
-import { Project } from '../../../models/project';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Project } from '../../../models/project';
+import { ProjectTask } from '../../../models/project-task';
 import { ProjectsService } from '../../../services/projects/projects.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-task-dialog',
@@ -42,9 +42,9 @@ export class TaskDialogComponent implements OnInit {
 
   });
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    this.projectsService.refreshProjects();
+    await this.projectsService.refreshProjects();
 
     if (this.task) {
 
@@ -53,6 +53,7 @@ export class TaskDialogComponent implements OnInit {
       this.projectFromGroup.controls['descriptionFormControl'].setValue(this.task.description);
     } else {
       this.projectFromGroup.reset();
+      this.projectFromGroup.controls['projectFormControl'].setValue(this.projectsService.currentProject.id);
     }
   }
 
@@ -64,11 +65,12 @@ export class TaskDialogComponent implements OnInit {
     const taskResult = new ProjectTask();
 
     if (this.task) {
-      taskResult.projectTaskId = this.task.projectTaskId;
+      taskResult.id = this.task.id;
     }
 
     taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
     taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
+    taskResult.project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
     taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
 
     return taskResult;

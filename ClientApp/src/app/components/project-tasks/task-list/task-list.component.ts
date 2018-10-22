@@ -43,7 +43,7 @@ export class TaskListComponent implements OnInit {
   ngOnInit() { }
 
   trackById(index: number, task: ProjectTask) {
-    return task.projectTaskId;
+    return task.id;
   }
 
   expandPanel(matExpansionPanel: MatExpansionPanel, event: Event): void {
@@ -118,7 +118,7 @@ export class TaskListComponent implements OnInit {
         return;
       }
       const updatedProjectTask = new ProjectTask();
-      updatedProjectTask.projectTaskId = this.selectedTask.projectTaskId;
+      updatedProjectTask.id = this.selectedTask.id;
       updatedProjectTask.name = result.name;
       updatedProjectTask.description = result.description;
       await this.projectTaskService.updateProjectTask(updatedProjectTask);

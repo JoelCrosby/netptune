@@ -1,7 +1,6 @@
-import { Component, OnInit, Optional, Inject } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Workspace } from '../../../models/workspace';
-import { WorkspaceService } from '../../../services/workspace/workspace.service';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -31,7 +30,7 @@ export class WorkspaceDialogComponent implements OnInit {
     const workspaceResult = new Workspace();
 
     if (this.workspace) {
-      workspaceResult.workspaceId = this.workspace.workspaceId;
+      workspaceResult.id = this.workspace.id;
     }
 
     workspaceResult.name = this.selectedName;

@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Entites;
-using DataPlane.Models;
+using Netptune.Entites;
+using Netptune.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using DataPlane.Interfaces;
+using Netptune.Interfaces;
 using System;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
 
     [Authorize]
@@ -32,7 +32,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<ProjectTask> GetTasks(int workspaceId)
         {
-            return _context.ProjectTasks.Where(x => x.Workspace.WorkspaceId == workspaceId).OrderBy(x => x.SortOrder)
+            return _context.ProjectTasks.Where(x => x.Workspace.Id == workspaceId).OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee).Include(x => x.Project).Include(x => x.Owner);
         }
 
@@ -64,12 +64,12 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != task.ProjectTaskId)
+            if (id != task.Id)
             {
                 return BadRequest();
             }
 
-            var fromDb = _context.ProjectTasks.FirstOrDefault(x => x.ProjectTaskId == task.ProjectTaskId);
+            var fromDb = _context.ProjectTasks.FirstOrDefault(x => x.Id == task.Id);
 
             fromDb.Name = task.Name;
             fromDb.Description = task.Description;
@@ -108,9 +108,9 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (task.ProjectId == null || task.Project == null) 
+            if (task.ProjectId == null) 
             {
-                return BadRequest("Could not deter,mine the project for task.");
+                return BadRequest("Could not determine the project for task.");
             }
 
             // Load the relationship tables.
@@ -118,16 +118,15 @@ namespace DataPlane.Controllers
 
             var relational = (from w in _context.Workspaces
                                 join p in _context.Projects 
-                                on new { ProjectId = task.ProjectId ?? task.Project.ProjectId } 
-                                equals new { ProjectId = p.ProjectId }
+                                on task.ProjectId equals p.Id
                                 where
-                                w.WorkspaceId == (task.WorkspaceId ?? task.Workspace.WorkspaceId)
+                                w.Id == task.WorkspaceId
                                 select new {
                                     project = p,
                                     workspace = w
                                 }).Take(1);
 
-            if (!relational.Any()) 
+            if (!relational.Any())
             {
                 return BadRequest("Could not find related project or workspace!");
             }
@@ -143,7 +142,7 @@ namespace DataPlane.Controllers
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTask", new { id = task.ProjectTaskId }, task);
+            return CreatedAtAction("GetTask", new { id = task.Id }, task);
         }
 
         // DELETE: api/Tasks/5
@@ -169,7 +168,7 @@ namespace DataPlane.Controllers
 
         private bool TaskExists(int id)
         {
-            return _context.ProjectTasks.Any(e => e.ProjectTaskId == id);
+            return _context.ProjectTasks.Any(e => e.Id == id);
         }
 
         [HttpPost]

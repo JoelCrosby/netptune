@@ -69,7 +69,7 @@ export class WorkspaceService {
   updateWorkspace(workspace: Workspace): Observable<Workspace> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/Workspaces/${workspace.workspaceId}`;
+    const url = `${this.baseUrl}api/Workspaces/${workspace.id}`;
     return this.http.put<Workspace>(url, workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -82,7 +82,7 @@ export class WorkspaceService {
 
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/Workspaces/${workspace.workspaceId}`;
+    const url = `${this.baseUrl}api/Workspaces/${workspace.id}`;
     return this.http.put<Workspace>(url, workspace, httpOptions)
       .pipe(
         catchError(this.handleError)

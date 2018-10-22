@@ -1,9 +1,9 @@
-using DataPlane.Models.Relationships;
+using Netptune.Models.Relationships;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
     public class AppUser : IdentityUser
     {
@@ -20,5 +20,7 @@ namespace DataPlane.Models
 
         public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
         public virtual ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
+
+        public virtual ProjectTask Assigneee { get; }
     }
 }

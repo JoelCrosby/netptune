@@ -1,7 +1,7 @@
 ﻿using System;
-using DataPlane.Models;
+using Netptune.Models;
 
-namespace DataPlane.Interfaces
+namespace Netptune.Interfaces
 {
     public interface IBaseEntity
     {

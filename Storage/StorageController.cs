@@ -2,7 +2,7 @@ using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace DataPlane.Storage 
+namespace Netptune.Storage 
 {
 
     public class StorageController 

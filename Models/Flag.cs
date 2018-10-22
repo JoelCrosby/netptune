@@ -1,17 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DataPlane.Interfaces;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
-    public class Flag : BaseModel, IBaseEntity
+    public class Flag : BaseModel
     {
 
-        // Primary key
-        [Key]
-        public int FlagId { get; set; }
-
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(1024)]
         public string Description { get; set; }
 
     }

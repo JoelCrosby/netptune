@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Text;
 
-using DataPlane.Entites;
-using DataPlane.Models;
-using DataPlane.Services;
+using Netptune.Entites;
+using Netptune.Models;
+using Netptune.Services;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DataPlane
+namespace Netptune
 {
     public class Startup
     {
@@ -61,8 +61,8 @@ namespace DataPlane
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "DataPlane.com",
-                    ValidAudience = "DataPlane.com",
+                    ValidIssuer = "Netptune.com",
+                    ValidAudience = "Netptune.com",
                     IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (Configuration["SecurityKey"]))
                     };
                 });

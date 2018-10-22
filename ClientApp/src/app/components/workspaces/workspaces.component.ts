@@ -32,7 +32,7 @@ export class WorkspacesComponent implements OnInit {
   }
 
   trackById(index: number, workspace: Workspace) {
-    return workspace.workspaceId;
+    return workspace.id;
   }
 
   showAddModal(): void {
@@ -62,7 +62,7 @@ export class WorkspacesComponent implements OnInit {
 
       if (this.selectedWorkspace) {
         const newProject = new Workspace();
-        newProject.workspaceId = this.selectedWorkspace.workspaceId;
+        newProject.id = this.selectedWorkspace.id;
         newProject.name = result.name;
         newProject.description = result.description;
         this.updateWorkspace(newProject);

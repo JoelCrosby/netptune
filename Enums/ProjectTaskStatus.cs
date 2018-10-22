@@ -1,4 +1,4 @@
-namespace DataPlane.Enums
+namespace Netptune.Enums
 {
     public enum ProjectTaskStatus
     {

@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/DataPlane.csproj"
+                "${workspaceFolder}/Netptune.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

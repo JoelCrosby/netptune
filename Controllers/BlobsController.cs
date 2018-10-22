@@ -4,7 +4,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.Threading.Tasks;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
     public class BlobsController : Controller
     {
@@ -13,6 +13,7 @@ namespace DataPlane.Controllers
             return View();
         }
 
+#pragma warning disable S1144 // Unused private types or members should be removed
         private CloudBlobContainer GetCloudBlobContainer()
         {
             CloudStorageAccount storageAccount = new CloudStorageAccount(
@@ -30,5 +31,6 @@ namespace DataPlane.Controllers
 
             return container;
         }
+#pragma warning restore S1144 // Unused private types or members should be removed
     }
 }

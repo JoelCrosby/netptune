@@ -45,7 +45,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   trackById(index: number, project: Project) {
-    return project.projectId;
+    return project.id;
   }
 
   getProjectTypeName(project: Project): string {
@@ -85,7 +85,7 @@ export class ProjectsComponent implements OnInit {
     this.projectsService.deleteProject(project)
       .subscribe(projectResult => {
         this.projectsService.projects.forEach((item, itemIndex) => {
-          if (item.projectId === projectResult.projectId) {
+          if (item.id === projectResult.id) {
             this.projectsService.projects.splice(itemIndex, 1);
             this.alertsService.changeSuccessMessage('Project deleted!');
           }
@@ -125,18 +125,18 @@ export class ProjectsComponent implements OnInit {
       if (this.selectedProject) {
 
         const updatedProject = new Project();
-        updatedProject.projectId = this.selectedProject.projectId;
+        updatedProject.id = this.selectedProject.id;
         updatedProject.name = result.name;
         updatedProject.description = result.description;
         updatedProject.projectTypeId = result.projectTypeId;
-        updatedProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
+        updatedProject.workspaceId = this.workspaceService.currentWorkspace.id;
         this.updateProject(updatedProject);
       } else {
         const newProject = new Project();
         newProject.name = result.name;
         newProject.description = result.description;
         newProject.projectTypeId = result.projectTypeId;
-        newProject.workspaceId = this.workspaceService.currentWorkspace.workspaceId;
+        newProject.workspaceId = this.workspaceService.currentWorkspace.id;
         this.addProject(newProject);
       }
 

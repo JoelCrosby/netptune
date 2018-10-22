@@ -4,8 +4,6 @@ import { Basemodel } from './basemodel';
 
 export interface Workspace {
 
-    workspaceId: number;
-
     name: string;
     description: string;
 
@@ -15,7 +13,7 @@ export interface Workspace {
 
 export class Workspace extends Basemodel {
 
-    public workspaceId: number;
+    public id: number;
 
     public name: string;
     public description: string;

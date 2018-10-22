@@ -41,7 +41,7 @@ export class UserService {
 
   getUsers(workspace: Workspace): Observable<AppUser[]> {
     const httpOptions = this.getHeaders();
-    return this.http.get<AppUser[]>(this.baseUrl + 'api/AppUsers' + `?workspaceId=${workspace.workspaceId}`, httpOptions);
+    return this.http.get<AppUser[]>(this.baseUrl + 'api/AppUsers' + `?workspaceId=${workspace.id}`, httpOptions);
   }
 
   getUser(userId: string = this.authService.token.userId): Observable<AppUser> {

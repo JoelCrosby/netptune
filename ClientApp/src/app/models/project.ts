@@ -4,7 +4,6 @@ import { ProjectType } from './project-type';
 
 export interface Project {
 
-    projectId: number;
     workspaceId: number;
 
     name: string;
@@ -16,7 +15,7 @@ export interface Project {
 
 export class Project extends Basemodel {
 
-    public projectId: number;
+    public id: number;
 
 
     public name: string;

@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace DataPlane.Util
+namespace Netptune.Util
 {
     public class Cryptography
     {

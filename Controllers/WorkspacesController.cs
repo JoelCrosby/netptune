@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DataPlane.Entites;
-using DataPlane.Models;
-using DataPlane.Models.Relationships;
+using Netptune.Entites;
+using Netptune.Models;
+using Netptune.Models.Relationships;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataPlane.Controllers 
+namespace Netptune.Controllers 
 {
 
     [Authorize]
@@ -39,7 +39,7 @@ namespace DataPlane.Controllers
             // Select workspaces
             var workspaces = _context.WorkspaceAppUsers.Where(x => x.User == user).Select(w => w.Workspace);
 
-            return workspaces.Where(x => x.IsDeleted != true);
+            return workspaces.Where(x => !x.IsDeleted);
         }
 
         // GET: api/Workspaces/5
@@ -65,7 +65,7 @@ namespace DataPlane.Controllers
                 return BadRequest (ModelState);
             }
 
-            if (id != workspace.WorkspaceId) {
+            if (id != workspace.Id) {
                 return BadRequest ();
             }
 
@@ -116,7 +116,7 @@ namespace DataPlane.Controllers
             await _context.SaveChangesAsync();
 
 
-            return CreatedAtAction("GetWorkspace", new { id = workspace.WorkspaceId }, workspace);
+            return CreatedAtAction("GetWorkspace", new { id = workspace.Id }, workspace);
         }
 
         // DELETE: api/Workspaces/5
@@ -138,7 +138,7 @@ namespace DataPlane.Controllers
         }
 
         private bool WorkspaceExists (int id) {
-            return _context.Workspaces.Any (e => e.WorkspaceId == id);
+            return _context.Workspaces.Any (e => e.Id == id);
         }
     }
 }

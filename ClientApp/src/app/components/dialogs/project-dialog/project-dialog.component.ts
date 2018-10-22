@@ -68,7 +68,7 @@ export class ProjectDialogComponent implements OnInit {
     const projectResult = new Project();
 
     if (this.project) {
-      projectResult.projectId = this.project.projectId;
+      projectResult.id = this.project.id;
     }
 
     projectResult.name = this.projectFromGroup.controls['nameFormControl'].value;
@@ -76,6 +76,7 @@ export class ProjectDialogComponent implements OnInit {
     projectResult.repositoryUrl = this.projectFromGroup.controls['repositoryUrlFormControl'].value;
     projectResult.projectTypeId = this.projectFromGroup.controls['projectTypeFormControl'].value;
     projectResult.workspace = this.workspaceService.currentWorkspace;
+    projectResult.workspaceId = this.workspaceService.currentWorkspace.id;
 
     return projectResult;
   }

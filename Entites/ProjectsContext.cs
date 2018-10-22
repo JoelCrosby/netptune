@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using DataPlane.Models;
+using Netptune.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
 using System.Threading;
-using DataPlane.Interfaces;
-using DataPlane.Models.Relationships;
+using Netptune.Interfaces;
+using Netptune.Models.Relationships;
 
-namespace DataPlane.Entites
+namespace Netptune.Entites
 {
     public class ProjectsContext : IdentityDbContext
     {
@@ -32,79 +32,84 @@ namespace DataPlane.Entites
 
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
-            modelBuilder.Entity<Project>()
+            builder.Entity<Project>()
                 .HasOne(e => e.ProjectType)
                 .WithMany(c => c.Projects);
 
-            modelBuilder.Entity<Project>()
+            builder.Entity<Project>()
                 .HasOne(e => e.Workspace)
-                .WithMany(c => c.Projects);
+                .WithMany(c => c.Projects)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             // (One-to-One) AppUser > Task
 
-            modelBuilder.Entity<AppUser>()
+            builder.Entity<AppUser>()
                 .HasMany(c => c.Tasks)
                 .WithOne(e => e.Assignee)
                 .IsRequired();
 
             // (One-to-One) Project > Task
 
-            modelBuilder.Entity<Project>()
+            builder.Entity<Project>()
                 .HasMany(c => c.ProjectTasks)
                 .WithOne(e => e.Project);
 
             // (One-to-One) Workspace > Task
 
-            modelBuilder.Entity<Workspace>()
+            builder.Entity<Workspace>()
                 .HasMany(c => c.ProjectTasks)
                 .WithOne(e => e.Workspace)
                 .IsRequired();
 
             // (Many-to-many) Workspace > Project
 
-            modelBuilder.Entity<WorkspaceProject>()
+            builder.Entity<WorkspaceProject>()
+                .HasKey(pt => new { pt.WorkspaceId, pt.ProjectId });
+
+            builder.Entity<WorkspaceProject>()
                 .HasOne(pt => pt.Workspace)
                 .WithMany(p => p.WorkspaceProjects)
                 .HasForeignKey(pt => pt.WorkspaceId);
 
-            modelBuilder.Entity<WorkspaceProject>()
+            builder.Entity<WorkspaceProject>()
                 .HasOne(pt => pt.Project)
                 .WithMany(t => t.WorkspaceProjects)
                 .HasForeignKey(pt => pt.ProjectId);
 
             // (Many-to-many) Workspace > AppUser
 
-            modelBuilder.Entity<WorkspaceAppUser>()
+            builder.Entity<WorkspaceAppUser>()
+                .HasKey(pt => new { pt.WorkspaceId, pt.UserId });
+
+            builder.Entity<WorkspaceAppUser>()
                 .HasOne(pt => pt.Workspace)
                 .WithMany(p => p.WorkspaceUsers)
                 .HasForeignKey(pt => pt.WorkspaceId);
 
-            modelBuilder.Entity<WorkspaceAppUser>()
+            builder.Entity<WorkspaceAppUser>()
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.WorkspaceUsers)
                 .HasForeignKey(pt => pt.UserId);
 
             // (Many-to-many) Project > AppUser
 
-            modelBuilder.Entity<ProjectUser>()
+            builder.Entity<ProjectUser>()
+                .HasKey(pt => new { pt.ProjectId, pt.UserId });
+
+            builder.Entity<ProjectUser>()
                 .HasOne(pt => pt.Project)
                 .WithMany(p => p.ProjectUsers)
                 .HasForeignKey(pt => pt.ProjectId);
 
-            modelBuilder.Entity<ProjectUser>()
+            builder.Entity<ProjectUser>()
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.ProjectUsers)
                 .HasForeignKey(pt => pt.UserId);
-
-            // Unique sort order
-            modelBuilder.Entity<ProjectTask>()
-                .HasIndex(p => p.SortOrder)
-                .IsUnique(true);
 
         }
 

@@ -1,27 +1,28 @@
-using DataPlane.Interfaces;
-using DataPlane.Models.Relationships;
+using Netptune.Models.Relationships;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
-    public class Project : BaseModel, IBaseEntity
+    public class Project : BaseModel
     {
 
-        // Primary key
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ProjectId { get; set; }
-
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(1024)]
         public string Description { get; set; }
+
+        [StringLength(256)]
         public string RepositoryUrl { get; set; }
 
+        [Required]
         [ForeignKey("ProjectType")]
         public int? ProjectTypeId { get; set; }
 
+        [Required]
         [ForeignKey("Workspace")]
         public int? WorkspaceId { get; set; }
 

@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using DataPlane.Interfaces;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
-    public class ProjectType : BaseModel, IBaseEntity
+    public class ProjectType : BaseModel
     {
-        // Primary key
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(1024)]
         public string Description { get; set; }
+
+        [StringLength(128)]
         public string TypeCode { get; set; }
 
         // Navigation property 

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Entites;
-using DataPlane.Models;
+using Netptune.Entites;
+using Netptune.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
 
     [Authorize]
@@ -31,7 +30,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<Flag> GetFlag()
         {
-            return _context.Flags.Where(x => x.IsDeleted != true);;
+            return _context.Flags.Where(x => !x.IsDeleted);
         }
 
         // GET: api/Flags/5
@@ -62,7 +61,7 @@ namespace DataPlane.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != flag.FlagId)
+            if (id != flag.Id)
             {
                 return BadRequest();
             }
@@ -105,7 +104,7 @@ namespace DataPlane.Controllers
             _context.Flags.Add(flag);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetFlag", new { id = flag.FlagId }, flag);
+            return CreatedAtAction("GetFlag", new { id = flag.Id }, flag);
         }
 
         // DELETE: api/Flags/5
@@ -131,7 +130,7 @@ namespace DataPlane.Controllers
 
         private bool FlagExists(int id)
         {
-            return _context.Flags.Any(e => e.FlagId == id);
+            return _context.Flags.Any(e => e.Id == id);
         }
     }
 }

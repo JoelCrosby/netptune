@@ -75,7 +75,7 @@ export class ProjectTaskService {
     const httpOptions = this.getHeaders();
 
     return this.http
-      .get<ProjectTask[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.workspaceId, httpOptions);
+      .get<ProjectTask[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
   }
 
   private addTask(task: ProjectTask): Observable<ProjectTask> {
@@ -111,7 +111,7 @@ export class ProjectTaskService {
   private updateTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
+    const url = `${this.baseUrl}api/ProjectTasks/${task.id}`;
     return this.http.put<ProjectTask>(url, task, httpOptions).pipe(catchError(this.handleError));
   }
 
@@ -151,7 +151,7 @@ export class ProjectTaskService {
   private deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.projectTaskId}`;
+    const url = `${this.baseUrl}api/ProjectTasks/${task.id}`;
     return this.http.delete<ProjectTask>(url, httpOptions).pipe(catchError(this.handleError));
   }
 

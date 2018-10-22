@@ -1,4 +1,4 @@
-﻿namespace DataPlane.Models.Relationships
+﻿namespace Netptune.Models.Relationships
 {
     public class ProjectUser : RelationshipBaseModel
     {

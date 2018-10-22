@@ -2,6 +2,8 @@ import { AppUser } from './appuser';
 
 export class Basemodel {
 
+    public id: number;
+
     public isDeleted: Boolean;
 
     public createdAt: Date;

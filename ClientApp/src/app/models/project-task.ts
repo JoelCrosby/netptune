@@ -5,16 +5,15 @@ import { AppUser } from './appuser';
 
 export class ProjectTask extends Basemodel {
 
-    public projectTaskId: number;
-
     public name: string;
     public description: string;
     public status: ProjectTaskStatus;
 
+    public project: Project;
     public projectId: number;
 
-    public project: Project;
     public workspace: Workspace;
+    public workspaceId: number;
 
     public assignee: AppUser;
     public assigneeId: string;

@@ -1,12 +1,17 @@
-using DataPlane.Interfaces;
+using Netptune.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataPlane.Models
+namespace Netptune.Models
 {
     public abstract class BaseModel : IBaseEntity
     {
+
+        // Primary key
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         public bool IsDeleted { get; set; }
 
@@ -31,7 +36,6 @@ namespace DataPlane.Models
         [ForeignKey("Owner")]
         public string OwnerId { get; set; }
         public virtual AppUser Owner { get; set; }
-
 
     }
 }

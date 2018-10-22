@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataPlane.Entites;
-using DataPlane.Models;
+using Netptune.Entites;
+using Netptune.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace DataPlane.Controllers
+namespace Netptune.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -28,7 +28,7 @@ namespace DataPlane.Controllers
         [HttpGet]
         public IEnumerable<ProjectType> GetProjectTypes()
         {
-            return _context.ProjectTypes.Where(x => x.IsDeleted != true);
+            return _context.ProjectTypes.Where(x => !x.IsDeleted);
         }
 
         // GET: api/ProjectTypes/5

@@ -1,6 +1,6 @@
-import { Component, OnInit, Optional, Inject } from '@angular/core';
-import { ProjectType } from '../../../models/project-type';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ProjectType } from '../../../models/project-type';
 
 @Component({
   selector: 'app-project-type-dialog',
@@ -18,14 +18,14 @@ export class ProjectTypeDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ProjectTypeDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectType) {
 
-      if (data) {
-        this.projectType = data;
+    if (data) {
+      this.projectType = data;
 
-        this.selectedName = this.projectType.name;
-        this.selectedDescription = this.projectType.description;
-        this.selectedTypeCode = this.projectType.typeCode;
-      }
+      this.selectedName = this.projectType.name;
+      this.selectedDescription = this.projectType.description;
+      this.selectedTypeCode = this.projectType.typeCode;
     }
+  }
 
   ngOnInit() {
   }

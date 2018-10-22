@@ -2,7 +2,6 @@ import { Basemodel } from './basemodel';
 
 export interface ProjectType {
 
-    id: number;
     workspaceId: number;
 
     name: string;
