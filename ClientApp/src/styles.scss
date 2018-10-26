@@ -5,7 +5,7 @@
 @import 'styles/dragula.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('fonts/MaterialDesign-Webfont-master/css/materialdesignicons.min.css');
+// @import url('fonts/MaterialDesign-Webfont-master/css/materialdesignicons.min.css');
 html,
 body,
 #st-full-pg {
@@ -67,6 +67,13 @@ small {
 
 .mat-form-field-appearance-outline .mat-form-field-outline {
     color: #e2e2e2 !important;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+    border: solid 1px #e2e2e2 !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    margin-bottom: 2px !important;
 }
 
 #new-button {

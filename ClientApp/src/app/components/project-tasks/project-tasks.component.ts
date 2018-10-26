@@ -15,125 +15,123 @@ import { AuthService } from '../../services/auth/auth.service';
 
 
 @Component({
-  selector: 'app-project-tasks',
-  templateUrl: './project-tasks.component.html',
-  styleUrls: ['./project-tasks.component.scss']
+    selector: 'app-project-tasks',
+    templateUrl: './project-tasks.component.html',
+    styleUrls: ['./project-tasks.component.scss']
 })
 export class ProjectTasksComponent implements OnInit, OnDestroy {
 
-  public exportInProgress = false;
-  public dragGroupName = 'PROJECT_TASKS';
+    public exportInProgress = false;
+    public dragGroupName = 'PROJECT_TASKS';
 
-  public selectedTask: ProjectTask;
-  public subs = new Subscription();
+    public selectedTask: ProjectTask;
+    public subs = new Subscription();
 
-  public completedStatus = ProjectTaskStatus.Complete;
-  public inProgressStatus = ProjectTaskStatus.InProgress;
-  public blockedStatus = ProjectTaskStatus.OnHold;
-  public backlogStatus = ProjectTaskStatus.InActive;
+    public completedStatus = ProjectTaskStatus.Complete;
+    public inProgressStatus = ProjectTaskStatus.InProgress;
+    public blockedStatus = ProjectTaskStatus.OnHold;
+    public backlogStatus = ProjectTaskStatus.InActive;
 
-  public myTasks: ProjectTask[] = [];
-  public completedTasks: ProjectTask[] = [];
-  public backlogTasks: ProjectTask[] = [];
+    public myTasks: ProjectTask[] = [];
+    public completedTasks: ProjectTask[] = [];
+    public backlogTasks: ProjectTask[] = [];
 
-  public taskspanel: MatExpansionPanel;
+    public taskspanel: MatExpansionPanel;
 
-  public dragStart$ = this.dragulaService.drag(this.dragGroupName).pipe(mapTo(true));
-  public dragEnd$ = this.dragulaService.dragend(this.dragGroupName).pipe(mapTo(false));
-  public isDragging$ = merge(this.dragStart$, this.dragEnd$).pipe(startWith(false));
+    public dragStart$ = this.dragulaService.drag(this.dragGroupName).pipe(mapTo(true));
+    public dragEnd$ = this.dragulaService.dragend(this.dragGroupName).pipe(mapTo(false));
+    public isDragging$ = merge(this.dragStart$, this.dragEnd$).pipe(startWith(false));
 
-  constructor(
-    public projectTaskService: ProjectTaskService,
-    private projectsService: ProjectsService,
-    private workspaceService: WorkspaceService,
-    public snackBar: MatSnackBar,
-    private dragulaService: DragulaService,
-    private utilService: UtilService,
-    private authService: AuthService,
-    public dialog: MatDialog
-  ) {
-    this.subs.add(
-      this.dragulaService
-        .dropModel(this.dragGroupName)
-        .subscribe(({ el, target, source, item, sourceModel, targetModel, sourceIndex, targetIndex }) => {
+    constructor(
+        public projectTaskService: ProjectTaskService,
+        private projectsService: ProjectsService,
+        private workspaceService: WorkspaceService,
+        public snackBar: MatSnackBar,
+        private dragulaService: DragulaService,
+        private utilService: UtilService,
+        private authService: AuthService,
+        public dialog: MatDialog
+    ) {
+        this.subs.add(
+            this.dragulaService
+                .dropModel(this.dragGroupName)
+                .subscribe(({ el, target, source, item, sourceModel, targetModel, sourceIndex, targetIndex }) => {
 
-          const task = <ProjectTask>item;
-          if (!task) { return; }
+                    const task = <ProjectTask>item;
+                    if (!task) { return; }
 
-          if (target.id !== source.id && task.status !== Number(target.id)) {
-            this.projectTaskService.changeTaskStatus(task, Number(target.id));
-          }
-        })
-    );
-    this.subs.add(this.projectTaskService.taskUpdated
-      .subscribe((task: ProjectTask) => this.refreshData())
-    );
-    this.subs.add(this.projectTaskService.taskAdded
-      .subscribe((task: ProjectTask) => this.refreshData())
-    );
-    this.subs.add(this.projectTaskService.taskDeleted
-      .subscribe((task: ProjectTask) => this.refreshData())
-    );
-  }
+                    if (target.id !== source.id && task.status !== Number(target.id)) {
+                        this.projectTaskService.changeTaskStatus(task, Number(target.id));
+                    }
+                })
+        );
+        this.subs.add(this.projectTaskService.taskUpdated
+            .subscribe((task: ProjectTask) => this.refreshData())
+        );
+        this.subs.add(this.projectTaskService.taskAdded
+            .subscribe((task: ProjectTask) => this.refreshData())
+        );
+        this.subs.add(this.projectTaskService.taskDeleted
+            .subscribe((task: ProjectTask) => this.refreshData())
+        );
+    }
 
-  ngOnInit(): void {
-    this.refreshData();
-  }
+    ngOnInit(): void {
+        this.refreshData();
+    }
 
-  ngOnDestroy(): void {
-    this.subs.unsubscribe();
-  }
+    ngOnDestroy(): void {
+        this.subs.unsubscribe();
+    }
 
-  async refreshData(): Promise<void> {
-    await this.projectTaskService.refreshTasks();
+    async refreshData(): Promise<void> {
+        await this.projectTaskService.refreshTasks();
 
-    this.utilService.smoothUpdate(this.myTasks, this.projectTaskService.myTasks);
-    this.utilService.smoothUpdate(this.completedTasks, this.projectTaskService.completedTasks);
-    this.utilService.smoothUpdate(this.backlogTasks, this.projectTaskService.backlogTasks);
-  }
+        this.utilService.smoothUpdate(this.myTasks, this.projectTaskService.myTasks);
+        this.utilService.smoothUpdate(this.completedTasks, this.projectTaskService.completedTasks);
+        this.utilService.smoothUpdate(this.backlogTasks, this.projectTaskService.backlogTasks);
+    }
 
-  async addProjectTask(task: ProjectTask): Promise<void> {
-    await this.projectTaskService.addProjectTask(task);
-  }
+    async addProjectTask(task: ProjectTask): Promise<void> {
+        await this.projectTaskService.addProjectTask(task);
+    }
 
-  showAddModal(): void {
-    this.open();
-  }
+    showAddModal(): void {
+        this.open();
+    }
 
-  open(): void {
-    const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '600px'
-    });
+    open(): void {
+        const dialogRef = this.dialog.open(TaskDialogComponent, {
+            width: '600px'
+        });
 
-    dialogRef.afterClosed().subscribe((result: ProjectTask) => {
-      if (!result) {
-        return;
-      }
+        dialogRef.afterClosed().subscribe((result: ProjectTask) => {
+            if (!result) {
+                return;
+            }
 
-      const newProjectTask = new ProjectTask();
-      newProjectTask.name = result.name;
-      newProjectTask.description = result.description;
-      newProjectTask.projectId = result.projectId;
-      newProjectTask.workspaceId = this.workspaceService.currentWorkspace.id;
-      newProjectTask.project = this.projectsService.projects.find(x => x.id === result.id);
-      newProjectTask.assigneeId = this.authService.token.userId;
+            const newProjectTask = new ProjectTask();
+            newProjectTask.name = result.name;
+            newProjectTask.description = result.description;
+            newProjectTask.projectId = result.projectId;
+            newProjectTask.workspaceId = this.workspaceService.currentWorkspace.id;
+            newProjectTask.project = this.projectsService.projects.find(x => x.id === result.id);
+            newProjectTask.assigneeId = this.authService.token.userId;
 
-      this.addProjectTask(newProjectTask);
-    });
-  }
+            this.addProjectTask(newProjectTask);
+        });
+    }
 
-  exportProjects(): void {
-    this.exportInProgress = true;
+    async exportProjects(): Promise<void> {
+        this.exportInProgress = true;
 
-    this.projectTaskService.getTasks(this.workspaceService.currentWorkspace).subscribe(
-      result => {
-        const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
-        saveAs(blob, 'projects.json');
-        this.exportInProgress = false;
-      },
-      error => {
-        this.exportInProgress = error != null;
-      }
-    );
-  }
+        try {
+            const result = this.projectTaskService.getTasks(this.workspaceService.currentWorkspace).toPromise();
+            const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
+            saveAs(blob, 'projects.json');
+            this.exportInProgress = false;
+        } catch (error) {
+            this.exportInProgress = error != null;
+        }
+    }
 }
