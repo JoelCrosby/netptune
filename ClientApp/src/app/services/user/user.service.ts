@@ -49,4 +49,14 @@ export class UserService {
     return this.http.get<AppUser>(this.baseUrl + 'api/AppUsers/' + userId, httpOptions);
   }
 
+  getUserByEmail(email: string): Observable<AppUser> {
+    const httpOptions = this.getHeaders();
+    return this.http.get<AppUser>(this.baseUrl + `api/AppUsers/GetUserByEmail?email=${email}`, httpOptions);
+  }
+
+  inviteUser(user: AppUser, workspace: Workspace): Observable<AppUser> {
+    const httpOptions = this.getHeaders();
+    return this.http.post<AppUser>(this.baseUrl + `api/AppUsers/Invite?userId=${user.id}&workspaceId=${workspace.id}`, httpOptions);
+  }
+
 }

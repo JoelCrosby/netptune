@@ -5,7 +5,6 @@
 @import 'styles/dragula.scss';
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-// @import url('fonts/MaterialDesign-Webfont-master/css/materialdesignicons.min.css');
 html,
 body,
 #st-full-pg {
@@ -51,7 +50,8 @@ small {
     min-width: 12rem !important;
 }
 
-.mat-button, .mat-raised-button {
+.mat-button,
+.mat-raised-button {
     border-radius: 8px !important;
 }
 
@@ -97,13 +97,15 @@ small {
         white-space: nowrap;
         overflow: hidden;
         .fas {
-            margin-left: 0.45rem;
+            margin-left: 0.3rem !important;
+            margin-right: 1rem !important;
+            margin-bottom: 0.3rem !important;
         }
     }
 }
 
 #new-button:hover {
-    width: 8rem;
+    width: 14rem;
 }
 
 .shadow-panel {

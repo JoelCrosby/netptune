@@ -32,6 +32,7 @@ import { WorkspacesComponent } from './components/workspaces/workspaces.componen
 import { ProfileComponent } from './components/profile/profile.component';
 import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { InviteDialogComponent } from './components/dialogs/invite-dialog/invite-dialog.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -69,14 +70,16 @@ import { UtilService } from './services/util/util.service';
     TaskDialogComponent,
     ProfileComponent,
     TaskListComponent,
-    EditorComponent
+    EditorComponent,
+    InviteDialogComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
     WorkspaceDialogComponent,
     ProjectTypeDialogComponent,
     ConfirmDialogComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
+    InviteDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

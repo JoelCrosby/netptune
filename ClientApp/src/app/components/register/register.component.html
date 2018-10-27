@@ -9,6 +9,7 @@
         <div class="form-spacer"></div>
 
         <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Enter Username</mat-label>
           <input matInput placeholder="Username" name="usernameControl" [formControl]="usernameControl">
           <mat-error *ngIf="usernameControl.hasError('username') && !usernameControl.hasError('required')">
             Please enter a Username
@@ -19,6 +20,7 @@
         </mat-form-field>
 
         <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Enter Email Address</mat-label>
           <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
             Please enter a valid email address
@@ -31,7 +33,8 @@
         <div class="form-spacer"></div>
 
         <mat-form-field class="full-width" appearance="outline">
-          <input matInput placeholder="Password" name="password0FormControl" [formControl]="password0FormControl">
+          <mat-label>Enter Password</mat-label>
+          <input matInput placeholder="Password" type="password" name="password0FormControl" [formControl]="password0FormControl">
           <mat-error *ngIf="password0FormControl.hasError('password') && !password0FormControl.hasError('required')">
             Please enter a valid email address
           </mat-error>
@@ -41,7 +44,8 @@
         </mat-form-field>
 
         <mat-form-field class="full-width" appearance="outline">
-          <input matInput placeholder="Confirm Password" name="password1FormControl" [formControl]="password1FormControl">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput placeholder="Confirm Password" type="password" name="password1FormControl" [formControl]="password1FormControl">
           <mat-error *ngIf="password1FormControl.hasError('password') && !password1FormControl.hasError('required')">
             Please enter a valid email address
           </mat-error>

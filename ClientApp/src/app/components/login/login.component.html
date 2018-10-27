@@ -15,6 +15,7 @@
         </div>
 
         <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Enter Email Address</mat-label>
           <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
             Please enter a valid email address
@@ -25,6 +26,7 @@
         </mat-form-field>
 
         <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Enter Password</mat-label>
           <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
           <mat-error *ngIf="passwordFormControl.hasError('required')">
             Password is <strong>required</strong>

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Netptune.Models;
+using Netptune.Models.Relationships;
 
 namespace Netptune.Controllers
 {
@@ -111,6 +112,76 @@ namespace Netptune.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok (updatedUser);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
+        }
+
+        [HttpPost]
+        [Route("Invite")]
+        public async Task<IActionResult> Invite(string userId, int workspaceId) {
+
+            try
+            {
+                if (!ModelState.IsValid) {
+                return BadRequest (ModelState);
+                }
+
+                var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
+                var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == workspaceId);
+
+                if (user == null) {
+                    return NotFound("user not found");
+                }
+
+                if (workspace == null) {
+                    return NotFound("workspace not found");
+                }
+
+                var alreadyexists = _context.WorkspaceAppUsers.Any(x => x.UserId == user.Id && x.WorkspaceId == workspace.Id);
+
+                if (alreadyexists) {
+                    return BadRequest("User is already a member of the workspace");
+                }
+
+                var invite = new WorkspaceAppUser() {
+                    WorkspaceId = workspace.Id,
+                    UserId = user.Id
+                };
+
+                _context.WorkspaceAppUsers.Add(invite);
+
+                await _context.SaveChangesAsync();
+
+                return Ok (user);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
+        }
+
+        [HttpGet]
+        [Route("GetUserByEmail")]
+        public IActionResult GetUserByEmail(string email) {
+
+            try
+            {
+                if (!ModelState.IsValid) {
+                return BadRequest (ModelState);
+                }
+
+                var user = _context.AppUsers.SingleOrDefault(x => x.Email == email);
+
+                if (user == null) {
+                    return NotFound("user not found");
+                }
+
+                return Ok (user);
             }
             catch (Exception e)
             {
