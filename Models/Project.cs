@@ -35,5 +35,6 @@ namespace Netptune.Models
 
         public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
         public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
+        public virtual ICollection<Post> ProjectPosts { get; } = new List<Post>();
     }
 }

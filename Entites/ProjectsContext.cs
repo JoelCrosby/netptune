@@ -21,6 +21,7 @@ namespace Netptune.Entites
         public DbSet<Flag> Flags { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
@@ -111,6 +112,11 @@ namespace Netptune.Entites
                 .WithMany(t => t.ProjectUsers)
                 .HasForeignKey(pt => pt.UserId);
 
+            // (One-to-One) Project > Post
+
+            builder.Entity<Project>()
+                .HasMany(c => c.ProjectPosts)
+                .WithOne(e => e.Project);
         }
 
         public override int SaveChanges()
