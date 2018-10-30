@@ -34,6 +34,7 @@ import { TaskListComponent } from './components/project-tasks/task-list/task-lis
 import { EditorComponent } from './components/editor/editor.component';
 import { InviteDialogComponent } from './components/dialogs/invite-dialog/invite-dialog.component';
 import { BoardPostsComponent } from './components/board-posts/board-posts.component';
+import { BoardPostDialogComponent } from './components/dialogs/board-post-dialog/board-post-dialog.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -74,7 +75,8 @@ import { PostsService } from './services/posts/posts.service';
     TaskListComponent,
     EditorComponent,
     InviteDialogComponent,
-    BoardPostsComponent
+    BoardPostsComponent,
+    BoardPostDialogComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
