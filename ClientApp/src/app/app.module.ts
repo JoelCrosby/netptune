@@ -33,6 +33,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { InviteDialogComponent } from './components/dialogs/invite-dialog/invite-dialog.component';
+import { BoardPostsComponent } from './components/board-posts/board-posts.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -46,6 +47,7 @@ import { WorkspaceService } from './services/workspace/workspace.service';
 import { AlertService } from './services/alert/alert.service';
 import { LayoutService } from './services/layout/layout.service';
 import { UtilService } from './services/util/util.service';
+import { PostsService } from './services/posts/posts.service';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,8 @@ import { UtilService } from './services/util/util.service';
     ProfileComponent,
     TaskListComponent,
     EditorComponent,
-    InviteDialogComponent
+    InviteDialogComponent,
+    BoardPostsComponent
   ],
   entryComponents: [
     ProjectDialogComponent,
@@ -116,7 +119,8 @@ import { UtilService } from './services/util/util.service';
     TransitionService,
     UserService,
     UtilService,
-    LayoutService
+    LayoutService,
+    PostsService
   ],
   bootstrap: [AppComponent]
 })

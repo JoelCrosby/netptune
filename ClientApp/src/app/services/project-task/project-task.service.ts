@@ -3,11 +3,12 @@ import { Inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
+import { ProjectTask } from '../../models/project-task';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
+import { ProjectTaskStatus } from '../../enums/project-task-status';
 
 @Injectable({
   providedIn: 'root'

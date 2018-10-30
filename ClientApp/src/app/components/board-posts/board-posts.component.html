@@ -1,0 +1,21 @@
+<div class="card-group" [@dropIn]="posts">
+
+  <mat-card *ngFor="let post of posts; let i=index; trackBy:trackById;">
+    <mat-card-header>
+      <mat-card-title>{{ post.title }}</mat-card-title>
+      <mat-card-subtitle></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ post.body }}</p>
+    </mat-card-content>
+    <mat-card-actions class="flex-row space-between">
+
+      <div class="card-actions">
+        <button mat-raised-button color="primary" type="button">
+          Comment
+        </button>
+      </div>
+
+    </mat-card-actions>
+  </mat-card>
+</div>
