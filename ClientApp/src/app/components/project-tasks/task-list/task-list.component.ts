@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar, MatExpansionPanel } from '@angular/material';
 import { dropIn, toggleChip } from '../../../animations';
 import { Project } from '../../../models/project';
-import { ProjectTask, ProjectTaskStatus } from '../../../models/project-task';
+import { ProjectTask } from '../../../models/project-task';
 import { AlertService } from '../../../services/alert/alert.service';
 import { ProjectTaskService } from '../../../services/project-task/project-task.service';
 import { ProjectsService } from '../../../services/projects/projects.service';
@@ -10,6 +10,7 @@ import { UserService } from '../../../services/user/user.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
+import { ProjectTaskStatus } from '../../../enums/project-task-status';
 
 @Component({
   selector: 'app-task-list',

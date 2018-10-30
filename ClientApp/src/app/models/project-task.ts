@@ -1,7 +1,8 @@
-import { Basemodel } from './basemodel';
-import { Workspace } from './workspace';
-import { Project } from './project';
+import { ProjectTaskStatus } from '../enums/project-task-status';
 import { AppUser } from './appuser';
+import { Basemodel } from './basemodel';
+import { Project } from './project';
+import { Workspace } from './workspace';
 
 export class ProjectTask extends Basemodel {
 
@@ -17,14 +18,4 @@ export class ProjectTask extends Basemodel {
 
     public assignee: AppUser;
     public assigneeId: string;
-}
-
-export enum ProjectTaskStatus {
-    New = 0,
-    Complete = 1,
-    InProgress = 2,
-    OnHold = 3,
-    UnAssigned = 4,
-    AwaitingClassification = 5,
-    InActive = 6
 }

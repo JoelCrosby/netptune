@@ -4,13 +4,14 @@ import { saveAs } from 'file-saver';
 import { DragulaService } from 'ng2-dragula';
 import { merge, Subscription } from 'rxjs';
 import { mapTo, startWith } from 'rxjs/operators';
-import { ProjectTask, ProjectTaskStatus } from '../../models/project-task';
+import { ProjectTask } from '../../models/project-task';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { UtilService } from '../../services/util/util.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { ProjectTaskStatus } from '../../enums/project-task-status';
 
 
 
