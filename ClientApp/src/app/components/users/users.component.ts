@@ -29,40 +29,7 @@ export class UsersComponent implements OnInit {
   }
 
   async showInviteModal(): Promise<void> {
-    const dialogRef = this.dialog.open(InviteDialogComponent, {
-      width: '600px'
-    });
-
-    const email: string = await dialogRef.afterClosed().toPromise();
-
-    if (!email) {
-      return;
-    }
-
-    let user: AppUser = null;
-
-    try {
-      user = await this.userService.getUserByEmail(email).toPromise();
-    } catch (error) {
-      this.snackbar.open(`User with specified email address does not exist.`,
-        null,
-        { duration: 2000 });
-      return null;
-    }
-
-    try {
-      const userResult = await this.userService.inviteUser(user, this.workspaceService.currentWorkspace).toPromise();
-      if (userResult) {
-        this.userService.refreshUsers();
-        this.snackbar.open(`User ${userResult.email} has been invited to this workspace.`,
-          null,
-          { duration: 2000 });
-      }
-    } catch (error) {
-      this.snackbar.open(`An error has occured while trying to invite the user to this workspace.`,
-        null,
-        { duration: 2000 });
-    }
+    await this.userService.showInviteUserDialog();
   }
 
 }

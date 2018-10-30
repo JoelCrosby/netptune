@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,12 @@ export class AuthGuardService {
 
   public onNotAuthenticated = new Subject<void>();
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router) { }
 
-  canActivate(): boolean {
+  async canActivate(): Promise<boolean> {
     if (this.authService.isTokenExpired()) {
 
       this.onNotAuthenticated.next();
@@ -20,6 +24,17 @@ export class AuthGuardService {
       this.router.navigate(['login']);
       return false;
     }
+
+    if (!this.userService.currentUser) {
+
+      try {
+        const user = await this.userService.getUser(this.authService.token.userId).toPromise();
+        this.userService.currentUser = user;
+      } catch {
+        return false;
+      }
+    }
+
     return true;
   }
 

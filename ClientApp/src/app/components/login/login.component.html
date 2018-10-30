@@ -1,5 +1,5 @@
 <div clas="center">
-  <div class="full-height full-width flex-center" [@pullIn]="state">
+  <div class="full-height full-width flex-center">
 
     <mat-card>
       <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
@@ -16,7 +16,7 @@
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Enter Email Address</mat-label>
-          <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl">
+          <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl" [disabled]='isWorking'>
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
             Please enter a valid email address
           </mat-error>
@@ -27,7 +27,7 @@
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Enter Password</mat-label>
-          <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl">
+          <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl" [disabled]='isWorking'>
           <mat-error *ngIf="passwordFormControl.hasError('required')">
             Password is <strong>required</strong>
           </mat-error>
@@ -36,9 +36,9 @@
         <div class="form-spacer"></div>
 
         <div class="buuton-container">
-          <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid">Sign in</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid" [disabled]='isWorking'>Sign in</button>
           <br>
-          <button mat-button color="primary" type="button" (click)='createAccountClicked()'>Create Account</button>
+          <button mat-button color="primary" type="button" (click)='createAccountClicked()' [disabled]='isWorking'>Create Account</button>
         </div>
       </form>
     </mat-card>

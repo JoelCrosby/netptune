@@ -33,7 +33,6 @@ namespace Netptune.Controllers
             SignInManager<AppUser> signInManager
             )
         {
-
             _configuration = configuration;
             _context = context;
             _signInManager = signInManager;
@@ -70,6 +69,7 @@ namespace Netptune.Controllers
         }
 
         [HttpPost]
+        [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser(AppUser user) {
 
             try
@@ -84,8 +84,15 @@ namespace Netptune.Controllers
                     return NotFound();
                 }
 
+                var userId = _userManager.GetUserId (HttpContext.User);
+
+                if (userId != updatedUser.Id)
+                {
+                    return Unauthorized();
+                }
+
                 updatedUser.PhoneNumber = user.PhoneNumber;
-                
+
                 updatedUser.FirstName = user.FirstName;
                 updatedUser.LastName = user.LastName;
 

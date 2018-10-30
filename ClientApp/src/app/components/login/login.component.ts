@@ -12,7 +12,7 @@ import { pullIn } from '../../animations';
 })
 export class LoginComponent implements AfterViewInit {
 
-  public state = true;
+  public isWorking = false;
 
   constructor(public authServices: AuthService, private router: Router) { }
 
@@ -33,10 +33,14 @@ export class LoginComponent implements AfterViewInit {
   ngAfterViewInit() {
   }
 
-  login() {
-    this.authServices.login(
+  async login() {
+    this.isWorking = true;
+
+    await this.authServices.login(
       this.emailFormControl.value,
       this.passwordFormControl.value);
+
+    this.isWorking = false;
   }
 
   createAccountClicked(): void {

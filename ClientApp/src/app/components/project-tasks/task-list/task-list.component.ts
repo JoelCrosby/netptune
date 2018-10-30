@@ -95,7 +95,7 @@ export class TaskListComponent implements OnInit {
       case ProjectTaskStatus.OnHold:
         return 'fas fa-minus-circle blocked';
       default:
-        return '';
+        return 'fas fa-stream none';
     }
   }
 

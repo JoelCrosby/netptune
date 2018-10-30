@@ -66,36 +66,30 @@ export class AuthService {
         return true;
     }
 
-    login(email: string, password: string): void {
+    async login(email: string, password: string): Promise<boolean> {
 
         this.loginError = '';
 
         const body = `{"username": "${email}", "password": "${password}"}`;
 
-        this.http.post<Token>(this.baseUrl + 'api/auth/login', body, this.httpOptions)
-            .subscribe((data: Token) => {
+        try {
+            const data: Token = await this.http.post<Token>(this.baseUrl + 'api/auth/login', body, this.httpOptions).toPromise();
 
-                this.token = data;
+            this.token = data;
 
-                localStorage.setItem('auth_token', JSON.stringify(this.token));
-                this.userLoggedIn = true;
-                this.userName = this.token.username;
-                this.email = this.token.email;
-                this.router.navigate(['/home']);
-            }, error => {
-                if (error.error) {
-                    this.loginError = error.error;
-                } else if (error.error.error_description) {
-                    this.loginError = error.error.error_description;
-                } else {
-                    console.log(error);
-                    console.log(error.message);
-                    this.loginError = error.message;
-                }
+            localStorage.setItem('auth_token', JSON.stringify(this.token));
+            this.userLoggedIn = true;
+            this.userName = this.token.username;
+            this.email = this.token.email;
+            this.router.navigate(['/home']);
 
-                console.log(error);
-                this.userLoggedIn = false;
-            });
+            return true;
+        } catch (error) {
+            console.error(error);
+            this.userLoggedIn = false;
+
+            return false;
+        }
     }
 
     register(email: string, password: string, username: string): void {

@@ -8,6 +8,7 @@ import { WorkspaceDialogComponent } from '../dialogs/workspace-dialog/workspace-
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { dropIn } from '../../animations';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-workspaces',
@@ -21,6 +22,7 @@ export class WorkspacesComponent implements OnInit {
 
   constructor(
     public workspaceService: WorkspaceService,
+    private userService: UserService,
     private alertsService: AlertService,
     private router: Router,
     public snackBar: MatSnackBar,
@@ -115,7 +117,7 @@ export class WorkspacesComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRef.afterClosed().subscribe((result: boolean) => {
 
       if (result) {
         this.workspaceService.deleteWorkspace(workspace)
@@ -138,7 +140,8 @@ export class WorkspacesComponent implements OnInit {
 
   }
 
-  inviteUsersClicked(workspace: Workspace): void {
+  async inviteUsersClicked(): Promise<void> {
+    await this.userService.showInviteUserDialog();
   }
 
   exportDataClicked(workspace: Workspace): void {

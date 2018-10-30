@@ -5,7 +5,7 @@ export interface AppUser {
     id: string;
 
     firstName: string;
-    lasName: string;
+    lastName: string;
     email: string;
     userName: string;
     pictureUrl: string;

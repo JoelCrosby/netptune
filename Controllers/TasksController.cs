@@ -78,8 +78,6 @@ namespace Netptune.Controllers
             fromDb.OwnerId = task.OwnerId;
             fromDb.AssigneeId = task.AssigneeId;
 
-            // _context.Entry(task).State = EntityState.Modified;
-
             try
             {
                 _context.SaveChanges();
