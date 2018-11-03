@@ -28,7 +28,7 @@ namespace Netptune.Controllers
 
         public AppUsersController(
             IConfiguration configuration,
-            ProjectsContext context, 
+            ProjectsContext context,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager
             )
@@ -124,7 +124,7 @@ namespace Netptune.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
+
         }
 
         [HttpPost]
@@ -140,19 +140,16 @@ namespace Netptune.Controllers
                 var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
                 var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == workspaceId);
 
-                if (user == null) {
+                if (user == null)
                     return NotFound("user not found");
-                }
 
-                if (workspace == null) {
+                if (workspace == null)
                     return NotFound("workspace not found");
-                }
 
                 var alreadyexists = _context.WorkspaceAppUsers.Any(x => x.UserId == user.Id && x.WorkspaceId == workspace.Id);
 
-                if (alreadyexists) {
+                if (alreadyexists)
                     return BadRequest("User is already a member of the workspace");
-                }
 
                 var invite = new WorkspaceAppUser() {
                     WorkspaceId = workspace.Id,
@@ -169,7 +166,7 @@ namespace Netptune.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
+
         }
 
         [HttpGet]
@@ -194,7 +191,7 @@ namespace Netptune.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
+
         }
     }
 }
