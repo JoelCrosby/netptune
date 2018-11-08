@@ -9,7 +9,7 @@
       </button>
     </div>
 
-
+    <mat-card id="profile-card">
       <form [formGroup]="profileFromGroup">
 
         <h4>Details</h4>
@@ -49,10 +49,10 @@
         <div class="form-actions">
             <button mat-button (click)='saveChangesClicked()' [disabled]='profileFromGroup.pristine'>Save Changes</button>
         </div>
-        
+
 
       </form>
-
+    </mat-card>
 
   </div>
 </div>

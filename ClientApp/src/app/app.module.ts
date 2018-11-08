@@ -88,7 +88,8 @@ import { TaskBoardComponent } from './components/boards/task-board/task-board.co
     ProjectTypeDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
-    InviteDialogComponent
+    InviteDialogComponent,
+    BoardPostDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

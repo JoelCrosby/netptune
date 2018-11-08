@@ -89,6 +89,8 @@ namespace Netptune.Controllers
                 return BadRequest(ModelState);
             }
 
+            post.Project = _context.Projects.FirstOrDefault(x => x.Id == post.ProjectId);
+
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 

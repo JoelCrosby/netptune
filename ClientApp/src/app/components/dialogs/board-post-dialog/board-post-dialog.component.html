@@ -4,7 +4,7 @@
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Enter Post Title</mat-label>
-    <input matInput id="name" class="form-control" placeholder="Email Address" formControlName="titleFormControl" name="email"
+    <input matInput id="name" class="form-control" placeholder="Enter title..." formControlName="titleFormControl" name="title"
       required>
     <mat-hint>Required</mat-hint>
   </mat-form-field>
@@ -16,6 +16,6 @@
 <div mat-dialog-actions align="end">
   <button mat-button (click)="close()">Close</button>
   <button mat-button [mat-dialog-close]="getResult()" [disabled]="postFromGroup.invalid" type="button">
-    Invite User
+    Save Post
   </button>
 </div>
