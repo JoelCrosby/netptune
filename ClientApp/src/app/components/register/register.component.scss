@@ -3,16 +3,19 @@ h1 {
 }
 
 .full-height {
-    width: 420px;
-    height: 620px;
+    width: 620px;
     margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 100%;
 }
 
 .form-register {
     height: 100%;
     width: 100%;
-    max-width: 330px;
+    max-width: 530px;
     margin: 0 auto;
+    padding: 1rem;
 }
 
 .form-register .checkbox {

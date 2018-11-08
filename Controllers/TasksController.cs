@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Netptune.Interfaces;
 using System;
+using Netptune.Enums;
 
 namespace Netptune.Controllers
 {
@@ -28,12 +29,54 @@ namespace Netptune.Controllers
             _userManager = userManager;
         }
 
+        public class TaskDto
+        {
+            public int Id { get; set; }
+            public string AssigneeId { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public ProjectTaskStatus Status { get; set; }
+            public double SortOrder { get; set; }
+            public int? ProjectId { get; set; }
+            public int? WorkspaceId { get; set; }
+            public DateTimeOffset CreatedAt { get; set; }
+            public DateTimeOffset UpdatedAt { get; set; }
+            public string AssigneeUsername { get; set; }
+            public string AssigneePictureUrl { get; set; }
+            public string OwnerUsername { get; set; }
+            public string ProjectName { get; set; }
+        }
+
         // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<ProjectTask> GetTasks(int workspaceId)
+        public IEnumerable<TaskDto> GetTasks(int workspaceId)
         {
-            return _context.ProjectTasks.Where(x => x.Workspace.Id == workspaceId).OrderBy(x => x.SortOrder)
+
+            // var param = new SqlParameter("@WorkspaceId", workspaceId);
+            // var students = _context.ProjectTasks.FromSql("SelectAllWorkspaceTasks @WorkspaceId", param).ToList();
+
+            // return students;
+
+            var result = _context.ProjectTasks.Where(x => x.Workspace.Id == workspaceId).OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee).Include(x => x.Project).Include(x => x.Owner);
+
+            return result.Select(r => new TaskDto() {
+                        Id = r.Id,
+                        AssigneeId = r.Assignee.Id,
+                        Name = r.Name,
+                        Description = r.Description,
+                        Status = r.Status,
+                        SortOrder = r.SortOrder,
+                        ProjectId = r.ProjectId,
+                        WorkspaceId = r.WorkspaceId,
+                        CreatedAt = r.CreatedAt,
+                        UpdatedAt = r.UpdatedAt,
+                        AssigneeUsername = r.Assignee.UserName,
+                        AssigneePictureUrl = r.Assignee.UserName,
+                        OwnerUsername = r.Owner.UserName,
+                        ProjectName = r.Project.Name
+                    }).ToList();
+                    
         }
 
         // GET: api/Tasks/5

@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar, MatExpansionPanel } from '@angular/material';
+import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { dropIn, toggleChip } from '../../../animations';
+import { ProjectTaskStatus } from '../../../enums/project-task-status';
 import { Project } from '../../../models/project';
 import { ProjectTask } from '../../../models/project-task';
+import { ProjectTaskDto } from '../../../models/view-models/project-task-dto';
 import { AlertService } from '../../../services/alert/alert.service';
 import { ProjectTaskService } from '../../../services/project-task/project-task.service';
 import { ProjectsService } from '../../../services/projects/projects.service';
@@ -10,7 +12,6 @@ import { UserService } from '../../../services/user/user.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from '../../dialogs/task-dialog/task-dialog.component';
-import { ProjectTaskStatus } from '../../../enums/project-task-status';
 
 @Component({
   selector: 'app-task-list',
@@ -20,7 +21,8 @@ import { ProjectTaskStatus } from '../../../enums/project-task-status';
 })
 export class TaskListComponent implements OnInit {
 
-  @Input() tasks: ProjectTask[];
+  @Input() tasks: ProjectTaskDto[];
+
   @Input() dragGroupName: string;
   @Input() identifier: string;
   @Input() dragExpaneded: boolean;
@@ -36,28 +38,13 @@ export class TaskListComponent implements OnInit {
     public snackBar: MatSnackBar,
     public userService: UserService,
     public projectTaskService: ProjectTaskService,
-    private projectsService: ProjectsService,
     private workspaceService: WorkspaceService,
-    private alertsService: AlertService
   ) { }
 
   ngOnInit() { }
 
   trackById(index: number, task: ProjectTask) {
     return task.id;
-  }
-
-  expandPanel(matExpansionPanel: MatExpansionPanel, event: Event): void {
-    event.stopPropagation(); // Preventing event bubbling
-
-    if (!this._isExpansionIndicator(event.target)) {
-      matExpansionPanel.close(); // Here's the magic
-    }
-  }
-
-  private _isExpansionIndicator(target: EventTarget): boolean {
-    const expansionIndicatorClass = 'mat-expansion-indicator';
-    return ((<Element>target).classList && (<Element>target).classList.contains(expansionIndicatorClass));
   }
 
   clearModalValues(): void {
@@ -101,7 +88,7 @@ export class TaskListComponent implements OnInit {
   }
 
   UpdateSortOrder(): void {
-    this.projectTaskService.updateSortOrder(this.tasks).subscribe((responce: ProjectTask[]) => { });
+    // TODO: impletement sort order customisation.
   }
 
   async statusClicked(task: ProjectTask, status: ProjectTaskStatus): Promise<void> {

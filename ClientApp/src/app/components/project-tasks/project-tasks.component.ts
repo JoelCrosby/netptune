@@ -4,21 +4,22 @@ import { saveAs } from 'file-saver';
 import { DragulaService } from 'ng2-dragula';
 import { merge, Subscription } from 'rxjs';
 import { mapTo, startWith } from 'rxjs/operators';
+import { fadeIn } from '../../animations';
+import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
+import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
+import { AuthService } from '../../services/auth/auth.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { UtilService } from '../../services/util/util.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
-import { AuthService } from '../../services/auth/auth.service';
-import { ProjectTaskStatus } from '../../enums/project-task-status';
-
-
 
 @Component({
     selector: 'app-project-tasks',
     templateUrl: './project-tasks.component.html',
-    styleUrls: ['./project-tasks.component.scss']
+    styleUrls: ['./project-tasks.component.scss'],
+    animations: [fadeIn]
 })
 export class ProjectTasksComponent implements OnInit, OnDestroy {
 
@@ -33,15 +34,17 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
     public blockedStatus = ProjectTaskStatus.OnHold;
     public backlogStatus = ProjectTaskStatus.InActive;
 
-    public myTasks: ProjectTask[] = [];
-    public completedTasks: ProjectTask[] = [];
-    public backlogTasks: ProjectTask[] = [];
+    public myTasks: ProjectTaskDto[] = [];
+    public completedTasks: ProjectTaskDto[] = [];
+    public backlogTasks: ProjectTaskDto[] = [];
 
     public taskspanel: MatExpansionPanel;
 
     public dragStart$ = this.dragulaService.drag(this.dragGroupName).pipe(mapTo(true));
     public dragEnd$ = this.dragulaService.dragend(this.dragGroupName).pipe(mapTo(false));
     public isDragging$ = merge(this.dragStart$, this.dragEnd$).pipe(startWith(false));
+
+    public dataLoaded = false;
 
     constructor(
         public projectTaskService: ProjectTaskService,
@@ -56,7 +59,7 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
         this.subs.add(
             this.dragulaService
                 .dropModel(this.dragGroupName)
-                .subscribe(({ el, target, source, item, sourceModel, targetModel, sourceIndex, targetIndex }) => {
+                .subscribe(({ target, source, item }) => {
 
                     const task = <ProjectTask>item;
                     if (!task) { return; }
@@ -67,13 +70,13 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
                 })
         );
         this.subs.add(this.projectTaskService.taskUpdated
-            .subscribe((task: ProjectTask) => this.refreshData())
+            .subscribe(_ => this.refreshData())
         );
         this.subs.add(this.projectTaskService.taskAdded
-            .subscribe((task: ProjectTask) => this.refreshData())
+            .subscribe(_ => this.refreshData())
         );
         this.subs.add(this.projectTaskService.taskDeleted
-            .subscribe((task: ProjectTask) => this.refreshData())
+            .subscribe(_ => this.refreshData())
         );
     }
 
@@ -91,6 +94,8 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
         this.utilService.smoothUpdate(this.myTasks, this.projectTaskService.myTasks);
         this.utilService.smoothUpdate(this.completedTasks, this.projectTaskService.completedTasks);
         this.utilService.smoothUpdate(this.backlogTasks, this.projectTaskService.backlogTasks);
+
+        this.dataLoaded = true;
     }
 
     async addProjectTask(task: ProjectTask): Promise<void> {

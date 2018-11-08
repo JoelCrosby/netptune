@@ -9,16 +9,18 @@ import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
+import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectTaskService {
-  public tasks: ProjectTask[] = [];
 
-  public myTasks: ProjectTask[] = [];
-  public completedTasks: ProjectTask[] = [];
-  public backlogTasks: ProjectTask[] = [];
+  public tasks: ProjectTaskDto[] = [];
+
+  public myTasks: ProjectTaskDto[] = [];
+  public completedTasks: ProjectTaskDto[] = [];
+  public backlogTasks: ProjectTaskDto[] = [];
 
   public taskAdded = new Subject<ProjectTask>();
   public taskUpdated = new Subject<ProjectTask>();
@@ -72,11 +74,11 @@ export class ProjectTaskService {
     };
   }
 
-  getTasks(worspace: Workspace = this.workspaceService.currentWorkspace): Observable<ProjectTask[]> {
+  getTasks(worspace: Workspace = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
     const httpOptions = this.getHeaders();
 
     return this.http
-      .get<ProjectTask[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
+      .get<ProjectTaskDto[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
   }
 
   private addTask(task: ProjectTask): Observable<ProjectTask> {
@@ -100,7 +102,7 @@ export class ProjectTaskService {
         this.snackBar.open(`Project ${task.name} Added!.`, null, {
           duration: 3000
         });
-        return <ProjectTask>result;
+        return result;
       }
     } catch {
       this.snackBar.open('An error occured while trying to create the task', null, {

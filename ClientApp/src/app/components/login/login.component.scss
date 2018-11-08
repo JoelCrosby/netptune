@@ -3,9 +3,11 @@ h1 {
 }
 
 .full-height {
-    width: 360px;
-    height: 500px;
+    width: 620px;
     margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 100%;
 }
 
 .form-signin {
@@ -13,6 +15,7 @@ h1 {
     width: 100%;
     max-width: 630px;
     margin: 0 auto;
+    padding: 1rem;
 }
 
 .form-signin .checkbox {
@@ -29,4 +32,11 @@ h1 {
 
 .form-group {
     margin-bottom: 0rem;
+}
+
+button {
+    height: 4rem !important;
+    width: 27rem !important;
+    font-size: 1.4rem !important;
+    font-family: 'Nunito Sans' !important;
 }

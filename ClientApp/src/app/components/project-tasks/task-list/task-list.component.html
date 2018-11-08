@@ -1,68 +1,25 @@
-<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier" [class.expanded]='dragExpaneded'>
-  <mat-expansion-panel #matExpansionPanel *ngFor="let task of tasks">
-    <mat-expansion-panel-header (click)="expandPanel(matExpansionPanel, $event)" (dblclick)='matExpansionPanel.toggle()'>
-      <mat-panel-title>
+<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier"
+  [class.expanded]='dragExpaneded'>
+
+  <div class="task-card" *ngFor="let task of tasks">
+    <div class="task-header">
+      <div class="task-header-title">
         <i [class]='getStatusClass(task)' id="task-icon" *ngIf="userService.settings.showTaskIcons"></i>
         <div class="title">
           {{ task.name }}
         </div>
-      </mat-panel-title>
-      <mat-panel-description>
-        <mat-chip-list>
-          <mat-chip color="primary">
-            {{ task.project.name }}
-          </mat-chip>
-          <mat-chip color="accent">
-            {{ task.assignee.userName }}
-          </mat-chip>
-        </mat-chip-list>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-
-    <p>{{ task.description }}</p>
-
-    <app-editor></app-editor>
-
-    <div class="card-chips">
-      <mat-chip-list>
-        <mat-chip id="info-chip">Owner {{ task.owner?.userName }}</mat-chip>
-        <mat-chip id="info-chip">Updated {{ task.updatedAt | date }}</mat-chip>
-        <mat-chip id="info-chip">Created {{ task.createdAt | date }}</mat-chip>
-      </mat-chip-list>
+      </div>
+      <div class="chip-list">
+        <mat-chip color="primary">
+          {{ task.projectName }}
+        </mat-chip>
+        <div class="chip-spacer"></div>
+        <mat-chip color="accent">
+          {{ task.assigneeUsername }}
+        </mat-chip>
+      </div>
     </div>
-
-    <mat-action-row>
-
-      <div class="status-chips">
-        <mat-chip-list id="status-chips">
-          <mat-chip id="complete" (click)='statusClicked(task, Complete)' *ngIf="task.status !== Complete" @toggleChip>
-            <i class="fas fa-check"></i>
-            Mark Complete
-          </mat-chip>
-          <mat-chip id="in-progress" (click)='statusClicked(task, InProgress)' *ngIf="task.status !== InProgress"
-            @toggleChip>
-            <i class="fas fa-spinner"></i>
-            In Progress
-          </mat-chip>
-          <mat-chip id="blocked" (click)='statusClicked(task, Blocked)' *ngIf="task.status !== Blocked" @toggleChip>
-            <i class="fas fa-minus-circle"></i>
-            Blocked
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-
-      <div class="actions">
-        <button mat-button color="primary" type="button" (click)='showUpdateModal(task)'>
-          Edit
-        </button>
-        <button mat-button color="primary" type="button" (click)='showDeleteModal(task)'>
-          Delete
-        </button>
-      </div>
-
-    </mat-action-row>
-
-  </mat-expansion-panel>
+  </div>
 
   <mat-expansion-panel id='placeholder' *ngIf='dragExpaneded'>
     <mat-expansion-panel-header>

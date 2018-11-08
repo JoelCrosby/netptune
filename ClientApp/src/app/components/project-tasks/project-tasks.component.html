@@ -1,4 +1,4 @@
-<div class="container main">
+<div class="container main fade-in" *ngIf="dataLoaded">
   <div class="container-max">
 
     <div class="component-header bottom-border">
@@ -41,11 +41,6 @@
           <app-task-list [(tasks)]='backlogTasks' dragGroupName="PROJECT_TASKS" [identifier]="backlogStatus" [dragExpaneded]='isDragging$ | async'></app-task-list>
         </mat-expansion-panel>
       </div>
-
-      <!-- <button mat-button *ngIf="tasks && tasks.length > 0" type="button" class="btn btn-light float-right"
-        id="export-button" (click)='exportProjects()' [disabled]='exportInProgress'>
-        Export Projects
-      </button> -->
 
     </mat-accordion>
 

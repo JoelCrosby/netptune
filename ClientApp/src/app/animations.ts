@@ -46,3 +46,13 @@ export const toggleChip = trigger('toggleChip', [
     animate('320ms ease-out', style({ opacity: 0, width: 0, height: '*' }))
   ])
 ]);
+
+export const fadeIn = trigger('fadeIn', [
+  transition(':enter', [
+    style({ opacity: 0 }),
+    animate('320ms ease-out', style({ opacity: 1 })),
+  ]),
+  transition(':leave', [
+    animate('320ms ease-out', style({ opacity: 0 }))
+  ])
+]);
