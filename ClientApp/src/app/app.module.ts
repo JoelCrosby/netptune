@@ -6,8 +6,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
-import { DragulaModule } from 'ng2-dragula';
 import { QuillModule } from 'ngx-quill';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Components
 import { AppComponent } from './components/app/app.component';
@@ -99,7 +99,7 @@ import { TaskBoardComponent } from './components/boards/task-board/task-board.co
     BrowserAnimationsModule,
     AppMaterialModule,
     QuillModule,
-    DragulaModule.forRoot(),
+    DragDropModule,
     RouterModule.forRoot([
       { path: '', component: WorkspacesComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
       { path: 'login', component: LoginComponent },

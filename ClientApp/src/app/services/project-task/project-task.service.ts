@@ -10,6 +10,7 @@ import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
+import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
 
 @Injectable({
   providedIn: 'root'
@@ -156,6 +157,13 @@ export class ProjectTaskService {
 
     const url = `${this.baseUrl}api/ProjectTasks/${task.id}`;
     return this.http.delete<ProjectTask>(url, httpOptions).pipe(catchError(this.handleError));
+  }
+
+  public getProjectTaskCount(projectId: number): Observable<ProjectTaskCounts> {
+    const httpOptions = this.getHeaders();
+
+    const url = `${this.baseUrl}api/ProjectTasks/GetProjectTaskCount?projectId=${projectId}`;
+    return this.http.get<ProjectTaskCounts>(url, httpOptions).pipe(catchError(this.handleError));
   }
 
   updateSortOrder(tasks: ProjectTask[]): Observable<ProjectTask[]> {

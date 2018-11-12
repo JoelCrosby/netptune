@@ -2,12 +2,10 @@
 
 @import 'styles/variables.scss';
 @import 'styles/mixins.scss';
-@import 'styles/dragula.scss';
 @import 'styles/animations.scss';
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
 
 html,
 body,
@@ -26,7 +24,7 @@ body {
 
 body,
 p {
-    font-family: 'Nunito Sans', 'Roboto', sans-serif !important;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 h1,

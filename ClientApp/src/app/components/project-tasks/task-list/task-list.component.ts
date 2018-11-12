@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { dropIn, toggleChip } from '../../../animations';
 import { ProjectTaskStatus } from '../../../enums/project-task-status';
 import { Project } from '../../../models/project';
 import { ProjectTask } from '../../../models/project-task';
 import { ProjectTaskDto } from '../../../models/view-models/project-task-dto';
-import { AlertService } from '../../../services/alert/alert.service';
 import { ProjectTaskService } from '../../../services/project-task/project-task.service';
-import { ProjectsService } from '../../../services/projects/projects.service';
 import { UserService } from '../../../services/user/user.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
@@ -26,6 +25,8 @@ export class TaskListComponent implements OnInit {
   @Input() dragGroupName: string;
   @Input() identifier: string;
   @Input() dragExpaneded: boolean;
+
+  @Input() dragPeerContainers: string[];
 
   public selectedTask: ProjectTask;
 
@@ -48,12 +49,44 @@ export class TaskListComponent implements OnInit {
   }
 
   clearModalValues(): void {
-    // finally clear selecetd project
     this.selectedTask = null;
   }
 
   refreshData(): void {
     this.projectTaskService.refreshTasks(this.workspaceService.currentWorkspace);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+
+      const task = <unknown>event.previousContainer.data[event.previousIndex] as ProjectTask;
+      if (!task) { return; }
+
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+
+      this.projectTaskService.changeTaskStatus(
+        task,
+        this.getContainerTaskStatus(event.container.id)
+      );
+    }
+  }
+
+  getContainerTaskStatus(containerId: string): ProjectTaskStatus {
+    switch (containerId) {
+      case 'myTasks':
+        return this.InProgress;
+      case 'completedTasks':
+        return this.Complete;
+      case 'backlogTasks':
+        return ProjectTaskStatus.InActive;
+      default:
+        return ProjectTaskStatus.InActive;
+    }
   }
 
   showUpdateModal(task: ProjectTask): void {

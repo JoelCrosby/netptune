@@ -1,30 +1,39 @@
-<mat-accordion class="tasks-accordion" [dragula]="dragGroupName" [(dragulaModel)]="tasks" [id]="identifier"
-  [class.expanded]='dragExpaneded'>
+<mat-accordion>
+  <div
+    cdkDropList
+    #todoList="cdkDropList"
+    class="tasks-accordion task-list"
+    [cdkDropListConnectedTo]="dragPeerContainers"
+    [cdkDropListData]="tasks"
+    [id]="identifier" 
+    [class.expanded]='dragExpaneded'
+    (cdkDropListDropped)="drop($event)">
 
-  <div class="task-card" *ngFor="let task of tasks">
-    <div class="task-header">
-      <div class="task-header-title">
-        <i [class]='getStatusClass(task)' id="task-icon" *ngIf="userService.settings.showTaskIcons"></i>
-        <div class="title">
-          {{ task.name }}
+    <div class="task-card" *ngFor="let task of tasks" cdkDrag>
+      <div class="task-header">
+        <div class="task-header-title">
+          <i [class]='getStatusClass(task)' id="task-icon" *ngIf="userService.settings.showTaskIcons"></i>
+          <div class="title">
+            {{ task.name }}
+          </div>
+        </div>
+        <div class="chip-list">
+          <mat-chip color="primary">
+            {{ task.projectName }}
+          </mat-chip>
+          <div class="chip-spacer"></div>
+          <mat-chip color="accent">
+            {{ task.assigneeUsername }}
+          </mat-chip>
         </div>
       </div>
-      <div class="chip-list">
-        <mat-chip color="primary">
-          {{ task.projectName }}
-        </mat-chip>
-        <div class="chip-spacer"></div>
-        <mat-chip color="accent">
-          {{ task.assigneeUsername }}
-        </mat-chip>
-      </div>
     </div>
+
+    <mat-expansion-panel id='placeholder' *ngIf='dragExpaneded'>
+      <mat-expansion-panel-header>
+
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+
   </div>
-
-  <mat-expansion-panel id='placeholder' *ngIf='dragExpaneded'>
-    <mat-expansion-panel-header>
-
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
-
 </mat-accordion>

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Netptune.Interfaces;
 using System;
 using Netptune.Enums;
+using Netptune.Models.ViewModels;
 
 namespace Netptune.Controllers
 {
@@ -76,7 +77,7 @@ namespace Netptune.Controllers
                         OwnerUsername = r.Owner.UserName,
                         ProjectName = r.Project.Name
                     }).ToList();
-                    
+
         }
 
         // GET: api/Tasks/5
@@ -231,6 +232,23 @@ namespace Netptune.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpGet]
+        [Route("GetProjectTaskCount")]
+        public async Task<IActionResult> GetProjectTaskCount(int projectId)
+        {
+            var tasks = _context.ProjectTasks.Where(x => x.ProjectId == projectId && !x.IsDeleted);
+
+            return Ok(
+                await Task.FromResult(new ProjectTaskCounts() 
+                { 
+                    AllTasks  = tasks.Count(),
+                    CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),
+                    InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
+                    BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned)
+                })
+            );
         }
     }
 }

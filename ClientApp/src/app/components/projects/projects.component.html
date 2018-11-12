@@ -28,7 +28,10 @@
           <mat-card-content>
             <p>{{ project.description }}</p>
 
-
+            <Small> All Tasks - {{ taskCounts[i]?.allTasks }} </Small>
+            <Small> Completed - {{ taskCounts[i]?.completedTasks }} </Small>
+            <Small> In Progress - {{ taskCounts[i]?.inProgressTasks }} </Small>
+            <Small> Backlog - {{ taskCounts[i]?.backlogTasks }} </Small>
 
           </mat-card-content>
           <mat-card-actions class="flex-row space-between">

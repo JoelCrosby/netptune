@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from '../../models/project';
-import { ProjectsService } from '../../services/projects/projects.service';
-import { AlertService } from '../../services/alert/alert.service';
-import { ProjectTypeService } from '../../services/project-type/project-type.service';
-import { ProjectType } from '../../models/project-type';
-import { saveAs } from 'file-saver';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';
-import { dropIn } from '../../animations';
-import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
+import { dropIn } from '../../animations';
+import { Project } from '../../models/project';
+import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
+import { AlertService } from '../../services/alert/alert.service';
+import { ProjectTaskService } from '../../services/project-task/project-task.service';
+import { ProjectTypeService } from '../../services/project-type/project-type.service';
+import { ProjectsService } from '../../services/projects/projects.service';
+import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';
 
 
 @Component({
@@ -22,11 +23,13 @@ import { MatSnackBar } from '@angular/material';
 export class ProjectsComponent implements OnInit {
 
   public exportInProgress = false;
+  public taskCounts: ProjectTaskCounts[] = [];
 
   selectedProject: Project;
 
   constructor(
     public projectsService: ProjectsService,
+    public projectTaskService: ProjectTaskService,
     public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
@@ -35,17 +38,27 @@ export class ProjectsComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.refreshData();
+  async ngOnInit(): Promise<void> {
+    await this.refreshData();
   }
 
-  refreshData(): void {
-    this.projectsService.refreshProjects(this.workspaceService.currentWorkspace);
-    this.projectTypeService.refreshProjectTypes();
+  async refreshData(): Promise<void> {
+    await this.projectsService.refreshProjects(this.workspaceService.currentWorkspace);
+    await this.projectTypeService.refreshProjectTypes();
+    await this.getProjectTaskCounts();
   }
 
   trackById(index: number, project: Project) {
     return project.id;
+  }
+
+  async getProjectTaskCounts(): Promise<void> {
+    for (let i = 0; i < this.projectsService.projects.length; i++) {
+      const project = this.projectsService.projects[i];
+      this.taskCounts.push(
+        await this.projectTaskService.getProjectTaskCount(project.id).toPromise()
+      );
+    }
   }
 
   getProjectTypeName(project: Project): string {
@@ -98,14 +111,14 @@ export class ProjectsComponent implements OnInit {
   }
 
   showUpdateModal(project: Project): void {
-    if (project == null) { return; }
+    if (project === null) { return; }
 
     this.selectedProject = project;
     this.open(this.selectedProject);
   }
 
   showDeleteModal(project: Project): void {
-    if (project == null) { return; }
+    if (project === null) { return; }
 
     this.selectedProject = project;
     this.openConfirmationDialog(this.selectedProject);

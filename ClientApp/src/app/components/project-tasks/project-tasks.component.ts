@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { saveAs } from 'file-saver';
-import { DragulaService } from 'ng2-dragula';
-import { merge, Subscription } from 'rxjs';
-import { mapTo, startWith } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { fadeIn } from '../../animations';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
@@ -24,7 +22,6 @@ import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.componen
 export class ProjectTasksComponent implements OnInit, OnDestroy {
 
     public exportInProgress = false;
-    public dragGroupName = 'PROJECT_TASKS';
 
     public selectedTask: ProjectTask;
     public subs = new Subscription();
@@ -38,11 +35,11 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
     public completedTasks: ProjectTaskDto[] = [];
     public backlogTasks: ProjectTaskDto[] = [];
 
-    public taskspanel: MatExpansionPanel;
+    public completedTasksPeers: string[] = ['myTasks', 'backlogTasks'];
+    public inProgressTasksPeers: string[] = ['completedTasks', 'backlogTasks'];
+    public backlogTasksPeers: string[] = ['completedTasks', 'myTasks'];
 
-    public dragStart$ = this.dragulaService.drag(this.dragGroupName).pipe(mapTo(true));
-    public dragEnd$ = this.dragulaService.dragend(this.dragGroupName).pipe(mapTo(false));
-    public isDragging$ = merge(this.dragStart$, this.dragEnd$).pipe(startWith(false));
+    public taskspanel: MatExpansionPanel;
 
     public dataLoaded = false;
 
@@ -51,32 +48,18 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
         private projectsService: ProjectsService,
         private workspaceService: WorkspaceService,
         public snackBar: MatSnackBar,
-        private dragulaService: DragulaService,
         private utilService: UtilService,
         private authService: AuthService,
         public dialog: MatDialog
     ) {
-        this.subs.add(
-            this.dragulaService
-                .dropModel(this.dragGroupName)
-                .subscribe(({ target, source, item }) => {
-
-                    const task = <ProjectTask>item;
-                    if (!task) { return; }
-
-                    if (target.id !== source.id && task.status !== Number(target.id)) {
-                        this.projectTaskService.changeTaskStatus(task, Number(target.id));
-                    }
-                })
-        );
         this.subs.add(this.projectTaskService.taskUpdated
-            .subscribe(_ => this.refreshData())
+            .subscribe(async _ => await this.refreshData())
         );
         this.subs.add(this.projectTaskService.taskAdded
-            .subscribe(_ => this.refreshData())
+            .subscribe(async _ => await this.refreshData())
         );
         this.subs.add(this.projectTaskService.taskDeleted
-            .subscribe(_ => this.refreshData())
+            .subscribe(async _ => await this.refreshData())
         );
     }
 

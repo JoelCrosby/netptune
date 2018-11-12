@@ -23,13 +23,11 @@ export class ProjectTypeService {
 
   constructor(private http: HttpClient, private authService: AuthService, @Inject('BASE_URL') private baseUrl: string) { }
 
-  refreshProjectTypes(): void {
-    this.getProjectTypes()
-      .subscribe((response: ProjectType[]) => {
+  async refreshProjectTypes(): Promise<void> {
+    const response = await this.getProjectTypes().toPromise();
 
-        this.projectTypes.splice(0, this.projectTypes.length);
-        this.projectTypes.push.apply(this.projectTypes, response);
-      });
+    this.projectTypes.splice(0, this.projectTypes.length);
+    this.projectTypes.push.apply(this.projectTypes, response);
   }
 
   getProjectTypes(): Observable<ProjectType[]> {

@@ -34,7 +34,6 @@
     "core-js": "^2.5.7",
     "file-saver": "^2.0.0-rc.4",
     "hammerjs": "^2.0.8",
-    "ng2-dragula": "^2.1.0",
     "ngx-quill": "^4.0.0",
     "quill": "^1.3.6",
     "rxjs": "^6.3.3",
