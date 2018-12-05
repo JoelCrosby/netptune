@@ -35,12 +35,14 @@
 
       <div class="form-spacer"></div>
 
-      <div class="buuton-container">
-        <button mat-raised-button color="primary" type="submit" id="#sign-in-btn" [disabled]="loginFromGroup.invalid" [disabled]='isWorking'>Sign
-          in</button>
+      <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid" [disabled]='isWorking'>
+          Sign in
+        </button>
         <br>
         <button mat-button color="primary" type="button" (click)='createAccountClicked()' [disabled]='isWorking'>Create
-          Account</button>
+          Account
+        </button>
       </div>
     </form>
   </mat-card>
