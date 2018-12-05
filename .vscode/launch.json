@@ -28,7 +28,8 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:6400"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -38,7 +39,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "https://localhost:5001",
+            "url": "http://localhost:6400",
             "webRoot": "${workspaceFolder}/ClientApp"
         },
         {
@@ -46,7 +47,7 @@
             "type": "firefox",
             "request": "launch",
             "reAttach": true,
-            "url": "https://localhost:5001",
+            "url": "http://localhost:6400",
             "webRoot": "${workspaceFolder}/ClientApp"
         },
         {
@@ -74,7 +75,8 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:6400"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
