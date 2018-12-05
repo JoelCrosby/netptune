@@ -11,6 +11,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
 import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +80,7 @@ export class ProjectTaskService {
     const httpOptions = this.getHeaders();
 
     return this.http
-      .get<ProjectTaskDto[]>(this.baseUrl + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
+      .get<ProjectTaskDto[]>(environment.apiEndpoint + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
   }
 
   private addTask(task: ProjectTask): Observable<ProjectTask> {
@@ -89,7 +90,7 @@ export class ProjectTaskService {
       task.workspace = this.workspaceService.currentWorkspace;
     }
 
-    return this.http.post<ProjectTask>(this.baseUrl + 'api/ProjectTasks', task, httpOptions).pipe(catchError(this.handleError));
+    return this.http.post<ProjectTask>(environment.apiEndpoint + 'api/ProjectTasks', task, httpOptions).pipe(catchError(this.handleError));
   }
 
   async addProjectTask(task: ProjectTask): Promise<ProjectTask> {
@@ -115,7 +116,7 @@ export class ProjectTaskService {
   private updateTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.id}`;
+    const url = `${environment.apiEndpoint}api/ProjectTasks/${task.id}`;
     return this.http.put<ProjectTask>(url, task, httpOptions).pipe(catchError(this.handleError));
   }
 
@@ -155,21 +156,21 @@ export class ProjectTaskService {
   private deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/${task.id}`;
+    const url = `${environment.apiEndpoint}api/ProjectTasks/${task.id}`;
     return this.http.delete<ProjectTask>(url, httpOptions).pipe(catchError(this.handleError));
   }
 
   public getProjectTaskCount(projectId: number): Observable<ProjectTaskCounts> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/GetProjectTaskCount?projectId=${projectId}`;
+    const url = `${environment.apiEndpoint}api/ProjectTasks/GetProjectTaskCount?projectId=${projectId}`;
     return this.http.get<ProjectTaskCounts>(url, httpOptions).pipe(catchError(this.handleError));
   }
 
   updateSortOrder(tasks: ProjectTask[]): Observable<ProjectTask[]> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTasks/UpdateSortOrder`;
+    const url = `${environment.apiEndpoint}api/ProjectTasks/UpdateSortOrder`;
     return this.http.post<ProjectTask[]>(url, tasks, httpOptions).pipe(catchError(this.handleError));
   }
 

@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { ProjectType } from '../../models/project-type';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -33,14 +34,14 @@ export class ProjectTypeService {
   getProjectTypes(): Observable<ProjectType[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<ProjectType[]>(this.baseUrl + 'api/ProjectTypes', httpOptions)
+    return this.http.get<ProjectType[]>(environment.apiEndpoint + 'api/ProjectTypes', httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   getProjectType(id: number): Observable<ProjectType> {
-    const url = `${this.baseUrl}api/ProjectTypes/${id}`;
+    const url = `${environment.apiEndpoint}api/ProjectTypes/${id}`;
     return this.http.get<ProjectType>(url)
       .pipe(
         catchError(this.handleError)
@@ -50,7 +51,7 @@ export class ProjectTypeService {
   addProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<ProjectType>(this.baseUrl + 'api/ProjectTypes', projectType, httpOptions)
+    return this.http.post<ProjectType>(environment.apiEndpoint + 'api/ProjectTypes', projectType, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -59,7 +60,7 @@ export class ProjectTypeService {
   updateProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTypes/${projectType.id}`;
+    const url = `${environment.apiEndpoint}api/ProjectTypes/${projectType.id}`;
     return this.http.put<ProjectType>(url, projectType, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -69,7 +70,7 @@ export class ProjectTypeService {
   deleteProjectType(projectType: ProjectType): Observable<ProjectType> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/ProjectTypes/${projectType.id}`;
+    const url = `${environment.apiEndpoint}api/ProjectTypes/${projectType.id}`;
     return this.http.delete<ProjectType>(url, httpOptions)
       .pipe(
         catchError(this.handleError)

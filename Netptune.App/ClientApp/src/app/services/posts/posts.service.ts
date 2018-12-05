@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Post } from '../../models/post';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class PostsService {
     const httpOptions = this.getHeaders();
 
     return this.http
-      .get<Post[]>(this.baseUrl + 'api/Posts/GetProjectPosts' + '?projectId=' + projectId, httpOptions);
+      .get<Post[]>(environment.apiEndpoint + 'api/Posts/GetProjectPosts' + '?projectId=' + projectId, httpOptions);
   }
 
   async savePost(post: Post): Promise<Post> {
@@ -38,7 +39,7 @@ export class PostsService {
 
     try {
       const result =
-        await this.http.post<Post>(this.baseUrl + 'api/Posts/', post, httpOptions).toPromise();
+        await this.http.post<Post>(environment.apiEndpoint + 'api/Posts/', post, httpOptions).toPromise();
 
       this.snackBar.open('Task Deleted', null, {
         duration: 2000

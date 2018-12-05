@@ -1,8 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Token } from '../../models/token';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +18,8 @@ export class AuthService {
 
     public token: Token = new Token();
 
-    public userName: string;
-    public email: string;
+    public get userName(): string { return this.token.username; }
+    public get email(): string { return this.token.email; }
 
     public onLogout = new Subject<void>();
 
@@ -28,7 +29,7 @@ export class AuthService {
         })
     };
 
-    constructor(private http: HttpClient, private router: Router, @Inject('BASE_URL') private baseUrl: string) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     isTokenExpired(): boolean {
 
@@ -55,9 +56,6 @@ export class AuthService {
 
         if (expdate > today) {
             this.userLoggedIn = true;
-            this.userName = token.username;
-            this.email = token.email;
-
             return false;
         }
 
@@ -73,14 +71,12 @@ export class AuthService {
         const body = `{"username": "${email}", "password": "${password}"}`;
 
         try {
-            const data: Token = await this.http.post<Token>(this.baseUrl + 'api/auth/login', body, this.httpOptions).toPromise();
+            const data: Token = await this.http.post<Token>(environment.apiEndpoint + 'api/auth/login', body, this.httpOptions).toPromise();
 
             this.token = data;
 
             localStorage.setItem('auth_token', JSON.stringify(this.token));
             this.userLoggedIn = true;
-            this.userName = this.token.username;
-            this.email = this.token.email;
             this.router.navigate(['/home']);
 
             return true;
@@ -95,22 +91,13 @@ export class AuthService {
     register(email: string, password: string, username: string): void {
         const body = `{"email": "${email}", "password": "${password}", "username": "${username}"}`;
 
-        this.http.post<Token>(this.baseUrl + 'api/auth/Register', body, this.httpOptions)
+        this.http.post<Token>(environment.apiEndpoint + 'api/auth/Register', body, this.httpOptions)
             .subscribe(data => {
 
-                this.token.email = data.email;
-                this.token.displayName = data.displayName;
-                this.token.expires = data.expires;
-                this.token.issued = data.issued;
-                this.token.token = data.token;
-                this.token.expires_in = data.expires_in;
-                this.token.token_type = data.token_type;
-                this.token.username = data.username;
+                this.token = data;
 
                 localStorage.setItem('auth_token', JSON.stringify(this.token));
                 this.userLoggedIn = true;
-                this.userName = this.token.username;
-                this.email = this.token.email;
                 this.router.navigate(['/home']);
             }, error => {
                 if (error.error.Message) {
@@ -126,7 +113,6 @@ export class AuthService {
     logout() {
         localStorage.removeItem('auth_token');
         this.userLoggedIn = false;
-        this.userName = null;
         this.onLogout.next();
         this.router.navigate(['/login']);
     }

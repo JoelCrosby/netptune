@@ -7,6 +7,7 @@ import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from '../user/user.service';
 import { WorkspaceService } from '../workspace/workspace.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class ProjectsService {
   getProjects(worspace: Workspace): Observable<Project[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Project[]>(this.baseUrl + 'api/Projects' + `?workspaceId=${worspace.id}`, httpOptions)
+    return this.http.get<Project[]>(environment.apiEndpoint + 'api/Projects' + `?workspaceId=${worspace.id}`, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -58,7 +59,7 @@ export class ProjectsService {
   addProject(project: Project): Observable<Project> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<Project>(this.baseUrl + 'api/Projects', project, httpOptions)
+    return this.http.post<Project>(environment.apiEndpoint + 'api/Projects', project, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -67,7 +68,7 @@ export class ProjectsService {
   updateProject(project: Project): Observable<Project> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/projects/${project.id}`;
+    const url = `${environment.apiEndpoint}api/projects/${project.id}`;
     return this.http.put<Project>(url, project, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -77,7 +78,7 @@ export class ProjectsService {
   deleteProject(project: Project): Observable<Project> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/projects/${project.id}`;
+    const url = `${environment.apiEndpoint}api/projects/${project.id}`;
     return this.http.delete<Project>(url, httpOptions)
       .pipe(
         catchError(this.handleError)

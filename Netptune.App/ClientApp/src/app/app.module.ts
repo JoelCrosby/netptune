@@ -36,6 +36,7 @@ import { InviteDialogComponent } from './components/dialogs/invite-dialog/invite
 import { BoardPostsComponent } from './components/board-posts/board-posts.component';
 import { BoardPostDialogComponent } from './components/dialogs/board-post-dialog/board-post-dialog.component';
 import { BoardsComponent } from './components/boards/boards.component';
+import { TaskBoardComponent } from './components/boards/task-board/task-board.component';
 
 // Services
 import { AuthService } from './services/auth/auth.service';
@@ -50,7 +51,6 @@ import { AlertService } from './services/alert/alert.service';
 import { LayoutService } from './services/layout/layout.service';
 import { UtilService } from './services/util/util.service';
 import { PostsService } from './services/posts/posts.service';
-import { TaskBoardComponent } from './components/boards/task-board/task-board.component';
 
 @NgModule({
   declarations: [

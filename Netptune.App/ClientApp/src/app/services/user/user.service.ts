@@ -8,6 +8,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 import { UserSettings } from '../../models/user-settings';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from '../../components/dialogs/invite-dialog/invite-dialog.component';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -82,27 +83,28 @@ export class UserService {
 
   getUsers(workspace: Workspace): Observable<AppUser[]> {
     const httpOptions = this.getHeaders();
-    return this.http.get<AppUser[]>(this.baseUrl + 'api/AppUsers' + `?workspaceId=${workspace.id}`, httpOptions);
+    return this.http.get<AppUser[]>(environment.apiEndpoint + 'api/AppUsers' + `?workspaceId=${workspace.id}`, httpOptions);
   }
 
   getUser(userId: string = this.authService.token.userId): Observable<AppUser> {
     const httpOptions = this.getHeaders();
-    return this.http.get<AppUser>(this.baseUrl + 'api/AppUsers/' + userId, httpOptions);
+    return this.http.get<AppUser>(environment.apiEndpoint + 'api/AppUsers/' + userId, httpOptions);
   }
 
   getUserByEmail(email: string): Observable<AppUser> {
     const httpOptions = this.getHeaders();
-    return this.http.get<AppUser>(this.baseUrl + `api/AppUsers/GetUserByEmail?email=${email}`, httpOptions);
+    return this.http.get<AppUser>(environment.apiEndpoint + `api/AppUsers/GetUserByEmail?email=${email}`, httpOptions);
   }
 
   inviteUser(user: AppUser, workspace: Workspace): Observable<AppUser> {
     const httpOptions = this.getHeaders();
-    return this.http.post<AppUser>(this.baseUrl + `api/AppUsers/Invite?userId=${user.id}&workspaceId=${workspace.id}`, httpOptions);
+    return this.http.post<AppUser>(environment.apiEndpoint + `api/AppUsers/Invite?userId=${user.id}&workspaceId=${workspace.id}`,
+      httpOptions);
   }
 
   updateUser(user: AppUser = this.currentUser): Observable<AppUser> {
     const httpOptions = this.getHeaders();
-    return this.http.post<AppUser>(this.baseUrl + `api/AppUsers/UpdateUser`, user, httpOptions);
+    return this.http.post<AppUser>(environment.apiEndpoint + `api/AppUsers/UpdateUser`, user, httpOptions);
   }
 
 }

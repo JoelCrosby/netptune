@@ -59,6 +59,7 @@ namespace Netptune.Api
                         ValidAudience = "Netptune.com",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
                     };
+
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -75,7 +76,11 @@ namespace Netptune.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProjectsContext identityDbContext)
         {
-            app.UseAuthentication();
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             if (env.IsDevelopment())
             {
@@ -85,10 +90,15 @@ namespace Netptune.Api
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.MapWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
+                branch.UseAuthentication();
+            });
 
             app.UseMvc(routes =>
             {

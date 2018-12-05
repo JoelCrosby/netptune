@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Netptune.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Netptune.App.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
@@ -33,6 +33,10 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
+            },
+            "logging": {
+                "engineLogging": false,
+                "moduleLoad": false
             }
         },
         {
@@ -55,7 +59,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Netptune.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/Netptune.App.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
@@ -80,6 +84,10 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
+            },
+            "logging": {
+                "engineLogging": false,
+                "moduleLoad": false
             }
         },
         {

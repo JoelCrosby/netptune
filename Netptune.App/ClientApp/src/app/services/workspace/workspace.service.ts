@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Observable, throwError, Subject } from 'rxjs';
 import { Workspace } from '../../models/workspace';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +52,7 @@ export class WorkspaceService {
   getWorkspaces(): Observable<Workspace[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Workspace[]>(this.baseUrl + 'api/Workspaces', httpOptions)
+    return this.http.get<Workspace[]>(environment.apiEndpoint + 'api/Workspaces', httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -60,7 +61,7 @@ export class WorkspaceService {
   addWorkspace(workspace: Workspace): Observable<Workspace> {
     const httpOptions = this.getHeaders();
 
-    return this.http.post<Workspace>(this.baseUrl + 'api/Workspaces', workspace, httpOptions)
+    return this.http.post<Workspace>(environment.apiEndpoint + 'api/Workspaces', workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -69,7 +70,7 @@ export class WorkspaceService {
   updateWorkspace(workspace: Workspace): Observable<Workspace> {
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/Workspaces/${workspace.id}`;
+    const url = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
     return this.http.put<Workspace>(url, workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -82,7 +83,7 @@ export class WorkspaceService {
 
     const httpOptions = this.getHeaders();
 
-    const url = `${this.baseUrl}api/Workspaces/${workspace.id}`;
+    const url = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
     return this.http.put<Workspace>(url, workspace, httpOptions)
       .pipe(
         catchError(this.handleError)
