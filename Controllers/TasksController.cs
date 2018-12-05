@@ -53,30 +53,30 @@ namespace Netptune.Controllers
         public IEnumerable<TaskDto> GetTasks(int workspaceId)
         {
 
-            // var param = new SqlParameter("@WorkspaceId", workspaceId);
-            // var students = _context.ProjectTasks.FromSql("SelectAllWorkspaceTasks @WorkspaceId", param).ToList();
+            var result = _context.ProjectTasks
+                .Where(x => x.Workspace.Id == workspaceId)
+                .OrderBy(x => x.SortOrder)
+                .Include(x => x.Assignee)
+                .Include(x => x.Project)
+                .Include(x => x.Owner);
 
-            // return students;
-
-            var result = _context.ProjectTasks.Where(x => x.Workspace.Id == workspaceId).OrderBy(x => x.SortOrder)
-                .Include(x => x.Assignee).Include(x => x.Project).Include(x => x.Owner);
-
-            return result.Select(r => new TaskDto() {
-                        Id = r.Id,
-                        AssigneeId = r.Assignee.Id,
-                        Name = r.Name,
-                        Description = r.Description,
-                        Status = r.Status,
-                        SortOrder = r.SortOrder,
-                        ProjectId = r.ProjectId,
-                        WorkspaceId = r.WorkspaceId,
-                        CreatedAt = r.CreatedAt,
-                        UpdatedAt = r.UpdatedAt,
-                        AssigneeUsername = r.Assignee.UserName,
-                        AssigneePictureUrl = r.Assignee.UserName,
-                        OwnerUsername = r.Owner.UserName,
-                        ProjectName = r.Project.Name
-                    }).ToList();
+            return result
+                .Select(r => new TaskDto() {
+                    Id = r.Id,
+                    AssigneeId = r.Assignee.Id,
+                    Name = r.Name,
+                    Description = r.Description,
+                    Status = r.Status,
+                    SortOrder = r.SortOrder,
+                    ProjectId = r.ProjectId,
+                    WorkspaceId = r.WorkspaceId,
+                    CreatedAt = r.CreatedAt,
+                    UpdatedAt = r.UpdatedAt,
+                    AssigneeUsername = r.Assignee.UserName,
+                    AssigneePictureUrl = r.Assignee.UserName,
+                    OwnerUsername = r.Owner.UserName,
+                    ProjectName = r.Project.Name
+                }).ToList();
 
         }
 
