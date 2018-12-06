@@ -76,17 +76,18 @@ namespace Netptune.Api.Controllers
                    user.LastLoginTime = DateTime.UtcNow;
                    _context.SaveChanges();
                }
-                
+
+                var expireDays = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Tokens:ExpireDays"]));
 
                 return Ok(new
                 {
-                    token = GenerateJwtToken(model.Username, appUser),
+                    token = GenerateJwtToken(appUser, expireDays),
                     userId = appUser.Id,
                     username = model.Username,
                     emailaddress = appUser.Email,
                     displayName = appUser.UserName,
                     issued = DateTime.Now,
-                    expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]))
+                    expires = expireDays
                 });
 
             }
@@ -117,14 +118,16 @@ namespace Netptune.Api.Controllers
 
                 await _signInManager.SignInAsync(user, false);
 
+                var expireDays = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Tokens:ExpireDays"]));
+
                 return Ok(new
                 {
-                    token = GenerateJwtToken(model.Username, user),
+                    token = GenerateJwtToken(user, expireDays),
                     username = model.Username,
                     emailaddress = user.Email,
                     displayName = user.UserName,
                     issued = DateTime.Now,
-                    expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]))
+                    expires = expireDays
                 });
             }
 
@@ -136,22 +139,20 @@ namespace Netptune.Api.Controllers
             return BadRequest("Registration failed.");
         }
 
-        private object GenerateJwtToken(string email, AppUser user)
+        private object GenerateJwtToken(AppUser user, DateTime expires)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecurityKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:SecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JwtIssuer"],
-                audience: _configuration["JwtIssuer"],
+                issuer: _configuration["Tokens:Issuer"],
+                audience: _configuration["Tokens:Issuer"],
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,21 +47,30 @@ namespace Netptune.Api
                 options.Password.RequireUppercase = false;
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = "Netptune.com",
-                        ValidAudience = "Netptune.com",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
-                    };
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
 
-                });
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Tokens:Issuer"],
+                    ValidAudience = Configuration["Tokens:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:SecurityKey"]))
+                    
+                };
+
+            });
+
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -76,6 +86,7 @@ namespace Netptune.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProjectsContext identityDbContext)
         {
+
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
@@ -93,12 +104,7 @@ namespace Netptune.Api
                 app.UseHttpsRedirection();
             }
 
-            app.UseStaticFiles();
-
-            app.MapWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch =>
-            {
-                branch.UseAuthentication();
-            });
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

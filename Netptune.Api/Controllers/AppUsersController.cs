@@ -40,10 +40,9 @@ namespace Netptune.Api.Controllers
         public IEnumerable<AppUser> GetWorkspaceUsers(int workspaceId)
         {
 
-            var users = (from WorkspaceAppUsers in _context.WorkspaceAppUsers
-                            where
-                                WorkspaceAppUsers.WorkspaceId == workspaceId
-                            select WorkspaceAppUsers.User);
+            var users = (from workspaceAppUsers in _context.WorkspaceAppUsers
+                            where workspaceAppUsers.WorkspaceId == workspaceId
+                            select workspaceAppUsers.User);
             return users;
         }
 
@@ -142,9 +141,9 @@ namespace Netptune.Api.Controllers
                 if (workspace == null)
                     return NotFound("workspace not found");
 
-                var alreadyexists = _context.WorkspaceAppUsers.Any(x => x.UserId == user.Id && x.WorkspaceId == workspace.Id);
+                var alreadyExists = _context.WorkspaceAppUsers.Any(x => x.UserId == user.Id && x.WorkspaceId == workspace.Id);
 
-                if (alreadyexists)
+                if (alreadyExists)
                     return BadRequest("User is already a member of the workspace");
 
                 var invite = new WorkspaceAppUser() {
