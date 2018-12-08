@@ -10,15 +10,6 @@
   </mat-form-field>
 
   <mat-form-field class="full-width" appearance="outline">
-    <mat-label>Enter Project Name</mat-label>
-    <mat-select id="type" name="type" placeholder="Project Type" formControlName="projectTypeFormControl">
-      <mat-option>None</mat-option>
-      <mat-option *ngFor="let type of projectTypeService.projectTypes" [value]="type.id">{{type.name}}</mat-option>
-    </mat-select>
-    <mat-hint>Required</mat-hint>
-  </mat-form-field>
-
-  <mat-form-field class="full-width" appearance="outline">
     <mat-label>Enter Project Repository</mat-label>
     <input matInput id="url" class="form-control" placeholder="Repository Url" formControlName="repositoryUrlFormControl"
       name="url">

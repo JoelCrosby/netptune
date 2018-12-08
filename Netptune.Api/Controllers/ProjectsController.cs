@@ -32,7 +32,7 @@ namespace Netptune.Api.Controllers
             _context.ProjectTasks.Include(x => x.Owner).ThenInclude(x => x.UserName);
             return _context.Projects.Where(
                 x => x.WorkspaceId == workspaceId && !x.IsDeleted)
-                    .Include(x => x.ProjectType).Include(x => x.Workspace).Include(x => x.Owner);
+                    .Include(x => x.Workspace).Include(x => x.Owner);
         }
 
         // GET: api/Projects/5
@@ -77,7 +77,6 @@ namespace Netptune.Api.Controllers
 
             modifiedProject.Name = project.Name;
             modifiedProject.Description = project.Description;
-            modifiedProject.ProjectTypeId = project.ProjectTypeId;
 
             modifiedProject.ModifiedByUserId = _userManager.GetUserId(HttpContext.User);
 

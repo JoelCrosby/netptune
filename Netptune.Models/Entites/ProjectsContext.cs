@@ -16,7 +16,6 @@ namespace Netptune.Models.Entites
         // Core data models
 
         public DbSet<Project> Projects { get; set; }
-        public DbSet<ProjectType> ProjectTypes { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Flag> Flags { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
@@ -28,19 +27,26 @@ namespace Netptune.Models.Entites
         public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
 
+        public ProjectsContext() : base()
+        {
+
+        }
+
         public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
         {
 
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(
+                "Server=tcp:127.0.0.1,1433;Initial Catalog=Netptune;User ID=sa;Password=yourStrong(!)Password;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
             base.OnModelCreating(builder);
-
-            builder.Entity<Project>()
-                .HasOne(e => e.ProjectType)
-                .WithMany(c => c.Projects);
 
             builder.Entity<Project>()
                 .HasOne(e => e.Workspace)

@@ -19,15 +19,10 @@ namespace Netptune.Models.Models
         public string RepositoryUrl { get; set; }
 
         [Required]
-        [ForeignKey("ProjectType")]
-        public int? ProjectTypeId { get; set; }
-
-        [Required]
         [ForeignKey("Workspace")]
         public int? WorkspaceId { get; set; }
 
         // Navigation properties
-        public virtual ProjectType ProjectType { get; set; }
         public virtual Workspace Workspace { get; set; }
 
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();

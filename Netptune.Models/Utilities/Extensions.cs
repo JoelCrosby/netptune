@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Interfaces;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Models.Utilities
 {
     public static class Extensions
     {

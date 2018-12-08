@@ -2,7 +2,6 @@
   <div class="container-max">
 
     <div class="component-header bottom-border">
-      <h4>All Projects</h4>
       <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showAddModal()'>
         <i class="far fa-map"></i>
         New Project
@@ -19,11 +18,7 @@
 
         <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
           <mat-card-header>
-            <span class="icon">
-              <i class="{{ projectTypeService.getFaIconById(project.projectTypeId) }}"></i>
-            </span>
             <mat-card-title>{{ project.name }}</mat-card-title>
-            <mat-card-subtitle>{{ getProjectTypeName(project) }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p>{{ project.description }}</p>

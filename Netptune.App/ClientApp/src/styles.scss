@@ -42,6 +42,7 @@ h6,
 a,
 small {
     font-family: 'Roboto', sans-serif !important;
+    font-weight: initial !important;
 }
 
 .center {
@@ -109,25 +110,6 @@ small {
 
 #new-button:hover {
     width: 14rem;
-}
-
-.shadow-panel {
-    background-color: white !important;
-    -webkit-box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-    padding: 2rem;
-    margin-bottom: 2rem !important;
-    -webkit-transition: width 2s;
-    /* Safari */
-    transition: width 2s;
-    border-radius: 6px;
-}
-
-.container-max {
-    height: 100%;
-    width: 100%;
-    padding: 1.8rem;
-    min-height: 100%;
 }
 
 .dropdown-menu {

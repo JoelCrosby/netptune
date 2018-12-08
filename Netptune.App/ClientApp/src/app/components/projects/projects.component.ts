@@ -7,7 +7,6 @@ import { Project } from '../../models/project';
 import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
 import { AlertService } from '../../services/alert/alert.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
-import { ProjectTypeService } from '../../services/project-type/project-type.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -30,7 +29,6 @@ export class ProjectsComponent implements OnInit {
   constructor(
     public projectsService: ProjectsService,
     public projectTaskService: ProjectTaskService,
-    public projectTypeService: ProjectTypeService,
     private alertsService: AlertService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
@@ -44,7 +42,6 @@ export class ProjectsComponent implements OnInit {
 
   async refreshData(): Promise<void> {
     await this.projectsService.refreshProjects(this.workspaceService.currentWorkspace);
-    await this.projectTypeService.refreshProjectTypes();
     await this.getProjectTaskCounts();
   }
 
@@ -59,11 +56,6 @@ export class ProjectsComponent implements OnInit {
         await this.projectTaskService.getProjectTaskCount(project.id).toPromise()
       );
     }
-  }
-
-  getProjectTypeName(project: Project): string {
-    if (!project.projectTypeId || !this.projectTypeService.projectTypes) { return; }
-    return this.projectTypeService.projectTypes.filter(item => item.id === project.projectTypeId)[0].name;
   }
 
   addProject(project: Project): void {
@@ -201,10 +193,6 @@ export class ProjectsComponent implements OnInit {
 
     this.projectsService.getProjects(this.workspaceService.currentWorkspace).subscribe(
       result => {
-        for (const project of result) {
-          const type = this.projectTypeService.projectTypes.filter(item => item.id === project.projectTypeId)[0];
-          project['projectType'] = type;
-        }
 
         const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, 'projects.json');
