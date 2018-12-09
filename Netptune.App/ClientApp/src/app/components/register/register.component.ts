@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { trigger, style, transition, animate, query } from '@angular/animations';
 import { pullIn } from '../../animations';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,10 @@ export class RegisterComponent implements OnInit {
 
   public state = true;
 
-  constructor(public authServices: AuthService, private router: Router) { }
+  constructor(
+    public authServices: AuthService,
+    private router: Router,
+    public snackbar: MatSnackBar) { }
 
   usernameControl = new FormControl('', [
     Validators.required,
@@ -44,11 +48,19 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  register() {
-    this.authServices.register(
+  async register() {
+    const result = await this.authServices.register(
       this.emailFormControl.value,
       this.password1FormControl.value,
       this.usernameControl.value);
+
+    if (result.isSuccess) {
+      this.router.navigate(['/home']);
+    } else {
+      this.snackbar.open(result.message, null, {
+        duration: 3000,
+      });
+    }
   }
 
   backToLoginClicked(): void {

@@ -4,6 +4,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { RegisterResult } from '../../models/register-result.ts';
 
 @Injectable({
     providedIn: 'root'
@@ -88,26 +89,30 @@ export class AuthService {
         }
     }
 
-    register(email: string, password: string, username: string): void {
-        const body = `{"email": "${email}", "password": "${password}", "username": "${username}"}`;
+    async register(email: string, password: string, username: string): Promise<RegisterResult> {
 
-        this.http.post<Token>(environment.apiEndpoint + 'api/auth/Register', body, this.httpOptions)
-            .subscribe(data => {
+        const body = {
+            email,
+            password,
+            username
+        };
 
-                this.token = data;
+        try {
+            const result = await this.http.post<Token>(
+                environment.apiEndpoint + 'api/auth/Register',
+                body,
+                this.httpOptions
+            ).toPromise();
 
-                localStorage.setItem('auth_token', JSON.stringify(this.token));
-                this.userLoggedIn = true;
-                this.router.navigate(['/home']);
-            }, error => {
-                if (error.error.Message) {
-                    this.registerError = error.error.Message;
-                } else if (error.error.error_description) {
-                    this.registerError = error.error.error_description;
-                } else { this.registerError = JSON.parse(error.error); }
+            this.token = result;
+            localStorage.setItem('auth_token', JSON.stringify(this.token));
+            this.userLoggedIn = true;
 
-                console.log(error);
-            });
+            return RegisterResult.Success();
+
+        } catch (error) {
+            return RegisterResult.Error(error);
+        }
     }
 
     logout() {
