@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
 import { Post } from '../../models/post';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,7 @@ export class PostsService {
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar,
-    private authService: AuthService,
-    @Inject('BASE_URL') private baseUrl: string
+    private authService: AuthService
   ) { }
 
   getHeaders() {

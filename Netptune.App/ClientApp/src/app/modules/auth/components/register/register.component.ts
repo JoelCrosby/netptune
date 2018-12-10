@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { trigger, style, transition, animate, query } from '@angular/animations';
-import { pullIn } from '../../animations';
+import { pullIn } from '../../../../animations';
 import { MatSnackBar } from '@angular/material';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-register',

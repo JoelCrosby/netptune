@@ -21,7 +21,7 @@ export class AuthGuardService {
 
       this.onNotAuthenticated.next();
 
-      this.router.navigate(['login']);
+      this.router.navigate(['auth/login']);
       return false;
     }
 

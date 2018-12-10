@@ -1,17 +1,17 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProjectTask } from '../../models/project-task';
 import { Workspace } from '../../models/workspace';
-import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
 import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,7 @@ export class ProjectTaskService {
     private authService: AuthService,
     private workspaceService: WorkspaceService,
     private snackBar: MatSnackBar,
-    private utilService: UtilService,
-    @Inject('BASE_URL') private baseUrl: string
+    private utilService: UtilService
   ) {
     this.authService.onLogout.subscribe(() => {
       this.tasks = [];

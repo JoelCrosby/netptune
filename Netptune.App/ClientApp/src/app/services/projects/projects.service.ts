@@ -1,13 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Project } from '../../models/project';
 import { Workspace } from '../../models/workspace';
-import { AuthService } from '../auth/auth.service';
-import { UserService } from '../user/user.service';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +19,7 @@ export class ProjectsService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private workspaceService: WorkspaceService,
-    private userService: UserService,
-    @Inject('BASE_URL') private baseUrl: string) {
+    private workspaceService: WorkspaceService) {
     this.authService.onLogout.subscribe(() => {
       this.projects = [];
     });

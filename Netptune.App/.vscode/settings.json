@@ -8,6 +8,7 @@
         "**/node_modules": true,
         "**/.DS_Store": true,
         "**/StyleCop.Cache": true,
-        "**/**.csproj.user": true,
-    }, 
+        "**/*.csproj.user": true,
+    },
+    "editor.tabSize": 2,
 }

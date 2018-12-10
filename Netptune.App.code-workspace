@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "Netptune.App"
+		}
+	],
+	"settings": {
+		"tslint.configFile": "./ClientApp/tslint.json"
+	}
+}

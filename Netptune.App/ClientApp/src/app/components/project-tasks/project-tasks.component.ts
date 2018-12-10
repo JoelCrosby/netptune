@@ -6,12 +6,12 @@ import { fadeIn } from '../../animations';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
 import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
-import { AuthService } from '../../services/auth/auth.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { UtilService } from '../../services/util/util.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 import { TaskDialogComponent } from '../dialogs/task-dialog/task-dialog.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
     selector: 'app-project-tasks',

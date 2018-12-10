@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth/auth.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { pullIn } from '../../animations';
+import { pullIn } from '../../../../animations';
+import { MatSnackBar } from '@angular/material';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { pullIn } from '../../animations';
 export class LoginComponent {
 
   public isWorking = false;
+  public hidePassword = true;
 
   public loginFromGroup = new FormGroup({
     emailFormControl: new FormControl('', [
@@ -28,17 +30,23 @@ export class LoginComponent {
   // convenience getter for easy access to form fields
   get f() { return this.loginFromGroup.controls; }
 
-  constructor(public authServices: AuthService, private router: Router) { }
+  constructor(public authServices: AuthService, private router: Router, public snackbar: MatSnackBar) { }
 
   async login() {
     this.isWorking = true;
 
-    await this.authServices.login(
+    const result = await this.authServices.login(
       this.loginFromGroup.controls['emailFormControl'].value,
       this.loginFromGroup.controls['passwordFormControl'].value
     );
 
     this.isWorking = false;
+
+    if (result.isSuccess) {
+      this.router.navigate(['/home']);
+    } else {
+      this.snackbar.open(result.message, null, { duration: 2000 });
+    }
   }
 
   onCreateAccountClicked(): void {

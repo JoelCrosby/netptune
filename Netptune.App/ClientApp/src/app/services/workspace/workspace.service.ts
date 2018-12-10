@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
 import { Observable, throwError, Subject } from 'rxjs';
 import { Workspace } from '../../models/workspace';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,7 @@ export class WorkspaceService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
-    @Inject('BASE_URL') private baseUrl: string) {
+    private authService: AuthService) {
     this.authService.onLogout.subscribe(() => {
       this.currentWorkspace = null;
     });

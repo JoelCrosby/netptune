@@ -7,6 +7,6 @@
         "**/bin": true,
         "**/node_modules": true,
         "**/.DS_Store": true,
-        "**/**.csproj.user": true,
+        "**/*.csproj.user": true,
     }, 
 }

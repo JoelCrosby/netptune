@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ArrayType } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'

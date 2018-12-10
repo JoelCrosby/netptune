@@ -17,6 +17,9 @@ namespace Netptune.Api
 {
     public class Startup
     {
+
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -26,11 +29,6 @@ namespace Netptune.Api
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
-        }
-
-        public IConfiguration Configuration
-        {
-            get;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -72,11 +70,8 @@ namespace Netptune.Api
                     ValidIssuer = Configuration["Tokens:Issuer"],
                     ValidAudience = Configuration["Tokens:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:SecurityKey"]))
-                    
                 };
-
             });
-
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from '../../services/user/user.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { AppUser } from '../../models/appuser';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -40,23 +40,19 @@ export class ProfileComponent implements OnInit {
 
   async saveChangesClicked(): Promise<void> {
 
-    try {
-      const user: AppUser = JSON.parse(JSON.stringify(this.userService.currentUser));
+    const user: AppUser = JSON.parse(JSON.stringify(this.userService.currentUser));
 
-      user.firstName = this.profileFromGroup.controls['firstNameFormControl'].value;
-      user.lastName = this.profileFromGroup.controls['lastNameFormControl'].value;
-      user.email = this.profileFromGroup.controls['emailFormControl'].value;
+    user.firstName = this.profileFromGroup.controls['firstNameFormControl'].value;
+    user.lastName = this.profileFromGroup.controls['lastNameFormControl'].value;
+    user.email = this.profileFromGroup.controls['emailFormControl'].value;
 
-      await this.userService.updateUser(user).toPromise();
-      this.snackbar.open(`Changes applied.`,
-        null,
-        { duration: 2000 });
-    } catch (error) {
-      this.snackbar.open(`An error occured while trying to update.`,
-        null,
-        { duration: 2000 });
+    const result = await this.userService.updateUser(user);
+
+    if (result.isSuccess) {
+      this.snackbar.open(`Changes applied.`, null, { duration: 2000 });
+    } else {
+      this.snackbar.open(result.message, null, { duration: 2000 });
     }
-
   }
 
   async showLogOutModal(): Promise<void> {

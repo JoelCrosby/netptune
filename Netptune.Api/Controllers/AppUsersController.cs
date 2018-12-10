@@ -91,16 +91,6 @@ namespace Netptune.Api.Controllers
                 updatedUser.FirstName = user.FirstName;
                 updatedUser.LastName = user.LastName;
 
-                if (updatedUser.UserName != user.UserName)
-                {
-                    if(_context.AppUsers.Any(x => x.UserName == user.UserName))
-                    {
-                        return BadRequest("Username is already taken.");
-                    }
-
-                    updatedUser.UserName = user.UserName;
-                }
-
                 if (updatedUser.Email != user.Email)
                 {
                     if(_context.AppUsers.Any(x => x.Email == user.Email))
@@ -109,6 +99,7 @@ namespace Netptune.Api.Controllers
                     }
 
                     updatedUser.Email = user.Email;
+                    updatedUser.UserName = user.UserName;
                 }
 
                 await _context.SaveChangesAsync();
