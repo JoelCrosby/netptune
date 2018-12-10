@@ -7,7 +7,6 @@
         "**/bin": true,
         "**/node_modules": true,
         "**/.DS_Store": true,
-        "**/StyleCop.Cache": true,
         "**/**.csproj.user": true,
     }, 
 }
