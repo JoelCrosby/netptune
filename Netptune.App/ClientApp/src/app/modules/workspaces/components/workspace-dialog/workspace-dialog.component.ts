@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Workspace } from '../../../models/workspace';
+import { Workspace } from '../../../../models/workspace';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -11,8 +12,13 @@ export class WorkspaceDialogComponent implements OnInit {
 
   public workspace: Workspace;
 
-  public selectedName: string;
-  public selectedDescription: string;
+  public workspaceFromGroup = new FormGroup({
+    nameFormControl: new FormControl('', [
+      Validators.required,
+    ]),
+    discriptionFormControl: new FormControl('', [
+    ])
+  });
 
   constructor(
     public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
@@ -33,8 +39,8 @@ export class WorkspaceDialogComponent implements OnInit {
       workspaceResult.id = this.workspace.id;
     }
 
-    workspaceResult.name = this.selectedName;
-    workspaceResult.description = this.selectedDescription;
+    workspaceResult.name = this.workspaceFromGroup.controls['nameFormControl'].value;
+    workspaceResult.description = this.workspaceFromGroup.controls['discriptionFormControl'].value;
 
     return workspaceResult;
   }

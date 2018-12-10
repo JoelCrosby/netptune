@@ -15,21 +15,14 @@ $light1: #F6F9FA;
 $textOnDark: #A8A9AB;
 $hovberOnDark: #2C313C;
 
+@import '~@angular/material/theming';
 
-$primary: #0288D1;
+// Copy the palettes from your selected theme (usually theme.scss).
+$app-primary: mat-palette($mat-grey);
+$app-accent:  mat-palette($mat-light-blue);
+$app-warn:    mat-palette($mat-pink);
 
-.visual-studio {
-    color: #865FC5;
-}
-
-.nodejs {
-    color: #43853D;
-}
-
-.windows {
-    color: #007ACC;
-}
-
-.angular {
-   color: #E53935;
-}
+// Create your Sass color vars (will be available in all the project)
+$primary: mat-color($app-primary);
+$accent: mat-color($app-accent);
+$warn: mat-color($app-warn);

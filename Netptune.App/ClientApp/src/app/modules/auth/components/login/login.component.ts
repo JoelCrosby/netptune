@@ -50,6 +50,6 @@ export class LoginComponent {
   }
 
   onCreateAccountClicked(): void {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/auth/register']);
   }
 }

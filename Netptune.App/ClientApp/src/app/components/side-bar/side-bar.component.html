@@ -9,23 +9,23 @@
 
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/projects"]'>
+            <a [routerLink]='["/projects"]' matRipple>
                 <i class="far fa-map"></i>Projects</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/boards"]'>
+            <a [routerLink]='["/boards"]' matRipple>
                 <i class="fas fa-columns"></i>Boards</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/tasks"]'>
+            <a [routerLink]='["/tasks"]' matRipple>
                 <i class="fas fa-tasks"></i>Tasks</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/flags"]'>
+            <a [routerLink]='["/flags"]' matRipple>
                 <i class="far fa-flag"></i>Flags</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/users"]'>
+            <a [routerLink]='["/users"]' matRipple>
                 <i class="far fa-user"></i>Users</a>
         </li>
     </ul>
@@ -34,19 +34,19 @@
 
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/profile"]'>
+            <a [routerLink]='["/profile"]' matRipple>
                 <i class="far fa-user"></i>
                 {{ authService.token.displayName }}
             </a>
         </li>
         <li>
-            <a [routerLink]='["/workspaces"]'>
+            <a [routerLink]='["/workspaces"]' matRipple>
                 <i class="fas fa-network-wired"></i>
                 My Worksapces
             </a>
         </li>
         <li>
-            <a id="sideBar-toggle" (click)='transitionService.toggleSideBar()' href="javascript:void(0)">
+            <a id="sideBar-toggle" (click)='transitionService.toggleSideBar()' href="javascript:void(0)" matRipple>
                 <i class="fas fa-bars"></i>
                 Toggle
             </a>

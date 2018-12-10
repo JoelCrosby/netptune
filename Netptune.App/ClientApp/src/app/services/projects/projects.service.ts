@@ -44,10 +44,10 @@ export class ProjectsService {
     };
   }
 
-  getProjects(worspace: Workspace): Observable<Project[]> {
+  getProjects(workspace: Workspace): Observable<Project[]> {
     const httpOptions = this.getHeaders();
 
-    return this.http.get<Project[]>(environment.apiEndpoint + 'api/Projects' + `?workspaceId=${worspace.id}`, httpOptions)
+    return this.http.get<Project[]>(environment.apiEndpoint + 'api/Projects' + `?workspaceId=${workspace.id}`, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

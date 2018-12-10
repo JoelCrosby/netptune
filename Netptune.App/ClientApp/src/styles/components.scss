@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .component-header {
     h4 {
         font-weight: 200;
@@ -46,11 +48,19 @@ ul {
     list-style-type: none;
 }
 
-.buuton-container {
+.button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+}
+
+.form-action-button {
+    font-size: 1.4rem;
+    font-weight: initial;
+    height: 3.6rem;
+    border-width: 2px !important;
+    border-color: $primary !important;
 }
 
 .flex-center {

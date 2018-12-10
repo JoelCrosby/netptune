@@ -75,11 +75,11 @@ export class ProjectTaskService {
     };
   }
 
-  getTasks(worspace: Workspace = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
+  getTasks(workspace: Workspace = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
     const httpOptions = this.getHeaders();
 
     return this.http
-      .get<ProjectTaskDto[]>(environment.apiEndpoint + 'api/ProjectTasks' + '?workspaceId=' + worspace.id, httpOptions);
+      .get<ProjectTaskDto[]>(environment.apiEndpoint + 'api/ProjectTasks' + '?workspaceId=' + workspace.id, httpOptions);
   }
 
   private addTask(task: ProjectTask): Observable<ProjectTask> {

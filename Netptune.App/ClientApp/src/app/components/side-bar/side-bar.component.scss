@@ -26,11 +26,10 @@ a:focus {
 }
 
 #sidebar {
-    background: $black1;
-    color: $textOnDark;
-    -webkit-box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.03);
-    box-shadow: 0.05rem 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.03);
+    background: #FAFAFA;
+    color: #202A34;
     transition: all 0.3s;
+    border-right: 1px solid #DADADA;
 }
 
 #sidebar .sidebar-header {
@@ -39,7 +38,7 @@ a:focus {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #30343C;
+    border-bottom: 1px solid #DADADA;
     margin-top: 0;
 }
 
@@ -51,10 +50,17 @@ a:focus {
     padding: 16px 16px 16px 10px;
     font-size: 1.1em;
     display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #sidebar ul li a:hover {
-    background: $hovberOnDark;
+    background: #DADADA;
     border-radius: 5px;
 }
 
@@ -67,7 +73,7 @@ a:focus {
 }
 
 .link-active {
-    color: white;
+    color: #9C27B0;
 }
 
 ul ul a {

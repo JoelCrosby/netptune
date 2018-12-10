@@ -15,14 +15,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectDialogComponent } from './components/dialogs/project-dialog/project-dialog.component';
 import { TaskDialogComponent } from './components/dialogs/task-dialog/task-dialog.component';
-import { WorkspaceDialogComponent } from './components/dialogs/workspace-dialog/workspace-dialog.component';
 import { FlagsComponent } from './components/flags/flags.component';
 import { HeroComponent } from './components/hero/hero.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
 import { UsersComponent } from './components/users/users.component';
-import { WorkspacesComponent } from './components/workspaces/workspaces.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
 import { EditorComponent } from './components/editor/editor.component';
@@ -39,7 +37,6 @@ import { TransitionService } from './services/transition/transition.service';
 import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
 import { AlertService } from './services/alert/alert.service';
-import { LayoutService } from './services/layout/layout.service';
 import { UtilService } from './services/util/util.service';
 import { PostsService } from './services/posts/posts.service';
 import { AuthService } from './services/auth/auth.service';
@@ -51,13 +48,11 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     SideBarComponent,
     DashboardComponent,
     ProjectsComponent,
-    WorkspacesComponent,
     ProjectTasksComponent,
     UsersComponent,
     FlagsComponent,
     ProjectDialogComponent,
     HeroComponent,
-    WorkspaceDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
     ProfileComponent,
@@ -71,7 +66,6 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
   ],
   entryComponents: [
     ProjectDialogComponent,
-    WorkspaceDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
     InviteDialogComponent,
@@ -98,7 +92,6 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     TransitionService,
     UserService,
     UtilService,
-    LayoutService,
     PostsService
   ],
   bootstrap: [AppComponent]

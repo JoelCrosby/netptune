@@ -1,52 +1,55 @@
+<div class="full-height flex-center" [@pullIn]="state">
 
-  <div class="full-height flex-center" [@pullIn]="state">
+  <mat-card>
+    <form class="form-register" [formGroup]="registerFromGroup" (ngSubmit)="register()">
 
-    <mat-card>
-      <form class="form-register" [formGroup]="registerFromGroup" (ngSubmit)="register()">
+      <h1 class="text-center">Create new Account</h1>
 
-        <h1 class="text-center">Create new Account</h1>
+      <div class="form-spacer"></div>
+
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Enter Email Address</mat-label>
+        <input matInput placeholder="Email" name="emailFormControl" formControlName="emailFormControl" autocomplete="username">
+        <mat-error *ngIf="f['emailFormControl'].hasError('email') && !emailFormControl.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="f['emailFormControl'].hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-spacer"></div>
+
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Enter Password</mat-label>
+        <input matInput placeholder="Password" type="password" name="password0FormControl" formControlName="password0FormControl"
+          autocomplete="new-password">
+        <mat-error *ngIf="f['password0FormControl'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput placeholder="Confirm Password" type="password" name="password1FormControl" formControlName="password1FormControl"
+          autocomplete="new-password">
+        <mat-error *ngIf="f['password1FormControl'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-spacer"></div>
+
+      <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerFromGroup.invalid" class="full-width form-action-button">Register
+          Account</button>
 
         <div class="form-spacer"></div>
 
-        <mat-form-field class="full-width" appearance="fill">
-          <mat-label>Enter Email Address</mat-label>
-          <input matInput placeholder="Email" name="emailFormControl" formControlName="emailFormControl" autocomplete="username">
-          <mat-error *ngIf="f['emailFormControl'].hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address
-          </mat-error>
-          <mat-error *ngIf="f['emailFormControl'].hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+        <button mat-button color="primary" type="button" (click)='backToLoginClicked()'>Back to Log in</button>
+      </div>
 
-        <div class="form-spacer"></div>
+    </form>
+  </mat-card>
 
-        <mat-form-field class="full-width" appearance="fill">
-          <mat-label>Enter Password</mat-label>
-          <input matInput placeholder="Password" type="password" name="password0FormControl" formControlName="password0FormControl" autocomplete="new-password">
-          <mat-error *ngIf="f['password0FormControl'].hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="full-width" appearance="fill">
-          <mat-label>Confirm Password</mat-label>
-          <input matInput placeholder="Confirm Password" type="password" name="password1FormControl" formControlName="password1FormControl" autocomplete="new-password">
-          <mat-error *ngIf="f['password1FormControl'].hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-
-        <div class="form-spacer"></div>
-
-        <div class="buuton-container">
-          <button mat-raised-button color="primary" type="submit" [disabled]="registerFromGroup.invalid">Register
-            Account</button>
-          <br>
-          <button mat-button color="primary" type="button" (click)='backToLoginClicked()'>Back to Log in</button>
-        </div>
-
-      </form>
-    </mat-card>
-
-  </div>
+</div>
