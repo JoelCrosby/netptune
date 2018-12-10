@@ -3,7 +3,7 @@
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/dashboard"]'>
-                <i class="fas fa-home"></i>{{worskspaceService.currentWorkspace?.name}}</a>
+                <i class="fas fa-home"></i>{{ worskspaceService.currentWorkspace?.name }}</a>
         </li>
     </ul>
 
@@ -36,7 +36,7 @@
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/profile"]'>
                 <i class="far fa-user"></i>
-                {{authService.token.displayName}}
+                {{ authService.token.displayName }}
             </a>
         </li>
         <li>

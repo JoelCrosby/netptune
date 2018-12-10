@@ -34,9 +34,26 @@ h1 {
     margin-bottom: 0rem;
 }
 
-button {
-    height: 4rem !important;
-    width: 27rem !important;
-    font-size: 1.4rem !important;
-    font-weight: lighter !important;
+.form-register .checkbox {
+    font-weight: 400;
+}
+
+.form-register .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-register input[id="inputEmail"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.form-register input[id="inputPassword"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }

@@ -13,22 +13,21 @@
         {{authServices.loginError}}
       </div>
 
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Enter Email Address</mat-label>
-        <input matInput placeholder="Email" name="emailFormControl" [formControl]="emailFormControl" [disabled]='isWorking'>
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput id="email" placeholder="Enter Email Address" name="emailFormControl" formControlName="emailFormControl" autocomplete="username">
+        <mat-error *ngIf="f['emailFormControl'].hasError('password') && !emailFormControl.hasError('required')">
           Please enter a valid email address
         </mat-error>
-        <mat-error *ngIf="emailFormControl.hasError('required')">
+        <mat-error *ngIf="f['emailFormControl'].hasError('required')">
           Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Enter Password</mat-label>
-        <input matInput placeholder="Password" type="password" name="passwordFormControl" [formControl]="passwordFormControl"
-          [disabled]='isWorking'>
-        <mat-error *ngIf="passwordFormControl.hasError('required')">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput id="password" placeholder="Enter Password" type="password" name="passwordFormControl" formControlName="passwordFormControl" autocomplete="current-password">
+        <mat-error *ngIf="f['passwordFormControl'].hasError('required')">
           Password is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -36,11 +35,11 @@
       <div class="form-spacer"></div>
 
       <div class="button-container">
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginFromGroup.invalid" [disabled]='isWorking'>
+        <button mat-raised-button color="primary" type="submit">
           Sign in
         </button>
         <br>
-        <button mat-button color="primary" type="button" (click)='createAccountClicked()' [disabled]='isWorking'>Create
+        <button mat-button color="primary" type="button" (click)='onCreateAccountClicked()'>Create
           Account
         </button>
       </div>

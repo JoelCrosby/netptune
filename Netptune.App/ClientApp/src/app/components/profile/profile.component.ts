@@ -20,17 +20,10 @@ export class ProfileComponent implements OnInit {
     public dialog: MatDialog) { }
 
   profileFromGroup = new FormGroup({
-
     firstNameFormControl: new FormControl('', [
     ]),
-
     lastNameFormControl: new FormControl('', [
     ]),
-
-    userNameFormControl: new FormControl('', [
-      Validators.required,
-    ]),
-
     emailFormControl: new FormControl('', [
       Validators.required,
       Validators.email
@@ -42,7 +35,6 @@ export class ProfileComponent implements OnInit {
 
     this.profileFromGroup.controls['firstNameFormControl'].setValue(user.firstName);
     this.profileFromGroup.controls['lastNameFormControl'].setValue(user.lastName);
-    this.profileFromGroup.controls['userNameFormControl'].setValue(user.userName);
     this.profileFromGroup.controls['emailFormControl'].setValue(user.email);
   }
 
@@ -53,7 +45,6 @@ export class ProfileComponent implements OnInit {
 
       user.firstName = this.profileFromGroup.controls['firstNameFormControl'].value;
       user.lastName = this.profileFromGroup.controls['lastNameFormControl'].value;
-      user.userName = this.profileFromGroup.controls['userNameFormControl'].value;
       user.email = this.profileFromGroup.controls['emailFormControl'].value;
 
       await this.userService.updateUser(user).toPromise();

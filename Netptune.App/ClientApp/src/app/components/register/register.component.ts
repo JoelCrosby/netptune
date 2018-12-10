@@ -22,37 +22,33 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     public snackbar: MatSnackBar) { }
 
-  usernameControl = new FormControl('', [
-    Validators.required,
-  ]);
-
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-  password0FormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(4),
-  ]);
-
-  password1FormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(4),
-  ]);
-
   registerFromGroup = new FormGroup({
-
+    emailFormControl: new FormControl('', [
+      Validators.required,
+      Validators.email,
+    ]),
+    password0FormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
+    password1FormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ])
   });
+
+  // convenience getter for easy access to form fields
+  get f() { return this.registerFromGroup.controls; }
 
   ngOnInit() {
   }
 
   async register() {
+
     const result = await this.authServices.register(
-      this.emailFormControl.value,
-      this.password1FormControl.value,
-      this.usernameControl.value);
+      this.registerFromGroup.controls['emailFormControl'].value,
+      this.registerFromGroup.controls['password1FormControl'].value
+    );
 
     if (result.isSuccess) {
       this.router.navigate(['/home']);
