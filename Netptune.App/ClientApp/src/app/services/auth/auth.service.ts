@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Token } from '../../models/token';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -50,9 +50,7 @@ export class AuthService {
         }
 
         const expdate = new Date(token.expires);
-
         this.token = token;
-
         const today = new Date();
 
         if (expdate > today) {
@@ -89,15 +87,15 @@ export class AuthService {
         }
     }
 
-    async register(email: string, password: string, username: string): Promise<RegisterResult> {
+    async register(email: string, password: string): Promise<RegisterResult> {
 
         const body = {
             email,
-            password,
-            username
+            password
         };
 
         try {
+
             const result = await this.http.post<Token>(
                 environment.apiEndpoint + 'api/auth/Register',
                 body,
@@ -110,8 +108,20 @@ export class AuthService {
 
             return RegisterResult.Success();
 
-        } catch (error) {
-            return RegisterResult.Error(error);
+        } catch (e) {
+
+            if (e.error.length > 0) {
+                let msg = '';
+                for (let i = 0; i < e.error.length; i++) {
+                    const el = e.error[i];
+                    if (el.description) {
+                        msg += el.description + ' \n';
+                    }
+                }
+                return RegisterResult.Error(msg);
+            }
+
+            return RegisterResult.Error('Registration Failed');
         }
     }
 

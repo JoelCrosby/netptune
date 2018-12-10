@@ -7,7 +7,6 @@ export interface AppUser {
     firstName: string;
     lastName: string;
     email: string;
-    userName: string;
     pictureUrl: string;
     lastLoginTime: Date;
     registrationDate: Date;
