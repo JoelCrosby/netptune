@@ -8,7 +8,7 @@ using Netptune.Models.Entites;
 
 namespace Netptune.Models.Migrations
 {
-    [DbContext(typeof(ProjectsContext))]
+    [DbContext(typeof(Entites.DataContext))]
     partial class ProjectsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

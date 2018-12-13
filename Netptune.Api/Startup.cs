@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Netptune.Models.Entites;
 using Netptune.Models.Models;
+using Netptune.Models.Repositories;
+using Netptune.Repository;
 
 namespace Netptune.Api
 {
@@ -34,11 +36,11 @@ namespace Netptune.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<ProjectsContext>(options =>
+            services.AddDbContext<Models.Entites.DataContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
 
             services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<ProjectsContext>()
+                .AddEntityFrameworkStores<DbContext>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -81,10 +83,16 @@ namespace Netptune.Api
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
+
+            // Register Repository services.
+            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IWorkspaceRepository, WorkspaceRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ProjectsContext identityDbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Models.Entites.DataContext identityDbContext)
         {
 
             app.UseCors(builder => builder

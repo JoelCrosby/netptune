@@ -1,6 +1,8 @@
+using Netptune.Models.Repositories;
+
 namespace Netptune.Repository
 {
-    public class TaskRepository
+    public class TaskRepository : ITaskRepository
     {
         
     }

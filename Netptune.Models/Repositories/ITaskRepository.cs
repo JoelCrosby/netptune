@@ -1,6 +1,6 @@
 namespace Netptune.Models.Repositories
 {
-    public class ITaskRepository
+    public interface ITaskRepository
     {
         
     }

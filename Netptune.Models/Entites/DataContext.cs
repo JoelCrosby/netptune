@@ -10,7 +10,7 @@ using Netptune.Models.Models.Relationships;
 
 namespace Netptune.Models.Entites
 {
-    public class ProjectsContext : IdentityDbContext
+    public class DataContext : IdentityDbContext
     {
 
         // Core data models
@@ -27,12 +27,12 @@ namespace Netptune.Models.Entites
         public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
 
-        public ProjectsContext() : base()
+        public DataContext() : base()
         {
 
         }
 
-        public ProjectsContext(DbContextOptions<ProjectsContext> context) : base(context)
+        public DataContext(DbContextOptions<DataContext> context) : base(context)
         {
 
         }

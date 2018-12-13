@@ -16,10 +16,10 @@ namespace Netptune.Api.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly ProjectsContext _context;
+        private readonly Models.Entites.DataContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public ProjectsController(ProjectsContext context, UserManager<AppUser> userManager)
+        public ProjectsController(Models.Entites.DataContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;

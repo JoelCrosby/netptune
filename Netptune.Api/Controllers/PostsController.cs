@@ -12,9 +12,9 @@ namespace Netptune.Api.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly ProjectsContext _context;
+        private readonly Models.Entites.DataContext _context;
 
-        public PostsController(ProjectsContext context)
+        public PostsController(Models.Entites.DataContext context)
         {
             _context = context;
         }

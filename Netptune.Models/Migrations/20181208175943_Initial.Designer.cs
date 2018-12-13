@@ -9,7 +9,7 @@ using Netptune.Models.Entites;
 
 namespace Netptune.Models.Migrations
 {
-    [DbContext(typeof(ProjectsContext))]
+    [DbContext(typeof(Entites.DataContext))]
     [Migration("20181208175943_Initial")]
     partial class Initial
     {

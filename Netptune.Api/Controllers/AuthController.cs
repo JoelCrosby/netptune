@@ -20,14 +20,14 @@ namespace Netptune.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ProjectsContext _context;
+        private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
 
         public AuthController(
             IConfiguration configuration, 
-            ProjectsContext context, 
+            DataContext context, 
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager
             )
