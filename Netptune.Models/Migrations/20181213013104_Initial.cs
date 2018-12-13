@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Netptune.Models.Migrations
@@ -58,7 +57,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -79,7 +78,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -164,7 +163,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -206,58 +205,11 @@ namespace Netptune.Models.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false),
-                    CreatedByUserId = table.Column<string>(nullable: true),
-                    ModifiedByUserId = table.Column<string>(nullable: true),
-                    DeletedByUserId = table.Column<string>(nullable: true),
-                    OwnerId = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 1024, nullable: true),
-                    TypeCode = table.Column<string>(maxLength: 128, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectTypes_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectTypes_AspNetUsers_DeletedByUserId",
-                        column: x => x.DeletedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectTypes_AspNetUsers_ModifiedByUserId",
-                        column: x => x.ModifiedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectTypes_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Workspaces",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -303,7 +255,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -315,7 +267,6 @@ namespace Netptune.Models.Migrations
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     RepositoryUrl = table.Column<string>(maxLength: 256, nullable: true),
-                    ProjectTypeId = table.Column<int>(nullable: false),
                     WorkspaceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -346,12 +297,6 @@ namespace Netptune.Models.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Projects_ProjectTypes_ProjectTypeId",
-                        column: x => x.ProjectTypeId,
-                        principalTable: "ProjectTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Projects_Workspaces_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspaces",
@@ -364,7 +309,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -418,7 +363,7 @@ namespace Netptune.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -489,7 +434,7 @@ namespace Netptune.Models.Migrations
                     ProjectId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("Sqlite:Autoincrement", true)
                 },
                 constraints: table =>
                 {
@@ -516,7 +461,7 @@ namespace Netptune.Models.Migrations
                     WorkspaceId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     ProjectId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -550,7 +495,7 @@ namespace Netptune.Models.Migrations
                     WorkspaceId = table.Column<int>(nullable: false),
                     ProjectId = table.Column<int>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     AppUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -586,8 +531,7 @@ namespace Netptune.Models.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -613,8 +557,7 @@ namespace Netptune.Models.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flags_CreatedByUserId",
@@ -682,11 +625,6 @@ namespace Netptune.Models.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectTypeId",
-                table: "Projects",
-                column: "ProjectTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Projects_WorkspaceId",
                 table: "Projects",
                 column: "WorkspaceId");
@@ -725,26 +663,6 @@ namespace Netptune.Models.Migrations
                 name: "IX_ProjectTasks_WorkspaceId",
                 table: "ProjectTasks",
                 column: "WorkspaceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectTypes_CreatedByUserId",
-                table: "ProjectTypes",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectTypes_DeletedByUserId",
-                table: "ProjectTypes",
-                column: "DeletedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectTypes_ModifiedByUserId",
-                table: "ProjectTypes",
-                column: "ModifiedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectTypes_OwnerId",
-                table: "ProjectTypes",
-                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectUsers_UserId",
@@ -832,9 +750,6 @@ namespace Netptune.Models.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
-
-            migrationBuilder.DropTable(
-                name: "ProjectTypes");
 
             migrationBuilder.DropTable(
                 name: "Workspaces");

@@ -1,4 +1,6 @@
-﻿namespace Netptune.Models.Repositories
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Netptune.Models.Repositories
 {
     public class RepoResult<T>
     {
@@ -45,6 +47,23 @@
         public static RepoResult<T> Ok(string message = "Ok")
         {
             return new RepoResult<T>(message, RepoResultStatus.Ok);
+        }
+
+        public IActionResult ToRestResult()
+        {
+            switch(Status)
+            {
+                case RepoResultStatus.NotFound:
+                    return new NotFoundObjectResult(Message);
+                case RepoResultStatus.BadRequest:
+                    return new BadRequestObjectResult(Message);
+                case RepoResultStatus.Unauthorized:
+                    return new UnauthorizedObjectResult(Message);
+                case RepoResultStatus.Ok:
+                    return new OkObjectResult(Message);
+            }
+
+            return new StatusCodeResult(500);
         }
 
     }

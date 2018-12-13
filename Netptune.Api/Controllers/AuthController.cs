@@ -102,8 +102,8 @@ namespace Netptune.Api.Controllers
         {
             var user = new AppUser
             {
-                UserName = model.Email,
-                Email = model.Email
+                UserName = model.Username,
+                Email = model.Username
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 

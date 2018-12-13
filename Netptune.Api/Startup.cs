@@ -36,8 +36,13 @@ namespace Netptune.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
+#if DEBUG
+            services.AddDbContext<Models.Entites.DataContext>(options =>
+               options.UseSqlite("Data Source = app.db;"));
+#else
             services.AddDbContext<Models.Entites.DataContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
+#endif
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
@@ -83,11 +88,12 @@ namespace Netptune.Api
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
+            services.AddScoped<DbContext, DataContext>();
 
             // Register Repository services.
-            services.AddTransient<ITaskRepository, TaskRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IWorkspaceRepository, WorkspaceRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 
         }
 

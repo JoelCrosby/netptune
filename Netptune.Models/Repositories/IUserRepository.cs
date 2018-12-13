@@ -6,13 +6,15 @@ namespace Netptune.Models.Repositories
 {
     public interface IUserRepository
     {
-        AppUser GetUser(string userId);
+        Task<RepoResult<AppUser>> GetUserAsync(string userId);
 
-        IEnumerable<AppUser> GetWorkspaceUsers(int workspaceId);
+        Task<RepoResult<AppUser>> GetUserByEmailAsync(string email);
 
-        Task<AppUser> UpdateUserAsync(AppUser user);
+        Task<RepoResult<IEnumerable<AppUser>>> GetWorkspaceUsersAsync(int workspaceId);
 
-        Task<AppUser> InviteUserToWorkspace(string userId, int workspaceId);
+        Task<RepoResult<AppUser>> UpdateUserAsync(AppUser user, string currentUserId);
+
+        Task<RepoResult<AppUser>> InviteUserToWorkspaceAsync(string userId, int workspaceId);
 
     }
 }

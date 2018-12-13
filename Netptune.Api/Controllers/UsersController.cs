@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Netptune.Models.Entites;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 
@@ -16,38 +12,28 @@ namespace Netptune.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly IConfiguration _configuration;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
 
+        private readonly UserManager<AppUser> _userManager;
         private readonly IUserRepository _userRepository;
 
-        public UsersController(
-            IConfiguration configuration,
-            DataContext context,
-            UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager,
-            IUserRepository userRepository
-            )
+        public UsersController(UserManager<AppUser> userManager, IUserRepository userRepository)
         {
-            _configuration = configuration;
-            _context = context;
-            _signInManager = signInManager;
             _userManager = userManager;
             _userRepository = userRepository;
         }
 
         // GET: api/AppUsers
         [HttpGet]
-        public IEnumerable<AppUser> GetWorkspaceUsers(int workspaceId)
+        public async Task<IActionResult> GetWorkspaceUsersAsync(int workspaceId)
         {
-            return _userRepository.GetWorkspaceUsers(workspaceId);
+            var result = await _userRepository.GetWorkspaceUsersAsync(workspaceId);
+
+            return result.ToRestResult();
         }
 
         // GET: api/AppUsers/<guid>
         [HttpGet("{id}")]
-        public IActionResult GetUser([FromRoute] string id)
+        public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
 
             if (!ModelState.IsValid)
@@ -55,14 +41,9 @@ namespace Netptune.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = _userRepository.GetUser(id);
+            var result = await _userRepository.GetUserAsync(id);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
+            return result.ToRestResult();
         }
 
         [HttpPost]
@@ -75,9 +56,10 @@ namespace Netptune.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userRepository.UpdateUserAsync(user);
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var result =  await _userRepository.UpdateUserAsync(user, userId);
 
-            return Ok(result);
+            return result.ToRestResult();
         }
 
         [HttpPost]
@@ -90,14 +72,14 @@ namespace Netptune.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            
+            var result = await _userRepository.InviteUserToWorkspaceAsync(userId, workspaceId);
 
-            return Ok(user);
+            return result.ToRestResult();
         }
 
         [HttpGet]
         [Route("GetUserByEmail")]
-        public IActionResult GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
 
             if (!ModelState.IsValid)
@@ -105,14 +87,9 @@ namespace Netptune.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = _context.AppUsers.SingleOrDefault(x => x.Email == email);
+            var result = await _userRepository.GetUserByEmailAsync(email);
 
-            if (user == null)
-            {
-                return NotFound("user not found");
-            }
-
-            return Ok(user);
+            return result.ToRestResult();
         }
     }
 }

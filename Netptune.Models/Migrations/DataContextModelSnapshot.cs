@@ -2,24 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Netptune.Models.Entites;
 
 namespace Netptune.Models.Migrations
 {
-    [DbContext(typeof(Entites.DataContext))]
-    [Migration("20181208175943_Initial")]
-    partial class Initial
+    [DbContext(typeof(DataContext))]
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -39,8 +34,7 @@ namespace Netptune.Models.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -48,8 +42,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -113,8 +106,7 @@ namespace Netptune.Models.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
 
@@ -124,8 +116,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -190,8 +181,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Netptune.Models.Models.Flag", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -234,8 +224,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Netptune.Models.Models.Post", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Body")
                         .HasMaxLength(4096);
@@ -284,8 +273,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Netptune.Models.Models.Project", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -305,9 +293,6 @@ namespace Netptune.Models.Migrations
                         .HasMaxLength(128);
 
                     b.Property<string>("OwnerId");
-
-                    b.Property<int?>("ProjectTypeId")
-                        .IsRequired();
 
                     b.Property<string>("RepositoryUrl")
                         .HasMaxLength(256);
@@ -331,8 +316,6 @@ namespace Netptune.Models.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("ProjectTypeId");
-
                     b.HasIndex("WorkspaceId");
 
                     b.ToTable("Projects");
@@ -341,8 +324,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Netptune.Models.Models.ProjectTask", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("AssigneeId")
                         .IsRequired();
@@ -401,53 +383,6 @@ namespace Netptune.Models.Migrations
                     b.ToTable("ProjectTasks");
                 });
 
-            modelBuilder.Entity("Netptune.Models.Models.ProjectType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("CreatedByUserId");
-
-                    b.Property<string>("DeletedByUserId");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1024);
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedByUserId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128);
-
-                    b.Property<string>("OwnerId");
-
-                    b.Property<string>("TypeCode")
-                        .HasMaxLength(128);
-
-                    b.Property<DateTime>("UpdatedAt");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("DeletedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("ProjectTypes");
-                });
-
             modelBuilder.Entity("Netptune.Models.Models.Relationships.ProjectUser", b =>
                 {
                     b.Property<int>("ProjectId");
@@ -455,8 +390,7 @@ namespace Netptune.Models.Migrations
                     b.Property<string>("UserId");
 
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("ProjectId", "UserId");
 
@@ -474,8 +408,7 @@ namespace Netptune.Models.Migrations
                     b.Property<string>("UserId");
 
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int?>("ProjectId");
 
@@ -499,8 +432,7 @@ namespace Netptune.Models.Migrations
                     b.Property<string>("AppUserId");
 
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("WorkspaceId", "ProjectId");
 
@@ -516,8 +448,7 @@ namespace Netptune.Models.Migrations
             modelBuilder.Entity("Netptune.Models.Models.Workspace", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAt");
 
@@ -680,11 +611,6 @@ namespace Netptune.Models.Migrations
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
-                    b.HasOne("Netptune.Models.Models.ProjectType", "ProjectType")
-                        .WithMany("Projects")
-                        .HasForeignKey("ProjectTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Netptune.Models.Models.Workspace", "Workspace")
                         .WithMany("Projects")
                         .HasForeignKey("WorkspaceId")
@@ -723,25 +649,6 @@ namespace Netptune.Models.Migrations
                         .WithMany("ProjectTasks")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Netptune.Models.Models.ProjectType", b =>
-                {
-                    b.HasOne("Netptune.Models.Models.AppUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("Netptune.Models.Models.AppUser", "DeletedByUser")
-                        .WithMany()
-                        .HasForeignKey("DeletedByUserId");
-
-                    b.HasOne("Netptune.Models.Models.AppUser", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId");
-
-                    b.HasOne("Netptune.Models.Models.AppUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("Netptune.Models.Models.Relationships.ProjectUser", b =>

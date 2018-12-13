@@ -39,8 +39,8 @@ namespace Netptune.Models.Entites
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=tcp:127.0.0.1,1433;Initial Catalog=Netptune;User ID=sa;Password=yourStrong(!)Password;Connection Timeout=30;");
+            optionsBuilder.UseSqlite(
+                "Data Source=appDb.sqlite;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

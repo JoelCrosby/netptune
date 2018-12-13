@@ -5,33 +5,42 @@ using Netptune.Models.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Netptune.Models.Models.Relationships;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Netptune.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserRepository(DataContext dataContext)
+        public UserRepository(DataContext dataContext, UserManager<AppUser> userManager)
         {
             _context = dataContext;
+            _userManager = userManager;
         }
 
-        public AppUser GetUser(string userId)
+        public async Task<RepoResult<AppUser>> GetUserAsync(string userId)
         {
-            return _context.Users.SingleOrDefault(x => x.Id == userId) as AppUser;
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId) as AppUser;
+
+            if (user == null) return RepoResult<AppUser>.NotFound();
+
+            return RepoResult<AppUser>.Ok(user);
         }
 
-        public IEnumerable<AppUser> GetWorkspaceUsers(int workspaceId)
+        public Task<RepoResult<IEnumerable<AppUser>>> GetWorkspaceUsersAsync(int workspaceId)
         {
 
             var users = (from workspaceAppUsers in _context.WorkspaceAppUsers
                          where workspaceAppUsers.WorkspaceId == workspaceId
                          select workspaceAppUsers.User);
-            return users;
+
+            return Task.FromResult(RepoResult<IEnumerable<AppUser>>.Ok(users));
         }
 
-        public async Task<RepoResult<AppUser>> UpdateUserAsync(AppUser user)
+        public async Task<RepoResult<AppUser>> UpdateUserAsync(AppUser user, string currentUserId)
         {
             var updatedUser = _context.AppUsers.SingleOrDefault(x => x.Id == user.Id);
 
@@ -40,9 +49,7 @@ namespace Netptune.Repository
                 return RepoResult<AppUser>.NotFound();
             }
 
-            var userId = _userManager.GetUserId(HttpContext.User);
-
-            if (userId != updatedUser.Id)
+            if (currentUserId != updatedUser.Id)
             {
                 return RepoResult<AppUser>.Unauthorized();
             }
@@ -68,7 +75,7 @@ namespace Netptune.Repository
             return RepoResult<AppUser>.Ok(updatedUser);
         }
 
-        public async Task<RepoResult<AppUser>> InviteUserToWorkspace(string userId, int workspaceId)
+        public async Task<RepoResult<AppUser>> InviteUserToWorkspaceAsync(string userId, int workspaceId)
         {
 
             var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
@@ -98,5 +105,21 @@ namespace Netptune.Repository
             return RepoResult<AppUser>.Ok(user);
 
         }
+
+
+        public async Task<RepoResult<AppUser>> GetUserByEmailAsync(string email)
+        {
+
+            var user = await _context.AppUsers.SingleOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                return RepoResult<AppUser>.NotFound("user not found");
+            }
+
+            return RepoResult<AppUser>.Ok(user);
+
+        }
+
     }
 }
