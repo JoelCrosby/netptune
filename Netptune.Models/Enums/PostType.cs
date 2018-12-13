@@ -2,7 +2,7 @@ namespace Netptune.Models.Enums
 {
     public enum PostType
     {
-        Board,
-        Comment
+        Board = 0,
+        Comment = 1
     }
 }

@@ -41,86 +41,88 @@ namespace Netptune.Api.Controllers
         {
 
             var users = (from workspaceAppUsers in _context.WorkspaceAppUsers
-                            where workspaceAppUsers.WorkspaceId == workspaceId
-                            select workspaceAppUsers.User);
+                         where workspaceAppUsers.WorkspaceId == workspaceId
+                         select workspaceAppUsers.User);
             return users;
         }
 
         // GET: api/AppUsers/<guid>
-        [HttpGet ("{id}")]
-        public IActionResult GetUser([FromRoute] string id) {
+        [HttpGet("{id}")]
+        public IActionResult GetUser([FromRoute] string id)
+        {
 
-            if (!ModelState.IsValid) {
-                return BadRequest (ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             var user = _context.Users.SingleOrDefault(x => x.Id == id);
 
-            if (user == null) {
-                return NotFound ();
+            if (user == null)
+            {
+                return NotFound();
             }
 
-            return Ok (user);
+            return Ok(user);
         }
 
         [HttpPost]
         [Route("UpdateUser")]
-        public async Task<IActionResult> UpdateUser(AppUser user) {
+        public async Task<IActionResult> UpdateUser(AppUser user)
+        {
 
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid) {
-                return BadRequest (ModelState);
-                }
-
-                var updatedUser = _context.AppUsers.SingleOrDefault(x => x.Id == user.Id);
-
-                if (updatedUser == null) {
-                    return NotFound();
-                }
-
-                var userId = _userManager.GetUserId (HttpContext.User);
-
-                if (userId != updatedUser.Id)
-                {
-                    return Unauthorized();
-                }
-
-                updatedUser.PhoneNumber = user.PhoneNumber;
-
-                updatedUser.FirstName = user.FirstName;
-                updatedUser.LastName = user.LastName;
-
-                if (updatedUser.Email != user.Email)
-                {
-                    if(_context.AppUsers.Any(x => x.Email == user.Email))
-                    {
-                        return BadRequest("Email address is already registered.");
-                    }
-
-                    updatedUser.Email = user.Email;
-                    updatedUser.UserName = user.UserName;
-                }
-
-                await _context.SaveChangesAsync();
-
-                return Ok (updatedUser);
+                return BadRequest(ModelState);
             }
-            catch (Exception e)
+
+            var updatedUser = _context.AppUsers.SingleOrDefault(x => x.Id == user.Id);
+
+            if (updatedUser == null)
             {
-                return StatusCode(500, e.Message);
+                return NotFound();
             }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            if (userId != updatedUser.Id)
+            {
+                return Unauthorized();
+            }
+
+            updatedUser.PhoneNumber = user.PhoneNumber;
+
+            updatedUser.FirstName = user.FirstName;
+            updatedUser.LastName = user.LastName;
+
+            if (updatedUser.Email != user.Email)
+            {
+                if (_context.AppUsers.Any(x => x.Email == user.Email))
+                {
+                    return BadRequest("Email address is already registered.");
+                }
+
+                updatedUser.Email = user.Email;
+                updatedUser.UserName = user.UserName;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(updatedUser);
+
 
         }
 
         [HttpPost]
         [Route("Invite")]
-        public async Task<IActionResult> Invite(string userId, int workspaceId) {
+        public async Task<IActionResult> Invite(string userId, int workspaceId)
+        {
 
             try
             {
-                if (!ModelState.IsValid) {
-                return BadRequest (ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
                 var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
@@ -137,7 +139,8 @@ namespace Netptune.Api.Controllers
                 if (alreadyExists)
                     return BadRequest("User is already a member of the workspace");
 
-                var invite = new WorkspaceAppUser() {
+                var invite = new WorkspaceAppUser()
+                {
                     WorkspaceId = workspace.Id,
                     UserId = user.Id
                 };
@@ -146,7 +149,7 @@ namespace Netptune.Api.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok (user);
+                return Ok(user);
             }
             catch (Exception e)
             {
@@ -157,21 +160,24 @@ namespace Netptune.Api.Controllers
 
         [HttpGet]
         [Route("GetUserByEmail")]
-        public IActionResult GetUserByEmail(string email) {
+        public IActionResult GetUserByEmail(string email)
+        {
 
             try
             {
-                if (!ModelState.IsValid) {
-                return BadRequest (ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
                 var user = _context.AppUsers.SingleOrDefault(x => x.Email == email);
 
-                if (user == null) {
+                if (user == null)
+                {
                     return NotFound("user not found");
                 }
 
-                return Ok (user);
+                return Ok(user);
             }
             catch (Exception e)
             {

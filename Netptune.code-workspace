@@ -5,6 +5,15 @@
 		},
 		{
 			"path": "Netptune.Api"
+		},
+		{
+			"path": "Netptune.Core"
+		},
+		{
+			"path": "Netptune.Models"
+		},
+		{
+			"path": "Netptune.Repository"
 		}
 	],
 	"settings": {}
