@@ -82,19 +82,19 @@ export class UserService {
     }
 
     getUsers(workspace: Workspace): Observable<AppUser[]> {
-        return this.http.get<AppUser[]>(environment.apiEndpoint + 'api/AppUsers' + `?workspaceId=${workspace.id}`, this.getHeaders);
+        return this.http.get<AppUser[]>(environment.apiEndpoint + 'api/Users' + `?workspaceId=${workspace.id}`, this.getHeaders);
     }
 
     getUser(userId: string = this.authService.token.userId): Observable<AppUser> {
-        return this.http.get<AppUser>(environment.apiEndpoint + 'api/AppUsers/' + userId, this.getHeaders);
+        return this.http.get<AppUser>(environment.apiEndpoint + 'api/Users/' + userId, this.getHeaders);
     }
 
     getUserByEmail(email: string): Observable<AppUser> {
-        return this.http.get<AppUser>(environment.apiEndpoint + `api/AppUsers/GetUserByEmail?email=${email}`, this.getHeaders);
+        return this.http.get<AppUser>(environment.apiEndpoint + `api/Users/GetUserByEmail?email=${email}`, this.getHeaders);
     }
 
     inviteUser(user: AppUser, workspace: Workspace): Observable<AppUser> {
-        return this.http.post<AppUser>(environment.apiEndpoint + `api/AppUsers/Invite?userId=${user.id}&workspaceId=${workspace.id}`,
+        return this.http.post<AppUser>(environment.apiEndpoint + `api/Users/Invite?userId=${user.id}&workspaceId=${workspace.id}`,
             this.getHeaders);
     }
 
@@ -102,7 +102,7 @@ export class UserService {
 
         try {
             await this.http.post<AppUser>(
-                environment.apiEndpoint + `api/AppUsers/UpdateUser`,
+                environment.apiEndpoint + `api/Users/UpdateUser`,
                 user,
                 this.getHeaders).toPromise();
             return ApiResult.Success();

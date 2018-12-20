@@ -12,11 +12,21 @@ export class ApiResult {
         return new ApiResult(false, message);
     }
 
-    static FromError(error: any, fallback: string = 'An Unexpected error as occured.') {
-        if (error.error.length > 0) {
+    static FromError({ error }: any, fallback: string = 'An Unexpected error as occured.') {
+
+        if (error == null) {
+            return ApiResult.Error(fallback);
+        }
+
+        if (error.constructor !== Array && (typeof error === 'string' || error instanceof String)) {
+            return ApiResult.Error(error as string);
+        }
+
+        if (error.length > 0) {
+
             let msg = '';
-            for (let i = 0; i < error.error.length; i++) {
-                const el = error.error[i];
+            for (let i = 0; i < error.length; i++) {
+                const el = error[i];
                 if (el.description) {
                     msg += el.description + ' \n';
                 }
@@ -24,6 +34,6 @@ export class ApiResult {
             return ApiResult.Error(msg);
         }
 
-        return ApiResult.Error(fallback);
+        return ApiResult.Error('Login failed');
     }
 }

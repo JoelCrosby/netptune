@@ -57,7 +57,7 @@ namespace Netptune.Api.Controllers
                 var user =  await _userManager.FindByEmailAsync(model.Username.ToUpper());
                 if (user == null)
                 {
-                    return BadRequest("Invalid login attempt.");
+                    return BadRequest($"User with the following email address  '{model.Username}'  does not exist");
                 }
                 else
                 {

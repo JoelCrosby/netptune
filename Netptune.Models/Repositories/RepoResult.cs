@@ -29,7 +29,7 @@ namespace Netptune.Models.Repositories
             return new RepoResult<T>(message, RepoResultStatus.NotFound);
         }
 
-        public static RepoResult<T> BadRequest(string message = "BadRequest")
+        public static RepoResult<T> BadRequest(string message = "Bad Request")
         {
             return new RepoResult<T>(message, RepoResultStatus.BadRequest);
         }
@@ -60,7 +60,7 @@ namespace Netptune.Models.Repositories
                 case RepoResultStatus.Unauthorized:
                     return new UnauthorizedObjectResult(Message);
                 case RepoResultStatus.Ok:
-                    return new OkObjectResult(Message);
+                    return new OkObjectResult(Result);
             }
 
             return new StatusCodeResult(500);

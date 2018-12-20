@@ -144,10 +144,6 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             if (task.ProjectId == null) 
             {
@@ -176,9 +172,9 @@ namespace Netptune.Api.Controllers
             task.Project = relational.FirstOrDefault().project;
 
             var user = await _userManager.GetUserAsync(User) as AppUser;
-            task.Assignee = user;
-            task.Owner = user;
-            task.CreatedByUser = user;
+            task.AssigneeId = user.Id;
+            task.OwnerId = user.Id;
+            task.CreatedByUserId = user.Id;
 
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();

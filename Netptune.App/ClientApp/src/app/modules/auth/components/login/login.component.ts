@@ -45,7 +45,7 @@ export class LoginComponent {
     if (result.isSuccess) {
       this.router.navigate(['/home']);
     } else {
-      this.snackbar.open(result.message, null, { duration: 2000 });
+      this.snackbar.open(result.message, null, { duration: 4000 });
     }
   }
 

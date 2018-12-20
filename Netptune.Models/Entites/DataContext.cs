@@ -39,8 +39,8 @@ namespace Netptune.Models.Entites
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(
-                "Data Source=appDb.sqlite;");
+            optionsBuilder.UseSqlServer(
+                "Server=JOEL-DESKTOP\\VEGA;Initial Catalog=Netptune;Persist Security Info=True;User ID=sa;Password=V3gaLyr4");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

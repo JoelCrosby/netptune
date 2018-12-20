@@ -44,7 +44,6 @@ namespace Netptune.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWorkspace([FromRoute] int id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var workspace = await _context.Workspaces.FindAsync(id);
 
@@ -57,7 +56,6 @@ namespace Netptune.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkspace([FromRoute] int id, [FromBody] Workspace workspace)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             if (id != workspace.Id) return BadRequest();
 
@@ -80,7 +78,6 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostWorkspace([FromBody] Workspace workspace)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
@@ -98,11 +95,11 @@ namespace Netptune.Api.Controllers
 
             var relationship = new WorkspaceAppUser
             {
-                User = user,
-                Workspace = workspace
+                UserId = user.Id,
+                WorkspaceId = workspace.Id
             };
 
-            workspace.WorkspaceUsers.Add(relationship);
+            _context.WorkspaceAppUsers.Add(relationship);
 
             await _context.SaveChangesAsync();
 
@@ -114,7 +111,6 @@ namespace Netptune.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var workspace = await _context.Workspaces.FindAsync(id);
             if (workspace == null) return NotFound();

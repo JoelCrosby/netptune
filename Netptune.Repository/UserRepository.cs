@@ -30,14 +30,14 @@ namespace Netptune.Repository
             return RepoResult<AppUser>.Ok(user);
         }
 
-        public Task<RepoResult<IEnumerable<AppUser>>> GetWorkspaceUsersAsync(int workspaceId)
+        public async Task<RepoResult<IEnumerable<AppUser>>> GetWorkspaceUsersAsync(int workspaceId)
         {
 
             var users = (from workspaceAppUsers in _context.WorkspaceAppUsers
                          where workspaceAppUsers.WorkspaceId == workspaceId
                          select workspaceAppUsers.User);
 
-            return Task.FromResult(RepoResult<IEnumerable<AppUser>>.Ok(users));
+            return await Task.FromResult(RepoResult<IEnumerable<AppUser>>.Ok(users));
         }
 
         public async Task<RepoResult<AppUser>> UpdateUserAsync(AppUser user, string currentUserId)

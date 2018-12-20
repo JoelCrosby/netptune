@@ -36,13 +36,8 @@ namespace Netptune.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-#if DEBUG
-            services.AddDbContext<Models.Entites.DataContext>(options =>
-               options.UseSqlite("Data Source = app.db;"));
-#else
             services.AddDbContext<Models.Entites.DataContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
-#endif
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
@@ -100,6 +95,12 @@ namespace Netptune.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Models.Entites.DataContext identityDbContext)
         {
+
+            using(var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DbContext>();
+                context.Database.Migrate();
+            }
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()

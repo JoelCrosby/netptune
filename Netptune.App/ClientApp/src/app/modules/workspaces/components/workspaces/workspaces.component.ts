@@ -83,29 +83,29 @@ export class WorkspacesComponent implements OnInit {
     this.selectedWorkspace = null;
   }
 
-  addWorkspace(workspace: Workspace): void {
-    this.workspaceService.addWorkspace(workspace)
-      .subscribe((projectResult) => {
-        if (projectResult) {
-          this.workspaceService.refreshWorkspaces();
-          this.alertsService.changeSuccessMessage('Workspace added!');
-        }
-      }, error => {
-        this.alertsService.
-          changeErrorMessage('An error occured while trying to create the Workspace. ' + error);
-      });
-  }
+  async addWorkspace(workspace: Workspace) {
+    try {
+      const projectResult = await this.workspaceService.addWorkspace(workspace).toPromise();
 
-  updateWorkspace(workspace: Workspace): void {
-    this.workspaceService.updateWorkspace(workspace)
-      .subscribe(result => {
-        workspace = result;
+      if (projectResult) {
         this.workspaceService.refreshWorkspaces();
-        this.alertsService.changeSuccessMessage('Workspace updated!');
-      });
+        this.alertsService.changeSuccessMessage('Workspace added!');
+      }
+    } catch (error) {
+      this.alertsService.
+        changeErrorMessage('An error occured while trying to create the Workspace. ' + error);
+    }
   }
 
-  deleteClicked(workspace: Workspace) {
+  async updateWorkspace(workspace: Workspace) {
+    const result = await this.workspaceService.updateWorkspace(workspace).toPromise();
+
+    workspace = result;
+    this.workspaceService.refreshWorkspaces();
+    this.alertsService.changeSuccessMessage('Workspace updated!');
+  }
+
+  async deleteClicked(workspace: Workspace) {
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
@@ -116,27 +116,28 @@ export class WorkspacesComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((result: boolean) => {
+    const result = await dialogRef.afterClosed().toPromise();
 
-      if (result) {
-        this.workspaceService.deleteWorkspace(workspace)
-          .subscribe((data: Workspace) => {
-            workspace = data;
-            this.workspaceService.refreshWorkspaces();
-            this.snackBar.open('Workspace Deleted.', 'Undo', {
-              duration: 3000,
-            });
-
-          }, error => {
-            this.snackBar.open('An error occured while trying to delete workspace' + error, null, {
-              duration: 2000,
-            });
-          });
-      }
-
+    if (!result) {
       this.clearModalValues();
-    });
+      return;
+    }
 
+    try {
+      const data = await this.workspaceService.deleteWorkspace(workspace).toPromise();
+
+      workspace = data;
+      this.workspaceService.refreshWorkspaces();
+      this.snackBar.open('Workspace Deleted.', 'Undo', {
+        duration: 3000,
+      });
+
+    } catch (error) {
+      this.snackBar.open('An error occured while trying to delete workspace', null, {
+        duration: 2000
+      });
+    }
+    this.clearModalValues();
   }
 
   async inviteUsersClicked(): Promise<void> {
