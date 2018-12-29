@@ -9,8 +9,8 @@ import { AlertService } from '../../services/alert/alert.service';
 import { ProjectTaskService } from '../../services/project-task/project-task.service';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { ProjectDialogComponent } from '../dialogs/project-dialog/project-dialog.component';
+import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { ProjectDialogComponent } from '../../dialogs/project-dialog/project-dialog.component';
 
 
 @Component({

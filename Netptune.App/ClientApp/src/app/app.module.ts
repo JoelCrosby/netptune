@@ -6,27 +6,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './modules/routing/app-routing.module';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
-import { QuillModule } from 'ngx-quill';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Components
 import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
-import { ProjectDialogComponent } from './components/dialogs/project-dialog/project-dialog.component';
-import { TaskDialogComponent } from './components/dialogs/task-dialog/task-dialog.component';
-import { FlagsComponent } from './components/flags/flags.component';
-import { HeroComponent } from './components/hero/hero.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { ProjectDialogComponent } from './dialogs/project-dialog/project-dialog.component';
+import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { TaskListComponent } from './components/project-tasks/task-list/task-list.component';
-import { EditorComponent } from './components/editor/editor.component';
-import { InviteDialogComponent } from './components/dialogs/invite-dialog/invite-dialog.component';
+import { InviteDialogComponent } from './dialogs/invite-dialog/invite-dialog.component';
 import { BoardPostsComponent } from './components/board-posts/board-posts.component';
-import { BoardPostDialogComponent } from './components/dialogs/board-post-dialog/board-post-dialog.component';
+import { BoardPostDialogComponent } from './dialogs/board-post-dialog/board-post-dialog.component';
 import { BoardsComponent } from './components/boards/boards.component';
 import { TaskBoardComponent } from './components/boards/task-board/task-board.component';
 
@@ -48,16 +42,11 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     SideBarComponent,
     DashboardComponent,
     ProjectsComponent,
-    ProjectTasksComponent,
     UsersComponent,
-    FlagsComponent,
     ProjectDialogComponent,
-    HeroComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
     ProfileComponent,
-    TaskListComponent,
-    EditorComponent,
     InviteDialogComponent,
     BoardPostsComponent,
     BoardPostDialogComponent,
@@ -78,7 +67,6 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppMaterialModule,
-    QuillModule,
     DragDropModule,
     AppRoutingModule
   ],

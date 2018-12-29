@@ -1,0 +1,130 @@
+@import '../../../../../styles/variables.scss';
+
+#complete {
+    color: green;
+}
+
+#in-progress {
+    color: mediumslateblue;
+}
+
+#blocked {
+    color: red;
+}
+
+#task-icon {
+    padding: 6px;
+    border-radius: 4px;
+    width: 16px;
+    text-align: center;
+    transition: all 400ms;
+}
+
+.card-chips {
+    justify-content: flex-end;
+}
+
+.completed {
+    color: darkgreen;
+    background-color: #90eec3;
+}
+
+#info-chip {
+    color: #969696;
+    height: 1.2rem;
+    background-color: #f4f4f4;
+    font-weight: 100;
+}
+
+.in-progress {
+    color: darkblue;
+    background-color: lightblue;
+}
+
+.blocked {
+    color: darkred;
+    background-color: pink;
+}
+
+.title {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.input-group-prepend {
+    span,
+    label {
+        width: 10rem;
+    }
+}
+
+.fas {
+    margin-right: 0.6rem;
+}
+
+mat-divider {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.task-card {
+    border: solid 1px #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: none;
+    margin-bottom: 3px;
+    transition: box-shadow 360ms cubic-bezier(.24,0,0,1);
+}
+
+.task-card:active {
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.task-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px;
+}
+
+.task-header-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.chip-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.chip-spacer {
+    width: 0.4rem;
+}
+
+#placeholder {
+    background-color: transparent;
+    color: transparent;
+    border: 0;
+    height: 0px;
+}
+
+// Drag n drop styling.
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(.24, 0, 0, 1);
+}
+
+.task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(.24, 0, 0, 1);
+}
+
+.cdk-drag-preview {
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}

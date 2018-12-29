@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { dropIn } from '../../../../animations';
-import { ConfirmDialogComponent } from '../../../../components/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../../dialogs/confirm-dialog/confirm-dialog.component';
 import { Workspace } from '../../../../models/workspace';
 import { AlertService } from '../../../../services/alert/alert.service';
 import { UserService } from '../../../../services/user/user.service';

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { dropIn } from '../../animations';
 import { AppUser } from '../../models/appuser';
 import { UserService } from '../../services/user/user.service';
-import { InviteDialogComponent } from '../dialogs/invite-dialog/invite-dialog.component';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
 
