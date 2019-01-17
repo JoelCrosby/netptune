@@ -1,0 +1,44 @@
+@import '../../../../styles/variables.scss';
+
+mat-card {
+    min-width: 300px;
+    min-height: 200px;
+    margin-bottom: 2rem;
+    padding: 1.6rem;
+    border-top: $primary solid 2px;
+}
+
+.card-group {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.mat-card-actions {
+    padding: 1.6rem;
+    margin-bottom: 2rem;
+}
+
+.mat-card > .mat-card-actions:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0;
+}
+
+.action-button {
+    margin-right: 0.8rem;
+}
+
+.action-button:first-child, .mat-card-actions .mat-raised-button:first-child {
+    margin-left: 0;
+    margin-right: 0.8rem !important;
+}
+
+.action-mat-icon {
+    margin-right: 0.6rem;
+}
+
+mat-card-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

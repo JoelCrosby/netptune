@@ -3,7 +3,7 @@
     <ul class="list-unstyled components">
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/dashboard"]'>
-                <i class="fas fa-home"></i>{{ worskspaceService.currentWorkspace?.name }}</a>
+                <i class="fas fa-drafting-compass"></i>{{ worskspaceService.currentWorkspace?.name }}</a>
         </li>
     </ul>
 
@@ -11,10 +11,6 @@
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/projects"]' matRipple>
                 <i class="far fa-map"></i>Projects</a>
-        </li>
-        <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/boards"]' matRipple>
-                <i class="fas fa-columns"></i>Boards</a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/tasks"]' matRipple>
@@ -32,7 +28,7 @@
         <li [routerLinkActive]='["link-active"]'>
             <a [routerLink]='["/profile"]' matRipple>
                 <i class="far fa-user"></i>
-                {{ authService.token.displayName }}
+                Account
             </a>
         </li>
         <li>

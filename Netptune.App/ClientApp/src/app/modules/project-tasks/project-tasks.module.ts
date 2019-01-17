@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 
-import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
+import { ProjectTasksComponent } from './index/project-tasks.index.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

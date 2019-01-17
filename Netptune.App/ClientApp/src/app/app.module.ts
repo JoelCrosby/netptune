@@ -4,25 +4,18 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './modules/routing/app-routing.module';
+import { AppRoutingModule } from './routing/app-routing.module';
 import { AppMaterialModule } from './modules/app-material/app-material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Components
 import { AppComponent } from './components/app/app.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectDialogComponent } from './dialogs/project-dialog/project-dialog.component';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
-import { ProjectsComponent } from './components/projects/projects.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { UsersComponent } from './components/users/users.component';
-import { ProfileComponent } from './components/profile/profile.component';
 import { InviteDialogComponent } from './dialogs/invite-dialog/invite-dialog.component';
-import { BoardPostsComponent } from './components/board-posts/board-posts.component';
 import { BoardPostDialogComponent } from './dialogs/board-post-dialog/board-post-dialog.component';
-import { BoardsComponent } from './components/boards/boards.component';
-import { TaskBoardComponent } from './components/boards/task-board/task-board.component';
 
 // Services
 import { ProjectTaskService } from './services/project-task/project-task.service';
@@ -40,18 +33,11 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
   declarations: [
     AppComponent,
     SideBarComponent,
-    DashboardComponent,
-    ProjectsComponent,
-    UsersComponent,
     ProjectDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
-    ProfileComponent,
     InviteDialogComponent,
-    BoardPostsComponent,
     BoardPostDialogComponent,
-    BoardsComponent,
-    TaskBoardComponent
   ],
   entryComponents: [
     ProjectDialogComponent,

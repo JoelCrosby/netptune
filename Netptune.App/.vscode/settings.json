@@ -11,4 +11,7 @@
         "**/*.csproj.user": true,
     },
     "editor.tabSize": 2,
+    "tslint.configFile": "./ClientApp/tslint.json",
+    "typescript.tsdk": "./ClientApp/node_modules/typescript/lib"
+     
 }

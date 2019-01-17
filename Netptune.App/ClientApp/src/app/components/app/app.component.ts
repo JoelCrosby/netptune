@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { AlertService } from '../../services/alert/alert.service';
-import { TransitionService } from '../../services/transition/transition.service';
-import { LayoutService } from '../../services/layout/layout.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { insertRemoveSidebar } from '../../animations';
-import { AuthService } from '../../services/auth/auth.service';
+import { TransitionService } from '../../services/transition/transition.service';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +14,29 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class AppComponent {
 
+  subscriptions = new Subscription();
+
+  showSidebar = true;
+
   constructor(
-    public alertService: AlertService,
-    public authServives: AuthService,
-    public layoutService: LayoutService,
-    public transitionService: TransitionService) { }
+    public transitionService: TransitionService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
+
+    this.subscriptions.add(
+      this.activatedRoute.url.subscribe(() => {
+        const url = this.router.url;
+        const firstSlashIndex = url.indexOf('/', 1);
+        const path = url.substring(1, firstSlashIndex);
+        console.log(path);
+
+      })
+    );
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
 }

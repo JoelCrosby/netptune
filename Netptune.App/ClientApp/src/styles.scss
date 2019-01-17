@@ -4,11 +4,6 @@
 @import 'styles/mixins.scss';
 @import 'styles/animations.scss';
 
-* {
-    font-family: 'Roboto', sans-serif !important;
-    font-weight: initial !important;
-}
-
 html,
 body,
 #st-full-pg {
@@ -124,3 +119,6 @@ body {
 
 @import "styles/loaders.scss";
 @import "styles/components.scss";
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');

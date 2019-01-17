@@ -26,10 +26,9 @@ a:focus {
 }
 
 #sidebar {
-    background: #FAFAFA;
-    color: #202A34;
+    background: #212121;
+    color: #B5B5B5;
     transition: all 0.3s;
-    border-right: 1px solid #DADADA;
 }
 
 #sidebar .sidebar-header {
@@ -38,12 +37,15 @@ a:focus {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #DADADA;
     margin-top: 0;
 }
 
 #sidebar ul p {
     padding: 10px;
+}
+
+#sidebar ul li {
+  margin-bottom: .4rem;
 }
 
 #sidebar ul li a {
@@ -54,13 +56,13 @@ a:focus {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-  
+
     -webkit-user-drag: none;
     -webkit-tap-highlight-color: transparent;
 }
 
 #sidebar ul li a:hover {
-    background: #DADADA;
+    background: #252525;
     border-radius: 5px;
 }
 
@@ -73,7 +75,9 @@ a:focus {
 }
 
 .link-active {
-    color: #9C27B0;
+  background: #2e2e2e;
+  color: #ffffff;
+  border-radius: 5px;
 }
 
 ul ul a {
