@@ -5,8 +5,8 @@
 }
 
 form {
+  max-width: 400px;
     margin-top: 4em;
-    max-width: 500px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -16,6 +16,7 @@ form {
 }
 
 .form-actions {
+  margin-bottom: 3rem;
     button {
         float: right;
     }
@@ -26,6 +27,10 @@ form {
 }
 
 .mat-card {
-    max-width: 520px;
     padding: 2rem;
+}
+
+.profile-section-header {
+  font-weight: 400;
+  font-size: 1.1rem;
 }

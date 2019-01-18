@@ -18,7 +18,8 @@
 
         <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
           <mat-card-header>
-            <mat-card-title>{{ project.name }}</mat-card-title>
+            <mat-card-title><i class="far fa-file-alt title-icon"></i>{{ project.name }}</mat-card-title>
+
           </mat-card-header>
           <mat-card-content>
             <p>{{ project.description }}</p>

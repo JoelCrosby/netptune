@@ -1,8 +1,8 @@
-<div class="container main">
+<div class="container main fade-in">
   <div class="container-max">
 
-    <div class="component-header bottom-border">
-      <button mat-button type="button" class="new-button float-right" (click)='showLogOutModal()'>
+    <div class="component-header">
+      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showLogOutModal()'>
         <i class="fas fa-sign-out-alt"></i>
         Log Out
       </button>
@@ -11,7 +11,7 @@
     <mat-card id="profile-card">
       <form [formGroup]="profileFromGroup">
 
-        <h4>Details</h4>
+        <h3 class="profile-section-header">Details</h3>
 
         <mat-form-field class="full-width" appearance="fill">
           <mat-label>First Name</mat-label>
@@ -27,7 +27,7 @@
 
         <div class="form-spacer"></div>
 
-        <h4>Account</h4>
+        <h3 class="profile-section-header">Account</h3>
 
         <mat-form-field class="full-width" appearance="fill">
           <mat-label>Email Address</mat-label>
