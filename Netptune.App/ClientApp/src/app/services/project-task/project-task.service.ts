@@ -18,15 +18,15 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ProjectTaskService {
 
-  public tasks: ProjectTaskDto[] = [];
+  tasks: ProjectTaskDto[] = [];
 
-  public myTasks: ProjectTaskDto[] = [];
-  public completedTasks: ProjectTaskDto[] = [];
-  public backlogTasks: ProjectTaskDto[] = [];
+  myTasks: ProjectTaskDto[] = [];
+  completedTasks: ProjectTaskDto[] = [];
+  backlogTasks: ProjectTaskDto[] = [];
 
-  public taskAdded = new Subject<ProjectTask>();
-  public taskUpdated = new Subject<ProjectTask>();
-  public taskDeleted = new Subject<ProjectTask>();
+  taskAdded = new Subject<ProjectTask>();
+  taskUpdated = new Subject<ProjectTask>();
+  taskDeleted = new Subject<ProjectTask>();
 
   constructor(
     private http: HttpClient,

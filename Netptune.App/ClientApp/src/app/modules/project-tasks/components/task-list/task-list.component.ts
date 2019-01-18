@@ -28,11 +28,11 @@ export class TaskListComponent implements OnInit {
 
   @Input() dragPeerContainers: string[];
 
-  public selectedTask: ProjectTask;
+  selectedTask: ProjectTask;
 
-  public Complete = ProjectTaskStatus.Complete;
-  public InProgress = ProjectTaskStatus.InProgress;
-  public Blocked = ProjectTaskStatus.OnHold;
+  Complete = ProjectTaskStatus.Complete;
+  InProgress = ProjectTaskStatus.InProgress;
+  Blocked = ProjectTaskStatus.OnHold;
 
   constructor(
     public dialog: MatDialog,

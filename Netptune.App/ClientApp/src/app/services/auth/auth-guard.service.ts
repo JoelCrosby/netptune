@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
 })
 export class AuthGuardService {
 
-  public onNotAuthenticated = new Subject<void>();
+  onNotAuthenticated = new Subject<void>();
 
   constructor(
     private authService: AuthService,

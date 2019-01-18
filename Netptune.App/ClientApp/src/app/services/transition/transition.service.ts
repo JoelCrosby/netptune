@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class TransitionService {
 
-  public sidebarStateClass = 'open';
+  sidebarStateClass = 'open';
 
   constructor() { }
 

@@ -21,8 +21,8 @@ import { ProjectDialogComponent } from '../../../dialogs/project-dialog/project-
 })
 export class ProjectsComponent implements OnInit {
 
-  public exportInProgress = false;
-  public taskCounts: ProjectTaskCounts[] = [];
+  exportInProgress = false;
+  taskCounts: ProjectTaskCounts[] = [];
 
   selectedProject: Project;
 

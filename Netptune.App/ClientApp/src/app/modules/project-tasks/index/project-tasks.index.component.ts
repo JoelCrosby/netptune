@@ -21,27 +21,27 @@ import { WorkspaceService } from '../../../services/workspace/workspace.service'
 })
 export class ProjectTasksComponent implements OnInit, OnDestroy {
 
-  public exportInProgress = false;
+  exportInProgress = false;
 
-  public selectedTask: ProjectTask;
-  public subs = new Subscription();
+  selectedTask: ProjectTask;
+  subs = new Subscription();
 
-  public completedStatus = ProjectTaskStatus.Complete;
-  public inProgressStatus = ProjectTaskStatus.InProgress;
-  public blockedStatus = ProjectTaskStatus.OnHold;
-  public backlogStatus = ProjectTaskStatus.InActive;
+  completedStatus = ProjectTaskStatus.Complete;
+  inProgressStatus = ProjectTaskStatus.InProgress;
+  blockedStatus = ProjectTaskStatus.OnHold;
+  backlogStatus = ProjectTaskStatus.InActive;
 
-  public myTasks: ProjectTaskDto[] = [];
-  public completedTasks: ProjectTaskDto[] = [];
-  public backlogTasks: ProjectTaskDto[] = [];
+  myTasks: ProjectTaskDto[] = [];
+  completedTasks: ProjectTaskDto[] = [];
+  backlogTasks: ProjectTaskDto[] = [];
 
-  public completedTasksPeers: string[] = ['myTasks', 'backlogTasks'];
-  public inProgressTasksPeers: string[] = ['completedTasks', 'backlogTasks'];
-  public backlogTasksPeers: string[] = ['completedTasks', 'myTasks'];
+  completedTasksPeers: string[] = ['myTasks', 'backlogTasks'];
+  inProgressTasksPeers: string[] = ['completedTasks', 'backlogTasks'];
+  backlogTasksPeers: string[] = ['completedTasks', 'myTasks'];
 
-  public taskspanel: MatExpansionPanel;
+  taskspanel: MatExpansionPanel;
 
-  public dataLoaded = false;
+  dataLoaded = false;
 
   constructor(
     public projectTaskService: ProjectTaskService,

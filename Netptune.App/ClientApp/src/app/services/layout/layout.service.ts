@@ -7,7 +7,8 @@ import { AuthGuardService } from '../auth/auth-guard.service';
   providedIn: 'root'
 })
 export class LayoutService {
-  public showSidebar = false;
+
+  showSidebar = false;
 
   constructor(
     private workspaceService: WorkspaceService,

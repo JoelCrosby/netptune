@@ -13,8 +13,8 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ProjectsService {
 
-  public projects: Project[] = [];
-  public currentProject: Project;
+  projects: Project[] = [];
+  currentProject: Project;
 
   constructor(
     private http: HttpClient,

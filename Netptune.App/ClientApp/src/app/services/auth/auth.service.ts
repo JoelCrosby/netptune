@@ -12,17 +12,17 @@ import { ApiResult } from '../../models/api-result';
 })
 export class AuthService {
 
-  public userLoggedIn = false;
-  public isLoginCheckReady = false;
+  userLoggedIn = false;
+  isLoginCheckReady = false;
 
-  public token: Token = new Token();
+  token: Token = new Token();
 
-  public get userName(): string { return this.token.username; }
-  public get email(): string { return this.token.email; }
+  get userName(): string { return this.token.username; }
+  get email(): string { return this.token.email; }
 
-  public onLogout = new Subject<void>();
+  onLogout = new Subject<void>();
 
-  public httpOptions = {
+  httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })

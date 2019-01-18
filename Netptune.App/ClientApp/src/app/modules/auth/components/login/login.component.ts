@@ -13,8 +13,8 @@ import { AuthService } from '../../../../services/auth/auth.service';
 })
 export class LoginComponent {
 
-  public isWorking = false;
-  public hidePassword = true;
+  isWorking = false;
+  hidePassword = true;
 
   public loginFromGroup = new FormGroup({
     emailFormControl: new FormControl('', [

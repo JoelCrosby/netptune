@@ -13,7 +13,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-  public state = true;
+  state = true;
 
   constructor(
     public authServices: AuthService,
