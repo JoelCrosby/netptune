@@ -42,7 +42,7 @@
 
             <div class="card-chips">
               <mat-chip-list>
-                <mat-chip>Owner {{ project.owner?.userName }}</mat-chip>
+                <mat-chip>Owner {{ project.owner?.firstName + ' ' + project.owner?.lastName }}</mat-chip>
                 <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
                 <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
               </mat-chip-list>

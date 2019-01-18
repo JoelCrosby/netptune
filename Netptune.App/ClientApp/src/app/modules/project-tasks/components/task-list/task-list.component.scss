@@ -68,11 +68,10 @@ mat-divider {
 }
 
 .task-card {
-    border: solid 1px #e2e2e2;
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: .4rem;
     box-shadow: none;
-    margin-bottom: 3px;
+    margin-bottom: 1rem;
     transition: box-shadow 360ms cubic-bezier(.24,0,0,1);
 }
 
@@ -85,6 +84,15 @@ mat-divider {
     flex-direction: row;
     justify-content: space-between;
     padding: 8px;
+}
+
+@media only screen and (max-width: 900px) {
+  .task-header {
+    flex-direction: column;
+  }
+  .chip-list {
+    margin-top: 1.4rem;
+  }
 }
 
 .task-header-title {

@@ -10,6 +10,9 @@
     padding: 0px 16px 0px;
     display: flex;
     flex-direction: column;
+    -webkit-box-shadow: 10px 10px 123px -29px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 123px -29px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 123px -29px rgba(0,0,0,0.75);
 }
 
 a,
