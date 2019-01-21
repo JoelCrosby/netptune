@@ -27,7 +27,6 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetWorkspaceUsersAsync(int workspaceId)
         {
             var result = await _userRepository.GetWorkspaceUsersAsync(workspaceId);
-
             return result.ToRestResult();
         }
 
@@ -35,14 +34,7 @@ namespace Netptune.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userRepository.GetUserAsync(id);
-
             return result.ToRestResult();
         }
 
@@ -50,15 +42,8 @@ namespace Netptune.Api.Controllers
         [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser(AppUser user)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var userId = _userManager.GetUserId(HttpContext.User);
             var result =  await _userRepository.UpdateUserAsync(user, userId);
-
             return result.ToRestResult();
         }
 
@@ -66,14 +51,7 @@ namespace Netptune.Api.Controllers
         [Route("Invite")]
         public async Task<IActionResult> Invite(string userId, int workspaceId)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userRepository.InviteUserToWorkspaceAsync(userId, workspaceId);
-
             return result.ToRestResult();
         }
 
@@ -81,14 +59,7 @@ namespace Netptune.Api.Controllers
         [Route("GetUserByEmail")]
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userRepository.GetUserByEmailAsync(email);
-
             return result.ToRestResult();
         }
     }
