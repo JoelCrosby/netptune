@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatButtonModule, MatIconModule, MatCardModule } from '@angular/material';
+import { SharedModule } from '../shared/shared.module';
 
 // Components
 import { LoginComponent } from './components/login/login.component';
@@ -19,11 +17,7 @@ import { AuthRoutingModule } from './auth-routing.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule,
-    MatSnackBarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
+    SharedModule,
     AuthRoutingModule,
   ],
   providers: []

@@ -29,13 +29,14 @@ export class BoardPostDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  async getResult(): Promise<Post> {
+  async getResult(): Promise<Post | null> {
 
-    const title = this.postFromGroup.get('titleFormControl').value;
+    const title = this.postFromGroup.get('titleFormControl');
     if (!title) { return null; }
 
+    const value = title.value;
     const post = new Post();
-    post.title = title;
+    post.title = value;
 
     return post;
   }

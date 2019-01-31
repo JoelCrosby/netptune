@@ -11,6 +11,7 @@ import { ProjectTaskDto } from '../../../../models/view-models/project-task-dto'
 import { ProjectTaskService } from '../../../../services/project-task/project-task.service';
 import { UserService } from '../../../../services/user/user.service';
 import { WorkspaceService } from '../../../../services/workspace/workspace.service';
+import { Maybe } from '../../../nothing';
 
 @Component({
   selector: 'app-task-list',
@@ -28,7 +29,7 @@ export class TaskListComponent implements OnInit {
 
   @Input() dragPeerContainers: string[];
 
-  selectedTask: ProjectTask;
+  selectedTask: Maybe<ProjectTask>;
 
   Complete = ProjectTaskStatus.Complete;
   InProgress = ProjectTaskStatus.InProgress;
@@ -138,8 +139,13 @@ export class TaskListComponent implements OnInit {
       if (!result) {
         return;
       }
+
+      const task = this.selectedTask;
+
+      if (!task) throw new Error('selectedTask was undefenied.');
+
       const updatedProjectTask = new ProjectTask();
-      updatedProjectTask.id = this.selectedTask.id;
+      updatedProjectTask.id = task.id;
       updatedProjectTask.name = result.name;
       updatedProjectTask.description = result.description;
       await this.projectTaskService.updateProjectTask(updatedProjectTask);

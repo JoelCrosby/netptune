@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
     if (result.isSuccess) {
       this.router.navigate(['/home']);
     } else {
-      this.snackbar.open(result.message, null, {
+      this.snackbar.open(result.message, undefined, {
         duration: 3000,
       });
     }

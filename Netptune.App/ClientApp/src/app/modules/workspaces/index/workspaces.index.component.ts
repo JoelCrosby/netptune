@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { dropIn } from '../../../animations';
 import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 import { Workspace } from '../../../models/workspace';
-import { AlertService } from '../../../services/alert/alert.service';
 import { UserService } from '../../../services/user/user.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { WorkspaceDialogComponent } from '../../../dialogs/workspace-dialog/workspace-dialog.component';
+import { Maybe } from '../../nothing';
 
 @Component({
   selector: 'app-workspaces',
@@ -17,18 +17,17 @@ import { WorkspaceDialogComponent } from '../../../dialogs/workspace-dialog/work
 })
 export class WorkspacesComponent implements OnInit {
 
-  selectedWorkspace: Workspace;
+  selectedWorkspace: Maybe<Workspace>;
 
   constructor(
     public workspaceService: WorkspaceService,
     private userService: UserService,
-    private alertsService: AlertService,
     private router: Router,
     public snackBar: MatSnackBar,
     public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.workspaceService.currentWorkspace = null;
+    this.workspaceService.clearCurrentWorkspace();
     this.workspaceService.refreshWorkspaces();
   }
 
@@ -42,12 +41,12 @@ export class WorkspacesComponent implements OnInit {
 
   goToProjectsClicked(workspace: Workspace): void {
     this.workspaceService.currentWorkspace = workspace;
-    this.router.navigate(['projects']);
+    this.router.navigate(['/projects']);
   }
 
   manageUsersClicked(workspace: Workspace): void {
     this.workspaceService.currentWorkspace = workspace;
-    this.router.navigate(['users']);
+    this.router.navigate(['/users']);
   }
 
   open() {
@@ -89,11 +88,9 @@ export class WorkspacesComponent implements OnInit {
 
       if (projectResult) {
         this.workspaceService.refreshWorkspaces();
-        this.alertsService.changeSuccessMessage('Workspace added!');
       }
     } catch (error) {
-      this.alertsService.
-        changeErrorMessage('An error occured while trying to create the Workspace. ' + error);
+
     }
   }
 
@@ -102,7 +99,6 @@ export class WorkspacesComponent implements OnInit {
 
     workspace = result;
     this.workspaceService.refreshWorkspaces();
-    this.alertsService.changeSuccessMessage('Workspace updated!');
   }
 
   async deleteClicked(workspace: Workspace) {
@@ -133,9 +129,6 @@ export class WorkspacesComponent implements OnInit {
       });
 
     } catch (error) {
-      this.snackBar.open('An error occured while trying to delete workspace', null, {
-        duration: 2000
-      });
     }
     this.clearModalValues();
   }

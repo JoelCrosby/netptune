@@ -49,9 +49,9 @@ export class ProfileComponent implements OnInit {
     const result = await this.userService.updateUser(user);
 
     if (result.isSuccess) {
-      this.snackbar.open(`Changes applied.`, null, { duration: 2000 });
+      this.snackbar.open(`Changes applied.`, undefined, { duration: 2000 });
     } else {
-      this.snackbar.open(result.message, null, { duration: 2000 });
+      this.snackbar.open(result.message, undefined, { duration: 2000 });
     }
   }
 

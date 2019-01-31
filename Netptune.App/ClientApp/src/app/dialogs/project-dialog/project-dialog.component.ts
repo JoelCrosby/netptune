@@ -62,6 +62,10 @@ export class ProjectDialogComponent implements OnInit {
       projectResult.id = this.project.id;
     }
 
+    if (!this.workspaceService.currentWorkspace) {
+      throw new Error("currentWorkspace  null or undefined!");
+    }
+
     projectResult.name = this.projectFromGroup.controls['nameFormControl'].value;
     projectResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
     projectResult.repositoryUrl = this.projectFromGroup.controls['repositoryUrlFormControl'].value;

@@ -43,9 +43,9 @@ export class LoginComponent {
     this.isWorking = false;
 
     if (result.isSuccess) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/workspaces']);
     } else {
-      this.snackbar.open(result.message, null, { duration: 4000 });
+      this.snackbar.open(result.message, undefined, { duration: 4000 });
     }
   }
 

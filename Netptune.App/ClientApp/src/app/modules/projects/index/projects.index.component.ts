@@ -5,12 +5,12 @@ import { saveAs } from 'file-saver';
 import { dropIn } from '../../../animations';
 import { Project } from '../../../models/project';
 import { ProjectTaskCounts } from '../../../models/view-models/project-task-counts';
-import { AlertService } from '../../../services/alert/alert.service';
 import { ProjectTaskService } from '../../../services/project-task/project-task.service';
 import { ProjectsService } from '../../../services/projects/projects.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectDialogComponent } from '../../../dialogs/project-dialog/project-dialog.component';
+import { Maybe } from '../../nothing';
 
 
 @Component({
@@ -24,12 +24,11 @@ export class ProjectsComponent implements OnInit {
   exportInProgress = false;
   taskCounts: ProjectTaskCounts[] = [];
 
-  selectedProject: Project;
+  selectedProject: Maybe<Project>;
 
   constructor(
     public projectsService: ProjectsService,
     public projectTaskService: ProjectTaskService,
-    private alertsService: AlertService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
     public dialog: MatDialog) {
@@ -41,6 +40,11 @@ export class ProjectsComponent implements OnInit {
   }
 
   async refreshData(): Promise<void> {
+
+    if (!this.workspaceService.currentWorkspace) {
+      throw new Error('unable to refresh projects when current worksapce is undefined');
+    }
+
     await this.projectsService.refreshProjects(this.workspaceService.currentWorkspace);
     await this.getProjectTaskCounts();
   }
@@ -63,17 +67,14 @@ export class ProjectsComponent implements OnInit {
       .subscribe((projectResult) => {
         if (projectResult) {
           this.refreshData();
-          this.snackBar.open(`Project ${projectResult.name} Added!.`, null, {
+          this.snackBar.open(`Project ${projectResult.name} Added!.`, undefined, {
             duration: 3000,
           });
-          this.alertsService.changeSuccessMessage(`Project ${projectResult.name} Added!.`);
         }
       }, error => {
-        this.snackBar.open('An error occured while trying to create the project. ' + error, null, {
+        this.snackBar.open('An error occured while trying to create the project. ' + error, undefined, {
           duration: 2000,
         });
-        this.alertsService.
-          changeErrorMessage('An error occured while trying to create the Project. ' + error);
       });
   }
 
@@ -82,7 +83,6 @@ export class ProjectsComponent implements OnInit {
       .subscribe(result => {
         project = result;
         this.refreshData();
-        this.alertsService.changeSuccessMessage('Project updated!');
       });
   }
 
@@ -92,7 +92,6 @@ export class ProjectsComponent implements OnInit {
         this.projectsService.projects.forEach((item, itemIndex) => {
           if (item.id === projectResult.id) {
             this.projectsService.projects.splice(itemIndex, 1);
-            this.alertsService.changeSuccessMessage('Project deleted!');
           }
         });
       });
@@ -127,19 +126,22 @@ export class ProjectsComponent implements OnInit {
 
       if (!result) { return; }
 
+      const workspace = this.workspaceService.currentWorkspace;
+      if (!workspace) throw new Error(`current workspace was undefined`);
+
       if (this.selectedProject) {
 
         const updatedProject = new Project();
         updatedProject.id = this.selectedProject.id;
         updatedProject.name = result.name;
         updatedProject.description = result.description;
-        updatedProject.workspaceId = this.workspaceService.currentWorkspace.id;
+        updatedProject.workspaceId = workspace.id;
         this.updateProject(updatedProject);
       } else {
         const newProject = new Project();
         newProject.name = result.name;
         newProject.description = result.description;
-        newProject.workspaceId = this.workspaceService.currentWorkspace.id;
+        newProject.workspaceId = workspace.id;
         this.addProject(newProject);
       }
 
@@ -170,7 +172,7 @@ export class ProjectsComponent implements OnInit {
             });
 
           }, error => {
-            this.snackBar.open('An error occured while trying to delete project' + error, null, {
+            this.snackBar.open('An error occured while trying to delete project' + error, undefined, {
               duration: 2000,
             });
           });
@@ -182,14 +184,16 @@ export class ProjectsComponent implements OnInit {
   }
 
   clearModalValues(): void {
-    // finally clear selecetd project
     this.selectedProject = null;
   }
 
   exportProjects(): void {
     this.exportInProgress = true;
 
-    this.projectsService.getProjects(this.workspaceService.currentWorkspace).subscribe(
+    const workspace = this.workspaceService.currentWorkspace;
+    if (!workspace) throw new Error(`current workspace was undefined`);
+
+    this.projectsService.getProjects(workspace).subscribe(
       result => {
 
         const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });

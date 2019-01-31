@@ -1,15 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectsRoutingModule } from './projects-routing.module';
+import { SharedModule } from '../shared/shared.module';
+
 import { ProjectsComponent } from './index/projects.index.component';
-import {
-  MatCardModule,
-  MatIconModule,
-  MatButtonModule,
-  MatInputModule,
-  MatChipsModule,
-  MatProgressSpinnerModule
-} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -20,12 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatCardModule,
-    MatIconModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
+    SharedModule,
     ProjectsRoutingModule
   ]
 })

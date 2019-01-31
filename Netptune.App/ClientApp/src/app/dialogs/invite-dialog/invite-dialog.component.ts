@@ -2,6 +2,7 @@ import { Component, OnInit, Optional, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppUser } from '../../models/appuser';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Nothing } from '../../modules/nothing';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -30,12 +31,12 @@ export class InviteDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  async getResult(): Promise<AppUser> {
+  async getResult(): Promise<AppUser | Nothing> {
 
-    const email = this.inviteFromGroup.get('emailFormControl').value;
+    const email = this.inviteFromGroup.get('emailFormControl');
     if (!email) { return null; }
 
-    return email;
+    return email.value;
   }
 
 }

@@ -1,12 +1,11 @@
 // Modules
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './routing/app-routing.module';
-import { AppMaterialModule } from './modules/app-material/app-material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SharedModule } from './modules/shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Components
 import { AppComponent } from './components/app/app.component';
@@ -23,7 +22,6 @@ import { ProjectsService } from './services/projects/projects.service';
 import { TransitionService } from './services/transition/transition.service';
 import { UserService } from './services/user/user.service';
 import { WorkspaceService } from './services/workspace/workspace.service';
-import { AlertService } from './services/alert/alert.service';
 import { UtilService } from './services/util/util.service';
 import { PostsService } from './services/posts/posts.service';
 import { AuthService } from './services/auth/auth.service';
@@ -48,12 +46,10 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     BrowserAnimationsModule,
-    AppMaterialModule,
+    HttpClientModule,
     DragDropModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [
@@ -61,7 +57,6 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     AuthGuardService,
     ProjectsService,
     WorkspaceService,
-    AlertService,
     ProjectTaskService,
     TransitionService,
     UserService,

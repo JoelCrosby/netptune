@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { Maybe } from '../../modules/nothing';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class AlertService {
   staticAlertClosed = false;
   estaticAlertClosed = false;
 
-  successMessage: string;
-  errorMessage: string;
+  successMessage: Maybe<string>;
+  errorMessage: Maybe<string>;
 
   constructor() {
 

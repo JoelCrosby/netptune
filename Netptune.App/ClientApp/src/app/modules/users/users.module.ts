@@ -1,15 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UsersRoutingModule } from './users-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 import { UsersComponent } from './index/users.index.component';
-import {
-  MatCardModule,
-  MatIconModule,
-  MatButtonModule,
-  MatChipsModule,
-  MatProgressSpinnerModule
-} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -20,11 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
+    SharedModule,
     UsersRoutingModule
   ]
 })

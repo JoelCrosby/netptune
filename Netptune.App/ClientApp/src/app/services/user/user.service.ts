@@ -10,6 +10,7 @@ import { InviteDialogComponent } from '../../dialogs/invite-dialog/invite-dialog
 import { environment } from '../../../environments/environment';
 import { ApiResult } from '../../models/api-result';
 import { AuthService } from '../auth/auth.service';
+import { Maybe } from '../../modules/nothing';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,9 @@ export class UserService {
     private dialog: MatDialog,
     private workspaceService: WorkspaceService) { }
 
-  async refreshUsers(workspace: Workspace = this.workspaceService.currentWorkspace): Promise<void> {
+  async refreshUsers(workspace: Maybe<Workspace> = this.workspaceService.currentWorkspace): Promise<void> {
+
+    if (!workspace) throw new Error('Unable to determine workspace to refresh users for');
 
     const appUsers = await this.getUsers(workspace).toPromise();
 
@@ -55,15 +58,19 @@ export class UserService {
       return;
     }
 
-    let user: AppUser = null;
+    if (!this.workspaceService.currentWorkspace) {
+      throw new Error('cannot show user invite dialog while currentworkspace is undefined.');
+    }
+
+    let user: AppUser;
 
     try {
       user = await this.getUserByEmail(email).toPromise();
     } catch (error) {
       this.snackbar.open(`User with specified email address does not exist.`,
-        null,
+        undefined,
         { duration: 2000 });
-      return null;
+      return;
     }
 
     try {
@@ -71,12 +78,12 @@ export class UserService {
       if (userResult) {
         this.refreshUsers();
         this.snackbar.open(`User ${userResult.email} has been invited to this workspace.`,
-          null,
+          undefined,
           { duration: 2000 });
       }
     } catch (error) {
       this.snackbar.open(`An error has occured while trying to invite the user to this workspace.`,
-        null,
+        undefined,
         { duration: 2000 });
     }
   }

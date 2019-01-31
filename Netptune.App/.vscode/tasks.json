@@ -10,6 +10,31 @@
         "${workspaceFolder}/Netptune.App.csproj"
       ],
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "tslint",
+      "command": "cmd",
+      "type": "shell",
+      "args": [
+        "tslint",
+        "--project",
+        "clientApp"
+      ],
+      "problemMatcher": {
+        "owner": "tslint",
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}"
+        ],
+        "severity": "warning",
+        "pattern": {
+          "regexp": "^(.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      }
     }
   ]
 }

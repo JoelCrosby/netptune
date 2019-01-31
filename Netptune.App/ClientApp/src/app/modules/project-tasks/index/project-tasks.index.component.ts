@@ -99,12 +99,18 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
         return;
       }
 
+      const workspace = this.workspaceService.currentWorkspace;
+      if (!workspace) throw new Error(`current workspace was undefined`);
+
+      const project = this.projectsService.projects.find(x => x.id === result.id);
+      if (!project) throw new Error(`unable to find project with id ${result.id}`);
+
       const newProjectTask = new ProjectTask();
       newProjectTask.name = result.name;
       newProjectTask.description = result.description;
       newProjectTask.projectId = result.projectId;
-      newProjectTask.workspaceId = this.workspaceService.currentWorkspace.id;
-      newProjectTask.project = this.projectsService.projects.find(x => x.id === result.id);
+      newProjectTask.workspaceId = workspace.id;
+      newProjectTask.project = project;
       newProjectTask.assigneeId = this.authService.token.userId;
 
       this.addProjectTask(newProjectTask);

@@ -1,17 +1,17 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Observable, throwError, Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
+import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
+import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
 import { Workspace } from '../../models/workspace';
+import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { ProjectTaskStatus } from '../../enums/project-task-status';
-import { ProjectTaskDto } from '../../models/view-models/project-task-dto';
-import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../auth/auth.service';
+import { Maybe } from '../../modules/nothing';
 
 @Injectable({
   providedIn: 'root'
@@ -75,8 +75,10 @@ export class ProjectTaskService {
     };
   }
 
-  getTasks(workspace: Workspace = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
+  getTasks(workspace: Maybe<Workspace> = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
     const httpOptions = this.getHeaders();
+
+    if (!workspace) throw new Error('worksapce supplied to getTasks was undefined');
 
     return this.http
       .get<ProjectTaskDto[]>(environment.apiEndpoint + 'api/ProjectTasks' + '?workspaceId=' + workspace.id, httpOptions);
@@ -85,14 +87,14 @@ export class ProjectTaskService {
   private addTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
-    if (!task.workspace) {
+    if (!task.workspace && this.workspaceService.currentWorkspace) {
       task.workspace = this.workspaceService.currentWorkspace;
     }
 
-    return this.http.post<ProjectTask>(environment.apiEndpoint + 'api/ProjectTasks', task, httpOptions).pipe(catchError(this.handleError));
+    return this.http.post<ProjectTask>(environment.apiEndpoint + 'api/ProjectTasks', task, httpOptions);
   }
 
-  async addProjectTask(task: ProjectTask): Promise<ProjectTask> {
+  async addProjectTask(task: ProjectTask): Promise<ProjectTask | undefined> {
 
     try {
 
@@ -100,23 +102,25 @@ export class ProjectTaskService {
 
       if (result) {
         this.taskAdded.next(task);
-        this.snackBar.open(`Project ${task.name} Added!.`, null, {
+        this.snackBar.open(`Project ${task.name} Added!.`, undefined, {
           duration: 3000
         });
         return result;
       }
     } catch {
-      this.snackBar.open('An error occured while trying to create the task', null, {
+      this.snackBar.open('An error occured while trying to create the task', undefined, {
         duration: 2000
       });
     }
+
+    return undefined;
   }
 
   private updateTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
     const url = `${environment.apiEndpoint}api/ProjectTasks/${task.id}`;
-    return this.http.put<ProjectTask>(url, task, httpOptions).pipe(catchError(this.handleError));
+    return this.http.put<ProjectTask>(url, task, httpOptions);
   }
 
   async changeTaskStatus(task: ProjectTask, staus: ProjectTaskStatus): Promise<void> {
@@ -130,59 +134,47 @@ export class ProjectTaskService {
       await this.updateTask(task).toPromise();
       this.taskUpdated.next(task);
     } catch (error) {
-      this.snackBar.open('An error occured while trying to update the task', null, {
+      this.snackBar.open('An error occured while trying to update the task', undefined, {
         duration: 2000
       });
     }
   }
 
-  async deleteProjectTask(task: ProjectTask): Promise<ProjectTask> {
+  async deleteProjectTask(task: ProjectTask): Promise<ProjectTask | undefined> {
     try {
       const deletedTask = await this.deleteTask(task).toPromise();
-      this.snackBar.open('Task Deleted', null, {
+      this.snackBar.open('Task Deleted', undefined, {
         duration: 2000
       });
       this.taskDeleted.next(deletedTask);
       return deletedTask;
     } catch (error) {
-      this.snackBar.open('An error occured while trying to delete Task' + error, null, {
+      this.snackBar.open('An error occured while trying to delete Task' + error, undefined, {
         duration: 2000
       });
     }
-    return null;
+    return undefined;
   }
 
   private deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
     const url = `${environment.apiEndpoint}api/ProjectTasks/${task.id}`;
-    return this.http.delete<ProjectTask>(url, httpOptions).pipe(catchError(this.handleError));
+    return this.http.delete<ProjectTask>(url, httpOptions);
   }
 
   public getProjectTaskCount(projectId: number): Observable<ProjectTaskCounts> {
     const httpOptions = this.getHeaders();
 
     const url = `${environment.apiEndpoint}api/ProjectTasks/GetProjectTaskCount?projectId=${projectId}`;
-    return this.http.get<ProjectTaskCounts>(url, httpOptions).pipe(catchError(this.handleError));
+    return this.http.get<ProjectTaskCounts>(url, httpOptions);
   }
 
   updateSortOrder(tasks: ProjectTask[]): Observable<ProjectTask[]> {
     const httpOptions = this.getHeaders();
 
     const url = `${environment.apiEndpoint}api/ProjectTasks/UpdateSortOrder`;
-    return this.http.post<ProjectTask[]>(url, tasks, httpOptions).pipe(catchError(this.handleError));
+    return this.http.post<ProjectTask[]>(url, tasks, httpOptions);
   }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(`Backend returned code ${error.status}, ` + `body was: ${error.error}`);
-    }
-    // return an observable with a user-facing error message
-    return throwError('Something bad happened; please try again later.');
-  }
 }

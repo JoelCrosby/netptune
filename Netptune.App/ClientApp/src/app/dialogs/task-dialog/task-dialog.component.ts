@@ -53,7 +53,9 @@ export class TaskDialogComponent implements OnInit {
       this.projectFromGroup.controls['descriptionFormControl'].setValue(this.task.description);
     } else {
       this.projectFromGroup.reset();
-      this.projectFromGroup.controls['projectFormControl'].setValue(this.projectsService.currentProject.id);
+      if (this.projectsService.currentProject) {
+        this.projectFromGroup.controls['projectFormControl'].setValue(this.projectsService.currentProject.id);
+      }
     }
   }
 
@@ -68,9 +70,13 @@ export class TaskDialogComponent implements OnInit {
       taskResult.id = this.task.id;
     }
 
+    const project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
+
+    if (!project) throw new Error(`unable to find project with id ${taskResult.projectId}`);
+
     taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
     taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
-    taskResult.project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
+    taskResult.project = project;
     taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
 
     return taskResult;
