@@ -1,101 +1,135 @@
 @import './variables.scss';
 
-.component-header {
-    h4 {
-        font-weight: 200;
-        font-size: 2rem;
-        margin-top: 0rem;
-        letter-spacing: 0.2rem;
-        margin-bottom: 1rem;
+button {
+  border-radius: 50rem !important;
+  min-width: 8rem !important;
+}
+
+#new-button {
+  margin-bottom: 4rem;
+  margin-right: 6rem;
+  font-size: 1.4rem;
+  height: 4rem;
+  background-color: #9C27B0;
+  color: white;
+  padding-left: 1rem;
+  border-radius: 48px !important;
+  width: 14rem;
+  font-weight: 100;
+  transition: all 330ms;
+  bottom: 0;
+  position: fixed;
+  right: 0;
+  min-width: 0px;
+  overflow: hidden;
+  z-index: 99;
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    .fas {
+      margin-left: 0.3rem !important;
+      margin-right: 1rem !important;
+      margin-bottom: 0.3rem !important;
     }
+  }
+}
+
+.component-header {
+  h4 {
+    font-weight: 200;
+    font-size: 2rem;
+    margin-top: 0rem;
+    letter-spacing: 0.2rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .list-item-text {
-    h4 {
-        font-weight: 500;
-    }
+  h4 {
+    font-weight: 500;
+  }
 }
 
 .component-header {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    margin-bottom: 2em;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 2em;
 }
 
 .bottom-border {
-    border-top: 0 !important;
-    border-bottom: 1px solid $hover !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid $hover !important;
 }
 
 .card {
-    border: 0 !important;
-    margin: 1rem !important;
-    border-radius: 0.3rem !important;
+  border: 0 !important;
+  margin: 1rem !important;
+  border-radius: 0.3rem !important;
 }
 
 .card-footer {
-    border: 0 !important;
-    background-color: transparent;
+  border: 0 !important;
+  background-color: transparent;
 }
 
 .full-width {
-    min-width: 150px;
-    width: 100%;
+  min-width: 150px;
+  width: 100%;
 }
 
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 .button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .form-action-button {
-    font-size: 1.4rem;
-    font-weight: initial;
-    height: 3.6rem;
-    border-width: 2px !important;
-    border-color: $primary !important;
+  font-size: 1.4rem;
+  font-weight: initial;
+  height: 3.6rem;
+  border-width: 2px !important;
+  border-color: $primary !important;
 }
 
 .flex-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .form-spacer {
-    height: 2rem;
+  height: 2rem;
 }
 
 .center {
-    display: flex;
-    align-items: center;
-    vertical-align: middle;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 .flex-row {
-    display: flex !important;
+  display: flex !important;
 }
 
 .space-between {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .card-actions {
-    display: flex;
+  display: flex;
 }
 
 .card-chips {
-    display: flex;
+  display: flex;
 }

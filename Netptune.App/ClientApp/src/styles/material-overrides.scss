@@ -1,0 +1,40 @@
+.dropdown-menu {
+  -webkit-box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+}
+
+.draggable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.dropdown-menu .show {
+  min-width: 12rem !important;
+}
+
+.mat-button, .mat-raised-button {
+  min-width: 8rem !important;
+}
+
+.mat-dialog-container {
+  border-radius: 8px !important;
+}
+
+.mat-select-panel:not([class*=mat-elevation-z]) {
+  border-radius: 8px !important;
+  border: solid 2px #e2e2e2 !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #e2e2e2 !important;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+  border: none !important;
+  border-radius: .4rem !important;
+  box-shadow: 10px 10px 121px -19px rgba(179, 0, 179, 0.08) !important;
+  margin-bottom: 1.4rem !important;
+}
