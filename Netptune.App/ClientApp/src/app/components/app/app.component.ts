@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { insertRemoveSidebar } from '../../animations';
+import { insertRemoveSidebar } from '../../core/animations';
 import { TransitionService } from '../../services/transition/transition.service';
 import { filter } from 'rxjs/operators';
 

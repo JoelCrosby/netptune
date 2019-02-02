@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '../../models/project';
 import { ProjectTask } from '../../models/project-task';
 import { ProjectsService } from '../../services/projects/projects.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 
 @Component({
   selector: 'app-task-dialog',

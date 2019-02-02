@@ -11,7 +11,7 @@ import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 
 @Injectable({
   providedIn: 'root'

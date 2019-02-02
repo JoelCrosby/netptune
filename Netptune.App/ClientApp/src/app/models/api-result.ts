@@ -1,4 +1,4 @@
-import { Maybe } from '../modules/nothing';
+import { Maybe } from '../core/nothing';
 
 export class ApiResult {
 

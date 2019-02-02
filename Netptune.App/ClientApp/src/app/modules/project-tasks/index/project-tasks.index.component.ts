@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
-import { fadeIn } from '../../../animations';
+import { fadeIn } from '../../../core/animations';
 import { TaskDialogComponent } from '../../../dialogs/task-dialog/task-dialog.component';
 import { ProjectTaskStatus } from '../../../enums/project-task-status';
 import { ProjectTask } from '../../../models/project-task';

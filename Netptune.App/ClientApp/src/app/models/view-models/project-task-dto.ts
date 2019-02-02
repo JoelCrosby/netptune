@@ -1,18 +1,17 @@
-export class ProjectTaskDto {
-
-    public id: number;
-    public assigneeId: null;
-    public name: string;
-    public description: string;
-    public status: number;
-    public sortOrder: number;
-    public projectId: number;
-    public workspaceId: number;
-    public createdAt: string;
-    public updatedAt: string;
-    public assigneeUsername: string;
-    public ownerUsername: string;
-    public assigneePictureUrl: string;
-    public projectName: string;
+export interface ProjectTaskDto {
+  id: number;
+  assigneeId: null;
+  name: string;
+  description: string;
+  status: number;
+  sortOrder: number;
+  projectId: number;
+  workspaceId: number;
+  createdAt: string;
+  updatedAt: string;
+  assigneeUsername: string;
+  ownerUsername: string;
+  assigneePictureUrl: string;
+  projectName: string;
 }
 

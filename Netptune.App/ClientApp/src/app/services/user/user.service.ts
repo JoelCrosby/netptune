@@ -10,7 +10,7 @@ import { InviteDialogComponent } from '../../dialogs/invite-dialog/invite-dialog
 import { environment } from '../../../environments/environment';
 import { ApiResult } from '../../models/api-result';
 import { AuthService } from '../auth/auth.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 
 @Injectable({
   providedIn: 'root'

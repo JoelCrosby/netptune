@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 
 @Injectable({
   providedIn: 'root'

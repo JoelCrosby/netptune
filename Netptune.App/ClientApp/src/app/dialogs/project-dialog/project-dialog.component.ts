@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '../../models/project';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 
 @Component({
   selector: 'app-project-dialog',

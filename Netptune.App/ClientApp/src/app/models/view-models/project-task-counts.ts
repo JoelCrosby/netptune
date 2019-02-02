@@ -1,6 +1,6 @@
-export class ProjectTaskCounts {
-    public allTasks: number;
-    public completedTasks: number;
-    public inProgressTasks: number;
-    public backlogTasks: number;
+export interface ProjectTaskCounts {
+  allTasks: number;
+  completedTasks: number;
+  inProgressTasks: number;
+  backlogTasks: number;
 }

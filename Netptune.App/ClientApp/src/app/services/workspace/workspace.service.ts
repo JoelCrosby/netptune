@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
-import { Maybe } from '../../modules/nothing';
+import { Maybe } from '../../core/nothing';
 import { BaseService } from '../base.service';
 
 @Injectable({

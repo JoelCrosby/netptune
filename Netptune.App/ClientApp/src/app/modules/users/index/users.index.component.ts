@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { dropIn } from '../../../animations';
+import { dropIn } from '../../../core/animations';
 import { AppUser } from '../../../models/appuser';
 import { UserService } from '../../../services/user/user.service';
 import { MatDialog, MatSnackBar } from '@angular/material';

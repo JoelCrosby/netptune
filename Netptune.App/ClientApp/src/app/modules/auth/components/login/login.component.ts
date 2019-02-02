@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { pullIn } from '../../../../animations';
+import { pullIn } from '../../../../core/animations';
 import { MatSnackBar } from '@angular/material';
 import { AuthService } from '../../../../services/auth/auth.service';
 
