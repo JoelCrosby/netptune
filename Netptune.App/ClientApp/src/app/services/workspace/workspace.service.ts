@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { Maybe } from '../../modules/nothing';
+import { BaseService } from '../base.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class WorkspaceService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService) {
+    private baseService: BaseService,
+    private authService: AuthService
+  ) {
     this.authService.onLogout.subscribe(() => {
       this.clearCurrentWorkspace();
     });
@@ -34,6 +37,7 @@ export class WorkspaceService {
       }
     }
   }
+
   public set currentWorkspace(value: Maybe<Workspace>) {
     if (value) {
       localStorage.setItem('currentWorkspace', JSON.stringify(value));
@@ -55,42 +59,24 @@ export class WorkspaceService {
       });
   }
 
-  getHeaders() {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authService.token.token
-      })
-    };
-  }
-
   getWorkspaces(): Observable<Workspace[]> {
-    const httpOptions = this.getHeaders();
-
-    return this.http.get<Workspace[]>(environment.apiEndpoint + 'api/Workspaces', httpOptions);
+    return this.http.get<Workspace[]>(environment.apiEndpoint + 'api/Workspaces', this.baseService.httpOptions);
   }
 
   addWorkspace(workspace: Workspace): Observable<Workspace> {
-    const httpOptions = this.getHeaders();
-
-    return this.http.post<Workspace>(environment.apiEndpoint + 'api/Workspaces', workspace, httpOptions);
+    return this.http.post<Workspace>(environment.apiEndpoint + 'api/Workspaces', workspace, this.baseService.httpOptions);
   }
 
   updateWorkspace(workspace: Workspace): Observable<Workspace> {
-    const httpOptions = this.getHeaders();
-
-    const url = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
-    return this.http.put<Workspace>(url, workspace, httpOptions);
+    const path = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
+    return this.http.put<Workspace>(path, workspace, this.baseService.httpOptions);
   }
 
   deleteWorkspace(workspace: Workspace): Observable<Workspace> {
-
     workspace.isDeleted = true;
 
-    const httpOptions = this.getHeaders();
-
-    const url = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
-    return this.http.put<Workspace>(url, workspace, httpOptions);
+    const path = `${environment.apiEndpoint}api/Workspaces/${workspace.id}`;
+    return this.http.put<Workspace>(path, workspace, this.baseService.httpOptions);
   }
 
 }
