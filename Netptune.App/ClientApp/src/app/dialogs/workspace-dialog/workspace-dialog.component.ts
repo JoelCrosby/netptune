@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Workspace } from '../../models/workspace';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Maybe } from '../../modules/nothing';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -42,7 +43,7 @@ export class WorkspaceDialogComponent implements OnInit {
     workspaceResult.name = this.workspaceFromGroup.controls['nameFormControl'].value;
     workspaceResult.description = this.workspaceFromGroup.controls['discriptionFormControl'].value;
 
-    return workspaceResult;
+    this.dialogRef.close(workspaceResult);
   }
 
 }

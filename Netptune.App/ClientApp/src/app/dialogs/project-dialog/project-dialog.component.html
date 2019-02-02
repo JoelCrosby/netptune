@@ -26,7 +26,7 @@
 
 <div mat-dialog-actions align="end">
   <button mat-button (click)="close()">Close</button>
-  <button mat-button [mat-dialog-close]="getResult()" [disabled]="projectFromGroup.invalid" type="button">
+  <button mat-button (click)="getResult()" [disabled]="projectFromGroup.invalid" type="button">
     {{ project ? 'Save Changes' : 'Save Project'}}
   </button>
 </div>

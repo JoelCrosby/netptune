@@ -29,7 +29,7 @@ export class BoardPostDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  async getResult(): Promise<Post | null> {
+  getResult() {
 
     const title = this.postFromGroup.get('titleFormControl');
     if (!title) { return null; }
@@ -38,7 +38,7 @@ export class BoardPostDialogComponent implements OnInit {
     const post = new Post();
     post.title = value;
 
-    return post;
+    this.dialogRef.close(post);
   }
 
 }

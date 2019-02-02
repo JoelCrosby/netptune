@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '../../models/project';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { Maybe } from '../../modules/nothing';
 
 @Component({
   selector: 'app-project-dialog',
@@ -72,7 +73,7 @@ export class ProjectDialogComponent implements OnInit {
     projectResult.workspace = this.workspaceService.currentWorkspace;
     projectResult.workspaceId = this.workspaceService.currentWorkspace.id;
 
-    return projectResult;
+    this.dialogRef.close(projectResult);
   }
 
 
