@@ -127,7 +127,7 @@ export class ProjectsComponent implements OnInit {
       if (!result) { return; }
 
       const workspace = this.workspaceService.currentWorkspace;
-      if (!workspace) throw new Error(`current workspace was undefined`);
+      if (!workspace) { throw new Error(`current workspace was undefined`); }
 
       if (this.selectedProject) {
 
@@ -191,7 +191,7 @@ export class ProjectsComponent implements OnInit {
     this.exportInProgress = true;
 
     const workspace = this.workspaceService.currentWorkspace;
-    if (!workspace) throw new Error(`current workspace was undefined`);
+    if (!workspace) { throw new Error(`current workspace was undefined`); }
 
     this.projectsService.getProjects(workspace).subscribe(
       result => {
