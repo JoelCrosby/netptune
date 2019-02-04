@@ -1,6 +1,6 @@
 @import '../../../styles/variables.scss';
 
-.page-body { 
+.page-body {
     overflow: hidden;  /*makes the body non-scrollable (we will add scrolling to the sidebar and main content containers)*/
     margin: 0;  /*removes default style*/
     display: flex;  /*enables flex content for its children*/
@@ -54,4 +54,12 @@ ul {
     height: 100%;
     padding-bottom: 0px;
     padding-top: 0px;
+}
+
+.open {
+  width: 320px;
+}
+
+.closed {
+  width: 68px;
 }
