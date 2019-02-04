@@ -140,12 +140,10 @@ export class TaskListComponent implements OnInit {
         return;
       }
 
-      const task = this.selectedTask;
-
-      if (!task) throw new Error('selectedTask was undefenied.');
+      if (!this.selectedTask) { throw new Error('selectedTask was undefenied.'); }
 
       const updatedProjectTask = new ProjectTask();
-      updatedProjectTask.id = task.id;
+      updatedProjectTask.id = this.selectedTask.id;
       updatedProjectTask.name = result.name;
       updatedProjectTask.description = result.description;
       await this.projectTaskService.updateProjectTask(updatedProjectTask);

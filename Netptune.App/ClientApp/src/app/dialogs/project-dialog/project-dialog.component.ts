@@ -1,9 +1,8 @@
-import { Component, OnInit, Inject, Optional } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '../../models/project';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { Maybe } from '../../core/nothing';
 
 @Component({
   selector: 'app-project-dialog',
@@ -64,7 +63,7 @@ export class ProjectDialogComponent implements OnInit {
     }
 
     if (!this.workspaceService.currentWorkspace) {
-      throw new Error("currentWorkspace  null or undefined!");
+      throw new Error('currentWorkspace  null or undefined!');
     }
 
     projectResult.name = this.projectFromGroup.controls['nameFormControl'].value;

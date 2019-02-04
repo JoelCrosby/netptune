@@ -1,8 +1,6 @@
-import { Component, OnInit, Optional, Inject } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppUser } from '../../models/appuser';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Nothing, Maybe } from '../../core/nothing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-invite-dialog',

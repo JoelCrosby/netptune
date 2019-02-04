@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { Workspace } from '../../models/workspace';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Maybe } from '../../core/nothing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Workspace } from '../../models/workspace';
 
 @Component({
   selector: 'app-workspace-dialog',
