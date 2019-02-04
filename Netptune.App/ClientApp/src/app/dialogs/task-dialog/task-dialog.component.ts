@@ -5,6 +5,8 @@ import { Project } from '../../models/project';
 import { ProjectTask } from '../../models/project-task';
 import { ProjectsService } from '../../services/projects/projects.service';
 import { Maybe } from '../../core/nothing';
+import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -21,7 +23,9 @@ export class TaskDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectTask,
-    public projectsService: ProjectsService) {
+    public projectsService: ProjectsService,
+    private workspaceService: WorkspaceService,
+    private authService: AuthService) {
 
     if (data) {
       this.task = data;
@@ -72,14 +76,24 @@ export class TaskDialogComponent implements OnInit {
       taskResult.id = this.task.id;
     }
 
-    const project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
-
-    if (!project) throw new Error(`unable to find project with id ${taskResult.projectId}`);
-
     taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
     taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
-    taskResult.project = project;
     taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
+
+    const project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
+    if (!project) { throw new Error(`unable to find project with id ${taskResult.projectId}`); }
+
+    taskResult.project = project;
+
+    const workspace = this.workspaceService.currentWorkspace;
+    if (!workspace) { throw new Error(`current workspace was undefined`); }
+
+    taskResult.workspaceId = workspace.id;
+
+    const assigneeId = this.authService.token.userId;
+    if (!workspace) { throw new Error(`current userId was undefined`); }
+
+    taskResult.assigneeId = assigneeId;
 
     this.dialogRef.close(taskResult);
   }

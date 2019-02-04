@@ -7,9 +7,7 @@ import { TaskDialogComponent } from '../../../dialogs/task-dialog/task-dialog.co
 import { ProjectTaskStatus } from '../../../enums/project-task-status';
 import { ProjectTask } from '../../../models/project-task';
 import { ProjectTaskDto } from '../../../models/view-models/project-task-dto';
-import { AuthService } from '../../../services/auth/auth.service';
 import { ProjectTaskService } from '../../../services/project-task/project-task.service';
-import { ProjectsService } from '../../../services/projects/projects.service';
 import { UtilService } from '../../../services/util/util.service';
 import { WorkspaceService } from '../../../services/workspace/workspace.service';
 
@@ -45,11 +43,9 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
 
   constructor(
     public projectTaskService: ProjectTaskService,
-    private projectsService: ProjectsService,
     private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
     private utilService: UtilService,
-    private authService: AuthService,
     public dialog: MatDialog
   ) {
     this.subs.add(this.projectTaskService.taskUpdated
@@ -98,22 +94,7 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
       if (!result) {
         return;
       }
-
-      const workspace = this.workspaceService.currentWorkspace;
-      if (!workspace) throw new Error(`current workspace was undefined`);
-
-      const project = this.projectsService.projects.find(x => x.id === result.id);
-      if (!project) throw new Error(`unable to find project with id ${result.id}`);
-
-      const newProjectTask = new ProjectTask();
-      newProjectTask.name = result.name;
-      newProjectTask.description = result.description;
-      newProjectTask.projectId = result.projectId;
-      newProjectTask.workspaceId = workspace.id;
-      newProjectTask.project = project;
-      newProjectTask.assigneeId = this.authService.token.userId;
-
-      this.addProjectTask(newProjectTask);
+      this.addProjectTask(result);
     });
   }
 
