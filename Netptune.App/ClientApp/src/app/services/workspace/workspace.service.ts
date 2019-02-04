@@ -31,7 +31,9 @@ export class WorkspaceService {
     if (res) {
       try {
         const workspace = JSON.parse(res);
-        if (workspace) return workspace;
+        if (workspace) {
+          return workspace;
+        }
       } catch {
         return;
       }
@@ -43,7 +45,7 @@ export class WorkspaceService {
       localStorage.setItem('currentWorkspace', JSON.stringify(value));
       this.onWorkspaceChanged.next(value);
     } else {
-      throw new Error('Cannot set current worksapce to undefined | null')
+      throw new Error('Cannot set current worksapce to undefined | null');
     }
   }
 

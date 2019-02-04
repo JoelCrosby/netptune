@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Maybe } from '../../core/nothing';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
 import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
@@ -11,7 +12,6 @@ import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { UtilService } from '../util/util.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { Maybe } from '../../core/nothing';
 
 @Injectable({
   providedIn: 'root'
@@ -78,7 +78,9 @@ export class ProjectTaskService {
   getTasks(workspace: Maybe<Workspace> = this.workspaceService.currentWorkspace): Observable<ProjectTaskDto[]> {
     const httpOptions = this.getHeaders();
 
-    if (!workspace) throw new Error('worksapce supplied to getTasks was undefined');
+    if (!workspace) {
+      throw new Error('worksapce supplied to getTasks was undefined');
+    }
 
     return this.http
       .get<ProjectTaskDto[]>(environment.apiEndpoint + 'api/ProjectTasks' + '?workspaceId=' + workspace.id, httpOptions);
