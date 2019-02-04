@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppLoadService } from '../../app-load.service';
+import { AppLoadService } from '../../core/app-load.service';
 import { insertRemoveSidebar } from '../../core/animations';
 import { TransitionService } from '../../services/transition/transition.service';
 
