@@ -7,7 +7,7 @@
 
       <div class="form-spacer"></div>
 
-      <mat-form-field class="full-width" appearance="fill">
+      <mat-form-field class="full-width" appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput id="email" placeholder="Enter Email Address" name="emailFormControl" formControlName="emailFormControl" autocomplete="username">
         <mat-error *ngIf="f['emailFormControl'].hasError('password') && !f['emailFormControl'].hasError('required')">
@@ -18,7 +18,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="full-width" appearance="fill">
+      <mat-form-field class="full-width" appearance="outline">
         <mat-label>Password</mat-label>
         <input matInput id="password" placeholder="Enter Password" [type]="hidePassword ? 'password' : 'text'" name="passwordFormControl" formControlName="passwordFormControl" autocomplete="current-password">
         <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -33,7 +33,7 @@
         <button mat-stroked-button color="primary" type="submit" class="full-width form-action-button">
             Sign in
         </button>
-        
+
         <div class="form-spacer"></div>
 
         <button mat-button color="primary" type="button" (click)='onCreateAccountClicked()'>Create
