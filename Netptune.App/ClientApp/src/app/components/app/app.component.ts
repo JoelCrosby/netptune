@@ -14,7 +14,7 @@ export class AppComponent {
   showSidebar = false;
 
   constructor(private appLoad: AppLoadService,
-    public transitionService: AppLoadService) {
+    public transitionService: TransitionService) {
     this.appLoad.sideBarVisibility.subscribe(x => this.showSidebar = x);
   }
 
