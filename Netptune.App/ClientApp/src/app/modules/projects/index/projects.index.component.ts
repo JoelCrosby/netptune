@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { saveAs } from 'file-saver';
 import { dropIn } from '../../../core/animations';
 import { Project } from '../../../models/project';
 import { ProjectTaskCounts } from '../../../models/view-models/project-task-counts';
@@ -185,22 +184,6 @@ export class ProjectsComponent implements OnInit {
 
   clearModalValues(): void {
     this.selectedProject = null;
-  }
-
-  exportProjects(): void {
-    this.exportInProgress = true;
-
-    const workspace = this.workspaceService.currentWorkspace;
-    if (!workspace) { throw new Error(`current workspace was undefined`); }
-
-    this.projectsService.getProjects(workspace).subscribe(
-      result => {
-
-        const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
-        saveAs(blob, 'projects.json');
-        this.exportInProgress = false;
-      }, error => { this.exportInProgress = error != null; }
-    );
   }
 
 }

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
-import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
 import { fadeIn } from '../../../core/animations';
 import { TaskDialogComponent } from '../../../dialogs/task-dialog/task-dialog.component';
@@ -96,18 +95,5 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
       }
       this.addProjectTask(result);
     });
-  }
-
-  async exportProjects(): Promise<void> {
-    this.exportInProgress = true;
-
-    try {
-      const result = this.projectTaskService.getTasks(this.workspaceService.currentWorkspace).toPromise();
-      const blob = new Blob([JSON.stringify(result, null, '\t')], { type: 'text/plain;charset=utf-8' });
-      saveAs(blob, 'projects.json');
-      this.exportInProgress = false;
-    } catch (error) {
-      this.exportInProgress = error != null;
-    }
   }
 }
