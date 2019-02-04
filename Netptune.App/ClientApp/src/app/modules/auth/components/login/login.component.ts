@@ -27,7 +27,6 @@ export class LoginComponent {
     ])
   });
 
-  // convenience getter for easy access to form fields
   get f() { return this.loginFromGroup.controls; }
 
   constructor(public authServices: AuthService, private router: Router, public snackbar: MatSnackBar) { }

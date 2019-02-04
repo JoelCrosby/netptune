@@ -11,9 +11,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
   styleUrls: ['./register.component.scss'],
   animations: [pullIn]
 })
-export class RegisterComponent implements OnInit {
-
-  state = true;
+export class RegisterComponent {
 
   constructor(
     public authServices: AuthService,
@@ -35,11 +33,7 @@ export class RegisterComponent implements OnInit {
     ])
   });
 
-  // convenience getter for easy access to form fields
   get f() { return this.registerFromGroup.controls; }
-
-  ngOnInit() {
-  }
 
   async register() {
 
