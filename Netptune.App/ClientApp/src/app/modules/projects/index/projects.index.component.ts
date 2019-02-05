@@ -153,9 +153,9 @@ export class ProjectsComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '600px',
       data: {
-        title: 'Remove Project',
-        content: `Are you sure you wish to remove ${project.name}?`,
-        confirm: 'Remove'
+        title: 'Delete Project',
+        content: `Are you sure you wish to delete ${project.name}? \nThis will delete all tasks assosiated with it!`,
+        confirm: 'Delete'
       }
     });
 
