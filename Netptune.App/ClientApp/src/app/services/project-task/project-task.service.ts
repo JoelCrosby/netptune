@@ -104,7 +104,7 @@ export class ProjectTaskService {
 
       if (result) {
         this.taskAdded.next(task);
-        this.snackBar.open(`Project ${task.name} Added!.`, undefined, {
+        this.snackBar.open(`Task created`, undefined, {
           duration: 3000
         });
         return result;
