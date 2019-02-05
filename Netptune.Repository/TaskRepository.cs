@@ -86,7 +86,7 @@ namespace Netptune.Repository
             result.OwnerId = projectTask.OwnerId;
             result.AssigneeId = projectTask.AssigneeId;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
 
             return RepoResult<ProjectTask>.Ok(result);
