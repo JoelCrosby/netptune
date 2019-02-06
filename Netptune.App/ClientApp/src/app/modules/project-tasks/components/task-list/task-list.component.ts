@@ -1,17 +1,17 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { dropIn, toggleChip } from '../../../../core/animations/animations';
-import { ConfirmDialogComponent } from '../../../../dialogs/confirm-dialog/confirm-dialog.component';
-import { TaskDialogComponent } from '../../../../dialogs/task-dialog/task-dialog.component';
-import { ProjectTaskStatus } from '../../../../enums/project-task-status';
-import { Project } from '../../../../models/project';
-import { ProjectTask } from '../../../../models/project-task';
-import { ProjectTaskDto } from '../../../../models/view-models/project-task-dto';
-import { ProjectTaskService } from '../../../../services/project-task/project-task.service';
-import { UserService } from '../../../../services/user/user.service';
-import { WorkspaceService } from '../../../../services/workspace/workspace.service';
-import { Maybe } from '../../../../core/types/nothing';
+import { dropIn, toggleChip } from '@app/core/animations/animations';
+import { Maybe } from '@app/core/types/nothing';
+import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
+import { TaskDialogComponent } from '@app/dialogs/task-dialog/task-dialog.component';
+import { ProjectTaskStatus } from '@app/enums/project-task-status';
+import { Project } from '@app/models/project';
+import { ProjectTask } from '@app/models/project-task';
+import { ProjectTaskDto } from '@app/models/view-models/project-task-dto';
+import { ProjectTaskService } from '@app/services/project-task/project-task.service';
+import { UserService } from '@app/services/user/user.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-task-list',

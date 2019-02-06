@@ -6,7 +6,7 @@ import { Workspace } from '@app/models/workspace';
 import { WorkspaceService } from '../workspace/workspace.service';
 import { UserSettings } from '@app/models/user-settings';
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { InviteDialogComponent } from '../../dialogs/invite-dialog/invite-dialog.component';
+import { InviteDialogComponent } from '@app/dialogs/invite-dialog/invite-dialog.component';
 import { environment } from '@env/environment';
 import { ApiResult } from '@app/models/api-result';
 import { AuthService } from '../auth/auth.service';

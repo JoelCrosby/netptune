@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { dropIn } from '../../../core/animations/animations';
-import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
-import { Workspace } from '../../../models/workspace';
-import { UserService } from '../../../services/user/user.service';
-import { WorkspaceService } from '../../../services/workspace/workspace.service';
-import { WorkspaceDialogComponent } from '../../../dialogs/workspace-dialog/workspace-dialog.component';
-import { Maybe } from '../../../core/types/nothing';
+import { dropIn } from '@app/core/animations/animations';
+import { Maybe } from '@app/core/types/nothing';
+import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
+import { WorkspaceDialogComponent } from '@app/dialogs/workspace-dialog/workspace-dialog.component';
+import { Workspace } from '@app/models/workspace';
+import { UserService } from '@app/services/user/user.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-workspaces',

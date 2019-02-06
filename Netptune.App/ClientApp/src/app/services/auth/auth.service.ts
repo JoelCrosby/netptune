@@ -1,10 +1,10 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { ApiResult } from '@app/models/api-result';
 import { Token } from '@app/models/token';
 import { environment } from '@env/environment';
-import { ApiResult } from '@app/models/api-result';
+import { Subject } from 'rxjs';
 
 
 @Injectable({

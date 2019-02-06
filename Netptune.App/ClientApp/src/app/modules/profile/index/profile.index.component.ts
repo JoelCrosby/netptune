@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { UserService } from '../../../services/user/user.service';
-import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
-import { AppUser } from '../../../models/appuser';
-import { AuthService } from '../../../services/auth/auth.service';
+import { UserService } from '@app/services/user/user.service';
+import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
+import { AppUser } from '@app/models/appuser';
+import { AuthService } from '@app/services/auth/auth.service';
 
 @Component({
   selector: 'app-profile',

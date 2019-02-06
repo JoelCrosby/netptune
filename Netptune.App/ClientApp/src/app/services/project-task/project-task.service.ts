@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '@env/environment';
 import { Maybe } from '@app/core/types/nothing';
-import { ProjectTaskStatus } from '../../enums/project-task-status';
+import { ProjectTaskStatus } from '@app/enums/project-task-status';
 import { ProjectTask } from '@app/models/project-task';
 import { ProjectTaskCounts } from '@app/models/view-models/project-task-counts';
 import { ProjectTaskDto } from '@app/models/view-models/project-task-dto';
