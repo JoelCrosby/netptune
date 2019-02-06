@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { Maybe } from '../../core/nothing';
+import { Maybe } from '../../core/types/nothing';
 
 @Injectable({
   providedIn: 'root'

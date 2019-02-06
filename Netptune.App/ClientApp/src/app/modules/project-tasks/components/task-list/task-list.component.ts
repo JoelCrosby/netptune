@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { dropIn, toggleChip } from '../../../../core/animations';
+import { dropIn, toggleChip } from '../../../../core/animations/animations';
 import { ConfirmDialogComponent } from '../../../../dialogs/confirm-dialog/confirm-dialog.component';
 import { TaskDialogComponent } from '../../../../dialogs/task-dialog/task-dialog.component';
 import { ProjectTaskStatus } from '../../../../enums/project-task-status';
@@ -11,7 +11,7 @@ import { ProjectTaskDto } from '../../../../models/view-models/project-task-dto'
 import { ProjectTaskService } from '../../../../services/project-task/project-task.service';
 import { UserService } from '../../../../services/user/user.service';
 import { WorkspaceService } from '../../../../services/workspace/workspace.service';
-import { Maybe } from '../../../../core/nothing';
+import { Maybe } from '../../../../core/types/nothing';
 
 @Component({
   selector: 'app-task-list',

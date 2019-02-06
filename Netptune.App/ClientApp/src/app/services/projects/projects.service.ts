@@ -6,7 +6,7 @@ import { Project } from '../../models/project';
 import { Workspace } from '../../models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { Maybe } from '../../core/nothing';
+import { Maybe } from '../../core/types/nothing';
 
 @Injectable({
   providedIn: 'root'

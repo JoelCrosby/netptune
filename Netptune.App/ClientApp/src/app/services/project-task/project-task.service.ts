@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Maybe } from '../../core/nothing';
+import { Maybe } from '../../core/types/nothing';
 import { ProjectTaskStatus } from '../../enums/project-task-status';
 import { ProjectTask } from '../../models/project-task';
 import { ProjectTaskCounts } from '../../models/view-models/project-task-counts';
