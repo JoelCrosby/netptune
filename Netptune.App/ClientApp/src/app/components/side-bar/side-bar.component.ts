@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TransitionService } from '../../services/transition/transition.service';
+import { TransitionService } from '@app/services/transition/transition.service';
 import { Router, NavigationEnd } from '@angular/router';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
-import { AuthService } from '../../services/auth/auth.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
+import { AuthService } from '@app/services/auth/auth.service';
 
 @Component({
   selector: 'app-side-bar',

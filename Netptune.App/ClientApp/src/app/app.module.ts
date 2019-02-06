@@ -4,9 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { AppLoadModule } from './core/app-load/app-load.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CoreModule } from './core';
 
 // Components
 import { AppComponent } from './components/app/app.component';
@@ -50,7 +50,7 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     BrowserAnimationsModule,
     HttpClientModule,
     DragDropModule,
-    AppLoadModule,
+    CoreModule,
     SharedModule,
     AppRoutingModule
   ],

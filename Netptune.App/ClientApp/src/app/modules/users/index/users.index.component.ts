@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { dropIn } from '../../../core/animations';
-import { AppUser } from '../../../models/appuser';
-import { UserService } from '../../../services/user/user.service';
+import { dropIn } from '@app/core/animations/animations';
+import { AppUser } from '@app/models/appuser';
+import { UserService } from '@app/services/user/user.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { WorkspaceService } from '../../../services/workspace/workspace.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-users',

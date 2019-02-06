@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Project } from '../../models/project';
-import { ProjectTask } from '../../models/project-task';
-import { AuthService } from '../../services/auth/auth.service';
-import { ProjectsService } from '../../services/projects/projects.service';
-import { WorkspaceService } from '../../services/workspace/workspace.service';
+import { Project } from '@app/models/project';
+import { ProjectTask } from '@app/models/project-task';
+import { AuthService } from '@app/services/auth/auth.service';
+import { ProjectsService } from '@app/services/projects/projects.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-task-dialog',

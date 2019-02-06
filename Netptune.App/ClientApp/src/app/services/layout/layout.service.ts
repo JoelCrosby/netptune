@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { Workspace } from '../../models/workspace';
+import { Workspace } from '@app/models/workspace';
 import { AuthGuardService } from '../auth/auth-guard.service';
 
 @Injectable({

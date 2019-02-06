@@ -28,6 +28,15 @@
       "dom"
     ],
     "module": "es2015",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@env/*": [
+        "environments/*"
+      ],
+      "@testing/*": [
+        "testing/*"
+      ]
+    },
   }
 }

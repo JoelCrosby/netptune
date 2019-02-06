@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Post } from '../../models/post';
+import { Post } from '@app/models/post';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { AuthService } from '../auth/auth.service';
-import { Maybe } from '../../core/types/nothing';
+import { Maybe } from '@app/core/types/nothing';
 
 @Injectable({
   providedIn: 'root'

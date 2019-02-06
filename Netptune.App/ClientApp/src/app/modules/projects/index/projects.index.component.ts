@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { dropIn } from '../../../core/animations/animations';
-import { Project } from '../../../models/project';
-import { ProjectTaskCounts } from '../../../models/view-models/project-task-counts';
-import { ProjectTaskService } from '../../../services/project-task/project-task.service';
-import { ProjectsService } from '../../../services/projects/projects.service';
-import { WorkspaceService } from '../../../services/workspace/workspace.service';
-import { ConfirmDialogComponent } from '../../../dialogs/confirm-dialog/confirm-dialog.component';
-import { ProjectDialogComponent } from '../../../dialogs/project-dialog/project-dialog.component';
-import { Maybe } from '../../../core/types/nothing';
-
+import { dropIn } from '@app/core/animations/animations';
+import { Maybe } from '@app/core/types/nothing';
+import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
+import { ProjectDialogComponent } from '@app/dialogs/project-dialog/project-dialog.component';
+import { Project } from '@app/models/project';
+import { ProjectTaskCounts } from '@app/models/view-models/project-task-counts';
+import { ProjectTaskService } from '@app/services/project-task/project-task.service';
+import { ProjectsService } from '@app/services/projects/projects.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-projects',

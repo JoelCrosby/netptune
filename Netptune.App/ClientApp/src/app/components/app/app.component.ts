@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AppLoadService } from '../../core/app-load.service';
-import { insertRemoveSidebar } from '../../core/animations';
-import { TransitionService } from '../../services/transition/transition.service';
+import { AppLoadService } from '@app/core/app-load/app-load.service';
+import { insertRemoveSidebar } from '@app/core/animations/animations';
+import { TransitionService } from '@app/services/transition/transition.service';
 
 @Component({
   selector: 'app-root',

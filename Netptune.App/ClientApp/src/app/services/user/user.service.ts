@@ -1,16 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppUser } from '../../models/appuser';
-import { Workspace } from '../../models/workspace';
+import { AppUser } from '@app/models/appuser';
+import { Workspace } from '@app/models/workspace';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { UserSettings } from '../../models/user-settings';
+import { UserSettings } from '@app/models/user-settings';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from '../../dialogs/invite-dialog/invite-dialog.component';
-import { environment } from '../../../environments/environment';
-import { ApiResult } from '../../models/api-result';
+import { environment } from '@env/environment';
+import { ApiResult } from '@app/models/api-result';
 import { AuthService } from '../auth/auth.service';
-import { Maybe } from '../../core/types/nothing';
+import { Maybe } from '@app/core/types/nothing';
 
 @Injectable({
   providedIn: 'root'

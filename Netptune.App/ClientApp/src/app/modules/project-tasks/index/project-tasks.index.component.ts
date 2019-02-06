@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { fadeIn } from '../../../core/animations';
-import { TaskDialogComponent } from '../../../dialogs/task-dialog/task-dialog.component';
-import { ProjectTaskStatus } from '../../../enums/project-task-status';
-import { ProjectTask } from '../../../models/project-task';
-import { ProjectTaskDto } from '../../../models/view-models/project-task-dto';
-import { ProjectTaskService } from '../../../services/project-task/project-task.service';
-import { UtilService } from '../../../services/util/util.service';
-import { WorkspaceService } from '../../../services/workspace/workspace.service';
+import { fadeIn } from '@app/core/animations/animations';
+import { TaskDialogComponent } from '@app/dialogs/task-dialog/task-dialog.component';
+import { ProjectTaskStatus } from '@app/enums/project-task-status';
+import { ProjectTask } from '@app/models/project-task';
+import { ProjectTaskDto } from '@app/models/view-models/project-task-dto';
+import { ProjectTaskService } from '@app/services/project-task/project-task.service';
+import { UtilService } from '@app/services/util/util.service';
+import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
   selector: 'app-project-tasks',

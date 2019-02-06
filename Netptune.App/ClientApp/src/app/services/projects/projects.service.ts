@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { Project } from '../../models/project';
-import { Workspace } from '../../models/workspace';
+import { environment } from '@env/environment';
+import { Project } from '@app/models/project';
+import { Workspace } from '@app/models/workspace';
 import { AuthService } from '../auth/auth.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { Maybe } from '../../core/types/nothing';
+import { Maybe } from '@app/core/types/nothing';
 
 @Injectable({
   providedIn: 'root'
