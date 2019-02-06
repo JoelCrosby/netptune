@@ -88,6 +88,7 @@ namespace Netptune.Api
             // Register Repository services.
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 
         }
