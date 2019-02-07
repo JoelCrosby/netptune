@@ -20,13 +20,13 @@
         <mat-card *ngFor="let user of userService.appUsers; let i=index; trackBy:trackById;">
           <mat-card-header>
             <div mat-card-avatar class="far fa-user"></div>
-            <mat-card-title>{{ user.userName }}</mat-card-title>
+            <mat-card-title>{{ userService.getDisplayName(user) }}</mat-card-title>
             <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <mat-chip-list>
-              <mat-chip><i class="fas fa-user-check"></i> {{user.lastLoginTime | date }}</mat-chip>
-              <mat-chip><i class="fas fa-user-clock"></i> {{user.registrationDate | date }}</mat-chip>
+              <mat-chip><i class="fas fa-user-check"></i> {{ user.lastLoginTime | date }}</mat-chip>
+              <mat-chip><i class="fas fa-user-clock"></i> {{ user.registrationDate | date }}</mat-chip>
             </mat-chip-list>
           </mat-card-content>
         </mat-card>

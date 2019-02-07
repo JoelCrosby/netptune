@@ -22,5 +22,16 @@ namespace Netptune.Models.Models
         public virtual ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
 
         public virtual ProjectTask Assigneee { get; }
+
+        public string GetDisplayName()
+        {
+            if (string.IsNullOrWhiteSpace(FirstName) && string.IsNullOrWhiteSpace(LastName))
+                return UserName;
+
+            if (string.IsNullOrWhiteSpace(LastName))
+                return FirstName;
+
+            return $"{FirstName} {LastName}";
+        }
     }
 }

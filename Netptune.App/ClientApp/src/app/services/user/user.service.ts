@@ -47,6 +47,16 @@ export class UserService {
     this.appUsers.push(...appUsers);
   }
 
+  getDisplayName(user: AppUser): string {
+    if (!user.firstName && !user.lastName)
+      return user.userName;
+
+    if (!user.lastName)
+      return user.firstName;
+
+    return `${user.firstName} ${user.lastName}`;
+  }
+
   async showInviteUserDialog(): Promise<void> {
     const dialogRef = this.dialog.open(InviteDialogComponent, {
       width: '600px'
