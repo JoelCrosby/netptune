@@ -44,9 +44,9 @@ namespace Netptune.Repository
                     WorkspaceId = r.WorkspaceId,
                     CreatedAt = r.CreatedAt,
                     UpdatedAt = r.UpdatedAt,
-                    AssigneeUsername = r.Assignee.UserName,
-                    AssigneePictureUrl = r.Assignee.UserName,
-                    OwnerUsername = r.Owner.UserName,
+                    AssigneeUsername = r.Assignee.GetDisplayName(),
+                    AssigneePictureUrl = r.Assignee.GetDisplayName(),
+                    OwnerUsername = r.Owner.GetDisplayName(),
                     ProjectName = r.Project.Name
                 }).ToListAsync();
 
