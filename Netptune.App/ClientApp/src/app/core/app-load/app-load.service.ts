@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs';
+import { NavigationStart, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Injectable()
@@ -19,6 +19,7 @@ export class AppLoadService {
   ];
 
   sideBarVisibility = new Subject<boolean>();
+  loadingRouteConfig = new Subject<boolean>();
 
   constructor(private injector: Injector) { }
 
@@ -35,6 +36,16 @@ export class AppLoadService {
             const showSideBar = this.sidebarRoutes.includes(val.url);
             this.sideBarVisibility.next(showSideBar);
           })
+      );
+
+      this.subscriptions.add(
+        router.events.subscribe(event => {
+          if (event instanceof RouteConfigLoadStart) {
+            this.loadingRouteConfig.next(true);
+          } else if (event instanceof RouteConfigLoadEnd) {
+            this.loadingRouteConfig.next(false);
+          }
+        })
       );
 
       resolve();

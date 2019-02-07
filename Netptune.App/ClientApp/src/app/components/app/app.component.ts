@@ -12,10 +12,12 @@ import { TransitionService } from '@app/services/transition/transition.service';
 export class AppComponent {
 
   showSidebar = false;
+  routeLoading = false;
 
   constructor(private appLoad: AppLoadService,
     public transitionService: TransitionService) {
     this.appLoad.sideBarVisibility.subscribe(x => this.showSidebar = x);
+    this.appLoad.loadingRouteConfig.subscribe(x => this.routeLoading = x)
   }
 
 }
