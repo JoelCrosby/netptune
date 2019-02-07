@@ -8,9 +8,9 @@ import { ProjectsService } from '@app/services/projects/projects.service';
 import { WorkspaceService } from '@app/services/workspace/workspace.service';
 
 @Component({
-  selector: 'app-task-dialog',
-  templateUrl: './task-dialog.component.html',
-  styleUrls: ['./task-dialog.component.scss']
+  selector: 'app-task-detail-dialog',
+  templateUrl: './task-detail-dialog.component.html',
+  styleUrls: ['./task-detail-dialog.component.scss']
 })
 export class TaskDetailDialogComponent implements OnInit {
 

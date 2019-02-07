@@ -9,6 +9,7 @@ import { ProjectTaskDto } from '@app/models/view-models/project-task-dto';
 import { ProjectTaskService } from '@app/services/project-task/project-task.service';
 import { UtilService } from '@app/services/util/util.service';
 import { WorkspaceService } from '@app/services/workspace/workspace.service';
+import { TaskDetailDialogComponent } from '@app/dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-project-tasks',
@@ -81,11 +82,22 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
   }
 
   showAddModal(): void {
-    this.open();
+
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe((result: ProjectTask) => {
+      if (!result) {
+        return;
+      }
+      this.addProjectTask(result);
+    });
   }
 
-  open(): void {
-    const dialogRef = this.dialog.open(TaskDialogComponent, {
+  showDetailModal(): void {
+
+    const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: '600px'
     });
 
