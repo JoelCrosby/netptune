@@ -14,10 +14,12 @@ import { WorkspaceService } from '@app/services/workspace/workspace.service';
 })
 export class TaskDialogComponent implements OnInit {
 
-  public task: ProjectTask;
-  public projects: Project[];
+  task: ProjectTask;
+  projects: Project[];
 
-  public selectedTypeValue: number;
+  showDescriptionField = false;
+
+  selectedTypeValue: number;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDialogComponent>,
