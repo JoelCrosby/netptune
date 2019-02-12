@@ -39,8 +39,7 @@ namespace Netptune.Models.Entites
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=JOEL-DESKTOP\\VEGA;Initial Catalog=Netptune;Persist Security Info=True;User ID=sa;Password=V3gaLyr4");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=Netptune;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
