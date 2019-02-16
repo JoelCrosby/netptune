@@ -14,7 +14,6 @@ namespace Netptune.Models.Entites
     {
 
         // Core data models
-
         public DbSet<Project> Projects { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Flag> Flags { get; set; }
@@ -39,7 +38,7 @@ namespace Netptune.Models.Entites
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=Netptune;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=Netptune;User ID=postgres");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
