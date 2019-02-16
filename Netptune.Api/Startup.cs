@@ -1,4 +1,5 @@
 ﻿using System.Text;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+
 using Netptune.Models.Entites;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
@@ -20,6 +22,7 @@ namespace Netptune.Api
     {
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Env { get; }
 
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
@@ -29,6 +32,7 @@ namespace Netptune.Api
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
+            Env = env;
             Configuration = builder.Build();
         }
 
@@ -37,7 +41,7 @@ namespace Netptune.Api
         {
 
             services.AddDbContext<DataContext>(options =>
-               options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabase")));
+                options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabase")));
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
@@ -53,26 +57,26 @@ namespace Netptune.Api
             });
 
             services.AddAuthentication(sharedOptions =>
-            {
-                sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Tokens:Issuer"],
-                    ValidAudience = Configuration["Tokens:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:SecurityKey"]))
-                };
-            });
+                    sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:SecurityKey"]))
+                    };
+                });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
