@@ -31,6 +31,7 @@ export class AuthGuardService {
         const user = await this.userService.getUser(this.authService.token.userId).toPromise();
         this.userService.currentUser = user;
       } catch {
+        this.router.navigate(['auth/login']);
         return false;
       }
     }

@@ -39,7 +39,9 @@ export class UserService {
 
   async refreshUsers(workspace: Maybe<Workspace> = this.workspaceService.currentWorkspace): Promise<void> {
 
-    if (!workspace) throw new Error('Unable to determine workspace to refresh users for');
+    if (!workspace) {
+      throw new Error('Unable to determine workspace to refresh users for');
+    }
 
     const appUsers = await this.getUsers(workspace).toPromise();
 
@@ -48,11 +50,13 @@ export class UserService {
   }
 
   getDisplayName(user: AppUser): string {
-    if (!user.firstName && !user.lastName)
+    if (!user.firstName && !user.lastName) {
       return user.userName;
+    }
 
-    if (!user.lastName)
+    if (!user.lastName) {
       return user.firstName;
+    }
 
     return `${user.firstName} ${user.lastName}`;
   }
