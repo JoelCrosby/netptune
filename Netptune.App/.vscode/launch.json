@@ -49,6 +49,8 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
+            "internalConsoleOptions": "neverOpen",
+            "externalConsole": true,
             "launchBrowser": {
                 "enabled": false,
                 "args": "${auto-detect-url}",
