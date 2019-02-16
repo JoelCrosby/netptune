@@ -28,7 +28,7 @@ namespace Netptune
             });
 
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
         }
 
