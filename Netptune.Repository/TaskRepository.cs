@@ -50,7 +50,7 @@ namespace Netptune.Repository
                     ProjectName = r.Project.Name
                 }).ToListAsync();
 
-            if (result == null || !result.Any()) return RepoResult<IEnumerable<TaskViewModel>>.NotFound();
+            if (result == null) return RepoResult<IEnumerable<TaskViewModel>>.NotFound();
 
             return RepoResult<IEnumerable<TaskViewModel>>.Ok(result);
         }

@@ -78,5 +78,4 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 
-// Dragular
-(window as any).global = window;
+
