@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
@@ -33,21 +34,17 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
   completedTasks: ProjectTaskDto[] = [];
   backlogTasks: ProjectTaskDto[] = [];
 
-  completedTasksPeers: string[] = ['myTasks', 'backlogTasks'];
-  inProgressTasksPeers: string[] = ['completedTasks', 'backlogTasks'];
-  backlogTasksPeers: string[] = ['completedTasks', 'myTasks'];
-
-  taskspanel: MatExpansionPanel;
-
   dataLoaded = false;
+
+  Complete = ProjectTaskStatus.Complete;
+  InProgress = ProjectTaskStatus.InProgress;
+  Blocked = ProjectTaskStatus.OnHold;
 
   constructor(
     public projectTaskService: ProjectTaskService,
-    private workspaceService: WorkspaceService,
     public snackBar: MatSnackBar,
     private utilService: UtilService,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog) {
     this.subs.add(this.projectTaskService.taskUpdated
       .subscribe(async _ => await this.refreshData())
     );
@@ -107,5 +104,45 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
       }
       this.addProjectTask(result);
     });
+  }
+
+  drop(event: CdkDragDrop<ProjectTaskDto[]>) {
+    console.log(event);
+    if (event.previousContainer === event.container) {
+      console.log('moveItemInArray');
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      console.log('transferArrayItem');
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  getContainerTaskStatus(containerId: string): ProjectTaskStatus {
+    switch (containerId) {
+      case 'myTasks':
+        return this.InProgress;
+      case 'completedTasks':
+        return this.Complete;
+      case 'backlogTasks':
+        return ProjectTaskStatus.InActive;
+      default:
+        return ProjectTaskStatus.InActive;
+    }
+  }
+
+  getStatusClass(task: ProjectTask): string {
+    switch (task.status) {
+      case ProjectTaskStatus.Complete:
+        return 'fas fa-check completed';
+      case ProjectTaskStatus.InProgress:
+        return 'fas fa-minus in-progress';
+      case ProjectTaskStatus.OnHold:
+        return 'fas fa-minus-circle blocked';
+      default:
+        return 'fas fa-stream none';
+    }
   }
 }

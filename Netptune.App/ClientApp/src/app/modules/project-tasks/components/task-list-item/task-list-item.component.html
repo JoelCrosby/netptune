@@ -1,0 +1,22 @@
+<div class="task-card-container">
+  <div class="task-card">
+    <div class="task-header">
+      <div class="task-header-title">
+        <i [class]='getStatusClass(task)' id="task-icon"></i>
+        <div class="title">
+          {{ task.name }}
+        </div>
+      </div>
+      <div class="chip-list">
+        <mat-chip color="primary">
+          {{ task.projectName }}
+        </mat-chip>
+        <div class="chip-spacer"></div>
+        <mat-chip color="accent">
+          {{ task.assigneeUsername }}
+        </mat-chip>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -21,6 +21,7 @@ a:focus {
     white-space: nowrap;
     overflow: hidden;
     letter-spacing: 2px;
+    cursor: pointer;
 }
 
 #sidebar {
@@ -86,4 +87,20 @@ i {
     min-height: 16px;
     height: 16px;
     width: 16px;
+}
+
+.title {
+  display: inline;
+}
+
+.open {
+  width: 208px;
+}
+
+.closed {
+  width: 48px;
+}
+
+.closed li a .title {
+  color: transparent;
 }

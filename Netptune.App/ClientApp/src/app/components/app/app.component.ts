@@ -17,7 +17,7 @@ export class AppComponent {
   constructor(private appLoad: AppLoadService,
     public transitionService: TransitionService) {
     this.appLoad.sideBarVisibility.subscribe(x => this.showSidebar = x);
-    this.appLoad.loadingRouteConfig.subscribe(x => this.routeLoading = x)
+    this.appLoad.loadingRouteConfig.subscribe(x => this.routeLoading = x);
   }
 
 }

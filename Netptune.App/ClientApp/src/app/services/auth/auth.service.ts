@@ -31,7 +31,6 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   isTokenExpired(): boolean {
-
     const tokenString = localStorage.getItem('auth_token');
     if (!tokenString) {
       this.isLoginCheckReady = true;
@@ -62,11 +61,9 @@ export class AuthService {
   }
 
   async login(username: string, password: string): Promise<ApiResult> {
-
     const body = { username, password };
 
     try {
-
       const data: Token = await this.http.post<Token>(
         environment.apiEndpoint + 'api/auth/login',
         body,
@@ -88,14 +85,12 @@ export class AuthService {
   }
 
   async register(username: string, password: string): Promise<ApiResult> {
-
     const body = {
       username,
       password
     };
 
     try {
-
       const result = await this.http.post<Token>(
         environment.apiEndpoint + 'api/auth/Register',
         body,

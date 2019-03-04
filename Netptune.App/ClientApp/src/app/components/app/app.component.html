@@ -7,7 +7,9 @@
   <div id="right" class="column-fs">
     <div class="bottom">
       <ng-container *ngIf="routeLoading; else elseTemplate">
-          <mat-spinner style="margin:0 auto;"></mat-spinner>
+        <div class="loading-indicator">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
       </ng-container>
       <ng-template #elseTemplate>
           <router-outlet></router-outlet>

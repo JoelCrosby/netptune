@@ -4,18 +4,6 @@
   box-shadow: none;
 }
 
-#completed-container {
-  background-color: #0a9e830d;
-  padding-top: 0.1rem;
-  border-radius: 16px;
-}
-
-#backlog-container {
-  background: repeating-linear-gradient( -45deg, #f0f0f0, #f0f0f0 10px, #f1f1f1 10px, #f1f1f1 20px);
-  padding-top: 0.1rem;
-  border-radius: 16px;
-}
-
 .container {
   width: 100%;
   padding-right: 0px;
@@ -32,13 +20,6 @@
 
 .fas {
   margin-right: 1rem;
-}
-
-.input-group-prepend {
-  span,
-  label {
-    width: 10rem;
-  }
 }
 
 #export-button {
@@ -82,30 +63,49 @@
   margin-top: 2em;
 }
 
-mat-divider {
-  margin-top: 2em;
-  margin-bottom: 2em;
-}
 
 h4 {
   font-weight: 100;
 }
 
-#container-header {
-  margin-left: 2rem;
-  color: #a695e6;
-  ;
-  cursor: pointer;
-  font-weight: 500;
+.task-list {
+  min-height: 46px;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: .4rem;
+  overflow: hidden;
+  display: block;
 }
 
-#container-header-dark-text {
-  color: #a695e6;
-  margin-left: 2rem;
-  cursor: pointer;
-  font-weight: 500;
+
+.task-drag {
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
 }
 
-.mat-expanded .expanded {
-  min-height: 8rem;
+// Drag n drop styling.
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: .4rem;
+  overflow: hidden;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(.24, 0, 0.2, 1);
+}
+
+.task-drag:last-child {
+  border: none;
+}
+
+.task-list.cdk-drop-list-dragging .task-drag:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(.24, 0, 0.2, 1);
+}
+

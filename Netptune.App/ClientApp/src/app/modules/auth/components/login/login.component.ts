@@ -16,7 +16,7 @@ export class LoginComponent {
   isWorking = false;
   hidePassword = true;
 
-  public loginFromGroup = new FormGroup({
+  loginFromGroup = new FormGroup({
     emailFormControl: new FormControl('', [
       Validators.required,
       Validators.email,

@@ -4,7 +4,7 @@ import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { ProjectTasksComponent } from './index/project-tasks.index.component';
-import { TaskListComponent } from './components/task-list/task-list.component';
+import { TaskListItemComponent } from './components/task-list-item/task-list-item.component';
 
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -12,7 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [
     ProjectTasksComponent,
-    TaskListComponent
+    TaskListItemComponent
   ],
   imports: [
     CommonModule,
