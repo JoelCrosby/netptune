@@ -16,8 +16,7 @@ export class WorkspaceDialogComponent implements OnInit {
     nameFormControl: new FormControl('', [
       Validators.required,
     ]),
-    discriptionFormControl: new FormControl('', [
-    ])
+    discriptionFormControl: new FormControl()
   });
 
   constructor(

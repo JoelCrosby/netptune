@@ -32,22 +32,15 @@ export class TaskDetailDialogComponent implements OnInit {
   }
 
   projectFromGroup = new FormGroup({
-
     nameFormControl: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-
-    projectFormControl: new FormControl('', [
-    ]),
-
-    descriptionFormControl: new FormControl('', [
-    ])
-
+    projectFormControl: new FormControl(),
+    descriptionFormControl: new FormControl()
   });
 
   async ngOnInit() {
-
     await this.projectsService.refreshProjects();
 
     if (this.task) {
@@ -68,7 +61,6 @@ export class TaskDetailDialogComponent implements OnInit {
   }
 
   getResult() {
-
     const taskResult = new ProjectTask();
 
     if (this.task) {

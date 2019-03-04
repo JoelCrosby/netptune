@@ -10,12 +10,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 export class InviteDialogComponent implements OnInit {
 
   inviteFromGroup = new FormGroup({
-
     emailFormControl: new FormControl('', [
       Validators.required,
       Validators.email
     ]),
-
   });
 
   constructor(
@@ -30,7 +28,6 @@ export class InviteDialogComponent implements OnInit {
   }
 
   getResult() {
-
     const email = this.inviteFromGroup.get('emailFormControl');
     if (!email) { return null; }
 

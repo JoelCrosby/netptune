@@ -25,22 +25,15 @@ export class ProjectDialogComponent implements OnInit {
   }
 
   projectFromGroup = new FormGroup({
-
     nameFormControl: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-
-    repositoryUrlFormControl: new FormControl('', [
-    ]),
-
-    descriptionFormControl: new FormControl('', [
-    ])
-
+    repositoryUrlFormControl: new FormControl(),
+    descriptionFormControl: new FormControl()
   });
 
   ngOnInit() {
-
     if (this.project) {
 
       this.projectFromGroup.controls['nameFormControl'].setValue(this.project.name);

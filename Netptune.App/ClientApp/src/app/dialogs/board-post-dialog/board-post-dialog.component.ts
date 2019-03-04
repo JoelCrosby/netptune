@@ -11,11 +11,9 @@ import { Post } from '@app/models/post';
 export class BoardPostDialogComponent implements OnInit {
 
   postFromGroup = new FormGroup({
-
     titleFormControl: new FormControl('', [
       Validators.required,
     ]),
-
   });
 
   constructor(
@@ -30,7 +28,6 @@ export class BoardPostDialogComponent implements OnInit {
   }
 
   getResult() {
-
     const title = this.postFromGroup.get('titleFormControl');
     if (!title) { return null; }
 
