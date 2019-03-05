@@ -3,7 +3,7 @@
     <div class="task-header">
       <div class="task-header-title">
         <i [class]='getStatusClass(task)' id="task-icon"></i>
-        <div class="title">
+        <div class="title" (click)="openDetail()">
           {{ task.name }}
         </div>
       </div>

@@ -16,6 +16,7 @@ import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { InviteDialogComponent } from './dialogs/invite-dialog/invite-dialog.component';
 import { BoardPostDialogComponent } from './dialogs/board-post-dialog/board-post-dialog.component';
+import { TaskDetailDialogComponent } from './dialogs/task-detail-dialog/task-detail-dialog.component';
 
 // Services
 import { ProjectTaskService } from './services/project-task/project-task.service';
@@ -35,6 +36,7 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     ProjectDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
+    TaskDetailDialogComponent,
     InviteDialogComponent,
     BoardPostDialogComponent,
   ],
@@ -42,6 +44,7 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     ProjectDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
+    TaskDetailDialogComponent,
     InviteDialogComponent,
     BoardPostDialogComponent
   ],

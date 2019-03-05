@@ -1,28 +1,26 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { dropIn, toggleChip } from '@app/core/animations/animations';
+import { toggleChip } from '@app/core/animations/animations';
 import { Maybe } from '@app/core/types/nothing';
 import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
-import { TaskDialogComponent } from '@app/dialogs/task-dialog/task-dialog.component';
 import { ProjectTaskStatus } from '@app/enums/project-task-status';
 import { Project } from '@app/models/project';
 import { ProjectTask } from '@app/models/project-task';
 import { ProjectTaskService } from '@app/services/project-task/project-task.service';
 import { UserService } from '@app/services/user/user.service';
 import { WorkspaceService } from '@app/services/workspace/workspace.service';
+import { TaskDetailDialogComponent } from '../../../../dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-task-list-item',
   templateUrl: './task-list-item.component.html',
   styleUrls: ['./task-list-item.component.scss'],
-  animations: [dropIn, toggleChip]
+  animations: [toggleChip]
 })
 export class TaskListItemComponent {
 
   @Input() task: ProjectTask;
-
-  selectedTask: Maybe<ProjectTask>;
 
   constructor(
     public dialog: MatDialog,
@@ -32,30 +30,8 @@ export class TaskListItemComponent {
     private workspaceService: WorkspaceService,
   ) { }
 
-  clearModalValues(): void {
-    this.selectedTask = null;
-  }
-
   refreshData(): void {
     this.projectTaskService.refreshTasks(this.workspaceService.currentWorkspace);
-  }
-
-  showUpdateModal(task: ProjectTask): void {
-    if (task == null) {
-      return;
-    }
-
-    this.selectedTask = task;
-    this.open(this.selectedTask);
-  }
-
-  showDeleteModal(task: ProjectTask): void {
-    if (task == null) {
-      return;
-    }
-
-    this.selectedTask = task;
-    this.openConfirmationDialog(this.selectedTask);
   }
 
   getStatusClass(task: ProjectTask): string {
@@ -75,49 +51,38 @@ export class TaskListItemComponent {
     await this.projectTaskService.changeTaskStatus(task, status);
   }
 
-  open(task?: ProjectTask): void {
-    const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '600px',
-      data: task
+  openDetail(): void {
+    const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
+      width: '800px',
+      data: this.task
     });
 
-    dialogRef.afterClosed().subscribe(async (result: Project) => {
+    dialogRef.afterClosed().subscribe(async (result: ProjectTask) => {
       if (!result) {
         return;
       }
-
-      if (!this.selectedTask) { throw new Error('selectedTask was undefenied.'); }
-
-      const updatedProjectTask = new ProjectTask();
-      updatedProjectTask.id = this.selectedTask.id;
-      updatedProjectTask.name = result.name;
-      updatedProjectTask.description = result.description;
-      await this.projectTaskService.updateProjectTask(updatedProjectTask);
-
-      this.clearModalValues();
+      await this.projectTaskService.updateProjectTask(result);
     });
   }
 
-  openConfirmationDialog(task: ProjectTask): void {
+  openConfirmationDialog(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '600px',
       data: {
         title: 'Delete Task',
-        content: `Are you sure you wish to delete ${task.name}?`,
+        content: `Are you sure you wish to delete ${this.task.name}?`,
         confirm: 'Remove'
       }
     });
 
     dialogRef.afterClosed().subscribe((result: ProjectTask) => {
       if (result) {
-        this.deleteProjectTask(task);
+        this.deleteProjectTask();
       }
-
-      this.clearModalValues();
     });
   }
 
-  async deleteProjectTask(task: ProjectTask): Promise<void> {
-    await this.projectTaskService.deleteProjectTask(task);
+  async deleteProjectTask(): Promise<void> {
+    await this.projectTaskService.deleteProjectTask(this.task);
   }
 }

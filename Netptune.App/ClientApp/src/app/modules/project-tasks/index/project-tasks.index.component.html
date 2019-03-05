@@ -14,60 +14,82 @@
 
     <div class="container tasks-container">
       <h4>My Tasks</h4>
-      <div
-        cdkDropList
-        #myTasksList="cdkDropList"
-        class="task-list"
-        [cdkDropListConnectedTo]="[completedTasksList, backlogTasksList]"
-        [cdkDropListData]="myTasks"
+      <div cdkDropList #myTasksList="cdkDropList" class="task-list"
+        [cdkDropListConnectedTo]="[completedTasksList, backlogTasksList]" [cdkDropListData]="myTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <div class="task-drag" cdkDrag *ngFor="let task of myTasks">
-          <app-task-list-item [(task)]="task">
-          </app-task-list-item>
-        </div>
+        <ng-container *ngIf="myTasks.length > 0; else myTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of myTasks">
+            <app-task-list-item [(task)]="task">
+            </app-task-list-item>
+          </div>
+        </ng-container>
+        <ng-template #myTasksElseTemplate>
+          <div class="list-empty">
+            <div class="list-empty-mark">
+              <i class="far fa-compass"></i>
+              <h4 class="empty-text">
+                You have no tasks. Click the button in the bottom right to create a task.
+              </h4>
+            </div>
+          </div>
+        </ng-template>
 
       </div>
     </div>
 
-    <div class="container tasks-container">
+    <div class="container tasks-container" @dropIn>
       <h4>
-        <i class="fas fa-clipboard-check"></i>
         Completed Tasks
       </h4>
-      <div
-        cdkDropList
-        #completedTasksList="cdkDropList"
-        class="task-list"
-        [cdkDropListConnectedTo]="[backlogTasksList, myTasksList]"
-        [cdkDropListData]="completedTasks"
+      <div cdkDropList #completedTasksList="cdkDropList" class="task-list"
+        [cdkDropListConnectedTo]="[backlogTasksList, myTasksList]" [cdkDropListData]="completedTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <div class="task-drag" cdkDrag *ngFor="let task of completedTasks">
-          <app-task-list-item [(task)]="task">
-          </app-task-list-item>
-        </div>
+        <ng-container *ngIf="completedTasks.length > 0; else completedTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of completedTasks">
+            <app-task-list-item [(task)]="task">
+            </app-task-list-item>
+          </div>
+        </ng-container>
+        <ng-template #completedTasksElseTemplate>
+          <div class="list-empty">
+            <div class="list-empty-mark">
+              <i class="far fa-compass"></i>
+              <h4 class="empty-text">
+                You currently have no completed tasks. Mark a task as completed and it will show up here.
+              </h4>
+            </div>
+          </div>
+        </ng-template>
 
       </div>
     </div>
 
-    <div class="container tasks-container">
+    <div class="container tasks-container" @dropIn>
       <h4>
-        <i class="fas fa-th-list"></i>
         Backlog
       </h4>
-      <div
-        cdkDropList
-        #backlogTasksList="cdkDropList"
-        class="task-list"
-        [cdkDropListConnectedTo]="[myTasksList, completedTasksList]"
-        [cdkDropListData]="backlogTasks"
+      <div cdkDropList #backlogTasksList="cdkDropList" class="task-list"
+        [cdkDropListConnectedTo]="[myTasksList, completedTasksList]" [cdkDropListData]="backlogTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <div class="task-drag" cdkDrag *ngFor="let task of backlogTasks">
-          <app-task-list-item [(task)]="task">
-          </app-task-list-item>
-        </div>
+        <ng-container *ngIf="backlogTasks.length > 0; else backlogTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of backlogTasks">
+            <app-task-list-item [(task)]="task">
+            </app-task-list-item>
+          </div>
+        </ng-container>
+        <ng-template #backlogTasksElseTemplate>
+          <div class="list-empty">
+            <div class="list-empty-mark">
+              <i class="far fa-compass"></i>
+              <h4 class="empty-text">
+                Your backlog is currently empty hurray!
+              </h4>
+            </div>
+          </div>
+        </ng-template>
 
       </div>
     </div>

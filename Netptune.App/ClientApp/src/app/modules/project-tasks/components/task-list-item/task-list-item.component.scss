@@ -50,6 +50,7 @@
     margin-top: auto;
     margin-bottom: auto;
     font-size: 1rem;
+    cursor: pointer;
 }
 
 .input-group-prepend {
@@ -83,7 +84,6 @@ mat-divider {
     flex-direction: row;
     justify-content: space-between;
     padding: 8px;
-    box-shadow: 10px 10px 121px -19px rgba(179, 0, 179, 0.08) !important;
 }
 
 @media only screen and (max-width: 900px) {

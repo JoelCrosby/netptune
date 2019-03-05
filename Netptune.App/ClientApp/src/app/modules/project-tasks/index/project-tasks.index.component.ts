@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { fadeIn } from '@app/core/animations/animations';
+import { fadeIn, dropIn } from '@app/core/animations/animations';
 import { TaskDialogComponent } from '@app/dialogs/task-dialog/task-dialog.component';
 import { ProjectTaskStatus } from '@app/enums/project-task-status';
 import { ProjectTask } from '@app/models/project-task';
@@ -16,7 +16,7 @@ import { TaskDetailDialogComponent } from '@app/dialogs/task-detail-dialog/task-
   selector: 'app-project-tasks',
   templateUrl: './project-tasks.index.component.html',
   styleUrls: ['./project-tasks.index.component.scss'],
-  animations: [fadeIn]
+  animations: [fadeIn, dropIn]
 })
 export class ProjectTasksComponent implements OnInit, OnDestroy {
 

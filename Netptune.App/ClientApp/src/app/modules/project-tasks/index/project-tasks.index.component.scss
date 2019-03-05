@@ -65,11 +65,12 @@
 
 
 h4 {
-  font-weight: 100;
+  font-weight: 400;
+  font-size: 1.2rem;
 }
 
 .task-list {
-  min-height: 46px;
+  min-height: 196px;
   background-color: #fff;
   border: 1px solid #dee2e6;
   border-radius: .4rem;
@@ -109,3 +110,25 @@ h4 {
   transition: transform 250ms cubic-bezier(.24, 0, 0.2, 1);
 }
 
+
+.list-empty {
+  display: flex;
+  justify-content: center;
+  .list-empty-mark {
+    font-size: 3rem;
+    color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    .far {
+      margin: 1.4rem auto;
+      font-size: 6rem;
+    }
+    .empty-text {
+      color: #808080;
+      margin: 0;
+      margin-bottom: 3rem;
+    }
+  }
+}
