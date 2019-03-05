@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +18,7 @@ using Netptune.Models.Entites;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 using Netptune.Repository;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Netptune.Api
 {
@@ -95,6 +99,26 @@ namespace Netptune.Api
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new Info
+                {
+                    Title = "Netptune API",
+                    Version = "v1",
+                    License = new License
+                    {
+                        Name = "Use under MIT",
+                        Url = "https://opensource.org/licenses/MIT"
+                    }
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                config.IncludeXmlComments(xmlPath);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,6 +148,17 @@ namespace Netptune.Api
             }
 
             app.UseAuthentication();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(config =>
+            {
+                config.SwaggerEndpoint("/swagger/v1/swagger.json", "Netptune API V1");
+                config.DocumentTitle = "Netptune Api";
+            });
 
             app.UseMvc(routes =>
             {
