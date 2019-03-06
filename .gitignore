@@ -26,6 +26,9 @@ Bin/
 obj/
 Obj/
 
+# Local db folder
+localdb/
+
 # Visual Studio 2015 cache/options directory
 .vs/
 

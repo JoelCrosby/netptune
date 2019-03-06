@@ -36,11 +36,6 @@ namespace Netptune.Models.Entites
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=Netptune;User ID=postgres");
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

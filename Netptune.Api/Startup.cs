@@ -45,7 +45,7 @@ namespace Netptune.Api
         {
 
             services.AddDbContext<DataContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabase")));
+                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
