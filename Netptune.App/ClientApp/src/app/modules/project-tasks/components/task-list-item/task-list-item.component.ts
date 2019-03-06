@@ -2,7 +2,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { toggleChip } from '@app/core/animations/animations';
-import { Maybe } from '@app/core/types/nothing';
 import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectTaskStatus } from '@app/enums/project-task-status';
 import { ProjectTask } from '@app/models/project-task';
@@ -34,7 +33,7 @@ export class TaskListItemComponent {
     this.projectTaskService.refreshTasks(this.workspaceService.currentWorkspace);
   }
 
-  getStatusClass(task: ProjectTask): string {
+  getStatusClass(task: ProjectTaskDto): string {
     switch (task.status) {
       case ProjectTaskStatus.Complete:
         return 'fas fa-check completed';
@@ -45,10 +44,6 @@ export class TaskListItemComponent {
       default:
         return 'fas fa-stream none';
     }
-  }
-
-  async statusClicked(task: ProjectTask, status: ProjectTaskStatus): Promise<void> {
-    await this.projectTaskService.changeTaskStatus(task, status);
   }
 
   async openDetail(): Promise<void> {
@@ -86,6 +81,7 @@ export class TaskListItemComponent {
   }
 
   async deleteProjectTask(): Promise<void> {
-    // await this.projectTaskService.deleteProjectTask(this.task);
+    const task = await this.projectTaskService.getTask(this.task.id).toPromise();
+    await this.projectTaskService.deleteProjectTask(task);
   }
 }
