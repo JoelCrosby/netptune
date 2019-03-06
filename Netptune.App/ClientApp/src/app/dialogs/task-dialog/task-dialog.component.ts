@@ -73,6 +73,21 @@ export class TaskDialogComponent implements OnInit {
     taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
     taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
 
+    const project = this.projectsService.projects.find(x => x.id === taskResult.projectId);
+    if (!project) { throw new Error(`unable to find project with id ${taskResult.projectId}`); }
+
+    taskResult.project = project;
+
+    const workspace = this.workspaceService.currentWorkspace;
+    if (!workspace) { throw new Error(`current workspace was undefined`); }
+
+    taskResult.workspaceId = workspace.id;
+
+    const assigneeId = this.authService.token.userId;
+    if (!workspace) { throw new Error(`current userId was undefined`); }
+
+    taskResult.assigneeId = assigneeId;
+
     this.dialogRef.close(taskResult);
   }
 }
