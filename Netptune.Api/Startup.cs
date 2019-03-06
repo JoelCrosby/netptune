@@ -125,12 +125,6 @@ namespace Netptune.Api
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-            using(var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DbContext>();
-                context.Database.Migrate();
-            }
-
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
