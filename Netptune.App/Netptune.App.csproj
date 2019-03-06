@@ -16,27 +16,27 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\app\components\register\**" />
     <Compile Remove="ClientApp\src\app\interfaces\**" />
     <Compile Remove="ClientApp\src\Models\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\app\components\register\**" />
     <Content Remove="ClientApp\src\app\interfaces\**" />
     <Content Remove="ClientApp\src\Models\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="ClientApp\src\app\components\register\**" />
     <EmbeddedResource Remove="ClientApp\src\app\interfaces\**" />
     <EmbeddedResource Remove="ClientApp\src\Models\**" />
+    <None Remove="ClientApp\src\app\components\register\**" />
     <None Remove="ClientApp\src\app\interfaces\**" />
     <None Remove="ClientApp\src\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\models\project.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\src\app\components\register\" />
   </ItemGroup>
 
   <ItemGroup>
