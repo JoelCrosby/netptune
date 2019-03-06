@@ -1,4 +1,4 @@
 export const environment = {
-  apiEndpoint: 'http://localhost:7400/',
+  apiEndpoint: 'https://api.netptune.co.uk',
   production: true
 };
