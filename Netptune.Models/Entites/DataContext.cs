@@ -36,6 +36,11 @@ namespace Netptune.Models.Entites
 
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Netptune;Integrated Security=SSPI;");
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
