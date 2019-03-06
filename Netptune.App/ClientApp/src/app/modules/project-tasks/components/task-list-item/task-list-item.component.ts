@@ -5,12 +5,12 @@ import { toggleChip } from '@app/core/animations/animations';
 import { Maybe } from '@app/core/types/nothing';
 import { ConfirmDialogComponent } from '@app/dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectTaskStatus } from '@app/enums/project-task-status';
-import { Project } from '@app/models/project';
 import { ProjectTask } from '@app/models/project-task';
 import { ProjectTaskService } from '@app/services/project-task/project-task.service';
 import { UserService } from '@app/services/user/user.service';
 import { WorkspaceService } from '@app/services/workspace/workspace.service';
 import { TaskDetailDialogComponent } from '../../../../dialogs/task-detail-dialog/task-detail-dialog.component';
+import { ProjectTaskDto } from '../../../../models/view-models/project-task-dto';
 
 @Component({
   selector: 'app-task-list-item',
@@ -20,7 +20,7 @@ import { TaskDetailDialogComponent } from '../../../../dialogs/task-detail-dialo
 })
 export class TaskListItemComponent {
 
-  @Input() task: ProjectTask;
+  @Input() task: ProjectTaskDto;
 
   constructor(
     public dialog: MatDialog,
@@ -51,10 +51,15 @@ export class TaskListItemComponent {
     await this.projectTaskService.changeTaskStatus(task, status);
   }
 
-  openDetail(): void {
+  async openDetail(): Promise<void> {
+
+    const task = await this.projectTaskService.getTask(this.task.id).toPromise();
+
+    console.log(task);
+
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: '800px',
-      data: this.task
+      data: task
     });
 
     dialogRef.afterClosed().subscribe(async (result: ProjectTask) => {
@@ -83,6 +88,6 @@ export class TaskListItemComponent {
   }
 
   async deleteProjectTask(): Promise<void> {
-    await this.projectTaskService.deleteProjectTask(this.task);
+    // await this.projectTaskService.deleteProjectTask(this.task);
   }
 }

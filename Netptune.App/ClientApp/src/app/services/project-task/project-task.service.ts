@@ -158,6 +158,13 @@ export class ProjectTaskService {
     return undefined;
   }
 
+  getTask(taskId: number) {
+    const httpOptions = this.getHeaders();
+
+    const url = `${environment.apiEndpoint}api/ProjectTasks/${taskId}`;
+    return this.http.get<ProjectTask>(url, httpOptions);
+  }
+
   private deleteTask(task: ProjectTask): Observable<ProjectTask> {
     const httpOptions = this.getHeaders();
 
