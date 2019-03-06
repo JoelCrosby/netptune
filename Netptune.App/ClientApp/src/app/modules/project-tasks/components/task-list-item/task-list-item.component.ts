@@ -55,8 +55,6 @@ export class TaskListItemComponent {
 
     const task = await this.projectTaskService.getTask(this.task.id).toPromise();
 
-    console.log(task);
-
     const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
       width: '800px',
       data: task

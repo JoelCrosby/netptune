@@ -107,12 +107,9 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<ProjectTaskDto[]>) {
-    console.log(event);
     if (event.previousContainer === event.container) {
-      console.log('moveItemInArray');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      console.log('transferArrayItem');
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,

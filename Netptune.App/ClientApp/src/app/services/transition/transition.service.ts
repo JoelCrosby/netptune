@@ -10,7 +10,6 @@ export class TransitionService {
   constructor() { }
 
   toggleSideBar(): void {
-    console.log(this.sidebarStateClass);
     this.sidebarStateClass === 'open' ? this.sidebarStateClass = 'closed' : this.sidebarStateClass = 'open';
   }
 

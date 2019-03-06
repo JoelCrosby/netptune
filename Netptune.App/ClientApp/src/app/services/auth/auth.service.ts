@@ -40,8 +40,6 @@ export class AuthService {
     const token = <Token>JSON.parse(tokenString || '');
 
     if (!token) {
-      console.log('failed parsing token:' + tokenString);
-
       this.isLoginCheckReady = true;
       return true;
     }
