@@ -1,38 +1,36 @@
-<div class="container main">
-  <div class="container-max">
+<div class="container">
 
-    <div class="component-header">
-      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showInviteModal()'>
-          <i class="fas fa-paper-plane"></i>
-          Invite User
-        </button>
-    </div>
+  <div class="component-header">
+    <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showInviteModal()'>
+        <i class="fas fa-paper-plane"></i>
+        Invite User
+      </button>
+  </div>
 
 
-    <div *ngIf="!userService.appUsers">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
+  <div *ngIf="!userService.appUsers">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
 
-    <div class="container">
+  <div class="container">
 
-      <div class="user-card-group" [@dropIn]="userService.appUsers">
+    <div class="user-card-group" [@dropIn]="userService.appUsers">
 
-        <mat-card *ngFor="let user of userService.appUsers; let i=index; trackBy:trackById;">
-          <mat-card-header>
-            <div mat-card-avatar class="far fa-user"></div>
-            <mat-card-title>{{ userService.getDisplayName(user) }}</mat-card-title>
-            <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <mat-chip-list>
-              <mat-chip><i class="fas fa-user-check"></i> {{ user.lastLoginTime | date }}</mat-chip>
-              <mat-chip><i class="fas fa-user-clock"></i> {{ user.registrationDate | date }}</mat-chip>
-            </mat-chip-list>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
+      <mat-card *ngFor="let user of userService.appUsers; let i=index; trackBy:trackById;">
+        <mat-card-header>
+          <div mat-card-avatar class="far fa-user"></div>
+          <mat-card-title>{{ userService.getDisplayName(user) }}</mat-card-title>
+          <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-chip-list>
+            <mat-chip><i class="fas fa-user-check"></i> {{ user.lastLoginTime | date }}</mat-chip>
+            <mat-chip><i class="fas fa-user-clock"></i> {{ user.registrationDate | date }}</mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+      </mat-card>
     </div>
 
   </div>
+
 </div>

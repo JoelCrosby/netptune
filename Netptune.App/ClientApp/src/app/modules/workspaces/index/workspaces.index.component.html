@@ -1,55 +1,52 @@
-<div class="container main">
-  <div class="container-max">
+<div class="container">
 
-    <div class="container">
+  <div class="card-group" [@dropIn]="workspaceService.workspaces">
 
-      <div class="card-group" [@dropIn]="workspaceService.workspaces">
+    <mat-card *ngFor="let workspace of workspaceService.workspaces; let i=index; trackBy:trackById;">
+      <mat-card-title>
+        {{workspace.name}}
+        <button mat-button color="primary" type="button" (click)='deleteClicked(workspace)'>
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-title>
+      <mat-card-content>
+        <p>{{workspace.description}}</p>
+        <small class="text-muted">Last updated {{workspace.updatedAt | date:'shortTime'}}</small>
+      </mat-card-content>
 
-        <mat-card *ngFor="let workspace of workspaceService.workspaces; let i=index; trackBy:trackById;">
-          <mat-card-title>
-            {{workspace.name}}
-            <button mat-button color="primary" type="button" (click)='deleteClicked(workspace)'>
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-card-title>
-          <mat-card-content>
-            <p>{{workspace.description}}</p>
-            <small class="text-muted">Last updated {{workspace.updatedAt | date:'shortTime'}}</small>
-          </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button color="primary" class="action-button" type="button"
+          (click)='goToProjectsClicked(workspace)'>
+          <mat-icon class="action-mat-icon">assessment</mat-icon> Go To Projects
+        </button>
+        <button mat-button color="primary" class="action-button" type="button" (click)='manageUsersClicked(workspace)'>
+          Manage Users
+        </button>
+        <button mat-button color="primary" class="action-button" type="button" (click)='inviteUsersClicked()'>
+          Invite Users
+        </button>
+        <button mat-button color="primary" class="action-button" type="button" (click)='exportDataClicked(workspace)'>
+          Export Data
+        </button>
+      </mat-card-actions>
+    </mat-card>
 
-          <mat-card-actions>
-            <button mat-flat-button color="primary" class="action-button" type="button" (click)='goToProjectsClicked(workspace)'>
-              <mat-icon class="action-mat-icon">assessment</mat-icon> Go To Projects
-            </button>
-            <button mat-button color="primary" class="action-button" type="button" (click)='manageUsersClicked(workspace)'>
-              Manage Users
-            </button>
-            <button mat-button color="primary" class="action-button" type="button" (click)='inviteUsersClicked()'>
-              Invite Users
-            </button>
-            <button mat-button color="primary" class="action-button" type="button" (click)='exportDataClicked(workspace)'>
-              Export Data
-            </button>
-          </mat-card-actions>
-        </mat-card>
+    <mat-card>
+      <div class="card-body">
+        <h5 class="card-title">Create a new Workspace</h5>
+        <p class="card-text">Worksapces allow for team collobaration on multiple projectes and are the foundation of
+          all workflows within Neptuna.
+        </p>
 
-        <mat-card>
-          <div class="card-body">
-            <h5 class="card-title">Create a new Workspace</h5>
-            <p class="card-text">Worksapces allow for team collobaration on multiple projectes and are the foundation of
-              all workflows within Neptuna.
-            </p>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)='showAddModal()'>Create</button>
+        </mat-card-actions>
 
-            <mat-card-actions>
-              <button mat-button color="primary" (click)='showAddModal()'>Create</button>
-            </mat-card-actions>
-
-          </div>
-          <div class="card-footer">
-            <small class="text-muted">Created with by ❤ Joel</small>
-          </div>
-        </mat-card>
       </div>
-    </div>
+      <div class="card-footer">
+        <small class="text-muted">Created with by ❤ Joel</small>
+      </div>
+    </mat-card>
+
   </div>
 </div>

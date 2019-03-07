@@ -1,53 +1,51 @@
-<div class="container main">
-  <div class="container-max">
+<div class="container">
 
-    <div class="component-header">
-      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showLogOutModal()'>
-        <i class="fas fa-sign-out-alt"></i>
-        Log Out
-      </button>
-    </div>
-
-    <div class="container">
-      <div class="card-group">
-        <mat-card id="profile-card">
-          <form [formGroup]="profileFromGroup">
-
-            <h3 class="profile-section-header">Details</h3>
-
-            <mat-form-field class="full-width" appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input matInput id="firstName" class="form-control" formControlName="firstNameFormControl"
-                name="firstName">
-            </mat-form-field>
-
-            <mat-form-field class="full-width" appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input matInput id="lastName" class="form-control" formControlName="lastNameFormControl" name="lastName">
-            </mat-form-field>
-
-            <div class="form-spacer"></div>
-
-            <h3 class="profile-section-header">Account</h3>
-
-            <mat-form-field class="full-width" appearance="outline">
-              <mat-label>Email Address</mat-label>
-              <input matInput id="email" class="form-control" formControlName="emailFormControl" name="email" required>
-              <mat-hint>Required</mat-hint>
-            </mat-form-field>
-
-            <div class="form-spacer"></div>
-
-            <div class="form-actions">
-              <button mat-button (click)='saveChangesClicked()' [disabled]='profileFromGroup.pristine'>Save
-                Changes</button>
-            </div>
-
-
-          </form>
-        </mat-card>
-      </div>
-    </div>
-
+  <div class="component-header">
+    <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showLogOutModal()'>
+      <i class="fas fa-sign-out-alt"></i>
+      Log Out
+    </button>
   </div>
+
+  <div class="container">
+    <div class="card-group">
+      <mat-card id="profile-card">
+        <form [formGroup]="profileFromGroup">
+
+          <h3 class="profile-section-header">Details</h3>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput id="firstName" class="form-control" formControlName="firstNameFormControl"
+              name="firstName">
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput id="lastName" class="form-control" formControlName="lastNameFormControl" name="lastName">
+          </mat-form-field>
+
+          <div class="form-spacer"></div>
+
+          <h3 class="profile-section-header">Account</h3>
+
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput id="email" class="form-control" formControlName="emailFormControl" name="email" required>
+            <mat-hint>Required</mat-hint>
+          </mat-form-field>
+
+          <div class="form-spacer"></div>
+
+          <div class="form-actions">
+            <button mat-button (click)='saveChangesClicked()' [disabled]='profileFromGroup.pristine'>Save
+              Changes</button>
+          </div>
+
+
+        </form>
+      </mat-card>
+    </div>
+  </div>
+
 </div>

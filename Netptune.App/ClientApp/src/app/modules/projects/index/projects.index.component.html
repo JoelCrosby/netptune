@@ -1,59 +1,55 @@
-<div class="container main">
-  <div class="container-max">
+<div class="container">
 
-    <div class="component-header">
-      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showAddModal()'>
-        <i class="far fa-map"></i>
-        New Project
-      </button>
-    </div>
-
-    <div *ngIf="!projectsService.projects">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
-
-    <div class="container">
-
-      <div class="card-group" [@dropIn]="projectsService.projects">
-
-        <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
-          <mat-card-header>
-            <mat-card-title><i class="far fa-file-alt title-icon"></i>{{ project.name }}</mat-card-title>
-
-          </mat-card-header>
-          <mat-card-content>
-            <p>{{ project.description }}</p>
-
-            <Small> All Tasks - {{ taskCounts[i]?.allTasks }} </Small>
-            <Small> Completed - {{ taskCounts[i]?.completedTasks }} </Small>
-            <Small> In Progress - {{ taskCounts[i]?.inProgressTasks }} </Small>
-            <Small> Backlog - {{ taskCounts[i]?.backlogTasks }} </Small>
-
-          </mat-card-content>
-          <mat-card-actions class="flex-row space-between">
-
-            <div class="card-actions">
-              <button mat-flat-button color="primary" type="button" (click)='showUpdateModal(project)'>
-                Edit
-              </button>
-              <button mat-button color="default" type="button" (click)='showDeleteModal(project)'>
-                Delete
-              </button>
-            </div>
-
-            <div class="card-chips">
-              <mat-chip-list>
-                <mat-chip>Owner {{ project.owner?.firstName + ' ' + project.owner?.lastName }}</mat-chip>
-                <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
-                <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
-              </mat-chip-list>
-            </div>
-
-          </mat-card-actions>
-        </mat-card>
-      </div>
-
-    </div>
-
+  <div class="component-header">
+    <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showAddModal()'>
+      <i class="far fa-map"></i>
+      New Project
+    </button>
   </div>
+
+  <div *ngIf="!projectsService.projects">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+
+  <div class="container">
+
+    <div class="card-group" [@dropIn]="projectsService.projects">
+
+      <mat-card *ngFor="let project of projectsService.projects; let i=index; trackBy:trackById;">
+        <mat-card-header>
+          <mat-card-title><i class="far fa-file-alt title-icon"></i>{{ project.name }}</mat-card-title>
+
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ project.description }}</p>
+
+          <Small> All Tasks - {{ taskCounts[i]?.allTasks }} </Small>
+          <Small> Completed - {{ taskCounts[i]?.completedTasks }} </Small>
+          <Small> In Progress - {{ taskCounts[i]?.inProgressTasks }} </Small>
+          <Small> Backlog - {{ taskCounts[i]?.backlogTasks }} </Small>
+
+        </mat-card-content>
+        <mat-card-actions class="flex-row space-between">
+
+          <div class="card-actions">
+            <button mat-flat-button color="primary" type="button" (click)='showUpdateModal(project)'>
+              Edit
+            </button>
+            <button mat-button color="default" type="button" (click)='showDeleteModal(project)'>
+              Delete
+            </button>
+          </div>
+
+          <div class="card-chips">
+            <mat-chip-list>
+              <mat-chip>Owner {{ project.owner?.firstName + ' ' + project.owner?.lastName }}</mat-chip>
+              <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
+              <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
+            </mat-chip-list>
+          </div>
+
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
 </div>
