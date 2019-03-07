@@ -1,5 +1,3 @@
-@import '../../../styles/variables.scss';
-
 .page-body {
     overflow: hidden;  /*makes the body non-scrollable (we will add scrolling to the sidebar and main content containers)*/
     margin: 0;  /*removes default style*/
@@ -53,7 +51,7 @@ ul {
 }
 
 .top-left-corner {
-    background-color: $main1;
+    background-color: #212121;
     width: 100%;
     height: 100%;
     padding-bottom: 0px;

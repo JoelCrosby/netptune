@@ -1,11 +1,9 @@
-@import '../../../../styles/variables.scss';
-
 mat-card {
     min-width: 300px;
     min-height: 200px;
     margin-bottom: 2rem;
     padding: 1.6rem;
-    border-top: $primary solid 2px;
+    border-top: #6611D6 solid 2px;
 }
 
 .card-group {

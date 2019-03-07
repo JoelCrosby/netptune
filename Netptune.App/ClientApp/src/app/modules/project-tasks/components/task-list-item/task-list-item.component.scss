@@ -1,17 +1,3 @@
-@import '../../../../../styles/variables.scss';
-
-#complete {
-    color: green;
-}
-
-#in-progress {
-    color: mediumslateblue;
-}
-
-#blocked {
-    color: red;
-}
-
 #task-icon {
     padding: 2px;
     border-radius: 4px;
@@ -24,26 +10,11 @@
     justify-content: flex-end;
 }
 
-.completed {
-    color: darkgreen;
-    background-color: #90eec3;
-}
-
 #info-chip {
     color: #969696;
     height: 1.2rem;
     background-color: #f4f4f4;
     font-weight: 100;
-}
-
-.in-progress {
-    color: darkblue;
-    background-color: lightblue;
-}
-
-.blocked {
-    color: darkred;
-    background-color: pink;
 }
 
 .title {
