@@ -1,9 +1,9 @@
 <div class="container" *ngIf="dataLoaded">
 
     <div class="component-header">
-      <button mat-raised-button type="button" class="float-right" id="new-button" (click)='showAddModal()'>
-        <i class="fas fa-plus"></i>
-        New Task
+      <button mat-fab type="button" id="new-button" (click)='showAddModal()'>
+        <mat-icon>add</mat-icon>
+        <span id="new-button-text">New Task</span>
       </button>
     </div>
 

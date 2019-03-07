@@ -60,15 +60,29 @@
 h4 {
   font-weight: 400;
   font-size: 1.2rem;
+  margin-left: 1.4rem;
 }
 
 .task-list {
   min-height: 196px;
   background-color: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: .4rem;
   overflow: hidden;
   display: block;
+}
+
+@media (min-width: 600px) {
+  .task-list {
+    min-height: 196px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .4rem;
+    overflow: hidden;
+    display: block;
+  }
+
+  h4 {
+    margin-left: 0;
+  }
 }
 
 
