@@ -23,8 +23,7 @@
             "styles": [
               "src/styles.scss",
               "src/theme.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_modules/bootstrap/scss/bootstrap-grid.scss"
+              "node_modules/@fortawesome/fontawesome-free/css/all.css"
             ],
             "scripts": [
             ]
@@ -77,8 +76,7 @@
             "styles": [
               "src/theme.scss",
               "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_modules/bootstrap/scss/bootstrap-grid.scss"
+              "node_modules/@fortawesome/fontawesome-free/css/all.css"
             ],
             "assets": [
               "src/assets"
