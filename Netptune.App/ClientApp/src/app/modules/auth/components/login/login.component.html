@@ -1,46 +1,54 @@
-<div class="full-height full-width flex-center">
+<div class="row justify-content-center">
 
-  <mat-card>
-    <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
+  <div class="col-md-6 mt-5">
 
-      <h1 class="text-center full-width">Netpune</h1>
+    <mat-card>
+      <form class="form-signin" [formGroup]="loginFromGroup" (ngSubmit)="login()">
 
-      <div class="form-spacer"></div>
-
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput id="email" placeholder="Enter Email Address" name="emailFormControl" formControlName="emailFormControl" autocomplete="username">
-        <mat-error *ngIf="f['emailFormControl'].hasError('password') && !f['emailFormControl'].hasError('required')">
-          Please enter a valid email address
-        </mat-error>
-        <mat-error *ngIf="f['emailFormControl'].hasError('required')">
-          Email is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput id="password" placeholder="Enter Password" [type]="hidePassword ? 'password' : 'text'" name="passwordFormControl" formControlName="passwordFormControl" autocomplete="current-password">
-        <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        <mat-error *ngIf="f['passwordFormControl'].hasError('required')">
-          Password is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-
-      <div class="form-spacer"></div>
-
-      <div class="button-container">
-        <button mat-stroked-button color="primary" type="submit" class="full-width form-action-button">
-            Sign in
-        </button>
+        <div class="mat-typography">
+          <h1 class="text-center full-width">Netpune</h1>
+        </div>
 
         <div class="form-spacer"></div>
 
-        <button mat-button color="primary" type="button" (click)='onCreateAccountClicked()'>Create
-          Account
-        </button>
-      </div>
-    </form>
-  </mat-card>
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput id="email" placeholder="Enter Email Address" name="emailFormControl"
+            formControlName="emailFormControl" autocomplete="username">
+          <mat-error *ngIf="f['emailFormControl'].hasError('password') && !f['emailFormControl'].hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="f['emailFormControl'].hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
 
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput id="password" placeholder="Enter Password" [type]="hidePassword ? 'password' : 'text'"
+            name="passwordFormControl" formControlName="passwordFormControl" autocomplete="current-password">
+          <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+          <mat-error *ngIf="f['passwordFormControl'].hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-spacer"></div>
+
+        <div class="button-container">
+          <button mat-stroked-button color="primary" type="submit" class="full-width form-action-button">
+            Sign in
+          </button>
+
+          <div class="form-spacer"></div>
+
+          <button mat-button color="primary" type="button" (click)='onCreateAccountClicked()'>Create
+            Account
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+  </div>
 </div>
