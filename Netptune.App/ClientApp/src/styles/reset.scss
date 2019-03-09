@@ -13,3 +13,18 @@ body {
 .center {
   height: 100% !important;
 }
+
+p, h1, h2, h3, h4, h5 {
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  &:active,
+  :focus {
+    outline: none !important;
+  }
+}
+
+label {
+  margin-bottom: 0;
+}
