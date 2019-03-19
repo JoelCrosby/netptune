@@ -1,6 +1,13 @@
 import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaMatcher } from '@angular/cdk/layout';
+import {
+  selectIsAuthenticated,
+  selectCurrentUserDisplayName,
+} from './core/auth/store/auth.selectors';
+import { Store } from '@ngrx/store';
+import { AuthState } from './core/auth/store/auth.reducer';
+import { ActionAuthLogout } from './core/auth/store/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +15,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
-  // authenticated$ = this.store.select(selectIsAuthenticated);
-  // displayName$ = this.store.select(selectCurrentUserDisplayName);
+  authenticated$ = this.store.select(selectIsAuthenticated);
+  displayName$ = this.store.select(selectCurrentUserDisplayName);
 
   links = [
     { label: 'Projects', value: ['/projects'] },
@@ -24,7 +31,7 @@ export class AppComponent implements OnDestroy {
   private mobileQueryListener: () => void;
 
   constructor(
-    // private store: Store<AuthState>,
+    private store: Store<AuthState>,
     private router: Router,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
@@ -38,7 +45,7 @@ export class AppComponent implements OnDestroy {
     this.mobileQuery.removeListener(this.mobileQueryListener);
   }
 
-  //   onLoginClicked = () => this.router.navigate(['/accounts/login']);
-  //   onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
-  //   onProfileClicked = () => this.router.navigate(['/accounts/profile']);
+  onLoginClicked = () => this.router.navigate(['/accounts/login']);
+  onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
+  onProfileClicked = () => this.router.navigate(['/accounts/profile']);
 }

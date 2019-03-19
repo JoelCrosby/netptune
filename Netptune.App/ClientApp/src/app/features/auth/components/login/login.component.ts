@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { Validators, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@app/core/animations/animations';
-import { MatSnackBar } from '@angular/material';
+import { AuthState } from '../../../../core/auth/store/auth.reducer';
+import { Store } from '@ngrx/store';
+import { ActionAuthTryLogin } from '../../../../core/auth/store/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -11,21 +13,35 @@ import { MatSnackBar } from '@angular/material';
   animations: [pullIn],
 })
 export class LoginComponent {
-  isWorking = false;
   hidePassword = true;
 
-  loginFromGroup = new FormGroup({
-    emailFormControl: new FormControl('', [Validators.required, Validators.email]),
-    passwordFormControl: new FormControl('', [Validators.required, Validators.minLength(4)]),
+  loginGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(4)]),
   });
 
   get f() {
-    return this.loginFromGroup.controls;
+    return this.loginGroup.controls;
   }
 
-  constructor(private router: Router, public snackbar: MatSnackBar) {}
+  constructor(private router: Router, private store: Store<AuthState>) {}
 
-  async login() {}
+  login() {
+    const loginFormControl = this.loginGroup.get('email');
+    const passwordFormControl = this.loginGroup.get('password');
+
+    const username = loginFormControl ? loginFormControl.value : undefined;
+    const password = passwordFormControl ? passwordFormControl.value : undefined;
+
+    if (username && password) {
+      this.store.dispatch(
+        new ActionAuthTryLogin({
+          username,
+          password,
+        })
+      );
+    }
+  }
 
   onCreateAccountClicked(): void {
     this.router.navigate(['/auth/register']);

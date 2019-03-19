@@ -6,6 +6,7 @@
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       [fixedInViewport]="mobileQuery.matches"
       class="app-sidenav"
+      *ngIf="(authenticated$ | async)"
     >
       <mat-nav-list>
         <mat-list-item class="app-logo">Netptune</mat-list-item>
@@ -25,8 +26,8 @@
 
     <mat-sidenav-content>
       <mat-toolbar class="app-toolbar">
-        <ng-container *ngIf="mobileQuery.matches">
-          <button mat-icon-button (click)="snav.toggle()">
+        <ng-container *ngIf="mobileQuery.matches || (!(authenticated$ | async))">
+          <button mat-icon-button (click)="snav.toggle()" *ngIf="(authenticated$ | async)">
             <mat-icon>menu</mat-icon>
           </button>
           <h1 class="app-name">Netptune</h1>

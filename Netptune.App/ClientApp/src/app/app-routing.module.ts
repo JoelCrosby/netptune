@@ -11,10 +11,6 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'auth',
-    loadChildren: './features/auth/auth.module#AuthModule',
-  },
-  {
     path: 'projects',
     loadChildren: './features/projects/projects.module#ProjectsModule',
     canActivate: [AuthGuardService],
@@ -46,13 +42,17 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
+    path: 'auth',
+    loadChildren: './features/auth/auth.module#AuthModule',
+  },
+  {
     path: '**',
     redirectTo: 'auth',
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', enableTracing: false })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

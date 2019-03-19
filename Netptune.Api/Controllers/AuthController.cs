@@ -85,7 +85,7 @@ namespace Netptune.Api.Controllers
                     userId = appUser.Id,
                     username = model.Username,
                     emailaddress = appUser.Email,
-                    displayName = appUser.UserName,
+                    displayName = GetUserDisplayName(appUser),
                     issued = DateTime.Now,
                     expires = expireDays
                 });
@@ -93,6 +93,17 @@ namespace Netptune.Api.Controllers
             }
 
             return BadRequest("Username or Password is incorrect");
+        }
+
+
+        private string GetUserDisplayName(AppUser user)
+        {
+            if (String.IsNullOrEmpty(user.FirstName) || String.IsNullOrEmpty(user.LastName))
+            {
+                return user.Email;
+            }
+
+            return $"{user.FirstName} {user.LastName}";
         }
 
         [HttpPost]

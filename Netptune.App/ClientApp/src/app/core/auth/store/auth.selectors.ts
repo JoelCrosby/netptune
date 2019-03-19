@@ -19,7 +19,7 @@ export const selectCurrentUserDisplayName = createSelector(
   selectCurrentUser,
   (state: AuthState) => {
     if (state.currentUser) {
-      return state.currentUser.username || state.currentUser.email;
+      return state.currentUser.displayName || state.currentUser.email;
     }
   }
 );

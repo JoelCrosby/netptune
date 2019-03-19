@@ -4,6 +4,9 @@
 @import './styles/material-overrides.scss';
 @import './styles/components.scss';
 
+// Bootstrap Grid
+@import '~bootstrap/scss/bootstrap-grid';
+
 // Angular Material Theming core
 @import '~@angular/material/theming';
 
