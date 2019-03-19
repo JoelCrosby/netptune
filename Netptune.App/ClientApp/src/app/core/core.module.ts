@@ -1,15 +1,10 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { AppLoadModule } from './app-load/app-load.module';
+import { AuthGuardService } from './auth/auth-guard.service';
 import { LocalStorageService } from './local-storage/local-storage.service';
 
 @NgModule({
-  imports: [
-    AppLoadModule
-  ],
-  declarations: [],
-  providers: [
-    LocalStorageService,
-  ]
+  imports: [],
+  providers: [AuthGuardService, LocalStorageService],
 })
 export class CoreModule {
   constructor(

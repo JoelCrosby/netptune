@@ -1,0 +1,59 @@
+<div class="app-container default-theme" [class.example-is-mobile]="mobileQuery.matches">
+  <mat-sidenav-container class="app-sidenav-container">
+    <mat-sidenav
+      #snav
+      [opened]="!mobileQuery.matches"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      class="app-sidenav"
+    >
+      <mat-nav-list>
+        <mat-list-item class="app-logo">Netptune</mat-list-item>
+        <mat-divider></mat-divider>
+        <h3 matSubheader>Browse</h3>
+        <a
+          mat-list-item
+          *ngFor="let link of links"
+          [routerLink]="link.value"
+          class="app-menu-link"
+          routerLinkActive="router-link-active"
+        >
+          {{ link.label }}
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <mat-toolbar class="app-toolbar">
+        <ng-container *ngIf="mobileQuery.matches">
+          <button mat-icon-button (click)="snav.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <h1 class="app-name">Netptune</h1>
+        </ng-container>
+
+        <span class="toolbar-spacer"></span>
+
+        <ng-container *ngIf="(authenticated$ | async); else elseTemplate">
+          <button mat-button [matMenuTriggerFor]="menu">
+            <span class="toolbar-username">{{ displayName$ | async }}</span>
+            <mat-icon aria-label="Account Options">account_circle</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onProfileClicked()">Profile</button>
+            <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
+          </mat-menu>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon aria-label="Account Options">account_circle</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onLoginClicked()">Login</button>
+          </mat-menu>
+        </ng-template>
+      </mat-toolbar>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

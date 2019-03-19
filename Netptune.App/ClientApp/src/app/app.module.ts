@@ -4,35 +4,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { SharedModule } from './modules/shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core';
 
 // Components
-import { AppComponent } from './components/app/app.component';
+import { AppComponent } from './app.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectDialogComponent } from './dialogs/project-dialog/project-dialog.component';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
-import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { InviteDialogComponent } from './dialogs/invite-dialog/invite-dialog.component';
 import { BoardPostDialogComponent } from './dialogs/board-post-dialog/board-post-dialog.component';
 import { TaskDetailDialogComponent } from './dialogs/task-detail-dialog/task-detail-dialog.component';
 
-// Services
-import { ProjectTaskService } from './services/project-task/project-task.service';
-import { ProjectsService } from './services/projects/projects.service';
-import { TransitionService } from './services/transition/transition.service';
-import { UserService } from './services/user/user.service';
-import { WorkspaceService } from './services/workspace/workspace.service';
-import { UtilService } from './services/util/util.service';
-import { PostsService } from './services/posts/posts.service';
-import { AuthService } from './services/auth/auth.service';
-import { AuthGuardService } from './services/auth/auth-guard.service';
-
 @NgModule({
   declarations: [
     AppComponent,
-    SideBarComponent,
     ProjectDialogComponent,
     ConfirmDialogComponent,
     TaskDialogComponent,
@@ -46,28 +33,17 @@ import { AuthGuardService } from './services/auth/auth-guard.service';
     TaskDialogComponent,
     TaskDetailDialogComponent,
     InviteDialogComponent,
-    BoardPostDialogComponent
+    BoardPostDialogComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     DragDropModule,
     CoreModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
-  providers: [
-    AuthService,
-    AuthGuardService,
-    ProjectsService,
-    WorkspaceService,
-    ProjectTaskService,
-    TransitionService,
-    UserService,
-    UtilService,
-    PostsService
-  ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+
+@mixin reset-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-drawer-content, .mat-sidenav-content, mat-sidenav-container {
+    background-color: mat-color($background, background)
+  }
+
+}

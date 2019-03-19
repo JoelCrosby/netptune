@@ -1,0 +1,5 @@
+$light-app-primary: mat-palette($mat-deep-purple);
+$light-app-accent:  mat-palette($mat-deep-purple, 900);
+$light-app-warn:    mat-palette($mat-red, A200, A100, A400);
+
+$default-theme: mat-light-theme($light-app-primary, $light-app-accent, $light-app-warn);

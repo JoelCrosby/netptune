@@ -1,27 +1,24 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Post } from '@app/models/post';
+import { Post } from '@app/core/models/post';
 
 @Component({
   selector: 'app-board-post-dialog',
   templateUrl: './board-post-dialog.component.html',
-  styleUrls: ['./board-post-dialog.component.scss']
+  styleUrls: ['./board-post-dialog.component.scss'],
 })
 export class BoardPostDialogComponent implements OnInit {
-
   postFromGroup = new FormGroup({
-    titleFormControl: new FormControl('', [
-      Validators.required,
-    ]),
+    titleFormControl: new FormControl('', [Validators.required]),
   });
 
   constructor(
     public dialogRef: MatDialogRef<BoardPostDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Post) { }
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: Post
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   close(): void {
     this.dialogRef.close();
@@ -29,7 +26,9 @@ export class BoardPostDialogComponent implements OnInit {
 
   getResult() {
     const title = this.postFromGroup.get('titleFormControl');
-    if (!title) { return null; }
+    if (!title) {
+      return null;
+    }
 
     const value = title.value;
     const post = new Post();
@@ -37,5 +36,4 @@ export class BoardPostDialogComponent implements OnInit {
 
     this.dialogRef.close(post);
   }
-
 }

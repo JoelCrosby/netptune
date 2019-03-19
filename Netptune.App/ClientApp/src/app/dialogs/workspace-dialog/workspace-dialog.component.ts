@@ -1,31 +1,27 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Workspace } from '@app/models/workspace';
+import { Workspace } from '@app/core/models/workspace';
 
 @Component({
   selector: 'app-workspace-dialog',
   templateUrl: './workspace-dialog.component.html',
-  styleUrls: ['./workspace-dialog.component.scss']
+  styleUrls: ['./workspace-dialog.component.scss'],
 })
 export class WorkspaceDialogComponent implements OnInit {
-
   public workspace: Workspace;
 
   public workspaceFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [
-      Validators.required,
-    ]),
-    discriptionFormControl: new FormControl()
+    nameFormControl: new FormControl('', [Validators.required]),
+    discriptionFormControl: new FormControl(),
   });
 
   constructor(
     public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Workspace) { }
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: Workspace
+  ) {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   close(): void {
     this.dialogRef.close();
@@ -43,5 +39,4 @@ export class WorkspaceDialogComponent implements OnInit {
 
     this.dialogRef.close(workspaceResult);
   }
-
 }
