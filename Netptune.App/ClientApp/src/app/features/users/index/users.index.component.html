@@ -7,16 +7,11 @@
     </button>
   </div>
 
-
-  <div *ngIf="!userService.appUsers">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
-
   <div class="container">
 
-    <div class="user-card-group" [@dropIn]="userService.appUsers">
+    <div class="user-card-group">
 
-      <mat-card *ngFor="let user of userService.appUsers; let i=index; trackBy:trackById;">
+      <mat-card *ngFor="let user of users$; let i=index; trackBy:trackById;">
         <mat-card-header>
           <div mat-card-avatar class="far fa-user"></div>
           <mat-card-title>{{ userService.getDisplayName(user) }}</mat-card-title>

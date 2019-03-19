@@ -4,12 +4,10 @@ import { WorkspacesRoutingModule } from './workspaces-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { WorkspacesComponent } from './index/workspaces.index.component';
-import { WorkspaceDialogComponent } from '@app/dialogs/workspace-dialog/workspace-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [WorkspacesComponent, WorkspaceDialogComponent],
-  entryComponents: [WorkspaceDialogComponent],
+  declarations: [WorkspacesComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, WorkspacesRoutingModule],
 })
 export class WorkspacesModule {}

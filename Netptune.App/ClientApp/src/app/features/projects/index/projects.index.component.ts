@@ -11,6 +11,8 @@ import { Project } from '@app/core/models/project';
   animations: [dropIn],
 })
 export class ProjectsComponent {
+  projects$ = [];
+
   constructor(public snackBar: MatSnackBar, public dialog: MatDialog) {}
 
   trackById(index: number, project: Project) {

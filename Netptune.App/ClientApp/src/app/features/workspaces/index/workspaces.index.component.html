@@ -1,8 +1,8 @@
 <div class="container">
 
-  <div class="card-group" [@dropIn]="workspaceService.workspaces">
+  <div class="card-group">
 
-    <mat-card *ngFor="let workspace of workspaceService.workspaces; let i=index; trackBy:trackById;">
+    <mat-card *ngFor="let workspace of workspaces$; let i=index; trackBy:trackById;">
       <mat-card-title>
         {{workspace.name}}
         <button mat-button color="primary" type="button" (click)='deleteClicked(workspace)'>

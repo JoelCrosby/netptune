@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn } from '@app/core/animations/animations';
 import { Workspace } from '@app/core/models/workspace';
-import { Maybe } from '@app/core/types/nothing';
 
 @Component({
   selector: 'app-workspaces',
@@ -11,9 +9,9 @@ import { Maybe } from '@app/core/types/nothing';
   animations: [dropIn],
 })
 export class WorkspacesComponent implements OnInit {
-  selectedWorkspace: Maybe<Workspace>;
+  workspaces$ = [];
 
-  constructor(public snackBar: MatSnackBar, public dialog: MatDialog) {}
+  constructor() {}
 
   ngOnInit() {}
 

@@ -1,47 +1,10 @@
 <div class="container px-0">
 
   <div class="component-header">
-    <button mat-fab type="button" id="new-button" (click)='showLogOutModal()'>
+    <button mat-fab type="button" id="new-button">
       <mat-icon>exit_to_app</mat-icon>
       <span id="new-button-text">Log Out</span>
     </button>
   </div>
-
-  <mat-card id="profile-card">
-    <form [formGroup]="profileFromGroup">
-
-      <h3 class="profile-section-header">Details</h3>
-
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>First Name</mat-label>
-        <input matInput id="firstName" class="form-control" formControlName="firstNameFormControl"
-          name="firstName">
-      </mat-form-field>
-
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Last Name</mat-label>
-        <input matInput id="lastName" class="form-control" formControlName="lastNameFormControl" name="lastName">
-      </mat-form-field>
-
-      <div class="form-spacer"></div>
-
-      <h3 class="profile-section-header">Account</h3>
-
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput id="email" class="form-control" formControlName="emailFormControl" name="email" required>
-        <mat-hint>Required</mat-hint>
-      </mat-form-field>
-
-      <div class="form-spacer"></div>
-
-      <div class="form-actions">
-        <button mat-button (click)='saveChangesClicked()' [disabled]='profileFromGroup.pristine'>Save
-          Changes</button>
-      </div>
-
-
-    </form>
-  </mat-card>
 
 </div>

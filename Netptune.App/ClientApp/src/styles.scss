@@ -1,6 +1,9 @@
 // Styles reset
 @import './styles/reset.scss';
 
+@import './styles/material-overrides.scss';
+@import './styles/components.scss';
+
 // Angular Material Theming core
 @import '~@angular/material/theming';
 

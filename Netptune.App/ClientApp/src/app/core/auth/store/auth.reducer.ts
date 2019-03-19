@@ -4,19 +4,15 @@ import { User } from './auth.models';
 export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
-  currentUser: User;
+  currentUser?: User;
 }
 
 export const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
-  currentUser: undefined,
 };
 
-export function authReducer(
-  state = initialState,
-  action: AuthActions
-): AuthState {
+export function authReducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
     case AuthActionTypes.TRY_LOGIN:
       return { ...state, loading: true };
