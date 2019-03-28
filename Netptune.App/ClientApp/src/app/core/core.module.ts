@@ -12,6 +12,7 @@ import { reducers, metaReducers } from './core.state';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from '@env/environment';
+import { httpInterceptorProviders } from './http-interceptors';
 
 @NgModule({
   imports: [
@@ -26,7 +27,7 @@ import { environment } from '@env/environment';
           name: 'One Time',
         }),
   ],
-  providers: [AuthGuardService, LocalStorageService],
+  providers: [AuthGuardService, LocalStorageService, httpInterceptorProviders],
 })
 export class CoreModule {
   constructor(

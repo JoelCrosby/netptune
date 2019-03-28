@@ -6,7 +6,7 @@ import { AuthGuardService } from './core/auth/auth-guard.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tasks',
+    redirectTo: '/projects',
     canActivate: [AuthGuardService],
     pathMatch: 'full',
   },

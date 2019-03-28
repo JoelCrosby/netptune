@@ -14,6 +14,12 @@ export const selectCurrentUser = createSelector(
   (state: AuthState) => state.currentUser
 );
 
+export const selectAuthToken = createSelector(
+  getAuthState,
+  selectCurrentUser,
+  (state: AuthState) => (state.currentUser ? state.currentUser.token : undefined)
+);
+
 export const selectCurrentUserDisplayName = createSelector(
   getAuthState,
   selectCurrentUser,

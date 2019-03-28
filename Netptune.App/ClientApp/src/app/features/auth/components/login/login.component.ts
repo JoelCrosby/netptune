@@ -17,7 +17,7 @@ export class LoginComponent {
 
   loginGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    password: new FormControl('', [Validators.required]),
   });
 
   get f() {
@@ -33,14 +33,16 @@ export class LoginComponent {
     const username = loginFormControl ? loginFormControl.value : undefined;
     const password = passwordFormControl ? passwordFormControl.value : undefined;
 
-    if (username && password) {
-      this.store.dispatch(
-        new ActionAuthTryLogin({
-          username,
-          password,
-        })
-      );
+    if (!username || !password) {
+      return;
     }
+
+    this.store.dispatch(
+      new ActionAuthTryLogin({
+        username,
+        password,
+      })
+    );
   }
 
   onCreateAccountClicked(): void {

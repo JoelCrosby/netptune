@@ -1,7 +1,6 @@
 import { ProjectTask } from './project-task';
 
 export interface AppUser {
-
   id: string;
 
   firstName: string;
@@ -11,5 +10,6 @@ export interface AppUser {
   pictureUrl: string;
   lastLoginTime: Date;
   registrationDate: Date;
+  token: string;
   tasks: ProjectTask[];
 }

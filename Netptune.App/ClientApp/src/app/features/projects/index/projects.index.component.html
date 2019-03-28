@@ -11,19 +11,13 @@
 
     <div class="card-group">
 
-      <mat-card *ngFor="let project of projects$; let i=index; trackBy:trackById;">
+      <mat-card *ngFor="let project of projects$ | async; let i=index; trackBy:trackById;">
         <mat-card-header>
           <mat-card-title><i class="far fa-file-alt title-icon"></i>{{ project.name }}</mat-card-title>
 
         </mat-card-header>
         <mat-card-content>
           <p>{{ project.description }}</p>
-
-          <Small> All Tasks - {{ taskCounts[i]?.allTasks }} </Small>
-          <Small> Completed - {{ taskCounts[i]?.completedTasks }} </Small>
-          <Small> In Progress - {{ taskCounts[i]?.inProgressTasks }} </Small>
-          <Small> Backlog - {{ taskCounts[i]?.backlogTasks }} </Small>
-
         </mat-card-content>
         <mat-card-actions class="flex-row space-between">
 
