@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
-
-import { ProjectTasksComponent } from './index/project-tasks.index.component';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TaskListItemComponent } from './components/task-list-item/task-list-item.component';
-
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ProjectTasksComponent } from './index/project-tasks.index.component';
+import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
+import { ProjectTasksEffects } from './store/project-tasks.effects';
+import { projectTasksReducer } from './store/project-tasks.reducer';
 
 @NgModule({
   declarations: [ProjectTasksComponent, TaskListItemComponent],
-  imports: [CommonModule, ProjectTasksRoutingModule, SharedModule, DragDropModule],
+  imports: [
+    SharedModule,
+    StoreModule.forFeature('project-tasks', projectTasksReducer),
+    EffectsModule.forFeature([ProjectTasksEffects]),
+    ProjectTasksRoutingModule,
+  ],
 })
 export class ProjectTasksModule {}

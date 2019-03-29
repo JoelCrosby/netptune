@@ -1,4 +1,4 @@
-<div class="container" *ngIf="dataLoaded">
+<div class="container">
 
     <div class="component-header">
       <button mat-fab type="button" id="new-button" (click)='showAddModal()'>
@@ -7,9 +7,9 @@
       </button>
     </div>
 
-    <div *ngIf="!projectTaskService.tasks">
+    <!-- <div *ngIf="!projectTaskService.tasks">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
+    </div> -->
 
     <div class="container tasks-container">
       <h4>My Tasks</h4>
@@ -17,8 +17,8 @@
         [cdkDropListConnectedTo]="[completedTasksList, backlogTasksList]" [cdkDropListData]="myTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <ng-container *ngIf="myTasks.length > 0; else myTasksElseTemplate">
-          <div class="task-drag" cdkDrag *ngFor="let task of myTasks">
+        <ng-container *ngIf="(myTasks$ | async).length > 0; else myTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of myTasks$ | async">
             <app-task-list-item [(task)]="task">
             </app-task-list-item>
           </div>
@@ -45,8 +45,8 @@
         [cdkDropListConnectedTo]="[backlogTasksList, myTasksList]" [cdkDropListData]="completedTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <ng-container *ngIf="completedTasks.length > 0; else completedTasksElseTemplate">
-          <div class="task-drag" cdkDrag *ngFor="let task of completedTasks">
+        <ng-container *ngIf="(completedTasks$ | async).length > 0; else completedTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of completedTasks$ | async">
             <app-task-list-item [(task)]="task">
             </app-task-list-item>
           </div>
@@ -73,8 +73,8 @@
         [cdkDropListConnectedTo]="[myTasksList, completedTasksList]" [cdkDropListData]="backlogTasks"
         (cdkDropListDropped)="drop($event)">
 
-        <ng-container *ngIf="backlogTasks.length > 0; else backlogTasksElseTemplate">
-          <div class="task-drag" cdkDrag *ngFor="let task of backlogTasks">
+        <ng-container *ngIf="(backlogTasks$ | async).length > 0; else backlogTasksElseTemplate">
+          <div class="task-drag" cdkDrag *ngFor="let task of backlogTasks$ | async">
             <app-task-list-item [(task)]="task">
             </app-task-list-item>
           </div>
