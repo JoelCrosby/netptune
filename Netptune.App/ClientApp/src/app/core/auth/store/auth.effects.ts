@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '@app/core/local-storage/local-storage.service';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
-import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import {
   ActionAuthLoginFail,
@@ -13,6 +13,10 @@ import {
   AuthActionTypes,
   ActionAuthLogout,
 } from './auth.actions';
+import { AppState } from '../../core.state';
+import { selectAuthState } from './auth.selectors';
+
+export const AUTH_KEY = 'AUTH';
 
 @Injectable()
 export class AuthEffects {
@@ -20,13 +24,26 @@ export class AuthEffects {
     private actions$: Actions<Action>,
     private localStorageService: LocalStorageService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store<AppState>
   ) {}
 
   @Effect({ dispatch: false })
   logOut$ = this.actions$.pipe(
     ofType<ActionAuthLogout>(AuthActionTypes.LOGOUT),
     tap(() => this.router.navigate(['auth/login']))
+  );
+
+  @Effect({ dispatch: false })
+  persistSettings = this.actions$.pipe(
+    ofType(
+      AuthActionTypes.LOGIN_FAIL,
+      AuthActionTypes.LOGIN_SUCCESS,
+      AuthActionTypes.LOGOUT,
+      AuthActionTypes.TRY_LOGIN
+    ),
+    withLatestFrom(this.store.pipe(select(selectAuthState))),
+    tap(([action, settings]) => this.localStorageService.setItem(AUTH_KEY, settings))
   );
 
   @Effect()

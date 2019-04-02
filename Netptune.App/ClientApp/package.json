@@ -30,7 +30,7 @@
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@mdi/font": "^3.5.95",
     "@ngrx/effects": "^7.3.0",
-    "@ngrx/router-store": "^7.3.0",
+    "@ngrx/router-store": "^7.4.0",
     "@ngrx/store": "^7.3.0",
     "@ngrx/store-devtools": "^7.3.0",
     "aspnet-prerendering": "^3.0.1",
