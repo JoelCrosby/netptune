@@ -34,8 +34,19 @@ h1.app-name {
     flex: 1 0 auto;
 }
 
+.mat-subheader {
+  color: rgba(255, 255, 255, 0.54) !important;
+}
+
+.default-theme .mat-drawer-content, .default-theme .mat-sidenav-content, .default-theme mat-sidenav-container {
+  background-color: #ffffff !important;
+}
+
 .app-menu-link {
+  color: rgba(255,255,255, .8) !important;
+  height: 2.6rem !important;
     .mat-list-item-content {
+        height: 2.6rem;
         line-height: 18px;
         padding: 12px 48px;
         padding-left: 24px;
@@ -49,28 +60,31 @@ h1.app-name {
     height: 63px !important;
     text-transform: uppercase;
     letter-spacing: .4rem;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: 500;
+    color: rgba(255,255,255, .8) !important;
 }
 
 .toolbar-username {
-  text-transform: capitalize;
-  font-weight: 400;
-  font-size: 1rem;
-  letter-spacing: .05rem;
-  margin-right: 1rem;
+    text-transform: capitalize;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: .05rem;
+    margin-right: 1rem;
 
 }
 
 .app-sidenav {
-    width: 280px;
+    width: 200px;
+    background-color: #311D4B;
 }
 
 .app-toolbar {
     height: 72px;
     color: #202124;
     background-color: #ffffff;
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    border-bottom: 1px solid #f1f1f1;
+    box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, .03);
     z-index: 4;
 }
 
