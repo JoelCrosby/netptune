@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { User } from './auth.models';
 
 export enum AuthActionTypes {
   TRY_LOGIN = '[Auth] Try Login',
