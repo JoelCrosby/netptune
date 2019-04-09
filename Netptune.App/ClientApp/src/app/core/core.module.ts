@@ -7,6 +7,8 @@ import { LocalStorageService } from './local-storage/local-storage.service';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+import { CustomSerializer } from './router/custom-serializer';
 
 import { reducers, metaReducers } from './core.state';
 import { EffectsModule } from '@ngrx/effects';
@@ -20,14 +22,20 @@ import { httpInterceptorProviders } from './http-interceptors';
     HttpClientModule,
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
+    StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([AuthEffects]),
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({
-          name: 'One Time',
+          name: 'Netptune',
         }),
   ],
-  providers: [AuthGuardService, LocalStorageService, httpInterceptorProviders],
+  providers: [
+    AuthGuardService,
+    LocalStorageService,
+    httpInterceptorProviders,
+    { provide: RouterStateSerializer, useClass: CustomSerializer },
+  ],
 })
 export class CoreModule {
   constructor(

@@ -6,8 +6,8 @@ import {
   selectCurrentUserDisplayName,
 } from './core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { AuthState } from './core/auth/store/auth.reducer';
 import { ActionAuthLogout } from './core/auth/store/auth.actions';
+import { AppState, selectPageTitle } from './core/core.state';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,7 @@ import { ActionAuthLogout } from './core/auth/store/auth.actions';
 export class AppComponent implements OnDestroy {
   authenticated$ = this.store.select(selectIsAuthenticated);
   displayName$ = this.store.select(selectCurrentUserDisplayName);
+  pageTitle$ = this.store.select(selectPageTitle);
 
   links = [
     { label: 'Projects', value: ['/projects'] },
@@ -31,7 +32,7 @@ export class AppComponent implements OnDestroy {
   private mobileQueryListener: () => void;
 
   constructor(
-    private store: Store<AuthState>,
+    private store: Store<AppState>,
     private router: Router,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
