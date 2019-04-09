@@ -38,10 +38,6 @@ h1.app-name {
   color: rgba(255, 255, 255, 0.54) !important;
 }
 
-.default-theme .mat-drawer-content, .default-theme .mat-sidenav-content, .default-theme mat-sidenav-container {
-  background-color: #ffffff !important;
-}
-
 .app-menu-link {
   color: rgba(255,255,255, .8) !important;
   height: 2.6rem !important;
@@ -54,6 +50,11 @@ h1.app-name {
         width: 100%;
         font-size: 14px;
     }
+}
+
+.router-link-active {
+  color: rgba(255,255,255, 1) !important;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .app-logo {
@@ -81,16 +82,27 @@ h1.app-name {
 
 .app-toolbar {
     height: 72px;
-    color: #202124;
-    background-color: #ffffff;
     z-index: 4;
-}
-
-.app-toolbar-shadow {
-  border-bottom: 1px solid #f1f1f1;
-  box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, .03);
 }
 
 .toolbar-spacer {
     flex: 1 1 auto;
 }
+
+.default-theme .app-toolbar {
+  background-color: #ffffff !important;
+}
+
+.default-theme .mat-drawer-content, .default-theme .mat-sidenav-content, .default-theme mat-sidenav-container {
+  background-color: #ffffff !important;
+}
+
+
+.dark-theme .app-toolbar {
+  background-color: #282828 !important;
+}
+
+.dark-theme .mat-drawer-content, .dark-theme .mat-sidenav-content, .dark-theme mat-sidenav-container {
+  background-color: #282828 !important;
+}
+

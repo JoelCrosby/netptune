@@ -1,4 +1,4 @@
-<div class="app-container default-theme" [class.example-is-mobile]="mobileQuery.matches">
+<div [class]="'app-container theme-wrapper ' + (theme$ | async)" [class.example-is-mobile]="mobileQuery.matches">
   <mat-sidenav-container class="app-sidenav-container">
     <mat-sidenav
       #snav
@@ -6,6 +6,7 @@
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       [fixedInViewport]="mobileQuery.matches"
       class="app-sidenav"
+      id="app-sidenav"
       *ngIf="(authenticated$ | async)"
     >
       <mat-nav-list>
@@ -26,7 +27,7 @@
     <mat-sidenav-content>
       <mat-toolbar class="app-toolbar" [class.app-toolbar-shadow]="(authenticated$ | async)">
         <ng-container *ngIf="mobileQuery.matches || (!(authenticated$ | async)); else pageTitle">
-          <button mat-icon-button (click)="snav.toggle()" *ngIf="(authenticated$ | async)">
+          <button mat-icon-button (click)="toggleSideNav()" *ngIf="(authenticated$ | async)">
             <mat-icon>menu</mat-icon>
           </button>
           <h1 class="app-name">Netptune</h1>

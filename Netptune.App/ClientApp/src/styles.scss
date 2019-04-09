@@ -1,7 +1,6 @@
 // Styles reset
 @import './styles/reset.scss';
 
-@import './styles/material-overrides.scss';
 @import './styles/components.scss';
 
 // Bootstrap Grid
@@ -19,10 +18,14 @@
 // Component Themes
 @import './styles/reset.scss-theme';
 @import './app/app.component.scss-theme.scss';
+@import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme.scss';
+@import './app/features/project-tasks/index/project-tasks.index.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
   @include app-component-theme($theme);
+  @include task-list-item-component-theme($theme);
+  @include project-tasks-component-theme($theme);
 }
 
 .default-theme {

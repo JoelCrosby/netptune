@@ -15,6 +15,7 @@ import {
 } from './auth.actions';
 import { AppState } from '../../core.state';
 import { selectAuthState } from './auth.selectors';
+import { ActionSettingsClear } from '../../../features/settings/store/settings.actions';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -58,5 +59,12 @@ export class AuthEffects {
           catchError(error => of(new ActionAuthLoginFail({ error })))
         )
       )
-    );
+    )
+
+  @Effect()
+  logout$ = () =>
+    this.actions$.pipe(
+      ofType<ActionAuthTryLogin>(AuthActionTypes.LOGOUT),
+      map(() => new ActionSettingsClear())
+    )
 }

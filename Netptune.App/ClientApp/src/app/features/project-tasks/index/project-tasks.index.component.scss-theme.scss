@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin app-component-theme($theme) {
+@mixin project-tasks-component-theme($theme) {
 
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -8,15 +8,14 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  html, body, .main-content {
-    background-color: mat-color($background, background)
+  .task-list {
+    background-color: mat-color($background, background);
+    border: 1px solid mat-color($background, disabled-button);
+    box-shadow: 1px 2px 4px rgba(0,0,0,.03);
   }
 
-  .app-toolbar {
-    color: mat-color($foreground, text);
-  }
-
-  .app-toolbar-shadow {
+  .task-drag {
+    background-color: mat-color($background);
     border-bottom: 1px solid mat-color($background, disabled-button);
   }
 

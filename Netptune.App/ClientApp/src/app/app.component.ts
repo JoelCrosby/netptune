@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaMatcher } from '@angular/cdk/layout';
 import {
@@ -8,6 +8,8 @@ import {
 import { Store } from '@ngrx/store';
 import { ActionAuthLogout } from './core/auth/store/auth.actions';
 import { AppState, selectPageTitle } from './core/core.state';
+import { selectEffectiveTheme } from './features/settings/store/settings.selectors';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,9 @@ import { AppState, selectPageTitle } from './core/core.state';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
+  @ViewChild(MatSidenav) sideNav: MatSidenav;
+
+  theme$ = this.store.select(selectEffectiveTheme);
   authenticated$ = this.store.select(selectIsAuthenticated);
   displayName$ = this.store.select(selectCurrentUserDisplayName);
   pageTitle$ = this.store.select(selectPageTitle);
@@ -25,6 +30,7 @@ export class AppComponent implements OnDestroy {
     { label: 'Users', value: ['/users'] },
     { label: 'Account', value: ['/profile'] },
     { label: 'Workspaces', value: ['/workspaces'] },
+    { label: 'Settings', value: ['/settings'] },
   ];
 
   mobileQuery: MediaQueryList;
@@ -40,6 +46,11 @@ export class AppComponent implements OnDestroy {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this.mobileQueryListener);
+  }
+
+  toggleSideNav(): void {
+    console.log(this.sideNav);
+    this.sideNav.toggle();
   }
 
   ngOnDestroy(): void {

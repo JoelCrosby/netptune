@@ -10,13 +10,6 @@
     justify-content: flex-end;
 }
 
-#info-chip {
-    color: #969696;
-    height: 1.2rem;
-    background-color: #f4f4f4;
-    font-weight: 100;
-}
-
 .title {
     margin-top: auto;
     margin-bottom: auto;
@@ -42,7 +35,6 @@ mat-divider {
 }
 
 .task-card {
-    background-color: #fff;
     box-shadow: none;
     transition: box-shadow 360ms cubic-bezier(.24,0,0,1);
 }
