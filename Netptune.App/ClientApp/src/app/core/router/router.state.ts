@@ -4,4 +4,5 @@ export interface RouterStateUrl {
   url: string;
   params: Params;
   queryParams: Params;
+  title: string;
 }

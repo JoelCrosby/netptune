@@ -14,10 +14,11 @@ export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
 
     const {
       url,
-      root: { queryParams }
+      root: { queryParams },
     } = routerState;
     const { params } = route;
+    const title = route.data.title;
 
-    return { url, params, queryParams };
+    return { url, params, queryParams, title };
   }
 }
