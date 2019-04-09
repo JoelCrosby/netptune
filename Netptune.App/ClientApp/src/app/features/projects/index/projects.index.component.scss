@@ -15,11 +15,6 @@
     }
 }
 
-#export-button {
-    color: #6C757D;
-    margin-top: 2rem;
-}
-
 .projects-header {
     display: flex;
     justify-content: space-between;
@@ -27,26 +22,8 @@
     margin-bottom: 2rem;
 }
 
-.title-icon {
-  margin-right: .8rem;
-  color: #673AB7;
-  font-size: 1.8rem;
-}
-
-.icon {
-    margin: 0px auto;
-    text-align: center;
-    height: 48px;
-    width: 48px;
-    font-size: 2.5rem;
-    padding: 0.5rem;
-    display: inline-block;
-    margin-right: 1.5rem;
-}
-
 mat-card {
     min-width: 300px;
-    min-height: 200px;
     margin-bottom: 2rem;
     padding: 1.6rem;
     border: none;

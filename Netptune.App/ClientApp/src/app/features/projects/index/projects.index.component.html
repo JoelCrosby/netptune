@@ -1,45 +1,31 @@
 <div class="container px-0">
-
   <div class="component-header">
-    <button mat-fab type="button" id="new-button" (click)='showAddModal()'>
+    <button mat-fab type="button" id="new-button" (click)="showAddModal()">
       <mat-icon>add</mat-icon>
       <span id="new-button-text">New Project</span>
     </button>
   </div>
 
   <div class="container">
-
     <div class="card-group">
-
-      <mat-card *ngFor="let project of projects$ | async; let i=index; trackBy:trackById;">
+      <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById">
         <mat-card-header>
-          <mat-card-title><i class="far fa-file-alt title-icon"></i>{{ project.name }}</mat-card-title>
-
+          <mat-card-title>{{ project.name }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <p>{{ project.description }}</p>
-        </mat-card-content>
-        <mat-card-actions class="flex-row space-between">
-
-          <div class="card-actions">
-            <button mat-flat-button color="primary" type="button" (click)='showUpdateModal(project)'>
-              Edit
-            </button>
-            <button mat-button color="default" type="button" (click)='showDeleteModal(project)'>
-              Delete
-            </button>
-          </div>
 
           <div class="card-chips">
             <mat-chip-list>
-              <mat-chip>Owner {{ project.owner?.firstName + ' ' + project.owner?.lastName }}</mat-chip>
+              <mat-chip
+                >Owner {{ project.owner?.firstName + ' ' + project.owner?.lastName }}</mat-chip
+              >
               <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
               <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
             </mat-chip-list>
           </div>
-
-        </mat-card-actions>
+        </mat-card-content>
       </mat-card>
     </div>
-
+  </div>
 </div>
