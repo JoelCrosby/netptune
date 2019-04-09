@@ -83,9 +83,12 @@ h1.app-name {
     height: 72px;
     color: #202124;
     background-color: #ffffff;
-    border-bottom: 1px solid #f1f1f1;
-    box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, .03);
     z-index: 4;
+}
+
+.app-toolbar-shadow {
+  border-bottom: 1px solid #f1f1f1;
+  box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, .03);
 }
 
 .toolbar-spacer {

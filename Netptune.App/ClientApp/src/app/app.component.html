@@ -24,7 +24,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <mat-toolbar class="app-toolbar">
+      <mat-toolbar class="app-toolbar" [class.app-toolbar-shadow]="(authenticated$ | async)">
         <ng-container *ngIf="mobileQuery.matches || (!(authenticated$ | async))">
           <button mat-icon-button (click)="snav.toggle()" *ngIf="(authenticated$ | async)">
             <mat-icon>menu</mat-icon>
