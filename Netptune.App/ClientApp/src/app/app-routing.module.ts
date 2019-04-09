@@ -48,6 +48,12 @@ const routes: Routes = [
     data: { title: 'Profile' },
   },
   {
+    path: 'settings',
+    loadChildren: './features/settings/settings.module#SettingsModule',
+    canActivate: [AuthGuardService],
+    data: { title: 'Settings' },
+  },
+  {
     path: 'auth',
     loadChildren: './features/auth/auth.module#AuthModule',
   },
