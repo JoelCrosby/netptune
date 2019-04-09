@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Netptune.Api.Controllers
 {
     [Authorize]

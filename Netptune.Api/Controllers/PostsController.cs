@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Netptune.Models.Entites;
 using Netptune.Models.Models;
 
+[assembly:ApiConventionType(typeof(DefaultApiConventions))]
 namespace Netptune.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -30,11 +31,6 @@ namespace Netptune.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var post = await _context.Posts.FindAsync(id);
 
             if (post == null || post.IsDeleted)
@@ -49,11 +45,6 @@ namespace Netptune.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost([FromRoute] int id, [FromBody] Post post)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != post.Id)
             {
                 return BadRequest();
@@ -61,21 +52,7 @@ namespace Netptune.Api.Controllers
 
             _context.Entry(post).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -84,11 +61,6 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPost([FromBody] Post post)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             post.Project = _context.Projects.FirstOrDefault(x => x.Id == post.ProjectId);
 
             _context.Posts.Add(post);
@@ -101,11 +73,6 @@ namespace Netptune.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
@@ -118,21 +85,11 @@ namespace Netptune.Api.Controllers
             return Ok(post);
         }
 
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
-        }
-
 
         [HttpGet]
         [Route("GetProjectPosts")]
         public IActionResult GetProjectPosts(int projectId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var posts = _context.Posts.Where(x => x.ProjectId == projectId && !x.IsDeleted);
             if (posts == null)
             {

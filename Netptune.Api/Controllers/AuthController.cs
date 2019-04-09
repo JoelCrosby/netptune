@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +50,9 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] TokenRequest model)
         {
 
@@ -109,6 +113,9 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Register")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] TokenRequest model)
         {
             var user = new AppUser
