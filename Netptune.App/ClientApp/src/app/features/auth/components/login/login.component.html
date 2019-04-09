@@ -3,6 +3,9 @@
   <div class="col-md-4 mt-5">
 
     <mat-card>
+      <div class="progress-bar">
+        <mat-progress-bar mode="indeterminate" *ngIf="($authLoading | async)"></mat-progress-bar>
+      </div>
       <form class="form-signin" [formGroup]="loginGroup" (ngSubmit)="login()">
 
         <div class="mat-typography">
@@ -27,7 +30,7 @@
           <mat-label>Password</mat-label>
           <input matInput id="password" placeholder="Enter Password" [type]="hidePassword ? 'password' : 'text'"
             name="password" formControlName="password" autocomplete="current-password">
-          <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility'}}
+          <mat-icon matSuffix (click)="hidePassword = !hidePassword" class="cursor-pointer">{{ hidePassword ? 'visibility_off' : 'visibility'}}
           </mat-icon>
           <mat-error *ngIf="f['password'].hasError('required')">
             Password is <strong>required</strong>

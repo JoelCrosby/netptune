@@ -49,3 +49,16 @@ h1 {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.cursor-pointer:hover {
+  color: rgba(0,0,0,.5);
+}
+
+.progress-bar {
+  height: 1rem;
+}

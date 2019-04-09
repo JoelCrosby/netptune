@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@app/core/animations/animations';
-import { AuthState } from '../../../../core/auth/store/auth.reducer';
+import { AuthState } from '@app/core/auth/store/auth.reducer';
 import { Store } from '@ngrx/store';
-import { ActionAuthTryLogin } from '../../../../core/auth/store/auth.actions';
+import { ActionAuthTryLogin } from '@app/core/auth/store/auth.actions';
+import { selectAuthLoading } from '@app/core/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { ActionAuthTryLogin } from '../../../../core/auth/store/auth.actions';
   animations: [pullIn],
 })
 export class LoginComponent {
+  $authLoading = this.store.select(selectAuthLoading);
   hidePassword = true;
 
   loginGroup = new FormGroup({
