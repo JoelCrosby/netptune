@@ -1,0 +1,7 @@
+{
+  "prettier.tslintIntegration": true,
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+}
