@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +19,7 @@ using Netptune.Models.Entites;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 using Netptune.Repository;
+
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Netptune.Api
@@ -45,7 +47,12 @@ namespace Netptune.Api
         {
 
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase")));
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase"));
+                else
+                    options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabasePostgres"));
+            });
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
