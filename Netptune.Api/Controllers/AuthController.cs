@@ -118,32 +118,33 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] TokenRequest model)
         {
-            var user = new AppUser
+            var appUser = new AppUser
             {
                 UserName = model.Username,
                 Email = model.Username
             };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(appUser, model.Password);
 
             if (result.Succeeded)
             {
 
-                if (_context.AppUsers.SingleOrDefault(x => x.Id == user.Id) is AppUser newUser)
+                if (_context.AppUsers.SingleOrDefault(x => x.Id == appUser.Id) is AppUser newUser)
                 {
                    newUser.RegistrationDate = DateTime.UtcNow;
                    _context.SaveChanges();
                 }
 
-                await _signInManager.SignInAsync(user, false);
+                await _signInManager.SignInAsync(appUser, false);
 
                 var expireDays = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Tokens:ExpireDays"]));
 
                 return Ok(new
                 {
-                    token = GenerateJwtToken(user, expireDays),
+                    token = GenerateJwtToken(appUser, expireDays),
+                    userId = appUser.Id,
                     username = model.Username,
-                    emailaddress = user.Email,
-                    displayName = user.UserName,
+                    emailaddress = appUser.Email,
+                    displayName = GetUserDisplayName(appUser),
                     issued = DateTime.Now,
                     expires = expireDays
                 });
