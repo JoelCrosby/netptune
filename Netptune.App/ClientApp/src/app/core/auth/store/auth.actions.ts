@@ -5,6 +5,9 @@ export enum AuthActionTypes {
   LOGIN_FAIL = '[Auth] Login Failed',
   LOGIN_SUCCESS = '[Auth] Login Succeded',
   LOGOUT = '[Auth] Logout',
+  REGISTER = '[Auth] Register',
+  REGISTER_FAIL = '[Auth] Register Failed',
+  REGISTER_SUCCESS = '[Auth] Register Succeded',
 }
 
 export class ActionAuthTryLogin implements Action {
@@ -29,8 +32,29 @@ export class ActionAuthLogout implements Action {
   readonly type = AuthActionTypes.LOGOUT;
 }
 
+export class ActionAuthRegister implements Action {
+  readonly type = AuthActionTypes.REGISTER;
+
+  constructor(readonly payload: { username: string; password: string }) {}
+}
+
+export class ActionAuthRegisterSuccess implements Action {
+  readonly type = AuthActionTypes.REGISTER_SUCCESS;
+
+  constructor(readonly payload: any) {}
+}
+
+export class ActionAuthRegisterFail implements Action {
+  readonly type = AuthActionTypes.REGISTER_FAIL;
+
+  constructor(readonly payload: { error: any }) {}
+}
+
 export type AuthActions =
   | ActionAuthTryLogin
   | ActionAuthLoginSuccess
   | ActionAuthLoginFail
-  | ActionAuthLogout;
+  | ActionAuthLogout
+  | ActionAuthRegister
+  | ActionAuthRegisterSuccess
+  | ActionAuthRegisterFail;

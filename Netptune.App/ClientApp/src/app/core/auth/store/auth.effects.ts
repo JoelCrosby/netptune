@@ -12,6 +12,9 @@ import {
   ActionAuthTryLogin,
   AuthActionTypes,
   ActionAuthLogout,
+  ActionAuthRegister,
+  ActionAuthRegisterSuccess,
+  ActionAuthRegisterFail,
 } from './auth.actions';
 import { AppState } from '../../core.state';
 import { selectAuthState } from './auth.selectors';
@@ -57,6 +60,20 @@ export class AuthEffects {
           map((userInfo: any) => new ActionAuthLoginSuccess(userInfo)),
           tap(() => this.router.navigate(['/projects'])),
           catchError(error => of(new ActionAuthLoginFail({ error })))
+        )
+      )
+    )
+
+  @Effect()
+  register$ = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+    this.actions$.pipe(
+      ofType<ActionAuthRegister>(AuthActionTypes.REGISTER),
+      debounceTime(debounce, scheduler),
+      switchMap((action: ActionAuthRegister) =>
+        this.authService.register(action.payload).pipe(
+          map((userInfo: any) => new ActionAuthRegisterSuccess(userInfo)),
+          tap(() => this.router.navigate(['/projects'])),
+          catchError(error => of(new ActionAuthRegisterFail({ error })))
         )
       )
     )

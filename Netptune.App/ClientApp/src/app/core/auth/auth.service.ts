@@ -11,4 +11,8 @@ export class AuthService {
   login(loginReq: { username: string; password: string }) {
     return this.http.post(environment.apiEndpoint + 'api/auth/login', loginReq);
   }
+
+  register(registerReq: { username: string; password: string }) {
+    return this.http.post(environment.apiEndpoint + 'api/auth/register', registerReq);
+  }
 }

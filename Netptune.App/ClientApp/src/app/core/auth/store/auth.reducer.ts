@@ -26,6 +26,18 @@ export function authReducer(state = initialState, action: AuthActions): AuthStat
     }
     case AuthActionTypes.LOGIN_FAIL:
       return { ...state, isAuthenticated: false, loading: false };
+    case AuthActionTypes.REGISTER:
+      return { ...state, loading: true };
+    case AuthActionTypes.REGISTER_SUCCESS: {
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        currentUser: action.payload,
+      };
+    }
+    case AuthActionTypes.REGISTER_FAIL:
+      return { ...state, isAuthenticated: false, loading: false };
     case AuthActionTypes.LOGOUT:
       return {
         ...state,

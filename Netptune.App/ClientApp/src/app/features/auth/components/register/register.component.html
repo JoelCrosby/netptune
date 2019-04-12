@@ -3,9 +3,10 @@
   <div class="col-md-5 col-lg-4 col-sm-8 mt-5">
 
     <mat-card>
-      <form class="form-register" [formGroup]="registerFromGroup" (ngSubmit)="register()">
-
-        <div class="mt-2"></div>
+      <div class="progress-bar">
+        <mat-progress-bar mode="indeterminate" *ngIf="($authLoading | async)"></mat-progress-bar>
+      </div>
+      <form class="form-register" [formGroup]="registerGroup" (ngSubmit)="register()">
 
         <div class="mat-typography">
           <h3 class="text-center">Create new Account</h3>
@@ -15,12 +16,12 @@
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Enter Email Address</mat-label>
-          <input matInput placeholder="Email" name="emailFormControl" formControlName="emailFormControl"
+          <input matInput placeholder="Email" name="email" formControlName="email"
             autocomplete="username">
-          <mat-error *ngIf="f['emailFormControl'].hasError('email') && !f['emailFormControl'].hasError('required')">
+          <mat-error *ngIf="f['email'].hasError('email') && !f['email'].hasError('required')">
             Please enter a valid email address
           </mat-error>
-          <mat-error *ngIf="f['emailFormControl'].hasError('required')">
+          <mat-error *ngIf="f['email'].hasError('required')">
             Email is <strong>required</strong>
           </mat-error>
         </mat-form-field>
@@ -29,18 +30,18 @@
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Enter Password</mat-label>
-          <input matInput placeholder="Password" type="password" name="password0FormControl"
-            formControlName="password0FormControl" autocomplete="new-password">
-          <mat-error *ngIf="f['password0FormControl'].hasError('required')">
+          <input matInput placeholder="Password" type="password" name="password0"
+            formControlName="password0" autocomplete="new-password">
+          <mat-error *ngIf="f['password0'].hasError('required')">
             Password is <strong>required</strong>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Confirm Password</mat-label>
-          <input matInput placeholder="Confirm Password" type="password" name="password1FormControl"
-            formControlName="password1FormControl" autocomplete="new-password">
-          <mat-error *ngIf="f['password1FormControl'].hasError('required')">
+          <input matInput placeholder="Confirm Password" type="password" name="password1"
+            formControlName="password1" autocomplete="new-password">
+          <mat-error *ngIf="f['password1'].hasError('required')">
             Password is <strong>required</strong>
           </mat-error>
         </mat-form-field>
