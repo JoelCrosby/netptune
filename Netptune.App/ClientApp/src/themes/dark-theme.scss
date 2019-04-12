@@ -21,10 +21,10 @@ $mat-dark-theme-foreground: (
 // Background palette for dark themes.
 $mat-dark-theme-background: (
   status-bar: black,
-  app-bar:    map_get($mat-grey, 900),
-  background: #303030,
+  app-bar:    #272727,
+  background: #272727,
   hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
-  card:       map_get($mat-grey, 800),
+  card:       #303030,
   dialog:     map_get($mat-grey, 800),
   disabled-button: rgba(white, 0.12),
   raised-button: map-get($mat-grey, 800),

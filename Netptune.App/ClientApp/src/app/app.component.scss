@@ -87,21 +87,3 @@ h1.app-name {
 .toolbar-spacer {
     flex: 1 1 auto;
 }
-
-.default-theme .app-toolbar {
-  background-color: #ffffff !important;
-}
-
-.default-theme .mat-drawer-content, .default-theme .mat-sidenav-content, .default-theme mat-sidenav-container {
-  background-color: #ffffff !important;
-}
-
-
-.dark-theme .app-toolbar {
-  background-color: #282828 !important;
-}
-
-.dark-theme .mat-drawer-content, .dark-theme .mat-sidenav-content, .dark-theme mat-sidenav-container {
-  background-color: #282828 !important;
-}
-

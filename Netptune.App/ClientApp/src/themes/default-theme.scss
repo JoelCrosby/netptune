@@ -22,7 +22,7 @@ $mat-light-theme-foreground: (
 $mat-light-theme-background: (
   status-bar: map_get($mat-grey, 300),
   app-bar:    map_get($mat-grey, 100),
-  background: white,
+  background: #F1F3F4,
   hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
   card:       white,
   dialog:     white,
