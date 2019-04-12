@@ -9,12 +9,13 @@ $mat-dark-theme-foreground: (
   elevation:         black,
   hint-text:         $light-disabled-text,
   secondary-text:    $light-secondary-text,
-  icon:              white,
+  icon:              rgba(white, 0.6),
   icons:             white,
   text:              rgba(white, 0.8),
   slider-min:        white,
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
+  empty-list:        rgba(white, 0.14),
 );
 
 // Background palette for dark themes.
