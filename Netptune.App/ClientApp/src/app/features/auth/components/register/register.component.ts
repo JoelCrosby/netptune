@@ -1,11 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@app/core/animations/animations';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
-import { ActionAuthRegister } from '@app/core/auth/store/auth.actions';
+import {
+  ActionAuthRegister,
+  ActionAuthRegisterFail,
+  AuthActionTypes,
+} from '@app/core/auth/store/auth.actions';
 import { selectAuthLoading } from '@app/core/auth/store/auth.selectors';
+import { Actions, ofType } from '@ngrx/effects';
+import { Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
@@ -13,10 +20,9 @@ import { selectAuthLoading } from '@app/core/auth/store/auth.selectors';
   styleUrls: ['./register.component.scss'],
   animations: [pullIn],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
+  destroyed$ = new Subject<boolean>();
   $authLoading = this.store.select(selectAuthLoading);
-
-  constructor(private router: Router, private store: Store<AppState>) {}
 
   registerGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -26,6 +32,21 @@ export class RegisterComponent {
 
   get f() {
     return this.registerGroup.controls;
+  }
+
+  constructor(private router: Router, private store: Store<AppState>, updates$: Actions) {
+    updates$
+      .pipe(
+        ofType<ActionAuthRegisterFail>(AuthActionTypes.REGISTER_FAIL),
+        takeUntil(this.destroyed$),
+        tap(() => this.registerGroup.enable())
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   register() {
@@ -40,11 +61,16 @@ export class RegisterComponent {
       ? (password1FormControl.value as string)
       : undefined;
 
+    this.registerGroup.disable();
+
     if (password != passwordConfirm) {
+      this.registerGroup.enable();
       return;
     }
 
     if (!username || !password) {
+      password1FormControl && password1FormControl.reset();
+      this.registerGroup.enable();
       return;
     }
 
