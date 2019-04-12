@@ -5,11 +5,13 @@
     <mat-card>
       <form class="form-register" [formGroup]="registerFromGroup" (ngSubmit)="register()">
 
+        <div class="mt-2"></div>
+
         <div class="mat-typography">
-          <h1 class="text-center">Create new Account</h1>
+          <h3 class="text-center">Create new Account</h3>
         </div>
 
-        <div class="form-spacer"></div>
+        <div class="mt-2"></div>
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Enter Email Address</mat-label>
@@ -43,14 +45,14 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="form-spacer"></div>
+        <div class="mt-2"></div>
 
         <div class="button-container">
-          <button mat-stroked-button color="primary" type="submit" [disabled]="registerFromGroup.invalid"
+          <button mat-flat-button color="primary" type="submit"
             class="full-width form-action-button">Register Account
           </button>
 
-          <div class="form-spacer"></div>
+          <div class="mt-3"></div>
 
           <button mat-button color="primary" type="button" (click)='backToLoginClicked()'>Back to Log in</button>
         </div>

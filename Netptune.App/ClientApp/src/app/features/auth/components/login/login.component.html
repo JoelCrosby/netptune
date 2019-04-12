@@ -9,10 +9,10 @@
       <form class="form-signin" [formGroup]="loginGroup" (ngSubmit)="login()">
 
         <div class="mat-typography">
-          <h1 class="text-center full-width">Log-in</h1>
+          <h3 class="text-center full-width">Sign in to continue</h3>
         </div>
 
-        <div class="form-spacer"></div>
+        <div class="mt-2"></div>
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Email</mat-label>
@@ -40,7 +40,7 @@
         <div class="form-spacer"></div>
 
         <div class="button-container">
-          <button mat-stroked-button color="primary" type="submit" class="full-width form-action-button">
+          <button mat-flat-button color="primary" type="submit" class="full-width form-action-button">
             Sign in
           </button>
 
