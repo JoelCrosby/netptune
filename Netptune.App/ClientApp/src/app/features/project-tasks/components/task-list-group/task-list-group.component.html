@@ -1,0 +1,23 @@
+<div class="container tasks-container">
+  <h4> {{ header }} </h4>
+  <div class="task-list">
+
+    <ng-container *ngIf="(tasks | async).length > 0; else elseTemplate">
+      <div class="task-drag" cdkDrag *ngFor="let taskItem of tasks | async">
+        <app-task-list-item [task]="taskItem">
+        </app-task-list-item>
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <div class="list-empty">
+        <div class="list-empty-mark">
+          <i class="far fa-compass"></i>
+          <h4 class="empty-text">
+            {{ emptyMessage }}
+          </h4>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

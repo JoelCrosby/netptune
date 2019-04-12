@@ -2,7 +2,6 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn, fadeIn } from '@app/core/animations/animations';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../core/core.state';
@@ -24,14 +23,27 @@ export class ProjectTasksComponent implements OnInit {
   completedTasks$ = this.store.select(selectTasksCompleted);
   backlogTasks$ = this.store.select(selectTasksBacklog);
 
-  completedStatus = ProjectTaskStatus.Complete;
-  inProgressStatus = ProjectTaskStatus.InProgress;
-  blockedStatus = ProjectTaskStatus.OnHold;
-  backlogStatus = ProjectTaskStatus.InActive;
-
-  Complete = ProjectTaskStatus.Complete;
-  InProgress = ProjectTaskStatus.InProgress;
-  Blocked = ProjectTaskStatus.OnHold;
+  taskGroups = [
+    {
+      groupName: 'my-tasks',
+      tasks: this.myTasks$,
+      header: 'My Tasks',
+      emptyMessage: 'You have no tasks. Click the button in the bottom right to create a task.',
+    },
+    {
+      groupName: 'completed-tasks',
+      tasks: this.completedTasks$,
+      header: 'Completed Tasks',
+      emptyMessage:
+        'You currently have no completed tasks. Mark a task as completed and it will show up here.',
+    },
+    {
+      groupName: 'backlog-tasks',
+      tasks: this.backlogTasks$,
+      header: 'Backlog',
+      emptyMessage: 'Your backlog is currently empty hurray!',
+    },
+  ];
 
   constructor(
     public snackBar: MatSnackBar,
