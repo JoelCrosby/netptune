@@ -7,6 +7,7 @@ import {
   ActionLoadProjectTasksSuccess,
   ProjectTasksActions,
   ProjectTasksActionTypes,
+  ActionCreateProjectTasksSuccess,
 } from './project-tasks.actions';
 import { ProjectTasksService } from './project-tasks.service';
 
@@ -23,6 +24,17 @@ export class ProjectTasksEffects {
     switchMap(action =>
       this.projectTasksService.get(1).pipe(
         map(tasks => new ActionLoadProjectTasksSuccess(tasks)),
+        catchError(error => of(new ActionLoadProjectTasksFail(error)))
+      )
+    )
+  );
+
+  @Effect()
+  createProjectTask$ = this.actions$.pipe(
+    ofType(ProjectTasksActionTypes.CreateProjectTask),
+    switchMap(action =>
+      this.projectTasksService.post(action.payload).pipe(
+        map(task => new ActionCreateProjectTasksSuccess(task)),
         catchError(error => of(new ActionLoadProjectTasksFail(error)))
       )
     )
