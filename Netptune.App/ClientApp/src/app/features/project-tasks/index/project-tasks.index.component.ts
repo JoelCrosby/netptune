@@ -11,6 +11,8 @@ import {
   selectTasksCompleted,
   selectTasksOwner,
 } from '../store/project-tasks.selectors';
+import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
+import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
 
 @Component({
   selector: 'app-project-tasks',
@@ -52,7 +54,15 @@ export class ProjectTasksComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.store.dispatch(new ActionLoadProjects());
     this.store.dispatch(new ActionLoadProjectTasks());
+  }
+
+  showAddModal() {
+    this.dialog
+      .open<TaskDialogComponent>(TaskDialogComponent)
+      .afterClosed()
+      .subscribe(() => {});
   }
 
   drop(event: CdkDragDrop<ProjectTaskDto[]>) {

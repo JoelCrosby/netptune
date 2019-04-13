@@ -3,6 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from '@app/core/models/project';
 import { ProjectTask } from '@app/core/models/project-task';
+import { AppState } from '@app/core/core.state';
+import { Store } from '@ngrx/store';
+import { selectProjects } from '@app/features/projects/store/projects.selectors';
 
 @Component({
   selector: 'app-task-dialog',
@@ -11,13 +14,14 @@ import { ProjectTask } from '@app/core/models/project-task';
 })
 export class TaskDialogComponent implements OnInit {
   task: ProjectTask;
-  projects: Project[];
+  projects$ = this.store.select(selectProjects);
 
   showDescriptionField = false;
 
   selectedTypeValue: number;
 
   constructor(
+    private store: Store<AppState>,
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectTask
   ) {
