@@ -4,7 +4,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn, fadeIn } from '@app/core/animations/animations';
 import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../core/core.state';
+import { AppState } from '@app/core/core.state';
 import { ActionLoadProjectTasks } from '../store/project-tasks.actions';
 import {
   selectTasksBacklog,
