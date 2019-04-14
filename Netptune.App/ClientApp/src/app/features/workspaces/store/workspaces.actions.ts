@@ -2,19 +2,12 @@ import { Action } from '@ngrx/store';
 import { Workspace } from '@app/core/models/workspace';
 
 export enum WorkspacesActionTypes {
-  SelectWorkspace = '[Workspaces] Select Workspace',
   LoadWorkspaces = '[Workspaces] Load Workspaces',
   LoadWorkspacesFail = '[Workspaces] Load Workspaces Fail',
   LoadWorkspacesSuccess = '[Workspaces] Load Workspaces Success ',
   CreateWorkspace = '[Workspaces] Create Workspace',
   CreateWorkspaceFail = '[Workspaces] Create Workspace Fail',
   CreateWorkspaceSuccesss = '[Workspaces] Create Workspace Success',
-}
-
-export class ActionSelectWorkspace implements Action {
-  readonly type = WorkspacesActionTypes.SelectWorkspace;
-
-  constructor(readonly payload: Workspace) {}
 }
 
 export class ActionLoadWorkspaces implements Action {
@@ -52,7 +45,6 @@ export class ActionCreateWorkspacesFail implements Action {
 }
 
 export type WorkspacesActions =
-  | ActionSelectWorkspace
   | ActionLoadWorkspaces
   | ActionLoadWorkspacesFail
   | ActionLoadWorkspacesSuccess

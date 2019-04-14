@@ -19,11 +19,6 @@ export const selectWorkspacesLoaded = createSelector(
   (state: WorkspacesState) => state.loaded
 );
 
-export const SelectCurrentWorkspace = createSelector(
-  selectWorkspacesFeature,
-  (state: WorkspacesState) => state.currentWorkspace
-);
-
 export interface State extends AppState {
   Workspaces: WorkspacesState;
 }

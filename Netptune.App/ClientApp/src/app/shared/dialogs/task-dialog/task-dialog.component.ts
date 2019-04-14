@@ -7,7 +7,7 @@ import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
 import { ActionCreateProjectTask } from '@app/features/project-tasks/store/project-tasks.actions';
 import { selectProjects } from '@app/features/projects/store/projects.selectors';
-import { SelectCurrentWorkspace } from '@app/features/workspaces/store/workspaces.selectors';
+import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 
 @Component({
   selector: 'app-task-dialog',

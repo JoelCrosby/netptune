@@ -8,7 +8,6 @@ import { CoreModule } from '@app/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SettingsModule } from './features/settings/settings.module';
-import { StateModule } from './state/state.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +18,6 @@ import { StateModule } from './state/state.module';
 
     // core & shared
     CoreModule,
-    StateModule,
     SharedModule,
 
     // app

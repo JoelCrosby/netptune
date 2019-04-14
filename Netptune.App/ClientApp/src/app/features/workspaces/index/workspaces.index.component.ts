@@ -7,7 +7,8 @@ import { MatDialog } from '@angular/material';
 import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
 import { Router } from '@angular/router';
 import { selectWorkspaces } from '../store/workspaces.selectors';
-import { ActionLoadWorkspaces, ActionSelectWorkspace } from '../store/workspaces.actions';
+import { ActionLoadWorkspaces } from '../store/workspaces.actions';
+import { ActionSelectWorkspace } from '@app/core/state/core.actions';
 
 @Component({
   selector: 'app-workspaces',

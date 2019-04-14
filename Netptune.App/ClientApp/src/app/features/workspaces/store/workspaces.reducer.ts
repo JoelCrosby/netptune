@@ -7,7 +7,6 @@ export interface WorkspacesState {
   loading: boolean;
   loaded: boolean;
   loadWorkspacesError?: any;
-  currentWorkspace?: Workspace;
   loadingCreateWorkspace: boolean;
 }
 
@@ -23,8 +22,6 @@ export function workspacesReducer(
   action: WorkspacesActions
 ): WorkspacesState {
   switch (action.type) {
-    case WorkspacesActionTypes.SelectWorkspace:
-      return { ...state, currentWorkspace: action.payload };
     case WorkspacesActionTypes.LoadWorkspaces:
       return { ...state, loading: true };
     case WorkspacesActionTypes.LoadWorkspacesFail:

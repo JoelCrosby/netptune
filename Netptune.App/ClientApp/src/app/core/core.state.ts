@@ -6,10 +6,12 @@ import { authReducer, AuthState } from './auth/store/auth.reducer';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
+import { CoreState, coreReducer } from './state/core.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   router: routerReducer,
+  core: coreReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = [initStateFromLocalStorage];
@@ -33,4 +35,5 @@ export const selectPageTitle = createSelector(
 export interface AppState {
   auth: AuthState;
   router: RouterReducerState<RouterStateUrl>;
+  core: CoreState;
 }
