@@ -5,7 +5,9 @@ import { Project } from '@app/core/models/project';
 import { ProjectTask } from '@app/core/models/project-task';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
+import { ActionCreateProjectTask } from '@app/features/project-tasks/store/project-tasks.actions';
 import { selectProjects } from '@app/features/projects/store/projects.selectors';
+import { SelectCurrentWorkspace } from '@app/features/workspaces/store/workspaces.selectors';
 
 @Component({
   selector: 'app-task-dialog',
@@ -50,7 +52,7 @@ export class TaskDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getResult() {
+  async getResult() {
     const taskResult = new ProjectTask();
 
     if (this.task) {
@@ -61,6 +63,17 @@ export class TaskDialogComponent implements OnInit {
     taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
     taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
 
-    this.dialogRef.close(taskResult);
+    const currentWorkspace = await this.store.select(SelectCurrentWorkspace).toPromise();
+
+    if (currentWorkspace && currentWorkspace.id) {
+      taskResult.workspace = currentWorkspace;
+      taskResult.workspaceId = currentWorkspace.id;
+    } else {
+      throw new Error('unable to create task with no selected workspace');
+    }
+
+    this.store.dispatch(new ActionCreateProjectTask(taskResult));
+
+    this.dialogRef.close();
   }
 }

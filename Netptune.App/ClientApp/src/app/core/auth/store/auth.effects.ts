@@ -58,7 +58,7 @@ export class AuthEffects {
       switchMap((action: ActionAuthTryLogin) =>
         this.authService.login(action.payload).pipe(
           map((userInfo: any) => new ActionAuthLoginSuccess(userInfo)),
-          tap(() => this.router.navigate(['/projects'])),
+          tap(() => this.router.navigate(['/workspaces'])),
           catchError(error => of(new ActionAuthLoginFail({ error })))
         )
       )
@@ -72,7 +72,7 @@ export class AuthEffects {
       switchMap((action: ActionAuthRegister) =>
         this.authService.register(action.payload).pipe(
           map((userInfo: any) => new ActionAuthRegisterSuccess(userInfo)),
-          tap(() => this.router.navigate(['/projects'])),
+          tap(() => this.router.navigate(['/workspaces'])),
           catchError(error => of(new ActionAuthRegisterFail({ error })))
         )
       )

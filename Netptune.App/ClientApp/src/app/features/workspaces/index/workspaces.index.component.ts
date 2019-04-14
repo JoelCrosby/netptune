@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { dropIn } from '@app/core/animations/animations';
 import { Workspace } from '@app/core/models/workspace';
+import { AppState } from '@app/core/core.state';
+import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material';
+import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
+import { Router } from '@angular/router';
+import { selectWorkspaces } from '../store/workspaces.selectors';
+import { ActionLoadWorkspaces, ActionSelectWorkspace } from '../store/workspaces.actions';
 
 @Component({
   selector: 'app-workspaces',
@@ -9,13 +16,24 @@ import { Workspace } from '@app/core/models/workspace';
   animations: [dropIn],
 })
 export class WorkspacesComponent implements OnInit {
-  workspaces$ = [];
+  workspaces$ = this.store.select(selectWorkspaces);
 
-  constructor() {}
+  constructor(private store: Store<AppState>, private dialog: MatDialog, private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.store.dispatch(new ActionLoadWorkspaces());
+  }
 
   trackById(index: number, workspace: Workspace) {
     return workspace.id;
+  }
+
+  openWorkspaceDialog() {
+    this.dialog.open<WorkspaceDialogComponent>(WorkspaceDialogComponent);
+  }
+
+  goToProjectsClicked(workspace: Workspace) {
+    this.store.dispatch(new ActionSelectWorkspace(workspace));
+    this.router.navigate(['/projects']);
   }
 }

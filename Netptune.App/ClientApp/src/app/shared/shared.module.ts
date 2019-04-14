@@ -57,6 +57,7 @@ import {
   MatTooltipModule,
   MatTreeModule,
 } from '@angular/material';
+import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-dialog.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {
     TaskDetailDialogComponent,
     InviteDialogComponent,
     BoardPostDialogComponent,
+    WorkspaceDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -168,6 +170,7 @@ import {
     TaskDetailDialogComponent,
     InviteDialogComponent,
     BoardPostDialogComponent,
+    WorkspaceDialogComponent,
   ],
 })
 export class SharedModule {}

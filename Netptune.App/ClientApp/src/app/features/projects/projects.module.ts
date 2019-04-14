@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared/shared.module';
-import { StoreModule } from '@ngrx/store';
 import { ProjectsComponent } from './index/projects.index.component';
-import { projectsReducer } from './store/projects.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { ProjectsEffects } from './store/projects.effects';
 import { ProjectsRoutingModule } from './projects-routing.module';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { projectsReducer } from './store/projects.reducer';
+import { ProjectsEffects } from './store/projects.effects';
+import { ProjectsService } from './store/projects.service';
 
 @NgModule({
   declarations: [ProjectsComponent],
@@ -15,5 +16,6 @@ import { ProjectsRoutingModule } from './projects-routing.module';
     EffectsModule.forFeature([ProjectsEffects]),
     ProjectsRoutingModule,
   ],
+  providers: [ProjectsService],
 })
 export class ProjectsModule {}

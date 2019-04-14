@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { ActionAuthLoginFail } from '../../../core/auth/store/auth.actions';
+import { of, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
   ActionLoadProjectsSuccess,
   ProjectsActions,
   ProjectsActionTypes,
+  ActionLoadProjectsFail,
 } from './projects.actions';
 import { ProjectsService } from './projects.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '@app/core/core.state';
+import { SelectCurrentWorkspace } from '@app/features/workspaces/store/workspaces.selectors';
 
 @Injectable()
 export class ProjectsEffects {
   constructor(
     private actions$: Actions<ProjectsActions>,
-    private projectsService: ProjectsService
+    private projectsService: ProjectsService,
+    private store: Store<AppState>
   ) {}
 
   @Effect()
   loadProjects$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.LoadProjects),
-    switchMap(action =>
-      this.projectsService.get(1).pipe(
+    withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+    switchMap(([action, workspace]) =>
+      this.projectsService.get(workspace).pipe(
         map(projects => new ActionLoadProjectsSuccess(projects)),
-        catchError(error => of(new ActionAuthLoginFail(error)))
+        catchError(error => of(new ActionLoadProjectsFail(error)))
       )
     )
   );

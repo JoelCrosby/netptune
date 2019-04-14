@@ -58,8 +58,8 @@ export class LoginComponent implements OnDestroy {
 
     this.loginGroup.disable();
 
-    if (!username || !password) {
-      passwordFormControl && passwordFormControl.reset();
+    if ((!username || !password) && passwordFormControl) {
+      passwordFormControl.reset();
       this.loginGroup.enable();
       return;
     }
