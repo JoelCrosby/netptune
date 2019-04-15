@@ -9,7 +9,6 @@ import { selectProjects } from '@app/features/projects/store/projects.selectors'
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { ActionSelectProject } from '@app/core/state/core.actions';
-import { Project } from '@app/core/models/project';
 
 @Component({
   selector: 'app-task-dialog',
