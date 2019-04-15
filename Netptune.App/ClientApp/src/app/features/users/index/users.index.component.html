@@ -11,10 +11,10 @@
 
     <div class="user-card-group">
 
-      <mat-card *ngFor="let user of users$; let i=index; trackBy:trackById;">
+      <mat-card *ngFor="let user of users$ | async; let i=index; trackBy:trackById;">
         <mat-card-header>
           <div mat-card-avatar class="far fa-user"></div>
-          <mat-card-title>{{ userService.getDisplayName(user) }}</mat-card-title>
+          <mat-card-title>{{ toDisplay(user) }}</mat-card-title>
           <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>

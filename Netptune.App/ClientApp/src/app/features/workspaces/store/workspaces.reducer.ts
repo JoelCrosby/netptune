@@ -57,4 +57,4 @@ const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelecto
 export const selectWorkspaceIds = selectIds;
 export const selectWorkspaceEntities = selectEntities;
 export const selectAllWorkspaces = selectAll;
-export const selectPWorkspacesTotal = selectTotal;
+export const selectWorkspacesTotal = selectTotal;
