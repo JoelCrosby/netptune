@@ -24,7 +24,7 @@ namespace Netptune.Api.Controllers
             _userManager = userManager;
         }
 
-        // GET: api/Tasks
+        // GET: api/ProjectTasks
         [HttpGet]
         public async Task<IActionResult> GetTasks(int workspaceId)
         {
@@ -32,7 +32,7 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // GET: api/Tasks/5
+        // GET: api/ProjectTasks/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTask([FromRoute] int id)
         {
@@ -40,7 +40,7 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // PUT: api/Tasks/5
+        // PUT: api/ProjectTasks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
         {
@@ -48,7 +48,7 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // POST: api/Tasks
+        // POST: api/ProjectTasks
         [HttpPost]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
@@ -57,7 +57,7 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // DELETE: api/Tasks/5
+        // DELETE: api/ProjectTasks/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
@@ -65,7 +65,7 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // GET: api/Tasks/GetProjectTaskCount/5
+        // GET: api/ProjectTasks/GetProjectTaskCount/5
         [HttpGet]
         [Route("GetProjectTaskCount")]
         public async Task<IActionResult> GetProjectTaskCount(int projectId)
