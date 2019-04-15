@@ -3,7 +3,7 @@
   <div class="task-list">
 
     <ng-container *ngIf="(tasks | async).length > 0; else elseTemplate">
-      <div class="task-drag" cdkDrag *ngFor="let taskItem of tasks | async">
+      <div class="task-drag" *ngFor="let taskItem of tasks | async">
         <app-task-list-item [task]="taskItem">
         </app-task-list-item>
       </div>
