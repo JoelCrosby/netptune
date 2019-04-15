@@ -1,9 +1,9 @@
 import { WorkspacesActions, WorkspacesActionTypes } from './workspaces.actions';
 import { Workspace } from '@app/core/models/workspace';
-import { Maybe } from '@app/core/types/nothing';
+import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export interface WorkspacesState {
-  Workspaces: Workspace[];
+  Workspaces: Workspaces;
   loading: boolean;
   loaded: boolean;
   loadWorkspacesError?: any;
@@ -11,11 +11,15 @@ export interface WorkspacesState {
 }
 
 export const initialState: WorkspacesState = {
-  Workspaces: [],
+  Workspaces: { ids: [], entities: {} },
   loading: false,
   loaded: false,
   loadingCreateWorkspace: false,
 };
+
+export interface Workspaces extends EntityState<Workspace> {}
+
+export const adapter: EntityAdapter<Workspace> = createEntityAdapter<Workspace>();
 
 export function workspacesReducer(
   state = initialState,
@@ -27,7 +31,12 @@ export function workspacesReducer(
     case WorkspacesActionTypes.LoadWorkspacesFail:
       return { ...state, loading: false, loadWorkspacesError: action.payload };
     case WorkspacesActionTypes.LoadWorkspacesSuccess:
-      return { ...state, loading: false, loaded: true, Workspaces: action.payload };
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        Workspaces: adapter.addAll(action.payload, state.Workspaces),
+      };
     case WorkspacesActionTypes.CreateWorkspace:
       return { ...state, loadingCreateWorkspace: true };
     case WorkspacesActionTypes.CreateWorkspaceFail:
@@ -36,9 +45,16 @@ export function workspacesReducer(
       return {
         ...state,
         loadingCreateWorkspace: false,
-        Workspaces: [...state.Workspaces, action.payload],
+        Workspaces: adapter.addOne(action.payload, state.Workspaces),
       };
     default:
       return state;
   }
 }
+
+const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
+
+export const selectWorkspaceIds = selectIds;
+export const selectWorkspaceEntities = selectEntities;
+export const selectAllWorkspaces = selectAll;
+export const selectPWorkspacesTotal = selectTotal;

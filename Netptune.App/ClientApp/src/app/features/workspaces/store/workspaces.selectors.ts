@@ -1,12 +1,17 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { WorkspacesState } from './workspaces.reducer';
+import { WorkspacesState, selectAllWorkspaces } from './workspaces.reducer';
 import { AppState } from '@app/core/core.state';
 
 export const selectWorkspacesFeature = createFeatureSelector<WorkspacesState>('workspaces');
 
-export const selectWorkspaces = createSelector(
+export const selectWorkspaceEntities = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.Workspaces
+);
+
+export const selectWorkspaces = createSelector(
+  selectWorkspaceEntities,
+  selectAllWorkspaces
 );
 
 export const selectWorkspacesLoading = createSelector(
