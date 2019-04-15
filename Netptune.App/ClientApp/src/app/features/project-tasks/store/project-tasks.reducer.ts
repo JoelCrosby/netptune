@@ -2,6 +2,7 @@ import { ProjectTasksActions, ProjectTasksActionTypes } from './project-tasks.ac
 import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { ProjectTask } from '@app/core/models/project-task';
 import { EntityAdapter, createEntityAdapter, EntityState } from '@ngrx/entity';
+import { ActionState, DefaultActionState } from '@app/core/types/action-state';
 
 export interface ProjectTasksState {
   tasks: ProjectTasks;
@@ -11,6 +12,8 @@ export interface ProjectTasksState {
   loadingNewTask: boolean;
   createNewTaskError?: boolean;
   createdTask?: ProjectTask;
+  deleteState: ActionState;
+  editState: ActionState;
 }
 
 export const initialState: ProjectTasksState = {
@@ -18,6 +21,8 @@ export const initialState: ProjectTasksState = {
   loading: false,
   loaded: false,
   loadingNewTask: false,
+  deleteState: DefaultActionState,
+  editState: DefaultActionState,
 };
 
 export interface ProjectTasks extends EntityState<ProjectTaskDto> {}
@@ -45,7 +50,32 @@ export function projectTasksReducer(
     case ProjectTasksActionTypes.CreateProjectTaskFail:
       return { ...state, loadingNewTask: false, createNewTaskError: action.payload };
     case ProjectTasksActionTypes.CreateProjectTaskSuccess:
-      return { ...state, loadingNewTask: false, createdTask: action.payload };
+      return {
+        ...state,
+        loadingNewTask: false,
+        createdTask: action.payload,
+        tasks: adapter.addOne(action.payload, state.tasks),
+      };
+    case ProjectTasksActionTypes.EditProjectTask:
+      return { ...state, editState: { loading: true } };
+    case ProjectTasksActionTypes.EditProjectTaskFail:
+      return { ...state, editState: { loading: false, error: action.payload } };
+    case ProjectTasksActionTypes.EditProjectTaskSuccess:
+      return {
+        ...state,
+        editState: { loading: false },
+        tasks: adapter.upsertOne(action.payload, state.tasks),
+      };
+    case ProjectTasksActionTypes.DeleteProjectTask:
+      return { ...state, deleteState: { loading: true } };
+    case ProjectTasksActionTypes.DeleteProjectTaskFail:
+      return { ...state, deleteState: { loading: false, error: action.payload } };
+    case ProjectTasksActionTypes.DeleteProjectTaskSuccess:
+      return {
+        ...state,
+        deleteState: { loading: false },
+        tasks: adapter.removeOne(action.payload, state.tasks),
+      };
     default:
       return state;
   }

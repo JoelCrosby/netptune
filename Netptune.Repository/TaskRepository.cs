@@ -22,6 +22,39 @@ namespace Netptune.Repository
             _userManager = userManager;
         }
 
+        public async Task<RepoResult<TaskViewModel>> GetTaskAsync(int taskId)
+        {
+            var tasks = _context.ProjectTasks
+                .Where(x => x.Id == taskId)
+                .OrderBy(x => x.SortOrder)
+                .Include(x => x.Assignee)
+                .Include(x => x.Project)
+                .Include(x => x.Owner);
+
+            var result = await tasks
+                .Select(r => new TaskViewModel()
+                {
+                    Id = r.Id,
+                    AssigneeId = r.Assignee.Id,
+                    Name = r.Name,
+                    Description = r.Description,
+                    Status = r.Status,
+                    SortOrder = r.SortOrder,
+                    ProjectId = r.ProjectId,
+                    WorkspaceId = r.WorkspaceId,
+                    CreatedAt = r.CreatedAt,
+                    UpdatedAt = r.UpdatedAt,
+                    AssigneeUsername = r.Assignee.GetDisplayName(),
+                    AssigneePictureUrl = r.Assignee.GetDisplayName(),
+                    OwnerUsername = r.Owner.GetDisplayName(),
+                    ProjectName = r.Project.Name
+                }).FirstOrDefaultAsync();
+
+            if (result == null) return RepoResult<TaskViewModel>.NotFound();
+
+            return RepoResult<TaskViewModel>.Ok(result);
+        }
+
         public async Task<RepoResult<IEnumerable<TaskViewModel>>> GetTasksAsync(int workspaceId)
         {
             var tasks = _context.ProjectTasks
@@ -55,7 +88,7 @@ namespace Netptune.Repository
             return RepoResult<IEnumerable<TaskViewModel>>.Ok(result);
         }
 
-        public async Task<RepoResult<ProjectTask>>GetTask(int id)
+        public async Task<RepoResult<ProjectTask>> GetTask(int id)
         {
 
             var task = await _context.ProjectTasks.FindAsync(id);
@@ -68,16 +101,16 @@ namespace Netptune.Repository
             return RepoResult<ProjectTask>.Ok(task);
         }
 
-        public async Task<RepoResult<ProjectTask>> UpdateTask(ProjectTask projectTask)
+        public async Task<RepoResult<TaskViewModel>> UpdateTask(ProjectTask projectTask)
         {
             if (projectTask == null)
             {
-                return RepoResult<ProjectTask>.BadRequest();
+                return RepoResult<TaskViewModel>.BadRequest();
             }
 
             var result = await _context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == projectTask.Id);
 
-            if (result == null) return RepoResult<ProjectTask>.NotFound();
+            if (result == null) return RepoResult<TaskViewModel>.NotFound();
 
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
@@ -88,15 +121,16 @@ namespace Netptune.Repository
 
             await _context.SaveChangesAsync();
 
+            var response = await GetTaskAsync(result.Id);
 
-            return RepoResult<ProjectTask>.Ok(result);
+            return RepoResult<TaskViewModel>.Ok(response.Result);
         }
 
-        public async Task<RepoResult<ProjectTask>> AddTask(ProjectTask projectTask, AppUser user)
+        public async Task<RepoResult<TaskViewModel>> AddTask(ProjectTask projectTask, AppUser user)
         {
             if (projectTask.ProjectId == null)
             {
-                return RepoResult<ProjectTask>
+                return RepoResult<TaskViewModel>
                     .BadRequest("Could not determine the project for task.");
             }
 
@@ -116,7 +150,7 @@ namespace Netptune.Repository
 
             if (!relational.Any())
             {
-                return RepoResult<ProjectTask>
+                return RepoResult<TaskViewModel>
                     .BadRequest("Could not find related project or workspace.");
             }
 
@@ -129,23 +163,23 @@ namespace Netptune.Repository
             var result = await _context.ProjectTasks.AddAsync(projectTask);
             await _context.SaveChangesAsync();
 
+            var response = await GetTaskAsync(result.Entity.Id);
 
-            return RepoResult<ProjectTask>.Ok(result.Entity);
+            return RepoResult<TaskViewModel>.Ok(response.Result);
         }
 
-        public async Task<RepoResult<ProjectTask>> DeleteTask(int id)
+        public async Task<RepoResult<int>> DeleteTask(int id)
         {
             var task = await _context.ProjectTasks.FindAsync(id);
             if (task == null)
             {
-                return RepoResult<ProjectTask>.NotFound();
+                return RepoResult<int>.NotFound();
             }
 
-            var result = _context.ProjectTasks.Remove(task);
+            _context.ProjectTasks.Remove(task);
             await _context.SaveChangesAsync();
 
-
-            return RepoResult<ProjectTask>.Ok(result.Entity);
+            return RepoResult<int>.Ok(id);
         }
 
         public async Task<RepoResult<ProjectTaskCounts>> GetProjectTaskCount(int projectId)

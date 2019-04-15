@@ -9,6 +9,12 @@ export enum ProjectTasksActionTypes {
   CreateProjectTask = '[ProjectTasks] Create Project Task',
   CreateProjectTaskFail = '[ProjectTasks] Create Project Task Fail',
   CreateProjectTaskSuccess = '[ProjectTasks] Create Project Task Success',
+  EditProjectTask = '[ProjectTasks] Edit Project Task',
+  EditProjectTaskFail = '[ProjectTasks] Edit Project Task Fail',
+  EditProjectTaskSuccess = '[ProjectTasks] Edit Project Task Success',
+  DeleteProjectTask = '[ProjectTasks] Delete Project Task',
+  DeleteProjectTaskFail = '[ProjectTasks] Delete Project Task Fail',
+  DeleteProjectTaskSuccess = '[ProjectTasks] Delete Project Task Success',
 }
 
 export class ActionLoadProjectTasks implements Action {
@@ -36,11 +42,47 @@ export class ActionCreateProjectTask implements Action {
 export class ActionCreateProjectTasksSuccess implements Action {
   readonly type = ProjectTasksActionTypes.CreateProjectTaskSuccess;
 
-  constructor(readonly payload: ProjectTask) {}
+  constructor(readonly payload: ProjectTaskDto) {}
 }
 
 export class ActionCreateProjectTasksFail implements Action {
   readonly type = ProjectTasksActionTypes.CreateProjectTaskFail;
+
+  constructor(readonly payload: any) {}
+}
+
+export class ActionEditProjectTask implements Action {
+  readonly type = ProjectTasksActionTypes.EditProjectTask;
+
+  constructor(readonly payload: ProjectTaskDto) {}
+}
+
+export class ActionEditProjectTasksSuccess implements Action {
+  readonly type = ProjectTasksActionTypes.EditProjectTaskSuccess;
+
+  constructor(readonly payload: ProjectTaskDto) {}
+}
+
+export class ActionEditProjectTasksFail implements Action {
+  readonly type = ProjectTasksActionTypes.EditProjectTaskFail;
+
+  constructor(readonly payload: any) {}
+}
+
+export class ActionDeleteProjectTask implements Action {
+  readonly type = ProjectTasksActionTypes.DeleteProjectTask;
+
+  constructor(readonly payload: ProjectTaskDto) {}
+}
+
+export class ActionDeleteProjectTasksSuccess implements Action {
+  readonly type = ProjectTasksActionTypes.DeleteProjectTaskSuccess;
+
+  constructor(readonly payload: number) {}
+}
+
+export class ActionDeleteProjectTasksFail implements Action {
+  readonly type = ProjectTasksActionTypes.DeleteProjectTaskFail;
 
   constructor(readonly payload: any) {}
 }
@@ -51,4 +93,10 @@ export type ProjectTasksActions =
   | ActionLoadProjectTasksSuccess
   | ActionCreateProjectTask
   | ActionCreateProjectTasksSuccess
-  | ActionCreateProjectTasksFail;
+  | ActionCreateProjectTasksFail
+  | ActionEditProjectTask
+  | ActionEditProjectTasksFail
+  | ActionEditProjectTasksSuccess
+  | ActionDeleteProjectTask
+  | ActionDeleteProjectTasksFail
+  | ActionDeleteProjectTasksSuccess;

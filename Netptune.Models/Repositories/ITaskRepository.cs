@@ -11,11 +11,11 @@ namespace Netptune.Models.Repositories
 
         Task<RepoResult<ProjectTask>> GetTask(int id);
 
-        Task<RepoResult<ProjectTask>> UpdateTask(ProjectTask projectTask);
+        Task<RepoResult<TaskViewModel>> UpdateTask(ProjectTask projectTask);
 
-        Task<RepoResult<ProjectTask>> AddTask(ProjectTask projectTask, AppUser user);
+        Task<RepoResult<TaskViewModel>> AddTask(ProjectTask projectTask, AppUser user);
 
-        Task<RepoResult<ProjectTask>> DeleteTask(int id);
+        Task<RepoResult<TaskViewModel>> DeleteTask(int id);
 
         Task<RepoResult<ProjectTaskCounts>> GetProjectTaskCount(int projectId);
     }

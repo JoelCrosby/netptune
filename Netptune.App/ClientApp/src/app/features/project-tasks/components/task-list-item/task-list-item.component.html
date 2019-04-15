@@ -21,11 +21,11 @@
         </button>
         <mat-menu #menu="matMenu">
           <ng-template matMenuContent>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="editClicked()">
               <mat-icon>edit</mat-icon>
               <span>Edit</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="deleteClicked()">
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>

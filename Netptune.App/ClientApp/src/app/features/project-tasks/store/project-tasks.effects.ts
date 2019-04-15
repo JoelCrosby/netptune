@@ -9,11 +9,16 @@ import {
   ProjectTasksActionTypes,
   ActionCreateProjectTasksSuccess as ActionCreateProjectTaskSuccess,
   ActionCreateProjectTasksFail as ActionCreateProjectTaskFail,
+  ActionEditProjectTasksSuccess,
+  ActionEditProjectTasksFail,
+  ActionDeleteProjectTasksSuccess,
+  ActionDeleteProjectTasksFail,
 } from './project-tasks.actions';
 import { ProjectTasksService } from './project-tasks.service';
 import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -42,6 +47,28 @@ export class ProjectTasksEffects {
       this.projectTasksService.post(action.payload).pipe(
         map(task => new ActionCreateProjectTaskSuccess(task)),
         catchError(error => of(new ActionCreateProjectTaskFail(error)))
+      )
+    )
+  );
+
+  @Effect()
+  editProjectTask$ = this.actions$.pipe(
+    ofType(ProjectTasksActionTypes.EditProjectTask),
+    switchMap(action =>
+      this.projectTasksService.put(action.payload).pipe(
+        map(task => new ActionEditProjectTasksSuccess(task)),
+        catchError(error => of(new ActionEditProjectTasksFail(error)))
+      )
+    )
+  );
+
+  @Effect()
+  deleteProjectTask$ = this.actions$.pipe(
+    ofType(ProjectTasksActionTypes.DeleteProjectTask),
+    switchMap(action =>
+      this.projectTasksService.delete(action.payload).pipe(
+        map(task => new ActionDeleteProjectTasksSuccess(task)),
+        catchError(error => of(new ActionDeleteProjectTasksFail(error)))
       )
     )
   );
