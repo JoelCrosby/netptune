@@ -1,8 +1,10 @@
 import { Action } from '@ngrx/store';
 import { Workspace } from '@app/core/models/workspace';
+import { Project } from '../models/project';
 
 export enum CoreActionTypes {
   SelectWorkspace = '[Core] Select Workspace',
+  SelectProject = '[Core] Select Project',
 }
 
 export class ActionSelectWorkspace implements Action {
@@ -11,4 +13,10 @@ export class ActionSelectWorkspace implements Action {
   constructor(readonly payload: Workspace) {}
 }
 
-export type CoreActions = ActionSelectWorkspace;
+export class ActionSelectProject implements Action {
+  readonly type = CoreActionTypes.SelectProject;
+
+  constructor(readonly payload: Project) {}
+}
+
+export type CoreActions = ActionSelectWorkspace | ActionSelectProject;

@@ -15,6 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from '@env/environment';
 import { httpInterceptorProviders } from './http-interceptors';
+import { CoreEffects } from './state/core.effects';
 
 @NgModule({
   imports: [
@@ -23,7 +24,7 @@ import { httpInterceptorProviders } from './http-interceptors';
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreRouterConnectingModule.forRoot(),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, CoreEffects]),
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({

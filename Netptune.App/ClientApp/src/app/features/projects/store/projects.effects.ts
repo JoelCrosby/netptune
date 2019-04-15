@@ -7,6 +7,8 @@ import {
   ProjectsActions,
   ProjectsActionTypes,
   ActionLoadProjectsFail,
+  ActionCreateProjectFail,
+  ActionCreateProjectSuccess,
 } from './projects.actions';
 import { ProjectsService } from './projects.service';
 import { Store } from '@ngrx/store';
@@ -29,6 +31,17 @@ export class ProjectsEffects {
       this.projectsService.get(workspace).pipe(
         map(projects => new ActionLoadProjectsSuccess(projects)),
         catchError(error => of(new ActionLoadProjectsFail(error)))
+      )
+    )
+  );
+
+  @Effect()
+  createProject$ = this.actions$.pipe(
+    ofType(ProjectsActionTypes.CreateProject),
+    switchMap(action =>
+      this.projectsService.post(action.payload).pipe(
+        map(project => new ActionCreateProjectSuccess(project)),
+        catchError(error => of(new ActionCreateProjectFail(error)))
       )
     )
   );

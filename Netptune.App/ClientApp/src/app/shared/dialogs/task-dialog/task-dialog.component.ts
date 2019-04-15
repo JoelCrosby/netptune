@@ -1,22 +1,27 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Project } from '@app/core/models/project';
-import { ProjectTask } from '@app/core/models/project-task';
 import { AppState } from '@app/core/core.state';
-import { Store } from '@ngrx/store';
+import { ProjectTask } from '@app/core/models/project-task';
+import { SelectCurrentWorkspace, SelectCurrentProject } from '@app/core/state/core.selectors';
 import { ActionCreateProjectTask } from '@app/features/project-tasks/store/project-tasks.actions';
 import { selectProjects } from '@app/features/projects/store/projects.selectors';
-import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { ActionSelectProject } from '@app/core/state/core.actions';
+import { Project } from '@app/core/models/project';
 
 @Component({
   selector: 'app-task-dialog',
   templateUrl: './task-dialog.component.html',
   styleUrls: ['./task-dialog.component.scss'],
 })
-export class TaskDialogComponent implements OnInit {
+export class TaskDialogComponent implements OnInit, OnDestroy {
   task: ProjectTask;
   projects$ = this.store.select(selectProjects);
+  currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
+  currentProject$ = this.store.select(SelectCurrentProject);
+  subs = new Subscription();
 
   showDescriptionField = false;
 
@@ -38,42 +43,56 @@ export class TaskDialogComponent implements OnInit {
     descriptionFormControl: new FormControl(),
   });
 
-  async ngOnInit() {
+  ngOnInit() {
     if (this.task) {
-      this.projectFromGroup.controls['nameFormControl'].setValue(this.task.name);
-      this.projectFromGroup.controls['projectFormControl'].setValue(this.task.projectId);
-      this.projectFromGroup.controls['descriptionFormControl'].setValue(this.task.description);
+      this.projectFromGroup.get('nameFormControl').setValue(this.task.name);
+      this.projectFromGroup.get('projectFormControl').setValue(this.task.projectId);
+      this.projectFromGroup.get('descriptionFormControl').setValue(this.task.description);
     } else {
       this.projectFromGroup.reset();
+      this.subs.add(
+        this.currentProject$.subscribe(project => {
+          this.projectFromGroup.get('projectFormControl').setValue(project);
+        })
+      );
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   close(): void {
     this.dialogRef.close();
   }
 
-  async getResult() {
-    const taskResult = new ProjectTask();
+  selectProject() {
+    const project = this.projectFromGroup.controls['projectFormControl'].value;
+    this.store.dispatch(new ActionSelectProject(project));
+  }
 
-    if (this.task) {
-      Object.assign(taskResult, this.task);
-    }
+  getResult() {
+    this.subs.add(
+      this.currentWorkspace$.subscribe(workspace => {
+        const taskResult = new ProjectTask();
 
-    taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
-    taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
-    taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
+        if (this.task) {
+          Object.assign(taskResult, this.task);
+        }
 
-    const currentWorkspace = await this.store.select(SelectCurrentWorkspace).toPromise();
+        taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
+        taskResult.project = this.projectFromGroup.controls['projectFormControl'].value;
+        taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
 
-    if (currentWorkspace && currentWorkspace.id) {
-      taskResult.workspace = currentWorkspace;
-      taskResult.workspaceId = currentWorkspace.id;
-    } else {
-      throw new Error('unable to create task with no selected workspace');
-    }
+        taskResult.workspace = workspace;
+        taskResult.workspaceId = workspace.id;
 
-    this.store.dispatch(new ActionCreateProjectTask(taskResult));
+        taskResult.projectId = taskResult.project.id;
 
-    this.dialogRef.close();
+        this.store.dispatch(new ActionCreateProjectTask(taskResult));
+
+        this.dialogRef.close();
+      })
+    );
   }
 }

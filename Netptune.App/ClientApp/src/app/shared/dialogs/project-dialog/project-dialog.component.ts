@@ -1,18 +1,25 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { AppState } from '@app/core/core.state';
 import { Project } from '@app/core/models/project';
+import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
+import { ActionCreateProject } from '@app/features/projects/store/projects.actions';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-project-dialog',
   templateUrl: './project-dialog.component.html',
   styleUrls: ['./project-dialog.component.scss'],
 })
-export class ProjectDialogComponent implements OnInit {
-  public project: Project;
-  public selectedTypeValue: number;
+export class ProjectDialogComponent implements OnInit, OnDestroy {
+  project: Project;
+  currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
+  subs = new Subscription();
 
   constructor(
+    private store: Store<AppState>,
     public dialogRef: MatDialogRef<ProjectDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Project
   ) {
@@ -25,6 +32,7 @@ export class ProjectDialogComponent implements OnInit {
     nameFormControl: new FormControl('', [Validators.required, Validators.minLength(4)]),
     repositoryUrlFormControl: new FormControl(),
     descriptionFormControl: new FormControl(),
+    workspaceFormControl: new FormControl(),
   });
 
   ngOnInit() {
@@ -39,13 +47,32 @@ export class ProjectDialogComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   close(): void {
     this.dialogRef.close();
   }
 
   getResult() {
-    const projectResult = new Project();
+    this.subs = this.currentWorkspace$.subscribe(workspace => {
+      const projectResult = new Project();
 
-    this.dialogRef.close(projectResult);
+      if (this.project) {
+        projectResult.id = this.project.id;
+      }
+
+      projectResult.name = this.projectFromGroup.get('nameFormControl').value;
+      projectResult.description = this.projectFromGroup.get('descriptionFormControl').value;
+      projectResult.repositoryUrl = this.projectFromGroup.get('repositoryUrlFormControl').value;
+
+      projectResult.workspace = workspace;
+      projectResult.workspaceId = workspace.id;
+
+      this.store.dispatch(new ActionCreateProject(projectResult));
+
+      this.dialogRef.close();
+    });
   }
 }

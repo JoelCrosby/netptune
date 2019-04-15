@@ -7,3 +7,8 @@ export const SelectCurrentWorkspace = createSelector(
   selectCoreFeature,
   (state: CoreState) => state.currentWorksapce
 );
+
+export const SelectCurrentProject = createSelector(
+  selectCoreFeature,
+  (state: CoreState) => state.currentProject
+);

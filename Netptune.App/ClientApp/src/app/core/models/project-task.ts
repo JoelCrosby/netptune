@@ -5,17 +5,16 @@ import { Project } from './project';
 import { Workspace } from './workspace';
 
 export class ProjectTask extends Basemodel {
+  public name: string;
+  public description: string;
+  public status: ProjectTaskStatus;
 
-    public name: string;
-    public description: string;
-    public status: ProjectTaskStatus;
+  public project: Project;
+  public projectId: number;
 
-    public project: Project;
-    public projectId: number;
+  public workspace: Workspace;
+  public workspaceId: number;
 
-    public workspace: Workspace;
-    public workspaceId: number;
-
-    public assignee: AppUser;
-    public assigneeId: string;
+  public assignee: AppUser;
+  public assigneeId: string;
 }

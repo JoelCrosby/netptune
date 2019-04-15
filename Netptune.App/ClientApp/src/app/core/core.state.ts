@@ -22,6 +22,7 @@ if (!environment.production) {
 }
 
 export const selectAuthState = createFeatureSelector<AppState, AuthState>('auth');
+export const selectCoreState = createFeatureSelector<AppState, CoreState>('core');
 
 export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>(
   'router'

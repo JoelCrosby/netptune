@@ -9,7 +9,7 @@
   $background: map-get($theme, background);
 
   .task-card {
-    background-color: mat-color($background, background);
+    background-color: mat-color($background, card);
   }
 
 }

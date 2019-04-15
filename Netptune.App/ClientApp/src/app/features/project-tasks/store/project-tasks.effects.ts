@@ -1,28 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   ActionLoadProjectTasksFail,
   ActionLoadProjectTasksSuccess,
   ProjectTasksActions,
   ProjectTasksActionTypes,
-  ActionCreateProjectTasksSuccess,
+  ActionCreateProjectTasksSuccess as ActionCreateProjectTaskSuccess,
+  ActionCreateProjectTasksFail as ActionCreateProjectTaskFail,
 } from './project-tasks.actions';
 import { ProjectTasksService } from './project-tasks.service';
+import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
+import { AppState } from '@app/core/core.state';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class ProjectTasksEffects {
   constructor(
     private actions$: Actions<ProjectTasksActions>,
-    private projectTasksService: ProjectTasksService
+    private projectTasksService: ProjectTasksService,
+    private store: Store<AppState>
   ) {}
 
   @Effect()
   loadProjectTasks$ = this.actions$.pipe(
     ofType(ProjectTasksActionTypes.LoadProjectTasks),
-    switchMap(action =>
-      this.projectTasksService.get(1).pipe(
+    withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+    switchMap(([action, workspace]) =>
+      this.projectTasksService.get(workspace).pipe(
         map(tasks => new ActionLoadProjectTasksSuccess(tasks)),
         catchError(error => of(new ActionLoadProjectTasksFail(error)))
       )
@@ -34,8 +40,8 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.CreateProjectTask),
     switchMap(action =>
       this.projectTasksService.post(action.payload).pipe(
-        map(task => new ActionCreateProjectTasksSuccess(task)),
-        catchError(error => of(new ActionLoadProjectTasksFail(error)))
+        map(task => new ActionCreateProjectTaskSuccess(task)),
+        catchError(error => of(new ActionCreateProjectTaskFail(error)))
       )
     )
   );

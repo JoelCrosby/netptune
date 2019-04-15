@@ -7,6 +7,9 @@ import { Project } from '@app/core/models/project';
 import { Store } from '@ngrx/store';
 import { ActionLoadProjects } from '../store/projects.actions';
 import { selectProjects } from '../store/projects.selectors';
+import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
+import { AppUser } from '@app/core/models/appuser';
+import { UsernameConverter } from '@app/core/models/converters/username.converter';
 
 @Component({
   selector: 'app-projects',
@@ -29,5 +32,13 @@ export class ProjectsComponent implements OnInit {
 
   trackById(index: number, project: Project) {
     return project.id;
+  }
+
+  showAddModal() {
+    this.dialog.open<ProjectDialogComponent>(ProjectDialogComponent);
+  }
+
+  toDisplay(user: AppUser) {
+    return UsernameConverter.toDisplay(user);
   }
 }
