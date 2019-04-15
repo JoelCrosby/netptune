@@ -7,6 +7,7 @@ import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
 import { CoreState, coreReducer } from './state/core.reducer';
+import { clearState } from './meta-reducers/clear-state';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
@@ -14,7 +15,7 @@ export const reducers: ActionReducerMap<AppState> = {
   core: coreReducer,
 };
 
-export const metaReducers: MetaReducer<AppState>[] = [initStateFromLocalStorage];
+export const metaReducers: MetaReducer<AppState>[] = [initStateFromLocalStorage, clearState];
 
 if (!environment.production) {
   metaReducers.unshift(storeFreeze);
