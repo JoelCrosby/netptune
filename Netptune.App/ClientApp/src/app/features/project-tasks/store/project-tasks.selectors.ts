@@ -1,15 +1,17 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ProjectTasksState } from './project-tasks.reducer';
-import { pipe } from 'rxjs';
-import { map, filter, tap, switchMap, flatMap } from 'rxjs/operators';
-import { ProjectTaskStatus } from '../../../core/enums/project-task-status';
-import { ProjectTaskDto } from '../../../core/models/view-models/project-task-dto';
+import { ProjectTasksState, selectAllProjectTasks } from './project-tasks.reducer';
+import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 
 export const selectProjectTasksFeature = createFeatureSelector<ProjectTasksState>('project-tasks');
 
-export const selectTasks = createSelector(
+export const selectTasksEntites = createSelector(
   selectProjectTasksFeature,
   (state: ProjectTasksState) => state.tasks
+);
+
+export const selectTasks = createSelector(
+  selectTasksEntites,
+  selectAllProjectTasks
 );
 
 export const selectTasksCompleted = createSelector(

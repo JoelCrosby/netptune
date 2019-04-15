@@ -55,4 +55,4 @@ const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelecto
 export const selectProjectIds = selectIds;
 export const selectProjectEntities = selectEntities;
 export const selectAllProjects = selectAll;
-export const selectUserTotal = selectTotal;
+export const selectProjectsTotal = selectTotal;

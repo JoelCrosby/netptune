@@ -1,9 +1,10 @@
 import { ProjectTasksActions, ProjectTasksActionTypes } from './project-tasks.actions';
 import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { ProjectTask } from '@app/core/models/project-task';
+import { EntityAdapter, createEntityAdapter, EntityState } from '@ngrx/entity';
 
 export interface ProjectTasksState {
-  tasks: ProjectTaskDto[];
+  tasks: ProjectTasks;
   loading: boolean;
   loaded: boolean;
   loadProjectsError?: any;
@@ -13,11 +14,15 @@ export interface ProjectTasksState {
 }
 
 export const initialState: ProjectTasksState = {
-  tasks: [],
+  tasks: { ids: [], entities: {} },
   loading: false,
   loaded: false,
   loadingNewTask: false,
 };
+
+export interface ProjectTasks extends EntityState<ProjectTaskDto> {}
+
+export const adapter: EntityAdapter<ProjectTaskDto> = createEntityAdapter<ProjectTaskDto>();
 
 export function projectTasksReducer(
   state = initialState,
@@ -29,7 +34,12 @@ export function projectTasksReducer(
     case ProjectTasksActionTypes.LoadProjectTasksFail:
       return { ...state, loading: false, loadProjectsError: action.payload };
     case ProjectTasksActionTypes.LoadProjectTasksSuccess:
-      return { ...state, loading: false, loaded: true, tasks: action.payload };
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        tasks: adapter.addAll(action.payload, state.tasks),
+      };
     case ProjectTasksActionTypes.CreateProjectTask:
       return { ...state, loadingNewTask: true };
     case ProjectTasksActionTypes.CreateProjectTaskFail:
@@ -40,3 +50,10 @@ export function projectTasksReducer(
       return state;
   }
 }
+
+const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
+
+export const selectProjectTasksIds = selectIds;
+export const selectProjectTaskEntities = selectEntities;
+export const selectAllProjectTasks = selectAll;
+export const selectProjectTasksTotal = selectTotal;
