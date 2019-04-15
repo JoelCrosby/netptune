@@ -15,7 +15,7 @@ namespace Netptune.Models.Repositories
 
         Task<RepoResult<TaskViewModel>> AddTask(ProjectTask projectTask, AppUser user);
 
-        Task<RepoResult<TaskViewModel>> DeleteTask(int id);
+        Task<RepoResult<int>> DeleteTask(int id);
 
         Task<RepoResult<ProjectTaskCounts>> GetProjectTaskCount(int projectId);
     }
