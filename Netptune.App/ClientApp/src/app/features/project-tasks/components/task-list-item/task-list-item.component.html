@@ -6,15 +6,32 @@
           {{ task.name }}
         </div>
       </div>
-      <mat-chip-list>
-        <mat-chip color="primary">
-          {{ task.projectName }}
-        </mat-chip>
-        <div class="chip-spacer"></div>
-        <mat-chip color="accent">
-          {{ task.assigneeUsername }}
-        </mat-chip>
-      </mat-chip-list>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-chip-list>
+          <mat-chip color="primary">
+            {{ task.projectName }}
+          </mat-chip>
+          <div class="chip-spacer"></div>
+          <mat-chip color="accent">
+            {{ task.assigneeUsername }}
+          </mat-chip>
+        </mat-chip-list>
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="expand-icon">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <ng-template matMenuContent>
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </ng-template>
+        </mat-menu>
+      </div>
     </div>
   </div>
 </div>

@@ -34,20 +34,17 @@ mat-divider {
     margin-bottom: 2em;
 }
 
-.task-card {
-    box-shadow: none;
-    transition: box-shadow 360ms cubic-bezier(.24,0,0,1);
-}
-
-.task-card:active {
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
-}
-
 .task-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 8px;
+}
+
+.task-header:hover {
+  .expand-icon {
+    visibility: visible;
+  }
 }
 
 @media only screen and (max-width: 900px) {
@@ -74,4 +71,12 @@ mat-divider {
 .mat-standard-chip {
   min-height: 24px !important;
   font-family: 'Roboto', -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Droid Sans,Helvetica Neue,sans-serif;
+}
+
+.expand-icon {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  margin-left: .4rem;
+  visibility: hidden;
 }
