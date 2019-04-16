@@ -9,6 +9,7 @@ import { selectProjects } from '@app/features/projects/store/projects.selectors'
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { ActionSelectProject } from '@app/core/state/core.actions';
+import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
 
 @Component({
   selector: 'app-task-dialog',
@@ -43,6 +44,8 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
+    this.store.dispatch(new ActionLoadProjects());
+
     if (this.task) {
       this.projectFromGroup.get('nameFormControl').setValue(this.task.name);
       this.projectFromGroup.get('projectFormControl').setValue(this.task.projectId);
