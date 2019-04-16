@@ -18,6 +18,7 @@
 
 // Component Themes
 @import './styles/reset.scss-theme';
+@import './styles/spinners.scss-theme.scss';
 @import './styles/components.scss-theme.scss';
 @import './app/app.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme.scss';
@@ -26,6 +27,7 @@
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
+  @include spinners-theme($theme);
   @include components-theme($theme);
   @include app-component-theme($theme);
   @include task-list-group-component-theme($theme);
