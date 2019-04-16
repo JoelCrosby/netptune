@@ -14,6 +14,7 @@ export class TaskListGroupComponent implements OnInit {
   @Input() tasks: Observable<ProjectTaskDto[] | undefined>;
   @Input() header: string;
   @Input() emptyMessage: string;
+  @Input() loaded: Observable<boolean>;
 
   constructor() {}
 

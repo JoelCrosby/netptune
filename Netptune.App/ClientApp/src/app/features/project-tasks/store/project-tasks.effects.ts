@@ -7,12 +7,12 @@ import {
   ActionLoadProjectTasksSuccess,
   ProjectTasksActions,
   ProjectTasksActionTypes,
-  ActionCreateProjectTasksSuccess as ActionCreateProjectTaskSuccess,
-  ActionCreateProjectTasksFail as ActionCreateProjectTaskFail,
   ActionEditProjectTasksSuccess,
   ActionEditProjectTasksFail,
   ActionDeleteProjectTasksSuccess,
   ActionDeleteProjectTasksFail,
+  ActionCreateProjectTasksSuccess,
+  ActionCreateProjectTasksFail,
 } from './project-tasks.actions';
 import { ProjectTasksService } from './project-tasks.service';
 import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
@@ -45,8 +45,8 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.CreateProjectTask),
     switchMap(action =>
       this.projectTasksService.post(action.payload).pipe(
-        map(task => new ActionCreateProjectTaskSuccess(task)),
-        catchError(error => of(new ActionCreateProjectTaskFail(error)))
+        map(task => new ActionCreateProjectTasksSuccess(task)),
+        catchError(error => of(new ActionCreateProjectTasksFail(error)))
       )
     )
   );
