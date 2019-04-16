@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import {
   ActionLoadProjectTasksFail,
   ActionLoadProjectTasksSuccess,
@@ -19,12 +19,14 @@ import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class ProjectTasksEffects {
   constructor(
     private actions$: Actions<ProjectTasksActions>,
     private projectTasksService: ProjectTasksService,
+    private snackbar: MatSnackBar,
     private store: Store<AppState>
   ) {}
 
@@ -45,6 +47,7 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.CreateProjectTask),
     switchMap(action =>
       this.projectTasksService.post(action.payload).pipe(
+        tap(() => this.snackbar.open('Task created!')),
         map(task => new ActionCreateProjectTasksSuccess(task)),
         catchError(error => of(new ActionCreateProjectTasksFail(error)))
       )
@@ -56,6 +59,7 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.EditProjectTask),
     switchMap(action =>
       this.projectTasksService.put(action.payload).pipe(
+        tap(() => this.snackbar.open('Task updated!')),
         map(task => new ActionEditProjectTasksSuccess(task)),
         catchError(error => of(new ActionEditProjectTasksFail(error)))
       )
@@ -67,6 +71,7 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.DeleteProjectTask),
     switchMap(action =>
       this.projectTasksService.delete(action.payload).pipe(
+        tap(() => this.snackbar.open('Task deleted!')),
         map(task => new ActionDeleteProjectTasksSuccess(task)),
         catchError(error => of(new ActionDeleteProjectTasksFail(error)))
       )

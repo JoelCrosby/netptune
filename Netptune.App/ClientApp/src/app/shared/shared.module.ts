@@ -56,6 +56,7 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatTreeModule,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material';
 import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-dialog.component';
 
@@ -172,5 +173,6 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     BoardPostDialogComponent,
     WorkspaceDialogComponent,
   ],
+  providers: [{ provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }],
 })
 export class SharedModule {}
