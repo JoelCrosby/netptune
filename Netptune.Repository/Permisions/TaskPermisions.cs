@@ -6,9 +6,14 @@ namespace Netptune.Repository.Permisions
 {
     public static class TaskPermisions
     {
+        /// <summary>
+        /// Check if a user has permision to edit a task.
+        /// </summary>
+        /// <returns></returns>
+        /// <param name="task"></param>
+        /// <param name="user"></param>
         public static bool CanEdit(ProjectTask task, AppUser user)
         {
-            // Check if the task is in workspace user belongs in.
             return user.WorkspaceUsers.Any(x => x.Id == task.Workspace.Id);
         }
     }
