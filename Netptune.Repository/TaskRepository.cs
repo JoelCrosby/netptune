@@ -5,6 +5,7 @@ using Netptune.Models.Enums;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Repository.Permisions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace Netptune.Repository
         public async Task<RepoResult<IEnumerable<TaskViewModel>>> GetTasksAsync(int workspaceId)
         {
             var tasks = _context.ProjectTasks
-                .Where(x => x.Workspace.Id == workspaceId)
+                .Where(x => x.Workspace.Id == workspaceId && !x.IsDeleted)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
@@ -101,7 +102,7 @@ namespace Netptune.Repository
             return RepoResult<ProjectTask>.Ok(task);
         }
 
-        public async Task<RepoResult<TaskViewModel>> UpdateTask(ProjectTask projectTask)
+        public async Task<RepoResult<TaskViewModel>> UpdateTask(ProjectTask projectTask, AppUser user)
         {
             if (projectTask == null)
             {
@@ -111,6 +112,9 @@ namespace Netptune.Repository
             var result = await _context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == projectTask.Id);
 
             if (result == null) return RepoResult<TaskViewModel>.NotFound();
+
+            if (!TaskPermisions.CanEdit(result, user))
+                return RepoResult<TaskViewModel>.Unauthorized();
 
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
@@ -168,7 +172,7 @@ namespace Netptune.Repository
             return RepoResult<TaskViewModel>.Ok(response.Result);
         }
 
-        public async Task<RepoResult<int>> DeleteTask(int id)
+        public async Task<RepoResult<int>> DeleteTask(int id, AppUser user)
         {
             var task = await _context.ProjectTasks.FindAsync(id);
             if (task == null)
@@ -176,7 +180,9 @@ namespace Netptune.Repository
                 return RepoResult<int>.NotFound();
             }
 
-            _context.ProjectTasks.Remove(task);
+            task.IsDeleted = true;
+            task.DeletedByUserId = user.Id;
+
             await _context.SaveChangesAsync();
 
             return RepoResult<int>.Ok(id);

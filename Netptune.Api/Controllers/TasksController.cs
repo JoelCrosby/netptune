@@ -44,7 +44,8 @@ namespace Netptune.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
         {
-            var result = await _taskRepository.UpdateTask(task);
+            var user = await _userManager.GetUserAsync(User) as AppUser;
+            var result = await _taskRepository.UpdateTask(task, user);
             return result.ToRestResult();
         }
 
@@ -61,7 +62,8 @@ namespace Netptune.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var result = await _taskRepository.DeleteTask(id);
+            var user = await _userManager.GetUserAsync(User) as AppUser;
+            var result = await _taskRepository.DeleteTask(id, user);
             return result.ToRestResult();
         }
 
