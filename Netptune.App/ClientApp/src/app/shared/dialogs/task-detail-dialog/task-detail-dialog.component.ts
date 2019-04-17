@@ -11,7 +11,7 @@ import { ProjectTask } from '@app/core/models/project-task';
 })
 export class TaskDetailDialogComponent implements OnInit {
   public task: ProjectTask;
-  public projects: Project[];
+  public projects: Project[] = [];
 
   public selectedTypeValue: number;
 
