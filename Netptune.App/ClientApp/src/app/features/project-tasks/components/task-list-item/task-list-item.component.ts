@@ -4,6 +4,7 @@ import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { AppState } from '@app/core/core.state';
 import { ActionEditProjectTask, ActionDeleteProjectTask } from '../../store/project-tasks.actions';
+import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 
 @Component({
   selector: 'app-task-list-item',
@@ -22,5 +23,14 @@ export class TaskListItemComponent {
 
   deleteClicked() {
     this.store.dispatch(new ActionDeleteProjectTask(this.task));
+  }
+
+  markCompleteClicked() {
+    this.store.dispatch(
+      new ActionEditProjectTask({
+        ...this.task,
+        status: ProjectTaskStatus.Complete,
+      })
+    );
   }
 }

@@ -21,6 +21,10 @@
         </button>
         <mat-menu #menu="matMenu">
           <ng-template matMenuContent>
+            <button mat-menu-item (click)="markCompleteClicked()">
+              <mat-icon>edit</mat-icon>
+              <span>Mark Complete</span>
+            </button>
             <button mat-menu-item (click)="editClicked()">
               <mat-icon>edit</mat-icon>
               <span>Edit</span>
