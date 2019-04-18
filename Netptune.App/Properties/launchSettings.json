@@ -23,6 +23,7 @@
         "ASPNETCORE_URLS": "http://localhost:6400",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
+      "nativeDebugging": true,
       "applicationUrl": "http://localhost:6400"
     }
   }
