@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -118,6 +119,21 @@ namespace Netptune.Api
                         Name = "Use under MIT",
                         Url = "https://opensource.org/licenses/MIT"
                     }
+                });
+
+                // Swagger 2.+ support
+                ;
+
+                config.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                config.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { }},
                 });
 
                 // Set the comments path for the Swagger JSON and UI.
