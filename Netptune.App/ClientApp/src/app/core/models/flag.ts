@@ -1,6 +1,6 @@
-export interface Flag {
+import { Basemodel } from './basemodel';
 
-    name: string;
-    description: string;
-
+export interface Flag extends Basemodel {
+  name: string;
+  description: string;
 }

@@ -18,7 +18,6 @@ import { ProjectTasksService } from './project-tasks.service';
 import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
-import { Update } from '@ngrx/entity';
 import { MatSnackBar } from '@angular/material';
 
 @Injectable()

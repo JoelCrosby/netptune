@@ -26,7 +26,10 @@ export class ProjectTasksService {
   }
 
   put(task: ProjectTask) {
-    return this.http.put<ProjectTaskDto>(environment.apiEndpoint + `api/ProjectTasks`, task);
+    return this.http.put<ProjectTaskDto>(
+      environment.apiEndpoint + `api/ProjectTasks/${task.id}`,
+      task
+    );
   }
 
   delete(task: ProjectTask) {

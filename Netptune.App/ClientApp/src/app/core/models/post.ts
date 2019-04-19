@@ -2,13 +2,11 @@ import { PostType } from '../enums/post-type';
 import { Project } from './project';
 import { Basemodel } from './basemodel';
 
-export class Post extends Basemodel {
+export interface Post extends Basemodel {
+  title: string;
+  body: string;
+  postType: PostType;
 
-    public title: string;
-    public body: string;
-    public postType: PostType;
-
-    public project: Project;
-    public projectId: number;
-
+  project: Project;
+  projectId: number;
 }

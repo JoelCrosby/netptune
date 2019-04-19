@@ -7,6 +7,7 @@ import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 import { ActionCreateProject } from '@app/features/projects/store/projects.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { ProjectTask } from '@app/core/models/project-task';
 
 @Component({
   selector: 'app-project-dialog',
@@ -57,18 +58,14 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
 
   getResult() {
     this.subs = this.currentWorkspace$.subscribe(workspace => {
-      const projectResult = new Project();
-
-      if (this.project) {
-        projectResult.id = this.project.id;
-      }
-
-      projectResult.name = this.projectFromGroup.get('nameFormControl').value;
-      projectResult.description = this.projectFromGroup.get('descriptionFormControl').value;
-      projectResult.repositoryUrl = this.projectFromGroup.get('repositoryUrlFormControl').value;
-
-      projectResult.workspace = workspace;
-      projectResult.workspaceId = workspace.id;
+      const projectResult: Project = {
+        id: this.project ? this.project.id : undefined,
+        name: this.projectFromGroup.get('nameFormControl').value,
+        description: this.projectFromGroup.get('descriptionFormControl').value,
+        repositoryUrl: this.projectFromGroup.get('repositoryUrlFormControl').value,
+        workspace: workspace,
+        workspaceId: workspace.id,
+      };
 
       this.store.dispatch(new ActionCreateProject(projectResult));
 

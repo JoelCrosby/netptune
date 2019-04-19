@@ -2,11 +2,10 @@ import { AppUser } from './appuser';
 import { Project } from './project';
 import { Basemodel } from './basemodel';
 
-export class Workspace extends Basemodel {
+export interface Workspace extends Basemodel {
+  name: string;
+  description: string;
 
-    public name: string;
-    public description: string;
-
-    public users: AppUser[];
-    public projects: Project[];
+  users: AppUser[];
+  projects: Project[];
 }

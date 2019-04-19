@@ -10,6 +10,8 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { ActionSelectProject } from '@app/core/state/core.actions';
 import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
+import { Project } from '@app/core/models/project';
+import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 
 @Component({
   selector: 'app-task-dialog',
@@ -76,20 +78,18 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   getResult() {
     this.subs.add(
       this.currentWorkspace$.subscribe(workspace => {
-        const taskResult = new ProjectTask();
-
-        if (this.task) {
-          Object.assign(taskResult, this.task);
-        }
-
-        taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
-        taskResult.project = this.projectFromGroup.controls['projectFormControl'].value;
-        taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
-
-        taskResult.workspace = workspace;
-        taskResult.workspaceId = workspace.id;
-
-        taskResult.projectId = taskResult.project.id;
+        const taskResult: ProjectTask = {
+          name: this.projectFromGroup.controls['nameFormControl'].value,
+          project: this.projectFromGroup.controls['projectFormControl'].value,
+          description: this.projectFromGroup.controls['descriptionFormControl'].value,
+          workspace: workspace,
+          workspaceId: workspace.id,
+          projectId: (this.projectFromGroup.controls['projectFormControl'].value as Project).id,
+          assigneeId: undefined,
+          assignee: undefined,
+          id: undefined,
+          status: ProjectTaskStatus.New,
+        };
 
         this.store.dispatch(new ActionCreateProjectTask(taskResult));
 

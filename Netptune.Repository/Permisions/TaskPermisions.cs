@@ -14,7 +14,8 @@ namespace Netptune.Repository.Permisions
         /// <param name="user"></param>
         public static bool CanEdit(ProjectTask task, AppUser user)
         {
-            return user.WorkspaceUsers.Any(x => x.Id == task.Workspace.Id);
+            var rel = user.WorkspaceUsers.ToList();
+            return rel.Any(x => x.Id == task.Workspace.Id);
         }
     }
 }

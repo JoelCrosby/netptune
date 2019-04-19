@@ -31,8 +31,9 @@ export class BoardPostDialogComponent implements OnInit {
     }
 
     const value = title.value;
-    const post = new Post();
-    post.title = value;
+    const post = {
+      title: value,
+    };
 
     this.dialogRef.close(post);
   }

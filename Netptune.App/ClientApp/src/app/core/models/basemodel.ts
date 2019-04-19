@@ -1,24 +1,22 @@
 import { AppUser } from './appuser';
 
-export class Basemodel {
+export interface Basemodel {
+  id: number;
 
-    public id: number;
+  isDeleted?: Boolean;
 
-    public isDeleted: Boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 
-    public createdAt: Date;
-    public updatedAt: Date;
+  createdByUser?: AppUser;
+  createdByUserId?: string;
 
-    public createdByUser: AppUser;
-    public createdByUserId: string;
+  modifiedByUser?: AppUser;
+  modifiedByUserId?: string;
 
-    public modifiedByUser: AppUser;
-    public modifiedByUserId: string;
+  deletedByUser?: AppUser;
+  deletedByUserId?: string;
 
-    public deletedByUser: AppUser;
-    public deletedByUserId: string;
-
-    public owner: AppUser;
-    public ownerId: string;
-
+  owner?: AppUser;
+  ownerId?: string;
 }

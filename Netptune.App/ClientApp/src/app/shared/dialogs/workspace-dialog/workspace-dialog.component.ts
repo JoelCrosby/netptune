@@ -32,14 +32,13 @@ export class WorkspaceDialogComponent implements OnInit {
   }
 
   getResult() {
-    const workspaceResult = new Workspace();
-
-    if (this.workspace) {
-      workspaceResult.id = this.workspace.id;
-    }
-
-    workspaceResult.name = this.workspaceFromGroup.controls['nameFormControl'].value;
-    workspaceResult.description = this.workspaceFromGroup.controls['discriptionFormControl'].value;
+    const workspaceResult: Workspace = {
+      id: this.workspace ? this.workspace.id : undefined,
+      name: this.workspaceFromGroup.controls['nameFormControl'].value,
+      description: this.workspaceFromGroup.controls['discriptionFormControl'].value,
+      users: [],
+      projects: [],
+    };
 
     this.store.dispatch(new ActionCreateWorkspaces(workspaceResult));
 

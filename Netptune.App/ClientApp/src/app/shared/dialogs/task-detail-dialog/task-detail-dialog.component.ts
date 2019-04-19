@@ -44,15 +44,12 @@ export class TaskDetailDialogComponent implements OnInit {
   }
 
   getResult() {
-    const taskResult = new ProjectTask();
-
-    if (this.task) {
-      Object.assign(taskResult, this.task);
-    }
-
-    taskResult.name = this.projectFromGroup.controls['nameFormControl'].value;
-    taskResult.projectId = this.projectFromGroup.controls['projectFormControl'].value;
-    taskResult.description = this.projectFromGroup.controls['descriptionFormControl'].value;
+    const taskResult: ProjectTask = {
+      ...this.task,
+      name: this.projectFromGroup.controls['nameFormControl'].value,
+      projectId: this.projectFromGroup.controls['projectFormControl'].value,
+      description: this.projectFromGroup.controls['descriptionFormControl'].value,
+    };
 
     this.dialogRef.close(taskResult);
   }

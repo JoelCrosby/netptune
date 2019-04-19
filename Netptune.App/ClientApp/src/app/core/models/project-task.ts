@@ -4,17 +4,17 @@ import { Basemodel } from './basemodel';
 import { Project } from './project';
 import { Workspace } from './workspace';
 
-export class ProjectTask extends Basemodel {
-  public name: string;
-  public description: string;
-  public status: ProjectTaskStatus;
+export interface ProjectTask extends Basemodel {
+  name: string;
+  description: string;
+  status: ProjectTaskStatus;
 
-  public project: Project;
-  public projectId: number;
+  project: Project;
+  projectId: number;
 
-  public workspace: Workspace;
-  public workspaceId: number;
+  workspace: Workspace;
+  workspaceId: number;
 
-  public assignee: AppUser;
-  public assigneeId: string;
+  assignee: AppUser;
+  assigneeId: string;
 }
