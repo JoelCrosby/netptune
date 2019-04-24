@@ -33,22 +33,22 @@ namespace Netptune.Repository
                 .Include(x => x.Owner);
 
             var result = await tasks
-                .Select(r => new TaskViewModel()
+                .Select(task => new TaskViewModel()
                 {
-                    Id = r.Id,
-                    AssigneeId = r.Assignee.Id,
-                    Name = r.Name,
-                    Description = r.Description,
-                    Status = r.Status,
-                    SortOrder = r.SortOrder,
-                    ProjectId = r.ProjectId,
-                    WorkspaceId = r.WorkspaceId,
-                    CreatedAt = r.CreatedAt,
-                    UpdatedAt = r.UpdatedAt,
-                    AssigneeUsername = r.Assignee.GetDisplayName(),
-                    AssigneePictureUrl = r.Assignee.GetDisplayName(),
-                    OwnerUsername = r.Owner.GetDisplayName(),
-                    ProjectName = r.Project.Name
+                    Id = task.Id,
+                    AssigneeId = task.Assignee.Id,
+                    Name = task.Name,
+                    Description = task.Description,
+                    Status = task.Status,
+                    SortOrder = task.SortOrder,
+                    ProjectId = task.ProjectId,
+                    WorkspaceId = task.WorkspaceId,
+                    CreatedAt = task.CreatedAt,
+                    UpdatedAt = task.UpdatedAt,
+                    AssigneeUsername = task.Assignee.GetDisplayName(),
+                    AssigneePictureUrl = task.Assignee.GetDisplayName(),
+                    OwnerUsername = task.Owner.GetDisplayName(),
+                    ProjectName = task.Project.Name
                 }).FirstOrDefaultAsync();
 
             if (result == null) return RepoResult<TaskViewModel>.NotFound();
