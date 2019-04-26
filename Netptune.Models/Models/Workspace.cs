@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Netptune.Models.Models.Relationships;
+using Newtonsoft.Json;
 
 namespace Netptune.Models.Models
 {
     public class Workspace : BaseModel
     {
-
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
@@ -14,11 +14,21 @@ namespace Netptune.Models.Models
         [StringLength(1024)]
         public string Description { get; set; }
 
-        // Navigation properties
+    #region NavigationProperties
+
+        [JsonIgnore]
         public virtual ICollection<Project> Projects { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        
+        [JsonIgnore]
         public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
+        
+        [JsonIgnore]
         public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
+
+    #endregion
+    
     }
 }

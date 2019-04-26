@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Netptune.Models.Enums;
+using Newtonsoft.Json;
 
 namespace Netptune.Models.Models 
 {
@@ -17,7 +18,7 @@ namespace Netptune.Models.Models
         public ProjectTaskStatus Status { get; set; }
         public double SortOrder { get; set; }
 
-#region ForeignKeys
+    #region ForeignKeys
 
         [ForeignKey ("Assignee")]
         public string AssigneeId { get; set; }
@@ -30,14 +31,20 @@ namespace Netptune.Models.Models
         [ForeignKey ("Workspace")]
         public int? WorkspaceId { get; set; }
 
-#endregion
+    #endregion
 
-#region ForeignKeys
+    #region NavigationProperties
 
+        [JsonIgnore]
         public virtual AppUser Assignee { get; set; }
+
+        [JsonIgnore]
         public virtual Project Project { get; set; }
+
+        [JsonIgnore]
         public virtual Workspace Workspace { get; set; }
 
-#endregion
+    #endregion
+    
     }
 }
