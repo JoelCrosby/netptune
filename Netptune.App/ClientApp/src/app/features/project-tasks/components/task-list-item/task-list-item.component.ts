@@ -6,7 +6,8 @@ import { AppState } from '@app/core/core.state';
 import { ActionEditProjectTask, ActionDeleteProjectTask } from '../../store/project-tasks.actions';
 import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 import { MatDialog } from '@angular/material';
-import { ConfirmDialogComponent } from '../../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TextHelpers } from '@app/core/util/text-helpers';
 
 @Component({
   selector: 'app-task-list-item',
@@ -28,7 +29,7 @@ export class TaskListItemComponent {
       .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
         data: {
           title: 'Are you sure you want to delete task?',
-          content: `Delete task ${this.task.name}`,
+          content: `Delete task ${TextHelpers.truncate(this.task.name)}`,
           confirm: 'Delete',
         },
       })
