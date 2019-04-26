@@ -46,7 +46,7 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.CreateProjectTask),
     switchMap(action =>
       this.projectTasksService.post(action.payload).pipe(
-        tap(() => this.snackbar.open('Task created!')),
+        tap(() => this.snackbar.open('Task created')),
         map(task => new ActionCreateProjectTasksSuccess(task)),
         catchError(error => of(new ActionCreateProjectTasksFail(error)))
       )
@@ -58,7 +58,7 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.EditProjectTask),
     switchMap(action =>
       this.projectTasksService.put(action.payload).pipe(
-        tap(() => this.snackbar.open('Task updated!')),
+        tap(() => this.snackbar.open('Task updated')),
         map(task => new ActionEditProjectTasksSuccess(task)),
         catchError(error => of(new ActionEditProjectTasksFail(error)))
       )
@@ -70,8 +70,8 @@ export class ProjectTasksEffects {
     ofType(ProjectTasksActionTypes.DeleteProjectTask),
     switchMap(action =>
       this.projectTasksService.delete(action.payload).pipe(
-        tap(() => this.snackbar.open('Task deleted!')),
-        map(task => new ActionDeleteProjectTasksSuccess(task)),
+        tap(() => this.snackbar.open('Task deleted')),
+        map(task => new ActionDeleteProjectTasksSuccess(action.payload.id)),
         catchError(error => of(new ActionDeleteProjectTasksFail(error)))
       )
     )
