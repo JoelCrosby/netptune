@@ -2,12 +2,11 @@
   <mat-sidenav-container class="app-sidenav-container">
     <mat-sidenav
       #snav
-      [opened]="!mobileQuery.matches"
+      [opened]="!mobileQuery.matches && (authenticated$ | async) && ((pageTitle$ | async) !== 'Workspaces')"
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       [fixedInViewport]="mobileQuery.matches"
       class="app-sidenav"
       id="app-sidenav"
-      *ngIf="(authenticated$ | async) && ((pageTitle$ | async) !== 'Workspaces')"
     >
       <mat-nav-list>
         <mat-list-item class="app-logo">Netptune</mat-list-item>
