@@ -7,7 +7,7 @@
       [fixedInViewport]="mobileQuery.matches"
       class="app-sidenav"
       id="app-sidenav"
-      *ngIf="(authenticated$ | async)"
+      *ngIf="(authenticated$ | async) && ((pageTitle$ | async) !== 'Workspaces')"
     >
       <mat-nav-list>
         <mat-list-item class="app-logo">Netptune</mat-list-item>
