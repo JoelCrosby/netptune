@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@app/core/core.state';
 import { ActionEditProjectTask, ActionDeleteProjectTask } from '../../store/project-tasks.actions';
 import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from '../../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-task-list-item',
@@ -15,14 +17,27 @@ import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 export class TaskListItemComponent {
   @Input() task: ProjectTaskDto;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, public dialog: MatDialog) {}
 
   editClicked() {
     this.store.dispatch(new ActionEditProjectTask(this.task));
   }
 
   deleteClicked() {
-    this.store.dispatch(new ActionDeleteProjectTask(this.task));
+    this.dialog
+      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+        data: {
+          title: 'Are you sure you want to delete task?',
+          content: `Delete task ${this.task.name}`,
+          confirm: 'Delete',
+        },
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(new ActionDeleteProjectTask(this.task));
+        }
+      });
   }
 
   markCompleteClicked() {
