@@ -13,8 +13,8 @@ namespace Netptune.Api
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-.UseKestrel()
-.UseStartup<Startup>();
+                .UseKestrel()
+                .UseStartup<Startup>();
         }
     }
 }
