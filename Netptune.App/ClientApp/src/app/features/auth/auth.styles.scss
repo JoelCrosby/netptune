@@ -1,0 +1,94 @@
+.auth-form {
+  max-width: 520px !important;
+
+  h1 {
+    font-weight: lighter;
+  }
+
+  .form-signin {
+    height: 100%;
+    width: 100%;
+    max-width: 630px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
+
+  .form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 0rem;
+  }
+
+  .form-register .checkbox {
+    font-weight: 400;
+  }
+
+  .form-register .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .form-register input[id="inputEmail"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .form-register input[id="inputPassword"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .form-register input[id="inputUsername"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .form-register input[id="inputPassword0"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .form-register input[id="inputPassword1"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .cursor-pointer {
+  cursor: pointer;
+  transition: color .3s;
+  }
+
+  .cursor-pointer:hover {
+  color: rgba(0,0,0,.5);
+  }
+
+  .progress-bar {
+  height: 1rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .mat-card:not([class*=mat-elevation-z]) {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

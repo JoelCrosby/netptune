@@ -8,12 +8,6 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .task-list {
-    background-color: mat-color($background, card);
-    border: 1px solid mat-color($background, disabled-button);
-    box-shadow: 1px 2px 4px rgba(0,0,0,.03);
-  }
-
   .task-drag {
     background-color: mat-color($background);
     border-bottom: 1px solid mat-color($background, disabled-button);
@@ -25,5 +19,7 @@
       color: mat-color($foreground, disabled-button);
     }
   }
+
+
 
 }

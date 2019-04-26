@@ -17,7 +17,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss', '../../auth.styles.scss'],
   animations: [pullIn],
 })
 export class RegisterComponent implements OnDestroy {

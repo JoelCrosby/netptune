@@ -17,7 +17,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.scss', '../../auth.styles.scss'],
   animations: [pullIn],
 })
 export class LoginComponent implements OnDestroy {
@@ -26,8 +26,8 @@ export class LoginComponent implements OnDestroy {
   hidePassword = true;
 
   loginGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    email: new FormControl('', [, Validators.email]),
+    password: new FormControl(),
   });
 
   get f() {

@@ -2,24 +2,29 @@
   <div class="task-card">
     <div class="task-header">
       <div class="task-header-title">
-        <mat-icon svgIcon="done" class="done"></mat-icon>
+
         <div class="title">
           {{ task.name }}
         </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-        <mat-chip-list>
-          <mat-chip color="primary">
-            {{ task.projectName }}
-          </mat-chip>
-          <div class="chip-spacer"></div>
-          <mat-chip color="accent">
-            {{ task.assigneeUsername }}
-          </mat-chip>
-        </mat-chip-list>
+
+        <div class="chip-list">
+            <mat-chip-list>
+                <mat-chip color="primary">
+                  {{ task.projectName }}
+                </mat-chip>
+                <div class="chip-spacer"></div>
+                <mat-chip color="accent">
+                  {{ task.assigneeUsername }}
+                </mat-chip>
+              </mat-chip-list>
+        </div>
+
         <button mat-icon-button [matMenuTriggerFor]="menu" class="expand-icon">
           <mat-icon>more_vert</mat-icon>
         </button>
+
         <mat-menu #menu="matMenu">
           <ng-template matMenuContent>
             <button mat-menu-item (click)="markCompleteClicked()">
@@ -36,6 +41,7 @@
             </button>
           </ng-template>
         </mat-menu>
+
       </div>
     </div>
   </div>
