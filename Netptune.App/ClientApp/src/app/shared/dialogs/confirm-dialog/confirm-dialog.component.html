@@ -1,10 +1,11 @@
-<h1 mat-dialog-title>{{ data.title ? data.title : 'Are you Sure?' }}</h1>
+<h1 mat-dialog-title>{{ data && data.content ? data.title : 'Are you Sure?' }}</h1>
 
-<p *ngIf='data.content'>{{ data.content }}</p>
+<p *ngIf='data && data.content'>{{ data && data.content }}</p>
 
 <div mat-dialog-actions align="end">
-  <button mat-button color="warn" [mat-dialog-close]="true" type="button">
-    {{ data.confirm ? data.confirm : 'Confirm'}}
-  </button>
-  <button mat-button (click)="close()">Cancel</button>
+  <button mat-stroked-button (click)="close()">Cancel</button>
+  <div class="mr-2"></div>
+  <button mat-flat-button color="warn" [mat-dialog-close]="true" type="button">
+      {{ data && data.confirm ? data.confirm : 'Confirm'}}
+    </button>
 </div>

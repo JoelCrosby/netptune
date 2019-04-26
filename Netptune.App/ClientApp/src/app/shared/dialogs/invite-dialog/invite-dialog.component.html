@@ -13,8 +13,9 @@
 
 
 <div mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Close</button>
-  <button mat-button (click)="getResult()" [disabled]="inviteFromGroup.invalid" type="button">
+  <button mat-stroked-button (click)="close()">Close</button>
+  <div class="mr-2"></div>
+  <button mat-flat-button color="primary" (click)="getResult()" [disabled]="inviteFromGroup.invalid" type="button">
     Invite User
   </button>
 </div>

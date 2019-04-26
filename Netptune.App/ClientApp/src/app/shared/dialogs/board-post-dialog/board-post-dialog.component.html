@@ -12,8 +12,9 @@
 </form>
 
 <div mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Close</button>
-  <button mat-button (click)="getResult()" [disabled]="postFromGroup.invalid" type="button">
+  <button mat-stroked-button (click)="close()">Close</button>
+  <div class="mr-2"></div>
+  <button mat-flat-button color="primary" (click)="getResult()" [disabled]="postFromGroup.invalid" type="button">
     Save Post
   </button>
 </div>
