@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Netptune.Api.Controllers
 {
     [Authorize]
@@ -24,6 +25,8 @@ namespace Netptune.Api.Controllers
 
         // GET: api/Projects/5
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<Project>))]
         public async Task<IActionResult> GetProjects(int workspaceId)
         {
             var result = await _projectRepository.GetProjects(workspaceId);
@@ -32,6 +35,9 @@ namespace Netptune.Api.Controllers
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> GetProject([FromRoute] int id)
         {
             var result = await _projectRepository.GetProject(id);
@@ -40,6 +46,9 @@ namespace Netptune.Api.Controllers
 
         // PUT: api/Projects/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
         {
             var user = await _userManager.GetUserAsync(User) as AppUser;
@@ -49,6 +58,8 @@ namespace Netptune.Api.Controllers
 
         // POST: api/Projects
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> PostProject([FromBody] Project project)
         {
             var user = await _userManager.GetUserAsync(User) as AppUser;
@@ -58,11 +69,12 @@ namespace Netptune.Api.Controllers
 
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
             var result = await _projectRepository.DeleteProject(id);
             return result.ToRestResult();
         }
-
     }
 }

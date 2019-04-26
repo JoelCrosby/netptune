@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,19 +8,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
 using Netptune.Models.Entites;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 using Netptune.Repository;
-
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Netptune.Api
 {
     public class Startup
     {
-
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Env { get; }
 
@@ -46,13 +42,16 @@ namespace Netptune.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<DataContext>(options =>
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
                     options.UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase"));
+                }
                 else
+                {
                     options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabasePostgres"));
+                }
             });
 
             services.AddIdentity<AppUser, IdentityRole>()
@@ -141,13 +140,11 @@ namespace Netptune.Api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -169,7 +166,7 @@ namespace Netptune.Api
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(config =>
             {
@@ -183,7 +180,6 @@ namespace Netptune.Api
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-
         }
     }
 }

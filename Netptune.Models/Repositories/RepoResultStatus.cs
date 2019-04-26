@@ -6,7 +6,8 @@
         Ok,
         NotFound,
         BadRequest,
-        Unauthorized
+        Unauthorized,
+        NoContent
 
     }
 }

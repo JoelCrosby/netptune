@@ -11,6 +11,11 @@ namespace Netptune.Models.Repositories
 
         public T Result { get; }
 
+        private RepoResult(RepoResultStatus status)
+        {
+            Status = status;
+        }
+
         private RepoResult(string message, RepoResultStatus status)
         {
             Message = message;
@@ -25,29 +30,22 @@ namespace Netptune.Models.Repositories
         }
 
         public static RepoResult<T> NotFound(string message = "Not found")
-        {
-            return new RepoResult<T>(message, RepoResultStatus.NotFound);
-        }
+            => new RepoResult<T>(message, RepoResultStatus.NotFound);
 
         public static RepoResult<T> BadRequest(string message = "Bad Request")
-        {
-            return new RepoResult<T>(message, RepoResultStatus.BadRequest);
-        }
+            => new RepoResult<T>(message, RepoResultStatus.BadRequest);
 
         public static RepoResult<T> Unauthorized(string message = "Unauthorized")
-        {
-            return new RepoResult<T>(message, RepoResultStatus.Unauthorized);
-        }
+            => new RepoResult<T>(message, RepoResultStatus.Unauthorized);
 
         public static RepoResult<T> Ok(T result, string message = "Ok")
-        {
-            return new RepoResult<T>(message, RepoResultStatus.Ok, result);
-        }
+            => new RepoResult<T>(message, RepoResultStatus.Ok, result);
 
         public static RepoResult<T> Ok(string message = "Ok")
-        {
-            return new RepoResult<T>(message, RepoResultStatus.Ok);
-        }
+            => new RepoResult<T>(message, RepoResultStatus.Ok);
+
+        public static RepoResult<T> NoContent()
+            => new RepoResult<T>(RepoResultStatus.NoContent);
 
         public IActionResult ToRestResult()
         {
@@ -61,6 +59,8 @@ namespace Netptune.Models.Repositories
                     return new UnauthorizedObjectResult(Message);
                 case RepoResultStatus.Ok:
                     return new OkObjectResult(Result);
+                case RepoResultStatus.NoContent:
+                    return new NoContentResult();
             }
 
             return new StatusCodeResult(500);

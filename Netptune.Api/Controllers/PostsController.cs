@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-[assembly:ApiConventionType(typeof(DefaultApiConventions))]
 namespace Netptune.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -22,6 +21,8 @@ namespace Netptune.Api.Controllers
 
         // GET: api/Posts
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<Post>))]
         public IEnumerable<Post> GetPosts()
         {
             return _context.Posts.Where(x => !x.IsDeleted);
@@ -29,6 +30,9 @@ namespace Netptune.Api.Controllers
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(Post))]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {
             var post = await _context.Posts.FindAsync(id);
@@ -43,6 +47,9 @@ namespace Netptune.Api.Controllers
 
         // PUT: api/Posts/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(Post))]
         public async Task<IActionResult> PutPost([FromRoute] int id, [FromBody] Post post)
         {
             if (id != post.Id)
@@ -54,11 +61,13 @@ namespace Netptune.Api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(post);
         }
 
         // POST: api/Posts
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [Produces("application/json", Type = typeof(Post))]
         public async Task<IActionResult> PostPost([FromBody] Post post)
         {
             post.Project = _context.Projects.FirstOrDefault(x => x.Id == post.ProjectId);
@@ -71,6 +80,8 @@ namespace Netptune.Api.Controllers
 
         // DELETE: api/Posts/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
             var post = await _context.Posts.FindAsync(id);
@@ -82,12 +93,14 @@ namespace Netptune.Api.Controllers
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
 
-            return Ok(post);
+            return NoContent();
         }
-
 
         [HttpGet]
         [Route("GetProjectPosts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(List<Post>))]
         public IActionResult GetProjectPosts(int projectId)
         {
             var posts = _context.Posts.Where(x => x.ProjectId == projectId && !x.IsDeleted);

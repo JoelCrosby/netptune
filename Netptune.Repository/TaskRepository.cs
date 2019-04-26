@@ -185,7 +185,7 @@ namespace Netptune.Repository
 
             await _context.SaveChangesAsync();
 
-            return RepoResult<int>.Ok(id);
+            return RepoResult<int>.NoContent();
         }
 
         public async Task<RepoResult<ProjectTaskCounts>> GetProjectTaskCount(int projectId)

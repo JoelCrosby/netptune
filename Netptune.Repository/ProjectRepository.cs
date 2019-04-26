@@ -69,40 +69,42 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Project>> AddProject(Project project, AppUser user)
         {
-
-            var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == project.WorkspaceId);
-
-            project.CreatedByUserId = user.Id;
-            project.OwnerId = user.Id;
-
-            var result = await _context.Projects.AddAsync(project);
-            await _context.SaveChangesAsync();
-
-            // Need to explicily load the navigation property context.
-            // other wise the workspace.WorkspaceUsers list will return null.
-            _context.Projects.Include(m => m.WorkspaceProjects);
-            _context.Projects.Include(m => m.ProjectUsers);
-
-            var workspaceRelationship = new WorkspaceProject
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                ProjectId = project.Id,
-                WorkspaceId = workspace.Id
-            };
+                var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == project.WorkspaceId);
 
-            project.WorkspaceProjects.Add(workspaceRelationship);
+                project.CreatedByUserId = user.Id;
+                project.OwnerId = user.Id;
 
-            var userRelationship = new ProjectUser
-            {
-                ProjectId = project.Id,
-                UserId = user.Id
-            };
+                var result = await _context.Projects.AddAsync(project);
+                await _context.SaveChangesAsync();
 
-            project.ProjectUsers.Add(userRelationship);
+                // Need to explicily load the navigation property context.
+                // other wise the workspace.WorkspaceUsers list will return null.
+                _context.Projects.Include(m => m.WorkspaceProjects);
+                _context.Projects.Include(m => m.ProjectUsers);
 
-            await _context.SaveChangesAsync();
+                var workspaceRelationship = new WorkspaceProject
+                {
+                    ProjectId = project.Id,
+                    WorkspaceId = workspace.Id
+                };
+
+                project.WorkspaceProjects.Add(workspaceRelationship);
+
+                var userRelationship = new ProjectUser
+                {
+                    ProjectId = project.Id,
+                    UserId = user.Id
+                };
+
+                project.ProjectUsers.Add(userRelationship);
+
+                await _context.SaveChangesAsync();
 
 
-            return RepoResult<Project>.Ok(result.Entity);
+                return RepoResult<Project>.Ok(result.Entity);
+            }
         }
 
         public async Task<RepoResult<Project>> DeleteProject(int id)
@@ -117,7 +119,7 @@ namespace Netptune.Repository
             _context.Projects.Remove(result);
             await _context.SaveChangesAsync();
 
-            return RepoResult<Project>.Ok(result);
+            return RepoResult<Project>.NoContent();
         }
     }
 }

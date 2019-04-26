@@ -111,7 +111,7 @@ namespace Netptune.Repository
 
             await _context.SaveChangesAsync();
 
-            return RepoResult<Workspace>.Ok(result.Entity);
+            return RepoResult<Workspace>.NoContent();
 
         }
     }
