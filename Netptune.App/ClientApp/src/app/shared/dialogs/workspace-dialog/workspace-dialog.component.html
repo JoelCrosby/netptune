@@ -16,7 +16,7 @@
 
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Close</button>
-  <button mat-button (click)="getResult()" [disabled]="workspaceFromGroup.invalid" type="button">
+  <button mat-button (click)="getResult()" type="button">
     {{ workspace ? 'Save Changes' : 'Save Workspace'}}
   </button>
 </div>
