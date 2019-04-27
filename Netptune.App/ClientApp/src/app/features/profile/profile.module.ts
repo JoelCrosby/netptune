@@ -1,13 +1,21 @@
+import { ProfileService } from './store/profile.service';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProfileRoutingModule } from './profile-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
-
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { ProfileComponent } from './index/profile.index.component';
+import { ProfileRoutingModule } from './profile-routing.module';
+import { ProfileEffects } from './store/profile.effects';
+import { profileReducer } from './store/profile.reducer';
 
 @NgModule({
   declarations: [ProfileComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, ProfileRoutingModule],
+  imports: [
+    SharedModule,
+    StoreModule.forFeature('profile', profileReducer),
+    EffectsModule.forFeature([ProfileEffects]),
+    ProfileRoutingModule,
+  ],
+  providers: [ProfileService],
 })
 export class ProfileModule {}
