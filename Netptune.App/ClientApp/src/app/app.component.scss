@@ -22,6 +22,12 @@ h1.app-name {
     font-weight: 500;
 }
 
+h1.nav-title {
+  font: 300 20px/32px Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
 .app-sidenav-container {
     /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
    causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
@@ -41,6 +47,7 @@ h1.app-name {
 .app-menu-link {
   color: rgba(255,255,255, .8) !important;
   height: 2.6rem !important;
+
     .mat-list-item-content {
         height: 2.6rem;
         line-height: 18px;
