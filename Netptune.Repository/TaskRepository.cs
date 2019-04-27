@@ -113,9 +113,6 @@ namespace Netptune.Repository
 
             if (result == null) return RepoResult<TaskViewModel>.NotFound();
 
-            if (!TaskPermisions.CanEdit(result, user))
-                return RepoResult<TaskViewModel>.Unauthorized();
-
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
             result.Status = projectTask.Status;
