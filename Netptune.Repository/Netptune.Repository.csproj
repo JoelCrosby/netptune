@@ -8,8 +8,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Models\Netptune.Models.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Permisions\" />
-  </ItemGroup>
 </Project>

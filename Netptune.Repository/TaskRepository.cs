@@ -5,7 +5,6 @@ using Netptune.Models.Enums;
 using Netptune.Models.Models;
 using Netptune.Models.Repositories;
 using Netptune.Models.VeiwModels.ProjectTasks;
-using Netptune.Repository.Permisions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,9 +111,6 @@ namespace Netptune.Repository
             var result = await _context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == projectTask.Id);
 
             if (result == null) return RepoResult<TaskViewModel>.NotFound();
-
-            if (!TaskPermisions.CanEdit(result, user))
-                return RepoResult<TaskViewModel>.Unauthorized();
 
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
