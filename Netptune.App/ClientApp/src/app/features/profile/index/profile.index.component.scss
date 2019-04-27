@@ -1,33 +1,38 @@
-.fas {
+.profile-container {
+  background: white;
+
+  .fas {
     margin-right: 1rem;
+  }
+
+  form {
+    max-width: 520px;
+    margin-top: 4em;
+  }
+
+  .form-spacer {
+      height: 2em;
+  }
+
+  .form-actions {
+    margin-bottom: 3rem;
+      button {
+          float: right;
+      }
+  }
+
+  .mat-form-field {
+      width: 100%;
+      max-width: 480px;
+  }
+
+  .mat-card {
+      padding: 2rem;
+  }
+
+  .profile-section-header {
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
 }
 
-form {
-  max-width: 520px;
-  margin-top: 4em;
-}
-
-.form-spacer {
-    height: 2em;
-}
-
-.form-actions {
-  margin-bottom: 3rem;
-    button {
-        float: right;
-    }
-}
-
-.mat-form-field {
-    width: 100%;
-    max-width: 480px;
-}
-
-.mat-card {
-    padding: 2rem;
-}
-
-.profile-section-header {
-  font-weight: 400;
-  font-size: 1.1rem;
-}
