@@ -43,8 +43,14 @@
             <mat-icon aria-label="Account Options">account_circle</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="onProfileClicked()">Profile</button>
-            <button mat-menu-item (click)="onLogoutClicked()">Logout</button>
+            <button mat-menu-item (click)="onProfileClicked()">
+                <mat-icon>perm_identity</mat-icon>
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item (click)="onLogoutClicked()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Logout</span>
+          </button>
           </mat-menu>
         </ng-container>
         <ng-template #elseTemplate>
