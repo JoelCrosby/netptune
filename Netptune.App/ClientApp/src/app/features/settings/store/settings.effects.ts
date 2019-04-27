@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { merge, of } from 'rxjs';
-import { distinctUntilChanged, map, tap, withLatestFrom } from 'rxjs/operators';
+import { tap, withLatestFrom } from 'rxjs/operators';
 import { SettingsActions, SettingsActionTypes } from './settings.actions';
 import { SettingsState } from './settings.model';
 import { selectEffectiveTheme, selectSettingsState } from './settings.selectors';
