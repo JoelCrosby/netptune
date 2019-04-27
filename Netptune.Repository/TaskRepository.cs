@@ -24,33 +24,33 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<TaskViewModel>> GetTaskAsync(int taskId)
         {
-            var tasks = _context.ProjectTasks
+            var task = await _context.ProjectTasks
                 .Where(x => x.Id == taskId)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
-                .Include(x => x.Owner);
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync();
 
-            var result = await tasks
-                .Select(task => new TaskViewModel()
-                {
-                    Id = task.Id,
-                    AssigneeId = task.Assignee.Id,
-                    Name = task.Name,
-                    Description = task.Description,
-                    Status = task.Status,
-                    SortOrder = task.SortOrder,
-                    ProjectId = task.ProjectId,
-                    WorkspaceId = task.WorkspaceId,
-                    CreatedAt = task.CreatedAt,
-                    UpdatedAt = task.UpdatedAt,
-                    AssigneeUsername = task.Assignee.GetDisplayName(),
-                    AssigneePictureUrl = task.Assignee.GetDisplayName(),
-                    OwnerUsername = task.Owner.GetDisplayName(),
-                    ProjectName = task.Project.Name
-                }).FirstOrDefaultAsync();
+            if (task == null) return RepoResult<TaskViewModel>.NotFound();
 
-            if (result == null) return RepoResult<TaskViewModel>.NotFound();
+            var result = new TaskViewModel()
+            {
+                Id = task.Id,
+                AssigneeId = task.Assignee?.Id,
+                Name = task.Name,
+                Description = task.Description,
+                Status = task.Status,
+                SortOrder = task.SortOrder,
+                ProjectId = task.ProjectId,
+                WorkspaceId = task.WorkspaceId,
+                CreatedAt = task.CreatedAt,
+                UpdatedAt = task.UpdatedAt,
+                AssigneeUsername = task.Assignee?.GetDisplayName(),
+                AssigneePictureUrl = task.Assignee?.GetDisplayName(),
+                OwnerUsername = task.Owner?.GetDisplayName(),
+                ProjectName = task.Project?.Name
+            };
 
             return RepoResult<TaskViewModel>.Ok(result);
         }
@@ -68,7 +68,7 @@ namespace Netptune.Repository
                 .Select(r => new TaskViewModel()
                 {
                     Id = r.Id,
-                    AssigneeId = r.Assignee.Id,
+                    AssigneeId = r.Assignee == null ? string.Empty : r.Assignee.Id,
                     Name = r.Name,
                     Description = r.Description,
                     Status = r.Status,
@@ -77,10 +77,10 @@ namespace Netptune.Repository
                     WorkspaceId = r.WorkspaceId,
                     CreatedAt = r.CreatedAt,
                     UpdatedAt = r.UpdatedAt,
-                    AssigneeUsername = r.Assignee.GetDisplayName(),
-                    AssigneePictureUrl = r.Assignee.GetDisplayName(),
-                    OwnerUsername = r.Owner.GetDisplayName(),
-                    ProjectName = r.Project.Name
+                    AssigneeUsername = r.Assignee == null ? string.Empty : r.Assignee.GetDisplayName(),
+                    AssigneePictureUrl = r.Assignee == null ? string.Empty : r.Assignee.GetDisplayName(),
+                    OwnerUsername = r.Owner == null ? string.Empty : r.Owner.GetDisplayName(),
+                    ProjectName = r.Project == null ? string.Empty : r.Project.Name
                 }).ToListAsync();
 
             if (result == null) return RepoResult<IEnumerable<TaskViewModel>>.NotFound();
