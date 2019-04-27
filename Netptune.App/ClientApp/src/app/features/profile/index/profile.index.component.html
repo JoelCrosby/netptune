@@ -1,4 +1,4 @@
-<div class="container px-0">
+<div class="mb-5 px-3 px-md-4 px-lg-5">
 
   <div class="component-header">
     <button mat-fab type="button" id="new-button" (click)="onLogoutClicked()">
@@ -7,4 +7,31 @@
     </button>
   </div>
 
+  <form>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Firstname</mat-label>
+          <input matInput placeholder="Edit Firstname">
+          <mat-icon matSuffix>perm_identity</mat-icon>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Lastname</mat-label>
+          <input matInput placeholder="Edit Lastname">
+          <mat-icon matSuffix>perm_identity</mat-icon>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Outline form field</mat-label>
+          <input matInput placeholder="Change Email Address">
+          <mat-icon matSuffix>mail</mat-icon>
+        </mat-form-field>
+      </p>
+
+  </form>
 </div>

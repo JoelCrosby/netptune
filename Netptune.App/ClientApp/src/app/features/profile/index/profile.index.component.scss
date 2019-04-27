@@ -3,10 +3,8 @@
 }
 
 form {
-  max-width: 400px;
-    margin-top: 4em;
-    margin-right: auto;
-    margin-left: auto;
+  max-width: 520px;
+  margin-top: 4em;
 }
 
 .form-spacer {
@@ -21,7 +19,8 @@ form {
 }
 
 .mat-form-field {
-    margin-bottom: 1.4em;
+    width: 100%;
+    max-width: 480px;
 }
 
 .mat-card {
