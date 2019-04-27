@@ -59,5 +59,5 @@ export class AppComponent implements OnDestroy {
 
   onLoginClicked = () => this.router.navigate(['/accounts/login']);
   onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
-  onProfileClicked = () => this.router.navigate(['/accounts/profile']);
+  onProfileClicked = () => this.router.navigate(['/profile']);
 }
