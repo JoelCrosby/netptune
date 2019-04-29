@@ -1,38 +1,30 @@
-.profile-container {
-  background: white;
-
-  .fas {
-    margin-right: 1rem;
-  }
-
-  form {
-    max-width: 520px;
-    margin-top: 4em;
-  }
-
-  .form-spacer {
-      height: 2em;
-  }
-
-  .form-actions {
-    margin-bottom: 3rem;
-      button {
-          float: right;
+.container {
+  mat-card {
+    padding: 2rem;
+    form {
+      p {
+        mat-form-field {
+          max-width: 480px;
+          width: 360px;
+        }
       }
-  }
-
-  .mat-form-field {
-      width: 100%;
-      max-width: 480px;
-  }
-
-  .mat-card {
-      padding: 2rem;
-  }
-
-  .profile-section-header {
-    font-weight: 400;
-    font-size: 1.1rem;
+    }
   }
 }
 
+@media only screen and (max-width: 600px) {
+  .container {
+    mat-card {
+      padding: .4rem;
+      form {
+        margin: 0;
+        padding: 0 .4rem !important;
+        p {
+          mat-form-field {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
