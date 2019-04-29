@@ -1,4 +1,4 @@
-<div class="mb-5 px-3 px-md-4 px-lg-5 profile-container">
+<div class="mb-5 px-3 px-md-4 px-0 px-lg-5 container">
 
   <div class="component-header">
     <button mat-fab type="button" id="new-button" (click)="onLogoutClicked()">
@@ -7,7 +7,8 @@
     </button>
   </div>
 
-  <form [formGroup]="profileGroup">
+  <mat-card>
+    <form [formGroup]="profileGroup" class="px-4">
 
       <p>
         <mat-form-field appearance="outline">
@@ -33,5 +34,7 @@
         </mat-form-field>
       </p>
 
-  </form>
+    </form>
+  </mat-card>
+
 </div>

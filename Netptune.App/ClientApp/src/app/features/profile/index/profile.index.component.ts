@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActionAuthLogout } from '@app/core/auth/store/auth.actions';
 import { AppState } from '@app/core/core.state';
 import { Store } from '@ngrx/store';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { selectProfile } from '../store/profile.selectors';
 import { ActionLoadProfile } from './../store/profile.actions';
 
@@ -23,11 +23,10 @@ export class ProfileComponent implements OnInit {
     this.store
       .select(selectProfile)
       .pipe(
-        filter(profile => profile !== null),
         tap(profile => {
-          this.profileGroup.get('firstname').setValue(profile.firstName);
-          this.profileGroup.get('lastname').setValue(profile.lastName);
-          this.profileGroup.get('email').setValue(profile.email);
+          this.profileGroup.get('firstname').setValue(profile && profile.firstName);
+          this.profileGroup.get('lastname').setValue(profile && profile.lastName);
+          this.profileGroup.get('email').setValue(profile && profile.email);
         })
       )
       .subscribe();
