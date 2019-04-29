@@ -49,4 +49,13 @@ export class TaskListItemComponent {
       })
     );
   }
+
+  moveToBacklogClicked() {
+    this.store.dispatch(
+      new ActionEditProjectTask({
+        ...this.task,
+        status: ProjectTaskStatus.InActive,
+      })
+    );
+  }
 }
