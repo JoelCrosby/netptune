@@ -7,8 +7,6 @@ using Netptune.Models.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-[assembly: ApiConventionType(typeof(DefaultApiConventions))]
-
 namespace Netptune.Api.Controllers
 {
     [Authorize]

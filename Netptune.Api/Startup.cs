@@ -120,9 +120,6 @@ namespace Netptune.Api
                     }
                 });
 
-                // Swagger 2.+ support
-                ;
-
                 config.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -130,6 +127,7 @@ namespace Netptune.Api
                     In = "header",
                     Type = "apiKey"
                 });
+
                 config.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
                 {
                     { "Bearer", new string[] { }},
