@@ -1,5 +1,5 @@
 ﻿using System;
-using Netptune.Models.Models;
+using Netptune.Models.Entites;
 
 namespace Netptune.Models.Interfaces
 {

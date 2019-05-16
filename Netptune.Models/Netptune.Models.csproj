@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ViewModels\" />
+    <Folder Include="Entities\ViewModels\" />
   </ItemGroup>
 
 </Project>

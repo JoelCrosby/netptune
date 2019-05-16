@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Netptune.Models.Models;
+using Netptune.Models.Entites;
 using Netptune.Models.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;

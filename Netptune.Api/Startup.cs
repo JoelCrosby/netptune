@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Netptune.Models.Entites;
-using Netptune.Models.Models;
+using Netptune.Models.Entites;
 using Netptune.Models.Repositories;
 using Netptune.Repository;
 using Swashbuckle.AspNetCore.Swagger;

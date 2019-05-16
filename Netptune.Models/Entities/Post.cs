@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Netptune.Models.Enums;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Models
+namespace Netptune.Models.Entites
 {
     public class Post : BaseModel
     {

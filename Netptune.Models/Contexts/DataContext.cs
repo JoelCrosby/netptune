@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Interfaces;
-using Netptune.Models.Models;
-using Netptune.Models.Models.Relationships;
+using Netptune.Models.Entites;
+using Netptune.Models.Entites.Relationships;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Models.Contexts
 {
     public class DataContext : IdentityDbContext
     {

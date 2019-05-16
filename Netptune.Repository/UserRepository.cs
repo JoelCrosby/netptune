@@ -1,10 +1,10 @@
 using System.Linq;
 using Netptune.Models.Entites;
-using Netptune.Models.Models;
+using Netptune.Models.Contexts;
 using Netptune.Models.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Netptune.Models.Models.Relationships;
+using Netptune.Models.Entites.Relationships;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 

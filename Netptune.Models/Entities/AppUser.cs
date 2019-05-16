@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Netptune.Models.Models.Relationships;
+using Netptune.Models.Entites.Relationships;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Models
+namespace Netptune.Models.Entites
 {
     public class AppUser : IdentityUser
     {

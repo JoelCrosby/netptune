@@ -1,4 +1,4 @@
-﻿namespace Netptune.Models.Models.Relationships
+﻿namespace Netptune.Models.Entites.Relationships
 {
     public class WorkspaceProject : RelationshipBaseModel
     {

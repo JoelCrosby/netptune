@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Entites;
-using Netptune.Models.Models;
-using Netptune.Models.Models.Relationships;
+using Netptune.Models.Contexts;
+using Netptune.Models.Entites.Relationships;
 using Netptune.Models.Repositories;
 using System;
 using System.Collections.Generic;

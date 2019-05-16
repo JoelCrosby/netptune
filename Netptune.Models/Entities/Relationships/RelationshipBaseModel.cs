@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Netptune.Models.Models.Relationships
+namespace Netptune.Models.Entites.Relationships
 {
     public abstract class RelationshipBaseModel
     {

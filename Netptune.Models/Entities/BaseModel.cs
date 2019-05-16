@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Netptune.Models.Interfaces;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Models
+namespace Netptune.Models.Entites
 {
     public abstract class BaseModel : IBaseEntity
     {
