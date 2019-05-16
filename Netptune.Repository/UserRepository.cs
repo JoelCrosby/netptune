@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Netptune.Models.Entites.Relationships;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Netptune.Repository.Interfaces;
 using Netptune.Repositories.Models;
 
@@ -14,17 +13,15 @@ namespace Netptune.Repository
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
-        public UserRepository(DataContext dataContext, UserManager<AppUser> userManager)
+        public UserRepository(DataContext dataContext)
         {
             _context = dataContext;
-            _userManager = userManager;
         }
 
         public async Task<RepoResult<AppUser>> GetUserAsync(string userId)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId) as AppUser;
+            var user = await _context.AppUsers.SingleOrDefaultAsync(x => x.Id == userId);
 
             if (user == null) return RepoResult<AppUser>.NotFound();
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Entites;
 using Netptune.Models.Contexts;
 using Netptune.Models.Entites.Relationships;
@@ -14,12 +13,10 @@ namespace Netptune.Repository
     public class ProjectRepository : IProjectRepository
     {
         private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
-        public ProjectRepository(DataContext dataContext, UserManager<AppUser> userManager)
+        public ProjectRepository(DataContext dataContext)
         {
             _context = dataContext;
-            _userManager = userManager;
         }
 
         public async Task<RepoResult<IEnumerable<Project>>> GetProjects(int workspaceId)

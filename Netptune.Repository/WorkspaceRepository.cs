@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Entites;
 using Netptune.Models.Contexts;
@@ -15,12 +14,10 @@ namespace Netptune.Repository
     public class WorkspaceRepository : IWorkspaceRepository
     {
         private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
-        public WorkspaceRepository(DataContext dataContext, UserManager<AppUser> userManager)
+        public WorkspaceRepository(DataContext dataContext)
         {
             _context = dataContext;
-            _userManager = userManager;
         }
 
         public async Task<RepoResult<IEnumerable<Workspace>>> GetWorkspaces(AppUser user)
@@ -108,7 +105,7 @@ namespace Netptune.Repository
             var workspace = await _context.Workspaces.FindAsync(id);
             if (workspace == null) return RepoResult<Workspace>.NotFound();
 
-            var result = _context.Workspaces.Remove(workspace);
+            _context.Workspaces.Remove(workspace);
 
             await _context.SaveChangesAsync();
 
