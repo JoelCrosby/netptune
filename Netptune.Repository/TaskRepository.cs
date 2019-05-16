@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Entites;
 using Netptune.Models.Enums;
@@ -15,12 +14,10 @@ namespace Netptune.Repository
     public class TaskRepository : ITaskRepository
     {
         private readonly DataContext _context;
-        private readonly UserManager<AppUser> _userManager;
 
-        public TaskRepository(DataContext dataContext, UserManager<AppUser> userManager)
+        public TaskRepository(DataContext dataContext)
         {
             _context = dataContext;
-            _userManager = userManager;
         }
 
         public async Task<RepoResult<TaskViewModel>> GetTaskAsync(int taskId)
