@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Netptune.Models.Repositories
+namespace Netptune.Repositories.Models
 {
     public class RepoResult<T>
     {

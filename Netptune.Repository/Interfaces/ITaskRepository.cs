@@ -1,9 +1,10 @@
 using Netptune.Models.Entites;
 using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Repositories.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Netptune.Models.Repositories
+namespace Netptune.Repository.Interfaces
 {
     public interface ITaskRepository
     {

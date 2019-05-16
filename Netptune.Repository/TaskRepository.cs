@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Models.Entites;
 using Netptune.Models.Enums;
 using Netptune.Models.Contexts;
-using Netptune.Models.Repositories;
 using Netptune.Models.VeiwModels.ProjectTasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Netptune.Repository.Interfaces;
+using Netptune.Repositories.Models;
 
 namespace Netptune.Repository
 {

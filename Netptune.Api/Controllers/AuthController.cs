@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Netptune.Models.Authentication;
 using Netptune.Models.Entites;
-using Netptune.Models.Entites;
+using Netptune.Models.Contexts;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

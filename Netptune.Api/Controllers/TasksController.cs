@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Netptune.Models.Entites;
-using Netptune.Models.Repositories;
 using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

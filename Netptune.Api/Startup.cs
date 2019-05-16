@@ -9,8 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Netptune.Models.Entites;
-using Netptune.Models.Entites;
-using Netptune.Models.Repositories;
+using Netptune.Models.Contexts;
 using Netptune.Repository;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -19,6 +18,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Netptune.Repository.Interfaces;
 
 namespace Netptune.Api
 {
@@ -161,11 +161,8 @@ namespace Netptune.Api
 
             app.UseAuthentication();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(config =>
             {
                 config.SwaggerEndpoint("/swagger/v1/swagger.json", "Netptune API V1");

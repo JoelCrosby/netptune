@@ -1,4 +1,4 @@
-﻿namespace Netptune.Models.Repositories
+﻿namespace Netptune.Repositories.Models
 {
     public enum RepoResultStatus
     {

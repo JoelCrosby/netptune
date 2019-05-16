@@ -1,8 +1,9 @@
 using Netptune.Models.Entites;
+using Netptune.Repositories.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Netptune.Models.Repositories
+namespace Netptune.Repository.Interfaces
 {
     public interface IWorkspaceRepository
     {
