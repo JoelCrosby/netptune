@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Entities.Entites
 {
     public class Flag : BaseModel
     {

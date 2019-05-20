@@ -1,4 +1,4 @@
-namespace Netptune.Models.Enums
+namespace Netptune.Entities.Enums
 {
     public enum ProjectTaskStatus
     {

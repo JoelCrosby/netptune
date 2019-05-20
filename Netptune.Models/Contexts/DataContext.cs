@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Netptune.Models.Interfaces;
-using Netptune.Models.Entites;
-using Netptune.Models.Entites.Relationships;
+using Netptune.Entities.Interfaces;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Entites.Relationships;
 
-namespace Netptune.Models.Contexts
+namespace Netptune.Entities.Contexts
 {
     public class DataContext : IdentityDbContext
     {
@@ -67,8 +67,9 @@ namespace Netptune.Models.Contexts
             // (One-to-One) Workspace > Task
 
             builder.Entity<Workspace>()
-                .HasMany(c => c.ProjectTasks)
-                .WithOne(e => e.Workspace)
+                .HasMany(worspace => worspace.ProjectTasks)
+                .WithOne(task => task.Workspace)
+                .HasForeignKey(task => task.WorkspaceId)
                 .IsRequired();
 
             // (Many-to-many) Workspace > Project
@@ -120,7 +121,8 @@ namespace Netptune.Models.Contexts
 
             builder.Entity<Project>()
                 .HasMany(c => c.ProjectPosts)
-                .WithOne(e => e.Project);
+                .WithOne(e => e.Project)
+                .HasForeignKey(P => P.ProjectId);
         }
 
         public override int SaveChanges()

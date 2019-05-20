@@ -1,4 +1,4 @@
-﻿using Netptune.Models.Entites;
+﻿using Netptune.Entities.Entites;
 using Netptune.Repositories.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

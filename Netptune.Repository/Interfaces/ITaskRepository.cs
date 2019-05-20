@@ -1,5 +1,5 @@
-using Netptune.Models.Entites;
-using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Entities.Entites;
+using Netptune.Entities.VeiwModels.ProjectTasks;
 using Netptune.Repositories.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Netptune.Models.Enums;
+using Netptune.Entities.Enums;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Entities.Entites
 {
     public class Post : BaseModel
     {

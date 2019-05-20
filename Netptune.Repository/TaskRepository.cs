@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Netptune.Models.Entites;
-using Netptune.Models.Enums;
-using Netptune.Models.Contexts;
-using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Enums;
+using Netptune.Entities.Contexts;
+using Netptune.Entities.VeiwModels.ProjectTasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

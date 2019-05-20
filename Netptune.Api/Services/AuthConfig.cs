@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Netptune.Models.Entites;
+using Netptune.Entities.Entites;
 using System.Text;
 
 namespace Netptune.Api.Services

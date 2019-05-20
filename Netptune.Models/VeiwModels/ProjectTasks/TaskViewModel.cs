@@ -1,7 +1,7 @@
-﻿using Netptune.Models.Enums;
+﻿using Netptune.Entities.Enums;
 using System;
 
-namespace Netptune.Models.VeiwModels.ProjectTasks
+namespace Netptune.Entities.VeiwModels.ProjectTasks
 {
     public class TaskViewModel
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Netptune.Models.Entites.Relationships;
+using Netptune.Entities.Entites.Relationships;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Entities.Entites
 {
     public class Workspace : BaseModel
     {

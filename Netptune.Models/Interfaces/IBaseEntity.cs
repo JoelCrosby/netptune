@@ -1,7 +1,7 @@
 ﻿using System;
-using Netptune.Models.Entites;
+using Netptune.Entities.Entites;
 
-namespace Netptune.Models.Interfaces
+namespace Netptune.Entities.Interfaces
 {
     public interface IBaseEntity
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Netptune.Models.Authentication
+namespace Netptune.Entities.Authentication
 {
     public struct AuthenticationTicket
     {

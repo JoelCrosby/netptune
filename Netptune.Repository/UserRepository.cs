@@ -1,9 +1,9 @@
 using System.Linq;
-using Netptune.Models.Entites;
-using Netptune.Models.Contexts;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Contexts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Netptune.Models.Entites.Relationships;
+using Netptune.Entities.Entites.Relationships;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Repository.Interfaces;
 using Netptune.Repositories.Models;

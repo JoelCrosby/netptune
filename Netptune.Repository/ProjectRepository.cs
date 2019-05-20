@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Netptune.Models.Entites;
-using Netptune.Models.Contexts;
-using Netptune.Models.Entites.Relationships;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Contexts;
+using Netptune.Entities.Entites.Relationships;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

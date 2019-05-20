@@ -1,4 +1,4 @@
-namespace Netptune.Models.VeiwModels.ProjectTasks
+namespace Netptune.Entities.VeiwModels.ProjectTasks
 {
     public class ProjectTaskCounts
     {

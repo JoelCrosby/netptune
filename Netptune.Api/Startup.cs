@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Netptune.Models.Contexts;
+using Netptune.Entities.Contexts;
 using Netptune.Repository;
 using System.Runtime.InteropServices;
 using Netptune.Repository.Interfaces;

@@ -1,15 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Netptune.Models.Interfaces;
+using Netptune.Entities.Interfaces;
 using Newtonsoft.Json;
 
-namespace Netptune.Models.Entites
+namespace Netptune.Entities.Entites
 {
     public abstract class BaseModel : IBaseEntity
     {
 
-        // Primary key
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
