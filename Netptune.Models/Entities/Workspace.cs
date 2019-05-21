@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Entites.Relationships;
 using Newtonsoft.Json;
 
 namespace Netptune.Entities.Entites
 {
-    public class Workspace : BaseModel
+    public class Workspace : AuditableEntity<int>
     {
         [Required]
         [StringLength(128)]

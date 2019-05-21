@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Enums;
 using Newtonsoft.Json;
 
 namespace Netptune.Entities.Entites
 {
-    public class Post : BaseModel
+    public class Post : AuditableEntity<int>
     {
 
         [Required]

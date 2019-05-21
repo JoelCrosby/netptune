@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Entites.Relationships;
 using Newtonsoft.Json;
 
 namespace Netptune.Entities.Entites
 {
-    public class Project : BaseModel
+    public class Project : AuditableEntity<int>
     {
 
         [Required]

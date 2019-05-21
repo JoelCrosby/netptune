@@ -1,6 +1,8 @@
-﻿namespace Netptune.Entities.Entites.Relationships
+﻿using Netptune.Entities.Entites.BaseEntities;
+
+namespace Netptune.Entities.Entites.Relationships
 {
-    public class ProjectUser : RelationshipBaseModel
+    public class ProjectUser : KeyedEntity<int>
     {
         
         public int ProjectId { get; set; }

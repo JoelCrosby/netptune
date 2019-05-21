@@ -1,27 +1,23 @@
+﻿using Newtonsoft.Json;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Netptune.Entities.Interfaces;
-using Newtonsoft.Json;
 
-namespace Netptune.Entities.Entites
+namespace Netptune.Entities.Entites.BaseEntities
 {
-    public abstract class BaseModel : IBaseEntity
+    public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>
     {
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
 
         public bool IsDeleted { get; set; }
 
-        [Timestamp]
         public byte[] Version { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
         public DateTime UpdatedAt { get; set; }
 
-    #region ForeignKeys
+        //public DateTime DeletedAt { get; set; }
+
+        #region ForeignKeys
 
         [ForeignKey("CreatedByUser")]
         public string CreatedByUserId { get; set; }
@@ -35,9 +31,9 @@ namespace Netptune.Entities.Entites
         [ForeignKey("Owner")]
         public string OwnerId { get; set; }
 
-    #endregion
+        #endregion
 
-    #region NavigationProperties
+        #region NavigationProperties
 
         [JsonIgnore]
         public virtual AppUser CreatedByUser { get; set; }
@@ -53,7 +49,7 @@ namespace Netptune.Entities.Entites
         [JsonIgnore]
         public virtual AppUser Owner { get; set; }
 
-    #endregion
-    
+        #endregion
+
     }
 }

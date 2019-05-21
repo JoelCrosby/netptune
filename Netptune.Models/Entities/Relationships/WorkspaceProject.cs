@@ -1,6 +1,8 @@
-﻿namespace Netptune.Entities.Entites.Relationships
+﻿using Netptune.Entities.Entites.BaseEntities;
+
+namespace Netptune.Entities.Entites.Relationships
 {
-    public class WorkspaceProject : RelationshipBaseModel
+    public class WorkspaceProject : KeyedEntity<int>
     {
 
         public int WorkspaceId { get; set; }

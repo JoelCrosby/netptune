@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Netptune.Models\Netptune.Models.csproj" />
+    <ProjectReference Include="..\Netptune.Models\Netptune.Entities.csproj" />
   </ItemGroup>
 </Project>

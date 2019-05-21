@@ -46,12 +46,12 @@ namespace Netptune.Api.Controllers
         }
 
         // PUT: api/Workspaces/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(Workspace))]
-        public async Task<IActionResult> PutWorkspace([FromRoute] int id, [FromBody] Workspace workspace)
+        public async Task<IActionResult> PutWorkspace([FromBody] Workspace workspace)
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceRepository.UpdateWorkspace(workspace, user);

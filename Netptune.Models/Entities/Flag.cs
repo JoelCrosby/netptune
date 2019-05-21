@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Netptune.Entities.Entites.BaseEntities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Entities.Entites
 {
-    public class Flag : BaseModel
+    public class Flag : AuditableEntity<int>
     {
 
         [Required]

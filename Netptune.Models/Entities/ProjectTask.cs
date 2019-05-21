@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Enums;
 using Newtonsoft.Json;
 
 namespace Netptune.Entities.Entites 
 {
-    public class ProjectTask : BaseModel
+    public class ProjectTask : AuditableEntity<int>
     {
 
         [Required]

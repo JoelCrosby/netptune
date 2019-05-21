@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Netptune.Entities.Interfaces;
 using Netptune.Entities.Entites;
 using Netptune.Entities.Entites.Relationships;
+using Netptune.Entities.Entites.BaseEntities;
 
 namespace Netptune.Entities.Contexts
 {
@@ -148,12 +148,12 @@ namespace Netptune.Entities.Contexts
         private void AddTimestamps()
         {
             var entities = ChangeTracker.Entries().Where(
-                x => x.Entity is BaseModel && (x.State == EntityState.Added || x.State == EntityState.Modified)
+                x => x.Entity is AuditableEntity<int> && (x.State == EntityState.Added || x.State == EntityState.Modified)
             );
 
             foreach (var entity in entities)
             {
-                if (entity.Entity is IBaseEntity baseEntity)
+                if (entity.Entity is AuditableEntity<int> baseEntity)
                 {
                     if (entity.State == EntityState.Added)
                     {

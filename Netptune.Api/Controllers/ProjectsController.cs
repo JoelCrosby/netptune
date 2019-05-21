@@ -44,12 +44,12 @@ namespace Netptune.Api.Controllers
             return result.ToRestResult();
         }
 
-        // PUT: api/Projects/5
-        [HttpPut("{id}")]
+        // PUT: api/Projects
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(Project))]
-        public async Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
+        public async Task<IActionResult> PutProject([FromBody] Project project)
         {
             var user = await _userManager.GetUserAsync(User) as AppUser;
             var result = await _projectRepository.UpdateProject(project, user);

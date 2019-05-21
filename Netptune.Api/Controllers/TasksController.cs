@@ -46,11 +46,11 @@ namespace Netptune.Api.Controllers
         }
 
         // PUT: api/ProjectTasks/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
+        public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
             var user = await _userManager.GetUserAsync(User) as AppUser;
             var result = await _taskRepository.UpdateTask(task, user);
