@@ -24,7 +24,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <mat-toolbar class="app-toolbar" [class.app-toolbar-shadow]="(authenticated$ | async) as authenticated">
+      <mat-toolbar class="app-toolbar app-toolbar-shadow" *ngIf="authenticated$ | async as authenticated">
         <ng-container *ngIf="mobileQuery.matches || (!authenticated); else pageTitle">
           <button mat-icon-button (click)="toggleSideNav()" *ngIf="authenticated">
             <mat-icon>menu</mat-icon>
