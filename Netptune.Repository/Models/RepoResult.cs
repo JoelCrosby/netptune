@@ -49,7 +49,7 @@ namespace Netptune.Repositories.Models
 
         public IActionResult ToRestResult()
         {
-            switch(Status)
+            switch (Status)
             {
                 case RepoResultStatus.NotFound:
                     return new NotFoundObjectResult(Message);

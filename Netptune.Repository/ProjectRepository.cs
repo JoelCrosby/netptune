@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Netptune.Entities.Entites;
-using Netptune.Entities.Contexts;
-using Netptune.Entities.Entites.Relationships;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Netptune.Entities.Contexts;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Entites.Relationships;
 using Netptune.Repositories.Models;
 using Netptune.Repository.Interfaces;
 

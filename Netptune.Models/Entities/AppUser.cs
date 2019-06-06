@@ -25,13 +25,13 @@ namespace Netptune.Entities.Entites
             return $"{FirstName} {LastName}";
         }
 
-    #region NavigationProperties
+        #region NavigationProperties
 
         [JsonIgnore]
         public virtual DateTimeOffset? LastLoginTime { get; set; }
 
         [JsonIgnore]
-        public virtual DateTimeOffset?  RegistrationDate { get; set; }
+        public virtual DateTimeOffset? RegistrationDate { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
@@ -48,7 +48,7 @@ namespace Netptune.Entities.Entites
         [JsonIgnore]
         public virtual ProjectTask Assigneee { get; }
 
-    #endregion
+        #endregion
 
     }
 }

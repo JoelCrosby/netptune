@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Netptune.Entities.Entites;
 using Netptune.Entities.VeiwModels.ProjectTasks;
 using Netptune.Repositories.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Repository.Interfaces
 {

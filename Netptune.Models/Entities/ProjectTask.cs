@@ -4,7 +4,7 @@ using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Enums;
 using Newtonsoft.Json;
 
-namespace Netptune.Entities.Entites 
+namespace Netptune.Entities.Entites
 {
     public class ProjectTask : AuditableEntity<int>
     {
@@ -20,22 +20,22 @@ namespace Netptune.Entities.Entites
 
         public double SortOrder { get; set; }
 
-    #region ForeignKeys
+        #region ForeignKeys
 
-        [ForeignKey ("Assignee")]
+        [ForeignKey("Assignee")]
         public string AssigneeId { get; set; }
 
         [Required]
-        [ForeignKey ("Project")]
+        [ForeignKey("Project")]
         public int? ProjectId { get; set; }
 
         [Required]
-        [ForeignKey ("Workspace")]
+        [ForeignKey("Workspace")]
         public int? WorkspaceId { get; set; }
 
-    #endregion
+        #endregion
 
-    #region NavigationProperties
+        #region NavigationProperties
 
         [JsonIgnore]
         public virtual AppUser Assignee { get; set; }
@@ -46,7 +46,7 @@ namespace Netptune.Entities.Entites
         [JsonIgnore]
         public virtual Workspace Workspace { get; set; }
 
-    #endregion
-    
+        #endregion
+
     }
 }

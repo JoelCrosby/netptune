@@ -1,5 +1,5 @@
-﻿using Netptune.Entities.Enums;
-using System;
+﻿using System;
+using Netptune.Entities.Enums;
 
 namespace Netptune.Entities.VeiwModels.ProjectTasks
 {

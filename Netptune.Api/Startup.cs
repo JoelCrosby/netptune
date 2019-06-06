@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Netptune.Api.Services;
 using Netptune.Entities.Contexts;
 using Netptune.Repository;
-using System.Runtime.InteropServices;
 using Netptune.Repository.Interfaces;
-using Netptune.Api.Services;
 
 namespace Netptune.Api
 {

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Netptune.Entities.Entites;
 using Netptune.Entities.VeiwModels.ProjectTasks;
 using Netptune.Repository.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Api.Controllers
 {

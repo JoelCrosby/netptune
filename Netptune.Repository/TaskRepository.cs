@@ -1,13 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Netptune.Entities.Entites;
-using Netptune.Entities.Enums;
-using Netptune.Entities.Contexts;
-using Netptune.Entities.VeiwModels.ProjectTasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Netptune.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Netptune.Entities.Contexts;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Enums;
+using Netptune.Entities.VeiwModels.ProjectTasks;
 using Netptune.Repositories.Models;
+using Netptune.Repository.Interfaces;
 
 namespace Netptune.Repository
 {

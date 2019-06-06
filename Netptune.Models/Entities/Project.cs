@@ -20,15 +20,15 @@ namespace Netptune.Entities.Entites
         [StringLength(256)]
         public string RepositoryUrl { get; set; }
 
-    #region ForeignKeys
+        #region ForeignKeys
 
         [Required]
         [ForeignKey("Workspace")]
         public int? WorkspaceId { get; set; }
 
-    #endregion
+        #endregion
 
-    #region NavigationProperties
+        #region NavigationProperties
 
         [JsonIgnore]
         public virtual Workspace Workspace { get; set; }
@@ -44,11 +44,11 @@ namespace Netptune.Entities.Entites
 
         [JsonIgnore]
         public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
-        
+
         [JsonIgnore]
         public virtual ICollection<Post> ProjectPosts { get; } = new List<Post>();
 
-    #endregion
-    
+        #endregion
+
     }
 }

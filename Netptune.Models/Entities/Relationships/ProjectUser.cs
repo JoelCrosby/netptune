@@ -4,7 +4,7 @@ namespace Netptune.Entities.Entites.Relationships
 {
     public class ProjectUser : KeyedEntity<int>
     {
-        
+
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
 

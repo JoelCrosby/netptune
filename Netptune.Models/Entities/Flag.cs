@@ -1,5 +1,5 @@
-﻿using Netptune.Entities.Entites.BaseEntities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Netptune.Entities.Entites.BaseEntities;
 
 namespace Netptune.Entities.Entites
 {

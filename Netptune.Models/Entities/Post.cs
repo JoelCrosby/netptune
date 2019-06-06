@@ -18,20 +18,20 @@ namespace Netptune.Entities.Entites
 
         public PostType Type { get; set; }
 
-    #region ForeignKeys
+        #region ForeignKeys
 
         [Required]
-        [ForeignKey ("Project")]
+        [ForeignKey("Project")]
         public int ProjectId { get; set; }
 
-    #endregion
+        #endregion
 
-    #region NavigationProperties
+        #region NavigationProperties
 
         [JsonIgnore]
         public virtual Project Project { get; set; }
 
-    #endregion
-    
+        #endregion
+
     }
 }

@@ -1,7 +1,7 @@
-using Netptune.Entities.Entites;
-using Netptune.Repositories.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Netptune.Entities.Entites;
+using Netptune.Repositories.Models;
 
 namespace Netptune.Repository.Interfaces
 {

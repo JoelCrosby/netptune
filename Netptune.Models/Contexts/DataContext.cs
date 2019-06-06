@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Entities.Entites;
-using Netptune.Entities.Entites.Relationships;
 using Netptune.Entities.Entites.BaseEntities;
+using Netptune.Entities.Entites.Relationships;
 using Netptune.Entities.EntityMaps;
 
 namespace Netptune.Entities.Contexts
@@ -69,7 +69,7 @@ namespace Netptune.Entities.Contexts
         }
 
         public override Task<int> SaveChangesAsync(
-            bool acceptAllChangesOnSuccess, 
+            bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = default)
         {
             AddTimestamps();

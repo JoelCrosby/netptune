@@ -1,13 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Netptune.Entities.Entites;
-using Netptune.Entities.Contexts;
-using Netptune.Entities.Entites.Relationships;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Netptune.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Netptune.Entities.Contexts;
+using Netptune.Entities.Entites;
+using Netptune.Entities.Entites.Relationships;
 using Netptune.Repositories.Models;
+using Netptune.Repository.Interfaces;
 
 namespace Netptune.Repository
 {
@@ -61,7 +61,7 @@ namespace Netptune.Repository
 
             result.Name = workspace.Name;
             result.Description = workspace.Description;
-            
+
             if (workspace.IsDeleted)
             {
                 result.IsDeleted = true;
