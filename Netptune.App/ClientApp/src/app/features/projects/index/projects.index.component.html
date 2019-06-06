@@ -1,4 +1,4 @@
-<div class="container px-0">
+<div class="px-0">
   <div class="component-header">
     <button mat-fab type="button" id="new-button" (click)="showAddModal()">
       <mat-icon>add</mat-icon>
@@ -6,7 +6,7 @@
     </button>
   </div>
 
-  <div class="container mb-5 px-md-3 px-lg-5">
+  <div class="mb-5 px-md-3 px-lg-5">
     <div class="card-group">
       <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById" class="project-card">
         <mat-card-header>
