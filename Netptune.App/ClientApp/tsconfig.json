@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictNullChecks": false,
-    "target": "es5",
+    "target": "es2015",
     "plugins": [
       {
         "name": "typescript-tslint-plugin",
@@ -27,7 +27,7 @@
       "es2017",
       "dom"
     ],
-    "module": "es2015",
+    "module": "esnext",
     "baseUrl": "src",
     "paths": {
       "@app/*": ["app/*"],

@@ -17,7 +17,7 @@ import { MatSidenav } from '@angular/material';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
-  @ViewChild(MatSidenav) sideNav: MatSidenav;
+  @ViewChild(MatSidenav, { static: true }) sideNav: MatSidenav;
 
   theme$ = this.store.select(selectEffectiveTheme);
   authenticated$ = this.store.select(selectIsAuthenticated);
