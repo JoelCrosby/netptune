@@ -17,6 +17,7 @@ namespace Netptune.Entities.Entites
         public string Description { get; set; }
 
         public ProjectTaskStatus Status { get; set; }
+
         public double SortOrder { get; set; }
 
     #region ForeignKeys

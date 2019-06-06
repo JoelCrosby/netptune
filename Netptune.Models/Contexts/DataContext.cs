@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Entities.Entites;
 using Netptune.Entities.Entites.Relationships;
 using Netptune.Entities.Entites.BaseEntities;
+using Netptune.Entities.EntityMaps;
 
 namespace Netptune.Entities.Contexts
 {
@@ -38,7 +39,7 @@ namespace Netptune.Entities.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Netptune;Integrated Security=SSPI;");
+            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Netptune;Integrated Security=SSPI;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -46,83 +47,19 @@ namespace Netptune.Entities.Contexts
 
             base.OnModelCreating(builder);
 
-            builder.Entity<Project>()
-                .HasOne(e => e.Workspace)
-                .WithMany(c => c.Projects)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            builder
+                .ApplyConfiguration(new AppUserEntityMap())
+                .ApplyConfiguration(new FlagEntityMap())
+                .ApplyConfiguration(new PostEntityMap())
+                .ApplyConfiguration(new ProjectEntityMap())
+                .ApplyConfiguration(new ProjectTaskEntityMap())
+                .ApplyConfiguration(new WorkspaceEntityMap());
 
-            // (One-to-One) AppUser > Task
+            builder
+                .ApplyConfiguration(new ProjectUserEntityMap())
+                .ApplyConfiguration(new WorkspaceAppUserEntityMap())
+                .ApplyConfiguration(new WorkspaceProjectEntityMap());
 
-            builder.Entity<AppUser>()
-                .HasMany(c => c.Tasks)
-                .WithOne(e => e.Assignee)
-                .IsRequired();
-
-            // (One-to-One) Project > Task
-
-            builder.Entity<Project>()
-                .HasMany(c => c.ProjectTasks)
-                .WithOne(e => e.Project);
-
-            // (One-to-One) Workspace > Task
-
-            builder.Entity<Workspace>()
-                .HasMany(worspace => worspace.ProjectTasks)
-                .WithOne(task => task.Workspace)
-                .HasForeignKey(task => task.WorkspaceId)
-                .IsRequired();
-
-            // (Many-to-many) Workspace > Project
-
-            builder.Entity<WorkspaceProject>()
-                .HasKey(pt => new { pt.WorkspaceId, pt.ProjectId });
-
-            builder.Entity<WorkspaceProject>()
-                .HasOne(pt => pt.Workspace)
-                .WithMany(p => p.WorkspaceProjects)
-                .HasForeignKey(pt => pt.WorkspaceId);
-
-            builder.Entity<WorkspaceProject>()
-                .HasOne(pt => pt.Project)
-                .WithMany(t => t.WorkspaceProjects)
-                .HasForeignKey(pt => pt.ProjectId);
-
-            // (Many-to-many) Workspace > AppUser
-
-            builder.Entity<WorkspaceAppUser>()
-                .HasKey(pt => new { pt.WorkspaceId, pt.UserId });
-
-            builder.Entity<WorkspaceAppUser>()
-                .HasOne(pt => pt.Workspace)
-                .WithMany(p => p.WorkspaceUsers)
-                .HasForeignKey(pt => pt.WorkspaceId);
-
-            builder.Entity<WorkspaceAppUser>()
-                .HasOne(pt => pt.User)
-                .WithMany(t => t.WorkspaceUsers)
-                .HasForeignKey(pt => pt.UserId);
-
-            // (Many-to-many) Project > AppUser
-
-            builder.Entity<ProjectUser>()
-                .HasKey(pt => new { pt.ProjectId, pt.UserId });
-
-            builder.Entity<ProjectUser>()
-                .HasOne(pt => pt.Project)
-                .WithMany(p => p.ProjectUsers)
-                .HasForeignKey(pt => pt.ProjectId);
-
-            builder.Entity<ProjectUser>()
-                .HasOne(pt => pt.User)
-                .WithMany(t => t.ProjectUsers)
-                .HasForeignKey(pt => pt.UserId);
-
-            // (One-to-One) Project > Post
-
-            builder.Entity<Project>()
-                .HasMany(c => c.ProjectPosts)
-                .WithOne(e => e.Project)
-                .HasForeignKey(P => P.ProjectId);
         }
 
         public override int SaveChanges()

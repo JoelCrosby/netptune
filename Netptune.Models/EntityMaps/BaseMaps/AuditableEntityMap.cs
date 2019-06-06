@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Netptune.Entities.Entites.BaseEntities;
 
-namespace Netptune.Entities.EntityMaps
+namespace Netptune.Entities.EntityMaps.BaseMaps
 {
     public class AuditableEntityMap<TEntity, TId> : KeyedEntityMap<TEntity, TId>
         where TEntity : AuditableEntity<TId>
@@ -13,6 +13,10 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
+                .Property(t => t.Version)
+                .IsConcurrencyToken();
+
+            builder
                 .Property(t => t.CreatedAt)
                 .HasColumnName("CreatedAt")
                 .HasDefaultValueSql("GetDate()");
@@ -21,11 +25,6 @@ namespace Netptune.Entities.EntityMaps
                 .Property(t => t.UpdatedAt)
                 .HasColumnName("UpdatedAt")
                 .IsRequired(false);
-
-            //builder
-            //    .Property(t => t.DeletedAt)
-            //    .HasColumnName("DeletedAt")
-            //    .IsRequired(false);
 
             builder
                 .Property(t => t.IsDeleted)

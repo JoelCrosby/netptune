@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Api", "Netptune.Ap
 		{4613A1B1-F78C-49E0-B3C8-6A421781F787} = {4613A1B1-F78C-49E0-B3C8-6A421781F787}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Core", "Netptune.Core\Netptune.Core.csproj", "{AAC01825-77EF-442A-9759-93AFBC73E563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Services", "Netptune.Services\Netptune.Services.csproj", "{AAC01825-77EF-442A-9759-93AFBC73E563}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Repository", "Netptune.Repository\Netptune.Repository.csproj", "{4613A1B1-F78C-49E0-B3C8-6A421781F787}"
 	ProjectSection(ProjectDependencies) = postProject

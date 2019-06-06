@@ -152,13 +152,24 @@ namespace Netptune.Repository
                     .BadRequest("Could not find related project or workspace.");
             }
 
-            projectTask.Workspace = relational.FirstOrDefault().workspace;
-            projectTask.Project = relational.FirstOrDefault().project;
+            _context.AppUsers.Include(x => x.WorkspaceUsers).ThenInclude(x => x.Workspace);
+
+            var conUser = _context.AppUsers.Find(user.Id);
+            var userWorkspaces = conUser.WorkspaceUsers.Select(x => x.Workspace).ToList();
+
+            if (!(userWorkspaces.Select(x => x.Id).Contains(relational.FirstOrDefault().workspace.Id)))
+            {
+                return RepoResult<TaskViewModel>.Unauthorized();
+            }
+
+            projectTask.WorkspaceId = relational.FirstOrDefault().workspace.Id;
+            projectTask.ProjectId = relational.FirstOrDefault().project.Id;
             projectTask.AssigneeId = user.Id;
             projectTask.OwnerId = user.Id;
             projectTask.CreatedByUserId = user.Id;
 
             var result = await _context.ProjectTasks.AddAsync(projectTask);
+
             await _context.SaveChangesAsync();
 
             var response = await GetTaskAsync(result.Entity.Id);

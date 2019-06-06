@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Netptune.Entities.Entites.BaseEntities;
 
-namespace Netptune.Entities.EntityMaps
+namespace Netptune.Entities.EntityMaps.BaseMaps
 {
     public class KeyedEntityMap<TEntity, TValue> : IEntityTypeConfiguration<TEntity>
         where TEntity : KeyedEntity<TValue>

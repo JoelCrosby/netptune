@@ -14,7 +14,7 @@ namespace Netptune.Entities.VeiwModels.ProjectTasks
         public int? ProjectId { get; set; }
         public int? WorkspaceId { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset UpdatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
         public string AssigneeUsername { get; set; }
         public string AssigneePictureUrl { get; set; }
         public string OwnerUsername { get; set; }
