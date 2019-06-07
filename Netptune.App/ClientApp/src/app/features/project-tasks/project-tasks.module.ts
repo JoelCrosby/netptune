@@ -8,9 +8,10 @@ import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 import { ProjectTasksEffects } from './store/project-tasks.effects';
 import { projectTasksReducer } from './store/project-tasks.reducer';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
+import { TaskDetailComponent } from './components/task-detail/task-detail.component';
 
 @NgModule({
-  declarations: [ProjectTasksComponent, TaskListGroupComponent, TaskListItemComponent],
+  declarations: [ProjectTasksComponent, TaskListGroupComponent, TaskListItemComponent, TaskDetailComponent],
   imports: [
     SharedModule,
     StoreModule.forFeature('project-tasks', projectTasksReducer),
