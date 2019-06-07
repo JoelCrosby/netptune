@@ -15,6 +15,7 @@ export enum ProjectTasksActionTypes {
   DeleteProjectTask = '[ProjectTasks] Delete Project Task',
   DeleteProjectTaskFail = '[ProjectTasks] Delete Project Task Fail',
   DeleteProjectTaskSuccess = '[ProjectTasks] Delete Project Task Success',
+  SelectTask = '[ProjectTasks] Select Task',
 }
 
 export class ActionLoadProjectTasks implements Action {
@@ -87,6 +88,12 @@ export class ActionDeleteProjectTasksFail implements Action {
   constructor(readonly payload: any) {}
 }
 
+export class ActionSelectTask implements Action {
+  readonly type = ProjectTasksActionTypes.SelectTask;
+
+  constructor(readonly payload: ProjectTask) {}
+}
+
 export type ProjectTasksActions =
   | ActionLoadProjectTasks
   | ActionLoadProjectTasksFail
@@ -99,4 +106,5 @@ export type ProjectTasksActions =
   | ActionEditProjectTasksSuccess
   | ActionDeleteProjectTask
   | ActionDeleteProjectTasksFail
-  | ActionDeleteProjectTasksSuccess;
+  | ActionDeleteProjectTasksSuccess
+  | ActionSelectTask;

@@ -50,3 +50,8 @@ export const selectTasksLoaded = createSelector(
   selectProjectTasksFeature,
   (state: ProjectTasksState) => state.loaded
 );
+
+export const selectSelectedTask = createSelector(
+  selectProjectTasksFeature,
+  (state: ProjectTasksState) => state.selectedTask
+);

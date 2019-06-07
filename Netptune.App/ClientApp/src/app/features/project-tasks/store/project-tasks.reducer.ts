@@ -14,6 +14,7 @@ export interface ProjectTasksState {
   createdTask?: ProjectTask;
   deleteState: ActionState;
   editState: ActionState;
+  selectedTask?: ProjectTask;
 }
 
 export const initialState: ProjectTasksState = {
@@ -75,6 +76,11 @@ export function projectTasksReducer(
         ...state,
         deleteState: { loading: false },
         tasks: adapter.removeOne(action.payload, state.tasks),
+      };
+    case ProjectTasksActionTypes.SelectTask:
+      return {
+        ...state,
+        selectedTask: action.payload,
       };
     default:
       return state;
