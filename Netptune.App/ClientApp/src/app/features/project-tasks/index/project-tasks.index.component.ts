@@ -66,7 +66,9 @@ export class ProjectTasksComponent implements OnInit {
 
   showAddModal() {
     this.dialog
-      .open<TaskDialogComponent>(TaskDialogComponent)
+      .open<TaskDialogComponent>(TaskDialogComponent, {
+        width: '600px',
+      })
       .afterClosed()
       .subscribe(() => {});
   }

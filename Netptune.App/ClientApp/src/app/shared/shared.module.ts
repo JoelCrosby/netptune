@@ -4,9 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-// Flex layout
-import { FlexLayoutModule } from '@angular/flex-layout';
-
 // Drag n drop
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -75,7 +72,6 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     FormsModule,
     ReactiveFormsModule,
 
-    FlexLayoutModule,
     RouterModule,
 
     DragDropModule,
@@ -122,7 +118,6 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     FormsModule,
     ReactiveFormsModule,
 
-    FlexLayoutModule,
     RouterModule,
 
     DragDropModule,
