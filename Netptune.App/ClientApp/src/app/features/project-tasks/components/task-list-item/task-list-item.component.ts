@@ -3,7 +3,11 @@ import { toggleChip } from '@app/core/animations/animations';
 import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { AppState } from '@app/core/core.state';
-import { ActionEditProjectTask, ActionDeleteProjectTask } from '../../store/project-tasks.actions';
+import {
+  ActionEditProjectTask,
+  ActionDeleteProjectTask,
+  ActionSelectTask,
+} from '../../store/project-tasks.actions';
 import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -19,6 +23,10 @@ export class TaskListItemComponent {
   @Input() task: ProjectTaskDto;
 
   constructor(private store: Store<AppState>, public dialog: MatDialog) {}
+
+  titleClicked() {
+    this.store.dispatch(new ActionSelectTask(this.task));
+  }
 
   editClicked() {
     this.store.dispatch(new ActionEditProjectTask(this.task));

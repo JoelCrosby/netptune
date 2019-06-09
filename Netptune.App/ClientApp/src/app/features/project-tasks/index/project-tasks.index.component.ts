@@ -11,6 +11,7 @@ import {
   selectTasksCompleted,
   selectTasksOwner,
   selectTasksLoaded,
+  selectSelectedTask,
 } from '../store/project-tasks.selectors';
 import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
 import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
@@ -27,6 +28,8 @@ export class ProjectTasksComponent implements OnInit {
   backlogTasks$ = this.store.select(selectTasksBacklog);
 
   loaded$ = this.store.select(selectTasksLoaded);
+
+  selectedTask$ = this.store.select(selectSelectedTask);
 
   taskGroups = [
     {

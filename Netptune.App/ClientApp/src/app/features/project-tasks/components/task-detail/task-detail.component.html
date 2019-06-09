@@ -1,3 +1,5 @@
-<p>
-  task-detail works!
-</p>
+<div class="tasks-container" *ngIf="$task | async as task">
+  <h4> {{ task.name }} </h4>
+  <p> {{ task.description }} </p>
+
+</div>
