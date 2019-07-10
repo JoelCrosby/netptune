@@ -9,7 +9,6 @@ namespace Netptune.Api.Services
 {
     public static class SwaggerConfig
     {
-
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             return services.AddSwaggerGen(config =>
@@ -43,7 +42,6 @@ namespace Netptune.Api.Services
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
             });
-
         }
     }
 }

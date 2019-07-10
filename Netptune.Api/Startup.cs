@@ -24,7 +24,6 @@ namespace Netptune.Api
             Configuration = configuration;
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options =>
@@ -63,7 +62,6 @@ namespace Netptune.Api
             // Register the Swagger.
             services.AddSwagger();
         }
-
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

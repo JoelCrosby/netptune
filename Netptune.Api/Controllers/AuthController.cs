@@ -178,5 +178,4 @@ namespace Netptune.Api.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
 }

@@ -7,8 +7,6 @@ namespace Netptune.UnitTests.Netptune.Repository
         [Fact]
         public void GetTaskAsync_ShouldReturnRepoResult()
         {
-
         }
-
     }
 }

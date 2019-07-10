@@ -30,7 +30,6 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
                 .Property(t => t.IsDeleted)
                 .HasColumnName("IsDeleted")
                 .HasDefaultValue(false);
-
         }
     }
 }

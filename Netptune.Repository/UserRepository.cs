@@ -30,7 +30,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<IEnumerable<AppUser>>> GetWorkspaceUsersAsync(int workspaceId)
         {
-
             var users = (from workspaceAppUsers in _context.WorkspaceAppUsers
                          where workspaceAppUsers.WorkspaceId == workspaceId
                          select workspaceAppUsers.User);
@@ -75,7 +74,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<AppUser>> InviteUserToWorkspaceAsync(string userId, int workspaceId)
         {
-
             var user = _context.AppUsers.SingleOrDefault(x => x.Id == userId);
             var workspace = _context.Workspaces.SingleOrDefault(x => x.Id == workspaceId);
 
@@ -101,13 +99,10 @@ namespace Netptune.Repository
             await _context.SaveChangesAsync();
 
             return RepoResult<AppUser>.Ok(user);
-
         }
-
 
         public async Task<RepoResult<AppUser>> GetUserByEmailAsync(string email)
         {
-
             var user = await _context.AppUsers.SingleOrDefaultAsync(x => x.Email == email);
 
             if (user == null)
@@ -116,8 +111,6 @@ namespace Netptune.Repository
             }
 
             return RepoResult<AppUser>.Ok(user);
-
         }
-
     }
 }

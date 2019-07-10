@@ -46,7 +46,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Project>> UpdateProject(Project project, AppUser user)
         {
-
             var result = _context.Projects.SingleOrDefault(x => x.Id == project.Id);
 
             if (result == null)
@@ -60,7 +59,6 @@ namespace Netptune.Repository
             result.ModifiedByUserId = user.Id;
 
             await _context.SaveChangesAsync();
-
 
             return RepoResult<Project>.Ok(result);
         }
@@ -108,7 +106,6 @@ namespace Netptune.Repository
                 }
                 catch (System.Exception)
                 {
-
                     throw;
                 }
             }
@@ -116,7 +113,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Project>> DeleteProject(int id)
         {
-
             var result = await _context.Projects.FindAsync(id);
             if (result == null)
             {

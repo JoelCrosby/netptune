@@ -11,10 +11,8 @@ namespace Netptune.Api.Services
 {
     public static class AuthConfig
     {
-
         public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
                 .AddDefaultTokenProviders();
@@ -51,8 +49,6 @@ namespace Netptune.Api.Services
                 });
 
             return services;
-
         }
-
     }
 }

@@ -16,6 +16,5 @@ namespace Netptune.Repository.Interfaces
         Task<RepoResult<AppUser>> UpdateUserAsync(AppUser user, string currentUserId);
 
         Task<RepoResult<AppUser>> InviteUserToWorkspaceAsync(string userId, int workspaceId);
-
     }
 }

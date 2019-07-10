@@ -2,13 +2,10 @@
 using Netptune.Entities.Entites.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
-
 namespace Netptune.Entities.EntityMaps
 {
-
     public class ProjectUserEntityMap : KeyedEntityMap<ProjectUser, int>
     {
-
         public override void Configure(EntityTypeBuilder<ProjectUser> builder)
         {
             base.Configure(builder);
@@ -28,6 +25,5 @@ namespace Netptune.Entities.EntityMaps
                 .WithMany(t => t.ProjectUsers)
                 .HasForeignKey(pt => pt.UserId);
         }
-
     }
 }

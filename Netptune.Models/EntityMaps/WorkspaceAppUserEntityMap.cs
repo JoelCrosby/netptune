@@ -2,12 +2,10 @@
 using Netptune.Entities.Entites.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
-
 namespace Netptune.Entities.EntityMaps
 {
     public class WorkspaceAppUserEntityMap : KeyedEntityMap<WorkspaceAppUser, int>
     {
-
         public override void Configure(EntityTypeBuilder<WorkspaceAppUser> builder)
         {
             base.Configure(builder);
@@ -27,6 +25,5 @@ namespace Netptune.Entities.EntityMaps
                 .WithMany(t => t.WorkspaceUsers)
                 .HasForeignKey(pt => pt.UserId);
         }
-
     }
 }

@@ -8,7 +8,6 @@ namespace Netptune.Entities.Entites
 {
     public class ProjectTask : AuditableEntity<int>
     {
-
         [Required]
         [StringLength(128)]
         public string Name { get; set; }

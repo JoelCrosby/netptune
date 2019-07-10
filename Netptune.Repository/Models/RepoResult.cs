@@ -4,7 +4,6 @@ namespace Netptune.Repositories.Models
 {
     public class RepoResult<T>
     {
-
         public string Message { get; }
 
         public RepoResultStatus Status { get; }
@@ -65,6 +64,5 @@ namespace Netptune.Repositories.Models
 
             return new StatusCodeResult(500);
         }
-
     }
 }

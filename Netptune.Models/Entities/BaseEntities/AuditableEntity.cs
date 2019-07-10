@@ -6,7 +6,6 @@ namespace Netptune.Entities.Entites.BaseEntities
 {
     public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>
     {
-
         public bool IsDeleted { get; set; }
 
         public byte[] Version { get; set; }
@@ -39,10 +38,8 @@ namespace Netptune.Entities.Entites.BaseEntities
         [JsonIgnore]
         public virtual AppUser ModifiedByUser { get; set; }
 
-
         [JsonIgnore]
         public virtual AppUser DeletedByUser { get; set; }
-
 
         [JsonIgnore]
         public virtual AppUser Owner { get; set; }

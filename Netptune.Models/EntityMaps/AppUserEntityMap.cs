@@ -6,10 +6,8 @@ namespace Netptune.Entities.EntityMaps
 {
     public class AppUserEntityMap : IEntityTypeConfiguration<AppUser>
     {
-
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
-
             // (One-to-One) AppUser > Task
 
             builder
@@ -17,6 +15,5 @@ namespace Netptune.Entities.EntityMaps
                 .WithOne(e => e.Assignee)
                 .IsRequired();
         }
-
     }
 }

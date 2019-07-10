@@ -2,13 +2,10 @@
 using Netptune.Entities.Entites;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
-
 namespace Netptune.Entities.EntityMaps
 {
-
     public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
     {
-
         public override void Configure(EntityTypeBuilder<Workspace> builder)
         {
             base.Configure(builder);
@@ -21,6 +18,5 @@ namespace Netptune.Entities.EntityMaps
                 .HasForeignKey(task => task.WorkspaceId)
                 .IsRequired();
         }
-
     }
 }

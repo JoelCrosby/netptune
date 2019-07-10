@@ -7,7 +7,6 @@ namespace Netptune.Entities.EntityMaps
 {
     public class ProjectEntityMap : AuditableEntityMap<Project, int>
     {
-
         public override void Configure(EntityTypeBuilder<Project> builder)
         {
             base.Configure(builder);
@@ -23,7 +22,6 @@ namespace Netptune.Entities.EntityMaps
                 .HasMany(c => c.ProjectTasks)
                 .WithOne(e => e.Project);
 
-
             // (One-to-One) Project > Post
 
             builder
@@ -31,6 +29,5 @@ namespace Netptune.Entities.EntityMaps
                 .WithOne(e => e.Project)
                 .HasForeignKey(P => P.ProjectId);
         }
-
     }
 }

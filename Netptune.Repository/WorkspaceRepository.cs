@@ -22,7 +22,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<IEnumerable<Workspace>>> GetWorkspaces(AppUser user)
         {
-
             // Load the relationship table.
             _context.Workspaces.Include(m => m.WorkspaceUsers).ThenInclude(e => e.User);
 
@@ -38,7 +37,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Workspace>> GetWorkspace(int id)
         {
-
             var result = await _context.Workspaces.FindAsync(id);
 
             if (result == null) return RepoResult<Workspace>.NotFound();
@@ -48,7 +46,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Workspace>> UpdateWorkspace(Workspace workspace, AppUser user)
         {
-
             if (workspace == null)
             {
                 return RepoResult<Workspace>.BadRequest();
@@ -77,7 +74,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<Workspace>> AddWorkspace(Workspace workspace, AppUser user)
         {
-
             workspace.CreatedByUserId = user.Id;
             workspace.OwnerId = user.Id;
 
@@ -110,7 +106,6 @@ namespace Netptune.Repository
             await _context.SaveChangesAsync();
 
             return RepoResult<Workspace>.NoContent();
-
         }
     }
 }

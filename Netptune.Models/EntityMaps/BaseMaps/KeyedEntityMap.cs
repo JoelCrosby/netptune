@@ -10,7 +10,6 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-
             builder.HasKey(t => t.Id);
 
             builder

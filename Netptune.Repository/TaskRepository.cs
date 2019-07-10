@@ -88,7 +88,6 @@ namespace Netptune.Repository
 
         public async Task<RepoResult<ProjectTask>> GetTask(int id)
         {
-
             var task = await _context.ProjectTasks.FindAsync(id);
 
             if (task == null)
@@ -157,7 +156,7 @@ namespace Netptune.Repository
             var conUser = _context.AppUsers.Find(user.Id);
             var userWorkspaces = conUser.WorkspaceUsers.Select(x => x.Workspace).ToList();
 
-            if (!(userWorkspaces.Select(x => x.Id).Contains(relational.FirstOrDefault().workspace.Id)))
+            if (!userWorkspaces.Select(x => x.Id).Contains(relational.FirstOrDefault().workspace.Id))
             {
                 return RepoResult<TaskViewModel>.Unauthorized();
             }
@@ -205,7 +204,6 @@ namespace Netptune.Repository
                     InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
                     BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned)
                 });
-
 
             return RepoResult<ProjectTaskCounts>.Ok(result);
         }

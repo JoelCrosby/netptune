@@ -8,7 +8,6 @@ namespace Netptune.Entities.Entites
 {
     public class Post : AuditableEntity<int>
     {
-
         [Required]
         [StringLength(128)]
         public string Title { get; set; }

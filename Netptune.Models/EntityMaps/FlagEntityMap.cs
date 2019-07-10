@@ -4,14 +4,11 @@ using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-
     public class FlagEntityMap : AuditableEntityMap<Flag, int>
     {
-
         public override void Configure(EntityTypeBuilder<Flag> builder)
         {
             base.Configure(builder);
         }
-
     }
 }

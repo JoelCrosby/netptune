@@ -10,7 +10,6 @@ namespace Netptune
 {
     public class Startup
     {
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -21,7 +20,6 @@ namespace Netptune
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
            {
@@ -30,13 +28,11 @@ namespace Netptune
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -70,7 +66,6 @@ namespace Netptune
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
         }
     }
 }

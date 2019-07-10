@@ -13,7 +13,6 @@ namespace Netptune.Entities.Contexts
 {
     public class DataContext : IdentityDbContext
     {
-
         // Core data models
         public DbSet<Project> Projects { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
@@ -29,12 +28,10 @@ namespace Netptune.Entities.Contexts
 
         public DataContext() : base()
         {
-
         }
 
         public DataContext(DbContextOptions<DataContext> context) : base(context)
         {
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -44,7 +41,6 @@ namespace Netptune.Entities.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             base.OnModelCreating(builder);
 
             builder
@@ -59,7 +55,6 @@ namespace Netptune.Entities.Contexts
                 .ApplyConfiguration(new ProjectUserEntityMap())
                 .ApplyConfiguration(new WorkspaceAppUserEntityMap())
                 .ApplyConfiguration(new WorkspaceProjectEntityMap());
-
         }
 
         public override int SaveChanges()
@@ -99,9 +94,7 @@ namespace Netptune.Entities.Contexts
 
                     baseEntity.UpdatedAt = DateTime.UtcNow;
                 }
-
             }
         }
-
     }
 }
