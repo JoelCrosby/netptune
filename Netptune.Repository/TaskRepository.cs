@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,7 +82,7 @@ namespace Netptune.Repository
                     ProjectName = r.Project == null ? string.Empty : r.Project.Name
                 }).ToListAsync();
 
-            if (result == null) return RepoResult<IEnumerable<TaskViewModel>>.NotFound();
+            if (result == null) throw new Exception("GetTasksAsync returned null.");
 
             return RepoResult<IEnumerable<TaskViewModel>>.Ok(result);
         }
@@ -152,14 +153,6 @@ namespace Netptune.Repository
             }
 
             _context.AppUsers.Include(x => x.WorkspaceUsers).ThenInclude(x => x.Workspace);
-
-            var conUser = _context.AppUsers.Find(user.Id);
-            var userWorkspaces = conUser.WorkspaceUsers.Select(x => x.Workspace).ToList();
-
-            if (!userWorkspaces.Select(x => x.Id).Contains(relational.FirstOrDefault().workspace.Id))
-            {
-                return RepoResult<TaskViewModel>.Unauthorized();
-            }
 
             projectTask.WorkspaceId = relational.FirstOrDefault().workspace.Id;
             projectTask.ProjectId = relational.FirstOrDefault().project.Id;

@@ -46,13 +46,7 @@ namespace Netptune.Repository
                 return RepoResult<AppUser>.NotFound();
             }
 
-            if (currentUserId != updatedUser.Id)
-            {
-                return RepoResult<AppUser>.Unauthorized();
-            }
-
             updatedUser.PhoneNumber = user.PhoneNumber;
-
             updatedUser.FirstName = user.FirstName;
             updatedUser.LastName = user.LastName;
 
