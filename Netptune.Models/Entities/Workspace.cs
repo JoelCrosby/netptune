@@ -21,14 +21,13 @@ namespace Netptune.Entities.Entites
         public virtual ICollection<Project> Projects { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
-
+        public virtual ICollection<ProjectTask> ProjectTasks { get; }
         #endregion
 
     }

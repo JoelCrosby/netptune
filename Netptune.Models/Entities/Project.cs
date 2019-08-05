@@ -33,19 +33,19 @@ namespace Netptune.Entities.Entites
         public virtual Workspace Workspace { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
+        public virtual ICollection<ProjectUser> ProjectUsers { get; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; } = new List<ProjectTask>();
+        public virtual ICollection<ProjectTask> ProjectTasks { get; }
 
         [JsonIgnore]
-        public virtual ICollection<Post> ProjectPosts { get; } = new List<Post>();
+        public virtual ICollection<Post> ProjectPosts { get; }
 
         #endregion
 

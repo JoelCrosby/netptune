@@ -26,13 +26,9 @@ namespace Netptune.Entities.Contexts
         public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
 
-        public DataContext() : base()
-        {
-        }
+        public DataContext() { }
 
-        public DataContext(DbContextOptions<DataContext> context) : base(context)
-        {
-        }
+        public DataContext(DbContextOptions<DataContext> context) : base(context) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -63,17 +59,17 @@ namespace Netptune.Entities.Contexts
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync(
-            bool acceptAllChangesOnSuccess,
-            CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             AddTimestamps();
+
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             AddTimestamps();
+
             return base.SaveChangesAsync(cancellationToken);
         }
 

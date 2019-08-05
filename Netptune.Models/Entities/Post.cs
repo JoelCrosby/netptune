@@ -28,7 +28,7 @@ namespace Netptune.Entities.Entites
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual Project Project { get; set; }
+        public virtual Project Project { get; }
 
         #endregion
 

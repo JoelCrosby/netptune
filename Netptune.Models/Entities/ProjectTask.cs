@@ -37,13 +37,13 @@ namespace Netptune.Entities.Entites
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual AppUser Assignee { get; set; }
+        public virtual AppUser Assignee { get; }
 
         [JsonIgnore]
-        public virtual Project Project { get; set; }
+        public virtual Project Project { get; }
 
         [JsonIgnore]
-        public virtual Workspace Workspace { get; set; }
+        public virtual Workspace Workspace { get; }
 
         #endregion
 

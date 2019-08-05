@@ -34,16 +34,16 @@ namespace Netptune.Entities.Entites
         public virtual DateTimeOffset? RegistrationDate { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new List<WorkspaceAppUser>();
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; } = new List<WorkspaceProject>();
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; } = new List<ProjectUser>();
+        public virtual ICollection<ProjectUser> ProjectUsers { get; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> Tasks { get; } = new List<ProjectTask>();
+        public virtual ICollection<ProjectTask> Tasks { get; }
 
         [JsonIgnore]
         public virtual ProjectTask Assigneee { get; }
