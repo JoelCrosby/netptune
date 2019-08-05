@@ -53,12 +53,12 @@ export class LoginComponent implements OnDestroy {
     const loginFormControl = this.loginGroup.get('email');
     const passwordFormControl = this.loginGroup.get('password');
 
-    const username = loginFormControl ? loginFormControl.value : undefined;
+    const email = loginFormControl ? loginFormControl.value : undefined;
     const password = passwordFormControl ? passwordFormControl.value : undefined;
 
     this.loginGroup.disable();
 
-    if ((!username || !password) && passwordFormControl) {
+    if ((!email || !password) && passwordFormControl) {
       passwordFormControl.reset();
       this.loginGroup.enable();
       return;
@@ -66,7 +66,7 @@ export class LoginComponent implements OnDestroy {
 
     this.store.dispatch(
       new ActionAuthTryLogin({
-        username,
+        email,
         password,
       })
     );

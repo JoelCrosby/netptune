@@ -2,12 +2,14 @@
 {
     public enum RepoResultStatus
     {
-
         Ok,
-        NotFound,
-        BadRequest,
-        Unauthorized,
-        NoContent
 
+        NotFound,
+
+        BadRequest,
+
+        Unauthorized,
+
+        NoContent
     }
 }

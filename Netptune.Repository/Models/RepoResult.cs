@@ -2,13 +2,13 @@
 
 namespace Netptune.Repositories.Models
 {
-    public class RepoResult<T>
+    public sealed class RepoResult<TResult>
     {
         public string Message { get; }
 
         public RepoResultStatus Status { get; }
 
-        public T Result { get; }
+        public TResult Result { get; }
 
         private RepoResult(RepoResultStatus status)
         {
@@ -21,30 +21,30 @@ namespace Netptune.Repositories.Models
             Status = status;
         }
 
-        private RepoResult(string message, RepoResultStatus status, T result)
+        private RepoResult(string message, RepoResultStatus status, TResult result)
         {
             Message = message;
             Status = status;
             Result = result;
         }
 
-        public static RepoResult<T> NotFound(string message = "Not found")
-            => new RepoResult<T>(message, RepoResultStatus.NotFound);
+        public static RepoResult<TResult> NotFound(string message = "Not found")
+            => new RepoResult<TResult>(message, RepoResultStatus.NotFound);
 
-        public static RepoResult<T> BadRequest(string message = "Bad Request")
-            => new RepoResult<T>(message, RepoResultStatus.BadRequest);
+        public static RepoResult<TResult> BadRequest(string message = "Bad Request")
+            => new RepoResult<TResult>(message, RepoResultStatus.BadRequest);
 
-        public static RepoResult<T> Unauthorized(string message = "Unauthorized")
-            => new RepoResult<T>(message, RepoResultStatus.Unauthorized);
+        public static RepoResult<TResult> Unauthorized(string message = "Unauthorized")
+            => new RepoResult<TResult>(message, RepoResultStatus.Unauthorized);
 
-        public static RepoResult<T> Ok(T result, string message = "Ok")
-            => new RepoResult<T>(message, RepoResultStatus.Ok, result);
+        public static RepoResult<TResult> Ok(TResult result, string message = "Ok")
+            => new RepoResult<TResult>(message, RepoResultStatus.Ok, result);
 
-        public static RepoResult<T> Ok(string message = "Ok")
-            => new RepoResult<T>(message, RepoResultStatus.Ok);
+        public static RepoResult<TResult> Ok(string message = "Ok")
+            => new RepoResult<TResult>(message, RepoResultStatus.Ok);
 
-        public static RepoResult<T> NoContent()
-            => new RepoResult<T>(RepoResultStatus.NoContent);
+        public static RepoResult<TResult> NoContent()
+            => new RepoResult<TResult>(RepoResultStatus.NoContent);
 
         public IActionResult ToRestResult()
         {

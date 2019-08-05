@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,10 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Api.Services;
 using Netptune.Entities.Contexts;
 using Netptune.Repository;
 using Netptune.Repository.Interfaces;
+using Netptune.Services.Authentication;
+using Netptune.Services.Authentication.Interfaces;
 
 namespace Netptune.Api
 {
@@ -52,6 +56,8 @@ namespace Netptune.Api
                 );
 
             services.AddScoped<DbContext, DataContext>();
+
+            services.AddScoped<INetptuneAuthService, NetptuneAuthService>();
 
             // Register Repository services.
             services.AddScoped<ITaskRepository, TaskRepository>();

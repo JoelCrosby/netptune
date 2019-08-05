@@ -8,11 +8,11 @@ import { environment } from '@env/environment';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  login(loginReq: { username: string; password: string }) {
+  login(loginReq: { email: string; password: string }) {
     return this.http.post(environment.apiEndpoint + 'api/auth/login', loginReq);
   }
 
-  register(registerReq: { username: string; password: string }) {
+  register(registerReq: { email: string; password: string }) {
     return this.http.post(environment.apiEndpoint + 'api/auth/register', registerReq);
   }
 }

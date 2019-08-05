@@ -54,7 +54,7 @@ export class RegisterComponent implements OnDestroy {
     const password0FormControl = this.registerGroup.get('password0');
     const password1FormControl = this.registerGroup.get('password1');
 
-    const username = loginFormControl ? (loginFormControl.value as string) : undefined;
+    const email = loginFormControl ? (loginFormControl.value as string) : undefined;
     const password = password0FormControl ? (password0FormControl.value as string) : undefined;
 
     const passwordConfirm = password1FormControl
@@ -63,20 +63,20 @@ export class RegisterComponent implements OnDestroy {
 
     this.registerGroup.disable();
 
-    if (password != passwordConfirm) {
+    if (password !== passwordConfirm) {
       this.registerGroup.enable();
       return;
     }
 
-    if (!username || !password) {
-      password1FormControl && password1FormControl.reset();
+    if (!email || !password) {
+      password1FormControl.reset();
       this.registerGroup.enable();
       return;
     }
 
     this.store.dispatch(
       new ActionAuthRegister({
-        username,
+        email,
         password,
       })
     );

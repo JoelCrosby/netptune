@@ -13,7 +13,7 @@ export enum AuthActionTypes {
 export class ActionAuthTryLogin implements Action {
   readonly type = AuthActionTypes.TRY_LOGIN;
 
-  constructor(readonly payload: { username: string; password: string }) {}
+  constructor(readonly payload: { email: string; password: string }) {}
 }
 
 export class ActionAuthLoginSuccess implements Action {
@@ -35,7 +35,7 @@ export class ActionAuthLogout implements Action {
 export class ActionAuthRegister implements Action {
   readonly type = AuthActionTypes.REGISTER;
 
-  constructor(readonly payload: { username: string; password: string }) {}
+  constructor(readonly payload: { email: string; password: string }) {}
 }
 
 export class ActionAuthRegisterSuccess implements Action {
