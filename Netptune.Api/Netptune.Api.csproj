@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Netptune.Models\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
     <ProjectReference Include="..\Netptune.Repository\Netptune.Repository.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
   </ItemGroup>

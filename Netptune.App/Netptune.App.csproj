@@ -27,19 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="ClientApp\src\app\components\register\**" />
-    <EmbeddedResource Remove="ClientApp\src\app\interfaces\**" />
-    <EmbeddedResource Remove="ClientApp\src\Models\**" />
-    <None Remove="ClientApp\src\app\components\register\**" />
-    <None Remove="ClientApp\src\app\interfaces\**" />
-    <None Remove="ClientApp\src\Models\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\src\app\models\project.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />

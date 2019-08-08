@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Repository", "Netp
 		{AAC01825-77EF-442A-9759-93AFBC73E563} = {AAC01825-77EF-442A-9759-93AFBC73E563}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Entities", "Netptune.Models\Netptune.Entities.csproj", "{FE690814-8AD2-4A08-B04C-EF5DA50CDB24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Entities", "Netptune.Entities\Netptune.Entities.csproj", "{FE690814-8AD2-4A08-B04C-EF5DA50CDB24}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.UnitTests", "Netptune.UnitTests\Netptune.UnitTests.csproj", "{047EAC6B-EFF3-4421-A980-26FD8F4171A9}"
 EndProject

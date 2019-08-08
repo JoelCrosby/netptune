@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Netptune.Models\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
   </ItemGroup>
 
 </Project>
