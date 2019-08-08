@@ -55,15 +55,13 @@ namespace Netptune.Api
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddScoped<DbContext, DataContext>();
-
-            services.AddScoped<INetptuneAuthService, NetptuneAuthService>();
+            services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
 
             // Register Repository services.
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IWorkspaceRepository, WorkspaceRepository>();
 
             // Register the Swagger.
             services.AddSwagger();
