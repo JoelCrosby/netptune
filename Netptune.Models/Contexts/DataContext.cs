@@ -32,6 +32,8 @@ namespace Netptune.Entities.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (optionsBuilder.IsConfigured) return;
+
             optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Netptune;Integrated Security=SSPI;");
         }
 
@@ -82,14 +84,14 @@ namespace Netptune.Entities.Contexts
 
             foreach (var entity in entities)
             {
-                if (entity.Entity is AuditableEntity<int> baseEntity)
+                if (entity.Entity is AuditableEntity<int> auditableEntity)
                 {
                     if (entity.State == EntityState.Added)
                     {
-                        baseEntity.CreatedAt = DateTime.UtcNow;
+                        auditableEntity.CreatedAt = DateTime.UtcNow;
                     }
 
-                    baseEntity.UpdatedAt = DateTime.UtcNow;
+                    auditableEntity.UpdatedAt = DateTime.UtcNow;
                 }
             }
         }
