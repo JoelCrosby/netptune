@@ -56,6 +56,7 @@ namespace Netptune.Entities.Contexts
         public override int SaveChanges()
         {
             AddTimestamps();
+
             return base.SaveChanges();
         }
 

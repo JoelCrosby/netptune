@@ -32,6 +32,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetWorkspaceUsersAsync(int workspaceId)
         {
             var result = await _userRepository.GetWorkspaceUsersAsync(workspaceId);
+
             return result.ToRestResult();
         }
 
@@ -43,6 +44,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
             var result = await _userRepository.GetUserAsync(id);
+
             return result.ToRestResult();
         }
 
@@ -54,6 +56,7 @@ namespace Netptune.Api.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var result = await _userRepository.UpdateUserAsync(user, userId);
+
             return result.ToRestResult();
         }
 
@@ -66,6 +69,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> Invite(string userId, int workspaceId)
         {
             var result = await _userRepository.InviteUserToWorkspaceAsync(userId, workspaceId);
+
             return result.ToRestResult();
         }
 
@@ -77,6 +81,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
             var result = await _userRepository.GetUserByEmailAsync(email);
+
             return result.ToRestResult();
         }
     }

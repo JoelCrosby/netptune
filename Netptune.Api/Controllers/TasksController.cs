@@ -33,6 +33,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetTasks(int workspaceId)
         {
             var result = await _taskRepository.GetTasksAsync(workspaceId);
+
             return result.ToRestResult();
         }
 
@@ -44,6 +45,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetTask([FromRoute] int id)
         {
             var result = await _taskRepository.GetTask(id);
+
             return result.ToRestResult();
         }
 
@@ -54,8 +56,9 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
-            var user = await _userManager.GetUserAsync(User) as AppUser;
+            var user = await _userManager.GetUserAsync(User);
             var result = await _taskRepository.UpdateTask(task, user);
+
             return result.ToRestResult();
         }
 
@@ -66,8 +69,9 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(ProjectTask))]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
-            var user = await _userManager.GetUserAsync(User) as AppUser;
+            var user = await _userManager.GetUserAsync(User);
             var result = await _taskRepository.AddTask(task, user);
+
             return result.ToRestResult();
         }
 
@@ -77,8 +81,9 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var user = await _userManager.GetUserAsync(User) as AppUser;
+            var user = await _userManager.GetUserAsync(User);
             var result = await _taskRepository.DeleteTask(id, user);
+
             return result.ToRestResult();
         }
 
@@ -90,6 +95,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetProjectTaskCount(int projectId)
         {
             var result = await _taskRepository.GetProjectTaskCount(projectId);
+
             return result.ToRestResult();
         }
     }

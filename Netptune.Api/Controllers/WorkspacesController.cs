@@ -33,6 +33,7 @@ namespace Netptune.Api.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceRepository.GetWorkspaces(user);
+
             return result.ToRestResult();
         }
 
@@ -44,6 +45,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetWorkspace([FromRoute] int id)
         {
             var result = await _workspaceRepository.GetWorkspace(id);
+
             return result.ToRestResult();
         }
 
@@ -57,6 +59,7 @@ namespace Netptune.Api.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceRepository.UpdateWorkspace(workspace, user);
+
             return result.ToRestResult();
         }
 
@@ -68,6 +71,7 @@ namespace Netptune.Api.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceRepository.AddWorkspace(workspace, user);
+
             return result.ToRestResult();
         }
 
@@ -78,6 +82,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
             var result = await _workspaceRepository.DeleteWorkspace(id);
+
             return result.ToRestResult();
         }
     }
