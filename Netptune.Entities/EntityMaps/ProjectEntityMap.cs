@@ -12,22 +12,35 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
-                .HasOne(e => e.Workspace)
-                .WithMany(c => c.Projects)
+                .Property(project => project.Name)
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder
+                .Property(project => project.Description)
+                .HasMaxLength(4096);
+
+            builder
+                .Property(project => project.RepositoryUrl)
+                .HasMaxLength(1024);
+
+            builder
+                .HasOne(project => project.Workspace)
+                .WithMany(workspace => workspace.Projects)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             // (One-to-One) Project > Task
 
             builder
-                .HasMany(c => c.ProjectTasks)
-                .WithOne(e => e.Project);
+                .HasMany(project => project.ProjectTasks)
+                .WithOne(task => task.Project);
 
             // (One-to-One) Project > Post
 
             builder
-                .HasMany(c => c.ProjectPosts)
-                .WithOne(e => e.Project)
-                .HasForeignKey(P => P.ProjectId);
+                .HasMany(project => project.ProjectPosts)
+                .WithOne(post => post.Project)
+                .HasForeignKey(post => post.ProjectId);
         }
     }
 }

@@ -10,6 +10,15 @@ namespace Netptune.Entities.EntityMaps
         {
             base.Configure(builder);
 
+            builder
+                .Property(workspace => workspace.Name)
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder
+                .Property(workspace => workspace.Description)
+                .HasMaxLength(4096);
+
             // (One-to-One) Workspace > Task
 
             builder

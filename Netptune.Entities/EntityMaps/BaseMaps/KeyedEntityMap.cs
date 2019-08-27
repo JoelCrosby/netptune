@@ -10,11 +10,11 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
     {
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
-            builder.HasKey(t => t.Id);
+            builder.HasKey(entity => entity.Id);
 
             builder
-                .Property(t => t.Id)
-                .HasColumnName("id")
+                .Property(entity => entity.Id)
+                .HasColumnName("Id")
                 .ValueGeneratedOnAdd();
         }
     }

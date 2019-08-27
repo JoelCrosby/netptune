@@ -8,11 +8,26 @@ namespace Netptune.Entities.EntityMaps
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
+            builder
+                .Property(user => user.FirstName)
+                .HasMaxLength(256)
+                .IsRequired();
+
+            builder
+                .Property(user => user.LastName)
+                .HasMaxLength(256)
+                .IsRequired();
+
+            builder
+                .Property(user => user.PictureUrl)
+                .HasMaxLength(2048);
+
             // (One-to-One) AppUser > Task
 
             builder
-                .HasMany(c => c.Tasks)
-                .WithOne(e => e.Assignee)
+                .HasMany(user => user.Tasks)
+                .WithOne(task => task.Assignee)
+                .HasForeignKey(task => task.AssigneeId)
                 .IsRequired();
         }
     }

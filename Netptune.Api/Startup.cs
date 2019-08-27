@@ -36,7 +36,6 @@ namespace Netptune.Api
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     options
-                        .UseLazyLoadingProxies()
                         .UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase"));
                 }
                 else

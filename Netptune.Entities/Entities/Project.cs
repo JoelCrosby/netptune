@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Netptune.Entities.Entites.BaseEntities;
 using Netptune.Entities.Entites.Relationships;
 using Newtonsoft.Json;
@@ -9,21 +7,15 @@ namespace Netptune.Entities.Entites
 {
     public class Project : AuditableEntity<int>
     {
-        [Required]
-        [StringLength(128)]
         public string Name { get; set; }
 
-        [StringLength(1024)]
         public string Description { get; set; }
 
-        [StringLength(256)]
         public string RepositoryUrl { get; set; }
 
         #region ForeignKeys
 
-        [Required]
-        [ForeignKey("Workspace")]
-        public int? WorkspaceId { get; set; }
+        public int WorkspaceId { get; set; }
 
         #endregion
 
@@ -33,19 +25,19 @@ namespace Netptune.Entities.Entites
         public virtual Workspace Workspace { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; }
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; }
+        public virtual ICollection<ProjectTask> ProjectTasks { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<Post> ProjectPosts { get; }
+        public virtual ICollection<Post> ProjectPosts { get; set; }
 
         #endregion
 

@@ -13,17 +13,17 @@ namespace Netptune.Entities.EntityMaps
             // (Many-to-many) Workspace > Project
 
             builder
-                .HasKey(pt => new { pt.WorkspaceId, pt.ProjectId });
+                .HasKey(workspaceProject => new { workspaceProject.WorkspaceId, workspaceProject.ProjectId });
 
             builder
-                .HasOne(pt => pt.Workspace)
-                .WithMany(p => p.WorkspaceProjects)
-                .HasForeignKey(pt => pt.WorkspaceId);
+                .HasOne(workspaceProject => workspaceProject.Workspace)
+                .WithMany(workspace => workspace.WorkspaceProjects)
+                .HasForeignKey(workspaceProject => workspaceProject.WorkspaceId);
 
             builder
-                .HasOne(pt => pt.Project)
-                .WithMany(t => t.WorkspaceProjects)
-                .HasForeignKey(pt => pt.ProjectId);
+                .HasOne(workspaceProject => workspaceProject.Project)
+                .WithMany(project => project.WorkspaceProjects)
+                .HasForeignKey(workspaceProject => workspaceProject.ProjectId);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace Netptune.Entities.Contexts
         private void AddTimestamps()
         {
             var entities = ChangeTracker.Entries().Where(
-                x => x.Entity is AuditableEntity<int> && (x.State == EntityState.Added || x.State == EntityState.Modified)
+                entry => entry.Entity is AuditableEntity<int> && (entry.State == EntityState.Added || entry.State == EntityState.Modified)
             );
 
             foreach (var entity in entities)

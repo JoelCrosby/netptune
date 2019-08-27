@@ -13,21 +13,21 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
             base.Configure(builder);
 
             builder
-                .Property(t => t.Version)
+                .Property(entity => entity.Version)
                 .IsConcurrencyToken();
 
             builder
-                .Property(t => t.CreatedAt)
+                .Property(entity => entity.CreatedAt)
                 .HasColumnName("CreatedAt")
                 .HasDefaultValueSql("GetDate()");
 
             builder
-                .Property(t => t.UpdatedAt)
+                .Property(entity => entity.UpdatedAt)
                 .HasColumnName("UpdatedAt")
                 .IsRequired(false);
 
             builder
-                .Property(t => t.IsDeleted)
+                .Property(entity => entity.IsDeleted)
                 .HasColumnName("IsDeleted")
                 .HasDefaultValue(false);
         }

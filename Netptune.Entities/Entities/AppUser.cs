@@ -19,9 +19,6 @@ namespace Netptune.Entities.Entites
             if (string.IsNullOrWhiteSpace(FirstName) && string.IsNullOrWhiteSpace(LastName))
                 return UserName;
 
-            if (string.IsNullOrWhiteSpace(LastName))
-                return FirstName;
-
             return $"{FirstName} {LastName}";
         }
 
@@ -34,19 +31,19 @@ namespace Netptune.Entities.Entites
         public virtual DateTimeOffset? RegistrationDate { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; }
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> Tasks { get; }
+        public virtual ICollection<ProjectTask> Tasks { get; set; }
 
         [JsonIgnore]
-        public virtual ProjectTask Assigneee { get; }
+        public virtual ProjectTask Assigneee { get; set; }
 
         #endregion
 

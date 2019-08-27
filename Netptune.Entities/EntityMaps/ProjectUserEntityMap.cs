@@ -13,17 +13,17 @@ namespace Netptune.Entities.EntityMaps
             // (Many-to-many) Project > AppUser
 
             builder
-                .HasKey(pt => new { pt.ProjectId, pt.UserId });
+                .HasKey(projectUser => new { projectUser.ProjectId, projectUser.UserId });
 
             builder
-                .HasOne(pt => pt.Project)
-                .WithMany(p => p.ProjectUsers)
-                .HasForeignKey(pt => pt.ProjectId);
+                .HasOne(projectUser => projectUser.Project)
+                .WithMany(project => project.ProjectUsers)
+                .HasForeignKey(projectUser => projectUser.ProjectId);
 
             builder
-                .HasOne(pt => pt.User)
-                .WithMany(t => t.ProjectUsers)
-                .HasForeignKey(pt => pt.UserId);
+                .HasOne(projectUser => projectUser.User)
+                .WithMany(user => user.ProjectUsers)
+                .HasForeignKey(projectUser => projectUser.UserId);
         }
     }
 }

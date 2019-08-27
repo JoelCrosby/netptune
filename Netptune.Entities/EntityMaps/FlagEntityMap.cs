@@ -9,6 +9,15 @@ namespace Netptune.Entities.EntityMaps
         public override void Configure(EntityTypeBuilder<Flag> builder)
         {
             base.Configure(builder);
+
+            builder
+                .Property(flag => flag.Name)
+                .HasMaxLength(1024)
+                .IsRequired();
+
+            builder
+                .Property(flag => flag.Description)
+                .HasMaxLength(int.MaxValue);
         }
     }
 }
