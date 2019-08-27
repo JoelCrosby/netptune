@@ -16,6 +16,7 @@ namespace Netptune.Entities.Entites
 
         #region ForeignKeys
 
+        public string AssigneeId { get; set; }
 
         public int? ProjectId { get; set; }
 
