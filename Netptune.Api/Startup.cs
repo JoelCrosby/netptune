@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +30,7 @@ namespace Netptune.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -65,6 +66,11 @@ namespace Netptune.Api
 
             // Register the Swagger.
             services.AddSwagger();
+
+            if (Environment.IsDevelopment())
+            {
+                ConfigureDatabase(services).GetAwaiter().GetResult();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -101,6 +107,16 @@ namespace Netptune.Api
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+        }
+
+        private async Task ConfigureDatabase(IServiceCollection services)
+        {
+            using (var serviceScope = services.BuildServiceProvider().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+
+                await context.Database.EnsureCreatedAsync();
+            }
         }
     }
 }
