@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Entities.Entites;
@@ -11,7 +12,7 @@ using Netptune.Entities.EntityMaps;
 
 namespace Netptune.Entities.Contexts
 {
-    public class DataContext : IdentityDbContext
+    public class DataContext : IdentityDbContext<AppUser>
     {
         // Core data models
         public DbSet<Project> Projects { get; set; }
@@ -34,25 +35,38 @@ namespace Netptune.Entities.Contexts
         {
             if (optionsBuilder.IsConfigured) return;
 
-            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Netptune;Integrated Security=SSPI;");
+            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Netptune;Integrated Security=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            MapIdetityTableNames(builder);
+
             builder
-                .ApplyConfiguration(new AppUserEntityMap())
                 .ApplyConfiguration(new FlagEntityMap())
                 .ApplyConfiguration(new PostEntityMap())
                 .ApplyConfiguration(new ProjectEntityMap())
                 .ApplyConfiguration(new ProjectTaskEntityMap())
-                .ApplyConfiguration(new WorkspaceEntityMap());
+                .ApplyConfiguration(new WorkspaceEntityMap())
+                .ApplyConfiguration(new AppUserEntityMap());
 
             builder
                 .ApplyConfiguration(new ProjectUserEntityMap())
                 .ApplyConfiguration(new WorkspaceAppUserEntityMap())
                 .ApplyConfiguration(new WorkspaceProjectEntityMap());
+        }
+
+        private static void MapIdetityTableNames(ModelBuilder builder)
+        {
+            builder.Entity<AppUser>().ToTable("Users");
+            builder.Entity<IdentityRole>().ToTable("Roles");
+            builder.Entity<IdentityUserClaim<string>>().ToTable("Claims");
+            builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+            builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+            builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
         }
 
         public override int SaveChanges()

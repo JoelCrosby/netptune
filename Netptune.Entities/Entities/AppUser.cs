@@ -42,9 +42,6 @@ namespace Netptune.Entities.Entites
         [JsonIgnore]
         public virtual ICollection<ProjectTask> Tasks { get; set; }
 
-        [JsonIgnore]
-        public virtual ProjectTask Assigneee { get; set; }
-
         #endregion
 
     }

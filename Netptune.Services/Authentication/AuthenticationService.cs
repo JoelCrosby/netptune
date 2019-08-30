@@ -62,7 +62,8 @@ namespace Netptune.Services.Authentication
         {
             var user = new AppUser
             {
-                Email = model.Email
+                Email = model.Email,
+                UserName = model.Email
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

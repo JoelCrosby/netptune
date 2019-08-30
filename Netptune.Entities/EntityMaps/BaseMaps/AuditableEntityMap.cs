@@ -30,6 +30,23 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
                 .Property(entity => entity.IsDeleted)
                 .HasColumnName("IsDeleted")
                 .HasDefaultValue(false);
+
+            // Enity > AppUser
+
+            builder
+                .HasOne(entity => entity.CreatedByUser)
+                .WithOne()
+                .HasForeignKey<TEntity>(entity => entity.CreatedByUserId);
+
+            builder
+                .HasOne(entity => entity.ModifiedByUser)
+                .WithOne()
+                .HasForeignKey<TEntity>(entity => entity.ModifiedByUserId);
+
+            builder
+                .HasOne(entity => entity.DeletedByUser)
+                .WithOne()
+                .HasForeignKey<TEntity>(entity => entity.DeletedByUserId);
         }
     }
 }

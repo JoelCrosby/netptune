@@ -22,8 +22,6 @@ namespace Netptune.Entities.EntityMaps
                 .Property(user => user.PictureUrl)
                 .HasMaxLength(2048);
 
-            // (One-to-One) AppUser > Task
-
             builder
                 .HasMany(user => user.Tasks)
                 .WithOne(task => task.Assignee)
