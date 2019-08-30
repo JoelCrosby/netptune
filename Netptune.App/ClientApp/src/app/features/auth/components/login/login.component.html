@@ -1,57 +1,74 @@
 <div class="row no-gutters justify-content-center">
+  <div class="col-md-5 col-lg-4 col-sm-8 mt-5 form-auth">
+    <div class="progress-bar">
+      <mat-progress-bar mode="indeterminate" *ngIf="$authLoading | async"></mat-progress-bar>
+    </div>
 
-  <div class="col-md-5 col-lg-4 col-sm-8 mt-5 auth-form">
-
-    <mat-card>
-      <div class="progress-bar">
-        <mat-progress-bar mode="indeterminate" *ngIf="($authLoading | async)"></mat-progress-bar>
+    <form  [formGroup]="loginGroup" (ngSubmit)="login()">
+      <div class="mat-typography">
+        <h3 class="text-center w-100 mb-4">
+          Sign in to continue
+        </h3>
       </div>
-      <form class="form-signin" [formGroup]="loginGroup" (ngSubmit)="login()">
 
-        <div class="mat-typography">
-          <h3 class="text-center full-width">Sign in to continue</h3>
-        </div>
+      <div class="mt-2"></div>
 
-        <div class="mt-2"></div>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          id="email"
+          placeholder="Enter Email Address"
+          name="email"
+          formControlName="email"
+          autocomplete="username"
+        />
+        <mat-error *ngIf="f['email'].hasError('password') && !f['email'].hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="f['email'].hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput id="email" placeholder="Enter Email Address" name="email"
-            formControlName="email" autocomplete="username">
-          <mat-error *ngIf="f['email'].hasError('password') && !f['email'].hasError('required')">
-            Please enter a valid email address
-          </mat-error>
-          <mat-error *ngIf="f['email'].hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          id="password"
+          placeholder="Enter Password"
+          [type]="hidePassword ? 'password' : 'text'"
+          name="password"
+          formControlName="password"
+          autocomplete="current-password"
+        />
+        <mat-icon matSuffix (click)="hidePassword = !hidePassword" class="cursor-pointer"
+          >{{ hidePassword ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+        <mat-error *ngIf="f['password'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput id="password" placeholder="Enter Password" [type]="hidePassword ? 'password' : 'text'"
-            name="password" formControlName="password" autocomplete="current-password">
-          <mat-icon matSuffix (click)="hidePassword = !hidePassword" class="cursor-pointer">{{ hidePassword ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-          <mat-error *ngIf="f['password'].hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+      <div class="mt-4"></div>
 
-        <div class="form-spacer"></div>
+      <div class="button-container">
+        <button mat-stroked-button color="primary" type="submit" class="w-100 form-action-button">
+          Sign in
+        </button>
 
-        <div class="button-container">
-          <button mat-flat-button color="primary" type="submit" class="full-width form-action-button">
-            Sign in
-          </button>
+        <div class="mt-3"></div>
 
-          <div class="form-spacer"></div>
-
-          <button mat-button color="primary" type="button" (click)='onCreateAccountClicked()'>Create
-            Account
-          </button>
-        </div>
-      </form>
-    </mat-card>
-
+        <button
+          mat-button
+          color="primary"
+          type="button"
+          class="w-100 form-action-button"
+          (click)="onCreateAccountClicked()"
+        >
+          Create Account
+        </button>
+      </div>
+    </form>
   </div>
 </div>

@@ -1,13 +1,13 @@
 <h1 mat-dialog-title>{{ workspace ? 'Edit Workspace' : 'Add new Workspace'}}</h1>
 
-<form class="form-signin" [formGroup]="workspaceFromGroup">
+<form class="form-auth" [formGroup]="workspaceFromGroup">
 
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="w-100" appearance="outline">
       <mat-label>Enter Workspace Name</mat-label>
     <input matInput id="name" class="form-control" placeholder="Workspace Name" name="name" formControlName="nameFormControl">
   </mat-form-field>
 
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="w-100" appearance="outline">
       <mat-label>Enter Workspace Summary</mat-label>
     <textarea matInput id="description" class="form-control" placeholder="Description" name="description" aria-label="With textarea" formControlName="discriptionFormControl"></textarea>
   </mat-form-field>

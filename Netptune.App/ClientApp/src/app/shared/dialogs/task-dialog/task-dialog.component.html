@@ -2,7 +2,7 @@
 
 <form [formGroup]="projectFromGroup">
 
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="w-100" appearance="outline">
     <mat-label>Enter Task Summary</mat-label>
     <textarea matInput id="name" class="form-control" formControlName="nameFormControl" placeholder="What do you need to get done?"
       name="name" aria-label="With textarea" required></textarea>
@@ -11,7 +11,7 @@
 
   <br>
 
-  <mat-form-field class="full-width" appearance="outline">
+  <mat-form-field class="w-100" appearance="outline">
     <mat-label>Task Project</mat-label>
     <mat-select id="type" name="type" placeholder="Project" formControlName="projectFormControl" (selectionChange)="selectProject()">
       <mat-option>None</mat-option>
@@ -21,7 +21,7 @@
 
   <br>
 
-  <mat-form-field class="full-width" appearance="outline" *ngIf="showDescriptionField">
+  <mat-form-field class="w-100" appearance="outline" *ngIf="showDescriptionField">
     <mat-label>Enter Task Description</mat-label>
     <input matInput id="description" class="form-control" placeholder="Task Summary" formControlName="descriptionFormControl" name="Description">
   </mat-form-field>

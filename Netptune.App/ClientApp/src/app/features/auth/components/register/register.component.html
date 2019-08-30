@@ -1,66 +1,115 @@
 <div class="row no-gutters justify-content-center">
+  <div class="col-md-5 col-lg-4 col-sm-8 mt-5 form-auth">
+    <div class="progress-bar">
+      <mat-progress-bar mode="indeterminate" *ngIf="$authLoading | async"></mat-progress-bar>
+    </div>
 
-  <div class="col-md-5 col-lg-4 col-sm-8 mt-5 auth-form">
-
-    <mat-card>
-      <div class="progress-bar">
-        <mat-progress-bar mode="indeterminate" *ngIf="($authLoading | async)"></mat-progress-bar>
+    <form [formGroup]="registerGroup" (ngSubmit)="register()">
+      <div class="mat-typography">
+        <h2 class="text-center mb-4">
+          Create new Account
+        </h2>
       </div>
-      <form class="form-register" [formGroup]="registerGroup" (ngSubmit)="register()">
 
-        <div class="mat-typography">
-          <h3 class="text-center">Create new Account</h3>
-        </div>
+      <div class="mt-2"></div>
 
-        <div class="mt-2"></div>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Firstname</mat-label>
+        <input
+          matInput
+          name="firstname"
+          formControlName="firstname"
+          autocomplete="givenname"
+        />
+        <mat-error *ngIf="f['firstname'].hasError('firstname') && !f['firstname'].hasError('required')">
+          Please enter a valid Firstname
+        </mat-error>
+        <mat-error *ngIf="f['email'].hasError('required')">
+            Firstname is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Enter Email Address</mat-label>
-          <input matInput placeholder="Email" name="email" formControlName="email"
-            autocomplete="username">
-          <mat-error *ngIf="f['email'].hasError('email') && !f['email'].hasError('required')">
-            Please enter a valid email address
-          </mat-error>
-          <mat-error *ngIf="f['email'].hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Lastname</mat-label>
+        <input
+          matInput
+          name="lastname"
+          formControlName="lastname"
+          autocomplete="familyname"
+        />
+        <mat-error *ngIf="f['lastname'].hasError('lastname') && !f['lastname'].hasError('required')">
+          Please enter a valid Lastname
+        </mat-error>
+        <mat-error *ngIf="f['lastname'].hasError('required')">
+            Lastname is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <div class="form-spacer"></div>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input
+          matInput
+          name="email"
+          formControlName="email"
+          autocomplete="username"
+        />
+        <mat-error *ngIf="f['email'].hasError('email') && !f['email'].hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="f['email'].hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Enter Password</mat-label>
-          <input matInput placeholder="Password" type="password" name="password0"
-            formControlName="password0" autocomplete="new-password">
-          <mat-error *ngIf="f['password0'].hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+      <div class="mt-4"></div>
 
-        <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Confirm Password</mat-label>
-          <input matInput placeholder="Confirm Password" type="password" name="password1"
-            formControlName="password1" autocomplete="new-password">
-          <mat-error *ngIf="f['password1'].hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          name="password0"
+          formControlName="password0"
+          autocomplete="new-password"
+        />
+        <mat-error *ngIf="f['password0'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <div class="mt-2"></div>
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          type="password"
+          name="password1"
+          formControlName="password1"
+          autocomplete="new-password"
+        />
+        <mat-error *ngIf="f['password1'].hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-        <div class="button-container">
-          <button mat-flat-button color="primary" type="submit"
-            class="full-width form-action-button">Register Account
-          </button>
+      <div class="mt-2"></div>
 
-          <div class="mt-3"></div>
+      <div class="button-container">
+        <button mat-stroked-button color="primary" type="submit" class="w-100 form-action-button">
+          Register Account
+        </button>
 
-          <button mat-button color="primary" type="button" (click)='backToLoginClicked()'>Back to Log in</button>
-        </div>
+        <div class="mt-3"></div>
 
-      </form>
-    </mat-card>
-
+        <button
+          mat-button
+          color="primary"
+          type="button"
+          class="w-100 form-action-button"
+          (click)="backToLoginClicked()"
+        >
+          Back to Log in
+        </button>
+      </div>
+    </form>
   </div>
-
 </div>
