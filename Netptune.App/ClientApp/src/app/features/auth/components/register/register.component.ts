@@ -25,7 +25,9 @@ export class RegisterComponent implements OnDestroy {
   $authLoading = this.store.select(selectAuthLoading);
 
   registerGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    firstname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
+    lastname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)]),
     password0: new FormControl('', [Validators.required, Validators.minLength(4)]),
     password1: new FormControl('', [Validators.required, Validators.minLength(4)]),
   });
@@ -50,16 +52,11 @@ export class RegisterComponent implements OnDestroy {
   }
 
   register() {
-    const loginFormControl = this.registerGroup.get('email');
-    const password0FormControl = this.registerGroup.get('password0');
-    const password1FormControl = this.registerGroup.get('password1');
-
-    const email = loginFormControl ? (loginFormControl.value as string) : undefined;
-    const password = password0FormControl ? (password0FormControl.value as string) : undefined;
-
-    const passwordConfirm = password1FormControl
-      ? (password1FormControl.value as string)
-      : undefined;
+    const firstname: string = this.registerGroup.get('firstname').value;
+    const lastname: string = this.registerGroup.get('lastname').value;
+    const email: string = this.registerGroup.get('email').value;
+    const password: string = this.registerGroup.get('password0').value;
+    const passwordConfirm: string = this.registerGroup.get('password1').value;
 
     this.registerGroup.disable();
 
@@ -69,15 +66,18 @@ export class RegisterComponent implements OnDestroy {
     }
 
     if (!email || !password) {
-      password1FormControl.reset();
       this.registerGroup.enable();
       return;
     }
 
     this.store.dispatch(
       new ActionAuthRegister({
-        email,
-        password,
+        request: {
+          firstname,
+          lastname,
+          email,
+          password,
+        },
       })
     );
   }

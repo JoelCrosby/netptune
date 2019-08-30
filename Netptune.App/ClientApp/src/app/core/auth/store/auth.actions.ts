@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { RegisterRequest } from '@app/core/models/register-request';
 
 export enum AuthActionTypes {
   TRY_LOGIN = '[Auth] Try Login',
@@ -35,7 +36,7 @@ export class ActionAuthLogout implements Action {
 export class ActionAuthRegister implements Action {
   readonly type = AuthActionTypes.REGISTER;
 
-  constructor(readonly payload: { email: string; password: string }) {}
+  constructor(readonly payload: { request: RegisterRequest }) {}
 }
 
 export class ActionAuthRegisterSuccess implements Action {
