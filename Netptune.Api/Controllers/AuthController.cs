@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Entities.Authentication;
+using Netptune.Api.Extensions;
 using Netptune.Services.Authentication.Interfaces;
+using Netptune.Services.Authentication.Models;
 
 namespace Netptune.Api.Controllers
 {
@@ -40,7 +41,7 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(AuthenticationTicket))]
-        public async Task<IActionResult> Register([FromBody] TokenRequest model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             var result = await _authenticationService.Register(model);
 

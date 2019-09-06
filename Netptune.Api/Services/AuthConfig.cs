@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-using Netptune.Entities.Entites;
+using Netptune.Models;
 
 namespace Netptune.Api.Services
 {

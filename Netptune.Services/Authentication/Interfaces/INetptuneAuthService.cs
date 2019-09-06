@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Netptune.Entities.Authentication;
-using Netptune.Services.Models;
+
+using Netptune.Core.Models;
+using Netptune.Services.Authentication.Models;
 
 namespace Netptune.Services.Authentication.Interfaces
 {
@@ -8,6 +9,6 @@ namespace Netptune.Services.Authentication.Interfaces
     {
         Task<ServiceResult<AuthenticationTicket>> LogIn(TokenRequest model);
 
-        Task<ServiceResult<AuthenticationTicket>> Register(TokenRequest model);
+        Task<ServiceResult<AuthenticationTicket>> Register(RegisterRequest model);
     }
 }

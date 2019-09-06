@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Entities.Entites;
-using Netptune.Repository.Interfaces;
+using Netptune.Api.Extensions;
+using Netptune.Core.Services;
+using Netptune.Models;
 
 namespace Netptune.Api.Controllers
 {
@@ -17,12 +18,12 @@ namespace Netptune.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UsersController(UserManager<AppUser> userManager, IUserRepository userRepository)
+        public UsersController(UserManager<AppUser> userManager, IUserService userService)
         {
             _userManager = userManager;
-            _userRepository = userRepository;
+            _userService = userService;
         }
 
         // GET: api/AppUsers
@@ -31,7 +32,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<AppUser>))]
         public async Task<IActionResult> GetWorkspaceUsersAsync(int workspaceId)
         {
-            var result = await _userRepository.GetWorkspaceUsersAsync(workspaceId);
+            var result = await _userService.GetWorkspaceUsers(workspaceId);
 
             return result.ToRestResult();
         }
@@ -43,7 +44,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
-            var result = await _userRepository.GetUserAsync(id);
+            var result = await _userService.Get(id);
 
             return result.ToRestResult();
         }
@@ -55,7 +56,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> UpdateUser(AppUser user)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            var result = await _userRepository.UpdateUserAsync(user, userId);
+            var result = await _userService.Update(user, userId);
 
             return result.ToRestResult();
         }
@@ -68,7 +69,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> Invite(string userId, int workspaceId)
         {
-            var result = await _userRepository.InviteUserToWorkspaceAsync(userId, workspaceId);
+            var result = await _userService.InviteUserToWorkspace(userId, workspaceId);
 
             return result.ToRestResult();
         }
@@ -80,7 +81,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
-            var result = await _userRepository.GetUserByEmailAsync(email);
+            var result = await _userService.GetByEmail(email);
 
             return result.ToRestResult();
         }

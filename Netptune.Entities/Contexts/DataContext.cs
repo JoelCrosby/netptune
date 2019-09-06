@@ -2,13 +2,15 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Netptune.Entities.Entites;
-using Netptune.Entities.Entites.BaseEntities;
-using Netptune.Entities.Entites.Relationships;
+
 using Netptune.Entities.EntityMaps;
+using Netptune.Models;
+using Netptune.Models.BaseEntities;
+using Netptune.Models.Relationships;
 
 namespace Netptune.Entities.Contexts
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Netptune.Entities.Entites;
+
+using Netptune.Models;
 
 namespace Netptune.Entities.EntityMaps
 {
@@ -9,12 +10,12 @@ namespace Netptune.Entities.EntityMaps
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder
-                .Property(user => user.FirstName)
+                .Property(user => user.Firstname)
                 .HasMaxLength(256)
                 .IsRequired();
 
             builder
-                .Property(user => user.LastName)
+                .Property(user => user.Lastname)
                 .HasMaxLength(256)
                 .IsRequired();
 

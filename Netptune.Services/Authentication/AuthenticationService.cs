@@ -11,17 +11,15 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-using Netptune.Entities.Authentication;
-using Netptune.Entities.Contexts;
-using Netptune.Entities.Entites;
+using Netptune.Core.Models;
+using Netptune.Models;
 using Netptune.Services.Authentication.Interfaces;
-using Netptune.Services.Models;
+using Netptune.Services.Authentication.Models;
 
 namespace Netptune.Services.Authentication
 {
     public class NetptuneAuthService : INetptuneAuthService
     {
-        private readonly DataContext _context;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
@@ -32,13 +30,11 @@ namespace Netptune.Services.Authentication
 
         public NetptuneAuthService(
             IConfiguration configuration,
-            DataContext context,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager
             )
         {
             _configuration = configuration;
-            _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
 
@@ -53,17 +49,19 @@ namespace Netptune.Services.Authentication
 
             if (!result.Succeeded) return ServiceResult<AuthenticationTicket>.BadRequest("Username or Password is incorrect");
 
-            var appUser = await UpdateLastLoginTime(model);
+            var appUser = await _userManager.FindByEmailAsync(model.Email);
 
             return ServiceResult<AuthenticationTicket>.Ok(GenerateToken(appUser));
         }
 
-        public async Task<ServiceResult<AuthenticationTicket>> Register(TokenRequest model)
+        public async Task<ServiceResult<AuthenticationTicket>> Register(RegisterRequest model)
         {
             var user = new AppUser
             {
                 Email = model.Email,
-                UserName = model.Email
+                UserName = model.Email,
+                Firstname = model.Firstname,
+                Lastname = model.Lastname
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -78,7 +76,7 @@ namespace Netptune.Services.Authentication
                 return ServiceResult<AuthenticationTicket>.BadRequest("Registration failed.");
             }
 
-            var appUser = await UpdateRegistrationTime(model);
+            var appUser = await _userManager.FindByEmailAsync(model.Email);
 
             await _signInManager.SignInAsync(appUser, false);
 
@@ -88,22 +86,6 @@ namespace Netptune.Services.Authentication
         private DateTime GetExpireDays()
         {
             return DateTime.Now.AddDays(Convert.ToDouble(_expireDays));
-        }
-
-        private async Task<AppUser> UpdateLastLoginTime(TokenRequest model)
-        {
-            var appUser = await _userManager.FindByEmailAsync(model.Email);
-            appUser.LastLoginTime = DateTime.UtcNow;
-            _context.SaveChanges();
-            return appUser;
-        }
-
-        private async Task<AppUser> UpdateRegistrationTime(TokenRequest model)
-        {
-            var appUser = await _userManager.FindByEmailAsync(model.Email);
-            appUser.RegistrationDate = DateTime.UtcNow;
-            _context.SaveChanges();
-            return appUser;
         }
 
         private AuthenticationTicket GenerateToken(AppUser appUser)
@@ -145,12 +127,12 @@ namespace Netptune.Services.Authentication
 
         private string GetUserDisplayName(AppUser user)
         {
-            if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
+            if (string.IsNullOrEmpty(user.Firstname) || string.IsNullOrEmpty(user.Lastname))
             {
                 return user.Email;
             }
 
-            return $"{user.FirstName} {user.LastName}";
+            return $"{user.Firstname} {user.Lastname}";
         }
     }
 }

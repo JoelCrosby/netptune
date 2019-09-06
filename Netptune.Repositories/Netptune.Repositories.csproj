@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Models\Netptune.Models.csproj" />
+  </ItemGroup>
+</Project>

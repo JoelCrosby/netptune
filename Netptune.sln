@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Api", "Netptune.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Services", "Netptune.Services\Netptune.Services.csproj", "{AAC01825-77EF-442A-9759-93AFBC73E563}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Repository", "Netptune.Repository\Netptune.Repository.csproj", "{4613A1B1-F78C-49E0-B3C8-6A421781F787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Repositories", "Netptune.Repositories\Netptune.Repositories.csproj", "{4613A1B1-F78C-49E0-B3C8-6A421781F787}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AAC01825-77EF-442A-9759-93AFBC73E563} = {AAC01825-77EF-442A-9759-93AFBC73E563}
 	EndProjectSection
@@ -22,7 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Entities", "Netptu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.UnitTests", "Netptune.UnitTests\Netptune.UnitTests.csproj", "{047EAC6B-EFF3-4421-A980-26FD8F4171A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netptune.Core", "Netptune.Core\Netptune.Core.csproj", "{5C71DA75-13A9-4D3F-B5A5-104CDCF9A7F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Core", "Netptune.Core\Netptune.Core.csproj", "{5C71DA75-13A9-4D3F-B5A5-104CDCF9A7F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Models", "Netptune.Models\Netptune.Models.csproj", "{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,6 +120,18 @@ Global
 		{5C71DA75-13A9-4D3F-B5A5-104CDCF9A7F8}.Release|x64.Build.0 = Release|Any CPU
 		{5C71DA75-13A9-4D3F-B5A5-104CDCF9A7F8}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C71DA75-13A9-4D3F-B5A5-104CDCF9A7F8}.Release|x86.Build.0 = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|x64.Build.0 = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3301B35-0E20-40DA-B34F-C6E7DC6100C3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

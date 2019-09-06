@@ -1,19 +1,20 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Api.Services;
+using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
-using Netptune.Repository;
-using Netptune.Repository.Interfaces;
+using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Authentication.Interfaces;
+using Netptune.Services.Configuration;
 
 namespace Netptune.Api
 {
@@ -30,19 +31,10 @@ namespace Netptune.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<DbContext, DataContext>();
-            services.AddDbContext<DataContext>(options =>
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    options
-                        .UseSqlServer(Configuration.GetConnectionString("ProjectsDatabase"));
-                }
-                else
-                {
-                    options.UseNpgsql(Configuration.GetConnectionString("ProjectsDatabasePostgres"));
-                }
-            });
+            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            var connectionString = isWindows
+                ? Configuration.GetConnectionString("ProjectsDatabase")
+                : Configuration.GetConnectionString("ProjectsDatabasePostgres");
 
             services.AddAuth(Configuration);
 
@@ -57,11 +49,14 @@ namespace Netptune.Api
 
             services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
 
-            // Register Repository services.
-            services.AddTransient<ITaskRepository, TaskRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddTransient<IWorkspaceRepository, WorkspaceRepository>();
+            services.AddNetptuneRepository(connectionString);
+            services.AddNetptuneEntities(options =>
+            {
+                options.ConnectionString = connectionString;
+                options.IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            });
+
+            services.AddNetptuneServices();
 
             // Register the Swagger.
             services.AddSwagger();

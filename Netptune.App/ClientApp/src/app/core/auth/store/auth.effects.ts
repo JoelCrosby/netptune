@@ -70,7 +70,7 @@ export class AuthEffects {
       ofType<ActionAuthRegister>(AuthActionTypes.REGISTER),
       debounceTime(debounce, scheduler),
       switchMap((action: ActionAuthRegister) =>
-        this.authService.register(action.payload).pipe(
+        this.authService.register(action.payload.request).pipe(
           map((userInfo: any) => new ActionAuthRegisterSuccess(userInfo)),
           tap(() => this.router.navigate(['/workspaces'])),
           catchError(error => of(new ActionAuthRegisterFail({ error })))

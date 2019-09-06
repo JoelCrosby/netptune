@@ -1,4 +1,5 @@
 using System.Diagnostics;
+
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Netptune.Pages

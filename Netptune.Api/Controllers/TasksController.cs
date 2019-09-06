@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Entities.Entites;
-using Netptune.Entities.VeiwModels.ProjectTasks;
-using Netptune.Repository.Interfaces;
+using Netptune.Api.Extensions;
+using Netptune.Core.Services;
+using Netptune.Models;
+using Netptune.Models.VeiwModels.ProjectTasks;
 
 namespace Netptune.Api.Controllers
 {
@@ -17,12 +18,12 @@ namespace Netptune.Api.Controllers
     [ApiController]
     public class ProjectTasksController : ControllerBase
     {
-        private readonly ITaskRepository _taskRepository;
+        private readonly ITaskService _taskService;
         private readonly UserManager<AppUser> _userManager;
 
-        public ProjectTasksController(ITaskRepository taskRepository, UserManager<AppUser> userManager)
+        public ProjectTasksController(ITaskService taskService, UserManager<AppUser> userManager)
         {
-            _taskRepository = taskRepository;
+            _taskService = taskService;
             _userManager = userManager;
         }
 
@@ -32,7 +33,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
         public async Task<IActionResult> GetTasks(int workspaceId)
         {
-            var result = await _taskRepository.GetTasksAsync(workspaceId);
+            var result = await _taskService.GetTasks(workspaceId);
 
             return result.ToRestResult();
         }
@@ -41,10 +42,10 @@ namespace Netptune.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(ProjectTask))]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> GetTask([FromRoute] int id)
         {
-            var result = await _taskRepository.GetTask(id);
+            var result = await _taskService.GetTask(id);
 
             return result.ToRestResult();
         }
@@ -57,7 +58,7 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _taskRepository.UpdateTask(task, user);
+            var result = await _taskService.UpdateTask(task, user);
 
             return result.ToRestResult();
         }
@@ -66,11 +67,11 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(ProjectTask))]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _taskRepository.AddTask(task, user);
+            var result = await _taskService.AddTask(task, user);
 
             return result.ToRestResult();
         }
@@ -79,10 +80,11 @@ namespace Netptune.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _taskRepository.DeleteTask(id, user);
+            var result = await _taskService.DeleteTask(id, user);
 
             return result.ToRestResult();
         }
@@ -94,7 +96,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(ProjectTaskCounts))]
         public async Task<IActionResult> GetProjectTaskCount(int projectId)
         {
-            var result = await _taskRepository.GetProjectTaskCount(projectId);
+            var result = await _taskService.GetProjectTaskCount(projectId);
 
             return result.ToRestResult();
         }

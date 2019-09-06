@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Netptune.Entities.Entites.BaseEntities;
+
+using Netptune.Models.BaseEntities;
 
 namespace Netptune.Entities.EntityMaps.BaseMaps
 {
