@@ -1,3 +1,4 @@
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Project } from '@app/core/models/project';
@@ -13,12 +14,10 @@ export class ProjectsService {
     if (!workspace) {
       return throwError('no current workspace');
     }
-    return this.http.get<Project[]>(
-      environment.apiEndpoint + `api/projects?workspaceId=${workspace.id}`
-    );
+    return this.http.get<ProjectViewModel[]>(environment.apiEndpoint + `api/projects?workspaceId=${workspace.id}`);
   }
 
   post(project: Project) {
-    return this.http.post<Project>(environment.apiEndpoint + 'api/projects', project);
+    return this.http.post<ProjectViewModel>(environment.apiEndpoint + 'api/projects', project);
   }
 }

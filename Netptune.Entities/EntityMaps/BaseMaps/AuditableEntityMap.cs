@@ -15,7 +15,8 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
 
             builder
                 .Property(entity => entity.Version)
-                .IsConcurrencyToken();
+                .IsConcurrencyToken()
+                .ValueGeneratedOnAddOrUpdate();
 
             builder
                 .Property(entity => entity.CreatedAt)
@@ -36,18 +37,27 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
 
             builder
                 .HasOne(entity => entity.CreatedByUser)
-                .WithOne()
-                .HasForeignKey<TEntity>(entity => entity.CreatedByUserId);
+                .WithMany()
+                .HasForeignKey(entity => entity.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(entity => entity.ModifiedByUser)
-                .WithOne()
-                .HasForeignKey<TEntity>(entity => entity.ModifiedByUserId);
+                .WithMany()
+                .HasForeignKey(entity => entity.ModifiedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(entity => entity.DeletedByUser)
-                .WithOne()
-                .HasForeignKey<TEntity>(entity => entity.DeletedByUserId);
+                .WithMany()
+                .HasForeignKey(entity => entity.DeletedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+               .HasOne(entity => entity.Owner)
+               .WithMany()
+               .HasForeignKey(entity => entity.OwnerId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

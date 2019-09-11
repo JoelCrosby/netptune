@@ -1,6 +1,6 @@
+import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { ProjectsActions, ProjectsActionTypes } from './projects.actions';
-import { Project } from '@app/core/models/project';
-import { EntityAdapter, createEntityAdapter, EntityState } from '@ngrx/entity';
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 
 export interface ProjectsState {
   projects: Projects;
@@ -18,9 +18,9 @@ export const initialState: ProjectsState = {
   createProjectLoading: false,
 };
 
-export interface Projects extends EntityState<Project> {}
+export interface Projects extends EntityState<ProjectViewModel> {}
 
-export const adapter: EntityAdapter<Project> = createEntityAdapter<Project>();
+export const adapter: EntityAdapter<ProjectViewModel> = createEntityAdapter<ProjectViewModel>();
 
 export function projectsReducer(state = initialState, action: ProjectsActions): ProjectsState {
   switch (action.type) {

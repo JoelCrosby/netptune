@@ -141,8 +141,6 @@ namespace Netptune.Repositories
 
             var result = await Context.ProjectTasks.AddAsync(projectTask);
 
-            await Context.SaveChangesAsync();
-
             return result.Entity;
         }
 
@@ -154,8 +152,6 @@ namespace Netptune.Repositories
 
             task.IsDeleted = true;
             task.DeletedByUserId = user.Id;
-
-            await Context.SaveChangesAsync();
 
             return task;
         }

@@ -31,7 +31,7 @@ namespace Netptune.Repositories
 
         public async Task<AppUser> Update(AppUser user, string currentUserId)
         {
-            var updatedUser = Context.AppUsers.SingleOrDefault(x => x.Id == user.Id);
+            var updatedUser = await Context.AppUsers.FirstOrDefaultAsync(x => x.Id == user.Id);
 
             if (updatedUser == null)
             {
@@ -41,8 +41,6 @@ namespace Netptune.Repositories
             updatedUser.PhoneNumber = user.PhoneNumber;
             updatedUser.Firstname = user.Firstname;
             updatedUser.Lastname = user.Lastname;
-
-            await Context.SaveChangesAsync();
 
             return updatedUser;
         }
@@ -57,16 +55,14 @@ namespace Netptune.Repositories
                 UserId = userId
             };
 
-            var result = Context.WorkspaceAppUsers.Add(invite);
-
-            await Context.SaveChangesAsync();
+            var result = await Context.WorkspaceAppUsers.AddAsync(invite);
 
             return result.Entity;
         }
 
         public async Task<AppUser> GetByEmail(string email)
         {
-            return await Context.AppUsers.SingleOrDefaultAsync(x => x.Email == email);
+            return await Context.AppUsers.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<bool> IsUserInWorkspace(string userId, int workspaceId)

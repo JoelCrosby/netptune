@@ -35,10 +35,7 @@ namespace Netptune.Entities.EntityMaps
                 .IsRequired();
 
             builder
-                .HasOne(task => task.Owner)
-                .WithOne()
-                .HasForeignKey<ProjectTask>(task => task.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .Property(task => task.OwnerId)
                 .IsRequired();
         }
     }

@@ -16,16 +16,16 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; set; }
+        public virtual ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
         #endregion
     }
 }

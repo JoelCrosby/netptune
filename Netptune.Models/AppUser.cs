@@ -34,16 +34,16 @@ namespace Netptune.Models
         public virtual DateTimeOffset? RegistrationDate { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; } = new HashSet<ProjectUser>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> Tasks { get; set; }
+        public virtual ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
 
         #endregion
 

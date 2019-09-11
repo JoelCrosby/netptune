@@ -27,19 +27,19 @@ namespace Netptune.Models
         public virtual Workspace Workspace { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; }
+        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; }
+        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; } = new HashSet<ProjectUser>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; set; }
+        public virtual ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
 
         [JsonIgnore]
-        public virtual ICollection<Post> ProjectPosts { get; set; }
+        public virtual ICollection<Post> ProjectPosts { get; set; } = new HashSet<Post>();
 
         #endregion
 

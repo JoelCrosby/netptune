@@ -17,11 +17,7 @@ import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
 
 @Injectable()
 export class ProjectsEffects {
-  constructor(
-    private actions$: Actions<ProjectsActions>,
-    private projectsService: ProjectsService,
-    private store: Store<AppState>
-  ) {}
+  constructor(private actions$: Actions<ProjectsActions>, private projectsService: ProjectsService, private store: Store<AppState>) {}
 
   @Effect()
   loadProjects$ = this.actions$.pipe(

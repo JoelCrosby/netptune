@@ -1,4 +1,4 @@
-<div [class]="'app-container theme-wrapper ' + (theme$ | async)" [class.example-is-mobile]="mobileQuery.matches">
+<div [class]="'app-container theme-wrapper ' + (theme$ | async)" [class.app-is-mobile]="mobileQuery.matches">
   <mat-sidenav-container class="app-sidenav-container">
     <mat-sidenav
       #snav
@@ -62,7 +62,11 @@
           </mat-menu>
         </ng-template>
       </mat-toolbar>
-      <router-outlet></router-outlet>
+
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
