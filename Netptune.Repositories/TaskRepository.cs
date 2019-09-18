@@ -35,7 +35,7 @@ namespace Netptune.Repositories
 
             if (task == null) return null;
 
-            return new TaskViewModel()
+            return new TaskViewModel
             {
                 Id = task.Id,
                 AssigneeId = task.AssigneeId,
@@ -64,8 +64,8 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner);
 
-            var result = await tasks
-                .Select(r => new TaskViewModel()
+            return await tasks
+                .Select(r => new TaskViewModel
                 {
                     Id = r.Id,
                     AssigneeId = r.Assignee == null ? string.Empty : r.Assignee.Id,
@@ -83,10 +83,6 @@ namespace Netptune.Repositories
                     OwnerUsername = r.Owner == null ? string.Empty : r.Owner.GetDisplayName(),
                     ProjectName = r.Project == null ? string.Empty : r.Project.Name
                 }).ToListAsync();
-
-            if (result == null) throw new Exception("GetTasksAsync returned null.");
-
-            return result;
         }
 
         public async Task<ProjectTask> UpdateTask(ProjectTask projectTask, AppUser user)
@@ -164,7 +160,7 @@ namespace Netptune.Repositories
                 .Where(x => x.ProjectId == projectId && !x.IsDeleted)
                 .ToListAsync();
 
-            return new ProjectTaskCounts()
+            return new ProjectTaskCounts
             {
                 AllTasks = tasks.Count,
                 CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),

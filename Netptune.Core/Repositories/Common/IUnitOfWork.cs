@@ -25,6 +25,6 @@ namespace Netptune.Core.Repositories.Common
         /// After completion commits the changes, if it fails it rolls the changes back
         /// </summary>
         /// <param name="callback"></param>
-        Task Transaction(Func<Task> callback);
+        Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback);
     }
 }

@@ -23,13 +23,14 @@ namespace Netptune.Services
 
         public async Task<ServiceResult<ProjectViewModel>> AddProject(Project project, AppUser user)
         {
-            var result = await _projectRepository.AddProject(project, user);
+            return await _unitOfWork.Transaction(async () =>
+            {
+                var result = await _projectRepository.AddProject(project, user);
 
-            if (result == null) return ServiceResult<ProjectViewModel>.BadRequest();
+                await _unitOfWork.CompleteAsync();
 
-            await _unitOfWork.CompleteAsync();
-
-            return await GetProjectViewModel(result);
+                return await GetProjectViewModel(result.Id);
+            });
         }
 
         public async Task<ServiceResult<ProjectViewModel>> DeleteProject(int id)
@@ -72,9 +73,16 @@ namespace Netptune.Services
             return await GetProjectViewModel(result);
         }
 
-        private async Task<ServiceResult<ProjectViewModel>> GetProjectViewModel(Project result)
+        private async Task<ServiceResult<ProjectViewModel>> GetProjectViewModel(Project project)
         {
-            var viewModel = await _projectRepository.GetProjectViewModel(result.Id);
+            var viewModel = await _projectRepository.GetProjectViewModel(project.Id);
+
+            return ServiceResult<ProjectViewModel>.Ok(viewModel);
+        }
+
+        private async Task<ServiceResult<ProjectViewModel>> GetProjectViewModel(int projectId)
+        {
+            var viewModel = await _projectRepository.GetProjectViewModel(projectId);
 
             return ServiceResult<ProjectViewModel>.Ok(viewModel);
         }

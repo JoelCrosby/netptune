@@ -50,16 +50,19 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="callback"></param>
 
-        public async Task Transaction(Func<Task> callback)
+        public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback)
         {
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
                 {
-                    await callback();
+                    var result = await callback();
+
                     // Commit transaction if all commands succeed, transaction will auto-rollback
                     // when disposed if either commands fails
                     transaction.Commit();
+
+                    return result;
                 }
                 catch (Exception ex)
                 {

@@ -86,51 +86,37 @@ namespace Netptune.Repositories
 
         public async Task<Project> AddProject(Project project, AppUser user)
         {
-            using (var transaction = Context.Database.BeginTransaction())
+            var workspace = await Context.Workspaces.FirstOrDefaultAsync(x => x.Id == project.WorkspaceId);
+
+            project.CreatedByUserId = user.Id;
+            project.OwnerId = user.Id;
+
+            var result = await Context.Projects.AddAsync(project);
+
+            await Context.SaveChangesAsync();
+
+            // Need to explicily load the navigation property context.
+            // other wise the workspace.WorkspaceUsers list will return null.
+            Context.Projects.Include(m => m.WorkspaceProjects);
+            Context.Projects.Include(m => m.ProjectUsers);
+
+            var workspaceRelationship = new WorkspaceProject
             {
-                try
-                {
-                    var workspace = await Context.Workspaces.FirstOrDefaultAsync(x => x.Id == project.WorkspaceId);
+                ProjectId = project.Id,
+                WorkspaceId = workspace.Id
+            };
 
-                    project.CreatedByUserId = user.Id;
-                    project.OwnerId = user.Id;
+            project.WorkspaceProjects.Add(workspaceRelationship);
 
-                    var result = await Context.Projects.AddAsync(project);
+            var userRelationship = new ProjectUser
+            {
+                ProjectId = project.Id,
+                UserId = user.Id
+            };
 
-                    await Context.SaveChangesAsync();
+            project.ProjectUsers.Add(userRelationship);
 
-                    // Need to explicily load the navigation property context.
-                    // other wise the workspace.WorkspaceUsers list will return null.
-                    Context.Projects.Include(m => m.WorkspaceProjects);
-                    Context.Projects.Include(m => m.ProjectUsers);
-
-                    var workspaceRelationship = new WorkspaceProject
-                    {
-                        ProjectId = project.Id,
-                        WorkspaceId = workspace.Id
-                    };
-
-                    project.WorkspaceProjects.Add(workspaceRelationship);
-
-                    var userRelationship = new ProjectUser
-                    {
-                        ProjectId = project.Id,
-                        UserId = user.Id
-                    };
-
-                    project.ProjectUsers.Add(userRelationship);
-
-                    await Context.SaveChangesAsync();
-
-                    transaction.Commit();
-
-                    return result.Entity;
-                }
-                catch (System.Exception)
-                {
-                    throw;
-                }
-            }
+            return result.Entity;
         }
 
         public async Task<Project> DeleteProject(int id)
