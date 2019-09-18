@@ -1,5 +1,5 @@
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 import { UsersActions, UsersActionTypes } from './users.actions';
 
 export interface UsersState {

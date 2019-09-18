@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
+import { AppState } from '@core/core.state';
 import { selectSelectedTask } from '../../store/project-tasks.selectors';
 
 @Component({

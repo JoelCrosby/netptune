@@ -1,8 +1,8 @@
 import { ProjectTasksActions, ProjectTasksActionTypes } from './project-tasks.actions';
-import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
-import { ProjectTask } from '@app/core/models/project-task';
+import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
+import { ProjectTask } from '@core/models/project-task';
 import { EntityAdapter, createEntityAdapter, EntityState } from '@ngrx/entity';
-import { ActionState, DefaultActionState } from '@app/core/types/action-state';
+import { ActionState, DefaultActionState } from '@core/types/action-state';
 
 export interface ProjectTasksState {
   tasks: ProjectTasks;

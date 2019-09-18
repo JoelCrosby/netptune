@@ -1,28 +1,26 @@
-import { Component, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { MediaMatcher } from '@angular/cdk/layout';
-import {
-  selectIsAuthenticated,
-  selectCurrentUserDisplayName,
-} from './core/auth/store/auth.selectors';
-import { Store } from '@ngrx/store';
-import { ActionAuthLogout } from './core/auth/store/auth.actions';
-import { AppState, selectPageTitle } from './core/core.state';
-import { selectEffectiveTheme } from './features/settings/store/settings.selectors';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
+import { Router } from '@angular/router';
+import { ActionAuthLogout } from '@core/auth/store/auth.actions';
+import { selectCurrentUserDisplayName, selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { AppState, selectPageTitle } from '@core/core.state';
+import { MediaService } from '@core/media/media.service';
+import { selectEffectiveTheme } from '@core/settings/settings.selectors';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnDestroy {
-  @ViewChild(MatSidenav, { static: true }) sideNav: MatSidenav;
+export class AppComponent implements OnInit {
+  @ViewChild(MatSidenav, { static: false }) sideNav: MatSidenav;
 
-  theme$ = this.store.select(selectEffectiveTheme);
-  authenticated$ = this.store.select(selectIsAuthenticated);
-  displayName$ = this.store.select(selectCurrentUserDisplayName);
-  pageTitle$ = this.store.select(selectPageTitle);
+  theme$: Observable<string>;
+  authenticated$: Observable<boolean>;
+  displayName$: Observable<string>;
+  pageTitle$: Observable<string>;
 
   links = [
     { label: 'Projects', value: ['/projects'] },
@@ -35,28 +33,18 @@ export class AppComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
 
-  private mobileQueryListener: () => void;
-
-  constructor(
-    private store: Store<AppState>,
-    private router: Router,
-    changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher
-  ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this.mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this.mobileQueryListener);
+  constructor(private store: Store<AppState>, private router: Router, private mediaService: MediaService) {
+    this.mobileQuery = this.mediaService.mobileQuery;
   }
 
-  toggleSideNav(): void {
-    console.log(this.sideNav);
-    this.sideNav.toggle();
+  ngOnInit() {
+    this.theme$ = this.store.pipe(select(selectEffectiveTheme));
+    this.authenticated$ = this.store.pipe(select(selectIsAuthenticated));
+    this.displayName$ = this.store.pipe(select(selectCurrentUserDisplayName));
+    this.pageTitle$ = this.store.pipe(select(selectPageTitle));
   }
 
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this.mobileQueryListener);
-  }
-
+  onToggleSideNav = () => this.sideNav.toggle();
   onLoginClicked = () => this.router.navigate(['/accounts/login']);
   onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
   onProfileClicked = () => this.router.navigate(['/profile']);

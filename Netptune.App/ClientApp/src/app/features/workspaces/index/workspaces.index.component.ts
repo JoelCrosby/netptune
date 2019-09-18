@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { dropIn } from '@app/core/animations/animations';
-import { Workspace } from '@app/core/models/workspace';
-import { AppState } from '@app/core/core.state';
+import { dropIn } from '@core/animations/animations';
+import { Workspace } from '@core/models/workspace';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
 import { Router } from '@angular/router';
 import { selectWorkspaces } from '../store/workspaces.selectors';
 import { ActionLoadWorkspaces } from '../store/workspaces.actions';
-import { ActionSelectWorkspace } from '@app/core/state/core.actions';
+import { ActionSelectWorkspace } from '@core/state/core.actions';
 
 @Component({
   selector: 'app-workspaces',

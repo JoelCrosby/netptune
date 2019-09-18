@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
-import { ProjectTask } from '@app/core/models/project-task';
+import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
+import { ProjectTask } from '@core/models/project-task';
 
 export enum ProjectTasksActionTypes {
   LoadProjectTasks = '[ProjectTasks] Load ProjectTasks',

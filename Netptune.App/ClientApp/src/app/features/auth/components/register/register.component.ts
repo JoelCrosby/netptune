@@ -1,15 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { pullIn } from '@app/core/animations/animations';
-import { AppState } from '@app/core/core.state';
+import { pullIn } from '@core/animations/animations';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import {
   ActionAuthRegister,
   ActionAuthRegisterFail,
   AuthActionTypes,
-} from '@app/core/auth/store/auth.actions';
-import { selectAuthLoading } from '@app/core/auth/store/auth.selectors';
+} from '@core/auth/store/auth.actions';
+import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';

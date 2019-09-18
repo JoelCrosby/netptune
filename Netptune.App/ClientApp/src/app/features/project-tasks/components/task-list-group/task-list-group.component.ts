@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
+import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
 import { Observable } from 'rxjs';
-import { fadeIn, dropIn } from '@app/core/animations/animations';
+import { fadeIn, dropIn } from '@core/animations/animations';
 
 @Component({
   selector: 'app-task-list-group',

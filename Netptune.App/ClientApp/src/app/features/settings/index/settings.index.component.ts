@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ActionSettingsChangeTheme } from '../store/settings.actions';
-import { selectSettings } from '../store/settings.selectors';
-import { SettingsState } from '../store/settings.model';
+import { SettingsState } from '@core/settings/settings.model';
+import { selectSettings } from '@core/settings/settings.selectors';
+import { ActionSettingsChangeTheme } from '@core/settings/settings.actions';
 
 @Component({
   selector: 'app-settings-index',

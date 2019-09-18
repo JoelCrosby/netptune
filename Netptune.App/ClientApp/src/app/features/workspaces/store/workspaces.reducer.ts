@@ -1,5 +1,5 @@
 import { WorkspacesActions, WorkspacesActionTypes } from './workspaces.actions';
-import { Workspace } from '@app/core/models/workspace';
+import { Workspace } from '@core/models/workspace';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export interface WorkspacesState {

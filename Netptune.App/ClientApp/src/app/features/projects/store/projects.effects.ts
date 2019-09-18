@@ -12,8 +12,8 @@ import {
 } from './projects.actions';
 import { ProjectsService } from './projects.service';
 import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
-import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
+import { AppState } from '@core/core.state';
+import { SelectCurrentWorkspace } from '@core/state/core.selectors';
 
 @Injectable()
 export class ProjectsEffects {

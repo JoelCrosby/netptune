@@ -1,17 +1,17 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AppState } from '@app/core/core.state';
-import { ProjectTask } from '@app/core/models/project-task';
-import { SelectCurrentWorkspace, SelectCurrentProject } from '@app/core/state/core.selectors';
+import { AppState } from '@core/core.state';
+import { ProjectTask } from '@core/models/project-task';
+import { SelectCurrentWorkspace, SelectCurrentProject } from '@core/state/core.selectors';
 import { ActionCreateProjectTask } from '@app/features/project-tasks/store/project-tasks.actions';
 import { selectProjects } from '@app/features/projects/store/projects.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { ActionSelectProject } from '@app/core/state/core.actions';
+import { ActionSelectProject } from '@core/state/core.actions';
 import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
-import { Project } from '@app/core/models/project';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { Project } from '@core/models/project';
+import { ProjectTaskStatus } from '@core/enums/project-task-status';
 
 @Component({
   selector: 'app-task-dialog',

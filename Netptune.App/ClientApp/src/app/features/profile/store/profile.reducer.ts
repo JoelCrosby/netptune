@@ -1,4 +1,4 @@
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 import { ProfileActions, ProfileActionTypes } from './profile.actions';
 
 export interface ProfileState {

@@ -1,6 +1,6 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ProjectsState, selectAllProjects } from './projects.reducer';
-import { AppState } from '@app/core/core.state';
+import { AppState } from '@core/core.state';
 
 export const selectProjectsFeature = createFeatureSelector<ProjectsState>('projects');
 

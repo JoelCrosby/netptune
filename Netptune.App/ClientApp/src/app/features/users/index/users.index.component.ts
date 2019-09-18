@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { dropIn } from '@app/core/animations/animations';
-import { AppUser } from '@app/core/models/appuser';
+import { dropIn } from '@core/animations/animations';
+import { AppUser } from '@core/models/appuser';
 import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
+import { AppState } from '@core/core.state';
 import { ActionLoadUsers } from '../store/users.actions';
-import { UsernameConverter } from '@app/core/models/converters/username.converter';
+import { UsernameConverter } from '@core/models/converters/username.converter';
 import { selectUsers } from '../store/users.selectors';
 
 @Component({

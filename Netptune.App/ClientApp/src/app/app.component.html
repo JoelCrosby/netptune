@@ -1,12 +1,11 @@
-<div [class]="'app-container theme-wrapper ' + (theme$ | async)" [class.app-is-mobile]="mobileQuery.matches">
-  <mat-sidenav-container class="app-sidenav-container">
+<div [class]="theme$ | async">
+
+  <mat-sidenav-container class="app-container app-sidenav-container" [class.app-is-mobile]="mobileQuery.matches">
     <mat-sidenav
-      #snav
-      [opened]="!mobileQuery.matches && (authenticated$ | async) && ((pageTitle$ | async) !== 'Workspaces')"
+      [opened]="!mobileQuery.matches && (authenticated$ | async)"
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       [fixedInViewport]="mobileQuery.matches"
       class="app-sidenav"
-      id="app-sidenav"
     >
       <mat-nav-list>
         <mat-list-item class="app-logo">Netptune</mat-list-item>
@@ -26,7 +25,7 @@
     <mat-sidenav-content>
       <mat-toolbar class="app-toolbar app-toolbar-shadow" *ngIf="authenticated$ | async as authenticated">
         <ng-container *ngIf="mobileQuery.matches || (!authenticated); else pageTitle">
-          <button mat-icon-button (click)="toggleSideNav()" *ngIf="authenticated">
+          <button mat-icon-button (click)="onToggleSideNav()" *ngIf="authenticated">
             <mat-icon>menu</mat-icon>
           </button>
           <h1 class="app-name">Netptune</h1>
@@ -69,4 +68,5 @@
 
     </mat-sidenav-content>
   </mat-sidenav-container>
+
 </div>

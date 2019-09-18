@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
-import { dropIn } from '@app/core/animations/animations';
-import { AppState } from '@app/core/core.state';
-import { Project } from '@app/core/models/project';
+import { dropIn } from '@core/animations/animations';
+import { AppState } from '@core/core.state';
+import { Project } from '@core/models/project';
 import { Store } from '@ngrx/store';
 import { ActionLoadProjects } from '../store/projects.actions';
 import { selectProjects } from '../store/projects.selectors';
 import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
-import { AppUser } from '@app/core/models/appuser';
-import { UsernameConverter } from '@app/core/models/converters/username.converter';
+import { AppUser } from '@core/models/appuser';
+import { UsernameConverter } from '@core/models/converters/username.converter';
 
 @Component({
   selector: 'app-projects',

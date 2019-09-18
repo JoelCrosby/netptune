@@ -1,4 +1,4 @@
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';

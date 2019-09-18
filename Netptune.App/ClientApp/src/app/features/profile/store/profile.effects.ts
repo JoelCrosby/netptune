@@ -1,6 +1,6 @@
-import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { Injectable } from '@angular/core';
-import { AppState } from '@app/core/core.state';
+import { AppState } from '@core/core.state';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';

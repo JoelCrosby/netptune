@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 
 const APP_PREFIX = 'Netptune-';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class LocalStorageService {
-  constructor() { }
+  constructor() {}
 
   static loadInitialState() {
     return Object.keys(localStorage).reduce((state: any, storageKey) => {
@@ -16,19 +18,16 @@ export class LocalStorageService {
           .map(key =>
             key
               .split('-')
-              .map(
-                (token, index) =>
-                  index === 0
-                    ? token
-                    : token.charAt(0).toUpperCase() + token.slice(1)
-              )
+              .map((token, index) => (index === 0 ? token : token.charAt(0).toUpperCase() + token.slice(1)))
               .join('')
           );
         let currentStateRef = state;
         stateKeys.forEach((key, index) => {
           if (index === stateKeys.length - 1) {
             const item = localStorage.getItem(storageKey);
-            if (!item) { return; }
+            if (!item) {
+              return;
+            }
             currentStateRef[key] = JSON.parse(item);
             return;
           }
@@ -46,7 +45,9 @@ export class LocalStorageService {
 
   getItem(key: string): any | undefined {
     const item = localStorage.getItem(`${APP_PREFIX}${key}`);
-    if (!item) { return undefined; }
+    if (!item) {
+      return undefined;
+    }
     return JSON.parse(item);
   }
 

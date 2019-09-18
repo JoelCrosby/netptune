@@ -7,7 +7,7 @@ import { tap, withLatestFrom } from 'rxjs/operators';
 import { SettingsActions, SettingsActionTypes } from './settings.actions';
 import { SettingsState } from './settings.model';
 import { selectEffectiveTheme, selectSettingsState } from './settings.selectors';
-import { LocalStorageService } from '@app/core/local-storage/local-storage.service';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 
 const INIT = of('app-init-effect-trigger');
 

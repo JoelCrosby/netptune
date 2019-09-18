@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProjectTasksState, selectAllProjectTasks } from './project-tasks.reducer';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { ProjectTaskStatus } from '@core/enums/project-task-status';
 
 export const selectProjectTasksFeature = createFeatureSelector<ProjectTasksState>('project-tasks');
 

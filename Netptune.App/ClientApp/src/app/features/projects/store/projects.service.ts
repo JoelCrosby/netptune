@@ -1,9 +1,9 @@
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Project } from '@app/core/models/project';
+import { Project } from '@core/models/project';
 import { environment } from '@env/environment';
-import { Workspace } from '@app/core/models/workspace';
+import { Workspace } from '@core/models/workspace';
 import { throwError } from 'rxjs';
 
 @Injectable()

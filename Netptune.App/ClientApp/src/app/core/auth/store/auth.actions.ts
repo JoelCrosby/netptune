@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { RegisterRequest } from '@app/core/models/register-request';
+import { RegisterRequest } from '@core/models/register-request';
 
 export enum AuthActionTypes {
   TRY_LOGIN = '[Auth] Try Login',

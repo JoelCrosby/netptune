@@ -8,11 +8,6 @@ export const selectSettings = createSelector(
   (state: SettingsState) => state
 );
 
-export const selectSettingsLanguage = createSelector(
-  selectSettings,
-  (state: SettingsState) => state.language
-);
-
 export const selectSettingsTheme = createSelector(
   selectSettings,
   settings => settings.theme

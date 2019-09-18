@@ -1,17 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { toggleChip } from '@app/core/animations/animations';
-import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
+import { toggleChip } from '@core/animations/animations';
+import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
-import { AppState } from '@app/core/core.state';
+import { AppState } from '@core/core.state';
 import {
   ActionEditProjectTask,
   ActionDeleteProjectTask,
   ActionSelectTask,
 } from '../../store/project-tasks.actions';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { ProjectTaskStatus } from '@core/enums/project-task-status';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { TextHelpers } from '@app/core/util/text-helpers';
+import { TextHelpers } from '@core/util/text-helpers';
 
 @Component({
   selector: 'app-task-list-item',

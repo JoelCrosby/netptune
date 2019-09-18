@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Workspace } from '@app/core/models/workspace';
+import { Workspace } from '@core/models/workspace';
 import { Project } from '../models/project';
 
 export enum CoreActionTypes {

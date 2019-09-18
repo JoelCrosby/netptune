@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '@app/core/local-storage/local-storage.service';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
@@ -16,9 +16,9 @@ import {
   ActionAuthRegisterSuccess,
   ActionAuthRegisterFail,
 } from './auth.actions';
-import { AppState } from '../../core.state';
+import { AppState } from '@core/core.state';
 import { selectAuthState } from './auth.selectors';
-import { ActionSettingsClear } from '../../../features/settings/store/settings.actions';
+import { ActionSettingsClear } from '@app/core/settings/settings.actions';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -40,12 +40,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   persistSettings = this.actions$.pipe(
-    ofType(
-      AuthActionTypes.LOGIN_FAIL,
-      AuthActionTypes.LOGIN_SUCCESS,
-      AuthActionTypes.LOGOUT,
-      AuthActionTypes.TRY_LOGIN
-    ),
+    ofType(AuthActionTypes.LOGIN_FAIL, AuthActionTypes.LOGIN_SUCCESS, AuthActionTypes.LOGOUT, AuthActionTypes.TRY_LOGIN),
     withLatestFrom(this.store.pipe(select(selectAuthState))),
     tap(([action, settings]) => this.localStorageService.setItem(AUTH_KEY, settings))
   );

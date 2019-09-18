@@ -15,8 +15,8 @@ import {
   ActionCreateProjectTasksFail,
 } from './project-tasks.actions';
 import { ProjectTasksService } from './project-tasks.service';
-import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
-import { AppState } from '@app/core/core.state';
+import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { MatSnackBar } from '@angular/material';
 

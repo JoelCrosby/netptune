@@ -1,6 +1,6 @@
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { ProjectsActions, ProjectsActionTypes } from './projects.actions';
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 
 export interface ProjectsState {
   projects: Projects;

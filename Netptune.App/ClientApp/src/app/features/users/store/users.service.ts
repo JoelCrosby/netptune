@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Workspace } from '@app/core/models/workspace';
-import { AppUser } from '@app/core/models/appuser';
+import { Workspace } from '@core/models/workspace';
+import { AppUser } from '@core/models/appuser';
 import { throwError } from 'rxjs';
 
 @Injectable()

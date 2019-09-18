@@ -1,13 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AppState } from '@app/core/core.state';
-import { Project } from '@app/core/models/project';
-import { SelectCurrentWorkspace } from '@app/core/state/core.selectors';
+import { AppState } from '@core/core.state';
+import { Project } from '@core/models/project';
+import { SelectCurrentWorkspace } from '@core/state/core.selectors';
 import { ActionCreateProject } from '@app/features/projects/store/projects.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { ProjectTask } from '@app/core/models/project-task';
+import { ProjectTask } from '@core/models/project-task';
 
 @Component({
   selector: 'app-project-dialog',

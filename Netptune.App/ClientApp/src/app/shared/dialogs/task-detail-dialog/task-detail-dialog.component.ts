@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Project } from '@app/core/models/project';
-import { ProjectTask } from '@app/core/models/project-task';
+import { Project } from '@core/models/project';
+import { ProjectTask } from '@core/models/project-task';
 
 @Component({
   selector: 'app-task-detail-dialog',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActionAuthLogout } from '@app/core/auth/store/auth.actions';
-import { AppState } from '@app/core/core.state';
+import { ActionAuthLogout } from '@core/auth/store/auth.actions';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { selectProfile } from '../store/profile.selectors';

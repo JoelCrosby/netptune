@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProjectTaskDto } from '@app/core/models/view-models/project-task-dto';
+import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
 import { environment } from '@env/environment';
-import { ProjectTask } from '@app/core/models/project-task';
+import { ProjectTask } from '@core/models/project-task';
 import { throwError } from 'rxjs';
-import { Workspace } from '@app/core/models/workspace';
+import { Workspace } from '@core/models/workspace';
 
 @Injectable({
   providedIn: 'root',

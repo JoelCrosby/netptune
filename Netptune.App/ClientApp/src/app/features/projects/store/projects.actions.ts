@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
-import { Project } from '@app/core/models/project';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { Project } from '@core/models/project';
 
 export enum ProjectsActionTypes {
   LoadProjects = '[Projects] Load Projects',
