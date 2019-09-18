@@ -34,6 +34,7 @@ $mat-light-theme-background: (
   disabled-button-toggle: map_get($mat-grey, 200),
   unselected-chip: map_get($mat-grey, 300),
   disabled-list-option: map_get($mat-grey, 200),
+  border: rgba(0, 0, 0, 0.08),
 );
 
 // Creates a container object for a light theme to be given to individual component theme mixins.
