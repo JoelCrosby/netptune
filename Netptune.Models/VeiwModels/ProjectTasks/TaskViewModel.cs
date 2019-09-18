@@ -10,6 +10,8 @@ namespace Netptune.Models.VeiwModels.ProjectTasks
 
         public string AssigneeId { get; set; }
 
+        public string OwnerId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

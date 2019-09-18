@@ -40,6 +40,8 @@ namespace Netptune.Services
 
             if (result == null) return ServiceResult<TaskViewModel>.BadRequest();
 
+            await _unitOfWork.CompleteAsync();
+
             var viewModel = await _taskRepository.GetTaskViewModel(result.Id);
 
             return ServiceResult<TaskViewModel>.Ok(viewModel);
@@ -77,6 +79,8 @@ namespace Netptune.Services
             var result = await _taskRepository.UpdateTask(projectTask, user);
 
             if (result == null) return ServiceResult<TaskViewModel>.BadRequest();
+
+            await _unitOfWork.CompleteAsync();
 
             var viewModel = await _taskRepository.GetTaskViewModel(result.Id);
 

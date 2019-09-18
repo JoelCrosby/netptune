@@ -38,7 +38,8 @@ namespace Netptune.Repositories
             return new TaskViewModel()
             {
                 Id = task.Id,
-                AssigneeId = task.Assignee?.Id,
+                AssigneeId = task.AssigneeId,
+                OwnerId = task.OwnerId,
                 Name = task.Name,
                 Description = task.Description,
                 Status = task.Status,
@@ -68,6 +69,7 @@ namespace Netptune.Repositories
                 {
                     Id = r.Id,
                     AssigneeId = r.Assignee == null ? string.Empty : r.Assignee.Id,
+                    OwnerId = r.OwnerId,
                     Name = r.Name,
                     Description = r.Description,
                     Status = r.Status,
