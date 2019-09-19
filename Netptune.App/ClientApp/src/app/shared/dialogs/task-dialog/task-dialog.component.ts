@@ -87,6 +87,8 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
           projectId: (this.projectFromGroup.controls['projectFormControl'].value as Project).id,
           assigneeId: undefined,
           assignee: undefined,
+          ownerId: undefined,
+          owner: undefined,
           id: undefined,
           status: ProjectTaskStatus.New,
         };
