@@ -1,8 +1,8 @@
 export interface ProjectViewModel {
-  Id: number;
-  Name: string;
-  Description: string;
-  RepositoryUrl: string;
-  WorkspaceId: number;
-  OwnerDisplayName: string;
+  id: number;
+  name: string;
+  description: string;
+  repositoryUrl: string;
+  workspaceId: number;
+  ownerDisplayName: string;
 }
