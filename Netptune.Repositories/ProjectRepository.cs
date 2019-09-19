@@ -30,15 +30,7 @@ namespace Netptune.Repositories
                 .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
-                .Select(project => new ProjectViewModel
-                {
-                    Id = project.Id,
-                    Name = project.Name,
-                    Description = project.Description,
-                    RepositoryUrl = project.RepositoryUrl,
-                    WorkspaceId = project.WorkspaceId,
-                    OwnerDisplayName = project.Owner.GetDisplayName()
-                })
+                .Select(project => GetViewModel(project))
                 .ToListAsync();
         }
 
@@ -55,16 +47,21 @@ namespace Netptune.Repositories
                 .Where(project => project.Id == id)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
-                .Select(project => new ProjectViewModel
-                {
-                    Id = project.Id,
-                    Name = project.Name,
-                    Description = project.Description,
-                    RepositoryUrl = project.RepositoryUrl,
-                    WorkspaceId = project.WorkspaceId,
-                    OwnerDisplayName = project.Owner.GetDisplayName()
-                })
+                .Select(project => GetViewModel(project))
                 .FirstOrDefaultAsync();
+        }
+
+        private static ProjectViewModel GetViewModel(Project project)
+        {
+            return new ProjectViewModel
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.Description,
+                RepositoryUrl = project.RepositoryUrl,
+                WorkspaceId = project.WorkspaceId,
+                OwnerDisplayName = project.Owner.GetDisplayName()
+            };
         }
 
         public async Task<Project> UpdateProject(Project project, AppUser user)
