@@ -60,7 +60,10 @@ namespace Netptune.Repositories
                 Description = project.Description,
                 RepositoryUrl = project.RepositoryUrl,
                 WorkspaceId = project.WorkspaceId,
-                OwnerDisplayName = project.Owner.GetDisplayName()
+                OwnerDisplayName = project.Owner.GetDisplayName(),
+                UpdatedAt = project.UpdatedAt,
+                CreatedAt = project.CreatedAt
+
             };
         }
 

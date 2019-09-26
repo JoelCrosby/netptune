@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Netptune.Core.Repositories.Common;
 using Netptune.Models;
 using Netptune.Models.VeiwModels.Projects;
 
 namespace Netptune.Core.Repositories
 {
-    public interface IProjectRepository
+    public interface IProjectRepository : IRepository<Project, int>
     {
         Task<IEnumerable<ProjectViewModel>> GetProjects(int workspaceId);
 

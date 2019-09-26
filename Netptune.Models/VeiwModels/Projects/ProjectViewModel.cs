@@ -1,4 +1,6 @@
-﻿namespace Netptune.Models.VeiwModels.Projects
+﻿using System;
+
+namespace Netptune.Models.VeiwModels.Projects
 {
     public class ProjectViewModel
     {
@@ -13,5 +15,9 @@
         public int WorkspaceId { get; set; }
 
         public string OwnerDisplayName { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }
