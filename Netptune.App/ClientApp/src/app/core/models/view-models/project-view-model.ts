@@ -5,4 +5,6 @@ export interface ProjectViewModel {
   repositoryUrl: string;
   workspaceId: number;
   ownerDisplayName: string;
+  updatedAt: Date;
+  createdAt: Date;
 }

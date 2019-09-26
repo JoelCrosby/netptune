@@ -1,5 +1,4 @@
-<div [class]="theme$ | async">
-
+<div [class]="(theme$ | async)">
   <mat-sidenav-container class="app-container app-sidenav-container" [class.app-is-mobile]="mobileQuery.matches">
     <mat-sidenav
       [opened]="!mobileQuery.matches && (authenticated$ | async)"
@@ -20,9 +19,11 @@
           {{ link.label }}
         </a>
       </mat-nav-list>
+
     </mat-sidenav>
 
     <mat-sidenav-content>
+
       <mat-toolbar class="app-toolbar app-toolbar-shadow" *ngIf="authenticated$ | async as authenticated">
         <ng-container *ngIf="mobileQuery.matches || (!authenticated); else pageTitle">
           <button mat-icon-button (click)="onToggleSideNav()" *ngIf="authenticated">
@@ -52,6 +53,7 @@
           </button>
           </mat-menu>
         </ng-container>
+
         <ng-template #elseTemplate>
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon aria-label="Account Options">account_circle</mat-icon>
@@ -60,6 +62,7 @@
             <button mat-menu-item (click)="onLoginClicked()">Login</button>
           </mat-menu>
         </ng-template>
+
       </mat-toolbar>
 
       <main>
@@ -67,6 +70,7 @@
       </main>
 
     </mat-sidenav-content>
+
   </mat-sidenav-container>
 
 </div>

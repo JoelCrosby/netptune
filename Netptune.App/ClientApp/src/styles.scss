@@ -25,6 +25,7 @@
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme.scss';
 @import './app/features/project-tasks/index/project-tasks.index.component.scss-theme.scss';
+@import './app/features/projects/index/projects.index.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
@@ -34,6 +35,7 @@
   @include task-list-group-component-theme($theme);
   @include task-list-item-component-theme($theme);
   @include project-tasks-component-theme($theme);
+  @include projects-index-component-theme($theme);
 }
 
 .default-theme {
