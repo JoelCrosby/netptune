@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
 using Netptune.Models.Relationships;
-
-using Newtonsoft.Json;
 
 namespace Netptune.Models
 {

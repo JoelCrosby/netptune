@@ -13,8 +13,8 @@ using Netptune.Models;
 namespace Netptune.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;

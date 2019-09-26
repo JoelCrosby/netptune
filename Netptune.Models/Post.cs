@@ -1,7 +1,7 @@
+using System.Text.Json.Serialization;
+
 using Netptune.Models.BaseEntities;
 using Netptune.Models.Enums;
-
-using Newtonsoft.Json;
 
 namespace Netptune.Models
 {

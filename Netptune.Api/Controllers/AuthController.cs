@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Api.Extensions;
-using Netptune.Services.Authentication.Interfaces;
-using Netptune.Services.Authentication.Models;
+using Netptune.Core.Authentication;
+using Netptune.Core.Authentication.Models;
 
 namespace Netptune.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly INetptuneAuthService _authenticationService;

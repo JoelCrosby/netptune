@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
 using Netptune.Models.Relationships;
-
-using Newtonsoft.Json;
 
 namespace Netptune.Models
 {

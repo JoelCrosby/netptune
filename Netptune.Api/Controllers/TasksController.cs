@@ -14,8 +14,8 @@ using Netptune.Models.VeiwModels.ProjectTasks;
 namespace Netptune.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ProjectTasksController : ControllerBase
     {
         private readonly ITaskService _taskService;

@@ -6,7 +6,6 @@ namespace Netptune.Repositories.ConnectionFactories
     {
         public NetptuneConnectionFactory(string connectionString) : base(connectionString)
         {
-
         }
     }
 }

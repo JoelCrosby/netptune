@@ -52,22 +52,21 @@ namespace Netptune.Repositories.Common
 
         public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback)
         {
-            using (var transaction = Context.Database.BeginTransaction())
+            using var transaction = Context.Database.BeginTransaction();
+
+            try
             {
-                try
-                {
-                    var result = await callback();
+                var result = await callback();
 
-                    // Commit transaction if all commands succeed, transaction will auto-rollback
-                    // when disposed if either commands fails
-                    transaction.Commit();
+                // Commit transaction if all commands succeed, transaction will auto-rollback
+                // when disposed if either commands fails
+                transaction.Commit();
 
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    throw new UnitofWorkTransactionException("UnitofWork Transaction Failed. See Inner exception for details.", ex);
-                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new UnitofWorkTransactionException("UnitofWork Transaction Failed. See Inner exception for details.", ex);
             }
         }
     }

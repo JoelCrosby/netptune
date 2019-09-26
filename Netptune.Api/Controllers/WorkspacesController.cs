@@ -13,8 +13,8 @@ using Netptune.Models;
 namespace Netptune.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class WorkspacesController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;

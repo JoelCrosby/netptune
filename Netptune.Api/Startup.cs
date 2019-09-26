@@ -4,16 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-using Netptune.Api.Services;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
-using Netptune.Services.Authentication.Interfaces;
 using Netptune.Services.Configuration;
 
 namespace Netptune.Api
@@ -21,9 +19,9 @@ namespace Netptune.Api
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Environment = environment;
             Configuration = configuration;
@@ -32,23 +30,18 @@ namespace Netptune.Api
         public void ConfigureServices(IServiceCollection services)
         {
             var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
             var connectionString = isWindows
                 ? Configuration.GetConnectionString("ProjectsDatabase")
                 : Configuration.GetConnectionString("ProjectsDatabasePostgres");
 
-            services.AddAuth(Configuration);
+            services.AddCors();
+
+            services.AddControllers();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(
-                    options => options.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
-
-            services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
-
+            services.AddNeptuneAuthentication(Configuration);
             services.AddNetptuneRepository(connectionString);
             services.AddNetptuneEntities(options =>
             {
@@ -58,59 +51,46 @@ namespace Netptune.Api
 
             services.AddNetptuneServices();
 
-            // Register the Swagger.
-            services.AddSwagger();
-
             if (Environment.IsDevelopment())
             {
                 ConfigureDatabase(services).GetAwaiter().GetResult();
             }
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
                 app.UseHttpsRedirection();
             }
 
+            app.UseRouting();
+
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(config =>
-            {
-                config.SwaggerEndpoint("/swagger/v1/swagger.json", "Netptune API V1");
-                config.DocumentTitle = "Netptune Api";
-            });
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
+            app.UseEndpoints(endpoints =>
+                endpoints.MapControllers()
+            );
         }
 
         private async Task ConfigureDatabase(IServiceCollection services)
         {
-            using (var serviceScope = services.BuildServiceProvider().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+            using var serviceScope = services.BuildServiceProvider().CreateScope();
 
-                await context.Database.EnsureCreatedAsync();
-            }
+            var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+
+            await context.Database.EnsureCreatedAsync();
         }
     }
 }

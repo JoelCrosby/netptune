@@ -19,7 +19,6 @@ namespace Netptune.Repositories
         public ProjectRepository(DataContext dataContext, IDbConnectionFactory connectionFactories)
             : base(dataContext, connectionFactories)
         {
-
         }
 
         public async Task<IEnumerable<ProjectViewModel>> GetProjects(int workspaceId)
@@ -63,7 +62,6 @@ namespace Netptune.Repositories
                 OwnerDisplayName = project.Owner.GetDisplayName(),
                 UpdatedAt = project.UpdatedAt,
                 CreatedAt = project.CreatedAt
-
             };
         }
 

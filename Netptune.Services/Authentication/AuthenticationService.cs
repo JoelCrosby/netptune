@@ -7,15 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
+using Netptune.Core.Authentication;
+using Netptune.Core.Authentication.Models;
 using Netptune.Core.Models;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
-using Netptune.Services.Authentication.Interfaces;
-using Netptune.Services.Authentication.Models;
 using Netptune.Services.Common;
 
 namespace Netptune.Services.Authentication
@@ -30,7 +29,6 @@ namespace Netptune.Services.Authentication
         private readonly string _issuer;
         private readonly string _securityKey;
         private readonly string _expireDays;
-
 
         public NetptuneAuthService(
             IConfiguration configuration,
@@ -80,7 +78,7 @@ namespace Netptune.Services.Authentication
             {
                 if (result.Errors is var errors)
                 {
-                    return BadRequest<AuthenticationTicket>(errors.Join(", "));
+                    return BadRequest<AuthenticationTicket>(string.Join(", ", errors));
                 }
 
                 return BadRequest<AuthenticationTicket>("Registration failed.");

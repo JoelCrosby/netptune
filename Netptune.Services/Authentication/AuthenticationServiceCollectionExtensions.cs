@@ -7,13 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
+using Netptune.Core.Authentication;
 using Netptune.Models;
 
-namespace Netptune.Api.Services
+namespace Netptune.Services.Authentication
 {
-    public static class AuthConfig
+    public static class AuthenticationServiceCollectionExtensions
     {
-        public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddNeptuneAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
@@ -49,6 +50,8 @@ namespace Netptune.Api.Services
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:SecurityKey"]))
                     };
                 });
+
+            services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
 
             return services;
         }

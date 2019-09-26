@@ -20,7 +20,6 @@ namespace Netptune.Repositories
         public TaskRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)
         {
-
         }
 
         public async Task<TaskViewModel> GetTaskViewModel(int taskId)

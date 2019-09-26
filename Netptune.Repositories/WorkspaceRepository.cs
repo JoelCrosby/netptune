@@ -19,7 +19,6 @@ namespace Netptune.Repositories
         public WorkspaceRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)
         {
-
         }
 
         public async Task<IEnumerable<Workspace>> GetWorkspaces(AppUser user)

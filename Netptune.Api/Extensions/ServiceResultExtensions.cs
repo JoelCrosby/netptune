@@ -9,21 +9,16 @@ namespace Netptune.Api.Extensions
     {
         public static IActionResult ToRestResult<TResult>(this ServiceResult<TResult> serviceResult)
         {
-            switch (serviceResult.Status)
+            return serviceResult.Status switch
             {
-                case ServiceResultStatus.NotFound:
-                    return new NotFoundObjectResult(serviceResult.Message);
-                case ServiceResultStatus.BadRequest:
-                    return new BadRequestObjectResult(serviceResult.Message);
-                case ServiceResultStatus.Unauthorized:
-                    return new UnauthorizedObjectResult(serviceResult.Message);
-                case ServiceResultStatus.Ok:
-                    return new OkObjectResult(serviceResult.Result);
-                case ServiceResultStatus.NoContent:
-                    return new NoContentResult();
-            }
+                ServiceResultStatus.NotFound => new NotFoundObjectResult(serviceResult.Message),
+                ServiceResultStatus.BadRequest => new BadRequestObjectResult(serviceResult.Message),
+                ServiceResultStatus.Unauthorized => new UnauthorizedObjectResult(serviceResult.Message),
+                ServiceResultStatus.Ok => new OkObjectResult(serviceResult.Result),
+                ServiceResultStatus.NoContent => new NoContentResult(),
 
-            return new StatusCodeResult(500);
+                _ => new StatusCodeResult(500),
+            };
         }
     }
 }

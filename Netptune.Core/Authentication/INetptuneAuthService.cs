@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 
+using Netptune.Core.Authentication.Models;
 using Netptune.Core.Models;
-using Netptune.Services.Authentication.Models;
 
-namespace Netptune.Services.Authentication.Interfaces
+namespace Netptune.Core.Authentication
 {
     public interface INetptuneAuthService
     {
