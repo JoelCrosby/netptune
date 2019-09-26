@@ -12,31 +12,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Models;
+using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Services.Authentication.Interfaces;
 using Netptune.Services.Authentication.Models;
+using Netptune.Services.Common;
 
 namespace Netptune.Services.Authentication
 {
-    public class NetptuneAuthService : INetptuneAuthService
+    public class NetptuneAuthService : ServiceBase, INetptuneAuthService
     {
         private readonly IConfiguration _configuration;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly INetptuneUnitOfWork _unitOfWork;
 
         private readonly string _issuer;
         private readonly string _securityKey;
         private readonly string _expireDays;
 
+
         public NetptuneAuthService(
             IConfiguration configuration,
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager
+            SignInManager<AppUser> signInManager,
+            INetptuneUnitOfWork unitOfWork
             )
         {
             _configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
 
             _issuer = _configuration["Tokens:Issuer"];
             _securityKey = _configuration["Tokens:SecurityKey"];
@@ -47,11 +53,15 @@ namespace Netptune.Services.Authentication
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
 
-            if (!result.Succeeded) return ServiceResult<AuthenticationTicket>.BadRequest("Username or Password is incorrect");
+            if (!result.Succeeded) return BadRequest<AuthenticationTicket>("Username or Password is incorrect");
 
             var appUser = await _userManager.FindByEmailAsync(model.Email);
 
-            return ServiceResult<AuthenticationTicket>.Ok(GenerateToken(appUser));
+            appUser.LastLoginTime = DateTime.UtcNow;
+
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(GenerateToken(appUser));
         }
 
         public async Task<ServiceResult<AuthenticationTicket>> Register(RegisterRequest model)
@@ -70,17 +80,22 @@ namespace Netptune.Services.Authentication
             {
                 if (result.Errors is var errors)
                 {
-                    return ServiceResult<AuthenticationTicket>.BadRequest(errors.Join(", "));
+                    return BadRequest<AuthenticationTicket>(errors.Join(", "));
                 }
 
-                return ServiceResult<AuthenticationTicket>.BadRequest("Registration failed.");
+                return BadRequest<AuthenticationTicket>("Registration failed.");
             }
 
             var appUser = await _userManager.FindByEmailAsync(model.Email);
 
             await _signInManager.SignInAsync(appUser, false);
 
-            return ServiceResult<AuthenticationTicket>.Ok(GenerateToken(appUser));
+            appUser.RegistrationDate = DateTime.UtcNow;
+            appUser.LastLoginTime = DateTime.UtcNow;
+
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(GenerateToken(appUser));
         }
 
         private DateTime GetExpireDays()
