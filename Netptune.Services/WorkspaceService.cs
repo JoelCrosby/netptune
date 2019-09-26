@@ -6,10 +6,11 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
+using Netptune.Services.Common;
 
 namespace Netptune.Services
 {
-    public class WorkspaceService : IWorkspaceService
+    public class WorkspaceService : ServiceBase, IWorkspaceService
     {
         private readonly INetptuneUnitOfWork _unitOfWork;
         private readonly IWorkspaceRepository _workspaceRepository;
@@ -24,31 +25,31 @@ namespace Netptune.Services
         {
             var result = await _workspaceRepository.AddWorkspace(workspace, user);
 
-            if (result == null) return ServiceResult<Workspace>.BadRequest();
+            if (result == null) return BadRequest<Workspace>();
 
             await _unitOfWork.CompleteAsync();
 
-            return ServiceResult<Workspace>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<Workspace>> DeleteWorkspace(int id)
         {
             var result = await _workspaceRepository.DeleteWorkspace(id);
 
-            if (result == null) return ServiceResult<Workspace>.BadRequest();
+            if (result == null) return BadRequest<Workspace>();
 
             await _unitOfWork.CompleteAsync();
 
-            return ServiceResult<Workspace>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<Workspace>> GetWorkspace(int id)
         {
             var result = await _workspaceRepository.GetAsync(id);
 
-            if (result == null) return ServiceResult<Workspace>.BadRequest();
+            if (result == null) return BadRequest<Workspace>();
 
-            return ServiceResult<Workspace>.Ok(result);
+            return Ok(result);
         }
 
 
@@ -56,20 +57,20 @@ namespace Netptune.Services
         {
             var result = await _workspaceRepository.GetWorkspaces(user);
 
-            if (result == null) return ServiceResult<IEnumerable<Workspace>>.BadRequest();
+            if (result == null) return BadRequest<IEnumerable<Workspace>>();
 
-            return ServiceResult<IEnumerable<Workspace>>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<Workspace>> UpdateWorkspace(Workspace workspace, AppUser user)
         {
             var result = await _workspaceRepository.UpdateWorkspace(workspace, user);
 
-            if (result == null) return ServiceResult<Workspace>.BadRequest();
+            if (result == null) return BadRequest<Workspace>();
 
             await _unitOfWork.CompleteAsync();
 
-            return ServiceResult<Workspace>.Ok(result);
+            return Ok(result);
         }
     }
 }

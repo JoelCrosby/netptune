@@ -7,10 +7,11 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Relationships;
+using Netptune.Services.Common;
 
 namespace Netptune.Services
 {
-    public class UserService : IUserService
+    public class UserService : ServiceBase, IUserService
     {
         private readonly INetptuneUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
@@ -27,25 +28,25 @@ namespace Netptune.Services
         {
             var result = await _userRepository.GetAsync(userId);
 
-            if (result == null) return ServiceResult<AppUser>.NotFound();
+            if (result == null) return NotFound<AppUser>();
 
-            return ServiceResult<AppUser>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<AppUser>> GetByEmail(string email)
         {
             var result = await _userRepository.GetByEmail(email);
 
-            if (result == null) return ServiceResult<AppUser>.NotFound();
+            if (result == null) return NotFound<AppUser>();
 
-            return ServiceResult<AppUser>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<IList<AppUser>>> GetWorkspaceUsers(int workspaceId)
         {
             var results = await _userRepository.GetWorkspaceUsers(workspaceId);
 
-            return ServiceResult<IList<AppUser>>.Ok(results);
+            return Ok(results);
         }
 
         public async Task<ServiceResult<WorkspaceAppUser>> InviteUserToWorkspace(string userId, int workspaceId)
@@ -55,37 +56,37 @@ namespace Netptune.Services
 
             if (user == null)
             {
-                return ServiceResult<WorkspaceAppUser>.NotFound("user not found");
+                return NotFound<WorkspaceAppUser>("user not found");
             }
 
             if (workspace == null)
             {
-                return ServiceResult<WorkspaceAppUser>.NotFound("workspace not found");
+                return NotFound<WorkspaceAppUser>("workspace not found");
             }
 
             if (await _userRepository.IsUserInWorkspace(userId, workspaceId))
             {
-                return ServiceResult<WorkspaceAppUser>.BadRequest("User is already a member of the workspace");
+                return BadRequest<WorkspaceAppUser>("User is already a member of the workspace");
             }
 
             var result = await _userRepository.InviteUserToWorkspace(userId, workspaceId);
 
-            if (result == null) return ServiceResult<WorkspaceAppUser>.NotFound();
+            if (result == null) return NotFound<WorkspaceAppUser>();
 
             await _unitOfWork.CompleteAsync();
 
-            return ServiceResult<WorkspaceAppUser>.Ok(result);
+            return Ok(result);
         }
 
         public async Task<ServiceResult<AppUser>> Update(AppUser user, string userId)
         {
             var result = await _userRepository.Update(user, userId);
 
-            if (result == null) return ServiceResult<AppUser>.NotFound();
+            if (result == null) return NotFound<AppUser>();
 
             await _unitOfWork.CompleteAsync();
 
-            return ServiceResult<AppUser>.Ok(result);
+            return Ok(result);
         }
     }
 }
