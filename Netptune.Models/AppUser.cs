@@ -27,22 +27,22 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual DateTimeOffset? LastLoginTime { get; set; }
+        public DateTimeOffset? LastLoginTime { get; set; }
 
         [JsonIgnore]
-        public virtual DateTimeOffset? RegistrationDate { get; set; }
+        public DateTimeOffset? RegistrationDate { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
+        public ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
+        public ICollection<WorkspaceProject> WorkspaceProjects { get; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectUser> ProjectUsers { get; set; } = new HashSet<ProjectUser>();
+        public ICollection<ProjectUser> ProjectUsers { get;  } = new HashSet<ProjectUser>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
+        public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
 
         #endregion
 

@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 
 using Netptune.Core.Authentication.Models;
-using Netptune.Core.Models;
+using Netptune.Core.Models.Authentication;
 
 namespace Netptune.Core.Authentication
 {
     public interface INetptuneAuthService
     {
-        Task<ServiceResult<AuthenticationTicket>> LogIn(TokenRequest model);
+        Task<LoginResult> LogIn(TokenRequest model);
 
-        Task<ServiceResult<AuthenticationTicket>> Register(RegisterRequest model);
+        Task<RegisterResult> Register(RegisterRequest model);
     }
 }

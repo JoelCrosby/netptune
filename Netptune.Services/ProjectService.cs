@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Models;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.VeiwModels.Projects;
-using Netptune.Services.Common;
 
 namespace Netptune.Services
 {
-    public class ProjectService : ServiceBase, IProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
         private readonly INetptuneUnitOfWork _unitOfWork;
@@ -22,9 +20,9 @@ namespace Netptune.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ServiceResult<ProjectViewModel>> AddProject(Project project, AppUser user)
+        public Task<ProjectViewModel> AddProject(Project project, AppUser user)
         {
-            return await _unitOfWork.Transaction(async () =>
+            return _unitOfWork.Transaction(async () =>
             {
                 var result = await _projectRepository.AddProject(project, user);
 
@@ -34,58 +32,44 @@ namespace Netptune.Services
             });
         }
 
-        public async Task<ServiceResult<ProjectViewModel>> DeleteProject(int id)
+        public async Task<ProjectViewModel> DeleteProject(int id)
         {
             var result = await _projectRepository.DeleteProject(id);
 
-            if (result == null) return BadRequest<ProjectViewModel>();
-
             await _unitOfWork.CompleteAsync();
 
             return await GetProjectViewModel(result);
         }
 
-        public async Task<ServiceResult<ProjectViewModel>> GetProject(int id)
+        public async Task<ProjectViewModel> GetProject(int id)
         {
             var result = await _projectRepository.GetProject(id);
 
-            if (result == null) return BadRequest<ProjectViewModel>();
-
             return await GetProjectViewModel(result);
         }
 
-        public async Task<ServiceResult<IEnumerable<ProjectViewModel>>> GetProjects(int workspaceId)
+        public Task<List<ProjectViewModel>> GetProjects(int workspaceId)
         {
-            var result = await _projectRepository.GetProjects(workspaceId);
-
-            if (result == null) return BadRequest<IEnumerable<ProjectViewModel>>();
-
-            return Ok(result);
+            return _projectRepository.GetProjects(workspaceId);
         }
 
-        public async Task<ServiceResult<ProjectViewModel>> UpdateProject(Project project, AppUser user)
+        public async Task<ProjectViewModel> UpdateProject(Project project, AppUser user)
         {
             var result = await _projectRepository.UpdateProject(project, user);
-
-            if (result == null) return BadRequest<ProjectViewModel>();
 
             await _unitOfWork.CompleteAsync();
 
             return await GetProjectViewModel(result);
         }
 
-        private async Task<ServiceResult<ProjectViewModel>> GetProjectViewModel(Project project)
+        private Task<ProjectViewModel> GetProjectViewModel(Project project)
         {
-            var viewModel = await _projectRepository.GetProjectViewModel(project.Id);
-
-            return Ok(viewModel);
+            return _projectRepository.GetProjectViewModel(project.Id);
         }
 
-        private async Task<ServiceResult<ProjectViewModel>> GetProjectViewModel(int projectId)
+        private Task<ProjectViewModel> GetProjectViewModel(int projectId)
         {
-            var viewModel = await _projectRepository.GetProjectViewModel(projectId);
-
-            return Ok(viewModel);
+            return _projectRepository.GetProjectViewModel(projectId);
         }
     }
 }

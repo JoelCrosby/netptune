@@ -9,26 +9,26 @@ namespace Netptune.Entities.Configuration
 {
     public static class NetptuneEntitiesConfiguration
     {
-        public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitesOptions> optionsAction)
+        public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitiesOptions> optionsAction)
         {
             if (optionsAction == null)
                 throw new ArgumentNullException(nameof(optionsAction));
 
-            var netptuneEntitesOptions = new NetptuneEntitesOptions();
-            optionsAction(netptuneEntitesOptions);
+            var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
+            optionsAction(netptuneEntitiesOptions);
 
             services.Configure(optionsAction);
 
             services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
-                if (netptuneEntitesOptions.IsWindows)
+                if (netptuneEntitiesOptions.IsWindows)
                 {
-                    options.UseSqlServer(netptuneEntitesOptions.ConnectionString);
+                    options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
                 }
                 else
                 {
-                    options.UseNpgsql(netptuneEntitesOptions.ConnectionString);
+                    options.UseNpgsql(netptuneEntitiesOptions.ConnectionString);
                 }
             });
 

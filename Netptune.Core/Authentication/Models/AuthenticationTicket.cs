@@ -2,18 +2,18 @@
 
 namespace Netptune.Core.Authentication.Models
 {
-    public struct AuthenticationTicket
+    public class AuthenticationTicket
     {
-        public object Token;
+        public object Token { get; set; }
 
-        public string UserId;
+        public string UserId { get; set; }
 
-        public string Emailaddress;
+        public string EmailAddress { get; set; }
 
-        public string DisplayName;
+        public string DisplayName { get; set; }
 
-        public DateTime Issued;
+        public DateTime Issued { get; set; }
 
-        public DateTime Expires;
+        public DateTime Expires { get; set; }
     }
 }

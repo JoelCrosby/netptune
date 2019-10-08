@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Api.Extensions;
 using Netptune.Core.Services;
 using Netptune.Models;
 
@@ -34,7 +33,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _projectService.GetProjects(workspaceId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // GET: api/Projects/5
@@ -46,7 +45,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _projectService.GetProject(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // PUT: api/Projects
@@ -59,7 +58,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _projectService.UpdateProject(project, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // POST: api/Projects
@@ -71,7 +70,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _projectService.AddProject(project, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // DELETE: api/Projects/5
@@ -82,7 +81,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _projectService.DeleteProject(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
     }
 }

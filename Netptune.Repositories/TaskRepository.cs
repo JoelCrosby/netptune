@@ -54,7 +54,7 @@ namespace Netptune.Repositories
             };
         }
 
-        public async Task<IEnumerable<TaskViewModel>> GetTasksAsync(int workspaceId)
+        public async Task<List<TaskViewModel>> GetTasksAsync(int workspaceId)
         {
             var tasks = Context.ProjectTasks
                 .Where(x => x.Workspace.Id == workspaceId && !x.IsDeleted)

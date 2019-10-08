@@ -21,7 +21,7 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<IEnumerable<Workspace>> GetWorkspaces(AppUser user)
+        public async Task<List<Workspace>> GetWorkspaces(AppUser user)
         {
             // Load the relationship table.
             Entities.Include(m => m.WorkspaceUsers).ThenInclude(e => e.User);

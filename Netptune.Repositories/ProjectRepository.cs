@@ -21,11 +21,11 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetProjects(int workspaceId)
+        public Task<List<ProjectViewModel>> GetProjects(int workspaceId)
         {
             Context.ProjectTasks.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
-            return await Context.Projects
+            return Context.Projects
                 .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
@@ -33,16 +33,16 @@ namespace Netptune.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Project> GetProject(int id)
+        public ValueTask<Project> GetProject(int id)
         {
-            return await Context.Projects.FindAsync(id);
+            return Context.Projects.FindAsync(id);
         }
 
-        public async Task<ProjectViewModel> GetProjectViewModel(int id)
+        public Task<ProjectViewModel> GetProjectViewModel(int id)
         {
             Context.ProjectTasks.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
-            return await Context.Projects
+            return Context.Projects
                 .Where(project => project.Id == id)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
@@ -93,7 +93,7 @@ namespace Netptune.Repositories
 
             await Context.SaveChangesAsync();
 
-            // Need to explicily load the navigation property context.
+            // Need to explicitly load the navigation property context.
             // other wise the workspace.WorkspaceUsers list will return null.
             Context.Projects.Include(m => m.WorkspaceProjects);
             Context.Projects.Include(m => m.ProjectUsers);

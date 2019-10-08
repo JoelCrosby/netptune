@@ -8,9 +8,9 @@ namespace Netptune.Core.Repositories
 {
     public interface IProjectRepository : IRepository<Project, int>
     {
-        Task<IEnumerable<ProjectViewModel>> GetProjects(int workspaceId);
+        Task<List<ProjectViewModel>> GetProjects(int workspaceId);
 
-        Task<Project> GetProject(int id);
+        ValueTask<Project> GetProject(int id);
 
         Task<ProjectViewModel> GetProjectViewModel(int id);
 

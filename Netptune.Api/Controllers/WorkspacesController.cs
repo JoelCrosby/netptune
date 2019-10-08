@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Api.Extensions;
 using Netptune.Core.Services;
 using Netptune.Models;
 
@@ -35,7 +34,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceService.GetWorkspaces(user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // GET: api/Workspaces/5
@@ -47,7 +46,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _workspaceService.GetWorkspace(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // PUT: api/Workspaces/5
@@ -61,7 +60,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceService.UpdateWorkspace(workspace, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // POST: api/Workspaces
@@ -73,7 +72,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _workspaceService.AddWorkspace(workspace, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // DELETE: api/Workspaces/5
@@ -84,7 +83,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _workspaceService.DeleteWorkspace(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
     }
 }

@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />

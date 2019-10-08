@@ -1,6 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
+using Netptune.Models.MappingProfiles;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
@@ -38,6 +41,8 @@ namespace Netptune.Api
             services.AddCors();
 
             services.AddControllers();
+
+            services.AddAutoMapper(typeof(UserMaps));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -84,7 +89,7 @@ namespace Netptune.Api
             );
         }
 
-        private async Task ConfigureDatabase(IServiceCollection services)
+        private static async Task ConfigureDatabase(IServiceCollection services)
         {
             using var serviceScope = services.BuildServiceProvider().CreateScope();
 

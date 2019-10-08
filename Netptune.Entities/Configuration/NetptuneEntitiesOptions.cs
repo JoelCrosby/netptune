@@ -2,7 +2,7 @@
 
 namespace Netptune.Entities.Configuration
 {
-    public class NetptuneEntitesOptions
+    public class NetptuneEntitiesOptions
     {
         [Required]
         public string ConnectionString { get; set; }

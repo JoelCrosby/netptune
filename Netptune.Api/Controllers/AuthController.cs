@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Api.Extensions;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 
@@ -32,7 +31,9 @@ namespace Netptune.Api.Controllers
         {
             var result = await _authenticationService.LogIn(model);
 
-            return result.ToRestResult();
+            if (!result.IsSuccess) return Unauthorized(result.Message);
+
+            return Ok(result.Ticket);
         }
 
         [HttpPost]
@@ -45,7 +46,9 @@ namespace Netptune.Api.Controllers
         {
             var result = await _authenticationService.Register(model);
 
-            return result.ToRestResult();
+            if (!result.IsSuccess) return Unauthorized(result.Message);
+
+            return Ok(result.Ticket);
         }
     }
 }

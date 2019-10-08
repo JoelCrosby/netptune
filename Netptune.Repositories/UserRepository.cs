@@ -21,9 +21,9 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<IList<AppUser>> GetWorkspaceUsers(int workspaceId)
+        public Task<List<AppUser>> GetWorkspaceUsers(int workspaceId)
         {
-            return await (from workspaceAppUsers in Context.WorkspaceAppUsers
+            return (from workspaceAppUsers in Context.WorkspaceAppUsers
                           where workspaceAppUsers.WorkspaceId == workspaceId
                           select workspaceAppUsers.User).ToListAsync();
         }
@@ -59,14 +59,14 @@ namespace Netptune.Repositories
             return result.Entity;
         }
 
-        public async Task<AppUser> GetByEmail(string email)
+        public Task<AppUser> GetByEmail(string email)
         {
-            return await Context.AppUsers.FirstOrDefaultAsync(x => x.Email == email);
+            return Context.AppUsers.FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<bool> IsUserInWorkspace(string userId, int workspaceId)
+        public Task<bool> IsUserInWorkspace(string userId, int workspaceId)
         {
-            return await Context.WorkspaceAppUsers
+            return Context.WorkspaceAppUsers
                 .AnyAsync(x => x.UserId == userId && x.WorkspaceId == workspaceId);
         }
     }

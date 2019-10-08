@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Api.Extensions;
 using Netptune.Core.Services;
 using Netptune.Models;
 
@@ -34,7 +33,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _userService.GetWorkspaceUsers(workspaceId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // GET: api/AppUsers/<guid>
@@ -46,7 +45,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _userService.Get(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         [HttpPost]
@@ -58,7 +57,7 @@ namespace Netptune.Api.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             var result = await _userService.Update(user, userId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         [HttpPost]
@@ -71,7 +70,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _userService.InviteUserToWorkspace(userId, workspaceId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         [HttpGet]
@@ -83,7 +82,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _userService.GetByEmail(email);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
     }
 }

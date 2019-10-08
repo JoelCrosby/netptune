@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Api.Extensions;
 using Netptune.Core.Services;
 using Netptune.Models;
 using Netptune.Models.VeiwModels.ProjectTasks;
@@ -35,7 +34,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _taskService.GetTasks(workspaceId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // GET: api/ProjectTasks/5
@@ -47,20 +46,20 @@ namespace Netptune.Api.Controllers
         {
             var result = await _taskService.GetTask(id);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // PUT: api/ProjectTasks/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] ProjectTask task)
+        public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _taskService.UpdateTask(task, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // POST: api/ProjectTasks
@@ -73,7 +72,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _taskService.AddTask(task, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // DELETE: api/ProjectTasks/5
@@ -86,7 +85,7 @@ namespace Netptune.Api.Controllers
             var user = await _userManager.GetUserAsync(User);
             var result = await _taskService.DeleteTask(id, user);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
 
         // GET: api/ProjectTasks/GetProjectTaskCount/5
@@ -98,7 +97,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await _taskService.GetProjectTaskCount(projectId);
 
-            return result.ToRestResult();
+            return Ok(result);
         }
     }
 }

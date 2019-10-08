@@ -11,7 +11,7 @@ namespace Netptune.Core.Repositories
     {
         Task<AppUser> GetByEmail(string email);
 
-        Task<IList<AppUser>> GetWorkspaceUsers(int workspaceId);
+        Task<List<AppUser>> GetWorkspaceUsers(int workspaceId);
 
         Task<AppUser> Update(AppUser user, string currentUserId);
 

@@ -11,7 +11,7 @@ namespace Netptune.Core.Repositories
     {
         Task<TaskViewModel> GetTaskViewModel(int workspaceId);
 
-        Task<IEnumerable<TaskViewModel>> GetTasksAsync(int workspaceId);
+        Task<List<TaskViewModel>> GetTasksAsync(int workspaceId);
 
         Task<ProjectTask> UpdateTask(ProjectTask projectTask, AppUser user);
 

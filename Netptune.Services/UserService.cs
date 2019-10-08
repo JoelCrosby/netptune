@@ -1,92 +1,86 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Netptune.Core.Models;
+using AutoMapper;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Relationships;
-using Netptune.Services.Common;
+using Netptune.Models.ViewModels.Users;
 
 namespace Netptune.Services
 {
-    public class UserService : ServiceBase, IUserService
+    public class UserService : IUserService
     {
         private readonly INetptuneUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IWorkspaceRepository _workspaceRepository;
 
-        public UserService(INetptuneUnitOfWork unitOfWork)
+        public UserService(INetptuneUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _userRepository = unitOfWork.Users;
             _workspaceRepository = unitOfWork.Workspaces;
         }
 
-        public async Task<ServiceResult<AppUser>> Get(string userId)
+        public Task<AppUser> Get(string userId)
         {
-            var result = await _userRepository.GetAsync(userId);
-
-            if (result == null) return NotFound<AppUser>();
-
-            return Ok(result);
+            return _userRepository.GetAsync(userId);
         }
 
-        public async Task<ServiceResult<AppUser>> GetByEmail(string email)
+        public Task<AppUser> GetByEmail(string email)
         {
-            var result = await _userRepository.GetByEmail(email);
-
-            if (result == null) return NotFound<AppUser>();
-
-            return Ok(result);
+            return _userRepository.GetByEmail(email);
         }
 
-        public async Task<ServiceResult<IList<AppUser>>> GetWorkspaceUsers(int workspaceId)
+        public async Task<List<UserViewModel>> GetWorkspaceUsers(int workspaceId)
         {
-            var results = await _userRepository.GetWorkspaceUsers(workspaceId);
+            var users = await _userRepository.GetWorkspaceUsers(workspaceId);
 
-            return Ok(results);
+            return _mapper.Map<List<AppUser>, List<UserViewModel>>(users);
         }
 
-        public async Task<ServiceResult<WorkspaceAppUser>> InviteUserToWorkspace(string userId, int workspaceId)
+        public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
         {
             var user = await _userRepository.GetAsync(userId);
             var workspace = await _workspaceRepository.GetAsync(workspaceId);
 
+            // TODO: Replace exceptions with return result type.
+
             if (user == null)
             {
-                return NotFound<WorkspaceAppUser>("user not found");
+                throw new Exception("user not found");
             }
 
             if (workspace == null)
             {
-                return NotFound<WorkspaceAppUser>("workspace not found");
+                throw new Exception("workspace not found");
             }
 
             if (await _userRepository.IsUserInWorkspace(userId, workspaceId))
             {
-                return BadRequest<WorkspaceAppUser>("User is already a member of the workspace");
+                throw new Exception("User is already a member of the workspace");
             }
 
             var result = await _userRepository.InviteUserToWorkspace(userId, workspaceId);
 
-            if (result == null) return NotFound<WorkspaceAppUser>();
+            if (result == null) throw new Exception();
 
             await _unitOfWork.CompleteAsync();
 
-            return Ok(result);
+            return result;
         }
 
-        public async Task<ServiceResult<AppUser>> Update(AppUser user, string userId)
+        public async Task<AppUser> Update(AppUser user, string userId)
         {
             var result = await _userRepository.Update(user, userId);
 
-            if (result == null) return NotFound<AppUser>();
-
             await _unitOfWork.CompleteAsync();
 
-            return Ok(result);
+            return result;
         }
     }
 }
