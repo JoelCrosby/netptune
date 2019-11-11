@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MatSidenav, { static: false }) sideNav: MatSidenav;
+  @ViewChild(MatSidenav) sideNav: MatSidenav;
 
   theme$: Observable<string>;
   authenticated$: Observable<boolean>;
