@@ -24,8 +24,8 @@ namespace Netptune.Repositories
         public Task<List<AppUser>> GetWorkspaceUsers(int workspaceId)
         {
             return (from workspaceAppUsers in Context.WorkspaceAppUsers
-                          where workspaceAppUsers.WorkspaceId == workspaceId
-                          select workspaceAppUsers.User).ToListAsync();
+                    where workspaceAppUsers.WorkspaceId == workspaceId
+                    select workspaceAppUsers.User).ToListAsync();
         }
 
         public async Task<AppUser> Update(AppUser user, string currentUserId)

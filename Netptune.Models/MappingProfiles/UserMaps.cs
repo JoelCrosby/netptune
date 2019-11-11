@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using Netptune.Models.ViewModels.Users;
 
 namespace Netptune.Models.MappingProfiles

@@ -39,7 +39,7 @@ namespace Netptune.Models
         public ICollection<WorkspaceProject> WorkspaceProjects { get; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public ICollection<ProjectUser> ProjectUsers { get;  } = new HashSet<ProjectUser>();
+        public ICollection<ProjectUser> ProjectUsers { get; } = new HashSet<ProjectUser>();
 
         [JsonIgnore]
         public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
