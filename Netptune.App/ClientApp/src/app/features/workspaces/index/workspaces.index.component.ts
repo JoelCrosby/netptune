@@ -37,4 +37,12 @@ export class WorkspacesComponent implements OnInit {
     this.store.dispatch(new ActionSelectWorkspace(workspace));
     this.router.navigate(['/projects']);
   }
+
+  deleteClicked(workspace: Workspace) {}
+
+  manageUsersClicked(workspace: Workspace) {}
+
+  inviteUsersClicked() {}
+
+  exportDataClicked(workspace: Workspace) {}
 }

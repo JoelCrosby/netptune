@@ -23,7 +23,7 @@
     "@angular/platform-browser": "~9.0.0-rc.1",
     "@angular/platform-browser-dynamic": "~9.0.0-rc.1",
     "@angular/router": "~9.0.0-rc.1",
-    "@mdi/font": "^3.6.95",
+    "@mdi/font": "^4.5.95",
     "@ngrx/effects": "^8.2.0",
     "@ngrx/entity": "^8.2.0",
     "@ngrx/router-store": "^8.2.0",
