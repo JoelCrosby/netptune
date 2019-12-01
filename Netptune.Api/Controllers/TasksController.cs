@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Services;
 using Netptune.Models;
-using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Api.Controllers
 {

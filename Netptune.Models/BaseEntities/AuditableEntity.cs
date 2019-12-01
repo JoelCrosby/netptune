@@ -40,6 +40,5 @@ namespace Netptune.Models.BaseEntities
         public virtual AppUser Owner { get; set; }
 
         #endregion
-
     }
 }

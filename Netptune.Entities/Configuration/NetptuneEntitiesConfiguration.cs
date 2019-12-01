@@ -22,14 +22,7 @@ namespace Netptune.Entities.Configuration
             services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
-                if (netptuneEntitiesOptions.IsWindows)
-                {
-                    options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
-                }
-                else
-                {
-                    options.UseNpgsql(netptuneEntitiesOptions.ConnectionString);
-                }
+                options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
             });
 
             return services;

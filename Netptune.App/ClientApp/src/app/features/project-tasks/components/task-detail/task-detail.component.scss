@@ -1,0 +1,9 @@
+.tasks-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-list {
+  flex: 1;
+}

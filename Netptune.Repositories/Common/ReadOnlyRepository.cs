@@ -7,7 +7,7 @@ namespace Netptune.Repositories.Common
     /// <summary>
     /// Basic base repository, designed to be used only with dapper or other micro ORM
     /// </summary>
-    public class ReadOnlyRepository
+    public abstract class ReadOnlyRepository
     {
         protected readonly IDbConnectionFactory ConnectionFactory;
 

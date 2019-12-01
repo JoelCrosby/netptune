@@ -42,16 +42,13 @@ h1.nav-title {
 }
 
 .mat-subheader {
-  color: rgba(255, 255, 255, 0.54) !important;
   font-weight: 500 !important;
   text-transform: uppercase !important;
   letter-spacing: 1.2px !important;
 }
 
 .app-menu-link {
-  color: rgba(255,255,255, .8) !important;
   height: 2.6rem !important;
-
     .mat-list-item-content {
         height: 2.6rem;
         line-height: 18px;
@@ -63,18 +60,12 @@ h1.nav-title {
     }
 }
 
-.router-link-active {
-  color: rgba(255,255,255, 1) !important;
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
 .app-logo {
     height: 63px !important;
     text-transform: uppercase;
     letter-spacing: .4rem;
     font-size: 1.3rem;
     font-weight: 500;
-    color: rgba(255,255,255, .8) !important;
 }
 
 .toolbar-username {
@@ -86,7 +77,6 @@ h1.nav-title {
 
 .app-sidenav {
     width: 200px;
-    background-color: #1E1E1E;
 }
 
 .app-toolbar {

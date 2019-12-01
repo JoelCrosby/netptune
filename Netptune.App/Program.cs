@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Netptune
+namespace Netptune.App
 {
     public static class Program
     {

@@ -6,11 +6,11 @@ using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Repositories.Common
 {
-    public class DbConnectionFactory : IDbConnectionFactory
+    public abstract class DbConnectionFactory : IDbConnectionFactory
     {
         private readonly string _connectionString;
 
-        public DbConnectionFactory(string connectionString)
+        protected DbConnectionFactory(string connectionString)
         {
             _connectionString = connectionString;
         }

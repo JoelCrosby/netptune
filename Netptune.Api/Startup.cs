@@ -1,11 +1,9 @@
-﻿using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using AutoMapper;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,11 +30,7 @@ namespace Netptune.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-            var connectionString = isWindows
-                ? Configuration.GetConnectionString("ProjectsDatabase")
-                : Configuration.GetConnectionString("ProjectsDatabasePostgres");
+            var connectionString = Configuration.GetConnectionString("ProjectsDatabase");
 
             services.AddCors();
 
@@ -44,15 +38,10 @@ namespace Netptune.Api
 
             services.AddAutoMapper(typeof(UserMaps));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddNeptuneAuthentication(Configuration);
-            services.AddNetptuneRepository(connectionString);
-            services.AddNetptuneEntities(options =>
-            {
-                options.ConnectionString = connectionString;
-                options.IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            });
+
+            services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
+            services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
             services.AddNetptuneServices();
 

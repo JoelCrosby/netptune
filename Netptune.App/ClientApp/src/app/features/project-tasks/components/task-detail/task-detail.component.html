@@ -1,5 +1,8 @@
 <div class="tasks-container" *ngIf="$task | async as task">
-  <h4> {{ task.name }} </h4>
-  <p> {{ task.description }} </p>
+  <h4 class="text-ellipsis w-100"> {{ task.name }} </h4>
+
+  <div class="task-list mb-5">
+    <p> {{ task.description }} </p>
+  </div>
 
 </div>

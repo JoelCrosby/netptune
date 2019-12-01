@@ -13,23 +13,13 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private store: Store<AppState>) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-     return this.store.select(selectAuthToken).pipe(
+    return this.store.select(selectAuthToken).pipe(
       first(),
       switchMap((token: string) => {
         if (this.isApiRequest(req) && token) {
           req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
         }
-        return next.handle(req).pipe(
-          tap(null, (err: any) => {
-            if (err instanceof HttpErrorResponse) {
-              switch (err.status) {
-                case 401: {
-                  this.store.dispatch(new ActionAuthLogout());
-                }
-              }
-            }
-          })
-        );
+        return next.handle(req);
       })
     );
   }

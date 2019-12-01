@@ -1,4 +1,6 @@
-﻿namespace Netptune.Models.ViewModels.Users
+﻿using System;
+
+namespace Netptune.Models.ViewModels.Users
 {
     public class UserViewModel
     {
@@ -13,5 +15,9 @@
         public string Email { get; set; }
 
         public string UserName { get; set; }
+
+        public DateTimeOffset LastLoginTime { get; set; }
+
+        public DateTimeOffset RegistrationDate { get; set; }
     }
 }

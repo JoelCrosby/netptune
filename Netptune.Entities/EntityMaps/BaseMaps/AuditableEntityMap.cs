@@ -33,7 +33,7 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
                 .HasColumnName("IsDeleted")
                 .HasDefaultValue(false);
 
-            // Enity > AppUser
+            // Entity > AppUser
 
             builder
                 .HasOne(entity => entity.CreatedByUser)

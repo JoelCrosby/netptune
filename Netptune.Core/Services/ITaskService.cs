@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Netptune.Models;
-using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Services
 {

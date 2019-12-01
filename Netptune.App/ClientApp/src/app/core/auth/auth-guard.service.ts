@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { AuthState } from './store/auth.reducer';
 import { selectIsAuthenticated } from './store/auth.selectors';
 
@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
   canActivate() {
     return this.store.pipe(
       select(selectIsAuthenticated),
-      map(result => {
+      tap(result => {
         if (!result) {
           this.router.navigate(['/auth/login']);
         }

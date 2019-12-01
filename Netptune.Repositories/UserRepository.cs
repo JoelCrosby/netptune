@@ -32,7 +32,7 @@ namespace Netptune.Repositories
         {
             var updatedUser = await Context.AppUsers.FirstOrDefaultAsync(x => x.Id == user.Id);
 
-            if (updatedUser == null)
+            if (updatedUser is null)
             {
                 return null;
             }
@@ -48,7 +48,7 @@ namespace Netptune.Repositories
         {
             if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));
 
-            var invite = new WorkspaceAppUser()
+            var invite = new WorkspaceAppUser
             {
                 WorkspaceId = workspaceId,
                 UserId = userId

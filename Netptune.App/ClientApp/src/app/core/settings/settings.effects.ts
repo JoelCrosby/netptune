@@ -33,7 +33,7 @@ export class SettingsEffects {
   updateTheme = merge(INIT, this.actions$.pipe(ofType(SettingsActionTypes.CHANGE_THEME))).pipe(
     withLatestFrom(this.store.pipe(select(selectEffectiveTheme))),
     tap(([action, effectiveTheme]) => {
-      const classList = this.overlayContainer.getContainerElement().classList;
+      const classList = document.querySelector('body').classList;
       const toRemove = Array.from(classList).filter((item: string) => item.includes('-theme'));
       if (toRemove.length) {
         classList.remove(...toRemove);

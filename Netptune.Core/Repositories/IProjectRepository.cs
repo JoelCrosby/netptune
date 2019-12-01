@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Repositories.Common;
 using Netptune.Models;
-using Netptune.Models.VeiwModels.Projects;
+using Netptune.Models.ViewModels.Projects;
 
 namespace Netptune.Core.Repositories
 {
@@ -15,9 +15,7 @@ namespace Netptune.Core.Repositories
 
         Task<ProjectViewModel> GetProjectViewModel(int id);
 
-        Task<Project> UpdateProject(Project project, AppUser user);
-
-        Task<Project> AddProject(Project project, AppUser user);
+        Task<Project> AddProject(Project project);
 
         Task<Project> DeleteProject(int id);
     }

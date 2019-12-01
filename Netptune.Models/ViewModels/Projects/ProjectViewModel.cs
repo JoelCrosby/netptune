@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Netptune.Models.VeiwModels.Projects
+namespace Netptune.Models.ViewModels.Projects
 {
     public class ProjectViewModel
     {

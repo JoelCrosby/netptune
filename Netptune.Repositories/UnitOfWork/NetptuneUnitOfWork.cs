@@ -2,8 +2,9 @@
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
+using Netptune.Repositories.Common;
 
-namespace Netptune.Repositories.Common
+namespace Netptune.Repositories.UnitOfWork
 {
     public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>, INetptuneUnitOfWork
     {

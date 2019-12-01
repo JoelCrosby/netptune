@@ -8,8 +8,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Models;
-using Netptune.Models.Relationships;
-using Netptune.Models.VeiwModels.Projects;
+using Netptune.Models.ViewModels.Projects;
 using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
@@ -65,54 +64,9 @@ namespace Netptune.Repositories
             };
         }
 
-        public async Task<Project> UpdateProject(Project project, AppUser user)
+        public async Task<Project> AddProject(Project project)
         {
-            var result = await Context.Projects.FirstOrDefaultAsync(x => x.Id == project.Id);
-
-            if (result == null)
-            {
-                return null;
-            }
-
-            result.Name = project.Name;
-            result.Description = project.Description;
-
-            result.ModifiedByUserId = user.Id;
-
-            return result;
-        }
-
-        public async Task<Project> AddProject(Project project, AppUser user)
-        {
-            var workspace = await Context.Workspaces.FirstOrDefaultAsync(x => x.Id == project.WorkspaceId);
-
-            project.CreatedByUserId = user.Id;
-            project.OwnerId = user.Id;
-
-            var result = await Context.Projects.AddAsync(project);
-
-            await Context.SaveChangesAsync();
-
-            // Need to explicitly load the navigation property context.
-            // other wise the workspace.WorkspaceUsers list will return null.
-            Context.Projects.Include(m => m.WorkspaceProjects);
-            Context.Projects.Include(m => m.ProjectUsers);
-
-            var workspaceRelationship = new WorkspaceProject
-            {
-                ProjectId = project.Id,
-                WorkspaceId = workspace.Id
-            };
-
-            project.WorkspaceProjects.Add(workspaceRelationship);
-
-            var userRelationship = new ProjectUser
-            {
-                ProjectId = project.Id,
-                UserId = user.Id
-            };
-
-            project.ProjectUsers.Add(userRelationship);
+            var result = await Entities.AddAsync(project);
 
             return result.Entity;
         }
@@ -121,7 +75,7 @@ namespace Netptune.Repositories
         {
             var result = await Context.Projects.FindAsync(id);
 
-            if (result == null)
+            if (result is null)
             {
                 return null;
             }

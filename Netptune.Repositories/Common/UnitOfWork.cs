@@ -13,14 +13,14 @@ namespace Netptune.Repositories.Common
     /// </summary>
     /// <typeparam name="TContext">Db context from entity framework</typeparam>
     /// <typeparam name="TDbConnectionFactory">Dc connection factory to proper database</typeparam>
-    public class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
+    public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
         where TContext : DbContext
         where TDbConnectionFactory : IDbConnectionFactory
     {
         protected readonly TContext Context;
         protected readonly TDbConnectionFactory ConnectionFactory;
 
-        public UnitOfWork(TContext context, TDbConnectionFactory connectionFactory)
+        protected UnitOfWork(TContext context, TDbConnectionFactory connectionFactory)
         {
             Context = context;
             ConnectionFactory = connectionFactory;

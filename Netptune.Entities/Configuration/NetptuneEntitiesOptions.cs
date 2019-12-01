@@ -6,7 +6,5 @@ namespace Netptune.Entities.Configuration
     {
         [Required]
         public string ConnectionString { get; set; }
-
-        public bool IsWindows { get; set; } = true;
     }
 }

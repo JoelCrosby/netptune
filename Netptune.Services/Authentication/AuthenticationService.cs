@@ -19,14 +19,13 @@ namespace Netptune.Services.Authentication
 {
     public class NetptuneAuthService : INetptuneAuthService
     {
-        private readonly IConfiguration _configuration;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly INetptuneUnitOfWork _unitOfWork;
 
-        private readonly string _issuer;
-        private readonly string _securityKey;
-        private readonly string _expireDays;
+        protected readonly string Issuer;
+        protected readonly string SecurityKey;
+        protected readonly string ExpireDays;
 
         public NetptuneAuthService(
             IConfiguration configuration,
@@ -35,14 +34,13 @@ namespace Netptune.Services.Authentication
             INetptuneUnitOfWork unitOfWork
             )
         {
-            _configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
             _unitOfWork = unitOfWork;
 
-            _issuer = _configuration["Tokens:Issuer"];
-            _securityKey = _configuration["Tokens:SecurityKey"];
-            _expireDays = _configuration["Tokens:ExpireDays"];
+            Issuer = configuration["Tokens:Issuer"];
+            SecurityKey = configuration["Tokens:SecurityKey"];
+            ExpireDays = configuration["Tokens:ExpireDays"];
         }
 
         public async Task<LoginResult> LogIn(TokenRequest model)
@@ -96,7 +94,7 @@ namespace Netptune.Services.Authentication
 
         private DateTime GetExpireDays()
         {
-            return DateTime.Now.AddDays(Convert.ToDouble(_expireDays));
+            return DateTime.Now.AddDays(Convert.ToDouble(ExpireDays));
         }
 
         private AuthenticationTicket GenerateToken(AppUser appUser)
@@ -122,13 +120,13 @@ namespace Netptune.Services.Authentication
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _issuer,
-                audience: _issuer,
-                claims: claims,
+                Issuer,
+                Issuer,
+                claims,
                 expires: expires,
                 signingCredentials: creds
             );

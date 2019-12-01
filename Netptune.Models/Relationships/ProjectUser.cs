@@ -1,4 +1,5 @@
-﻿using Netptune.Models.BaseEntities;
+﻿using System.Text.Json.Serialization;
+using Netptune.Models.BaseEntities;
 
 namespace Netptune.Models.Relationships
 {
@@ -10,9 +11,11 @@ namespace Netptune.Models.Relationships
 
         #region NavigationProperties
 
-        public virtual Project Project { get; set; }
+        [JsonIgnore]
+        public Project Project { get; set; }
 
-        public virtual AppUser User { get; set; }
+        [JsonIgnore]
+        public AppUser User { get; set; }
 
         #endregion
     }

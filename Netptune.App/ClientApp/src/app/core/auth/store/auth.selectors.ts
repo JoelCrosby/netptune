@@ -28,9 +28,5 @@ export const selectAuthToken = createSelector(
 export const selectCurrentUserDisplayName = createSelector(
   selectAuthState,
   selectCurrentUser,
-  (state: AuthState) => {
-    if (state.currentUser) {
-      return state.currentUser.displayName || state.currentUser.email;
-    }
-  }
+  (state: AuthState) => state.currentUser && (state.currentUser.displayName || state.currentUser.email)
 );

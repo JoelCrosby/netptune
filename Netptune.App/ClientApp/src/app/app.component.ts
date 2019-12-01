@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
 import { ActionAuthLogout } from '@core/auth/store/auth.actions';
@@ -13,11 +13,11 @@ import { Observable } from 'rxjs';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav: MatSidenav;
 
-  theme$: Observable<string>;
   authenticated$: Observable<boolean>;
   displayName$: Observable<string>;
   pageTitle$: Observable<string>;
@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.theme$ = this.store.pipe(select(selectEffectiveTheme));
     this.authenticated$ = this.store.pipe(select(selectIsAuthenticated));
     this.displayName$ = this.store.pipe(select(selectCurrentUserDisplayName));
     this.pageTitle$ = this.store.pipe(select(selectPageTitle));

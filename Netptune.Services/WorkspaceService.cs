@@ -1,58 +1,71 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Netptune.Core.Extensions;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
+using Netptune.Models.Relationships;
 
 namespace Netptune.Services
 {
     public class WorkspaceService : IWorkspaceService
     {
-        private readonly INetptuneUnitOfWork _unitOfWork;
-        private readonly IWorkspaceRepository _workspaceRepository;
+        protected readonly INetptuneUnitOfWork UnitOfWork;
+        protected readonly IWorkspaceRepository WorkspaceRepository;
 
         public WorkspaceService(INetptuneUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _workspaceRepository = unitOfWork.Workspaces;
+            UnitOfWork = unitOfWork;
+            WorkspaceRepository = unitOfWork.Workspaces;
         }
 
         public async Task<Workspace> AddWorkspace(Workspace workspace, AppUser user)
         {
-            var result = await _workspaceRepository.AddWorkspace(workspace, user);
+            workspace.CreatedByUserId = user.Id;
+            workspace.OwnerId = user.Id;
 
-            await _unitOfWork.CompleteAsync();
+            workspace.Slug = workspace.Name.ToUrlSlug();
+
+            workspace.WorkspaceUsers.Add(new WorkspaceAppUser
+            {
+                UserId = user.Id,
+                WorkspaceId = workspace.Id
+            });
+
+            var result = await WorkspaceRepository.AddWorkspace(workspace);
+
+            await UnitOfWork.CompleteAsync();
 
             return result;
         }
 
         public async Task<Workspace> DeleteWorkspace(int id)
         {
-            var result = await _workspaceRepository.DeleteWorkspace(id);
+            var result = await WorkspaceRepository.DeleteWorkspace(id);
 
-            await _unitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync();
 
             return result;
         }
 
         public Task<Workspace> GetWorkspace(int id)
         {
-            return _workspaceRepository.GetAsync(id);
+            return WorkspaceRepository.GetAsync(id);
         }
 
 
         public Task<List<Workspace>> GetWorkspaces(AppUser user)
         {
-            return _workspaceRepository.GetWorkspaces(user);
+            return WorkspaceRepository.GetWorkspaces(user);
         }
 
         public async Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user)
         {
-            var result = await _workspaceRepository.UpdateWorkspace(workspace, user);
+            var result = await WorkspaceRepository.UpdateWorkspace(workspace, user);
 
-            await _unitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync();
 
             return result;
         }

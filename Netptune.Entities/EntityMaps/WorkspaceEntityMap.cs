@@ -12,6 +12,9 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
+                .HasAlternateKey(workspace => workspace.Slug);
+
+            builder
                 .Property(workspace => workspace.Name)
                 .HasMaxLength(128)
                 .IsRequired();
@@ -20,10 +23,15 @@ namespace Netptune.Entities.EntityMaps
                 .Property(workspace => workspace.Description)
                 .HasMaxLength(4096);
 
+            builder
+                .Property(workspace => workspace.Slug)
+                .HasMaxLength(128)
+                .IsRequired();
+
             // (One-to-One) Workspace > Task
 
             builder
-                .HasMany(worspace => worspace.ProjectTasks)
+                .HasMany(workspace => workspace.ProjectTasks)
                 .WithOne(task => task.Workspace)
                 .HasForeignKey(task => task.WorkspaceId)
                 .IsRequired();

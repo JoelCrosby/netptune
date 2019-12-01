@@ -20,4 +20,12 @@
     border-bottom: 1px solid mat-color($background, border)
   }
 
+  .app-sidenav {
+    border-right: 1px solid mat-color($background, border)
+  }
+
+  .router-link-active {
+    background-color: mat-color($primary);
+    color: invert(mat-color($foreground, text));
+  }
 }

@@ -28,13 +28,13 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual AppUser Assignee { get; set; }
+        public AppUser Assignee { get; set; }
 
         [JsonIgnore]
-        public virtual Project Project { get; set; }
+        public Project Project { get; set; }
 
         [JsonIgnore]
-        public virtual Workspace Workspace { get; set; }
+        public Workspace Workspace { get; set; }
 
         #endregion
 

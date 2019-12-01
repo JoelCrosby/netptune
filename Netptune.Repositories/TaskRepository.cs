@@ -10,7 +10,7 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Models;
 using Netptune.Models.Enums;
-using Netptune.Models.VeiwModels.ProjectTasks;
+using Netptune.Models.ViewModels.ProjectTasks;
 using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
@@ -86,13 +86,13 @@ namespace Netptune.Repositories
 
         public async Task<ProjectTask> UpdateTask(ProjectTask projectTask, AppUser user)
         {
-            if (projectTask == null) throw new ArgumentNullException(nameof(projectTask));
+            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
 
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (user is null) throw new ArgumentNullException(nameof(user));
 
             var result = await Context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == projectTask.Id);
 
-            if (result == null) return null;
+            if (result is null) return null;
 
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
@@ -106,11 +106,11 @@ namespace Netptune.Repositories
 
         public async Task<ProjectTask> AddTask(ProjectTask projectTask, AppUser user)
         {
-            if (projectTask == null) throw new ArgumentNullException(nameof(projectTask));
+            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
 
-            if (projectTask.ProjectId == null) throw new ArgumentNullException(nameof(projectTask.ProjectId));
+            if (projectTask.ProjectId is null) throw new ArgumentNullException(nameof(projectTask.ProjectId));
 
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (user is null) throw new ArgumentNullException(nameof(user));
 
             // Load the relationship tables.
             Context.ProjectTasks.Include(m => m.Workspace).ThenInclude(e => e.Projects);
@@ -126,7 +126,7 @@ namespace Netptune.Repositories
                                         workspace = w
                                     }).FirstOrDefaultAsync();
 
-            if (relational == null) return null;
+            if (relational is null) return null;
 
             Context.AppUsers.Include(x => x.WorkspaceUsers).ThenInclude(x => x.Workspace);
 
@@ -145,7 +145,7 @@ namespace Netptune.Repositories
         {
             var task = await Context.ProjectTasks.FindAsync(id);
 
-            if (task == null) return null;
+            if (task is null) return null;
 
             task.IsDeleted = true;
             task.DeletedByUserId = user.Id;

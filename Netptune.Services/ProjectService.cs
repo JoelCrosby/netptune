@@ -5,71 +5,91 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
-using Netptune.Models.VeiwModels.Projects;
+using Netptune.Models.Relationships;
+using Netptune.Models.ViewModels.Projects;
 
 namespace Netptune.Services
 {
     public class ProjectService : IProjectService
     {
-        private readonly IProjectRepository _projectRepository;
-        private readonly INetptuneUnitOfWork _unitOfWork;
+        protected readonly IProjectRepository ProjectRepository;
+        protected readonly INetptuneUnitOfWork UnitOfWork;
 
         public ProjectService(INetptuneUnitOfWork unitOfWork)
         {
-            _projectRepository = unitOfWork.Projects;
-            _unitOfWork = unitOfWork;
+            ProjectRepository = unitOfWork.Projects;
+            UnitOfWork = unitOfWork;
         }
 
         public Task<ProjectViewModel> AddProject(Project project, AppUser user)
         {
-            return _unitOfWork.Transaction(async () =>
+            return UnitOfWork.Transaction(async () =>
             {
-                var result = await _projectRepository.AddProject(project, user);
+                project.CreatedByUserId = user.Id;
+                project.OwnerId = user.Id;
 
-                await _unitOfWork.CompleteAsync();
+                var userRelationship = new ProjectUser
+                {
+                    ProjectId = project.Id,
+                    UserId = user.Id
+                };
 
-                return await GetProjectViewModel(result.Id);
+                project.ProjectUsers.Add(userRelationship);
+
+                var workspace = await UnitOfWork.Workspaces.GetAsync(project.WorkspaceId);
+
+                workspace.Projects.Add(project);
+
+                await UnitOfWork.CompleteAsync();
+
+                return await GetProjectViewModel(project.Id);
             });
         }
 
         public async Task<ProjectViewModel> DeleteProject(int id)
         {
-            var result = await _projectRepository.DeleteProject(id);
+            var result = await ProjectRepository.DeleteProject(id);
 
-            await _unitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync();
 
             return await GetProjectViewModel(result);
         }
 
         public async Task<ProjectViewModel> GetProject(int id)
         {
-            var result = await _projectRepository.GetProject(id);
+            var result = await ProjectRepository.GetProject(id);
 
             return await GetProjectViewModel(result);
         }
 
         public Task<List<ProjectViewModel>> GetProjects(int workspaceId)
         {
-            return _projectRepository.GetProjects(workspaceId);
+            return ProjectRepository.GetProjects(workspaceId);
         }
 
         public async Task<ProjectViewModel> UpdateProject(Project project, AppUser user)
         {
-            var result = await _projectRepository.UpdateProject(project, user);
+            var result = await ProjectRepository.GetAsync(project.Id);
 
-            await _unitOfWork.CompleteAsync();
+            if (result is null) return null;
+            
+            result.Name = project.Name;
+            result.Description = project.Description;
+            result.ModifiedByUserId = user.Id;
+
+            await UnitOfWork.CompleteAsync();
 
             return await GetProjectViewModel(result);
         }
 
         private Task<ProjectViewModel> GetProjectViewModel(Project project)
         {
-            return _projectRepository.GetProjectViewModel(project.Id);
+            return ProjectRepository.GetProjectViewModel(project.Id);
         }
 
         private Task<ProjectViewModel> GetProjectViewModel(int projectId)
         {
-            return _projectRepository.GetProjectViewModel(projectId);
+            return ProjectRepository.GetProjectViewModel(projectId);
         }
     }
 }

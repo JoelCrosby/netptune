@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using Netptune.Entities.EntityMaps;
 using Netptune.Models;
 using Netptune.Models.BaseEntities;
 using Netptune.Models.Relationships;
@@ -23,11 +22,14 @@ namespace Netptune.Entities.Contexts
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Board> Boards { get; set; }
+        public DbSet<BoardGroup> BoardGroups { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
         public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
+        public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; }
 
         public DataContext() { }
 
@@ -47,17 +49,7 @@ namespace Netptune.Entities.Contexts
             MapIdetityTableNames(builder);
 
             builder
-                .ApplyConfiguration(new FlagEntityMap())
-                .ApplyConfiguration(new PostEntityMap())
-                .ApplyConfiguration(new ProjectEntityMap())
-                .ApplyConfiguration(new ProjectTaskEntityMap())
-                .ApplyConfiguration(new WorkspaceEntityMap())
-                .ApplyConfiguration(new AppUserEntityMap());
-
-            builder
-                .ApplyConfiguration(new ProjectUserEntityMap())
-                .ApplyConfiguration(new WorkspaceAppUserEntityMap())
-                .ApplyConfiguration(new WorkspaceProjectEntityMap());
+                .ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
         }
 
         private static void MapIdetityTableNames(ModelBuilder builder)

@@ -12,19 +12,22 @@ namespace Netptune.Models
 
         public string Description { get; set; }
 
+        public string Slug { get; set; }
+
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public ICollection<Project> Projects { get; set; } = new HashSet<Project>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
+        public ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public virtual ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
+        public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public virtual ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
+        public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
+
         #endregion
     }
 }

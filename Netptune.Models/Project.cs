@@ -23,10 +23,7 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual Workspace Workspace { get; set; }
-
-        [JsonIgnore]
-        public ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
+        public Workspace Workspace { get; set; }
 
         [JsonIgnore]
         public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
@@ -39,6 +36,9 @@ namespace Netptune.Models
 
         [JsonIgnore]
         public ICollection<Post> ProjectPosts { get; set; } = new HashSet<Post>();
+
+        [JsonIgnore]
+        public ICollection<Board> ProjectBoards { get; set; } = new HashSet<Board>();
 
         #endregion
 

@@ -6,16 +6,7 @@ import { Action, Store, select } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
-import {
-  ActionAuthLoginFail,
-  ActionAuthLoginSuccess,
-  ActionAuthTryLogin,
-  AuthActionTypes,
-  ActionAuthLogout,
-  ActionAuthRegister,
-  ActionAuthRegisterSuccess,
-  ActionAuthRegisterFail,
-} from './auth.actions';
+import * as AuthActions from './auth.actions';
 import { AppState } from '@core/core.state';
 import { selectAuthState } from './auth.selectors';
 import { ActionSettingsClear } from '@app/core/settings/settings.actions';
@@ -34,13 +25,18 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   logOut$ = this.actions$.pipe(
-    ofType<ActionAuthLogout>(AuthActionTypes.LOGOUT),
+    ofType<AuthActions.ActionAuthLogout>(AuthActions.AuthActionTypes.LOGOUT),
     tap(() => this.router.navigate(['auth/login']))
   );
 
   @Effect({ dispatch: false })
   persistSettings = this.actions$.pipe(
-    ofType(AuthActionTypes.LOGIN_FAIL, AuthActionTypes.LOGIN_SUCCESS, AuthActionTypes.LOGOUT, AuthActionTypes.TRY_LOGIN),
+    ofType(
+      AuthActions.AuthActionTypes.LOGIN_FAIL,
+      AuthActions.AuthActionTypes.LOGIN_SUCCESS,
+      AuthActions.AuthActionTypes.LOGOUT,
+      AuthActions.AuthActionTypes.TRY_LOGIN
+    ),
     withLatestFrom(this.store.pipe(select(selectAuthState))),
     tap(([action, settings]) => this.localStorageService.setItem(AUTH_KEY, settings))
   );
@@ -48,35 +44,35 @@ export class AuthEffects {
   @Effect()
   tryLogin$ = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
     this.actions$.pipe(
-      ofType<ActionAuthTryLogin>(AuthActionTypes.TRY_LOGIN),
+      ofType<AuthActions.ActionAuthTryLogin>(AuthActions.AuthActionTypes.TRY_LOGIN),
       debounceTime(debounce, scheduler),
-      switchMap((action: ActionAuthTryLogin) =>
+      switchMap((action: AuthActions.ActionAuthTryLogin) =>
         this.authService.login(action.payload).pipe(
-          map((userInfo: any) => new ActionAuthLoginSuccess(userInfo)),
+          map((userInfo: any) => new AuthActions.ActionAuthLoginSuccess(userInfo)),
           tap(() => this.router.navigate(['/workspaces'])),
-          catchError(error => of(new ActionAuthLoginFail({ error })))
+          catchError(error => of(new AuthActions.ActionAuthLoginFail({ error })))
         )
       )
-    )
+    );
 
   @Effect()
   register$ = ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
     this.actions$.pipe(
-      ofType<ActionAuthRegister>(AuthActionTypes.REGISTER),
+      ofType<AuthActions.ActionAuthRegister>(AuthActions.AuthActionTypes.REGISTER),
       debounceTime(debounce, scheduler),
-      switchMap((action: ActionAuthRegister) =>
+      switchMap((action: AuthActions.ActionAuthRegister) =>
         this.authService.register(action.payload.request).pipe(
-          map((userInfo: any) => new ActionAuthRegisterSuccess(userInfo)),
+          map((userInfo: any) => new AuthActions.ActionAuthRegisterSuccess(userInfo)),
           tap(() => this.router.navigate(['/workspaces'])),
-          catchError(error => of(new ActionAuthRegisterFail({ error })))
+          catchError(error => of(new AuthActions.ActionAuthRegisterFail({ error })))
         )
       )
-    )
+    );
 
   @Effect()
   logout$ = () =>
     this.actions$.pipe(
-      ofType<ActionAuthTryLogin>(AuthActionTypes.LOGOUT),
+      ofType<AuthActions.ActionAuthTryLogin>(AuthActions.AuthActionTypes.LOGOUT),
       map(() => new ActionSettingsClear())
-    )
+    );
 }

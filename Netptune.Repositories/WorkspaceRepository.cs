@@ -9,7 +9,6 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Models;
-using Netptune.Models.Relationships;
 using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
@@ -36,14 +35,14 @@ namespace Netptune.Repositories
 
         public async Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user)
         {
-            if (workspace == null) throw new ArgumentNullException(nameof(workspace));
+            if (workspace is null) throw new ArgumentNullException(nameof(workspace));
 
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (user is null) throw new ArgumentNullException(nameof(user));
 
             var result = await Entities
                 .FirstOrDefaultAsync(x => x.Id == workspace.Id);
 
-            if (result == null) return null;
+            if (result is null) return null;
 
             result.Name = workspace.Name;
             result.Description = workspace.Description;
@@ -59,24 +58,9 @@ namespace Netptune.Repositories
             return result;
         }
 
-        public async Task<Workspace> AddWorkspace(Workspace workspace, AppUser user)
+        public async Task<Workspace> AddWorkspace(Workspace workspace)
         {
-            workspace.CreatedByUserId = user.Id;
-            workspace.OwnerId = user.Id;
-
             var result = await Entities.AddAsync(workspace);
-
-            // Need to explicitly load the navigation property context.
-            // other wise the workspace.WorkspaceUsers list will return null.
-            Entities.Include(m => m.WorkspaceUsers);
-
-            var relationship = new WorkspaceAppUser
-            {
-                UserId = user.Id,
-                WorkspaceId = workspace.Id
-            };
-
-            await Context.WorkspaceAppUsers.AddAsync(relationship);
 
             return result.Entity;
         }
@@ -85,7 +69,7 @@ namespace Netptune.Repositories
         {
             var workspace = await Entities.FindAsync(id);
 
-            if (workspace == null) return null;
+            if (workspace is null) return null;
 
             Entities.Remove(workspace);
 
