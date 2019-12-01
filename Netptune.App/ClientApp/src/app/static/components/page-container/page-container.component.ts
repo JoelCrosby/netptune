@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-page-container',
@@ -6,4 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./page-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PageContainerComponent {}
+export class PageContainerComponent {
+  @Input() verticalPadding = true;
+}

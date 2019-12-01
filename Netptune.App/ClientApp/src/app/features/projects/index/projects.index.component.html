@@ -1,4 +1,5 @@
-<div class="px-0">
+<app-page-container>
+
   <div class="component-header">
     <button mat-fab type="button" id="new-button" (click)="showAddModal()">
       <mat-icon>add</mat-icon>
@@ -6,26 +7,25 @@
     </button>
   </div>
 
-  <div class="mb-5 px-md-3 px-lg-5">
-    <div class="card-group">
-      <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById" class="project-card">
-        <mat-card-header>
-          <mat-card-title>{{ project.name }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{ project.description }}</p>
+  <div class="card-group">
+    <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById" class="project-card">
+      <mat-card-header>
+        <mat-card-title>{{ project.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ project.description }}</p>
 
-          <div class="card-chips">
-            <mat-chip-list>
-              <mat-chip
-                >Owner {{ project.ownerDisplayName }}</mat-chip
-              >
-              <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
-              <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
-            </mat-chip-list>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+        <div class="card-chips">
+          <mat-chip-list>
+            <mat-chip
+              >Owner {{ project.ownerDisplayName }}</mat-chip
+            >
+            <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
+            <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
+          </mat-chip-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-</div>
+
+</app-page-container>
