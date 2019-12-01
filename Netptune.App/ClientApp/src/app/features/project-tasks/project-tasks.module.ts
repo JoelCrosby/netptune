@@ -9,11 +9,13 @@ import { ProjectTasksEffects } from './store/project-tasks.effects';
 import { projectTasksReducer } from './store/project-tasks.reducer';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
 import { TaskDetailComponent } from './components/task-detail/task-detail.component';
+import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
   declarations: [ProjectTasksComponent, TaskListGroupComponent, TaskListItemComponent, TaskDetailComponent],
   imports: [
     SharedModule,
+    StaticModule,
     StoreModule.forFeature('project-tasks', projectTasksReducer),
     EffectsModule.forFeature([ProjectTasksEffects]),
     ProjectTasksRoutingModule,

@@ -8,11 +8,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { UsersEffects } from './store/users.effects';
 import { usersReducer } from './store/users.reducer';
+import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
   declarations: [UsersComponent],
   imports: [
     SharedModule,
+    StaticModule,
     StoreModule.forFeature('users', usersReducer),
     EffectsModule.forFeature([UsersEffects]),
     UsersRoutingModule,

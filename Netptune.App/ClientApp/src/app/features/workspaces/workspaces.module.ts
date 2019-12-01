@@ -8,11 +8,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { workspacesReducer } from './store/workspaces.reducer';
 import { WorkspacesEffects } from './store/workspaces.effects';
 import { WorkspacesService } from './store/workspaces.service';
+import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
   declarations: [WorkspacesComponent],
   imports: [
     SharedModule,
+    StaticModule,
     StoreModule.forFeature('workspaces', workspacesReducer),
     EffectsModule.forFeature([WorkspacesEffects]),
     WorkspacesRoutingModule,

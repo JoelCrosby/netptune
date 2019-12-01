@@ -7,11 +7,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { projectsReducer } from './store/projects.reducer';
 import { ProjectsEffects } from './store/projects.effects';
 import { ProjectsService } from './store/projects.service';
+import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
   declarations: [ProjectsComponent],
   imports: [
     SharedModule,
+    StaticModule,
     StoreModule.forFeature('projects', projectsReducer),
     EffectsModule.forFeature([ProjectsEffects]),
     ProjectsRoutingModule,
