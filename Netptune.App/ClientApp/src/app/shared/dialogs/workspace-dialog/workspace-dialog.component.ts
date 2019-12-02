@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Workspace } from '@core/models/workspace';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
-import { ActionCreateWorkspaces } from '@app/features/workspaces/store/workspaces.actions';
+import { createWorkspace } from '@app/features/workspaces/store/workspaces.actions';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -32,15 +32,16 @@ export class WorkspaceDialogComponent implements OnInit {
   }
 
   getResult() {
-    const workspaceResult: Workspace = {
+    const workspace: Workspace = {
       id: this.workspace ? this.workspace.id : undefined,
       name: this.workspaceFromGroup.controls['nameFormControl'].value,
-      description: this.workspaceFromGroup.controls['discriptionFormControl'].value,
+      description: this.workspaceFromGroup.controls['discriptionFormControl']
+        .value,
       users: [],
       projects: [],
     };
 
-    this.store.dispatch(new ActionCreateWorkspaces(workspaceResult));
+    this.store.dispatch(createWorkspace({ workspace }));
 
     this.dialogRef.close();
   }

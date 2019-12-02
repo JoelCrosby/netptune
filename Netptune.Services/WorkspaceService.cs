@@ -55,6 +55,10 @@ namespace Netptune.Services
             return WorkspaceRepository.GetAsync(id);
         }
 
+        public Task<Workspace> GetWorkspace(string slug)
+        {
+            return WorkspaceRepository.GetBySlug(slug);
+        }
 
         public Task<List<Workspace>> GetWorkspaces(AppUser user)
         {

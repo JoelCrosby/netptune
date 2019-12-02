@@ -1,6 +1,29 @@
 {
+  "editor.tabSize": 2,
   "[typescript]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "files.exclude": {
+    "**/*.csproj.user": true,
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.idea": true,
+    "**/.sonarlint": true,
+    "**/.vs": true,
+    "**/StyleCop.Cache": true,
+    "**/bin": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/obj": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/bazel-out/**": true,
+    "**/dist/**": true,
+    "**/node_modules/**": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "tslint.configFile": "./tslint.json"
 }

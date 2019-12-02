@@ -23,6 +23,7 @@
 @import './styles/spinners.scss-theme.scss';
 @import './styles/components.scss-theme.scss';
 @import './app/app.component.scss-theme.scss';
+@import './app/features/workspaces/shell/shell.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme.scss';
 @import './app/features/project-tasks/index/project-tasks.index.component.scss-theme.scss';
@@ -33,6 +34,7 @@
   @include spinners-theme($theme);
   @include components-theme($theme);
   @include app-component-theme($theme);
+  @include app-shell-component-theme($theme);
   @include task-list-group-component-theme($theme);
   @include task-list-item-component-theme($theme);
   @include project-tasks-component-theme($theme);
@@ -42,9 +44,13 @@
 .default-theme {
   @include angular-material-theme($default-theme);
   @include custom-components-theme($default-theme);
+
+  color: rgba(0, 0, 0, .8);
 }
 
 .dark-theme {
   @include angular-material-theme($dark-theme);
   @include custom-components-theme($dark-theme);
+
+  color: rgba(255, 255, 255, .8);
 }

@@ -8,24 +8,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  html, body, .main-content {
+  main {
     background-color: mat-color($background, background)
-  }
-
-  .app-toolbar {
-    color: mat-color($foreground, text);
-  }
-
-  .app-toolbar-shadow {
-    border-bottom: 1px solid mat-color($background, border)
-  }
-
-  .app-sidenav {
-    border-right: 1px solid mat-color($background, border)
-  }
-
-  .router-link-active {
-    background-color: mat-color($primary);
-    color: invert(mat-color($foreground, text));
   }
 }

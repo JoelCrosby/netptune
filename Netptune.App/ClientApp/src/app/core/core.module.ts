@@ -1,24 +1,28 @@
+import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { environment } from '@env/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import {
+  RouterStateSerializer,
+  StoreRouterConnectingModule,
+} from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthEffects } from './auth/store/auth.effects';
 import { metaReducers, reducers } from './core.state';
-import { httpInterceptorProviders } from './http-interceptors';
-import { LocalStorageService } from './local-storage/local-storage.service';
 import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './settings/settings.effects';
 import { CoreEffects } from './state/core.effects';
 
 @NgModule({
   imports: [
+    // angular
     CommonModule,
     HttpClientModule,
+
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreRouterConnectingModule.forRoot(),
@@ -29,7 +33,11 @@ import { CoreEffects } from './state/core.effects';
           name: 'Netptune',
         }),
   ],
-  providers: [AuthGuardService, httpInterceptorProviders, { provide: RouterStateSerializer, useClass: CustomSerializer }],
+  providers: [
+    AuthGuardService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: RouterStateSerializer, useClass: CustomSerializer },
+  ],
 })
 export class CoreModule {
   constructor(

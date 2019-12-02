@@ -1,3 +1,5 @@
+import { TextHelpers } from '@core/util/text-helpers';
+import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { dropIn } from '@core/animations/animations';
 import { Workspace } from '@core/models/workspace';
@@ -6,8 +8,8 @@ import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
 import { Router } from '@angular/router';
-import { selectWorkspaces } from '../store/workspaces.selectors';
-import { ActionLoadWorkspaces } from '../store/workspaces.actions';
+import { selectAllWorkspaces } from '../store/workspaces.selectors';
+import { deleteWorkspace, loadWorkspaces } from '../store/workspaces.actions';
 import { ActionSelectWorkspace } from '@core/state/core.actions';
 
 @Component({
@@ -17,12 +19,16 @@ import { ActionSelectWorkspace } from '@core/state/core.actions';
   animations: [dropIn],
 })
 export class WorkspacesComponent implements OnInit {
-  workspaces$ = this.store.select(selectWorkspaces);
+  workspaces$ = this.store.select(selectAllWorkspaces);
 
-  constructor(private store: Store<AppState>, private dialog: MatDialog, private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadWorkspaces());
+    this.store.dispatch(loadWorkspaces());
   }
 
   trackById(index: number, workspace: Workspace) {
@@ -35,14 +41,24 @@ export class WorkspacesComponent implements OnInit {
 
   goToProjectsClicked(workspace: Workspace) {
     this.store.dispatch(new ActionSelectWorkspace(workspace));
-    this.router.navigate(['/projects']);
   }
 
-  deleteClicked(workspace: Workspace) {}
-
-  manageUsersClicked(workspace: Workspace) {}
-
-  inviteUsersClicked() {}
-
-  exportDataClicked(workspace: Workspace) {}
+  deleteClicked(workspace: Workspace) {
+    this.dialog
+      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+        data: {
+          title: 'Delete Workspace',
+          content: `Are you sure you want to delete ${TextHelpers.truncate(
+            workspace.name
+          )}`,
+          confirm: 'Delete',
+        },
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(deleteWorkspace({ workspace }));
+        }
+      });
+  }
 }

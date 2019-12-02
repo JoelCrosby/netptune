@@ -4,11 +4,7 @@ import { Router } from '@angular/router';
 import { pullIn } from '@core/animations/animations';
 import { AuthState } from '@core/auth/store/auth.reducer';
 import { Store } from '@ngrx/store';
-import {
-  ActionAuthTryLogin,
-  AuthActionTypes,
-  ActionAuthLoginFail,
-} from '@core/auth/store/auth.actions';
+import { ActionAuthTryLogin, AuthActionTypes, ActionAuthLoginFail } from '@core/auth/store/auth.actions';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Subject } from 'rxjs';
@@ -30,8 +26,12 @@ export class LoginComponent implements OnDestroy {
     password: new FormControl(),
   });
 
-  get f() {
-    return this.loginGroup.controls;
+  get email() {
+    return this.loginGroup.get('email');
+  }
+
+  get password() {
+    return this.loginGroup.get('password');
   }
 
   constructor(private router: Router, private store: Store<AuthState>, updates$: Actions) {
@@ -50,8 +50,8 @@ export class LoginComponent implements OnDestroy {
   }
 
   login() {
-    const loginFormControl = this.loginGroup.get('email');
-    const passwordFormControl = this.loginGroup.get('password');
+    const loginFormControl = this.email;
+    const passwordFormControl = this.password;
 
     const email = loginFormControl ? loginFormControl.value : undefined;
     const password = passwordFormControl ? passwordFormControl.value : undefined;

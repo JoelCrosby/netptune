@@ -20,6 +20,11 @@ namespace Netptune.Repositories
         {
         }
 
+        public Task<Workspace> GetBySlug(string slug)
+        {
+            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug);
+        }
+
         public async Task<List<Workspace>> GetWorkspaces(AppUser user)
         {
             // Load the relationship table.

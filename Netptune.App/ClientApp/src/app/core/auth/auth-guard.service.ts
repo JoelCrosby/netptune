@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { AuthState } from './store/auth.reducer';
 import { selectIsAuthenticated } from './store/auth.selectors';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthGuardService implements CanActivate {
   constructor(private store: Store<AuthState>, private router: Router) {}
 

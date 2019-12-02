@@ -1,0 +1,73 @@
+<mat-sidenav-container class="app-container app-sidenav-container" [class.app-is-mobile]="mobileQuery.matches">
+  <mat-sidenav
+    [opened]="!mobileQuery.matches && (authenticated$ | async)"
+    [mode]="mobileQuery.matches ? 'over' : 'side'"
+    [fixedInViewport]="mobileQuery.matches"
+    class="app-sidenav"
+  >
+    <mat-nav-list>
+      <mat-list-item class="app-logo">Netptune</mat-list-item>
+      <h3 matSubheader>Browse</h3>
+      <a
+        mat-list-item
+        *ngFor="let link of links"
+        [routerLink]="link.value"
+        class="app-menu-link"
+        routerLinkActive="router-link-active"
+      >
+        {{ link.label }}
+      </a>
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar class="app-toolbar app-toolbar-shadow" *ngIf="authenticated$ | async as authenticated">
+      <ng-container *ngIf="mobileQuery.matches || (!authenticated); else pageTitle">
+        <button mat-icon-button (click)="onToggleSideNav()" *ngIf="authenticated">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <h1 class="app-name">Netptune</h1>
+      </ng-container>
+      <ng-template #pageTitle>
+        <h1 class="nav-title">{{ pageTitle$ | async }}</h1>
+      </ng-template>
+
+      <span class="toolbar-spacer"></span>
+
+      <ng-container *ngIf="authenticated; else elseTemplate">
+        <button mat-button [matMenuTriggerFor]="menu">
+          <span class="toolbar-username">{{ displayName$ | async }}</span>
+          <mat-icon aria-label="Account Options">account_circle</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onProfileClicked()">
+              <mat-icon>perm_identity</mat-icon>
+              <span>Profile</span>
+          </button>
+          <button mat-menu-item (click)="onLogoutClicked()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+        </button>
+        </mat-menu>
+      </ng-container>
+
+      <ng-template #elseTemplate>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon aria-label="Account Options">account_circle</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onLoginClicked()">Login</button>
+        </mat-menu>
+      </ng-template>
+
+    </mat-toolbar>
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,23 +1,32 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { first, flatMap, tap, switchMap } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 import { selectAuthToken } from '../auth/store/auth.selectors';
 import { AppState } from '../core.state';
-import { ActionAuthLogout } from '../auth/store/auth.actions';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private store: Store<AppState>) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     return this.store.select(selectAuthToken).pipe(
       first(),
       switchMap((token: string) => {
         if (this.isApiRequest(req) && token) {
-          req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
+          req = req.clone({
+            headers: req.headers.set('Authorization', 'Bearer ' + token),
+          });
         }
         return next.handle(req);
       })

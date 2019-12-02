@@ -1,60 +1,35 @@
-import { WorkspacesActions, WorkspacesActionTypes } from './workspaces.actions';
-import { Workspace } from '@core/models/workspace';
-import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import { createReducer, on, Action } from '@ngrx/store';
+import * as actions from './workspaces.actions';
+import { adapter, initialState, WorkspacesState } from './workspaces.model';
 
-export interface WorkspacesState {
-  Workspaces: Workspaces;
-  loading: boolean;
-  loaded: boolean;
-  loadWorkspacesError?: any;
-  loadingCreateWorkspace: boolean;
-}
-
-export const initialState: WorkspacesState = {
-  Workspaces: { ids: [], entities: {} },
-  loading: false,
-  loaded: false,
-  loadingCreateWorkspace: false,
-};
-
-export interface Workspaces extends EntityState<Workspace> {}
-
-export const adapter: EntityAdapter<Workspace> = createEntityAdapter<Workspace>();
+const reducer = createReducer(
+  initialState,
+  on(actions.loadWorkspaces, state => ({ ...state, loading: true })),
+  on(actions.loadWorkspacesFail, (state, { error }) => ({
+    ...state,
+    loadWorkspacesError: error,
+  })),
+  on(actions.loadWorkspacesSuccess, (state, { workspaces }) => ({
+    ...state,
+    loading: false,
+    loaded: true,
+    Workspaces: adapter.addAll(workspaces, state.Workspaces),
+  })),
+  on(actions.createWorkspace, state => ({ ...state, loading: true })),
+  on(actions.createWorkspaceFail, (state, { error }) => ({
+    ...state,
+    loadWorkspacesError: error,
+  })),
+  on(actions.createWorkspaceSuccess, (state, { workspace }) => ({
+    ...state,
+    loadingCreateWorkspace: false,
+    Workspaces: adapter.addOne(workspace, state.Workspaces),
+  }))
+);
 
 export function workspacesReducer(
-  state = initialState,
-  action: WorkspacesActions
-): WorkspacesState {
-  switch (action.type) {
-    case WorkspacesActionTypes.LoadWorkspaces:
-      return { ...state, loading: true };
-    case WorkspacesActionTypes.LoadWorkspacesFail:
-      return { ...state, loading: false, loadWorkspacesError: action.payload };
-    case WorkspacesActionTypes.LoadWorkspacesSuccess:
-      return {
-        ...state,
-        loading: false,
-        loaded: true,
-        Workspaces: adapter.addAll(action.payload, state.Workspaces),
-      };
-    case WorkspacesActionTypes.CreateWorkspace:
-      return { ...state, loadingCreateWorkspace: true };
-    case WorkspacesActionTypes.CreateWorkspaceFail:
-      return { ...state, loadingCreateWorkspace: false, loadWorkspacesError: action.payload };
-    case WorkspacesActionTypes.CreateWorkspaceSuccesss:
-      return {
-        ...state,
-        loadingCreateWorkspace: false,
-        Workspaces: adapter.addOne(action.payload, state.Workspaces),
-      };
-    default:
-      return state;
-  }
+  state: WorkspacesState | undefined,
+  action: Action
+) {
+  return reducer(state, action);
 }
-
-const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
-
-export const selectWorkspaceIds = selectIds;
-export const selectWorkspaceEntities = selectEntities;
-export const selectAllWorkspaces = selectAll;
-export const selectWorkspacesTotal = selectTotal;

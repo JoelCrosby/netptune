@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
 import { ActionAuthLogout } from '@core/auth/store/auth.actions';
@@ -9,12 +9,10 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './shell.component.html',
+  styleUrls: ['./shell.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav: MatSidenav;
 
   authenticated$: Observable<boolean>;

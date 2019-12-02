@@ -1,17 +1,24 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { WorkspacesState, selectAllWorkspaces } from './workspaces.reducer';
 import { AppState } from '@core/core.state';
+import { adapter, WorkspacesState } from './workspaces.model';
 
-export const selectWorkspacesFeature = createFeatureSelector<WorkspacesState>('workspaces');
+export const selectWorkspacesFeature = createFeatureSelector<
+  State,
+  WorkspacesState
+>('workspaces');
 
-export const selectWorkspaceEntities = createSelector(
+const { selectEntities, selectAll } = adapter.getSelectors();
+
+export const selectWorkspaces = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.Workspaces
 );
 
-export const selectWorkspaces = createSelector(
-  selectWorkspaceEntities,
-  selectAllWorkspaces
+export const selectAllWorkspaces = createSelector(selectWorkspaces, selectAll);
+
+export const selectWorkspacesEntities = createSelector(
+  selectWorkspaces,
+  selectEntities
 );
 
 export const selectWorkspacesLoading = createSelector(
@@ -25,5 +32,5 @@ export const selectWorkspacesLoaded = createSelector(
 );
 
 export interface State extends AppState {
-  Workspaces: WorkspacesState;
+  workspaces: WorkspacesState;
 }

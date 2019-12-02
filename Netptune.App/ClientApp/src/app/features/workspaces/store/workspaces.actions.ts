@@ -1,53 +1,44 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
 
-export enum WorkspacesActionTypes {
-  LoadWorkspaces = '[Workspaces] Load Workspaces',
-  LoadWorkspacesFail = '[Workspaces] Load Workspaces Fail',
-  LoadWorkspacesSuccess = '[Workspaces] Load Workspaces Success ',
-  CreateWorkspace = '[Workspaces] Create Workspace',
-  CreateWorkspaceFail = '[Workspaces] Create Workspace Fail',
-  CreateWorkspaceSuccesss = '[Workspaces] Create Workspace Success',
-}
+export const loadWorkspaces = createAction('[Workspaces] Load Workspaces');
 
-export class ActionLoadWorkspaces implements Action {
-  readonly type = WorkspacesActionTypes.LoadWorkspaces;
-}
+export const loadWorkspacesSuccess = createAction(
+  '[Workspaces] Load Workspaces Success ',
+  props<{ workspaces: Workspace[] }>()
+);
 
-export class ActionLoadWorkspacesSuccess implements Action {
-  readonly type = WorkspacesActionTypes.LoadWorkspacesSuccess;
+export const loadWorkspacesFail = createAction(
+  '[Workspaces] Load Workspaces Fail',
+  props<{ error: any }>()
+);
 
-  constructor(readonly payload: Workspace[]) {}
-}
+export const createWorkspace = createAction(
+  '[Workspaces] Create Workspace',
+  props<{ workspace: Workspace }>()
+);
 
-export class ActionLoadWorkspacesFail implements Action {
-  readonly type = WorkspacesActionTypes.LoadWorkspacesFail;
+export const createWorkspaceSuccess = createAction(
+  '[Workspaces] Create Workspace Success',
+  props<{ workspace: Workspace }>()
+);
 
-  constructor(readonly payload: any) {}
-}
+export const createWorkspaceFail = createAction(
+  '[Workspaces] Create Workspace Fail',
+  props<{ error: any }>()
+);
 
-export class ActionCreateWorkspaces implements Action {
-  readonly type = WorkspacesActionTypes.CreateWorkspace;
+export const deleteWorkspace = createAction(
+  '[Workspaces] Delete Workspace',
+  props<{ workspace: Workspace }>()
+);
 
-  constructor(readonly payload: Workspace) {}
-}
+export const deleteWorkspacesSuccess = createAction(
+  '[Workspaces] Delete Workspace Success ',
+  props<{ workspace: Workspace }>()
+);
 
-export class ActionCreateWorkspacesSuccess implements Action {
-  readonly type = WorkspacesActionTypes.CreateWorkspaceSuccesss;
-
-  constructor(readonly payload: Workspace) {}
-}
-
-export class ActionCreateWorkspacesFail implements Action {
-  readonly type = WorkspacesActionTypes.CreateWorkspaceFail;
-
-  constructor(readonly payload: any) {}
-}
-
-export type WorkspacesActions =
-  | ActionLoadWorkspaces
-  | ActionLoadWorkspacesFail
-  | ActionLoadWorkspacesSuccess
-  | ActionCreateWorkspaces
-  | ActionCreateWorkspacesSuccess
-  | ActionCreateWorkspacesFail;
+export const deleteWorkspacesFail = createAction(
+  '[Workspaces] Load Workspaces Fail',
+  props<{ workspace: any }>()
+);

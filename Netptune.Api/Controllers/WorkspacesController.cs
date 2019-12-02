@@ -37,6 +37,17 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/Workspaces?slug=workspace
+        [HttpGet("{slug}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(Workspace))]
+        public async Task<IActionResult> GetWorkspaces([FromQuery] string slug)
+        {
+            var result = await _workspaceService.GetWorkspace(slug);
+
+            return Ok(result);
+        }
+
         // GET: api/Workspaces/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

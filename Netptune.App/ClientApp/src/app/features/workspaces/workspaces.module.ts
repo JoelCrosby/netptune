@@ -9,9 +9,10 @@ import { workspacesReducer } from './store/workspaces.reducer';
 import { WorkspacesEffects } from './store/workspaces.effects';
 import { WorkspacesService } from './store/workspaces.service';
 import { StaticModule } from '@app/static/static.module';
+import { ShellComponent } from './shell/shell.component';
 
 @NgModule({
-  declarations: [WorkspacesComponent],
+  declarations: [WorkspacesComponent, ShellComponent],
   imports: [
     SharedModule,
     StaticModule,

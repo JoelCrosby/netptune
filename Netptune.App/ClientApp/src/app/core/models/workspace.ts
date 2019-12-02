@@ -8,4 +8,6 @@ export interface Workspace extends Basemodel {
 
   users: AppUser[];
   projects: Project[];
+
+  slug?: string;
 }
