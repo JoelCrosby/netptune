@@ -48,5 +48,33 @@ namespace Netptune.Core.Repositories.Common
         /// </summary>
         /// <returns>List of Entities</returns>
         Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery);
+
+        /// <summary>
+        /// Add Entity to store
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Entity of the defined type</returns>
+        TEntity Add(TEntity entity);
+
+        /// <summary>
+        /// Add Entity to store async
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Entity of the defined type</returns>
+        Task<TEntity> AddAsync(TEntity entity);
+
+        /// <summary>
+        /// Add range of Entities to store
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns>Entity of the defined type</returns>
+        void AddRange(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// Add range of Entities to store async
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns>Entity of the defined type</returns>
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
     }
 }

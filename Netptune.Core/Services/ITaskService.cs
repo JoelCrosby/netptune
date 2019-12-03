@@ -12,7 +12,7 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> GetTask(int id);
 
-        Task<TaskViewModel> UpdateTask(ProjectTask projectTask, AppUser user);
+        Task<TaskViewModel> UpdateTask(ProjectTask projectTask);
 
         Task<TaskViewModel> AddTask(ProjectTask projectTask, AppUser user);
 

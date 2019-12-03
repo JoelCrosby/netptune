@@ -13,8 +13,6 @@ namespace Netptune.Core.Repositories
 
         Task<List<AppUser>> GetWorkspaceUsers(int workspaceId);
 
-        Task<AppUser> Update(AppUser user, string currentUserId);
-
         Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
 
         Task<bool> IsUserInWorkspace(string userId, int workspaceId);

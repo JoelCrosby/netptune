@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Repositories;
@@ -31,11 +32,16 @@ namespace Netptune.Services
 
         public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
         {
-            var result = await TaskRepository.DeleteTask(id, user);
+            var task = await TaskRepository.GetAsync(id);
+
+            if (task is null) return null;
+
+            task.IsDeleted = true;
+            task.DeletedByUserId = user.Id;
 
             await UnitOfWork.CompleteAsync();
 
-            return await TaskRepository.GetTaskViewModel(result.Id);
+            return await TaskRepository.GetTaskViewModel(task.Id);
         }
 
         public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
@@ -53,9 +59,20 @@ namespace Netptune.Services
             return TaskRepository.GetTasksAsync(workspaceId);
         }
 
-        public async Task<TaskViewModel> UpdateTask(ProjectTask projectTask, AppUser user)
+        public async Task<TaskViewModel> UpdateTask(ProjectTask projectTask)
         {
-            var result = await TaskRepository.UpdateTask(projectTask, user);
+            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
+
+            var result = await TaskRepository.GetAsync(projectTask.Id);
+
+            if (result is null) return null;
+
+            result.Name = projectTask.Name;
+            result.Description = projectTask.Description;
+            result.Status = projectTask.Status;
+            result.SortOrder = projectTask.SortOrder;
+            result.OwnerId = projectTask.OwnerId;
+            result.AssigneeId = projectTask.AssigneeId;
 
             await UnitOfWork.CompleteAsync();
 

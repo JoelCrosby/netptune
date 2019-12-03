@@ -56,8 +56,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _taskService.UpdateTask(task, user);
+            var result = await _taskService.UpdateTask(task);
 
             return Ok(result);
         }

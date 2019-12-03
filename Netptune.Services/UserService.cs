@@ -78,11 +78,20 @@ namespace Netptune.Services
 
         public async Task<AppUser> Update(AppUser user, string userId)
         {
-            var result = await UserRepository.Update(user, userId);
+            var updatedUser = await UserRepository.GetAsync(user.Id);
+
+            if (updatedUser is null)
+            {
+                return null;
+            }
+
+            updatedUser.PhoneNumber = user.PhoneNumber;
+            updatedUser.Firstname = user.Firstname;
+            updatedUser.Lastname = user.Lastname;
 
             await UnitOfWork.CompleteAsync();
 
-            return result;
+            return updatedUser;
         }
     }
 }

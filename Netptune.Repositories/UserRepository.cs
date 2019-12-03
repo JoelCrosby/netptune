@@ -28,22 +28,6 @@ namespace Netptune.Repositories
                     select workspaceAppUsers.User).ToListAsync();
         }
 
-        public async Task<AppUser> Update(AppUser user, string currentUserId)
-        {
-            var updatedUser = await Context.AppUsers.FirstOrDefaultAsync(x => x.Id == user.Id);
-
-            if (updatedUser is null)
-            {
-                return null;
-            }
-
-            updatedUser.PhoneNumber = user.PhoneNumber;
-            updatedUser.Firstname = user.Firstname;
-            updatedUser.Lastname = user.Lastname;
-
-            return updatedUser;
-        }
-
         public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
         {
             if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));

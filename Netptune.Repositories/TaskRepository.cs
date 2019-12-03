@@ -24,7 +24,7 @@ namespace Netptune.Repositories
 
         public async Task<TaskViewModel> GetTaskViewModel(int taskId)
         {
-            var task = await Context.ProjectTasks
+            var task = await Entities
                 .Where(x => x.Id == taskId)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
@@ -32,7 +32,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Owner)
                 .FirstOrDefaultAsync();
 
-            if (task == null) return null;
+            if (task is null) return null;
 
             return new TaskViewModel
             {
@@ -56,7 +56,7 @@ namespace Netptune.Repositories
 
         public async Task<List<TaskViewModel>> GetTasksAsync(int workspaceId)
         {
-            var tasks = Context.ProjectTasks
+            var tasks = Entities
                 .Where(x => x.Workspace.Id == workspaceId && !x.IsDeleted)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
@@ -82,26 +82,6 @@ namespace Netptune.Repositories
                     OwnerUsername = r.Owner == null ? string.Empty : r.Owner.GetDisplayName(),
                     ProjectName = r.Project == null ? string.Empty : r.Project.Name
                 }).ToListAsync();
-        }
-
-        public async Task<ProjectTask> UpdateTask(ProjectTask projectTask, AppUser user)
-        {
-            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
-
-            if (user is null) throw new ArgumentNullException(nameof(user));
-
-            var result = await Context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == projectTask.Id);
-
-            if (result is null) return null;
-
-            result.Name = projectTask.Name;
-            result.Description = projectTask.Description;
-            result.Status = projectTask.Status;
-            result.SortOrder = projectTask.SortOrder;
-            result.OwnerId = projectTask.OwnerId;
-            result.AssigneeId = projectTask.AssigneeId;
-
-            return result;
         }
 
         public async Task<ProjectTask> AddTask(ProjectTask projectTask, AppUser user)
@@ -136,26 +116,14 @@ namespace Netptune.Repositories
             projectTask.OwnerId = user.Id;
             projectTask.CreatedByUserId = user.Id;
 
-            var result = await Context.ProjectTasks.AddAsync(projectTask);
+            var result = await Entities.AddAsync(projectTask);
 
             return result.Entity;
         }
 
-        public async Task<ProjectTask> DeleteTask(int id, AppUser user)
-        {
-            var task = await Context.ProjectTasks.FindAsync(id);
-
-            if (task is null) return null;
-
-            task.IsDeleted = true;
-            task.DeletedByUserId = user.Id;
-
-            return task;
-        }
-
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
         {
-            var tasks = await Context.ProjectTasks
+            var tasks = await Entities
                 .Where(x => x.ProjectId == projectId && !x.IsDeleted)
                 .ToListAsync();
 

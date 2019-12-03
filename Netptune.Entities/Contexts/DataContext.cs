@@ -46,13 +46,13 @@ namespace Netptune.Entities.Contexts
         {
             base.OnModelCreating(builder);
 
-            MapIdetityTableNames(builder);
+            MapIdentityTableNames(builder);
 
             builder
                 .ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
         }
 
-        private static void MapIdetityTableNames(ModelBuilder builder)
+        private static void MapIdentityTableNames(ModelBuilder builder)
         {
             builder.Entity<AppUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
@@ -86,8 +86,9 @@ namespace Netptune.Entities.Contexts
 
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(
-                entry => entry.Entity is AuditableEntity<int> && (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            var entities = ChangeTracker.Entries().Where(entry =>
+                entry.Entity is AuditableEntity<int>
+             && (entry.State == EntityState.Added || entry.State == EntityState.Modified)
             );
 
             foreach (var entity in entities)

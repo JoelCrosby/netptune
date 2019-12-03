@@ -86,6 +86,50 @@ namespace Netptune.Repositories.Common
         }
 
         /// <summary>
+        /// Add Entity to store
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Entity of the defined type</returns>
+        public TEntity Add(TEntity entity)
+        {
+            var entityResult = Entities.Add(entity);
+
+            return entityResult.Entity;
+        }
+
+        /// <summary>
+        /// Add Entity to store async
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>Entity of the defined type</returns>
+        public async Task<TEntity> AddAsync(TEntity entity)
+        {
+            var entityResult = await Entities.AddAsync(entity);
+
+            return entityResult.Entity;
+        }
+
+        /// <summary>
+        /// Add range of Entities to store
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns>Entity of the defined type</returns>
+        public void AddRange(IEnumerable<TEntity> entities)
+        {
+            Entities.AddRange(entities);
+        }
+
+        /// <summary>
+        /// Add range of Entities to store async
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns>Entity of the defined type</returns>
+        public Task AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            return Entities.AddRangeAsync(entities);
+        }
+
+        /// <summary>
         /// Paginates an IQueryable entity collection with option for orderBy predicate.
         /// </summary>
         /// <param name="entities"></param>

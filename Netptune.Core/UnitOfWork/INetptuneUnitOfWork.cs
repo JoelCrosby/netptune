@@ -12,5 +12,7 @@ namespace Netptune.Core.UnitOfWork
         ITaskRepository Tasks { get; }
 
         IUserRepository Users { get; }
+
+        IBoardRepository Boards { get; }
     }
 }

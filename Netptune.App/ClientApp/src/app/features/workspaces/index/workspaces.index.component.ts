@@ -36,7 +36,7 @@ export class WorkspacesComponent implements OnInit {
   }
 
   openWorkspaceDialog() {
-    this.dialog.open<WorkspaceDialogComponent>(WorkspaceDialogComponent);
+    this.dialog.open(WorkspaceDialogComponent);
   }
 
   goToProjectsClicked(workspace: Workspace) {
@@ -45,7 +45,7 @@ export class WorkspacesComponent implements OnInit {
 
   deleteClicked(workspace: Workspace) {
     this.dialog
-      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+      .open(ConfirmDialogComponent, {
         data: {
           title: 'Delete Workspace',
           content: `Are you sure you want to delete ${TextHelpers.truncate(
