@@ -11,12 +11,15 @@
         </button>
       </div>
 
-      <div *ngFor="let group of taskGroups" class="mb-5">
+      <div class="drag-group" cdkDropListGroup>
         <app-task-list-group
-          [tasks]="group.tasks"
+          class="mb-5"
+          *ngFor="let group of taskGroups"
+          [tasks]="group.tasks | async"
           [header]="group.header"
           [emptyMessage]="group.emptyMessage"
-          [loaded]="loaded$">
+          [loaded]="loaded$"
+        >
         </app-task-list-group>
       </div>
 

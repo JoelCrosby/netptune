@@ -9,6 +9,10 @@
   $background: map-get($theme, background);
 
   main {
-    background-color: mat-color($background, background)
+    background-color: mat-color($background, background);
+  }
+
+  .app-shell-sidenav {
+    background-color: mat-color($background, card);
   }
 }

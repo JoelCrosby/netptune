@@ -1,4 +1,4 @@
-import { createReducer, on, Action } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import * as actions from './workspaces.actions';
 import { adapter, initialState, WorkspacesState } from './workspaces.model';
 
@@ -7,24 +7,22 @@ const reducer = createReducer(
   on(actions.loadWorkspaces, state => ({ ...state, loading: true })),
   on(actions.loadWorkspacesFail, (state, { error }) => ({
     ...state,
-    loadWorkspacesError: error,
+    loadingError: error,
   })),
-  on(actions.loadWorkspacesSuccess, (state, { workspaces }) => ({
-    ...state,
-    loading: false,
-    loaded: true,
-    Workspaces: adapter.addAll(workspaces, state.Workspaces),
-  })),
+  on(actions.loadWorkspacesSuccess, (state, { workspaces }) =>
+    adapter.addAll(workspaces, { ...state, loading: false, loaded: true })
+  ),
   on(actions.createWorkspace, state => ({ ...state, loading: true })),
   on(actions.createWorkspaceFail, (state, { error }) => ({
     ...state,
-    loadWorkspacesError: error,
+    loadingError: error,
   })),
-  on(actions.createWorkspaceSuccess, (state, { workspace }) => ({
-    ...state,
-    loadingCreateWorkspace: false,
-    Workspaces: adapter.addOne(workspace, state.Workspaces),
-  }))
+  on(actions.createWorkspaceSuccess, (state, { workspace }) =>
+    adapter.addOne(workspace, {
+      ...state,
+      loadingCreate: false,
+    })
+  )
 );
 
 export function workspacesReducer(

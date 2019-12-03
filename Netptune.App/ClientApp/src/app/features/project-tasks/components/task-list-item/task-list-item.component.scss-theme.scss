@@ -16,4 +16,11 @@
     fill: green;
   }
 
+  .task-header-title .mat-icon {
+    color: rgba(mat-color($foreground, icon), .3);
+  }
+
+  .mat-checkbox-frame{
+    border-color: rgba(mat-color($foreground, icon), .3);
+  }
 }

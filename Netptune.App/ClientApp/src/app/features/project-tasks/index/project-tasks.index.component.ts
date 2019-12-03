@@ -1,4 +1,8 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn, fadeIn } from '@core/animations/animations';
@@ -15,6 +19,7 @@ import {
 } from '../store/project-tasks.selectors';
 import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
 import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
+import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-tasks',
@@ -23,11 +28,11 @@ import { ActionLoadProjects } from '@app/features/projects/store/projects.action
   animations: [fadeIn, dropIn],
 })
 export class ProjectTasksComponent implements OnInit {
-  myTasks$ = this.store.select(selectTasksOwner);
-  completedTasks$ = this.store.select(selectTasksCompleted);
-  backlogTasks$ = this.store.select(selectTasksBacklog);
+  myTasks$ = this.store.select(selectTasksOwner).pipe(shareReplay());
+  completedTasks$ = this.store.select(selectTasksCompleted).pipe(shareReplay());
+  backlogTasks$ = this.store.select(selectTasksBacklog).pipe(shareReplay());
 
-  loaded$ = this.store.select(selectTasksLoaded);
+  loaded$ = this.store.select(selectTasksLoaded).pipe(shareReplay());
 
   selectedTask$ = this.store.select(selectSelectedTask);
 
@@ -36,7 +41,8 @@ export class ProjectTasksComponent implements OnInit {
       groupName: 'my-tasks',
       tasks: this.myTasks$,
       header: 'My Tasks',
-      emptyMessage: 'You have no tasks. Click the button in the bottom right to create a task.',
+      emptyMessage:
+        'You have no tasks. Click the button in the bottom right to create a task.',
     },
     {
       groupName: 'completed-tasks',
@@ -75,7 +81,11 @@ export class ProjectTasksComponent implements OnInit {
 
   drop(event: CdkDragDrop<ProjectTaskDto[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       transferArrayItem(
         event.previousContainer.data,

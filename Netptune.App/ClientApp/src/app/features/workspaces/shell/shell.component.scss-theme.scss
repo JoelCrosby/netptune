@@ -17,15 +17,20 @@
   }
 
   .app-toolbar-shadow {
-    border-bottom: 1px solid mat-color($background, border)
+    border-bottom: 1px solid mat-color($background, border);
   }
 
   .app-sidenav {
-    border-right: 1px solid mat-color($background, border)
+    border-right: 1px solid mat-color($background, border);
+    background-color: mat-color($background, card)
   }
 
   .router-link-active {
     background-color: mat-color($primary);
-    color: invert(mat-color($foreground, text));
+    color: invert(mat-color($foreground, text)) !important;
+  }
+
+  .router-link-active:hover, .router-link-active:focus {
+    background-color: lighten(mat-color($primary), 10) !important;
   }
 }

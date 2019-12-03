@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
 import { ActionAuthLogout } from '@core/auth/store/auth.actions';
-import { selectCurrentUserDisplayName, selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import {
+  selectCurrentUserDisplayName,
+  selectIsAuthenticated,
+} from '@core/auth/store/auth.selectors';
 import { AppState, selectPageTitle } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
@@ -24,13 +27,16 @@ export class ShellComponent implements OnInit {
     { label: 'Tasks', value: ['./tasks'] },
     { label: 'Users', value: ['./users'] },
     { label: 'Account', value: ['./profile'] },
-    { label: 'Workspaces', value: ['./workspaces'] },
     { label: 'Settings', value: ['./settings'] },
   ];
 
   mobileQuery: MediaQueryList;
 
-  constructor(private store: Store<AppState>, private router: Router, private mediaService: MediaService) {
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private mediaService: MediaService
+  ) {
     this.mobileQuery = this.mediaService.mobileQuery;
   }
 

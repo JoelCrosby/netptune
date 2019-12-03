@@ -1,23 +1,15 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Workspace } from '@core/models/workspace';
-
-export interface WorkspacesState {
-  Workspaces: Workspaces;
-  loading: boolean;
-  loaded: boolean;
-  loadWorkspacesError?: any;
-  loadingCreateWorkspace: boolean;
-}
-
-export const initialState: WorkspacesState = {
-  Workspaces: { ids: [], entities: {} },
-  loading: false,
-  loaded: false,
-  loadingCreateWorkspace: false,
-};
-
-export interface Workspaces extends EntityState<Workspace> {}
+import { AsyncEntityState } from '@core/entity/async-entity-state';
 
 export const adapter: EntityAdapter<Workspace> = createEntityAdapter<
   Workspace
 >();
+
+export const initialState = adapter.getInitialState({
+  loading: false,
+  loaded: false,
+  loadingCreate: false,
+});
+
+export interface WorkspacesState extends AsyncEntityState<Workspace> {}

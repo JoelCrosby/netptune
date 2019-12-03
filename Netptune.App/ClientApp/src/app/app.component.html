@@ -1,3 +1,29 @@
 <main>
-  <router-outlet></router-outlet>
+  <mat-sidenav-container class="app-shell" [class.app-is-mobile]="mobileQuery.matches">
+    <mat-sidenav
+      [opened]="!mobileQuery.matches && (authenticated$ | async)"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      class="app-shell-sidenav"
+    >
+      <mat-nav-list>
+        <div class="main-logo">
+          <img src="assets/apple-touch-icon.png" alt="Netptune logo" width="48" height="48">
+        </div>
+      </mat-nav-list>
+
+      <a
+        class="app-workspace-link"
+        routerLinkActive="router-link-active"
+        *ngFor="let workspace of workspaces$ | async"
+        [routerLink]="['/app/', workspace.slug]"
+      >
+        {{ workspace.name }}
+      </a>
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </main>

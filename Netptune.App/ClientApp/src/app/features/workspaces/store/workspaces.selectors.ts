@@ -11,7 +11,7 @@ const { selectEntities, selectAll } = adapter.getSelectors();
 
 export const selectWorkspaces = createSelector(
   selectWorkspacesFeature,
-  (state: WorkspacesState) => state.Workspaces
+  (state: WorkspacesState) => state
 );
 
 export const selectAllWorkspaces = createSelector(selectWorkspaces, selectAll);

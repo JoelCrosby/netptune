@@ -2,11 +2,22 @@
   <h4> {{ header }} </h4>
   <div class="task-list">
 
-    <ng-container *ngIf="(tasks | async).length > 0 && (loaded | async); else elseTemplate">
+    <ng-container *ngIf="loaded | async; else elseTemplate">
 
-      <div class="task-drag" *ngFor="let taskItem of tasks | async">
-        <app-task-list-item [task]="taskItem">
-        </app-task-list-item>
+      <div
+        cdkDropList
+        class="task-list-group"
+        [cdkDropListData]="tasks"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div
+          cdkDrag
+          class="task-drag"
+          app-task-list-item
+          *ngFor="let taskItem of tasks"
+          [task]="taskItem"
+        >
+        </div>
       </div>
 
     </ng-container>

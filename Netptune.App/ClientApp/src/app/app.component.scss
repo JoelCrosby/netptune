@@ -1,4 +1,15 @@
-
-main {
+main, .mat-drawer-container {
   height: 100vh;
+}
+
+.app-shell-sidenav {
+  width: 72px;
+}
+
+.main-logo {
+  display: flex;
+  padding-top: 6px;
+  img {
+    margin: auto;
+  }
 }

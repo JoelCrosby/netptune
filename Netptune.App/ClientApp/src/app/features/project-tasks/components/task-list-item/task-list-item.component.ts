@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confi
 import { TextHelpers } from '@core/util/text-helpers';
 
 @Component({
-  selector: 'app-task-list-item',
+  selector: '[app-task-list-item]',
   templateUrl: './task-list-item.component.html',
   styleUrls: ['./task-list-item.component.scss'],
   animations: [toggleChip],
