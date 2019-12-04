@@ -7,7 +7,7 @@
       <div
         cdkDropList
         class="task-list-group"
-        [cdkDropListData]="tasks"
+        [cdkDropListData]="{ tasks: tasks, status: status }"
         (cdkDropListDropped)="drop($event)"
       >
         <div
@@ -16,6 +16,7 @@
           app-task-list-item
           *ngFor="let taskItem of tasks"
           [task]="taskItem"
+          [cdkDragData]="taskItem"
         >
         </div>
       </div>

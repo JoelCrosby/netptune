@@ -14,5 +14,7 @@ namespace Netptune.Core.UnitOfWork
         IUserRepository Users { get; }
 
         IBoardRepository Boards { get; }
+
+        IBoardGroupRepository BoardGroups { get; }
     }
 }

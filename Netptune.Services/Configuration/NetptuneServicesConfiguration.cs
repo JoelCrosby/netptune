@@ -12,6 +12,8 @@ namespace Netptune.Services.Configuration
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IWorkspaceService, WorkspaceService>();
+            services.AddTransient<IBoardService, BoardService>();
+            services.AddTransient<IBoardGroupService, BoardGroupService>();
         }
     }
 }

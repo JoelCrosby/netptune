@@ -57,7 +57,7 @@ namespace Netptune.Services
 
         public async Task<ProjectViewModel> GetProject(int id)
         {
-            var result = await ProjectRepository.GetProject(id);
+            var result = await ProjectRepository.GetAsync(id);
 
             return await GetProjectViewModel(result);
         }

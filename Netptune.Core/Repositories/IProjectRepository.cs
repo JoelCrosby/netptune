@@ -11,8 +11,6 @@ namespace Netptune.Core.Repositories
     {
         Task<List<ProjectViewModel>> GetProjects(int workspaceId);
 
-        ValueTask<Project> GetProject(int id);
-
         Task<ProjectViewModel> GetProjectViewModel(int id);
 
         Task<Project> AddProject(Project project);

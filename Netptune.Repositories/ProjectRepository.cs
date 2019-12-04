@@ -32,11 +32,6 @@ namespace Netptune.Repositories
                 .ToListAsync();
         }
 
-        public ValueTask<Project> GetProject(int id)
-        {
-            return Context.Projects.FindAsync(id);
-        }
-
         public Task<ProjectViewModel> GetProjectViewModel(int id)
         {
             Context.ProjectTasks.Include(task => task.Owner).ThenInclude(x => x.UserName);

@@ -1,3 +1,4 @@
+import { AppState } from './../../../../core/core.state';
 import { Component, OnInit, Input } from '@angular/core';
 import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
 import { Observable } from 'rxjs';
@@ -7,6 +8,9 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { ActionEditProjectTask } from '../../store/project-tasks.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-task-list-group',
@@ -20,25 +24,42 @@ export class TaskListGroupComponent implements OnInit {
   @Input() header: string;
   @Input() emptyMessage: string;
   @Input() loaded: Observable<boolean>;
+  @Input() status: ProjectTaskStatus;
 
-  constructor() {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
 
-  drop(event: CdkDragDrop<ProjectTaskDto[]>) {
+  drop(
+    event: CdkDragDrop<{ tasks: ProjectTaskDto[]; status: ProjectTaskStatus }>
+  ) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
-        event.container.data,
+        event.container.data.tasks,
         event.previousIndex,
         event.currentIndex
       );
     } else {
       transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+        event.previousContainer.data.tasks,
+        event.container.data.tasks,
         event.previousIndex,
         event.currentIndex
       );
+
+      const { status } = event.container.data;
+      const { data } = event.item;
+
+      this.moveTask(status, data);
     }
+  }
+
+  moveTask(status: ProjectTaskStatus, task: ProjectTaskDto) {
+    this.store.dispatch(
+      new ActionEditProjectTask({
+        ...task,
+        status,
+      })
+    );
   }
 }

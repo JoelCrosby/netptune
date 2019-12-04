@@ -1,25 +1,19 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
+import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
+import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
+import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
 import { dropIn, fadeIn } from '@core/animations/animations';
-import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
-import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
+import { select, Store } from '@ngrx/store';
 import { ActionLoadProjectTasks } from '../store/project-tasks.actions';
 import {
+  selectSelectedTask,
   selectTasksBacklog,
   selectTasksCompleted,
-  selectTasksOwner,
   selectTasksLoaded,
-  selectSelectedTask,
+  selectTasksOwner,
 } from '../store/project-tasks.selectors';
-import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
-import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
-import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-tasks',
@@ -28,19 +22,20 @@ import { shareReplay } from 'rxjs/operators';
   animations: [fadeIn, dropIn],
 })
 export class ProjectTasksComponent implements OnInit {
-  myTasks$ = this.store.select(selectTasksOwner).pipe(shareReplay());
-  completedTasks$ = this.store.select(selectTasksCompleted).pipe(shareReplay());
-  backlogTasks$ = this.store.select(selectTasksBacklog).pipe(shareReplay());
+  myTasks$ = this.store.pipe(select(selectTasksOwner));
+  completedTasks$ = this.store.pipe(select(selectTasksCompleted));
+  backlogTasks$ = this.store.pipe(select(selectTasksBacklog));
 
-  loaded$ = this.store.select(selectTasksLoaded).pipe(shareReplay());
+  loaded$ = this.store.pipe(select(selectTasksLoaded));
 
-  selectedTask$ = this.store.select(selectSelectedTask);
+  selectedTask$ = this.store.pipe(select(selectSelectedTask));
 
   taskGroups = [
     {
       groupName: 'my-tasks',
       tasks: this.myTasks$,
       header: 'My Tasks',
+      status: ProjectTaskStatus.New,
       emptyMessage:
         'You have no tasks. Click the button in the bottom right to create a task.',
     },
@@ -48,6 +43,7 @@ export class ProjectTasksComponent implements OnInit {
       groupName: 'completed-tasks',
       tasks: this.completedTasks$,
       header: 'Completed Tasks',
+      status: ProjectTaskStatus.Complete,
       emptyMessage:
         'You currently have no completed tasks. Mark a task as completed and it will show up here.',
     },
@@ -55,6 +51,7 @@ export class ProjectTasksComponent implements OnInit {
       groupName: 'backlog-tasks',
       tasks: this.backlogTasks$,
       header: 'Backlog',
+      status: ProjectTaskStatus.InActive,
       emptyMessage: 'Your backlog is currently empty hurray!',
     },
   ];
@@ -77,22 +74,5 @@ export class ProjectTasksComponent implements OnInit {
       })
       .afterClosed()
       .subscribe(() => {});
-  }
-
-  drop(event: CdkDragDrop<ProjectTaskDto[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
   }
 }

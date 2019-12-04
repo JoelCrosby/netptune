@@ -17,6 +17,8 @@
           *ngFor="let group of taskGroups"
           [tasks]="group.tasks | async"
           [header]="group.header"
+          [groupName]="group.groupName"
+          [status]="group.status"
           [emptyMessage]="group.emptyMessage"
           [loaded]="loaded$"
         >
