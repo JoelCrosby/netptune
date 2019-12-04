@@ -3,7 +3,14 @@
 
 
     <div class="task-header-title">
-      <button mat-icon-button aria-label="more" [matMenuTriggerFor]="menu" cdkDragHandle>
+      <button
+        cdkDragHandle
+        mat-icon-button
+        aria-label="more"
+        matTooltip="click for more options. click and hold to drag task"
+        [matTooltipShowDelay]="1200"
+        [matMenuTriggerFor]="menu"
+      >
         <mat-icon>drag_indicator</mat-icon>
       </button>
       <mat-checkbox color="primary"></mat-checkbox>
