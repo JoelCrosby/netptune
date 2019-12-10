@@ -32,10 +32,10 @@ namespace Netptune.Services.Authentication
                 options.Password.RequireUppercase = false;
             });
 
-            services.AddAuthentication(sharedOptions =>
+            services.AddAuthentication(options =>
             {
-                sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
 
                 .AddJwtBearer(options =>
@@ -49,7 +49,7 @@ namespace Netptune.Services.Authentication
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Tokens:Issuer"],
-                        ValidAudience = configuration["Tokens:Issuer"],
+                        ValidAudience = configuration["Tokens:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:SecurityKey"]))
                     };
                 });
