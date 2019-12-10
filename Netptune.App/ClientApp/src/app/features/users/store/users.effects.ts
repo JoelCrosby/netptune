@@ -1,35 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, switchAll, withLatestFrom } from 'rxjs/operators';
-import {
-  ActionLoadUsersSuccess,
-  UsersActions,
-  UsersActionTypes,
-  ActionLoadUsersFail,
-} from './users.actions';
-import { UsersService } from './users.service';
-import { SelectCurrentWorkspace } from '@core/state/core.selectors';
 import { AppState } from '@core/core.state';
-import { Store } from '@ngrx/store';
+import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import * as actions from './users.actions';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersEffects {
-  constructor(
-    private actions$: Actions<UsersActions>,
-    private usersService: UsersService,
-    private store: Store<AppState>
-  ) {}
-
-  @Effect()
-  loadUsers$ = this.actions$.pipe(
-    ofType(UsersActionTypes.LoadUsers),
-    withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-    switchMap(([action, workspace]) =>
-      this.usersService.get(workspace).pipe(
-        map(users => new ActionLoadUsersSuccess(users)),
-        catchError(error => of(new ActionLoadUsersFail(error)))
+  loadUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadUsers),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([action, workspace]) =>
+        this.usersService.getUsersInWorkspace(workspace.id).pipe(
+          map(users => actions.loadUsersSuccess({ users })),
+          catchError(error => of(actions.loadUsersFail({ error })))
+        )
       )
     )
   );
+
+  constructor(
+    private actions$: Actions<Action>,
+    private usersService: UsersService,
+    private store: Store<AppState>
+  ) {}
 }

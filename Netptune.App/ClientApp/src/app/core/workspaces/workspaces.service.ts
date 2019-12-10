@@ -3,15 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Workspace } from '@core/models/workspace';
 import { environment } from '@env/environment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WorkspacesService {
   constructor(private http: HttpClient) {}
 
   get() {
-    return this.http.get<Workspace[]>(environment.apiEndpoint + 'api/workspaces');
+    return this.http.get<Workspace[]>(
+      environment.apiEndpoint + 'api/workspaces'
+    );
   }
 
   post(workspace: Workspace) {
-    return this.http.post<Workspace>(environment.apiEndpoint + 'api/workspaces', workspace);
+    return this.http.post<Workspace>(
+      environment.apiEndpoint + 'api/workspaces',
+      workspace
+    );
   }
 }

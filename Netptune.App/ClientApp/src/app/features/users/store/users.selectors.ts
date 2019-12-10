@@ -1,18 +1,19 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { UsersState, selectAllUsers } from './users.reducer';
 import { AppState } from '@core/core.state';
+import { adapter, UsersState } from './users.model';
 
-export const selectUsersFeature = createFeatureSelector<UsersState>('users');
-
-export const selectUserEntities = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.users
+export const selectUsersFeature = createFeatureSelector<State, UsersState>(
+  'users'
 );
+
+const { selectAll } = adapter.getSelectors();
 
 export const selectUsers = createSelector(
-  selectUserEntities,
-  selectAllUsers
+  selectUsersFeature,
+  (state: UsersState) => state
 );
+
+export const selectAllUsers = createSelector(selectUsers, selectAll);
 
 export const selectUsersLoading = createSelector(
   selectUsersFeature,
@@ -25,5 +26,5 @@ export const selectUsersLoaded = createSelector(
 );
 
 export interface State extends AppState {
-  Users: UsersState;
+  users: UsersState;
 }

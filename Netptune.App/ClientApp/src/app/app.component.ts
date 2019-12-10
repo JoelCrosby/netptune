@@ -8,10 +8,9 @@ import { MatSidenav } from '@angular/material';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
+import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectAllWorkspaces } from './features/workspaces/store/workspaces.selectors';
-import { loadWorkspaces } from './features/workspaces/store/workspaces.actions';
 
 @Component({
   selector: 'app-root',

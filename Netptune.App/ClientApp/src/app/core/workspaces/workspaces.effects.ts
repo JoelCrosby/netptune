@@ -21,7 +21,7 @@ export class WorkspacesEffects {
       switchMap(action =>
         this.workspacesService.get().pipe(
           map(workspaces => loadWorkspacesSuccess({ workspaces })),
-          catchError(error => of(loadWorkspacesFail(error)))
+          catchError(error => of(loadWorkspacesFail({ error })))
         )
       )
     )
@@ -33,7 +33,7 @@ export class WorkspacesEffects {
       switchMap(action =>
         this.workspacesService.post(action.workspace).pipe(
           map(workspace => createWorkspaceSuccess({ workspace })),
-          catchError(error => of(createWorkspaceFail(error)))
+          catchError(error => of(createWorkspaceFail({ error })))
         )
       )
     )

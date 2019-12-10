@@ -16,6 +16,7 @@ import { metaReducers, reducers } from './core.state';
 import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './settings/settings.effects';
 import { CoreEffects } from './state/core.effects';
+import { WorkspacesEffects } from './workspaces/workspaces.effects';
 
 @NgModule({
   imports: [
@@ -26,7 +27,12 @@ import { CoreEffects } from './state/core.effects';
     // ngrx
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreRouterConnectingModule.forRoot(),
-    EffectsModule.forRoot([AuthEffects, CoreEffects, SettingsEffects]),
+    EffectsModule.forRoot([
+      AuthEffects,
+      CoreEffects,
+      SettingsEffects,
+      WorkspacesEffects,
+    ]),
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({

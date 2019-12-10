@@ -1,10 +1,8 @@
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Workspace } from '@core/models/workspace';
 import { AsyncEntityState } from '@core/entity/async-entity-state';
+import { Workspace } from '@core/models/workspace';
+import { createEntityAdapter } from '@ngrx/entity';
 
-export const adapter: EntityAdapter<Workspace> = createEntityAdapter<
-  Workspace
->();
+export const adapter = createEntityAdapter<Workspace>();
 
 export const initialState = adapter.getInitialState({
   loading: false,

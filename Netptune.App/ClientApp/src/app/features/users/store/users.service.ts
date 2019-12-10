@@ -1,20 +1,15 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { Workspace } from '@core/models/workspace';
+import { Injectable } from '@angular/core';
 import { AppUser } from '@core/models/appuser';
-import { throwError } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Injectable()
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  get(workspace: Workspace) {
-    if (!workspace) {
-      return throwError('no current workspace');
-    }
+  getUsersInWorkspace(workspaceId: number) {
     return this.http.get<AppUser[]>(
-      environment.apiEndpoint + `api/users?workspaceId=${workspace.id}`
+      environment.apiEndpoint + `api/users?workspaceId=${workspaceId}`
     );
   }
 }

@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Workspace } from '@core/models/workspace';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
-import { createWorkspace } from '@app/features/workspaces/store/workspaces.actions';
+import { createWorkspace } from '@app/core/workspaces/workspaces.actions';
 
 @Component({
   selector: 'app-workspace-dialog',

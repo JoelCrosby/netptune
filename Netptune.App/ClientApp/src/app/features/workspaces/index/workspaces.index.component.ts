@@ -8,8 +8,11 @@ import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
 import { Router } from '@angular/router';
-import { selectAllWorkspaces } from '../store/workspaces.selectors';
-import { deleteWorkspace, loadWorkspaces } from '../store/workspaces.actions';
+import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
+import {
+  deleteWorkspace,
+  loadWorkspaces,
+} from '@core/workspaces/workspaces.actions';
 import { ActionSelectWorkspace } from '@core/state/core.actions';
 
 @Component({

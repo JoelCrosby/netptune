@@ -1,12 +1,12 @@
+import { selectAllUsers } from './../store/users.selectors';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn } from '@core/animations/animations';
 import { AppUser } from '@core/models/appuser';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AppState } from '@core/core.state';
-import { ActionLoadUsers } from '../store/users.actions';
 import { UsernameConverter } from '@core/models/converters/username.converter';
-import { selectUsers } from '../store/users.selectors';
+import { loadUsers } from '../store/users.actions';
 
 @Component({
   selector: 'app-users',
@@ -15,7 +15,7 @@ import { selectUsers } from '../store/users.selectors';
   animations: [dropIn],
 })
 export class UsersComponent implements OnInit {
-  users$ = this.store.select(selectUsers);
+  users$ = this.store.pipe(select(selectAllUsers));
 
   constructor(
     public snackBar: MatSnackBar,
@@ -24,7 +24,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadUsers());
+    this.store.dispatch(loadUsers());
   }
 
   trackById(index: number, user: AppUser) {

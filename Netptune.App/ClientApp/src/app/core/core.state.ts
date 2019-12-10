@@ -9,12 +9,15 @@ import { CoreState, coreReducer } from './state/core.reducer';
 import { clearState } from './meta-reducers/clear-state';
 import { settingsReducer } from './settings/settings.reducer';
 import { SettingsState } from './settings/settings.model';
+import { WorkspacesState } from './workspaces/workspaces.model';
+import { workspacesReducer } from './workspaces/workspaces.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   router: routerReducer,
   core: coreReducer,
   settings: settingsReducer,
+  workspaces: workspacesReducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = [initStateFromLocalStorage, clearState];
@@ -26,6 +29,7 @@ if (!environment.production) {
 export const selectAuthState = createFeatureSelector<AppState, AuthState>('auth');
 export const selectCoreState = createFeatureSelector<AppState, CoreState>('core');
 export const selectSettingsState = createFeatureSelector<AppState, SettingsState>('settings');
+export const selectWorkspacesFeature = createFeatureSelector<AppState, WorkspacesState>('workspaces');
 
 export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>('router');
 
@@ -39,4 +43,5 @@ export interface AppState {
   router: RouterReducerState<RouterStateUrl>;
   core: CoreState;
   settings: SettingsState;
+  workspaces: WorkspacesState;
 }
