@@ -12,14 +12,16 @@
         </div>
       </mat-nav-list>
 
-      <a
-        class="app-workspace-link"
-        routerLinkActive="router-link-active"
-        *ngFor="let workspace of workspaces$ | async"
-        [routerLink]="['/app/', workspace.slug]"
-      >
-        {{ workspace.name }}
-      </a>
+      <div class="workspace-nav-list">
+        <a
+          class="app-workspace-link"
+          routerLinkActive="router-link-active"
+          *ngFor="let workspace of workspaces$ | async"
+          [routerLink]="['/app/', workspace.slug]"
+          >
+          {{ workspace.name[0] }}
+        </a>
+      </div>
 
     </mat-sidenav>
     <mat-sidenav-content>

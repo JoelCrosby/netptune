@@ -1,3 +1,4 @@
+import { loadWorkspaces } from '@core/workspaces/workspaces.actions';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,5 +36,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authenticated$ = this.store.pipe(select(selectIsAuthenticated));
+    this.store.dispatch(loadWorkspaces());
   }
 }

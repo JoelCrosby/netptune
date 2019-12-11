@@ -13,3 +13,20 @@ main, .mat-drawer-container {
     margin: auto;
   }
 }
+
+.workspace-nav-list {
+  display: flex;
+  flex-direction: column;
+  padding: .4rem .2rem;
+  .app-workspace-link {
+    margin: .4rem;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+}
