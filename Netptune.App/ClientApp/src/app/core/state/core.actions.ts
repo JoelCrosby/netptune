@@ -1,22 +1,13 @@
-import { Action } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
+import { createAction, props } from '@ngrx/store';
 import { Project } from '../models/project';
 
-export enum CoreActionTypes {
-  SelectWorkspace = '[Core] Select Workspace',
-  SelectProject = '[Core] Select Project',
-}
+export const selectWorkspace = createAction(
+  '[Core] Select Workspace',
+  props<{ workspace: Workspace }>()
+);
 
-export class ActionSelectWorkspace implements Action {
-  readonly type = CoreActionTypes.SelectWorkspace;
-
-  constructor(readonly payload: Workspace) {}
-}
-
-export class ActionSelectProject implements Action {
-  readonly type = CoreActionTypes.SelectProject;
-
-  constructor(readonly payload: Project) {}
-}
-
-export type CoreActions = ActionSelectWorkspace | ActionSelectProject;
+export const selectProject = createAction(
+  '[Core] Select Project',
+  props<{ project: Project }>()
+);

@@ -1,14 +1,15 @@
 import { environment } from '@env/environment';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import { ActionReducerMap, MetaReducer, createFeatureSelector, createSelector } from '@ngrx/store';
+import { ActionReducerMap, createFeatureSelector, createSelector, MetaReducer } from '@ngrx/store';
 import { authReducer, AuthState } from './auth/store/auth.reducer';
+import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { CoreState, coreReducer } from './state/core.reducer';
-import { clearState } from './meta-reducers/clear-state';
-import { settingsReducer } from './settings/settings.reducer';
 import { SettingsState } from './settings/settings.model';
+import { settingsReducer } from './settings/settings.reducer';
+import { CoreState } from './state/core.model';
+import { coreReducer } from './state/core.reducer';
 import { WorkspacesState } from './workspaces/workspaces.model';
 import { workspacesReducer } from './workspaces/workspaces.reducer';
 

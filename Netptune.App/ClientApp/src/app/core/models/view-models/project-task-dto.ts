@@ -1,6 +1,6 @@
 import { ProjectTask } from '../project-task';
 
-export interface ProjectTaskDto extends ProjectTask {
+export interface TaskViewModel extends ProjectTask {
   assigneeUsername: string;
   ownerUsername: string;
   assigneePictureUrl: string;

@@ -1,17 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { toggleChip } from '@core/animations/animations';
-import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
-import {
-  ActionEditProjectTask,
-  ActionDeleteProjectTask,
-  ActionSelectTask,
-} from '../../store/project-tasks.actions';
-import { ProjectTaskStatus } from '@core/enums/project-task-status';
+import { TaskStatus } from '@core/enums/project-task-status';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@core/util/text-helpers';
+
+import * as actions from '../../store/tasks.actions';
 
 @Component({
   selector: '[app-task-list-item]',
@@ -20,16 +17,16 @@ import { TextHelpers } from '@core/util/text-helpers';
   animations: [toggleChip],
 })
 export class TaskListItemComponent {
-  @Input() task: ProjectTaskDto;
+  @Input() task: TaskViewModel;
 
   constructor(private store: Store<AppState>, public dialog: MatDialog) {}
 
   titleClicked() {
-    this.store.dispatch(new ActionSelectTask(this.task));
+    this.store.dispatch(actions.selectTask({ task: this.task }));
   }
 
   editClicked() {
-    this.store.dispatch(new ActionEditProjectTask(this.task));
+    this.store.dispatch(actions.editProjectTask({ task: this.task }));
   }
 
   deleteClicked() {
@@ -44,25 +41,29 @@ export class TaskListItemComponent {
       .afterClosed()
       .subscribe(result => {
         if (result) {
-          this.store.dispatch(new ActionDeleteProjectTask(this.task));
+          this.store.dispatch(actions.deleteProjectTask({ task: this.task }));
         }
       });
   }
 
   markCompleteClicked() {
     this.store.dispatch(
-      new ActionEditProjectTask({
-        ...this.task,
-        status: ProjectTaskStatus.Complete,
+      actions.editProjectTask({
+        task: {
+          ...this.task,
+          status: TaskStatus.Complete,
+        },
       })
     );
   }
 
   moveToBacklogClicked() {
     this.store.dispatch(
-      new ActionEditProjectTask({
-        ...this.task,
-        status: ProjectTaskStatus.InActive,
+      actions.editProjectTask({
+        task: {
+          ...this.task,
+          status: TaskStatus.InActive,
+        },
       })
     );
   }

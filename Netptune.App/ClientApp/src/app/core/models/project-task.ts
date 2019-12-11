@@ -1,4 +1,4 @@
-import { ProjectTaskStatus } from '../enums/project-task-status';
+import { TaskStatus } from '../enums/project-task-status';
 import { AppUser } from './appuser';
 import { Basemodel } from './basemodel';
 import { Project } from './project';
@@ -7,7 +7,7 @@ import { Workspace } from './workspace';
 export interface ProjectTask extends Basemodel {
   name: string;
   description: string;
-  status: ProjectTaskStatus;
+  status: TaskStatus;
 
   project: Project;
   projectId: number;

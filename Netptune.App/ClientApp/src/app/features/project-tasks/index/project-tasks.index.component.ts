@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
-import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
+import { TaskStatus } from '@app/core/enums/project-task-status';
 import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
 import { dropIn, fadeIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
-import { ActionLoadProjectTasks } from '../store/project-tasks.actions';
-import {
-  selectSelectedTask,
-  selectTasksBacklog,
-  selectTasksCompleted,
-  selectTasksLoaded,
-  selectTasksOwner,
-} from '../store/project-tasks.selectors';
+import * as actions from '../store/tasks.actions';
+import * as selectors from '../store/tasks.selectors';
 
 @Component({
   selector: 'app-project-tasks',
@@ -22,20 +15,20 @@ import {
   animations: [fadeIn, dropIn],
 })
 export class ProjectTasksComponent implements OnInit {
-  myTasks$ = this.store.pipe(select(selectTasksOwner));
-  completedTasks$ = this.store.pipe(select(selectTasksCompleted));
-  backlogTasks$ = this.store.pipe(select(selectTasksBacklog));
+  myTasks$ = this.store.pipe(select(selectors.selectTasksOwner));
+  completedTasks$ = this.store.pipe(select(selectors.selectTasksCompleted));
+  backlogTasks$ = this.store.pipe(select(selectors.selectTasksBacklog));
 
-  loaded$ = this.store.pipe(select(selectTasksLoaded));
+  loaded$ = this.store.pipe(select(selectors.selectTasksLoaded));
 
-  selectedTask$ = this.store.pipe(select(selectSelectedTask));
+  selectedTask$ = this.store.pipe(select(selectors.selectSelectedTask));
 
   taskGroups = [
     {
       groupName: 'my-tasks',
       tasks: this.myTasks$,
       header: 'My Tasks',
-      status: ProjectTaskStatus.New,
+      status: TaskStatus.New,
       emptyMessage:
         'You have no tasks. Click the button in the bottom right to create a task.',
     },
@@ -43,7 +36,7 @@ export class ProjectTasksComponent implements OnInit {
       groupName: 'completed-tasks',
       tasks: this.completedTasks$,
       header: 'Completed Tasks',
-      status: ProjectTaskStatus.Complete,
+      status: TaskStatus.Complete,
       emptyMessage:
         'You currently have no completed tasks. Mark a task as completed and it will show up here.',
     },
@@ -51,7 +44,7 @@ export class ProjectTasksComponent implements OnInit {
       groupName: 'backlog-tasks',
       tasks: this.backlogTasks$,
       header: 'Backlog',
-      status: ProjectTaskStatus.InActive,
+      status: TaskStatus.InActive,
       emptyMessage: 'Your backlog is currently empty hurray!',
     },
   ];
@@ -63,8 +56,7 @@ export class ProjectTasksComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadProjects());
-    this.store.dispatch(new ActionLoadProjectTasks());
+    this.store.dispatch(actions.loadProjectTasks());
   }
 
   showAddModal() {

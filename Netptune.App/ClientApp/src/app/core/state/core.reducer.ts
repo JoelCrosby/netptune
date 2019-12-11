@@ -1,21 +1,19 @@
-import { Workspace } from '../models/workspace';
-import { CoreActionTypes, CoreActions } from './core.actions';
-import { Project } from '../models/project';
+import { CoreState, initialState } from './core.model';
+import { Action, createReducer, on } from '@ngrx/store';
+import * as actions from './core.actions';
 
-export interface CoreState {
-  currentWorksapce?: Workspace;
-  currentProject?: Project;
-}
+const reducer = createReducer(
+  initialState,
+  on(actions.selectWorkspace, (state, { workspace }) => ({
+    ...state,
+    currentWorksapce: workspace,
+  })),
+  on(actions.selectProject, (state, { project }) => ({
+    ...state,
+    currentProject: project,
+  }))
+);
 
-export const initialState: CoreState = {};
-
-export function coreReducer(state = initialState, action: CoreActions): CoreState {
-  switch (action.type) {
-    case CoreActionTypes.SelectWorkspace:
-      return { ...state, currentWorksapce: action.payload };
-    case CoreActionTypes.SelectProject:
-      return { ...state, currentProject: action.payload };
-    default:
-      return state;
-  }
+export function coreReducer(state: CoreState | undefined, action: Action) {
+  return reducer(state, action);
 }

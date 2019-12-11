@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { environment } from '@env/environment';
 import { ProjectTask } from '@core/models/project-task';
 import { throwError } from 'rxjs';
@@ -16,27 +16,27 @@ export class ProjectTasksService {
     if (!workspace) {
       return throwError('no current workspace');
     }
-    return this.http.get<ProjectTaskDto[]>(
+    return this.http.get<TaskViewModel[]>(
       environment.apiEndpoint + `api/ProjectTasks?workspaceId=${workspace.id}`
     );
   }
 
   post(task: ProjectTask) {
-    return this.http.post<ProjectTaskDto>(
+    return this.http.post<TaskViewModel>(
       environment.apiEndpoint + `api/ProjectTasks`,
       task
     );
   }
 
   put(task: ProjectTask) {
-    return this.http.put<ProjectTaskDto>(
+    return this.http.put<TaskViewModel>(
       environment.apiEndpoint + `api/ProjectTasks`,
       task
     );
   }
 
   delete(task: ProjectTask) {
-    return this.http.delete<number>(
+    return this.http.delete<TaskViewModel>(
       environment.apiEndpoint + `api/ProjectTasks/${task.id}`
     );
   }

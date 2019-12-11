@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
-import { selectSelectedTask } from '../../store/project-tasks.selectors';
+import { selectSelectedTask } from '../../store/tasks.selectors';
 
 @Component({
   selector: 'app-task-detail',

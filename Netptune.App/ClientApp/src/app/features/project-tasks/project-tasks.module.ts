@@ -5,18 +5,23 @@ import { StoreModule } from '@ngrx/store';
 import { TaskListItemComponent } from './components/task-list-item/task-list-item.component';
 import { ProjectTasksComponent } from './index/project-tasks.index.component';
 import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
-import { ProjectTasksEffects } from './store/project-tasks.effects';
-import { projectTasksReducer } from './store/project-tasks.reducer';
+import { ProjectTasksEffects } from './store/tasks.effects';
+import { projectTasksReducer } from './store/tasks.reducer';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
 import { TaskDetailComponent } from './components/task-detail/task-detail.component';
 import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
-  declarations: [ProjectTasksComponent, TaskListGroupComponent, TaskListItemComponent, TaskDetailComponent],
+  declarations: [
+    ProjectTasksComponent,
+    TaskListGroupComponent,
+    TaskListItemComponent,
+    TaskDetailComponent,
+  ],
   imports: [
     SharedModule,
     StaticModule,
-    StoreModule.forFeature('project-tasks', projectTasksReducer),
+    StoreModule.forFeature('tasks', projectTasksReducer),
     EffectsModule.forFeature([ProjectTasksEffects]),
     ProjectTasksRoutingModule,
   ],

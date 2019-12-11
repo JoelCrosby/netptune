@@ -13,7 +13,7 @@ import {
   deleteWorkspace,
   loadWorkspaces,
 } from '@core/workspaces/workspaces.actions';
-import { ActionSelectWorkspace } from '@core/state/core.actions';
+import { selectWorkspace } from '@core/state/core.actions';
 
 @Component({
   selector: 'app-workspaces',
@@ -43,7 +43,7 @@ export class WorkspacesComponent implements OnInit {
   }
 
   goToProjectsClicked(workspace: Workspace) {
-    this.store.dispatch(new ActionSelectWorkspace(workspace));
+    this.store.dispatch(selectWorkspace({ workspace }));
   }
 
   deleteClicked(workspace: Workspace) {

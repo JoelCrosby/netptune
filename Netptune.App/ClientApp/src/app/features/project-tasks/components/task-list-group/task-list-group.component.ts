@@ -1,6 +1,6 @@
-import { AppState } from './../../../../core/core.state';
+import { AppState } from '@core/core.state';
 import { Component, OnInit, Input } from '@angular/core';
-import { ProjectTaskDto } from '@core/models/view-models/project-task-dto';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Observable } from 'rxjs';
 import { fadeIn, dropIn } from '@core/animations/animations';
 import {
@@ -8,8 +8,8 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { ProjectTaskStatus } from '@app/core/enums/project-task-status';
-import { ActionEditProjectTask } from '../../store/project-tasks.actions';
+import { TaskStatus } from '@app/core/enums/project-task-status';
+import * as actions from '../../store/tasks.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -20,19 +20,17 @@ import { Store } from '@ngrx/store';
 })
 export class TaskListGroupComponent implements OnInit {
   @Input() groupName: string;
-  @Input() tasks: ProjectTaskDto[] | undefined;
+  @Input() tasks: TaskViewModel[] | undefined;
   @Input() header: string;
   @Input() emptyMessage: string;
   @Input() loaded: Observable<boolean>;
-  @Input() status: ProjectTaskStatus;
+  @Input() status: TaskStatus;
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
 
-  drop(
-    event: CdkDragDrop<{ tasks: ProjectTaskDto[]; status: ProjectTaskStatus }>
-  ) {
+  drop(event: CdkDragDrop<{ tasks: TaskViewModel[]; status: TaskStatus }>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data.tasks,
@@ -54,11 +52,13 @@ export class TaskListGroupComponent implements OnInit {
     }
   }
 
-  moveTask(status: ProjectTaskStatus, task: ProjectTaskDto) {
+  moveTask(status: TaskStatus, task: TaskViewModel) {
     this.store.dispatch(
-      new ActionEditProjectTask({
-        ...task,
-        status,
+      actions.editProjectTask({
+        task: {
+          ...task,
+          status,
+        },
       })
     );
   }
