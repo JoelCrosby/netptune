@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
@@ -20,11 +22,17 @@ namespace Netptune.Repositories
         {
         }
 
-        public Task<List<ProjectViewModel>> GetProjects(int workspaceId)
+        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
         {
-            Context.ProjectTasks.Include(task => task.Owner).ThenInclude(x => x.UserName);
+            var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceSlug);
 
-            return Context.Projects
+            if (workspace is null) return new List<ProjectViewModel>();
+
+            var workspaceId = workspace.Id;
+
+            Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
+
+            return await Entities
                 .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
@@ -34,9 +42,9 @@ namespace Netptune.Repositories
 
         public Task<ProjectViewModel> GetProjectViewModel(int id)
         {
-            Context.ProjectTasks.Include(task => task.Owner).ThenInclude(x => x.UserName);
+            Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
-            return Context.Projects
+            return Entities
                 .Where(project => project.Id == id)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
@@ -68,14 +76,14 @@ namespace Netptune.Repositories
 
         public async Task<Project> DeleteProject(int id)
         {
-            var result = await Context.Projects.FindAsync(id);
+            var result = await Entities.FindAsync(id);
 
             if (result is null)
             {
                 return null;
             }
 
-            Context.Projects.Remove(result);
+            Entities.Remove(result);
 
             return result;
         }

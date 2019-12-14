@@ -4,15 +4,13 @@ import { adapter, WorkspacesState } from './workspaces.model';
 
 const { selectEntities, selectAll } = adapter.getSelectors();
 
-export const selectWorkspaces = createSelector(
+export const selectAllWorkspaces = createSelector(
   selectWorkspacesFeature,
-  (state: WorkspacesState) => state
+  selectAll
 );
 
-export const selectAllWorkspaces = createSelector(selectWorkspaces, selectAll);
-
 export const selectWorkspacesEntities = createSelector(
-  selectWorkspaces,
+  selectWorkspacesFeature,
   selectEntities
 );
 
@@ -24,6 +22,11 @@ export const selectWorkspacesLoading = createSelector(
 export const selectWorkspacesLoaded = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.loaded
+);
+
+export const SelectCurrentWorkspace = createSelector(
+  selectWorkspacesFeature,
+  (state: WorkspacesState) => state.currentWorksapce
 );
 
 export interface State extends AppState {

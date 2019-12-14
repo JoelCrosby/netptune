@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -21,8 +21,8 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.loadProjectTasks),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
-        this.projectTasksService.get(workspace).pipe(
+      switchMap(([action, workspaceSlug]) =>
+        this.projectTasksService.get(workspaceSlug).pipe(
           map(tasks => actions.loadProjectTasksSuccess({ tasks })),
           catchError(error => of(actions.loadProjectTasksFail(error)))
         )

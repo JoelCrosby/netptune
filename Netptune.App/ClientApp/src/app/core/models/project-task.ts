@@ -21,3 +21,16 @@ export interface ProjectTask extends Basemodel {
   owner: AppUser;
   ownerId: string;
 }
+
+export interface AddProjectTaskRequest {
+  name: string;
+  description: string;
+  status: TaskStatus;
+
+  projectId: number;
+
+  workspace: string;
+
+  assignee: AppUser;
+  assigneeId: string;
+}

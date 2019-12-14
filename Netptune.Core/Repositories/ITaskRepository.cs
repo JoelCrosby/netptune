@@ -9,9 +9,9 @@ namespace Netptune.Core.Repositories
 {
     public interface ITaskRepository : IRepository<ProjectTask, int>
     {
-        Task<TaskViewModel> GetTaskViewModel(int workspaceId);
+        Task<TaskViewModel> GetTaskViewModel(int id);
 
-        Task<List<TaskViewModel>> GetTasksAsync(int workspaceId);
+        Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug);
 
         Task<ProjectTask> AddTask(ProjectTask projectTask, AppUser user);
 

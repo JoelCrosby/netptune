@@ -21,11 +21,14 @@ namespace Netptune.Repositories
         {
         }
 
-        public Task<List<AppUser>> GetWorkspaceUsers(int workspaceId)
+        public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug)
         {
-            return (from workspaceAppUsers in Context.WorkspaceAppUsers
-                    where workspaceAppUsers.WorkspaceId == workspaceId
-                    select workspaceAppUsers.User).ToListAsync();
+            var result = await Context.Workspaces
+                .Include(workspace => workspace.WorkspaceUsers)
+                .ThenInclude(workspaceUser => workspaceUser.User)
+                .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceSlug);
+
+            return result.WorkspaceUsers.Select(x => x.User).ToList();
         }
 
         public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)

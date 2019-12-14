@@ -4,10 +4,6 @@ import * as actions from './core.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.selectWorkspace, (state, { workspace }) => ({
-    ...state,
-    currentWorksapce: workspace,
-  })),
   on(actions.selectProject, (state, { project }) => ({
     ...state,
     currentProject: project,

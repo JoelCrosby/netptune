@@ -7,14 +7,12 @@ import { selectProjects } from '@app/features/projects/store/projects.selectors'
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
-import { ProjectTask } from '@core/models/project-task';
+import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
 import { selectProject } from '@core/state/core.actions';
-import {
-  SelectCurrentProject,
-  SelectCurrentWorkspace,
-} from '@core/state/core.selectors';
+import { SelectCurrentProject } from '@core/state/core.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
 
 @Component({
   selector: 'app-task-dialog',
@@ -31,6 +29,16 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   showDescriptionField = false;
 
   selectedTypeValue: number;
+
+  get name() {
+    return this.projectFromGroup.get('nameFormControl');
+  }
+  get description() {
+    return this.projectFromGroup.get('descriptionFormControl');
+  }
+  get project() {
+    return this.projectFromGroup.get('projectFormControl');
+  }
 
   constructor(
     private store: Store<AppState>,
@@ -55,18 +63,14 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ActionLoadProjects());
 
     if (this.task) {
-      this.projectFromGroup.get('nameFormControl').setValue(this.task.name);
-      this.projectFromGroup
-        .get('projectFormControl')
-        .setValue(this.task.projectId);
-      this.projectFromGroup
-        .get('descriptionFormControl')
-        .setValue(this.task.description);
+      this.name.setValue(this.task.name);
+      this.project.setValue(this.task.projectId);
+      this.description.setValue(this.task.description);
     } else {
       this.projectFromGroup.reset();
       this.subs.add(
         this.currentProject$.subscribe(project => {
-          this.projectFromGroup.get('projectFormControl').setValue(project);
+          this.project.setValue(project);
         })
       );
     }
@@ -81,27 +85,20 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   }
 
   selectProject() {
-    const project = this.projectFromGroup.controls['projectFormControl'].value;
+    const project = this.project.value;
     this.store.dispatch(selectProject({ project }));
   }
 
   getResult() {
     this.subs.add(
-      this.currentWorkspace$.subscribe(workspace => {
-        const task: ProjectTask = {
-          name: this.projectFromGroup.controls['nameFormControl'].value,
-          project: this.projectFromGroup.controls['projectFormControl'].value,
-          description: this.projectFromGroup.controls['descriptionFormControl']
-            .value,
-          workspace,
-          workspaceId: workspace.id,
-          projectId: (this.projectFromGroup.controls['projectFormControl']
-            .value as Project).id,
+      this.currentWorkspace$.subscribe(workspaceSlug => {
+        const task: AddProjectTaskRequest = {
+          name: this.name.value,
+          description: this.description.value,
+          workspace: workspaceSlug,
+          projectId: (this.project.value as Project).id,
           assigneeId: undefined,
           assignee: undefined,
-          ownerId: undefined,
-          owner: undefined,
-          id: undefined,
           status: TaskStatus.New,
         };
 

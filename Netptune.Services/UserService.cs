@@ -38,9 +38,9 @@ namespace Netptune.Services
             return UserRepository.GetByEmail(email);
         }
 
-        public async Task<List<UserViewModel>> GetWorkspaceUsers(int workspaceId)
+        public async Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug)
         {
-            var users = await UserRepository.GetWorkspaceUsers(workspaceId);
+            var users = await UserRepository.GetWorkspaceUsers(workspaceSlug);
 
             return Mapper.Map<List<AppUser>, List<UserViewModel>>(users);
         }

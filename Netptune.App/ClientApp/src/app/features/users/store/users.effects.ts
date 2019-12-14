@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -14,8 +14,8 @@ export class UsersEffects {
     this.actions$.pipe(
       ofType(actions.loadUsers),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
-        this.usersService.getUsersInWorkspace(workspace.id).pipe(
+      switchMap(([action, workspaceSlug]) =>
+        this.usersService.getUsersInWorkspace(workspaceSlug).pipe(
           map(users => actions.loadUsersSuccess({ users })),
           catchError(error => of(actions.loadUsersFail({ error })))
         )

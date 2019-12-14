@@ -13,7 +13,6 @@ import {
   deleteWorkspace,
   loadWorkspaces,
 } from '@core/workspaces/workspaces.actions';
-import { selectWorkspace } from '@core/state/core.actions';
 
 @Component({
   selector: 'app-workspaces',
@@ -24,11 +23,7 @@ import { selectWorkspace } from '@core/state/core.actions';
 export class WorkspacesComponent implements OnInit {
   workspaces$ = this.store.select(selectAllWorkspaces);
 
-  constructor(
-    private store: Store<AppState>,
-    private dialog: MatDialog,
-    private router: Router
-  ) {}
+  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.store.dispatch(loadWorkspaces());
@@ -40,10 +35,6 @@ export class WorkspacesComponent implements OnInit {
 
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent);
-  }
-
-  goToProjectsClicked(workspace: Workspace) {
-    this.store.dispatch(selectWorkspace({ workspace }));
   }
 
   deleteClicked(workspace: Workspace) {

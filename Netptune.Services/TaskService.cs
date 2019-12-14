@@ -54,9 +54,9 @@ namespace Netptune.Services
             return TaskRepository.GetTaskViewModel(id);
         }
 
-        public Task<List<TaskViewModel>> GetTasks(int workspaceId)
+        public Task<List<TaskViewModel>> GetTasks(string workspaceSlug)
         {
-            return TaskRepository.GetTasksAsync(workspaceId);
+            return TaskRepository.GetTasksAsync(workspaceSlug);
         }
 
         public async Task<TaskViewModel> UpdateTask(ProjectTask projectTask)

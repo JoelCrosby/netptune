@@ -13,7 +13,7 @@ namespace Netptune.Core.Services
 
         Task<AppUser> GetByEmail(string email);
 
-        Task<List<UserViewModel>> GetWorkspaceUsers(int workspaceId);
+        Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug);
 
         Task<AppUser> Update(AppUser user, string userId);
 

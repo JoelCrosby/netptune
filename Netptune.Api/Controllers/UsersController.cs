@@ -29,9 +29,9 @@ namespace Netptune.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<AppUser>))]
-        public async Task<IActionResult> GetWorkspaceUsersAsync(int workspaceId)
+        public async Task<IActionResult> GetWorkspaceUsersAsync(string workspaceSlug)
         {
-            var result = await _userService.GetWorkspaceUsers(workspaceId);
+            var result = await _userService.GetWorkspaceUsers(workspaceSlug);
 
             return Ok(result);
         }

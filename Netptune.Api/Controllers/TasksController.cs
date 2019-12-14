@@ -30,9 +30,9 @@ namespace Netptune.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
-        public async Task<IActionResult> GetTasks(int workspaceId)
+        public async Task<IActionResult> GetTasks(string workspaceSlug)
         {
-            var result = await _taskService.GetTasks(workspaceId);
+            var result = await _taskService.GetTasks(workspaceSlug);
 
             return Ok(result);
         }

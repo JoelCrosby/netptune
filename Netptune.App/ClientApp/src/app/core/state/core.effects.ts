@@ -18,7 +18,7 @@ export class CoreEffects {
 
   @Effect({ dispatch: false })
   persistSettings = this.actions$.pipe(
-    ofType(actions.selectWorkspace),
+    ofType(actions.selectProject),
     withLatestFrom(this.store.pipe(select(selectCoreState))),
     tap(([action, settings]) =>
       this.localStorageService.setItem(CORE_KEY, settings)

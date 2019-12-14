@@ -54,10 +54,10 @@ namespace Netptune.Repositories
             };
         }
 
-        public async Task<List<TaskViewModel>> GetTasksAsync(int workspaceId)
+        public async Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug)
         {
             var tasks = Entities
-                .Where(x => x.Workspace.Id == workspaceId && !x.IsDeleted)
+                .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)

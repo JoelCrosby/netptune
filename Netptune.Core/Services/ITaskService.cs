@@ -8,7 +8,7 @@ namespace Netptune.Core.Services
 {
     public interface ITaskService
     {
-        Task<List<TaskViewModel>> GetTasks(int workspaceId);
+        Task<List<TaskViewModel>> GetTasks(string workspaceSlug);
 
         Task<TaskViewModel> GetTask(int id);
 

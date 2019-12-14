@@ -42,3 +42,8 @@ export const deleteWorkspacesFail = createAction(
   '[Workspaces] Load Workspaces Fail',
   props<{ workspace: any }>()
 );
+
+export const selectWorkspace = createAction(
+  '[Core] Select Workspace',
+  props<{ workspaceSlug: string }>()
+);

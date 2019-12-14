@@ -1,23 +1,27 @@
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Project } from '@core/models/project';
+import { Injectable } from '@angular/core';
+import { Project, AddProjectRequest } from '@core/models/project';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { environment } from '@env/environment';
-import { Workspace } from '@core/models/workspace';
 import { throwError } from 'rxjs';
 
 @Injectable()
 export class ProjectsService {
   constructor(private http: HttpClient) {}
 
-  get(workspace: Workspace) {
-    if (!workspace) {
+  get(workspaceSlug: string) {
+    if (!workspaceSlug) {
       return throwError('no current workspace');
     }
-    return this.http.get<ProjectViewModel[]>(environment.apiEndpoint + `api/projects?workspaceId=${workspace.id}`);
+    return this.http.get<ProjectViewModel[]>(
+      environment.apiEndpoint + `api/projects?workspaceSlug=${workspaceSlug}`
+    );
   }
 
-  post(project: Project) {
-    return this.http.post<ProjectViewModel>(environment.apiEndpoint + 'api/projects', project);
+  post(project: AddProjectRequest) {
+    return this.http.post<ProjectViewModel>(
+      environment.apiEndpoint + 'api/projects',
+      project
+    );
   }
 }

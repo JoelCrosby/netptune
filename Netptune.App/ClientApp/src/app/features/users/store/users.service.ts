@@ -7,9 +7,9 @@ import { environment } from '@env/environment';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  getUsersInWorkspace(workspaceId: number) {
+  getUsersInWorkspace(workspaceSlug: string) {
     return this.http.get<AppUser[]>(
-      environment.apiEndpoint + `api/users?workspaceId=${workspaceId}`
+      environment.apiEndpoint + `api/users?workspaceSlug=${workspaceSlug}`
     );
   }
 }

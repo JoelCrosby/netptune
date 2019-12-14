@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { environment } from '@env/environment';
-import { ProjectTask } from '@core/models/project-task';
-import { throwError } from 'rxjs';
-import { Workspace } from '@core/models/workspace';
 
 @Injectable({
   providedIn: 'root',
@@ -12,16 +10,14 @@ import { Workspace } from '@core/models/workspace';
 export class ProjectTasksService {
   constructor(private http: HttpClient) {}
 
-  get(workspace: Workspace) {
-    if (!workspace) {
-      return throwError('no current workspace');
-    }
+  get(workspaceSlug: string) {
     return this.http.get<TaskViewModel[]>(
-      environment.apiEndpoint + `api/ProjectTasks?workspaceId=${workspace.id}`
+      environment.apiEndpoint +
+        `api/ProjectTasks?workspaceSlug=${workspaceSlug}`
     );
   }
 
-  post(task: ProjectTask) {
+  post(task: AddProjectTaskRequest) {
     return this.http.post<TaskViewModel>(
       environment.apiEndpoint + `api/ProjectTasks`,
       task

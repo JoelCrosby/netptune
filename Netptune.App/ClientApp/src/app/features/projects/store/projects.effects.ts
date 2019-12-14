@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {
   ActionLoadProjectsSuccess,
   ProjectsActions,
@@ -13,18 +19,22 @@ import {
 import { ProjectsService } from './projects.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 
 @Injectable()
 export class ProjectsEffects {
-  constructor(private actions$: Actions<ProjectsActions>, private projectsService: ProjectsService, private store: Store<AppState>) {}
+  constructor(
+    private actions$: Actions<ProjectsActions>,
+    private projectsService: ProjectsService,
+    private store: Store<AppState>
+  ) {}
 
   @Effect()
   loadProjects$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.LoadProjects),
     withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-    switchMap(([action, workspace]) =>
-      this.projectsService.get(workspace).pipe(
+    switchMap(([action, workspaceSlug]) =>
+      this.projectsService.get(workspaceSlug).pipe(
         map(projects => new ActionLoadProjectsSuccess(projects)),
         catchError(error => of(new ActionLoadProjectsFail(error)))
       )

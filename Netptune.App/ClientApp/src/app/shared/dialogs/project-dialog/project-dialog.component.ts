@@ -2,8 +2,8 @@ import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AppState } from '@core/core.state';
-import { Project } from '@core/models/project';
-import { SelectCurrentWorkspace } from '@core/state/core.selectors';
+import { Project, AddProjectRequest } from '@core/models/project';
+import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { ActionCreateProject } from '@app/features/projects/store/projects.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,10 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   }
 
   projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    nameFormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
     repositoryUrlFormControl: new FormControl(),
     descriptionFormControl: new FormControl(),
     workspaceFormControl: new FormControl(),
@@ -38,8 +41,12 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.project) {
-      this.projectFromGroup.controls['nameFormControl'].setValue(this.project.name);
-      this.projectFromGroup.controls['descriptionFormControl'].setValue(this.project.description);
+      this.projectFromGroup.controls['nameFormControl'].setValue(
+        this.project.name
+      );
+      this.projectFromGroup.controls['descriptionFormControl'].setValue(
+        this.project.description
+      );
       this.projectFromGroup.controls['repositoryUrlFormControl'].setValue(
         this.project.repositoryUrl
       );
@@ -57,14 +64,13 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   }
 
   getResult() {
-    this.subs = this.currentWorkspace$.subscribe(workspace => {
-      const projectResult: Project = {
-        id: this.project ? this.project.id : undefined,
+    this.subs = this.currentWorkspace$.subscribe(workspaceSlug => {
+      const projectResult: AddProjectRequest = {
         name: this.projectFromGroup.get('nameFormControl').value,
         description: this.projectFromGroup.get('descriptionFormControl').value,
-        repositoryUrl: this.projectFromGroup.get('repositoryUrlFormControl').value,
-        workspace: workspace,
-        workspaceId: workspace.id,
+        repositoryUrl: this.projectFromGroup.get('repositoryUrlFormControl')
+          .value,
+        workspace: workspaceSlug,
       };
 
       this.store.dispatch(new ActionCreateProject(projectResult));

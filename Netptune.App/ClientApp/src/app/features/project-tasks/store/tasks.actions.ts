@@ -1,4 +1,4 @@
-import { ProjectTask } from '@core/models/project-task';
+import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 
@@ -18,7 +18,7 @@ export const loadProjectTasksFail = createAction(
 
 export const createProjectTask = createAction(
   '[ProjectTasks] Create Project Task',
-  props<{ task: ProjectTask }>()
+  props<{ task: AddProjectTaskRequest }>()
 );
 
 export const createProjectTasksSuccess = createAction(

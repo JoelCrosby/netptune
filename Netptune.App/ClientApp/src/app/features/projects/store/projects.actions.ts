@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { Project } from '@core/models/project';
+import { Project, AddProjectRequest } from '@core/models/project';
 
 export enum ProjectsActionTypes {
   LoadProjects = '[Projects] Load Projects',
@@ -30,7 +30,7 @@ export class ActionLoadProjectsFail implements Action {
 export class ActionCreateProject implements Action {
   readonly type = ProjectsActionTypes.CreateProject;
 
-  constructor(readonly payload: Project) {}
+  constructor(readonly payload: AddProjectRequest) {}
 }
 
 export class ActionCreateProjectSuccess implements Action {

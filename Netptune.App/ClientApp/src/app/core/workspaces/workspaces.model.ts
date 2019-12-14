@@ -10,4 +10,6 @@ export const initialState = adapter.getInitialState({
   loadingCreate: false,
 });
 
-export interface WorkspacesState extends AsyncEntityState<Workspace> {}
+export interface WorkspacesState extends AsyncEntityState<Workspace> {
+  currentWorksapce?: string;
+}

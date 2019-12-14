@@ -62,9 +62,9 @@ namespace Netptune.Services
             return await GetProjectViewModel(result);
         }
 
-        public Task<List<ProjectViewModel>> GetProjects(int workspaceId)
+        public Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
         {
-            return ProjectRepository.GetProjects(workspaceId);
+            return ProjectRepository.GetProjects(workspaceSlug);
         }
 
         public async Task<ProjectViewModel> UpdateProject(Project project, AppUser user)

@@ -22,7 +22,11 @@ const reducer = createReducer(
       ...state,
       loadingCreate: false,
     })
-  )
+  ),
+  on(actions.selectWorkspace, (state, { workspaceSlug }) => ({
+    ...state,
+    currentWorkspace: workspaceSlug,
+  }))
 );
 
 export function workspacesReducer(
