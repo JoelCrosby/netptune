@@ -26,7 +26,10 @@ const reducer = createReducer(
   on(actions.selectWorkspace, (state, { workspace }) => ({
     ...state,
     currentWorkspace: workspace,
-  }))
+  })),
+  on(actions.deleteWorkspaceSuccess, (state, { workspace }) =>
+    adapter.removeOne(workspace.id, state)
+  )
 );
 
 export function workspacesReducer(

@@ -15,7 +15,5 @@ namespace Netptune.Core.Repositories
         Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user);
 
         Task<Workspace> AddWorkspace(Workspace workspace);
-
-        Task<Workspace> DeleteWorkspace(int id);
     }
 }

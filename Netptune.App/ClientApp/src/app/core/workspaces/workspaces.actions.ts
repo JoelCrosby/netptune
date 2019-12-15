@@ -33,14 +33,14 @@ export const deleteWorkspace = createAction(
   props<{ workspace: Workspace }>()
 );
 
-export const deleteWorkspacesSuccess = createAction(
+export const deleteWorkspaceSuccess = createAction(
   '[Workspaces] Delete Workspace Success ',
   props<{ workspace: Workspace }>()
 );
 
-export const deleteWorkspacesFail = createAction(
+export const deleteWorkspaceFail = createAction(
   '[Workspaces] Load Workspaces Fail',
-  props<{ workspace: any }>()
+  props<{ error: any }>()
 );
 
 export const selectWorkspace = createAction(

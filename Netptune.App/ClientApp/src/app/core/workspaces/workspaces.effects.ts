@@ -3,25 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import {
-  createWorkspace,
-  createWorkspaceFail,
-  createWorkspaceSuccess,
-  loadWorkspaces,
-  loadWorkspacesFail,
-  loadWorkspacesSuccess,
-} from './workspaces.actions';
+import * as actions from './workspaces.actions';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable()
 export class WorkspacesEffects {
   loadWorkspaces$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadWorkspaces),
+      ofType(actions.loadWorkspaces),
       switchMap(action =>
         this.workspacesService.get().pipe(
-          map(workspaces => loadWorkspacesSuccess({ workspaces })),
-          catchError(error => of(loadWorkspacesFail({ error })))
+          map(workspaces => actions.loadWorkspacesSuccess({ workspaces })),
+          catchError(error => of(actions.loadWorkspacesFail({ error })))
         )
       )
     )
@@ -29,11 +22,23 @@ export class WorkspacesEffects {
 
   createWorkspace$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createWorkspace),
+      ofType(actions.createWorkspace),
       switchMap(action =>
         this.workspacesService.post(action.workspace).pipe(
-          map(workspace => createWorkspaceSuccess({ workspace })),
-          catchError(error => of(createWorkspaceFail({ error })))
+          map(workspace => actions.createWorkspaceSuccess({ workspace })),
+          catchError(error => of(actions.createWorkspaceFail({ error })))
+        )
+      )
+    )
+  );
+
+  deleteWorkspace$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteWorkspace),
+      switchMap(action =>
+        this.workspacesService.delete(action.workspace).pipe(
+          map(workspace => actions.deleteWorkspaceSuccess({ workspace })),
+          catchError(error => of(actions.deleteWorkspaceFail({ error })))
         )
       )
     )

@@ -69,16 +69,5 @@ namespace Netptune.Repositories
 
             return result.Entity;
         }
-
-        public async Task<Workspace> DeleteWorkspace(int id)
-        {
-            var workspace = await Entities.FindAsync(id);
-
-            if (workspace is null) return null;
-
-            Entities.Remove(workspace);
-
-            return workspace;
-        }
     }
 }

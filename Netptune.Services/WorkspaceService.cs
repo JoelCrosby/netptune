@@ -43,11 +43,13 @@ namespace Netptune.Services
 
         public async Task<Workspace> DeleteWorkspace(int id)
         {
-            var result = await WorkspaceRepository.DeleteWorkspace(id);
+            var workspace = await WorkspaceRepository.GetAsync(id);
+
+            workspace.IsDeleted = true;
 
             await UnitOfWork.CompleteAsync();
 
-            return result;
+            return workspace;
         }
 
         public Task<Workspace> GetWorkspace(int id)
