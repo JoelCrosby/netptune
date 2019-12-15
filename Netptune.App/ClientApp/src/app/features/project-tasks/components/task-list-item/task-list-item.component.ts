@@ -19,6 +19,8 @@ import * as actions from '../../store/tasks.actions';
 export class TaskListItemComponent {
   @Input() task: TaskViewModel;
 
+  checked = false;
+
   constructor(private store: Store<AppState>, public dialog: MatDialog) {}
 
   titleClicked() {

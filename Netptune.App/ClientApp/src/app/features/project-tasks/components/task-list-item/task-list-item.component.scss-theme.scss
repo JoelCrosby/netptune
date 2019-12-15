@@ -23,4 +23,8 @@
   .mat-checkbox-frame{
     border-color: rgba(mat-color($foreground, icon), .3);
   }
+
+  .task-item-selected {
+    background-color: mat-color($primary, 400, .1);
+  }
 }

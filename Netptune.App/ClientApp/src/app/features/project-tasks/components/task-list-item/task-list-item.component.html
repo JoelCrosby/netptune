@@ -1,6 +1,5 @@
-<div class="task-card">
+<div class="task-card" [class.task-item-selected]="checked">
   <div class="task-header">
-
 
     <div class="task-header-title">
       <button
@@ -13,7 +12,7 @@
       >
         <mat-icon>drag_indicator</mat-icon>
       </button>
-      <mat-checkbox color="primary"></mat-checkbox>
+      <mat-checkbox color="primary" [(ngModel)]="checked"></mat-checkbox>
       <div class="title" (click)="titleClicked()">
         {{ task.name }}
       </div>
