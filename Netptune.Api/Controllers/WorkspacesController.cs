@@ -37,25 +37,14 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Workspaces?slug=workspace
+        // GET: api/Workspaces/slug
         [HttpGet("{slug}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(Workspace))]
-        public async Task<IActionResult> GetWorkspaces([FromQuery] string slug)
-        {
-            var result = await _workspaceService.GetWorkspace(slug);
-
-            return Ok(result);
-        }
-
-        // GET: api/Workspaces/5
-        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(Workspace))]
-        public async Task<IActionResult> GetWorkspace([FromRoute] int id)
+        public async Task<IActionResult> GetWorkspace([FromRoute] string slug)
         {
-            var result = await _workspaceService.GetWorkspace(id);
+            var result = await _workspaceService.GetWorkspace(slug);
 
             return Ok(result);
         }

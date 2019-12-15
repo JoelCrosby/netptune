@@ -11,8 +11,10 @@ export function debug(
       return newState;
     }
 
-    console.log(`[DEBUG] action: ${action.type}`, {
-      payload: (action as any).payload,
+    const { type, ...payload } = action;
+
+    console.log(`[DEBUG] action: ${type}`, {
+      payload,
       oldState: state,
       newState,
     });

@@ -1,54 +1,32 @@
-import { Action } from '@ngrx/store';
+import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { Project, AddProjectRequest } from '@core/models/project';
+import { createAction, props } from '@ngrx/store';
 
-export enum ProjectsActionTypes {
-  LoadProjects = '[Projects] Load Projects',
-  LoadProjectsFail = '[Projects] Load Projects Fail',
-  LoadProjectsSuccess = '[Projects] Load Projects Success ',
-  CreateProject = '[Projects] Create Projects',
-  CreateProjectFail = '[Projects] Create Projects Fail',
-  CreateProjectSuccess = '[Projects] Create Projects Success ',
-}
+export const loadProjects = createAction(
+  '[Projects] Load Projects'
+);
 
-export class ActionLoadProjects implements Action {
-  readonly type = ProjectsActionTypes.LoadProjects;
-}
+export const loadProjectsSuccess = createAction(
+  '[Projects] Load Projects Success ',
+  props<{ projects: ProjectViewModel[] }>()
+);
 
-export class ActionLoadProjectsSuccess implements Action {
-  readonly type = ProjectsActionTypes.LoadProjectsSuccess;
+export const loadProjectsFail = createAction(
+  '[Projects] Load Projects Fail',
+  props<{ error: any }>()
+);
 
-  constructor(readonly payload: ProjectViewModel[]) {}
-}
+export const createProject = createAction(
+  '[Projects] Create Project',
+  props<{ project: AddProjectRequest }>()
+);
 
-export class ActionLoadProjectsFail implements Action {
-  readonly type = ProjectsActionTypes.LoadProjectsFail;
+export const createProjectSuccess = createAction(
+  '[Projects] Create Project Success',
+  props<{ project: ProjectViewModel }>()
+);
 
-  constructor(readonly payload: any) {}
-}
-
-export class ActionCreateProject implements Action {
-  readonly type = ProjectsActionTypes.CreateProject;
-
-  constructor(readonly payload: AddProjectRequest) {}
-}
-
-export class ActionCreateProjectSuccess implements Action {
-  readonly type = ProjectsActionTypes.CreateProjectSuccess;
-
-  constructor(readonly payload: ProjectViewModel) {}
-}
-
-export class ActionCreateProjectFail implements Action {
-  readonly type = ProjectsActionTypes.CreateProjectFail;
-
-  constructor(readonly payload: any) {}
-}
-
-export type ProjectsActions =
-  | ActionLoadProjects
-  | ActionLoadProjectsFail
-  | ActionLoadProjectsSuccess
-  | ActionCreateProject
-  | ActionCreateProjectFail
-  | ActionCreateProjectSuccess;
+export const createProjectFail = createAction(
+  '[Projects] Create Project Fail',
+  props<{ error: any }>()
+);

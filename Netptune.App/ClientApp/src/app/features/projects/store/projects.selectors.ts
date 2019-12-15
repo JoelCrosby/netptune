@@ -1,17 +1,23 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { ProjectsState, selectAllProjects } from './projects.reducer';
 import { AppState } from '@core/core.state';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { adapter, ProjectsState } from './projects.model';
 
-export const selectProjectsFeature = createFeatureSelector<ProjectsState>('projects');
+export interface State extends AppState {
+  projects: ProjectsState;
+}
 
-export const selectProjectsEntity = createSelector(
+const selectProjectsFeature = createFeatureSelector<State, ProjectsState>('projects');
+
+const { selectEntities, selectAll } = adapter.getSelectors();
+
+export const selectAllProjects = createSelector(
   selectProjectsFeature,
-  (state: ProjectsState) => state.projects
+  selectAll
 );
 
-export const selectProjects = createSelector(
-  selectProjectsEntity,
-  selectAllProjects
+export const selectProjectsEntities = createSelector(
+  selectProjectsFeature,
+  selectEntities
 );
 
 export const selectProjectsLoading = createSelector(
@@ -23,7 +29,3 @@ export const selectProjectsLoaded = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.loaded
 );
-
-export interface State extends AppState {
-  projects: ProjectsState;
-}

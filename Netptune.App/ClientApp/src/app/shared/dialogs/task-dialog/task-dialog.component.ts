@@ -2,8 +2,8 @@ import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { createProjectTask } from '@app/features/project-tasks/store/tasks.actions';
-import { ActionLoadProjects } from '@app/features/projects/store/projects.actions';
-import { selectProjects } from '@app/features/projects/store/projects.selectors';
+import { loadProjects } from '@app/features/projects/store/projects.actions';
+import { selectAllProjects } from '@app/features/projects/store/projects.selectors';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
@@ -21,7 +21,7 @@ import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selector
 })
 export class TaskDialogComponent implements OnInit, OnDestroy {
   task: ProjectTask;
-  projects$ = this.store.select(selectProjects);
+  projects$ = this.store.select(selectAllProjects);
   currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
   currentProject$ = this.store.select(SelectCurrentProject);
   subs = new Subscription();
@@ -60,7 +60,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadProjects());
+    this.store.dispatch(loadProjects());
 
     if (this.task) {
       this.name.setValue(this.task.name);
@@ -91,11 +91,11 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
 
   getResult() {
     this.subs.add(
-      this.currentWorkspace$.subscribe(workspaceSlug => {
+      this.currentWorkspace$.subscribe(workspace => {
         const task: AddProjectTaskRequest = {
           name: this.name.value,
           description: this.description.value,
-          workspace: workspaceSlug,
+          workspace: workspace.slug,
           projectId: (this.project.value as Project).id,
           assigneeId: undefined,
           assignee: undefined,

@@ -5,8 +5,8 @@ import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Project } from '@core/models/project';
 import { Store } from '@ngrx/store';
-import { ActionLoadProjects } from '../store/projects.actions';
-import { selectProjects } from '../store/projects.selectors';
+import { loadProjects } from '../store/projects.actions';
+import { selectAllProjects } from '../store/projects.selectors';
 import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
 import { AppUser } from '@core/models/appuser';
 import { UsernameConverter } from '@core/models/converters/username.converter';
@@ -18,7 +18,7 @@ import { UsernameConverter } from '@core/models/converters/username.converter';
   animations: [dropIn],
 })
 export class ProjectsComponent implements OnInit {
-  projects$ = this.store.select(selectProjects);
+  projects$ = this.store.select(selectAllProjects);
 
   constructor(
     public snackBar: MatSnackBar,
@@ -27,7 +27,7 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadProjects());
+    this.store.dispatch(loadProjects());
   }
 
   trackById(index: number, project: Project) {

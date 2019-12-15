@@ -23,9 +23,9 @@ const reducer = createReducer(
       loadingCreate: false,
     })
   ),
-  on(actions.selectWorkspace, (state, { workspaceSlug }) => ({
+  on(actions.selectWorkspace, (state, { workspace }) => ({
     ...state,
-    currentWorkspace: workspaceSlug,
+    currentWorkspace: workspace,
   }))
 );
 

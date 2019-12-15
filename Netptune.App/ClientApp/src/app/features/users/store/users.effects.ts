@@ -14,8 +14,8 @@ export class UsersEffects {
     this.actions$.pipe(
       ofType(actions.loadUsers),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspaceSlug]) =>
-        this.usersService.getUsersInWorkspace(workspaceSlug).pipe(
+      switchMap(([action, workspace]) =>
+        this.usersService.getUsersInWorkspace(workspace.slug).pipe(
           map(users => actions.loadUsersSuccess({ users })),
           catchError(error => of(actions.loadUsersFail({ error })))
         )

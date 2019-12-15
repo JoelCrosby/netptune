@@ -1,8 +1,8 @@
 import { AsyncEntityState } from '@core/entity/async-entity-state';
-import { Workspace } from '@core/models/workspace';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createEntityAdapter } from '@ngrx/entity';
 
-export const adapter = createEntityAdapter<Workspace>();
+export const adapter = createEntityAdapter<ProjectViewModel>();
 
 export const initialState = adapter.getInitialState({
   loading: false,
@@ -10,6 +10,4 @@ export const initialState = adapter.getInitialState({
   loadingCreate: false,
 });
 
-export interface WorkspacesState extends AsyncEntityState<Workspace> {
-  currentWorkspace?: Workspace;
-}
+export interface ProjectsState extends AsyncEntityState<ProjectViewModel> {}

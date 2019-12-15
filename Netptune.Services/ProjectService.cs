@@ -6,6 +6,7 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Relationships;
+using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.Projects;
 
 namespace Netptune.Services
@@ -21,12 +22,17 @@ namespace Netptune.Services
             UnitOfWork = unitOfWork;
         }
 
-        public Task<ProjectViewModel> AddProject(Project project, AppUser user)
+        public Task<ProjectViewModel> AddProject(AddProjectRequest request, AppUser user)
         {
             return UnitOfWork.Transaction(async () =>
             {
-                project.CreatedByUserId = user.Id;
-                project.OwnerId = user.Id;
+                var project = new Project
+                {
+                    Name = request.Name,
+                    Description = request.Description,
+                    CreatedByUserId = user.Id,
+                    OwnerId = user.Id,
+                };
 
                 var userRelationship = new ProjectUser
                 {
@@ -36,7 +42,7 @@ namespace Netptune.Services
 
                 project.ProjectUsers.Add(userRelationship);
 
-                var workspace = await UnitOfWork.Workspaces.GetAsync(project.WorkspaceId);
+                var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
                 workspace.Projects.Add(project);
 

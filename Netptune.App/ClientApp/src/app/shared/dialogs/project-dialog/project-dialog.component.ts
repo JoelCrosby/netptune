@@ -1,13 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { createProject } from '@app/features/projects/store/projects.actions';
 import { AppState } from '@core/core.state';
-import { Project, AddProjectRequest } from '@core/models/project';
+import { AddProjectRequest, Project } from '@core/models/project';
 import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
-import { ActionCreateProject } from '@app/features/projects/store/projects.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { ProjectTask } from '@core/models/project-task';
 
 @Component({
   selector: 'app-project-dialog',
@@ -19,16 +18,6 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
   subs = new Subscription();
 
-  constructor(
-    private store: Store<AppState>,
-    public dialogRef: MatDialogRef<ProjectDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Project
-  ) {
-    if (data) {
-      this.project = data;
-    }
-  }
-
   projectFromGroup = new FormGroup({
     nameFormControl: new FormControl('', [
       Validators.required,
@@ -39,17 +28,31 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
     workspaceFormControl: new FormControl(),
   });
 
+  get name() {
+    return this.projectFromGroup.get('nameFormControl');
+  }
+  get description() {
+    return this.projectFromGroup.get('descriptionFormControl');
+  }
+  get repositoryUrl() {
+    return this.projectFromGroup.get('repositoryUrlFormControl');
+  }
+
+  constructor(
+    private store: Store<AppState>,
+    public dialogRef: MatDialogRef<ProjectDialogComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: Project
+  ) {
+    if (data) {
+      this.project = data;
+    }
+  }
+
   ngOnInit() {
     if (this.project) {
-      this.projectFromGroup.controls['nameFormControl'].setValue(
-        this.project.name
-      );
-      this.projectFromGroup.controls['descriptionFormControl'].setValue(
-        this.project.description
-      );
-      this.projectFromGroup.controls['repositoryUrlFormControl'].setValue(
-        this.project.repositoryUrl
-      );
+      this.name.setValue(this.project.name);
+      this.description.setValue(this.project.description);
+      this.repositoryUrl.setValue(this.project.repositoryUrl);
     } else {
       this.projectFromGroup.reset();
     }
@@ -64,16 +67,15 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   }
 
   getResult() {
-    this.subs = this.currentWorkspace$.subscribe(workspaceSlug => {
-      const projectResult: AddProjectRequest = {
-        name: this.projectFromGroup.get('nameFormControl').value,
-        description: this.projectFromGroup.get('descriptionFormControl').value,
-        repositoryUrl: this.projectFromGroup.get('repositoryUrlFormControl')
-          .value,
-        workspace: workspaceSlug,
+    this.subs = this.currentWorkspace$.subscribe(workspace => {
+      const project: AddProjectRequest = {
+        name: this.name.value,
+        description: this.description.value,
+        repositoryUrl: this.repositoryUrl.value,
+        workspace: workspace.slug,
       };
 
-      this.store.dispatch(new ActionCreateProject(projectResult));
+      this.store.dispatch(createProject({ project }));
 
       this.dialogRef.close();
     });

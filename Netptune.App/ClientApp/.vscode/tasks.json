@@ -37,9 +37,6 @@
       "args": ["-w", "-p", ".", "--noEmit"],
       "isBackground": true,
       "problemMatcher": "$tsc-watch",
-      "runOptions": {
-        "runOn": "folderOpen"
-      }
     }
   ]
 }

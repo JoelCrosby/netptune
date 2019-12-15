@@ -21,8 +21,8 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.loadProjectTasks),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspaceSlug]) =>
-        this.projectTasksService.get(workspaceSlug).pipe(
+      switchMap(([action, workspace]) =>
+        this.projectTasksService.get(workspace.slug).pipe(
           map(tasks => actions.loadProjectTasksSuccess({ tasks })),
           catchError(error => of(actions.loadProjectTasksFail(error)))
         )

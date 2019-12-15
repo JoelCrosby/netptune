@@ -1,10 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Resolve,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { selectWorkspace } from '@core/workspaces/workspaces.actions';
@@ -18,18 +14,14 @@ export class WorkspaceResolver implements Resolve<Workspace> {
   constructor(private http: HttpClient, private store: Store<AppState>) {}
 
   resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    route: ActivatedRouteSnapshot
   ): Observable<Workspace> {
-    console.log(route);
-
     return this.get(route.paramMap.get('workspace'));
   }
 
-  get(workspaceSlug: string) {
-    const params = new HttpParams().append('slug', workspaceSlug);
+  get(workspaceSlug: string): Observable<Workspace> {
     return this.http
-      .get<Workspace>(environment.apiEndpoint + 'api/workspaces', { params })
-      .pipe(tap(() => this.store.dispatch(selectWorkspace({ workspaceSlug }))));
+      .get<Workspace>(environment.apiEndpoint + `api/workspaces/${workspaceSlug}`)
+      .pipe(tap(workspace => this.store.dispatch(selectWorkspace({ workspace }))));
   }
 }

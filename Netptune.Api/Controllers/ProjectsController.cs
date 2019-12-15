@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Services;
 using Netptune.Models;
+using Netptune.Models.Requests;
 
 namespace Netptune.Api.Controllers
 {
@@ -65,10 +66,10 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(Project))]
-        public async Task<IActionResult> PostProject([FromBody] Project project)
+        public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _projectService.AddProject(project, user);
+            var result = await _projectService.AddProject(request, user);
 
             return Ok(result);
         }
