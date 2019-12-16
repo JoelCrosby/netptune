@@ -23,11 +23,11 @@ export class ShellComponent implements OnInit {
   pageTitle$: Observable<string>;
 
   links = [
-    { label: 'Projects', value: ['./projects'] },
-    { label: 'Tasks', value: ['./tasks'] },
-    { label: 'Users', value: ['./users'] },
-    { label: 'Account', value: ['./profile'] },
-    { label: 'Settings', value: ['./settings'] },
+    { label: 'Projects', value: ['./projects'], icon: 'assessment' },
+    { label: 'Tasks', value: ['./tasks'], icon: 'check_box' },
+    { label: 'Boards', value: ['./boards'], icon: 'table_chart' },
+    { label: 'Users', value: ['./users'], icon: 'supervised_user_circle' },
+    { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
   ];
 
   mobileQuery: MediaQueryList;

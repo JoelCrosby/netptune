@@ -1,7 +1,6 @@
 @import '~@angular/material/theming';
 
 @mixin project-tasks-component-theme($theme) {
-
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, accent);
@@ -13,13 +12,12 @@
     border-bottom: 1px solid mat-color($background, disabled-button);
   }
 
-  .empty-list-img, .list-empty-mark {
+  .empty-list-img,
+  .list-empty-mark {
     color: mat-color($foreground, empty-list);
+
     .empty-text {
       color: mat-color($foreground, disabled-button);
     }
   }
-
-
-
 }

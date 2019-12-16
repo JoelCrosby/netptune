@@ -1,14 +1,9 @@
-/*Typing Loader*/
-.typing_loader{
+.typing-loader {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  -webkit-animation: typing 1s linear infinite alternate;
-     -moz-animation: Typing 1s linear infinite alternate;
-          animation: typing 1s linear infinite alternate;
-  margin: 46px auto; /* Not necessary- its only for layouting*/
+  animation: typing 1s linear infinite alternate;
+  margin: 46px auto;
   position: relative;
   left: -12px;
 }
-
-

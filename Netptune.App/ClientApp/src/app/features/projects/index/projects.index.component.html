@@ -1,12 +1,5 @@
 <app-page-container>
 
-  <div class="component-header">
-    <button mat-fab type="button" id="new-button" (click)="showAddModal()">
-      <mat-icon>add</mat-icon>
-      <span id="new-button-text">New Project</span>
-    </button>
-  </div>
-
   <div class="card-group">
     <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById" class="project-card">
       <mat-card-header>

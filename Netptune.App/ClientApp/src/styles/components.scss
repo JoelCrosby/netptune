@@ -1,71 +1,13 @@
-#new-button {
-  margin-bottom: 2rem;
-  margin-right: 2rem;
-  transition: all 330ms;
-  bottom: 0;
-  position: fixed;
-  right: 0;
-  min-width: 0px;
-  overflow: hidden;
-  z-index: 99;
-  #new-button-text {
-    display: none;
-  }
-}
-
-// This applies from 600px onwards
-@media (min-width: 600px) {
-  #new-button {
-    margin-bottom: 2rem;
-    margin-right: 6rem;
-    width: 12rem;
-    border-radius: .4rem;
-    bottom: 0;
-    position: fixed;
-    right: 0;
-    span {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      font-size: 1.2rem;
-      #new-button-text {
-        display: flex;
-        margin-left: .6rem;
-        text-transform: uppercase;
-        font-size: 1rem;
-      }
-    }
-  }
-}
-
-
-
-.component-header {
-  h4 {
-    font-weight: 200;
-    font-size: 2rem;
-    margin-top: 0rem;
-    letter-spacing: 0.2rem;
-    margin-bottom: 1rem;
-  }
-}
-
 .list-item-text {
   h4 {
     font-weight: 500;
   }
 }
 
-.component-header {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
 .card {
   border: 0 !important;
   margin: 1rem !important;
-  border-radius: 0.2rem !important;
+  border-radius: .2rem !important;
 }
 
 .card-footer {
@@ -128,10 +70,10 @@ ul {
   flex-direction: column;
 }
 
-.mat-card:not([class*=mat-elevation-z]) {
+.mat-card:not([class*='mat-elevation-z']) {
   border-radius: .2rem !important;
   margin-bottom: 1rem;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
 }
 
 .mat-menu-item {

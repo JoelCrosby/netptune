@@ -6,8 +6,12 @@
     class="app-sidenav"
   >
     <mat-nav-list>
-      <mat-list-item class="app-logo">Netptune</mat-list-item>
-      <h3 matSubheader>Browse</h3>
+      <mat-list-item class="app-logo">
+        Netptune
+      </mat-list-item>
+      <h3 matSubheader>
+        Browse
+      </h3>
       <a
         mat-list-item
         *ngFor="let link of links"
@@ -15,7 +19,12 @@
         class="app-menu-link"
         routerLinkActive="router-link-active"
       >
+      <mat-icon mat-list-icon class="material-icons-outlined">
+        {{ link.icon }}
+      </mat-icon>
+      <p mat-line>
         {{ link.label }}
+      </p>
       </a>
     </mat-nav-list>
 

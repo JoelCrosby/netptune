@@ -1,31 +1,20 @@
 <app-page-container>
 
-  <div class="component-header">
-    <button mat-fab type="button" id="new-button">
-      <mat-icon>send</mat-icon>
-      <span id="new-button-text">Invite User</span>
-    </button>
-  </div>
+  <div class="user-card-group">
 
-  <div>
-
-    <div class="user-card-group">
-
-      <mat-card *ngFor="let user of users$ | async; let i=index; trackBy:trackById;">
-        <mat-card-header>
-          <div mat-card-avatar class="far fa-user"></div>
-          <mat-card-title>{{ toDisplay(user) }}</mat-card-title>
-          <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-chip-list>
-            <mat-chip> {{ user.lastLoginTime | date }}</mat-chip>
-            <mat-chip> {{ user.registrationDate | date }}</mat-chip>
-          </mat-chip-list>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
+    <mat-card *ngFor="let user of users$ | async; let i=index; trackBy:trackById;">
+      <mat-card-header>
+        <div mat-card-avatar class="far fa-user"></div>
+        <mat-card-title>{{ toDisplay(user) }}</mat-card-title>
+        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-chip-list>
+          <mat-chip> {{ user.lastLoginTime | date }}</mat-chip>
+          <mat-chip> {{ user.registrationDate | date }}</mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+    </mat-card>
   </div>
 
 </app-page-container>

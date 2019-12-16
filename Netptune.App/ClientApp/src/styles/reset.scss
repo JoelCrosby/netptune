@@ -4,7 +4,6 @@ body {
   height: 100vh;
 }
 
-
 * {
   &:active,
   :focus {
@@ -15,14 +14,14 @@ body {
 code {
   white-space: nowrap;
   border-radius: 10px;
-  padding: 0 8px 1px 8px;
+  padding: 0 8px 1px;
 }
 
 .mat-menu-content {
   fa-icon {
-      position: relative;
-      top: 2px;
-      left: 4px;
+    position: relative;
+    top: 2px;
+    left: 4px;
   }
 }
 

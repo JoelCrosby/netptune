@@ -1,4 +1,5 @@
-main, .mat-drawer-container {
+main,
+.mat-drawer-container {
   height: 100vh;
 }
 
@@ -9,6 +10,7 @@ main, .mat-drawer-container {
 .main-logo {
   display: flex;
   padding-top: 6px;
+
   img {
     margin: auto;
   }
@@ -18,8 +20,9 @@ main, .mat-drawer-container {
   display: flex;
   flex-direction: column;
   padding: .4rem .2rem;
+
   .app-workspace-link {
-    margin: 0.4rem auto;
+    margin: .4rem auto;
     text-decoration: none;
     text-align: center;
     vertical-align: middle;

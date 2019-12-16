@@ -1,29 +1,27 @@
 @import '~@angular/material/theming';
 
 @mixin projects-index-component-theme($theme) {
-
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, accent);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-
   @media only screen and (max-width: 600px) {
     .project-card {
       background-color: mat-color($background, card);
-      border-left: none !important;
-      border-right: none  !important;
+      border-left: 0 !important;
+      border-right: 0 !important;
       border-top: 1px solid mat-color($background, disabled-button);
       border-bottom: 1px solid mat-color($background, disabled-button);
-      box-shadow: 1px 2px 4px rgba(0,0,0,.03);
+      box-shadow: 1px 2px 4px rgba(0, 0, 0, .03);
       border-radius: 0;
     }
   }
 
   .project-card {
     background-color: mat-color($background, card);
-    box-shadow: 1px 2px 4px rgba(0,0,0,.1);
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, .1);
     border: 1px solid mat-color($background, border);
   }
 }

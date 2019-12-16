@@ -1,40 +1,40 @@
 // Foreground palette for dark themes.
 $mat-dark-theme-foreground: (
-  base:              white,
+  base:              #fff,
   divider:           $light-dividers,
   dividers:          $light-dividers,
   disabled:          $light-disabled-text,
-  disabled-button:   rgba(white, 0.3),
+  disabled-button:   rgba(#fff, .3),
   disabled-text:     $light-disabled-text,
-  elevation:         black,
+  elevation:         #000,
   hint-text:         $light-disabled-text,
   secondary-text:    $light-secondary-text,
-  icon:              rgba(white, 0.6),
-  icons:             white,
-  text:              rgba(white, 0.8),
-  slider-min:        white,
-  slider-off:        rgba(white, 0.3),
-  slider-off-active: rgba(white, 0.3),
-  empty-list:        rgba(white, 0.14),
+  icon:              rgba(#fff, .6),
+  icons:             #fff,
+  text:              rgba(#fff, .8),
+  slider-min:        #fff,
+  slider-off:        rgba(#fff, .3),
+  slider-off-active: rgba(#fff, .3),
+  empty-list:        rgba(#fff, .14),
 );
 
 // Background palette for dark themes.
 $mat-dark-theme-background: (
-  status-bar: black,
+  status-bar: #000,
   app-bar:    #272727,
   background: #272727,
-  hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
+  hover:      rgba(#fff, .04), // TODO(kara): check style with Material Design UX
   card:       #303030,
-  dialog:     map_get($mat-grey, 800),
-  disabled-button: rgba(white, 0.12),
+  dialog:     map-get($mat-grey, 800),
+  disabled-button: rgba(#fff, .12),
   raised-button: map-get($mat-grey, 800),
   focused-button: $light-focused,
-  selected-button: map_get($mat-grey, 900),
-  selected-disabled-button: map_get($mat-grey, 800),
-  disabled-button-toggle: black,
-  unselected-chip: map_get($mat-grey, 700),
-  disabled-list-option: black,
-  border: rgba(255, 255, 255, 0.12)
+  selected-button: map-get($mat-grey, 900),
+  selected-disabled-button: map-get($mat-grey, 800),
+  disabled-button-toggle: #000,
+  unselected-chip: map-get($mat-grey, 700),
+  disabled-list-option: #000,
+  border: rgba(255, 255, 255, .12)
 );
 
 // Creates a container object for a dark theme to be given to individual component theme mixins.

@@ -1,23 +1,13 @@
-#task-expansion {
-  background-color: transparent;
-  box-shadow: none;
-}
-
 .container {
   width: 100%;
-  padding-right: 0px;
-  padding-left: 0px;
+  padding-right: 0;
+  padding-left: 0;
   margin-right: auto;
   margin-left: auto;
 }
 
 .fas {
   margin-right: 1rem;
-}
-
-#export-button {
-  color: #6C757D;
-  margin-top: 2rem;
 }
 
 .projects-header {
@@ -28,26 +18,26 @@
 }
 
 .icon {
-  margin: 0px auto;
+  margin: 0 auto;
   text-align: center;
   height: 48px;
   width: 48px;
   font-size: 2.5rem;
-  padding: 0.5rem;
+  padding: .5rem;
   display: inline-block;
   margin-right: 1.5rem;
 }
 
 .action-button {
-  margin-right: 0.8rem;
+  margin-right: .8rem;
 }
 
 .action-button:first-child,
 .mat-card-actions .mat-raised-button:first-child {
   margin-left: 0;
-  margin-right: 0.8rem !important;
+  margin-right: .8rem !important;
 }
 
 .action-mat-icon {
-  margin-right: 0.6rem;
+  margin-right: .6rem;
 }

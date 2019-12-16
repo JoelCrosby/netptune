@@ -1,33 +1,34 @@
 // Styles reset
-@import './styles/reset.scss';
+@import './styles/reset';
 
-@import './styles/utility.scss';
-@import './styles/components.scss';
-@import './styles/spinners.scss';
-@import './styles/typography.scss';
+@import './styles/material';
+@import './styles/utility';
+@import './styles/components';
+@import './styles/spinners';
+@import './styles/typography';
 
 // Bootstrap Grid
-@import './styles/bootstrap.scss';
+@import './styles/bootstrap';
 
 // Angular Material Theming core
 @import '~@angular/material/theming';
 
-@include mat-core();
+@include mat-core;
 
 // Themes
-@import './themes/default-theme.scss';
-@import './themes/dark-theme.scss';
+@import './themes/default-theme';
+@import './themes/dark-theme';
 
 // Component Themes
 @import './styles/reset.scss-theme';
-@import './styles/spinners.scss-theme.scss';
-@import './styles/components.scss-theme.scss';
-@import './app/app.component.scss-theme.scss';
-@import './app/features/workspaces/shell/shell.component.scss-theme.scss';
-@import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme.scss';
-@import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme.scss';
-@import './app/features/project-tasks/index/project-tasks.index.component.scss-theme.scss';
-@import './app/features/projects/index/projects.index.component.scss-theme.scss';
+@import './styles/spinners.scss-theme';
+@import './styles/components.scss-theme';
+@import './app/app.component.scss-theme';
+@import './app/features/workspaces/shell/shell.component.scss-theme';
+@import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
+@import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
+@import './app/features/project-tasks/index/project-tasks.index.component.scss-theme';
+@import './app/features/projects/index/projects.index.component.scss-theme';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
