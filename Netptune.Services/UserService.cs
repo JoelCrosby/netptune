@@ -28,21 +28,25 @@ namespace Netptune.Services
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
-        public Task<AppUser> Get(string userId)
+        public async Task<UserViewModel> Get(string userId)
         {
-            return UserRepository.GetAsync(userId);
+            var user = await UserRepository.GetAsync(userId);
+
+            return MapUser(user);
         }
 
-        public Task<AppUser> GetByEmail(string email)
+        public async Task<UserViewModel> GetByEmail(string email)
         {
-            return UserRepository.GetByEmail(email);
+            var user = await UserRepository.GetByEmail(email);
+
+            return MapUser(user);
         }
 
         public async Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug)
         {
             var users = await UserRepository.GetWorkspaceUsers(workspaceSlug);
 
-            return Mapper.Map<List<AppUser>, List<UserViewModel>>(users);
+            return MapUsers(users);
         }
 
         public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
@@ -76,7 +80,7 @@ namespace Netptune.Services
             return result;
         }
 
-        public async Task<AppUser> Update(AppUser user, string userId)
+        public async Task<UserViewModel> Update(AppUser user, string userId)
         {
             var updatedUser = await UserRepository.GetAsync(user.Id);
 
@@ -91,7 +95,17 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return updatedUser;
+            return MapUser(updatedUser);
+        }
+
+        private UserViewModel MapUser(AppUser user)
+        {
+            return Mapper.Map<AppUser, UserViewModel>(user);
+        }
+
+        private List<UserViewModel> MapUsers(List<AppUser> users)
+        {
+            return Mapper.Map<List<AppUser>, List<UserViewModel>>(users);
         }
     }
 }

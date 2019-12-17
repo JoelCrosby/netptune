@@ -1,11 +1,12 @@
+import { AppUser } from '@core/models/appuser';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as actions from '@core/auth/store/auth.actions';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
+import { tap, take, filter } from 'rxjs/operators';
 import { selectProfile } from '../store/profile.selectors';
-import { ActionLoadProfile } from './../store/profile.actions';
+import { loadProfile, updateProfile } from './../store/profile.actions';
 
 @Component({
   selector: 'app-profile',
@@ -19,18 +20,29 @@ export class ProfileComponent implements OnInit {
     email: new FormControl(),
   });
 
+  profile: AppUser;
+
+  get firstname() {
+    return this.profileGroup.get('firstname');
+  }
+  get lastname() {
+    return this.profileGroup.get('lastname');
+  }
+  get email() {
+    return this.profileGroup.get('email');
+  }
+
   constructor(private store: Store<AppState>) {
     this.store
       .select(selectProfile)
       .pipe(
+        filter(profile => !!profile),
+        take(1),
         tap(profile => {
-          this.profileGroup
-            .get('firstname')
-            .setValue(profile && profile.firstName);
-          this.profileGroup
-            .get('lastname')
-            .setValue(profile && profile.lastName);
-          this.profileGroup.get('email').setValue(profile && profile.email);
+          this.profile = profile;
+          this.firstname.setValue(profile.firstname);
+          this.lastname.setValue(profile.lastname);
+          this.email.setValue(profile.email);
         })
       )
       .subscribe();
@@ -39,6 +51,17 @@ export class ProfileComponent implements OnInit {
   onLogoutClicked = () => this.store.dispatch(actions.logout());
 
   ngOnInit() {
-    this.store.dispatch(new ActionLoadProfile());
+    this.store.dispatch(loadProfile());
+  }
+
+  updateClicked() {
+    const profile = {
+      ...this.profile,
+      firstname: this.firstname.value,
+      lastname: this.lastname.value,
+      email: this.email.value,
+    };
+
+    this.store.dispatch(updateProfile({ profile }));
   }
 }

@@ -9,13 +9,13 @@ namespace Netptune.Core.Services
 {
     public interface IUserService
     {
-        Task<AppUser> Get(string userId);
+        Task<UserViewModel> Get(string userId);
 
-        Task<AppUser> GetByEmail(string email);
+        Task<UserViewModel> GetByEmail(string email);
 
         Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug);
 
-        Task<AppUser> Update(AppUser user, string userId);
+        Task<UserViewModel> Update(AppUser user, string userId);
 
         Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
     }

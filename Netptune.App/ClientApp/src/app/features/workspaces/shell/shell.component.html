@@ -51,10 +51,10 @@
           <mat-icon aria-label="Account Options">account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onProfileClicked()">
+          <a mat-menu-item [routerLink]="['./profile']">
               <mat-icon>perm_identity</mat-icon>
               <span>Profile</span>
-          </button>
+          </a>
           <button mat-menu-item (click)="onLogoutClicked()">
             <mat-icon>exit_to_app</mat-icon>
             <span>Logout</span>

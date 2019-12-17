@@ -1,53 +1,29 @@
-import { Action } from '@ngrx/store';
 import { AppUser } from '@core/models/appuser';
+import { createAction, props } from '@ngrx/store';
 
-export enum ProfileActionTypes {
-  LoadProfile = '[Profile] Load Profile',
-  LoadProfileFail = '[Profile] Load Profile Fail',
-  LoadProfileSuccess = '[Profile] Load Profile Success ',
-  UpdateProfile = '[Profile] Update Profile',
-  UpdateProfileFail = '[Profile] Update Profile Fail',
-  UpdateProfileSuccess = '[Profile] Update Profile Success ',
-}
+export const loadProfile = createAction('[Profile] Load Profile');
 
-export class ActionLoadProfile implements Action {
-  readonly type = ProfileActionTypes.LoadProfile;
-}
+export const loadProfileSuccess = createAction(
+  '[Profile] Load Profile Success',
+  props<{ profile: AppUser }>()
+);
 
-export class ActionLoadProfileSuccess implements Action {
-  readonly type = ProfileActionTypes.LoadProfileSuccess;
+export const loadProfileFail = createAction(
+  '[Profile] Load Profile Fail',
+  props<{ error: any }>()
+);
 
-  constructor(readonly payload: AppUser) {}
-}
+export const updateProfile = createAction(
+  '[Profile] Update Profile',
+  props<{ profile: Partial<AppUser> }>()
+);
 
-export class ActionLoadProfileFail implements Action {
-  readonly type = ProfileActionTypes.LoadProfileFail;
+export const updateProfileSuccess = createAction(
+  '[Profile] Update Profile Success',
+  props<{ profile: AppUser }>()
+);
 
-  constructor(readonly payload: any) {}
-}
-
-export class ActionUpdateProfile implements Action {
-  readonly type = ProfileActionTypes.UpdateProfile;
-
-  constructor(readonly payload: AppUser) {}
-}
-
-export class ActionUpdateProfileSuccess implements Action {
-  readonly type = ProfileActionTypes.UpdateProfileSuccess;
-
-  constructor(readonly payload: AppUser) {}
-}
-
-export class ActionUpdateProfileFail implements Action {
-  readonly type = ProfileActionTypes.UpdateProfileFail;
-
-  constructor(readonly payload: any) {}
-}
-
-export type ProfileActions =
-  | ActionLoadProfile
-  | ActionLoadProfileFail
-  | ActionLoadProfileSuccess
-  | ActionUpdateProfile
-  | ActionUpdateProfileFail
-  | ActionUpdateProfileSuccess;
+export const updateProfileFail = createAction(
+  '[Profile] Update Profile Fail',
+  props<{ error: any }>()
+);

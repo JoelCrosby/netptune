@@ -48,11 +48,10 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("UpdateUser")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(AppUser))]
-        public async Task<IActionResult> UpdateUser(AppUser user)
+        public async Task<IActionResult> UpdateUser([FromRoute] string id, [FromBody] AppUser user)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var result = await _userService.Update(user, userId);

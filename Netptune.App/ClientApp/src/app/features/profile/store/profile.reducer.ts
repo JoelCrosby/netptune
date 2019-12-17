@@ -1,45 +1,40 @@
-import { AppUser } from '@core/models/appuser';
-import { ProfileActions, ProfileActionTypes } from './profile.actions';
+import { Action, createReducer, on } from '@ngrx/store';
+import * as actions from './profile.actions';
+import { initialState, ProfileState } from './profile.model';
 
-export interface ProfileState {
-  profile?: AppUser;
-  loading: boolean;
-  loaded: boolean;
-  loadProfileError?: any;
-  createProjectError?: any;
-  createProjectLoading: boolean;
-}
+const reducer = createReducer(
+  initialState,
+  on(actions.loadProfile, state => ({ ...state, loadProfileloading: true })),
+  on(actions.loadProfileFail, (state, { error }) => ({
+    ...state,
+    loadProfileloading: false,
+    loadProfileError: error,
+  })),
+  on(actions.loadProfileSuccess, (state, { profile }) => ({
+    ...state,
+    loadProfileloading: false,
+    profileloaded: true,
+    profile,
+  })),
+  on(actions.updateProfile, state => ({
+    ...state,
+    updateProfileLoading: true,
+  })),
+  on(actions.updateProfileFail, (state, { error }) => ({
+    ...state,
+    updateProfileLoading: false,
+    updateProfileError: error,
+  })),
+  on(actions.updateProfileSuccess, (state, { profile }) => ({
+    ...state,
+    updateProfileLoading: false,
+    profile,
+  }))
+);
 
-export const initialState: ProfileState = {
-  loading: false,
-  loaded: false,
-  createProjectLoading: false,
-};
-
-export function profileReducer(state = initialState, action: ProfileActions): ProfileState {
-  switch (action.type) {
-    case ProfileActionTypes.LoadProfile:
-      return { ...state, loading: true };
-    case ProfileActionTypes.LoadProfileFail:
-      return { ...state, loading: false, loadProfileError: action.payload };
-    case ProfileActionTypes.LoadProfileSuccess:
-      return {
-        ...state,
-        loading: false,
-        loaded: true,
-        profile: action.payload,
-      };
-    case ProfileActionTypes.UpdateProfile:
-      return { ...state, createProjectLoading: true };
-    case ProfileActionTypes.UpdateProfileFail:
-      return { ...state, createProjectLoading: false, createProjectError: action.payload };
-    case ProfileActionTypes.UpdateProfileSuccess:
-      return {
-        ...state,
-        createProjectLoading: false,
-        profile: action.payload,
-      };
-    default:
-      return state;
-  }
+export function profileReducer(
+  state: ProfileState | undefined,
+  action: Action
+) {
+  return reducer(state, action);
 }

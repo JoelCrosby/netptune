@@ -1,48 +1,43 @@
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { Injectable } from '@angular/core';
 import { AppState } from '@core/core.state';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
+import { Store, Action } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import {
-  ActionLoadProfileFail,
-  ActionLoadProfileSuccess,
-  ActionUpdateProfileFail,
-  ActionUpdateProfileSuccess,
-  ProfileActions,
-  ProfileActionTypes,
-} from './profile.actions';
+import * as actions from './profile.actions';
 import { ProfileService } from './profile.service';
 
 @Injectable()
 export class ProfileEffects {
+  loadProfile$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadProfile),
+      withLatestFrom(this.store.select(selectCurrentUser)),
+      switchMap(([action, user]) =>
+        this.profileService.get(user.userId).pipe(
+          map(profile => actions.loadProfileSuccess({ profile })),
+          catchError(error => of(actions.loadProfileFail({ error })))
+        )
+      )
+    )
+  );
+
+  updateProfile$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateProfile),
+      switchMap(action =>
+        this.profileService.put(action.profile).pipe(
+          map(profile => actions.updateProfileSuccess({ profile })),
+          catchError(error => of(actions.updateProfileFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
-    private actions$: Actions<ProfileActions>,
+    private actions$: Actions<Action>,
     private profileService: ProfileService,
     private store: Store<AppState>
   ) {}
-
-  @Effect()
-  loadProfile$ = this.actions$.pipe(
-    ofType(ProfileActionTypes.LoadProfile),
-    withLatestFrom(this.store.select(selectCurrentUser)),
-    switchMap(([action, user]) =>
-      this.profileService.get(user.userId).pipe(
-        map(profile => new ActionLoadProfileSuccess(profile)),
-        catchError(error => of(new ActionLoadProfileFail(error)))
-      )
-    )
-  );
-
-  @Effect()
-  updateProfile$ = this.actions$.pipe(
-    ofType(ProfileActionTypes.UpdateProfile),
-    switchMap(action =>
-      this.profileService.post(action.payload).pipe(
-        map(profile => new ActionUpdateProfileSuccess(profile)),
-        catchError(error => of(new ActionUpdateProfileFail(error)))
-      )
-    )
-  );
 }

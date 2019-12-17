@@ -5,8 +5,8 @@ export class UsernameConverter {
     if (!user) {
       return '';
     }
-    if (user.firstName && user.lastName) {
-      return `${user.firstName} ${user.lastName}`;
+    if (user.firstname && user.lastname) {
+      return `${user.firstname} ${user.lastname}`;
     }
     return user.email;
   }

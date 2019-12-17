@@ -49,5 +49,4 @@ export class ShellComponent implements OnInit {
   onToggleSideNav = () => this.sideNav.toggle();
   onLoginClicked = () => this.router.navigate(['/accounts/login']);
   onLogoutClicked = () => this.store.dispatch(logout());
-  onProfileClicked = () => this.router.navigate(['/profile']);
 }

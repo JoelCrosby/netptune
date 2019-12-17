@@ -8,10 +8,22 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   get(userId: string) {
-    return this.http.get<AppUser>(environment.apiEndpoint + `api/users/${userId}`);
+    return this.http.get<AppUser>(
+      environment.apiEndpoint + `api/users/${userId}`
+    );
   }
 
   post(user: AppUser) {
-    return this.http.post<AppUser>(environment.apiEndpoint + `api/users/${user.id}`, user);
+    return this.http.post<AppUser>(
+      environment.apiEndpoint + `api/users/${user.id}`,
+      user
+    );
+  }
+
+  put(user: Partial<AppUser>) {
+    return this.http.put<AppUser>(
+      environment.apiEndpoint + `api/users/${user.id}`,
+      user
+    );
   }
 }
