@@ -72,8 +72,10 @@ export class LoginComponent implements OnDestroy {
 
     this.store.dispatch(
       actions.tryLogin({
-        email,
-        password,
+        request: {
+          email,
+          password,
+        },
       })
     );
   }

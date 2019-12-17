@@ -1,3 +1,4 @@
+import { User } from './auth.models';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
@@ -62,13 +63,11 @@ export class AuthEffects {
         ofType(actions.tryLogin),
         debounceTime(debounce, scheduler),
         switchMap(action =>
-          this.authService
-            .login({ email: action.email, password: action.password })
-            .pipe(
-              map((userInfo: any) => actions.loginSuccess(userInfo)),
-              tap(() => this.router.navigate(['/workspaces'])),
-              catchError(error => of(actions.loginFail({ error })))
-            )
+          this.authService.login(action.request).pipe(
+            map((userInfo: User) => actions.loginSuccess({ userInfo })),
+            tap(() => this.router.navigate(['/workspaces'])),
+            catchError(error => of(actions.loginFail({ error })))
+          )
         )
       )
   );
@@ -80,7 +79,7 @@ export class AuthEffects {
         debounceTime(debounce, scheduler),
         switchMap(action =>
           this.authService.register(action.request).pipe(
-            map((userInfo: any) => actions.registerSuccess(userInfo)),
+            map((userInfo: User) => actions.registerSuccess({ userInfo })),
             tap(() => this.router.navigate(['/workspaces'])),
             catchError(error => of(actions.registerFail({ error })))
           )

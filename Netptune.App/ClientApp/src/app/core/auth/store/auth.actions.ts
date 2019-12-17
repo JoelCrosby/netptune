@@ -1,14 +1,15 @@
 import { RegisterRequest } from '@core/models/register-request';
 import { createAction, props } from '@ngrx/store';
+import { User, LoginRequest } from './auth.models';
 
 export const tryLogin = createAction(
   '[Auth] Try Login',
-  props<{ email: string; password: string }>()
+  props<{ request: LoginRequest }>()
 );
 
 export const loginSuccess = createAction(
   '[Auth] Login Succeded',
-  props<{ userInfo: any }>()
+  props<{ userInfo: User }>()
 );
 
 export const loginFail = createAction(
@@ -25,7 +26,7 @@ export const register = createAction(
 
 export const registerSuccess = createAction(
   '[Auth] Register Succeded',
-  props<{ userInfo: any }>()
+  props<{ userInfo: User }>()
 );
 
 export const registerFail = createAction(
