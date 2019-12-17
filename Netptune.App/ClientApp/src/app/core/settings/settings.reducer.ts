@@ -1,18 +1,19 @@
-import { SettingsState } from './settings.model';
-import { SettingsActions, SettingsActionTypes } from './settings.actions';
+import { createReducer, on, Action } from '@ngrx/store';
+import { SettingsState, initialState } from './settings.model';
+import * as actions from './settings.actions';
 
-export const initialState: SettingsState = {
-  language: 'en',
-  theme: 'DEFAULT-THEME',
-};
+const reducer = createReducer(
+  initialState,
+  on(actions.changeTheme, (state, { theme }) => ({
+    ...state,
+    theme,
+  })),
+  on(actions.clearSttings, state => ({ ...state, theme: 'DEFAULT-THEME' }))
+);
 
-export function settingsReducer(state = initialState, action: SettingsActions): SettingsState {
-  switch (action.type) {
-    case SettingsActionTypes.CHANGE_THEME:
-      return { ...state, ...action.payload };
-    case SettingsActionTypes.CLEAR:
-      return { ...state, theme: 'DEFAULT-THEME' };
-    default:
-      return state;
-  }
+export function settingsReducer(
+  state: SettingsState | undefined,
+  action: Action
+) {
+  return reducer(state, action);
 }

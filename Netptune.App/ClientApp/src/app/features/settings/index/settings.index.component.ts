@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SettingsState } from '@core/settings/settings.model';
 import { selectSettings } from '@core/settings/settings.selectors';
-import { ActionSettingsChangeTheme } from '@core/settings/settings.actions';
+import { changeTheme } from '@core/settings/settings.actions';
 
 @Component({
   selector: 'app-settings-index',
@@ -13,7 +13,10 @@ import { ActionSettingsChangeTheme } from '@core/settings/settings.actions';
 export class SettingsIndexComponent implements OnInit {
   settings$: Observable<SettingsState>;
 
-  themes = [{ value: 'DEFAULT-THEME', label: 'Light' }, { value: 'DARK-THEME', label: 'Dark' }];
+  themes = [
+    { value: 'DEFAULT-THEME', label: 'Light' },
+    { value: 'DARK-THEME', label: 'Dark' },
+  ];
 
   constructor(private store: Store<SettingsState>) {}
 
@@ -22,6 +25,6 @@ export class SettingsIndexComponent implements OnInit {
   }
 
   onThemeSelect({ value: theme }) {
-    this.store.dispatch(new ActionSettingsChangeTheme({ theme }));
+    this.store.dispatch(changeTheme({ theme }));
   }
 }

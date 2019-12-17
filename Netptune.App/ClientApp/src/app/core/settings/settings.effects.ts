@@ -1,13 +1,16 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { select, Store } from '@ngrx/store';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Action, select, Store } from '@ngrx/store';
 import { merge, of } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
-import { SettingsActions, SettingsActionTypes } from './settings.actions';
+import * as actions from './settings.actions';
 import { SettingsState } from './settings.model';
-import { selectEffectiveTheme, selectSettingsState } from './settings.selectors';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import {
+  selectEffectiveTheme,
+  selectSettingsState,
+} from './settings.selectors';
 
 const INIT = of('app-init-effect-trigger');
 
@@ -15,30 +18,40 @@ export const SETTINGS_KEY = 'SETTINGS';
 
 @Injectable()
 export class SettingsEffects {
+  persistSettings$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.changeTheme),
+        withLatestFrom(this.store.pipe(select(selectSettingsState))),
+        tap(([action, settings]) =>
+          this.localStorageService.setItem(SETTINGS_KEY, settings)
+        )
+      ),
+    { dispatch: false }
+  );
+
+  updateTheme$ = createEffect(
+    () =>
+      merge(INIT, this.actions$.pipe(ofType(actions.changeTheme))).pipe(
+        withLatestFrom(this.store.pipe(select(selectEffectiveTheme))),
+        tap(([action, effectiveTheme]) => {
+          const classList = document.querySelector('body').classList;
+          const toRemove = Array.from(classList).filter((item: string) =>
+            item.includes('-theme')
+          );
+          if (toRemove.length) {
+            classList.remove(...toRemove);
+          }
+          classList.add(effectiveTheme);
+        })
+      ),
+    { dispatch: false }
+  );
+
   constructor(
-    private actions$: Actions<SettingsActions>,
+    private actions$: Actions<Action>,
     private store: Store<SettingsState>,
     private overlayContainer: OverlayContainer,
     private localStorageService: LocalStorageService
   ) {}
-
-  @Effect({ dispatch: false })
-  persistSettings = this.actions$.pipe(
-    ofType(SettingsActionTypes.CHANGE_THEME),
-    withLatestFrom(this.store.pipe(select(selectSettingsState))),
-    tap(([action, settings]) => this.localStorageService.setItem(SETTINGS_KEY, settings))
-  );
-
-  @Effect({ dispatch: false })
-  updateTheme = merge(INIT, this.actions$.pipe(ofType(SettingsActionTypes.CHANGE_THEME))).pipe(
-    withLatestFrom(this.store.pipe(select(selectEffectiveTheme))),
-    tap(([action, effectiveTheme]) => {
-      const classList = document.querySelector('body').classList;
-      const toRemove = Array.from(classList).filter((item: string) => item.includes('-theme'));
-      if (toRemove.length) {
-        classList.remove(...toRemove);
-      }
-      classList.add(effectiveTheme);
-    })
-  );
 }

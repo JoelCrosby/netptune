@@ -17,7 +17,7 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { AppState } from '@core/core.state';
 import { selectAuthState } from './auth.selectors';
-import { ActionSettingsClear } from '@app/core/settings/settings.actions';
+import { clearSttings } from '@app/core/settings/settings.actions';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -90,7 +90,7 @@ export class AuthEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.logout),
-      map(() => new ActionSettingsClear())
+      map(() => clearSttings())
     )
   );
 }
