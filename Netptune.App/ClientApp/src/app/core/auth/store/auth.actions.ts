@@ -1,61 +1,34 @@
-import { Action } from '@ngrx/store';
 import { RegisterRequest } from '@core/models/register-request';
+import { createAction, props } from '@ngrx/store';
 
-export enum AuthActionTypes {
-  TRY_LOGIN = '[Auth] Try Login',
-  LOGIN_FAIL = '[Auth] Login Failed',
-  LOGIN_SUCCESS = '[Auth] Login Succeded',
-  LOGOUT = '[Auth] Logout',
-  REGISTER = '[Auth] Register',
-  REGISTER_FAIL = '[Auth] Register Failed',
-  REGISTER_SUCCESS = '[Auth] Register Succeded',
-}
+export const tryLogin = createAction(
+  '[Auth] Try Login',
+  props<{ email: string; password: string }>()
+);
 
-export class ActionAuthTryLogin implements Action {
-  readonly type = AuthActionTypes.TRY_LOGIN;
+export const loginSuccess = createAction(
+  '[Auth] Login Succeded',
+  props<{ userInfo: any }>()
+);
 
-  constructor(readonly payload: { email: string; password: string }) {}
-}
+export const loginFail = createAction(
+  '[Auth] Login Failed',
+  props<{ error: any }>()
+);
 
-export class ActionAuthLoginSuccess implements Action {
-  readonly type = AuthActionTypes.LOGIN_SUCCESS;
+export const logout = createAction('[Auth] Logout');
 
-  constructor(readonly payload: any) {}
-}
+export const register = createAction(
+  '[Auth] Register',
+  props<{ request: RegisterRequest }>()
+);
 
-export class ActionAuthLoginFail implements Action {
-  readonly type = AuthActionTypes.LOGIN_FAIL;
+export const registerSuccess = createAction(
+  '[Auth] Register Succeded',
+  props<{ userInfo: any }>()
+);
 
-  constructor(readonly payload: { error: any }) {}
-}
-
-export class ActionAuthLogout implements Action {
-  readonly type = AuthActionTypes.LOGOUT;
-}
-
-export class ActionAuthRegister implements Action {
-  readonly type = AuthActionTypes.REGISTER;
-
-  constructor(readonly payload: { request: RegisterRequest }) {}
-}
-
-export class ActionAuthRegisterSuccess implements Action {
-  readonly type = AuthActionTypes.REGISTER_SUCCESS;
-
-  constructor(readonly payload: any) {}
-}
-
-export class ActionAuthRegisterFail implements Action {
-  readonly type = AuthActionTypes.REGISTER_FAIL;
-
-  constructor(readonly payload: { error: any }) {}
-}
-
-export type AuthActions =
-  | ActionAuthTryLogin
-  | ActionAuthLoginSuccess
-  | ActionAuthLoginFail
-  | ActionAuthLogout
-  | ActionAuthRegister
-  | ActionAuthRegisterSuccess
-  | ActionAuthRegisterFail;
+export const registerFail = createAction(
+  '[Auth] Register Failed',
+  props<{ error: any }>()
+);

@@ -1,3 +1,14 @@
+export interface AuthState {
+  isAuthenticated: boolean;
+  loading: boolean;
+  currentUser?: User;
+}
+
+export const initialState: AuthState = {
+  isAuthenticated: false,
+  loading: false,
+};
+
 export interface User {
   userId: string;
   email: string;

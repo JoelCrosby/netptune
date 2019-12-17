@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
-import { ActionAuthLogout } from '@core/auth/store/auth.actions';
+import { logout } from '@core/auth/store/auth.actions';
 import {
   selectCurrentUserDisplayName,
   selectIsAuthenticated,
@@ -48,6 +48,6 @@ export class ShellComponent implements OnInit {
 
   onToggleSideNav = () => this.sideNav.toggle();
   onLoginClicked = () => this.router.navigate(['/accounts/login']);
-  onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
+  onLogoutClicked = () => this.store.dispatch(logout());
   onProfileClicked = () => this.router.navigate(['/profile']);
 }

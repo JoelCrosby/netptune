@@ -1,7 +1,13 @@
 import { environment } from '@env/environment';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import { ActionReducerMap, createFeatureSelector, createSelector, MetaReducer } from '@ngrx/store';
-import { authReducer, AuthState } from './auth/store/auth.reducer';
+import {
+  ActionReducerMap,
+  createFeatureSelector,
+  createSelector,
+  MetaReducer,
+} from '@ngrx/store';
+import { authReducer } from './auth/store/auth.reducer';
+import { AuthState } from './auth/store/auth.models';
 import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
@@ -18,25 +24,44 @@ export const reducers: ActionReducerMap<AppState> = {
   router: routerReducer,
   core: coreReducer,
   settings: settingsReducer,
-  workspaces: workspacesReducer
+  workspaces: workspacesReducer,
 };
 
-export const metaReducers: MetaReducer<AppState>[] = [initStateFromLocalStorage, clearState];
+export const metaReducers: MetaReducer<AppState>[] = [
+  initStateFromLocalStorage,
+  clearState,
+];
 
 if (!environment.production) {
   metaReducers.unshift(debug);
 }
 
-export const selectAuthState = createFeatureSelector<AppState, AuthState>('auth');
-export const selectCoreState = createFeatureSelector<AppState, CoreState>('core');
-export const selectSettingsState = createFeatureSelector<AppState, SettingsState>('settings');
-export const selectWorkspacesFeature = createFeatureSelector<AppState, WorkspacesState>('workspaces');
+export const selectAuthState = createFeatureSelector<AppState, AuthState>(
+  'auth'
+);
 
-export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>('router');
+export const selectCoreState = createFeatureSelector<AppState, CoreState>(
+  'core'
+);
+
+export const selectSettingsState = createFeatureSelector<
+  AppState,
+  SettingsState
+>('settings');
+
+export const selectWorkspacesFeature = createFeatureSelector<
+  AppState,
+  WorkspacesState
+>('workspaces');
+
+export const selectRouterState = createFeatureSelector<
+  RouterReducerState<RouterStateUrl>
+>('router');
 
 export const selectPageTitle = createSelector(
   selectRouterState,
-  (state: RouterReducerState<RouterStateUrl>) => state && state.state && state.state.title
+  (state: RouterReducerState<RouterStateUrl>) =>
+    state && state.state && state.state.title
 );
 
 export interface AppState {

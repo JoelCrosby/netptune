@@ -2,11 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@core/animations/animations';
-import { AuthState } from '@core/auth/store/auth.reducer';
-import { Store } from '@ngrx/store';
-import { ActionAuthTryLogin, AuthActionTypes, ActionAuthLoginFail } from '@core/auth/store/auth.actions';
+import * as actions from '@core/auth/store/auth.actions';
+import { AuthState } from '@core/auth/store/auth.models';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
@@ -34,10 +34,14 @@ export class LoginComponent implements OnDestroy {
     return this.loginGroup.get('password');
   }
 
-  constructor(private router: Router, private store: Store<AuthState>, updates$: Actions) {
+  constructor(
+    private router: Router,
+    private store: Store<AuthState>,
+    updates$: Actions
+  ) {
     updates$
       .pipe(
-        ofType<ActionAuthLoginFail>(AuthActionTypes.LOGIN_FAIL),
+        ofType(actions.loginFail),
         takeUntil(this.destroyed$),
         tap(() => this.loginGroup.enable())
       )
@@ -54,7 +58,9 @@ export class LoginComponent implements OnDestroy {
     const passwordFormControl = this.password;
 
     const email = loginFormControl ? loginFormControl.value : undefined;
-    const password = passwordFormControl ? passwordFormControl.value : undefined;
+    const password = passwordFormControl
+      ? passwordFormControl.value
+      : undefined;
 
     this.loginGroup.disable();
 
@@ -65,14 +71,14 @@ export class LoginComponent implements OnDestroy {
     }
 
     this.store.dispatch(
-      new ActionAuthTryLogin({
+      actions.tryLogin({
         email,
         password,
       })
     );
   }
 
-  onCreateAccountClicked(): void {
+  onCreateAccountClicked() {
     this.router.navigate(['/auth/register']);
   }
 }

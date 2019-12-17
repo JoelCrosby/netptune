@@ -1,6 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-
-import { AuthState } from './auth.reducer';
+import { AuthState, User } from './auth.models';
 
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
 
@@ -20,13 +19,11 @@ export const selectCurrentUser = createSelector(
 );
 
 export const selectAuthToken = createSelector(
-  selectAuthState,
   selectCurrentUser,
-  (state: AuthState) => (state.currentUser ? state.currentUser.token : undefined)
+  (user: User) => user.token
 );
 
 export const selectCurrentUserDisplayName = createSelector(
-  selectAuthState,
   selectCurrentUser,
-  (state: AuthState) => state.currentUser && (state.currentUser.displayName || state.currentUser.email)
+  (user: User) => user.displayName || user.email
 );

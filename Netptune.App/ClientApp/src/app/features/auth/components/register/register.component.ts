@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { pullIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
-import { ActionAuthRegister, ActionAuthRegisterFail, AuthActionTypes } from '@core/auth/store/auth.actions';
+import * as actions from '@core/auth/store/auth.actions';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Subject } from 'rxjs';
@@ -21,11 +21,27 @@ export class RegisterComponent implements OnDestroy {
   $authLoading = this.store.select(selectAuthLoading);
 
   registerGroup = new FormGroup({
-    firstname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
-    lastname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
-    email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)]),
-    password0: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    password1: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    firstname: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128),
+    ]),
+    lastname: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(128),
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(128),
+    ]),
+    password0: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
+    password1: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
   });
 
   get firstname() {
@@ -48,10 +64,14 @@ export class RegisterComponent implements OnDestroy {
     return this.registerGroup.get('password1');
   }
 
-  constructor(private router: Router, private store: Store<AppState>, updates$: Actions) {
+  constructor(
+    private router: Router,
+    private store: Store<AppState>,
+    updates$: Actions
+  ) {
     updates$
       .pipe(
-        ofType<ActionAuthRegisterFail>(AuthActionTypes.REGISTER_FAIL),
+        ofType(actions.registerFail),
         takeUntil(this.destroyed$),
         tap(() => this.registerGroup.enable())
       )
@@ -83,7 +103,7 @@ export class RegisterComponent implements OnDestroy {
     }
 
     this.store.dispatch(
-      new ActionAuthRegister({
+      actions.register({
         request: {
           firstname,
           lastname,
@@ -94,7 +114,7 @@ export class RegisterComponent implements OnDestroy {
     );
   }
 
-  backToLoginClicked(): void {
+  backToLoginClicked() {
     this.router.navigate(['/auth/login']);
   }
 }

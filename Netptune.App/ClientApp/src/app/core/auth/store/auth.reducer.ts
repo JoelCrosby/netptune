@@ -1,51 +1,41 @@
-import { AuthActions, AuthActionTypes } from './auth.actions';
-import { User } from './auth.models';
+import { Action, createReducer, on } from '@ngrx/store';
+import * as actions from './auth.actions';
+import { AuthState, initialState } from './auth.models';
 
-export interface AuthState {
-  isAuthenticated: boolean;
-  loading: boolean;
-  currentUser?: User;
-}
+const reducer = createReducer(
+  initialState,
+  on(actions.tryLogin, state => ({ ...state, loading: true })),
+  on(actions.loginSuccess, (state, { userInfo }) => ({
+    ...state,
+    isAuthenticated: true,
+    loading: false,
+    currentUser: userInfo,
+  })),
+  on(actions.loginFail, state => ({
+    ...state,
+    isAuthenticated: false,
+    loading: false,
+  })),
+  on(actions.register, state => ({ ...state, loading: true })),
+  on(actions.registerSuccess, (state, { userInfo }) => ({
+    ...state,
+    isAuthenticated: true,
+    loading: false,
+    currentUser: userInfo,
+  })),
+  on(actions.registerFail, state => ({
+    ...state,
+    isAuthenticated: false,
+    loading: false,
+  })),
+  on(actions.logout, state => ({
+    ...state,
+    loading: false,
+    isAuthenticated: false,
+    currentUser: undefined,
+  }))
+);
 
-export const initialState: AuthState = {
-  isAuthenticated: false,
-  loading: false,
-};
-
-export function authReducer(state = initialState, action: AuthActions): AuthState {
-  switch (action.type) {
-    case AuthActionTypes.TRY_LOGIN:
-      return { ...state, loading: true };
-    case AuthActionTypes.LOGIN_SUCCESS: {
-      return {
-        ...state,
-        isAuthenticated: true,
-        loading: false,
-        currentUser: action.payload,
-      };
-    }
-    case AuthActionTypes.LOGIN_FAIL:
-      return { ...state, isAuthenticated: false, loading: false };
-    case AuthActionTypes.REGISTER:
-      return { ...state, loading: true };
-    case AuthActionTypes.REGISTER_SUCCESS: {
-      return {
-        ...state,
-        isAuthenticated: true,
-        loading: false,
-        currentUser: action.payload,
-      };
-    }
-    case AuthActionTypes.REGISTER_FAIL:
-      return { ...state, isAuthenticated: false, loading: false };
-    case AuthActionTypes.LOGOUT:
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: false,
-        currentUser: undefined,
-      };
-    default:
-      return state;
-  }
+export function authReducer(state: AuthState | undefined, action: Action) {
+  return reducer(state, action);
 }

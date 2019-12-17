@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActionAuthLogout } from '@core/auth/store/auth.actions';
+import * as actions from '@core/auth/store/auth.actions';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
@@ -24,15 +24,19 @@ export class ProfileComponent implements OnInit {
       .select(selectProfile)
       .pipe(
         tap(profile => {
-          this.profileGroup.get('firstname').setValue(profile && profile.firstName);
-          this.profileGroup.get('lastname').setValue(profile && profile.lastName);
+          this.profileGroup
+            .get('firstname')
+            .setValue(profile && profile.firstName);
+          this.profileGroup
+            .get('lastname')
+            .setValue(profile && profile.lastName);
           this.profileGroup.get('email').setValue(profile && profile.email);
         })
       )
       .subscribe();
   }
 
-  onLogoutClicked = () => this.store.dispatch(new ActionAuthLogout());
+  onLogoutClicked = () => this.store.dispatch(actions.logout());
 
   ngOnInit() {
     this.store.dispatch(new ActionLoadProfile());
