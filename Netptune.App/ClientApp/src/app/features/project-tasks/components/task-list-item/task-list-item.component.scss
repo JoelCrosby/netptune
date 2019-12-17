@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 2px;
 
     .card-chips {
       justify-content: flex-end;
@@ -20,7 +19,7 @@
     .input-group-prepend {
       span,
       label {
-          width: 10rem;
+        width: 10rem;
       }
     }
 
@@ -54,7 +53,7 @@
     }
 
     .chip-spacer {
-        width: 0.4rem;
+      width: .4rem;
     }
 
     .mat-standard-chip {
@@ -82,15 +81,16 @@
   .task-header {
     flex-direction: column;
   }
+
   .chip-list {
     display: none;
   }
 }
 
 @media only screen and (max-width: 600px) {
-  .mat-card:not([class*=mat-elevation-z]) {
+  .mat-card:not([class*='mat-elevation-z']) {
     background-color: transparent !important;
-    border: none !important;
+    border: 0 !important;
     box-shadow: none !important;
   }
 }
