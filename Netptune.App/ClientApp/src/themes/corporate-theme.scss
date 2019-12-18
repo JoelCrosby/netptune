@@ -1,0 +1,56 @@
+// Foreground palette for light themes.
+$mat-light-theme-foreground: (
+  base:              #000,
+  divider:           $dark-dividers,
+  dividers:          $dark-dividers,
+  disabled:          $dark-disabled-text,
+  disabled-button:   rgba(#000, .26),
+  disabled-text:     $dark-disabled-text,
+  elevation:         #000,
+  hint-text:         $dark-disabled-text,
+  secondary-text:    $dark-secondary-text,
+  icon:              rgba(#000, .54),
+  icons:             rgba(#000, .54),
+  text:              rgba(#000, .87),
+  slider-min:        rgba(#000, .87),
+  slider-off:        rgba(#000, .26),
+  slider-off-active: rgba(#000, .38),
+  empty-list:        rgba(#000, .14),
+);
+
+// Background palette for light themes.
+$mat-light-theme-background: (
+  status-bar: #fafafa,
+  app-bar:    #fff,
+  background: #ffffff,
+  hover:      rgba(#000, .04), // TODO(kara): check style with Material Design UX
+  card:       #fff,
+  dialog:     #fff,
+  disabled-button: rgba(#000, .12),
+  raised-button: #fff,
+  focused-button: $dark-focused,
+  selected-button: map-get($mat-grey, 300),
+  selected-disabled-button: map-get($mat-grey, 400),
+  disabled-button-toggle: map-get($mat-grey, 200),
+  unselected-chip: map-get($mat-grey, 300),
+  disabled-list-option: map-get($mat-grey, 200),
+  border: rgba(0, 0, 0, .08),
+);
+
+// Creates a container object for a light theme to be given to individual component theme mixins.
+@function netptune-mat-light-theme($primary, $accent, $warn: mat-palette($mat-red)) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $mat-light-theme-foreground,
+    background: $mat-light-theme-background,
+  );
+}
+
+$light-app-primary: mat-palette($mat-blue, 800);
+$light-app-accent:  mat-palette($mat-teal, 700);
+$light-app-warn:    mat-palette($mat-red, A200, A100, A400);
+
+$corporate-theme: netptune-mat-light-theme($light-app-primary, $light-app-accent, $light-app-warn);
