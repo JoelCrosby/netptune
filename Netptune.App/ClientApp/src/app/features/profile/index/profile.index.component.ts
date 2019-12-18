@@ -1,12 +1,14 @@
+import { selectUpdateProfileLoading } from './../store/profile.selectors';
 import { AppUser } from '@core/models/appuser';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as actions from '@core/auth/store/auth.actions';
 import { AppState } from '@core/core.state';
-import { Store } from '@ngrx/store';
-import { tap, take, filter } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import { tap, take, filter, shareReplay } from 'rxjs/operators';
 import { selectProfile } from '../store/profile.selectors';
 import { loadProfile, updateProfile } from './../store/profile.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +24,8 @@ export class ProfileComponent implements OnInit {
 
   profile: AppUser;
 
+  loadingUpdate$: Observable<boolean>;
+
   get firstname() {
     return this.profileGroup.get('firstname');
   }
@@ -32,7 +36,17 @@ export class ProfileComponent implements OnInit {
     return this.profileGroup.get('email');
   }
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {}
+
+  onLogoutClicked = () => this.store.dispatch(actions.logout());
+
+  ngOnInit() {
+    this.store.dispatch(loadProfile());
+    this.loadingUpdate$ = this.store.pipe(
+      select(selectUpdateProfileLoading),
+      tap(loading => (loading ? this.profileGroup.disable() : this.profileGroup.enable())),
+      shareReplay()
+    );
     this.store
       .select(selectProfile)
       .pipe(
@@ -46,12 +60,6 @@ export class ProfileComponent implements OnInit {
         })
       )
       .subscribe();
-  }
-
-  onLogoutClicked = () => this.store.dispatch(actions.logout());
-
-  ngOnInit() {
-    this.store.dispatch(loadProfile());
   }
 
   updateClicked() {

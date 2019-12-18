@@ -1,27 +1,31 @@
-<app-page-container>
+<app-page-container [showProgress]="loadingUpdate$ | async">
   <form [formGroup]="profileGroup" class="px-4">
 
-      <mat-form-field class="profile-input mb-3" appearance="outline">
-        <mat-label>Firstname</mat-label>
-        <input matInput placeholder="Edit Firstname" formControlName="firstname">
-        <mat-icon matSuffix>perm_identity</mat-icon>
-      </mat-form-field>
+    <mat-form-field class="profile-input mb-3" appearance="outline">
+      <mat-label>Firstname</mat-label>
+      <input matInput placeholder="Edit Firstname" formControlName="firstname">
+      <mat-icon matSuffix>perm_identity</mat-icon>
+    </mat-form-field>
 
-      <mat-form-field class="profile-input mb-3" appearance="outline">
-        <mat-label>Lastname</mat-label>
-        <input matInput placeholder="Edit Lastname" formControlName="lastname">
-        <mat-icon matSuffix>perm_identity</mat-icon>
-      </mat-form-field>
+    <mat-form-field class="profile-input mb-3" appearance="outline">
+      <mat-label>Lastname</mat-label>
+      <input matInput placeholder="Edit Lastname" formControlName="lastname">
+      <mat-icon matSuffix>perm_identity</mat-icon>
+    </mat-form-field>
 
-      <mat-form-field class="profile-input mb-3" appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput placeholder="Change Email Address" formControlName="email">
-        <mat-icon matSuffix>mail</mat-icon>
-      </mat-form-field>
+    <mat-form-field class="profile-input mb-3" appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput placeholder="Change Email Address" formControlName="email">
+      <mat-icon matSuffix>mail</mat-icon>
+    </mat-form-field>
 
-      <button mat-button (click)="updateClicked()">
-        Update
-      </button>
+    <button
+      mat-button
+      (click)="updateClicked()"
+      [disabled]="loadingUpdate$ | async"
+    >
+      Update
+    </button>
 
   </form>
 </app-page-container>
