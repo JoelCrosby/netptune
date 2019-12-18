@@ -1,3 +1,4 @@
+import { SharedModule } from '@app/shared/shared.module';
 // Angular modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -5,7 +6,7 @@ import { PageContainerComponent } from './components/page-container/page-contain
 
 @NgModule({
   declarations: [PageContainerComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, SharedModule],
   exports: [PageContainerComponent],
 })
 export class StaticModule {}
