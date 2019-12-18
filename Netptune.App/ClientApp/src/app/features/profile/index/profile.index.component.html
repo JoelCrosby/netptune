@@ -1,32 +1,27 @@
-<div class="px-md-3 px-lg-5 mt-5">
-  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+<app-page-container>
+  <form [formGroup]="profileGroup" class="px-4">
 
-    <form [formGroup]="profileGroup" class="px-4">
+      <mat-form-field class="profile-input mb-3" appearance="outline">
+        <mat-label>Firstname</mat-label>
+        <input matInput placeholder="Edit Firstname" formControlName="firstname">
+        <mat-icon matSuffix>perm_identity</mat-icon>
+      </mat-form-field>
 
-        <mat-form-field class="profile-input mb-3" appearance="outline">
-          <mat-label>Firstname</mat-label>
-          <input matInput placeholder="Edit Firstname" formControlName="firstname">
-          <mat-icon matSuffix>perm_identity</mat-icon>
-        </mat-form-field>
+      <mat-form-field class="profile-input mb-3" appearance="outline">
+        <mat-label>Lastname</mat-label>
+        <input matInput placeholder="Edit Lastname" formControlName="lastname">
+        <mat-icon matSuffix>perm_identity</mat-icon>
+      </mat-form-field>
 
-        <mat-form-field class="profile-input mb-3" appearance="outline">
-          <mat-label>Lastname</mat-label>
-          <input matInput placeholder="Edit Lastname" formControlName="lastname">
-          <mat-icon matSuffix>perm_identity</mat-icon>
-        </mat-form-field>
+      <mat-form-field class="profile-input mb-3" appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput placeholder="Change Email Address" formControlName="email">
+        <mat-icon matSuffix>mail</mat-icon>
+      </mat-form-field>
 
-        <mat-form-field class="profile-input mb-3" appearance="outline">
-          <mat-label>Email Address</mat-label>
-          <input matInput placeholder="Change Email Address" formControlName="email">
-          <mat-icon matSuffix>mail</mat-icon>
-        </mat-form-field>
+      <button mat-button (click)="updateClicked()">
+        Update
+      </button>
 
-        <button mat-button (click)="updateClicked()">
-          Update
-        </button>
-
-    </form>
-
-  </div>
-
-</div>
+  </form>
+</app-page-container>

@@ -1,52 +1,56 @@
-<div class="card-group">
-  <mat-card *ngFor="let workspace of workspaces$ | async; let i = index; trackBy: trackById">
-    <mat-card-title>
-      {{ workspace.name }}
-      <button mat-button color="primary" type="button" (click)="deleteClicked(workspace)">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-card-title>
-    <mat-card-content>
-      <p>{{ workspace.description }}</p>
-      <small class="text-muted">Last updated {{ workspace.updatedAt | date: 'shortTime' }}</small>
-    </mat-card-content>
+<app-page-container>
 
-    <mat-card-actions>
-      <a
-        mat-flat-button
-        color="primary"
-        class="action-button"
-        type="button"
-        [routerLink]="['/app/', workspace.slug]"
-      >
-        <mat-icon class="action-mat-icon">assessment</mat-icon> Go To Projects
-      </a>
-      <a
-        mat-button
-        color="primary"
-        class="action-button"
-        type="button"
-        [routerLink]="['/app/', workspace.slug, 'users']"
-      >
-        Manage Users
-      </a>
-    </mat-card-actions>
-  </mat-card>
-
-  <mat-card>
-    <div class="card-body">
-      <h5 class="card-title">Create a new Workspace</h5>
-      <p class="card-text">
-        Worksapces allow for team collobaration on multiple projectes and are the foundation of all workflows within
-        Neptuna.
-      </p>
+  <div class="card-group">
+    <mat-card *ngFor="let workspace of workspaces$ | async; let i = index; trackBy: trackById">
+      <mat-card-title>
+        {{ workspace.name }}
+        <button mat-button color="primary" type="button" (click)="deleteClicked(workspace)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-title>
+      <mat-card-content>
+        <p>{{ workspace.description }}</p>
+        <small class="text-muted">Last updated {{ workspace.updatedAt | date: 'shortTime' }}</small>
+      </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button color="primary" (click)="openWorkspaceDialog()">Create</button>
+        <a
+          mat-flat-button
+          color="primary"
+          class="action-button"
+          type="button"
+          [routerLink]="['/app/', workspace.slug]"
+        >
+          <mat-icon class="action-mat-icon">assessment</mat-icon> Go To Projects
+        </a>
+        <a
+          mat-button
+          color="primary"
+          class="action-button"
+          type="button"
+          [routerLink]="['/app/', workspace.slug, 'users']"
+        >
+          Manage Users
+        </a>
       </mat-card-actions>
-    </div>
-    <div class="card-footer">
-      <small class="text-muted">Created with by ❤ Joel</small>
-    </div>
-  </mat-card>
-</div>
+    </mat-card>
+
+    <mat-card>
+      <div class="card-body">
+        <h5 class="card-title">Create a new Workspace</h5>
+        <p class="card-text">
+          Worksapces allow for team collobaration on multiple projectes and are the foundation of all workflows within
+          Neptuna.
+        </p>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="openWorkspaceDialog()">Create</button>
+        </mat-card-actions>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Created with by ❤ Joel</small>
+      </div>
+    </mat-card>
+  </div>
+
+</app-page-container>
