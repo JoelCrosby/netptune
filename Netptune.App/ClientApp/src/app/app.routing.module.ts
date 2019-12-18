@@ -44,6 +44,13 @@ const routes: Routes = [
         data: { title: 'Tasks' },
       },
       {
+        path: 'boards',
+        loadChildren: () => import('./features/boards/boards.module').then(m => m.BoardsModule),
+        canActivate: [AuthGuardService],
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Boards' },
+      },
+      {
         path: 'users',
         loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule),
         canActivate: [AuthGuardService],
