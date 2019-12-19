@@ -1,16 +1,16 @@
-import { Project } from '@core/models/project';
-import { Workspace } from '@core/models/workspace';
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AppState } from '@core/core.state';
+import { TaskStatus } from '@core/enums/project-task-status';
+import { Project } from '@core/models/project';
 import { AddProjectTaskRequest } from '@core/models/project-task';
+import { Workspace } from '@core/models/workspace';
 import { SelectCurrentProject } from '@core/state/core.selectors';
 import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { forkJoin, Subscription, Observable, combineLatest } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { createProjectTask } from './../../store/tasks.actions';
-import { take, first } from 'rxjs/operators';
-import { TaskStatus } from '../../../../core/enums/project-task-status';
 
 @Component({
   selector: 'app-task-inline',

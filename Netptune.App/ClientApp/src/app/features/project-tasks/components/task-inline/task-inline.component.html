@@ -1,4 +1,4 @@
-<div class="task-inline-container">
+<div class="task-inline-container" [class.edit-mode]="editMode">
 
   <ng-container *ngIf="!editMode; else elseTemplate">
     <div class="new-task-button">
@@ -13,8 +13,10 @@
 
   <ng-template #elseTemplate>
     <div class="inline-task-form">
-      <form [formGroup]="taskGroup" class="px-0" (ngSubmit)="onSubmit()">
-        <input matInput formControlName="taskName" class="inline-task-input" autofocus>
+      <mat-icon>drag_indicator</mat-icon>
+      <mat-checkbox color="primary" disabled></mat-checkbox>
+      <form [formGroup]="taskGroup" class="task-form" (ngSubmit)="onSubmit()">
+        <input matInput formControlName="taskName" class="inline-task-input" placeholder="What do you need to get done?" autofocus>
       </form>
     </div>
   </ng-template>

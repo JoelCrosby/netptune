@@ -31,9 +31,9 @@
   box-sizing: border-box;
   border-radius: .4rem;
   overflow: hidden;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-              0 8px 10px 1px rgba(0, 0, 0, 0.14),
-              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2),
+              0 8px 10px 1px rgba(0, 0, 0, .14),
+              0 3px 14px 2px rgba(0, 0, 0, .12);
 }
 
 .cdk-drag-placeholder {
@@ -45,27 +45,30 @@
 }
 
 .task-drag:last-child {
-  border: none;
+  border: 0;
 }
 
 .task-list .cdk-drop-list-dragging .task-drag:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(.24, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(.24, 0, .2, 1);
 }
 
 
 .list-empty {
   display: flex;
   justify-content: center;
+
   .list-empty-mark {
     font-size: 3rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
     height: 100%;
+
     .far {
       margin: 1.4rem auto;
       font-size: 6rem;
     }
+
     .empty-text {
       color: #808080;
       margin: 0;
@@ -75,6 +78,7 @@
     }
   }
 }
+
 .spinner-container {
   padding: 4.6rem;
 }
