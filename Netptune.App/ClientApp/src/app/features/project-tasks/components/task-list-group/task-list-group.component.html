@@ -2,7 +2,7 @@
   <h4> {{ header }} </h4>
   <div class="task-list">
 
-    <ng-container *ngIf="loaded | async; else elseTemplate">
+    <ng-container *ngIf="(loaded | async) && tasks.length; else elseTemplate">
 
       <div
         cdkDropList
@@ -25,6 +25,8 @@
 
     <ng-template #elseTemplate>
       <ng-container *ngIf="(loaded | async); else loadedElseTemplate">
+
+        <app-task-inline [status]="status"></app-task-inline>
 
         <div class="list-empty">
           <div class="list-empty-mark">

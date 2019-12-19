@@ -48,7 +48,7 @@ export class ProjectTasksEffects {
       ofType(actions.editProjectTask),
       switchMap(action =>
         this.projectTasksService.put(action.task).pipe(
-          tap(() => this.snackbar.open('Task updated')),
+          tap(() => !!action.silent && this.snackbar.open('Task updated')),
           map(task => actions.editProjectTasksSuccess({ task })),
           catchError(error => of(actions.editProjectTasksFail({ error })))
         )

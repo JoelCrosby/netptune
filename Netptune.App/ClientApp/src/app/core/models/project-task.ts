@@ -9,6 +9,8 @@ export interface ProjectTask extends Basemodel {
   description: string;
   status: TaskStatus;
 
+  sortOrder: number;
+
   project: Project;
   projectId: number;
 
@@ -24,13 +26,13 @@ export interface ProjectTask extends Basemodel {
 
 export interface AddProjectTaskRequest {
   name: string;
-  description: string;
-  status: TaskStatus;
+  description?: string;
+  status?: TaskStatus;
 
   projectId: number;
 
   workspace: string;
 
-  assignee: AppUser;
-  assigneeId: string;
+  assignee?: AppUser;
+  assigneeId?: string;
 }

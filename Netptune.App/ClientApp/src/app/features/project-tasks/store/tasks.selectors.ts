@@ -11,18 +11,33 @@ const selectTasksFeature = createFeatureSelector<State, TasksState>('tasks');
 
 const { selectAll } = adapter.getSelectors();
 
-export const selectTasks = createSelector(selectTasksFeature, selectAll);
-
-export const selectTasksCompleted = createSelector(selectTasks, tasks =>
-  tasks.filter(task => task.status === TaskStatus.Complete)
+export const selectTasks = createSelector(
+  selectTasksFeature,
+  selectAll
 );
 
-export const selectTasksOwner = createSelector(selectTasks, tasks =>
-  tasks.filter(task => task.status === TaskStatus.New)
+export const selectTasksCompleted = createSelector(
+  selectTasks,
+  tasks =>
+    tasks
+      .filter(task => task.status === TaskStatus.Complete)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
 );
 
-export const selectTasksBacklog = createSelector(selectTasks, tasks =>
-  tasks.filter(task => task.status === TaskStatus.InActive)
+export const selectTasksOwner = createSelector(
+  selectTasks,
+  tasks =>
+    tasks
+      .filter(task => task.status === TaskStatus.New)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+);
+
+export const selectTasksBacklog = createSelector(
+  selectTasks,
+  tasks =>
+    tasks
+      .filter(task => task.status === TaskStatus.InActive)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
 );
 
 export const selectTasksLoading = createSelector(

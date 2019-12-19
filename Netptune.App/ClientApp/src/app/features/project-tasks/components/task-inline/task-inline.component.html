@@ -1,0 +1,22 @@
+<div class="task-inline-container">
+
+  <ng-container *ngIf="!editMode; else elseTemplate">
+    <div class="new-task-button">
+      <button mat-ripple (click)="addTaskClicked()">
+        <mat-icon>add</mat-icon>
+        <span>
+          Add Task
+        </span>
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div class="inline-task-form">
+      <form [formGroup]="taskGroup" class="px-0" (ngSubmit)="onSubmit()">
+        <input matInput formControlName="taskName" class="inline-task-input" autofocus>
+      </form>
+    </div>
+  </ng-template>
+
+</div>

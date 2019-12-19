@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Services;
 using Netptune.Models;
+using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Api.Controllers
@@ -66,7 +67,7 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PostTask([FromBody] ProjectTask task)
+        public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest task)
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _taskService.AddTask(task, user);

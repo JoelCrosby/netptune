@@ -17,7 +17,6 @@
 
 // Themes
 @import './themes/default-theme';
-@import './themes/corporate-theme';
 @import './themes/dark-theme';
 
 // Component Themes
@@ -46,13 +45,6 @@
 .default-theme {
   @include angular-material-theme($default-theme);
   @include custom-components-theme($default-theme);
-
-  color: rgba(0, 0, 0, .8);
-}
-
-.corporate-theme {
-  @include angular-material-theme($corporate-theme);
-  @include custom-components-theme($corporate-theme);
 
   color: rgba(0, 0, 0, .8);
 }

@@ -10,6 +10,7 @@ import { projectTasksReducer } from './store/tasks.reducer';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
 import { TaskDetailComponent } from './components/task-detail/task-detail.component';
 import { StaticModule } from '@app/static/static.module';
+import { TaskInlineComponent } from './components/task-inline/task-inline.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { StaticModule } from '@app/static/static.module';
     TaskListGroupComponent,
     TaskListItemComponent,
     TaskDetailComponent,
+    TaskInlineComponent,
   ],
   imports: [
     SharedModule,

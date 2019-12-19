@@ -11,6 +11,7 @@ import {
 import { TaskStatus } from '@app/core/enums/project-task-status';
 import * as actions from '../../store/tasks.actions';
 import { Store } from '@ngrx/store';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 
 @Component({
   selector: 'app-task-list-group',
@@ -44,20 +45,31 @@ export class TaskListGroupComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-
-      const { status } = event.container.data;
-      const { data } = event.item;
-
-      this.moveTask(status, data);
     }
+
+    const tasks = event.container.data.tasks;
+
+    const prevTask = tasks[event.currentIndex - 1];
+    const nextTask = tasks[event.currentIndex + 1];
+
+    const preOrder = prevTask && prevTask.sortOrder;
+    const nextOrder = nextTask && nextTask.sortOrder;
+
+    const order = getNewSortOrder(preOrder, nextOrder);
+
+    const { status } = event.container.data;
+    const { data } = event.item;
+
+    this.moveTask(data, status, order);
   }
 
-  moveTask(status: TaskStatus, task: TaskViewModel) {
+  moveTask(task: TaskViewModel, status: TaskStatus, sortOrder: number) {
     this.store.dispatch(
       actions.editProjectTask({
         task: {
           ...task,
           status,
+          sortOrder,
         },
       })
     );

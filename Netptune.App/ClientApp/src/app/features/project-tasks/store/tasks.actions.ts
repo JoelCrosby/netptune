@@ -33,7 +33,7 @@ export const createProjectTasksFail = createAction(
 
 export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
-  props<{ task: TaskViewModel }>()
+  props<{ task: TaskViewModel; silent?: boolean }>()
 );
 
 export const editProjectTasksSuccess = createAction(

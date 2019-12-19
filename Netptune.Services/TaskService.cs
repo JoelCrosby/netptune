@@ -6,6 +6,8 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
+using Netptune.Models.Enums;
+using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Services
@@ -21,9 +23,24 @@ namespace Netptune.Services
             UnitOfWork = unitOfWork;
         }
 
-        public async Task<TaskViewModel> AddTask(ProjectTask projectTask, AppUser user)
+        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest projectTask, AppUser user)
         {
-            var result = await TaskRepository.AddTask(projectTask, user);
+            var workspace = await UnitOfWork.Workspaces.GetBySlug(projectTask.Workspace);
+
+            if (workspace is null) return null;
+
+            var task = new ProjectTask
+            {
+                Name = projectTask.Name,
+                Description = projectTask.Description,
+                Status = projectTask.Status ?? ProjectTaskStatus.New,
+                ProjectId = projectTask.ProjectId,
+                AssigneeId = projectTask.AssigneeId,
+                Workspace = workspace,
+                WorkspaceId = workspace.Id
+            };
+
+            var result = await TaskRepository.AddTask(task, user);
 
             await UnitOfWork.CompleteAsync();
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Netptune.Models;
+using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Services
@@ -14,7 +15,7 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> UpdateTask(ProjectTask projectTask);
 
-        Task<TaskViewModel> AddTask(ProjectTask projectTask, AppUser user);
+        Task<TaskViewModel> AddTask(AddProjectTaskRequest projectTask, AppUser user);
 
         Task<TaskViewModel> DeleteTask(int id, AppUser user);
 
