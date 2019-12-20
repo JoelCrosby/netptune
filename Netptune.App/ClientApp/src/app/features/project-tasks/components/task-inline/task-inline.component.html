@@ -5,7 +5,7 @@
 >
 
   <ng-container *ngIf="!editActive; else elseTemplate">
-    <button mat-button class="new-task-button" (click)="addTaskClicked()">
+    <button mat-button disableRipple="true" class="new-task-button" (click)="addTaskClicked()">
       <mat-icon>add</mat-icon>
       <span>
         Add Task
