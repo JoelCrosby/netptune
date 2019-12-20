@@ -65,3 +65,12 @@ export const selectTask = createAction(
   '[ProjectTasks] Select Task',
   props<{ task: ProjectTask }>()
 );
+
+export const clearSelectedTask = createAction(
+  '[ProjectTasks] Clear selected Task'
+);
+
+export const setInlineEditActive = createAction(
+  '[ProjectTasks] Set Inline Edit Active',
+  props<{ active: boolean }>()
+);

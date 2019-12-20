@@ -61,6 +61,14 @@ const reducer = createReducer(
   on(actions.selectTask, (state, { task }) => ({
     ...state,
     selectedTask: task,
+  })),
+  on(actions.clearSelectedTask, state => ({
+    ...state,
+    selectedTask: undefined,
+  })),
+  on(actions.setInlineEditActive, (state, { active }) => ({
+    ...state,
+    inlineEditActive: active,
   }))
 );
 

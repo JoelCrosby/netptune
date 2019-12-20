@@ -34,6 +34,7 @@ namespace Netptune.Services
                 Name = projectTask.Name,
                 Description = projectTask.Description,
                 Status = projectTask.Status ?? ProjectTaskStatus.New,
+                SortOrder = projectTask.SortOrder,
                 ProjectId = projectTask.ProjectId,
                 AssigneeId = projectTask.AssigneeId,
                 Workspace = workspace,

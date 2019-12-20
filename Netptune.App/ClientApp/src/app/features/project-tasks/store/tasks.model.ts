@@ -23,5 +23,6 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   createdTask?: TaskModel;
   deleteState: ActionState;
   editState: ActionState;
-  selectedTask?: TaskModel;
+  selectedTask?: TaskViewModel;
+  inlineEditActive?: boolean;
 }

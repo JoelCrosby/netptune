@@ -7,30 +7,25 @@
   justify-content: center;
 
   .new-task-button {
-    padding: .4rem;
     width: 100%;
     display: flex;
     justify-content: flex-start;
     transition: background-color .2s ease-in;
+    flex-direction: row;
+    background-color: transparent;
+    border: 0;
+    text-align: start;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: .8rem;
+    letter-spacing: .125px;
+    padding: 0 2.3rem;
+    border-radius: 0;
 
-    button {
-      display: flex;
-      flex-direction: row;
-      border-radius: .2rem;
-      background-color: transparent;
-      border: 0;
-      text-align: start;
-      width: 100%;
-      font-family: inherit;
-      font-weight: 500;
-      font-size: .8rem;
-      letter-spacing: .125px;
-      padding: 0 1.8rem;
-
-      span {
-        margin: auto 1rem;
-      }
+    span {
+      margin: auto 1rem;
     }
+
   }
 
   .inline-task-form {

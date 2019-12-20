@@ -15,4 +15,11 @@
   .app-shell-sidenav {
     background-color: mat-color($background, card);
   }
+
+  .workspace-nav-list {
+    .app-workspace-link {
+      background-color: mat-color($primary);
+      color: mat-color($background, card);
+    }
+  }
 }

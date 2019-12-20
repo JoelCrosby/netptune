@@ -1,3 +1,4 @@
+import { clearSelectedTask } from './../../store/tasks.actions';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
@@ -14,4 +15,8 @@ export class TaskDetailComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
+
+  closeClicked() {
+    this.store.dispatch(clearSelectedTask());
+  }
 }

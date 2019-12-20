@@ -33,7 +33,7 @@
   }
 
   .task-inline-container.edit-mode {
-    border-bottom: 1px solid mat-color($background, disabled-button);
+    border-bottom: 1px solid mat-color($background, disabled-button, .06);
   }
 
   .inline-task-form .mat-icon {

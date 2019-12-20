@@ -2,7 +2,7 @@
 
   <div class="row">
 
-    <div class="col">
+    <div class="task-list-main" [class.task-list-shrink]="selectedTask$ | async">
       <div class="drag-group" cdkDropListGroup>
         <app-task-list-group
           class="mb-5"
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="col-4" *ngIf="selectedTask$ | async">
+    <div class="task-detail-aside" *ngIf="selectedTask$ | async">
       <app-task-detail></app-task-detail>
     </div>
 

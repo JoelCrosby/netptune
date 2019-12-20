@@ -1,8 +1,32 @@
 <div class="tasks-container" *ngIf="$task | async as task">
-  <h4 class="text-ellipsis w-100"> {{ task.name }} </h4>
+  <h4 class="task-detail-header text-ellipsis w-100">
+    Active Task
+  </h4>
 
   <div class="task-list mb-5">
-    <p> {{ task.description }} </p>
+
+    <div class="task-title-bar">
+      <h5>{{ task.name }}</h5>
+      <button mat-icon-button aria-label="Close task detail panel" (click)="closeClicked()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="task-body">
+      <p> {{ task.description }} </p>
+
+      <mat-chip-list ariaOrientation="horizontal">
+        <mat-chip color="primary">
+          {{ task.projectName }}
+        </mat-chip>
+        <div class="chip-spacer"></div>
+        <mat-chip color="accent">
+          {{ task.assigneeUsername }}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+
   </div>
+
 
 </div>
