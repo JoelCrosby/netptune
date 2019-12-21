@@ -100,6 +100,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
           assigneeId: undefined,
           assignee: undefined,
           status: TaskStatus.New,
+          sortOrder: 0,
         };
 
         this.store.dispatch(createProjectTask({ task }));
