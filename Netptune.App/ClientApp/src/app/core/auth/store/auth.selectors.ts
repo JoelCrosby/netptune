@@ -20,10 +20,10 @@ export const selectCurrentUser = createSelector(
 
 export const selectAuthToken = createSelector(
   selectCurrentUser,
-  (user: User) => user.token
+  (user: User) => user && user.token
 );
 
 export const selectCurrentUserDisplayName = createSelector(
   selectCurrentUser,
-  (user: User) => user.displayName || user.email
+  (user: User) => user && (user.displayName || user.email)
 );
