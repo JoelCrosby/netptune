@@ -10,6 +10,8 @@ namespace Netptune.Models
 
         public int BoardId { get; set; }
 
+        public double SortOrder { get; set; }
+
         #region NavigationProperties
 
         [JsonIgnore]

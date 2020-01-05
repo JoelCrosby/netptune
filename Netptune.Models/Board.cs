@@ -16,7 +16,7 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public ICollection<BoardGroup> BoardGroups { get; set; }
+        public ICollection<BoardGroup> BoardGroups { get; set; } = new HashSet<BoardGroup>();
 
         [JsonIgnore]
         public Project Project { get; set; }

@@ -29,9 +29,9 @@ namespace Netptune.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<BoardGroup>))]
-        public async Task<IActionResult> GetBoardGroups(int projectId)
+        public async Task<IActionResult> GetBoardGroups(int boardId)
         {
-            var result = await _boardGroupService.GetBoardGroups(projectId);
+            var result = await _boardGroupService.GetBoardGroups(boardId);
 
             return Ok(result);
         }

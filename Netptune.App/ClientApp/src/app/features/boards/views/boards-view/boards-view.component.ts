@@ -1,14 +1,21 @@
 import {
+  loadBoardGroups,
+  createBoardGroup,
+} from './../../store/groups/board-groups.actions';
+import {
   loadBoards,
   createBoard,
   selectBoard,
-} from './../../store/boards.actions';
+} from './../../store/boards/boards.actions';
 import { Component, OnInit } from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectAllBoards } from './../../store/boards.selectors';
+import {
+  selectAllBoards,
+  selectCurrentBoard,
+} from './../../store/boards/boards.selectors';
 import { tap, first } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 
@@ -18,19 +25,24 @@ import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 })
 export class BoardsViewComponent implements OnInit {
   boards$: Observable<Board[]>;
+  selectedBoard$: Observable<Board>;
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.boards$ = this.store.pipe(select(selectAllBoards));
+    this.selectedBoard$ = this.store.pipe(select(selectCurrentBoard));
     this.store.dispatch(loadBoards());
+    this.store.dispatch(loadBoardGroups());
   }
 
   boardClicked(board: Board) {
     this.store.dispatch(selectBoard({ board }));
   }
 
-  showAddModal() {
+  showAddModal() {}
+
+  createBoard() {
     this.store
       .select(selectCurrentProject)
       .pipe(
@@ -42,6 +54,26 @@ export class BoardsViewComponent implements OnInit {
                 name: 'Todo',
                 identifier: 'todo-0',
                 projectId: project.id,
+              },
+            })
+          );
+        })
+      )
+      .subscribe();
+  }
+
+  createBoardGroup(name: string, sortOrder: number) {
+    this.store
+      .select(selectCurrentBoard)
+      .pipe(
+        first(),
+        tap(board => {
+          this.store.dispatch(
+            createBoardGroup({
+              boardGroup: {
+                name,
+                sortOrder,
+                boardId: board.id,
               },
             })
           );
