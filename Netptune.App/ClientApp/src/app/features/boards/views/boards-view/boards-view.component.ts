@@ -1,3 +1,5 @@
+import { selectAllBoardGroups } from './../../store/groups/board-groups.selectors';
+import { BoardGroup } from '@app/core/models/board-group';
 import {
   loadBoardGroups,
   createBoardGroup,
@@ -18,6 +20,7 @@ import {
 } from './../../store/boards/boards.selectors';
 import { tap, first } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   templateUrl: './boards-view.component.html',
@@ -25,12 +28,14 @@ import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 })
 export class BoardsViewComponent implements OnInit {
   boards$: Observable<Board[]>;
+  groups$: Observable<BoardGroup[]>;
   selectedBoard$: Observable<Board>;
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.boards$ = this.store.pipe(select(selectAllBoards));
+    this.groups$ = this.store.pipe(select(selectAllBoardGroups));
     this.selectedBoard$ = this.store.pipe(select(selectCurrentBoard));
     this.store.dispatch(loadBoards());
     this.store.dispatch(loadBoardGroups());
@@ -41,6 +46,14 @@ export class BoardsViewComponent implements OnInit {
   }
 
   showAddModal() {}
+
+  drop(event: CdkDragDrop<BoardGroup[]>) {
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
 
   createBoard() {
     this.store

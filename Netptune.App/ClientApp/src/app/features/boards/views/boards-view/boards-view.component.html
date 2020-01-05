@@ -24,4 +24,24 @@
     </button>
   </div>
 
+  <div
+    cdkDropList
+    class="board-groups"
+    *ngIf="groups$ | async as groups"
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="drop($event)"
+    [cdkDropListData]="groups"
+  >
+
+    <mat-card
+      cdkDrag
+      class="board-group"
+      [cdkDragData]="group"
+      *ngFor="let group of groups"
+    >
+      <span class="board-group-header">{{ group.name }}</span>
+    </mat-card>
+
+  </div>
+
 </app-page-container>

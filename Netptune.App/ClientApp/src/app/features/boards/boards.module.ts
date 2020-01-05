@@ -18,7 +18,7 @@ import { boardGroupsReducer } from './store/groups/board-groups.reducer';
     SharedModule,
     StaticModule,
     StoreModule.forFeature('boards', boardsReducer),
-    StoreModule.forFeature('boardGroups', boardGroupsReducer),
+    StoreModule.forFeature('boardgroups', boardGroupsReducer),
     EffectsModule.forFeature([BoardsEffects, BoardGroupsEffects]),
     BoardsRoutingModule,
   ],

@@ -30,6 +30,7 @@
 @import './app/features/project-tasks/index/project-tasks.index.component.scss-theme';
 @import './app/features/projects/index/projects.index.component.scss-theme';
 @import './app/features/project-tasks/components/task-inline/task-inline.component.scss-theme.scss';
+@import './app/features/boards/views/boards-view/boards-view.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
@@ -42,6 +43,7 @@
   @include project-tasks-component-theme($theme);
   @include projects-index-component-theme($theme);
   @include app-task-inline-component-theme($theme);
+  @include boards-view-component-theme($theme);
 }
 
 .default-theme {

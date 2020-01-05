@@ -1,3 +1,4 @@
+import { loadBoardGroups } from './../groups/board-groups.actions';
 import { selectCurrentBoard } from './boards.selectors';
 import { selectCurrentProject } from '@core/projects/projects.selectors';
 import { BoardsService } from './boards.service';
@@ -68,6 +69,13 @@ export class BoardsEffects {
           catchError(error => of(actions.deleteBoardFail({ error })))
         )
       )
+    )
+  );
+
+  selectBoard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.selectBoard),
+      map(_ => loadBoardGroups())
     )
   );
 
