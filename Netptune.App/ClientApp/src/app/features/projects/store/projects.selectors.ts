@@ -6,7 +6,9 @@ export interface State extends AppState {
   projects: ProjectsState;
 }
 
-const selectProjectsFeature = createFeatureSelector<State, ProjectsState>('projects');
+const selectProjectsFeature = createFeatureSelector<State, ProjectsState>(
+  'projects'
+);
 
 const { selectEntities, selectAll } = adapter.getSelectors();
 
@@ -28,4 +30,9 @@ export const selectProjectsLoading = createSelector(
 export const selectProjectsLoaded = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.loaded
+);
+
+export const selectCurrentProject = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.currentProject
 );

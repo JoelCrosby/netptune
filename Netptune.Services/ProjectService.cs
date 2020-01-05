@@ -32,15 +32,14 @@ namespace Netptune.Services
                     Description = request.Description,
                     CreatedByUserId = user.Id,
                     OwnerId = user.Id,
+                    RepositoryUrl = request.RepositoryUrl
                 };
 
-                var userRelationship = new ProjectUser
+                project.ProjectUsers.Add(new ProjectUser
                 {
                     ProjectId = project.Id,
                     UserId = user.Id
-                };
-
-                project.ProjectUsers.Add(userRelationship);
+                });
 
                 var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
@@ -52,15 +51,20 @@ namespace Netptune.Services
             });
         }
 
-        public async Task<ProjectViewModel> DeleteProject(int id)
+        public async Task<ProjectViewModel> DeleteProject(int id, AppUser user)
         {
-            var result = await ProjectRepository.DeleteProject(id);
+            var project = await ProjectRepository.GetAsync(id);
+            
+            if (project is null) return null;
+
+            project.IsDeleted = true;
+            project.DeletedByUserId = user.Id;
 
             await UnitOfWork.CompleteAsync();
 
-            return await GetProjectViewModel(result);
+            return await GetProjectViewModel(project);
         }
-
+        
         public async Task<ProjectViewModel> GetProject(int id)
         {
             var result = await ProjectRepository.GetAsync(id);

@@ -1,21 +1,54 @@
 <app-page-container>
 
+  <div class="action-bar">
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="showAddModal()"
+    >
+      Create Project
+    </button>
+  </div>
+
   <div class="card-group">
-    <mat-card *ngFor="let project of (projects$ | async); let i = index; trackBy: trackById" class="project-card">
+    <mat-card *ngFor="let project of projects$ | async; let i = index; trackBy: trackById" class="project-card">
       <mat-card-header>
-        <mat-card-title>{{ project.name }}</mat-card-title>
+        <div mat-card-avatar class="project-header-image"></div>
+        <mat-card-title>
+          {{ project.name }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          <a [href]="project.repositoryUrl">
+            {{ project.repositoryUrl }}
+          </a>
+        </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>{{ project.description }}</p>
 
         <div class="card-chips">
           <mat-chip-list>
-            <mat-chip
-              >Owner {{ project.ownerDisplayName }}</mat-chip
-            >
-            <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
-            <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
+            <mat-chip>
+              Owner {{ project.ownerDisplayName }}
+            </mat-chip>
+            <mat-chip>
+              Updated {{ project.updatedAt | date }}
+            </mat-chip>
+            <mat-chip>
+              Created {{ project.createdAt | date }}
+            </mat-chip>
           </mat-chip-list>
+
+          <mat-menu #appMenu="matMenu">
+            <ng-template matMenuContent>
+              <button mat-menu-item>Edit</button>
+              <button mat-menu-item (click)="deleteClicked(project)">Delete</button>
+            </ng-template>
+          </mat-menu>
+
+          <button mat-icon-button [matMenuTriggerFor]="appMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
         </div>
       </mat-card-content>
     </mat-card>

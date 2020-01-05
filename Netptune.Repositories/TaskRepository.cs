@@ -84,43 +84,6 @@ namespace Netptune.Repositories
                 }).ToListAsync();
         }
 
-        public async Task<ProjectTask> AddTask(ProjectTask projectTask, AppUser user)
-        {
-            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
-
-            if (projectTask.ProjectId is null) throw new ArgumentNullException(nameof(projectTask.ProjectId));
-
-            if (user is null) throw new ArgumentNullException(nameof(user));
-
-            // Load the relationship tables.
-            Context.ProjectTasks.Include(m => m.Workspace).ThenInclude(e => e.Projects);
-
-            var relational = await (from w in Context.Workspaces
-                                    join p in Context.Projects
-                                    on projectTask.ProjectId equals p.Id
-                                    where
-                                    w.Id == projectTask.WorkspaceId
-                                    select new
-                                    {
-                                        project = p,
-                                        workspace = w
-                                    }).FirstOrDefaultAsync();
-
-            if (relational is null) return null;
-
-            Context.AppUsers.Include(x => x.WorkspaceUsers).ThenInclude(x => x.Workspace);
-
-            projectTask.WorkspaceId = relational.workspace.Id;
-            projectTask.ProjectId = relational.project.Id;
-            projectTask.AssigneeId = user.Id;
-            projectTask.OwnerId = user.Id;
-            projectTask.CreatedByUserId = user.Id;
-
-            var result = await Entities.AddAsync(projectTask);
-
-            return result.Entity;
-        }
-
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
         {
             var tasks = await Entities

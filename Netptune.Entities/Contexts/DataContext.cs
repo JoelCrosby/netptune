@@ -48,8 +48,7 @@ namespace Netptune.Entities.Contexts
 
             MapIdentityTableNames(builder);
 
-            builder
-                .ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
         }
 
         private static void MapIdentityTableNames(ModelBuilder builder)

@@ -24,5 +24,7 @@ export interface User {
   family_name: string;
   picture: string;
   zoneinfo: string;
+  expires: Date;
+  token: string;
   [key: string]: any;
 }

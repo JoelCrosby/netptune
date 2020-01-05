@@ -13,8 +13,6 @@ namespace Netptune.Core.Repositories
 
         Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug);
 
-        Task<ProjectTask> AddTask(ProjectTask projectTask, AppUser user);
-
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
     }
 }

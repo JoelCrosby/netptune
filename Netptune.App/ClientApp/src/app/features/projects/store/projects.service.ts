@@ -24,4 +24,10 @@ export class ProjectsService {
       project
     );
   }
+
+  delete(project: ProjectViewModel) {
+    return this.http.delete<ProjectViewModel>(
+      environment.apiEndpoint + `api/projects/${project.id}`
+    );
+  }
 }

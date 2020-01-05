@@ -27,8 +27,6 @@ namespace Netptune.Services
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlug(projectTask.Workspace);
 
-            if (workspace is null) return null;
-
             var task = new ProjectTask
             {
                 Name = projectTask.Name,
@@ -37,11 +35,16 @@ namespace Netptune.Services
                 SortOrder = projectTask.SortOrder,
                 ProjectId = projectTask.ProjectId,
                 AssigneeId = projectTask.AssigneeId,
+                OwnerId = user.Id,
                 Workspace = workspace,
                 WorkspaceId = workspace.Id
             };
 
-            var result = await TaskRepository.AddTask(task, user);
+            var project = UnitOfWork.Projects.GetAsync(projectTask.ProjectId);
+
+            if (project is null) throw new Exception("ProjectId cannot be null.");
+
+            var result = await TaskRepository.AddAsync(task);
 
             await UnitOfWork.CompleteAsync();
 

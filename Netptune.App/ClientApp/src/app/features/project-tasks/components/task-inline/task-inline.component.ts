@@ -1,3 +1,5 @@
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import {
   ChangeDetectorRef,
   Component,
@@ -10,11 +12,9 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
-import { Project } from '@core/models/project';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Workspace } from '@core/models/workspace';
-import { SelectCurrentProject } from '@core/state/core.selectors';
 import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import {
@@ -36,6 +36,8 @@ import {
   createProjectTask,
   setInlineEditActive,
 } from './../../store/tasks.actions';
+import { selectCurrentProject } from '../../../projects/store/projects.selectors';
+import { User } from '@core/auth/store/auth.models';
 
 @Component({
   selector: 'app-task-inline',
@@ -53,8 +55,9 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   outsideClickSubscription: Subscription;
 
   currentWorkspace$: Observable<Workspace>;
-  currentProject$: Observable<Project>;
+  currentProject$: Observable<ProjectViewModel>;
   inlineEditActive$: Observable<boolean>;
+  currentUser$: Observable<User>;
 
   taskGroup = new FormGroup({
     taskName: new FormControl(),
@@ -74,7 +77,9 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
-    this.currentProject$ = this.store.pipe(select(SelectCurrentProject));
+    this.currentProject$ = this.store.pipe(select(selectCurrentProject));
+    this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+
     this.inlineEditActive$ = this.store.pipe(
       select(selectInlineEditActive),
       shareReplay()
@@ -114,27 +119,35 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    combineLatest([this.currentWorkspace$, this.currentProject$])
+    combineLatest([
+      this.currentWorkspace$,
+      this.currentProject$,
+      this.currentUser$,
+    ])
       .pipe(first())
       .subscribe({
-        next: ([workspace, project]) => {
-          const lastSibling =
-            this.siblings && this.siblings[this.siblings.length - 1];
-
-          const order = lastSibling && lastSibling.sortOrder + 1;
-
-          const task: AddProjectTaskRequest = {
-            name: this.taskName.value,
-            workspace: workspace.slug,
-            projectId: project.id,
-            status: this.status,
-            sortOrder: order || 0,
-          };
-
-          this.store.dispatch(createProjectTask({ task }));
-
-          this.taskGroup.reset();
-        },
+        next: ([workspace, project, user]) =>
+          this.createTask(workspace, project, user),
       });
+  }
+
+  createTask(workspace: Workspace, project: ProjectViewModel, user: User) {
+    const lastSibling =
+      this.siblings && this.siblings[this.siblings.length - 1];
+
+    const order = lastSibling && lastSibling.sortOrder + 1;
+
+    const task: AddProjectTaskRequest = {
+      name: this.taskName.value,
+      workspace: workspace.slug,
+      projectId: project.id,
+      status: this.status,
+      sortOrder: order || 1,
+      assigneeId: user.userId,
+    };
+
+    this.store.dispatch(createProjectTask({ task }));
+
+    this.taskGroup.reset();
   }
 }

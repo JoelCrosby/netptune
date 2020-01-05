@@ -34,7 +34,7 @@ namespace Netptune.Services
                 WorkspaceId = workspace.Id
             });
 
-            var result = await WorkspaceRepository.AddWorkspace(workspace);
+            var result = await WorkspaceRepository.AddAsync(workspace);
 
             await UnitOfWork.CompleteAsync();
 

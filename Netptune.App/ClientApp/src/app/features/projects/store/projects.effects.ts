@@ -4,9 +4,16 @@ import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  switchMap,
+  withLatestFrom,
+  tap,
+} from 'rxjs/operators';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class ProjectsEffects {
@@ -23,6 +30,17 @@ export class ProjectsEffects {
     )
   );
 
+  loadProjectsSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadProjectsSuccess),
+      map(action => {
+        return actions.selectProject({
+          project: action.projects && action.projects[0],
+        });
+      })
+    )
+  );
+
   createProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProject),
@@ -35,9 +53,23 @@ export class ProjectsEffects {
     )
   );
 
+  deleteProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteProject),
+      switchMap(action =>
+        this.projectsService.delete(action.project).pipe(
+          tap(() => this.snackbar.open('Project Deleted')),
+          map(project => actions.deleteProjectSuccess({ project })),
+          catchError(error => of(actions.deleteProjectFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private projectsService: ProjectsService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private snackbar: MatSnackBar
   ) {}
 }

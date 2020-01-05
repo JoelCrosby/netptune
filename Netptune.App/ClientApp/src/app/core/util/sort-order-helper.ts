@@ -1,12 +1,18 @@
 export function getNewSortOrder(preOrder: number, nextOrder: number) {
-  if (!nextOrder) {
+  if (!isNumeric(nextOrder)) {
     console.log('[REORDER] moved item to end.', { preOrder, nextOrder });
     return preOrder + 1;
-  } else if (nextOrder && !preOrder) {
+  } else if (isNumeric(nextOrder) && !isNumeric(preOrder)) {
     console.log('[REORDER] moved item to start.', { preOrder, nextOrder });
-    return nextOrder * 0.9;
+    return nextOrder === 0 ? -1 : nextOrder * 0.9;
   } else {
     console.log('[REORDER] moved item to middle.', { preOrder, nextOrder });
     return (preOrder + nextOrder) / 2;
   }
 }
+
+const isNumeric = (input: any): boolean => {
+  console.log(input);
+
+  return !isNaN(input);
+};

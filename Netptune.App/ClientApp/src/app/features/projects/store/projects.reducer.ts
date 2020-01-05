@@ -23,6 +23,24 @@ const reducer = createReducer(
       loadingCreate: false,
     })
   ),
+  on(actions.selectProject, (state, { project }) => ({
+    ...state,
+    currentProject: project,
+  })),
+  on(actions.deleteProject, state => ({
+    ...state,
+    deleteState: { loading: true },
+  })),
+  on(actions.deleteProjectFail, (state, { error }) => ({
+    ...state,
+    deleteState: { loading: false, error },
+  })),
+  on(actions.deleteProjectSuccess, (state, { project }) =>
+    adapter.removeOne(project.id, {
+      ...state,
+      deleteState: { loading: false },
+    })
+  )
 );
 
 export function projectsReducer(

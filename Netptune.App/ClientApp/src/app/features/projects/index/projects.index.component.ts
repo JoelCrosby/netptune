@@ -1,3 +1,4 @@
+import { ProjectViewModel } from './../../../core/models/view-models/project-view-model';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
@@ -5,11 +6,13 @@ import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Project } from '@core/models/project';
 import { Store } from '@ngrx/store';
-import { loadProjects } from '../store/projects.actions';
+import { loadProjects, deleteProject } from '../store/projects.actions';
 import { selectAllProjects } from '../store/projects.selectors';
 import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
 import { AppUser } from '@core/models/appuser';
 import { UsernameConverter } from '@core/models/converters/username.converter';
+import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TextHelpers } from '@app/core/util/text-helpers';
 
 @Component({
   selector: 'app-projects',
@@ -40,5 +43,22 @@ export class ProjectsComponent implements OnInit {
 
   toDisplay(user: AppUser) {
     return UsernameConverter.toDisplay(user);
+  }
+
+  deleteClicked(project: ProjectViewModel) {
+    this.dialog
+      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+        data: {
+          title: 'Are you sure you want to delete this project?',
+          content: `${TextHelpers.truncate(project.name)}`,
+          confirm: 'Delete Project',
+        },
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(deleteProject({ project }));
+        }
+      });
   }
 }

@@ -62,12 +62,5 @@ namespace Netptune.Repositories
 
             return result;
         }
-
-        public async Task<Workspace> AddWorkspace(Workspace workspace)
-        {
-            var result = await Entities.AddAsync(workspace);
-
-            return result.Entity;
-        }
     }
 }

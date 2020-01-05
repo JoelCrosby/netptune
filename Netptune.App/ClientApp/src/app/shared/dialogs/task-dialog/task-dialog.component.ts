@@ -3,13 +3,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { createProjectTask } from '@app/features/project-tasks/store/tasks.actions';
 import { loadProjects } from '@app/features/projects/store/projects.actions';
-import { selectAllProjects } from '@app/features/projects/store/projects.selectors';
+import {
+  selectAllProjects,
+  selectCurrentProject,
+} from '@app/features/projects/store/projects.selectors';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
 import { selectProject } from '@core/state/core.actions';
-import { SelectCurrentProject } from '@core/state/core.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
@@ -23,7 +25,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   task: ProjectTask;
   projects$ = this.store.select(selectAllProjects);
   currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
-  currentProject$ = this.store.select(SelectCurrentProject);
+  currentProject$ = this.store.select(selectCurrentProject);
   subs = new Subscription();
 
   showDescriptionField = false;
