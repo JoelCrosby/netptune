@@ -1,9 +1,9 @@
 import { AppUser } from './appuser';
 
 export interface Basemodel {
-  id: number;
+  id?: number;
 
-  isDeleted?: Boolean;
+  isDeleted?: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;

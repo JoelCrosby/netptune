@@ -1,4 +1,4 @@
-import { ProjectViewModel } from './../../../core/models/view-models/project-view-model';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,13 +6,13 @@ import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Project } from '@core/models/project';
 import { Store } from '@ngrx/store';
-import { loadProjects, deleteProject } from '../store/projects.actions';
-import { selectAllProjects } from '../store/projects.selectors';
 import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
 import { AppUser } from '@core/models/appuser';
 import { UsernameConverter } from '@core/models/converters/username.converter';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@app/core/util/text-helpers';
+import { selectAllProjects } from '@app/core/projects/projects.selectors';
+import * as actions from '@app/core/projects/projects.actions';
 
 @Component({
   selector: 'app-projects',
@@ -30,7 +30,7 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(loadProjects());
+    this.store.dispatch(actions.loadProjects());
   }
 
   trackById(index: number, project: Project) {
@@ -57,7 +57,7 @@ export class ProjectsComponent implements OnInit {
       .afterClosed()
       .subscribe(result => {
         if (result) {
-          this.store.dispatch(deleteProject({ project }));
+          this.store.dispatch(actions.deleteProject({ project }));
         }
       });
   }

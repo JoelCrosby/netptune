@@ -36,8 +36,8 @@ import {
   createProjectTask,
   setInlineEditActive,
 } from './../../store/tasks.actions';
-import { selectCurrentProject } from '../../../projects/store/projects.selectors';
 import { User } from '@core/auth/store/auth.models';
+import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 
 @Component({
   selector: 'app-task-inline',

@@ -1,3 +1,4 @@
+import { selectCurrentProject } from '@core/projects/projects.selectors';
 import { Injectable } from '@angular/core';
 import { AppState } from '@core/core.state';
 import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
@@ -33,7 +34,9 @@ export class ProjectsEffects {
   loadProjectsSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadProjectsSuccess),
-      map(action => {
+      withLatestFrom(this.store.select(selectCurrentProject)),
+      map(([action, project]) => {
+        if (project) return { type: '[N/A]' };
         return actions.selectProject({
           project: action.projects && action.projects[0],
         });

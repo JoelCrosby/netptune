@@ -11,5 +11,5 @@ export const initialState = adapter.getInitialState({
 });
 
 export interface ProjectsState extends AsyncEntityState<ProjectViewModel> {
-  currentProject: ProjectViewModel;
+  currentProject?: ProjectViewModel;
 }

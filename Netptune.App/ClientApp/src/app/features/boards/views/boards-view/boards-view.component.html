@@ -1,1 +1,27 @@
-<p>boards-view works!</p>
+<app-page-container>
+
+  <div class="action-bar">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Select Board</mat-label>
+      <mat-select>
+        <mat-option
+          *ngFor="let board of boards$ | async"
+          (click)="boardClicked(board)"
+          [value]="board.id"
+        >
+          {{ board.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="showAddModal()"
+    >
+      Create Board
+    </button>
+  </div>
+
+</app-page-container>

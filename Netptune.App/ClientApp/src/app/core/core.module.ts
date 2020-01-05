@@ -1,3 +1,4 @@
+import { ProjectsEffects } from './projects/projects.effects';
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -32,6 +33,7 @@ import { WorkspacesEffects } from './workspaces/workspaces.effects';
       CoreEffects,
       SettingsEffects,
       WorkspacesEffects,
+      ProjectsEffects,
     ]),
     environment.production
       ? []

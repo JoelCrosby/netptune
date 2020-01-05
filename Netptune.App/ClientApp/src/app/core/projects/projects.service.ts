@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Project, AddProjectRequest } from '@core/models/project';
+import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { environment } from '@env/environment';
 import { throwError } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProjectsService {
   constructor(private http: HttpClient) {}
 
