@@ -1,10 +1,9 @@
-
 .action-bar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: .6rem;
+  align-items: center;
+  flex: 0 0 64px;
 }
 
 .board-groups {
@@ -12,29 +11,32 @@
   height: 100%;
   display: flex;
   flex-direction: row;
+  flex: 1;
+  padding-bottom: 1rem;
 }
 
 .board-group {
   margin-right: 1rem;
-  flex: 0 0  200px;
+  flex: 0 0  260px;
   border-radius: .4rem;
-  padding: .4rem .6rem;
-  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
 }
 
 .board-group:last-child {
   margin-right: 0 !important;
 }
 
-.board-group-header {
-  font-size: .8rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-}
-
 .cdk-drag-placeholder {
   opacity: 0;
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2),
+  0 8px 10px 1px rgba(0, 0, 0, .14),
+  0 3px 14px 2px rgba(0, 0, 0, .12);
 }
 
 .cdk-drag-animating {

@@ -1,3 +1,18 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .page-progress {
   height: .8rem;
+}
+
+.full-height {
+  height: calc(100vh - 56px);
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

@@ -8,4 +8,6 @@ import { Component, Input } from '@angular/core';
 export class PageContainerComponent {
   @Input() verticalPadding = true;
   @Input() showProgress = false;
+  @Input() marginBottom = true;
+  @Input() fullHeight = false;
 }

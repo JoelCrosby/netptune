@@ -24,6 +24,7 @@ namespace Netptune.Repositories
             return Entities
                 .Where(boardGroup => boardGroup.BoardId == boardId)
                 .Where(boardGroup => !boardGroup.IsDeleted)
+                .OrderBy(boardGroup => boardGroup.SortOrder)
                 .ToListAsync();
         }
     }

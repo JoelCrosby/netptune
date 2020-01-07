@@ -1,10 +1,14 @@
 @import '~@angular/material/theming';
 
-@mixin boards-view-component-theme($theme) {
+@mixin board-group-component-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, accent);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
+
+  .board-group-header {
+    border-bottom: 1px solid mat-color($background, border);
+  }
 
 }

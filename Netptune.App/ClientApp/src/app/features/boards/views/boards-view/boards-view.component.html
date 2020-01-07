@@ -1,19 +1,20 @@
-<app-page-container>
+<app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
 
   <div class="action-bar">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Select Board</mat-label>
-      <mat-select [value]="(selectedBoard$ | async).id">
-        <mat-option
-          *ngFor="let board of boards$ | async"
-          (click)="boardClicked(board)"
-          [value]="board.id"
-        >
-          {{ board.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <button mat-button [matMenuTriggerFor]="belowMenu">
+      {{ selectedBoardName$ | async }}
+    </button>
+
+    <mat-menu #belowMenu="matMenu" yPosition="below">
+      <button
+        mat-menu-item
+        *ngFor="let board of boards$ | async"
+        (click)="boardClicked(board)"
+      >
+        {{ board.name }}
+      </button>
+    </mat-menu>
 
     <button
       mat-stroked-button
@@ -33,14 +34,16 @@
     [cdkDropListData]="groups"
   >
 
-    <mat-card
+    <app-board-group
       cdkDrag
       class="board-group"
-      [cdkDragData]="group"
       *ngFor="let group of groups"
+      [cdkDragData]="group"
+      [group]="group"
     >
-      <span class="board-group-header">{{ group.name }}</span>
-    </mat-card>
+
+    </app-board-group>
+
 
   </div>
 

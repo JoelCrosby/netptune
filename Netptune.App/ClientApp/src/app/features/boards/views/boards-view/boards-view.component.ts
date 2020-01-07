@@ -18,7 +18,7 @@ import {
   selectAllBoards,
   selectCurrentBoard,
 } from './../../store/boards/boards.selectors';
-import { tap, first } from 'rxjs/operators';
+import { tap, first, map } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -30,6 +30,7 @@ export class BoardsViewComponent implements OnInit {
   boards$: Observable<Board[]>;
   groups$: Observable<BoardGroup[]>;
   selectedBoard$: Observable<Board>;
+  selectedBoardName$: Observable<string>;
 
   constructor(private store: Store<AppState>) {}
 
@@ -37,6 +38,10 @@ export class BoardsViewComponent implements OnInit {
     this.boards$ = this.store.pipe(select(selectAllBoards));
     this.groups$ = this.store.pipe(select(selectAllBoardGroups));
     this.selectedBoard$ = this.store.pipe(select(selectCurrentBoard));
+    this.selectedBoardName$ = this.store.pipe(
+      select(selectCurrentBoard),
+      map(board => board && board.name)
+    );
     this.store.dispatch(loadBoards());
     this.store.dispatch(loadBoardGroups());
   }
