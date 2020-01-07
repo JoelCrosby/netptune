@@ -17,3 +17,12 @@
   flex-direction: column;
   padding: 0;
 }
+
+.create-task {
+  padding: .2rem;
+
+  button {
+    display: block;
+    width: 100%;
+  }
+}
