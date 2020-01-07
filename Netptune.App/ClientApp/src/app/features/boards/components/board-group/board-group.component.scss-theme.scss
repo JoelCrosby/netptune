@@ -11,4 +11,9 @@
     border-bottom: 1px solid mat-color($background, border);
   }
 
+  .board-group-card {
+    background-color: mat-color($background, card);
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, .1);
+    border: 1px solid mat-color($background, border);
+  }
 }
