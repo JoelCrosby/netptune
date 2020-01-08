@@ -41,7 +41,9 @@
       [cdkDragData]="group"
       [group]="group"
     >
-
+      <span class="board-group-header" cdkDragHandle>
+        {{ group.name }}
+      </span>
     </app-board-group>
 
 

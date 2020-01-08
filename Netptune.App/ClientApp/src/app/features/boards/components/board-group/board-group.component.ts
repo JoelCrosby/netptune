@@ -49,4 +49,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
+
+  onInlineCanceled() {
+    this.inlineActive = false;
+  }
 }

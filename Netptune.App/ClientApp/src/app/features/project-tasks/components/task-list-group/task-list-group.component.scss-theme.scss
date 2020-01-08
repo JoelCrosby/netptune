@@ -27,7 +27,7 @@
 
   .task-drag {
     background-color: mat-color($background);
-    border-bottom: 1px solid mat-color($background, disabled-button);
+    border-bottom: 1px solid mat-color($background, disabled-button, .08);
   }
 
   .empty-list-img,

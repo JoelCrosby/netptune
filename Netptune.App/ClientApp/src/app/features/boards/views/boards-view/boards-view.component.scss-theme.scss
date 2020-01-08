@@ -7,4 +7,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  .board-group-header {
+    border-bottom: 1px solid mat-color($background, border, .04);
+  }
 }

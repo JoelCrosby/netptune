@@ -7,11 +7,12 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .inline-task-container {
-    border: 1px solid mat-color($background, border);
+  .inline-task-textarea {
+    background-color: mat-color($background, card);
   }
 
   .inline-task-container {
-    border: 1px solid mat-color($background, border);
+    border: 2px solid mat-color($primary, 400, .4);
+    background-color: mat-color($background, card);
   }
 }
