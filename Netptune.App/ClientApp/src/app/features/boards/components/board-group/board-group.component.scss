@@ -17,10 +17,11 @@
   flex-direction: column;
   padding: 0;
   height: 100%;
+  border-radius: .3rem;
 }
 
 .create-task {
-  padding: .2rem;
+  padding: .1rem;
 
   button {
     display: block;

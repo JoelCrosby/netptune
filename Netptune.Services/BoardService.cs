@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Netptune.Core.Extensions;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -37,7 +37,7 @@ namespace Netptune.Services
             if (result is null) return null;
 
             result.Name = board.Name;
-            result.Identifier = board.Identifier;
+            result.Identifier = board.Identifier.ToUrlSlug();
 
             await UnitOfWork.CompleteAsync();
 
@@ -46,6 +46,8 @@ namespace Netptune.Services
 
         public async Task<Board> AddBoard(Board board)
         {
+            board.Identifier = board.Identifier.ToUrlSlug();
+
             var result = await Boards.AddAsync(board);
 
             await UnitOfWork.CompleteAsync();

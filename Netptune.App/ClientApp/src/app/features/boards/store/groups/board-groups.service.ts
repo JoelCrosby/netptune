@@ -28,4 +28,11 @@ export class BoardGroupsService {
       environment.apiEndpoint + `api/boardgroups/${boardGorup.id}`
     );
   }
+
+  put(boardGorup: BoardGroup) {
+    return this.http.put<BoardGroup>(
+      environment.apiEndpoint + 'api/boardgroups',
+      boardGorup
+    );
+  }
 }

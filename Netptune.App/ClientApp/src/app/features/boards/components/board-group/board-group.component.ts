@@ -25,6 +25,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   focused$ = this.focusedSubject.pipe();
 
+  inlineActive = false;
+
   ngOnInit() {}
 
   ngAfterViewInit() {

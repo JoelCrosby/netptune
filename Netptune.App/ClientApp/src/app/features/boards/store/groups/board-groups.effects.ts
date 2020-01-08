@@ -57,6 +57,18 @@ export class BoardGroupsEffects {
     )
   );
 
+  editBoardGroups$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.editBoardGroup),
+      switchMap(action =>
+        this.boardGroupsService.put(action.boardGroup).pipe(
+          map(boardGroup => actions.editBoardGroupSuccess({ boardGroup })),
+          catchError(error => of(actions.editBoardGroupFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,

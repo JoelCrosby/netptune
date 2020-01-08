@@ -48,7 +48,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // PUT: api/boardgroups/5
+        // PUT: api/boardgroups
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

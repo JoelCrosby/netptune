@@ -38,6 +38,7 @@ namespace Netptune.Services
             if (result is null) return null;
 
             result.Name = boardGroup.Name;
+            result.SortOrder = boardGroup.SortOrder;
 
             await UnitOfWork.CompleteAsync();
 

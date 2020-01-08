@@ -1,9 +1,6 @@
 import { selectAllBoardGroups } from './../../store/groups/board-groups.selectors';
 import { BoardGroup } from '@app/core/models/board-group';
-import {
-  loadBoardGroups,
-  createBoardGroup,
-} from './../../store/groups/board-groups.actions';
+import * as actions from './../../store/groups/board-groups.actions';
 import {
   loadBoards,
   createBoard,
@@ -21,6 +18,7 @@ import {
 import { tap, first, map } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 
 @Component({
   templateUrl: './boards-view.component.html',
@@ -43,7 +41,7 @@ export class BoardsViewComponent implements OnInit {
       map(board => board && board.name)
     );
     this.store.dispatch(loadBoards());
-    this.store.dispatch(loadBoardGroups());
+    this.store.dispatch(actions.loadBoardGroups());
   }
 
   boardClicked(board: Board) {
@@ -57,6 +55,35 @@ export class BoardsViewComponent implements OnInit {
       event.container.data,
       event.previousIndex,
       event.currentIndex
+    );
+
+    const groups = event.container.data;
+
+    const prevGroup = groups[event.currentIndex - 1];
+    const nextGroup = groups[event.currentIndex + 1];
+
+    const preOrder = prevGroup && prevGroup.sortOrder;
+    const nextOrder = nextGroup && nextGroup.sortOrder;
+
+    const order = getNewSortOrder(preOrder, nextOrder);
+
+    const { data } = event.item;
+
+    if (data.sortOrder === order) {
+      return;
+    }
+
+    this.moveBoardGroup(data, order);
+  }
+
+  moveBoardGroup(boardGroup: BoardGroup, sortOrder: number) {
+    this.store.dispatch(
+      actions.editBoardGroup({
+        boardGroup: {
+          ...boardGroup,
+          sortOrder,
+        },
+      })
     );
   }
 
@@ -87,7 +114,7 @@ export class BoardsViewComponent implements OnInit {
         first(),
         tap(board => {
           this.store.dispatch(
-            createBoardGroup({
+            actions.createBoardGroup({
               boardGroup: {
                 name,
                 sortOrder,

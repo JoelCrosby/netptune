@@ -13,6 +13,9 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
+                .HasAlternateKey(board => board.Identifier);
+
+            builder
                 .Property(board => board.Name)
                 .HasMaxLength(128)
                 .IsRequired();

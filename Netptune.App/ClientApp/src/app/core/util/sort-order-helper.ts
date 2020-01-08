@@ -11,8 +11,4 @@ export function getNewSortOrder(preOrder: number, nextOrder: number) {
   }
 }
 
-const isNumeric = (input: any): boolean => {
-  console.log(input);
-
-  return !isNaN(input);
-};
+const isNumeric = (input: any): boolean => !isNaN(input);

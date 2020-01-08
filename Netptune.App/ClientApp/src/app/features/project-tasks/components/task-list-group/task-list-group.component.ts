@@ -60,6 +60,10 @@ export class TaskListGroupComponent implements OnInit {
     const { status } = event.container.data;
     const { data } = event.item;
 
+    if (data.sortOrder === order && data.status === status) {
+      return;
+    }
+
     this.moveTask(data, status, order);
   }
 

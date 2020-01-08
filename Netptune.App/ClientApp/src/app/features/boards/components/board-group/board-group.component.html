@@ -1,10 +1,12 @@
 <div #container class="board-group-card">
   <span class="board-group-header">{{ group.name }}</span>
   <div class="task-container">
-    <div class="create-task" *ngIf="focused$ | async">
-      <button mat-button color="primary">
+    <div class="create-task" *ngIf="(focused$ | async) && !inlineActive">
+      <button mat-button color="primary" (click)="inlineActive = true">
         ADD TASK
       </button>
     </div>
+    <app-board-group-task-inline *ngIf="inlineActive">
+    </app-board-group-task-inline>
   </div>
 </div>

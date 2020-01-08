@@ -47,3 +47,18 @@ export const deleteBoardGroupFail = createAction(
   '[BoardGroups] Delete Board Group Fail',
   props<{ error: any }>()
 );
+
+export const editBoardGroup = createAction(
+  '[BoardGroups] Edit Board Group',
+  props<{ boardGroup: BoardGroup }>()
+);
+
+export const editBoardGroupSuccess = createAction(
+  '[BoardGroups] Edit Board Group Success',
+  props<{ boardGroup: BoardGroup }>()
+);
+
+export const editBoardGroupFail = createAction(
+  '[BoardGroups] Edit Board Group Fail',
+  props<{ error: any }>()
+);
