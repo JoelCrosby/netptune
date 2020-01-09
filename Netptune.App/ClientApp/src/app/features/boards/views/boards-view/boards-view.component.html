@@ -40,6 +40,8 @@
       *ngFor="let group of groups"
       [cdkDragData]="group"
       [group]="group"
+      [siblingIds]="getsiblingIds(group, groups)"
+      [dragListId]="getDragListId(group)"
     >
       <span class="board-group-header" cdkDragHandle>
         {{ group.name }}

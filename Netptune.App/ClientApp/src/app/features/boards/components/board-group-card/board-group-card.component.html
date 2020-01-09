@@ -1,0 +1,14 @@
+<mat-card class="group-task-card">
+  <div class="task-name-text">
+    {{ task.name }}
+  </div>
+
+  <ngx-avatar
+    size="32"
+    textSizeRatio="2"
+    class="task-card-user-chip"
+    [name]="task.ownerUsername"
+  >
+  </ngx-avatar>
+
+</mat-card>

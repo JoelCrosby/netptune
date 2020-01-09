@@ -6,6 +6,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
+using Netptune.Models.Enums;
 
 namespace Netptune.Services
 {
@@ -47,6 +48,34 @@ namespace Netptune.Services
         public async Task<Board> AddBoard(Board board)
         {
             board.Identifier = board.Identifier.ToUrlSlug();
+
+            board.BoardGroups.Add(new BoardGroup
+            {
+                Name = "Backlog",
+                Type = BoardGroupType.Backlog,
+                SortOrder = 1D
+            });
+
+            board.BoardGroups.Add(new BoardGroup
+            {
+                Name = "Todo",
+                Type = BoardGroupType.Basic,
+                SortOrder = 1.1D
+            });
+
+            board.BoardGroups.Add(new BoardGroup
+            {
+                Name = "Pending Review",
+                Type = BoardGroupType.Basic,
+                SortOrder = 1.2D
+            });
+
+            board.BoardGroups.Add(new BoardGroup
+            {
+                Name = "Done",
+                Type = BoardGroupType.Done,
+                SortOrder = 1.3D
+            });
 
             var result = await Boards.AddAsync(board);
 

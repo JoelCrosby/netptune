@@ -17,7 +17,8 @@
         {{ task.name }}
       </div>
     </div>
-    <div class="flex-row justify-content-start align-items-start">
+
+    <div class="task-footer">
 
       <div class="chip-list">
         <mat-chip-list ariaOrientation="horizontal">
@@ -25,11 +26,16 @@
               {{ task.projectName }}
             </mat-chip>
             <div class="chip-spacer"></div>
-            <mat-chip color="accent">
-              {{ task.assigneeUsername }}
-            </mat-chip>
           </mat-chip-list>
       </div>
+
+      <ngx-avatar
+        size="24"
+        textSizeRatio="2"
+        class="task-card-user-chip"
+        [name]="task.ownerUsername"
+      >
+      </ngx-avatar>
 
       <mat-menu #menu="matMenu">
         <ng-template matMenuContent>
@@ -49,6 +55,7 @@
       </mat-menu>
 
     </div>
+
   </div>
 </div>
 

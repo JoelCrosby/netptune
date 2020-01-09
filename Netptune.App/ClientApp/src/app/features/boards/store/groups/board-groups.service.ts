@@ -1,3 +1,4 @@
+import { MoveTaskInGroupRequest } from './../../../../core/models/move-task-in-group-request';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BoardGroup } from '@app/core/models/board-group';
@@ -20,6 +21,13 @@ export class BoardGroupsService {
     return this.http.post<BoardGroup>(
       environment.apiEndpoint + 'api/boardgroups',
       boardGorup
+    );
+  }
+
+  moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
+    return this.http.post<BoardGroup>(
+      environment.apiEndpoint + 'api/porojecttasks/MoveTaskInGroupRequest',
+      request
     );
   }
 

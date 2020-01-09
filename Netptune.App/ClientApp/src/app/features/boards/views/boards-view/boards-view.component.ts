@@ -1,5 +1,5 @@
 import { selectAllBoardGroups } from './../../store/groups/board-groups.selectors';
-import { BoardGroup } from '@app/core/models/board-group';
+import { BoardGroup, BoardGroupType } from '@app/core/models/board-group';
 import * as actions from './../../store/groups/board-groups.actions';
 import {
   loadBoards,
@@ -49,6 +49,16 @@ export class BoardsViewComponent implements OnInit {
   }
 
   showAddModal() {}
+
+  getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {
+    return groups
+      .filter(item => item.id !== group.id)
+      .map(item => `bg-${item.id.toString()}`);
+  }
+
+  getDragListId(group: BoardGroup) {
+    return `bg-${group.id.toString()}`;
+  }
 
   drop(event: CdkDragDrop<BoardGroup[]>) {
     moveItemInArray(
@@ -119,6 +129,7 @@ export class BoardsViewComponent implements OnInit {
                 name,
                 sortOrder,
                 boardId: board.id,
+                type: BoardGroupType.Basic,
               },
             })
           );

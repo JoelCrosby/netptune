@@ -69,6 +69,18 @@ export class BoardGroupsEffects {
     )
   );
 
+  moveTaskInBoardGroup$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.moveTaskInBoardGroup),
+      switchMap(action =>
+        this.boardGroupsService.moveTaskInBoardGroup(action.request).pipe(
+          map(actions.moveTaskInBoardGroupSuccess),
+          catchError(error => of(actions.moveTaskInBoardGroupFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,

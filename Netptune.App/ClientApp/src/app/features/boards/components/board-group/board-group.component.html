@@ -1,6 +1,28 @@
 <div class="board-group-card">
   <ng-content></ng-content>
-  <div class="task-container" #container>
+  <div
+    #container
+    class="task-container"
+  >
+
+  <div
+    cdkDropList
+    class="board-task-list"
+    [id]="dragListId"
+    [cdkDropListConnectedTo]="siblingIds"
+    (cdkDropListDropped)="drop($event)"
+    [cdkDropListData]="group.tasks"
+  >
+    <app-board-group-card
+      cdkDrag
+      class="board-group-task-card"
+      *ngFor="let task of group.tasks"
+      [cdkDragData]="task"
+      [task]="task"
+    >
+    </app-board-group-card>
+  </div>
+
     <div class="create-task" *ngIf="(focused$ | async) && !inlineActive">
       <button mat-button color="primary" (click)="inlineActive = true">
         ADD TASK
@@ -8,5 +30,6 @@
     </div>
     <app-board-group-task-inline *ngIf="inlineActive" (canceled)="onInlineCanceled()">
     </app-board-group-task-inline>
+
   </div>
 </div>

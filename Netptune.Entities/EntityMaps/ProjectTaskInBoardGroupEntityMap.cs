@@ -17,6 +17,16 @@ namespace Netptune.Entities.EntityMaps
                     taskInGroup.BoardGroupId,
                     taskInGroup.ProjectTaskId
                 });
+
+            builder
+                .HasOne(taskInGroup => taskInGroup.BoardGroup)
+                .WithMany(boardGroup => boardGroup.TasksInGroups)
+                .HasForeignKey(taskInGroup => taskInGroup.BoardGroupId);
+
+            builder
+                .HasOne(taskInGroup => taskInGroup.ProjectTask)
+                .WithMany(projectTask => projectTask.ProjectTaskInBoardGroups)
+                .HasForeignKey(taskInGroup => taskInGroup.ProjectTaskId);
         }
     }
 }

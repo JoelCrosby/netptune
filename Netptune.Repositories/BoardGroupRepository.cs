@@ -24,7 +24,16 @@ namespace Netptune.Repositories
             return Entities
                 .Where(boardGroup => boardGroup.BoardId == boardId)
                 .Where(boardGroup => !boardGroup.IsDeleted)
+
                 .OrderBy(boardGroup => boardGroup.SortOrder)
+
+                .Include(group => group.TasksInGroups)
+                    .ThenInclude(relational => relational.ProjectTask)
+                        .ThenInclude(task => task.Owner)
+                .Include(group => group.TasksInGroups)
+                    .ThenInclude(relational => relational.ProjectTask)
+                        .ThenInclude(task => task.Project)
+
                 .ToListAsync();
         }
     }

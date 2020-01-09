@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Netptune.Core.Repositories;
@@ -7,6 +8,7 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Enums;
+using Netptune.Models.Relationships;
 using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.ProjectTasks;
 
@@ -23,24 +25,24 @@ namespace Netptune.Services
             UnitOfWork = unitOfWork;
         }
 
-        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest projectTask, AppUser user)
+        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request, AppUser user)
         {
-            var workspace = await UnitOfWork.Workspaces.GetBySlug(projectTask.Workspace);
+            var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
             var task = new ProjectTask
             {
-                Name = projectTask.Name,
-                Description = projectTask.Description,
-                Status = projectTask.Status ?? ProjectTaskStatus.New,
-                SortOrder = projectTask.SortOrder,
-                ProjectId = projectTask.ProjectId,
-                AssigneeId = projectTask.AssigneeId,
+                Name = request.Name,
+                Description = request.Description,
+                Status = request.Status ?? ProjectTaskStatus.New,
+                SortOrder = request.SortOrder,
+                ProjectId = request.ProjectId,
+                AssigneeId = request.AssigneeId,
                 OwnerId = user.Id,
                 Workspace = workspace,
                 WorkspaceId = workspace.Id
             };
 
-            var project = UnitOfWork.Projects.GetAsync(projectTask.ProjectId);
+            var project = UnitOfWork.Projects.GetAsync(request.ProjectId);
 
             if (project is null) throw new Exception("ProjectId cannot be null.");
 
@@ -98,6 +100,63 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return await TaskRepository.GetTaskViewModel(result.Id);
+        }
+
+        public async Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user)
+        {
+            if (request.OldGroupId == request.NewGroupId)
+            {
+                var relational = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
+
+                var task = relational
+                    .TasksInGroups
+                    .FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
+
+                if (task is null)
+                {
+                    return null;
+                }
+
+                task.SortOrder = request.SortOrder;
+
+                await UnitOfWork.CompleteAsync();
+
+                return task;
+            }
+
+            var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
+            var itemToRemove = oldGroup.TasksInGroups.FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
+
+            oldGroup.TasksInGroups.Remove(itemToRemove);
+
+            var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
+
+            var existing = newGroup
+                .TasksInGroups
+                .Where(item => item.ProjectTaskId == request.TaskId)
+                .ToList();
+
+            if (existing.Any())
+            {
+                foreach (var item in existing)
+                {
+                    newGroup
+                        .TasksInGroups.Remove(item);
+                }
+            }
+
+            var newRelational = new ProjectTaskInBoardGroup
+            {
+                ProjectTaskId = request.TaskId,
+                BoardGroupId = request.NewGroupId,
+                SortOrder = request.SortOrder,
+            };
+
+            newGroup.TasksInGroups.Add(newRelational);
+
+            await UnitOfWork.CompleteAsync();
+
+            return newRelational;
         }
     }
 }

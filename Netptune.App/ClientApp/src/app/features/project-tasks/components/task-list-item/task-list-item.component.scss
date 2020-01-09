@@ -3,14 +3,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 
     .card-chips {
       justify-content: flex-end;
     }
 
     .title {
-      margin-top: auto;
-      margin-bottom: auto;
       margin-left: 1.2rem;
       font-size: 14px;
       cursor: pointer;
@@ -39,10 +38,18 @@
       justify-content: flex-start;
       margin-top: auto;
       margin-bottom: auto;
+      align-items: center;
 
       .mat-checkbox {
         margin: auto;
       }
+    }
+
+    .task-footer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     .chip-list {
@@ -67,6 +74,11 @@
       line-height: 24px;
       margin-left: .4rem;
       visibility: hidden;
+    }
+
+    .task-card-user-chip {
+      margin-right: .6rem;
+      font-size: 12px / 24px 'Roboto', sans-serif !important;
     }
   }
 

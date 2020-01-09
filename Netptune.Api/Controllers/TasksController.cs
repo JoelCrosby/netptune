@@ -99,5 +99,19 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // POST: api/ProjectTasks/MoveTaskInGroup
+        [HttpPost]
+        [Route("MoveTaskInGroupRequest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
+        public async Task<IActionResult> PostTask([FromBody] MoveTaskInGroupRequest request)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _taskService.MoveTaskInBoardGroup(request, user);
+
+            return Ok(result);
+        }
     }
 }

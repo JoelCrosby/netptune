@@ -32,26 +32,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Owner)
                 .FirstOrDefaultAsync();
 
-            if (task is null) return null;
-
-            return new TaskViewModel
-            {
-                Id = task.Id,
-                AssigneeId = task.AssigneeId,
-                OwnerId = task.OwnerId,
-                Name = task.Name,
-                Description = task.Description,
-                Status = task.Status,
-                SortOrder = task.SortOrder,
-                ProjectId = task.ProjectId,
-                WorkspaceId = task.WorkspaceId,
-                CreatedAt = task.CreatedAt,
-                UpdatedAt = task.UpdatedAt,
-                AssigneeUsername = task.Assignee?.GetDisplayName(),
-                AssigneePictureUrl = task.Assignee?.GetDisplayName(),
-                OwnerUsername = task.Owner?.GetDisplayName(),
-                ProjectName = task.Project?.Name
-            };
+            return task?.ToViewModel();
         }
 
         public async Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug)
@@ -63,25 +44,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner);
 
-            return await tasks
-                .Select(r => new TaskViewModel
-                {
-                    Id = r.Id,
-                    AssigneeId = r.Assignee == null ? string.Empty : r.Assignee.Id,
-                    OwnerId = r.OwnerId,
-                    Name = r.Name,
-                    Description = r.Description,
-                    Status = r.Status,
-                    SortOrder = r.SortOrder,
-                    ProjectId = r.ProjectId,
-                    WorkspaceId = r.WorkspaceId,
-                    CreatedAt = r.CreatedAt,
-                    UpdatedAt = r.UpdatedAt,
-                    AssigneeUsername = r.Assignee == null ? string.Empty : r.Assignee.GetDisplayName(),
-                    AssigneePictureUrl = r.Assignee == null ? string.Empty : r.Assignee.GetDisplayName(),
-                    OwnerUsername = r.Owner == null ? string.Empty : r.Owner.GetDisplayName(),
-                    ProjectName = r.Project == null ? string.Empty : r.Project.Name
-                }).ToListAsync();
+            return await tasks.Select(task => task.ToViewModel()).ToListAsync();
         }
 
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)

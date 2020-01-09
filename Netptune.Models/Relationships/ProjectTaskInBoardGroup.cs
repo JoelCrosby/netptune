@@ -10,6 +10,8 @@ namespace Netptune.Models.Relationships
 
         public int BoardGroupId { get; set; }
 
+        public double SortOrder { get; set; }
+
         #region NavigationProperties
 
         [JsonIgnore]

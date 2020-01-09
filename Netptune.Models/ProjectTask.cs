@@ -1,7 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
 using Netptune.Models.Enums;
+using Netptune.Models.Relationships;
+using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Models
 {
@@ -35,6 +38,35 @@ namespace Netptune.Models
 
         [JsonIgnore]
         public Workspace Workspace { get; set; }
+
+        [JsonIgnore]
+        public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
+
+        #endregion
+
+        #region Methods
+
+        public TaskViewModel ToViewModel()
+        {
+            return new TaskViewModel
+            {
+                Id = Id,
+                AssigneeId = Assignee == null ? string.Empty : Assignee.Id,
+                OwnerId = OwnerId,
+                Name = Name,
+                Description = Description,
+                Status = Status,
+                SortOrder = SortOrder,
+                ProjectId = ProjectId,
+                WorkspaceId = WorkspaceId,
+                CreatedAt = CreatedAt,
+                UpdatedAt = UpdatedAt,
+                AssigneeUsername = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
+                AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
+                OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
+                ProjectName = Project == null ? string.Empty : Project.Name
+            };
+        }
 
         #endregion
 

@@ -1,3 +1,4 @@
+import { avatarColors } from './../core/colors/colors';
 // Angular modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,6 +15,9 @@ import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component
 import { TaskDetailDialogComponent } from './dialogs/task-detail-dialog/task-detail-dialog.component';
 import { InviteDialogComponent } from './dialogs/invite-dialog/invite-dialog.component';
 import { BoardPostDialogComponent } from './dialogs/board-post-dialog/board-post-dialog.component';
+
+// ngx-avatar
+import { AvatarModule } from 'ngx-avatar';
 
 // Angular Material Components
 import {
@@ -112,6 +116,9 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
+    AvatarModule.forRoot({
+      colors: avatarColors,
+    }),
   ],
   exports: [
     CommonModule,
@@ -158,6 +165,7 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
+    AvatarModule,
   ],
   entryComponents: [
     ProjectDialogComponent,
@@ -168,6 +176,8 @@ import { WorkspaceDialogComponent } from './dialogs/workspace-dialog/workspace-d
     BoardPostDialogComponent,
     WorkspaceDialogComponent,
   ],
-  providers: [{ provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }],
+  providers: [
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
+  ],
 })
 export class SharedModule {}

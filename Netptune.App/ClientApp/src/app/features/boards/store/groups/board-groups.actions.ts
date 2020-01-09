@@ -1,5 +1,6 @@
 import { BoardGroup } from '@app/core/models/board-group';
 import { createAction, props } from '@ngrx/store';
+import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
 
 export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
@@ -60,5 +61,19 @@ export const editBoardGroupSuccess = createAction(
 
 export const editBoardGroupFail = createAction(
   '[BoardGroups] Edit Board Group Fail',
+  props<{ error: any }>()
+);
+
+export const moveTaskInBoardGroup = createAction(
+  '[BoardGroups] Move Task In BoardGroup',
+  props<{ request: MoveTaskInGroupRequest }>()
+);
+
+export const moveTaskInBoardGroupSuccess = createAction(
+  '[BoardGroups] Move Task In BoardGroup Success'
+);
+
+export const moveTaskInBoardGroupFail = createAction(
+  '[BoardGroups] Move Task In BoardGroup Fail',
   props<{ error: any }>()
 );

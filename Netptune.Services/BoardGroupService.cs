@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Netptune.Core.Repositories;
@@ -21,9 +22,23 @@ namespace Netptune.Services
             BoardGroups = unitOfWork.BoardGroups;
         }
 
-        public Task<List<BoardGroup>> GetBoardGroups(int boardId)
+        public async Task<List<BoardGroup>> GetBoardGroups(int boardId)
         {
-            return BoardGroups.GetBoardGroupsInBoard(boardId);
+            var groups = await BoardGroups.GetBoardGroupsInBoard(boardId);
+
+            foreach (var group in groups)
+            {
+                var tasks = group
+                    .TasksInGroups
+                    .OrderBy(item => item.SortOrder)
+                    .Select(item => item.ProjectTask);
+
+                var viewModels = tasks.Select(task => task.ToViewModel());
+
+                group.Tasks.AddRange(viewModels.OrderBy(item => item.SortOrder));
+            }
+
+            return groups;
         }
 
         public Task<BoardGroup> GetBoardGroup(int id)
