@@ -18,6 +18,7 @@
           routerLinkActive="router-link-active"
           *ngFor="let workspace of workspaces$ | async"
           [routerLink]="['/app/', workspace.slug]"
+          [style.backgroundColor]="workspace?.metaInfo.color"
         >
           {{ workspace.name[0] }}
         </a>

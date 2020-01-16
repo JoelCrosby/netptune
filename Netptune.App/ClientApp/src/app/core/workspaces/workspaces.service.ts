@@ -20,6 +20,13 @@ export class WorkspacesService {
     );
   }
 
+  put(workspace: Workspace) {
+    return this.http.put<Workspace>(
+      environment.apiEndpoint + 'api/workspaces',
+      workspace
+    );
+  }
+
   delete(workspace: Workspace) {
     return this.http.delete<Workspace>(
       environment.apiEndpoint + 'api/workspaces/' + workspace.id

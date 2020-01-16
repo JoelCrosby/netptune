@@ -1,1 +1,27 @@
+.color-pallete {
+  border-radius: .55rem;
+  height: 24px;
+  width: 24px;
+}
 
+.color-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.label {
+  margin-left: 1rem;
+}
+
+.name-color-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: center;
+}
+
+.color-field {
+  margin-left: 1rem;
+  max-width: 200px;
+}

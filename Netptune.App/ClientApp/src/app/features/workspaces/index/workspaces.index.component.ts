@@ -37,6 +37,13 @@ export class WorkspacesComponent implements OnInit {
     this.dialog.open(WorkspaceDialogComponent);
   }
 
+  onEditClicked(workspace: Workspace) {
+    this.dialog.open(WorkspaceDialogComponent, {
+      data: workspace,
+      width: '600px',
+    });
+  }
+
   deleteClicked(workspace: Workspace) {
     this.dialog
       .open(ConfirmDialogComponent, {

@@ -12,7 +12,7 @@ const reducer = createReducer(
   on(actions.loadWorkspacesSuccess, (state, { workspaces }) =>
     adapter.addAll(workspaces, { ...state, loading: false, loaded: true })
   ),
-  on(actions.createWorkspace, state => ({ ...state, loading: true })),
+  on(actions.createWorkspace, state => ({ ...state, loadingCreate: true })),
   on(actions.createWorkspaceFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -21,6 +21,17 @@ const reducer = createReducer(
     adapter.addOne(workspace, {
       ...state,
       loadingCreate: false,
+    })
+  ),
+  on(actions.editWorkspace, state => ({ ...state, loadingEdit: true })),
+  on(actions.editWorkspaceFail, (state, { error }) => ({
+    ...state,
+    editError: error,
+  })),
+  on(actions.editWorkspaceSuccess, (state, { workspace }) =>
+    adapter.upsertOne(workspace, {
+      ...state,
+      loadingEdit: false,
     })
   ),
   on(actions.selectWorkspace, (state, { workspace }) => ({

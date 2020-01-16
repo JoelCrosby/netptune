@@ -1,10 +1,17 @@
+import { editWorkspace } from './../../../core/workspaces/workspaces.actions';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Workspace } from '@core/models/workspace';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { createWorkspace } from '@app/core/workspaces/workspaces.actions';
+import { avatarColors, colorDictionary } from '@app/core/colors/colors';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -12,12 +19,33 @@ import { createWorkspace } from '@app/core/workspaces/workspaces.actions';
   styleUrls: ['./workspace-dialog.component.scss'],
 })
 export class WorkspaceDialogComponent implements OnInit {
-  public workspace: Workspace;
-
-  public workspaceFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [Validators.required]),
-    discriptionFormControl: new FormControl(),
+  workspaceFromGroup = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl(),
+    color: new FormControl(''),
   });
+
+  colors = colorDictionary();
+
+  get name() {
+    return this.workspaceFromGroup.get('name');
+  }
+
+  get description() {
+    return this.workspaceFromGroup.get('description');
+  }
+
+  get color() {
+    return this.workspaceFromGroup.get('color');
+  }
+
+  get selectedColor() {
+    return this.color.value;
+  }
+
+  get isEditMode() {
+    return this.data !== undefined || null;
+  }
 
   constructor(
     private store: Store<AppState>,
@@ -25,7 +53,15 @@ export class WorkspaceDialogComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Workspace
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data) {
+      const workspace = this.data;
+
+      this.name.setValue(workspace.name);
+      this.description.setValue(workspace.description);
+      this.color.setValue(workspace.metaInfo.color);
+    }
+  }
 
   close(): void {
     this.dialogRef.close();
@@ -33,16 +69,27 @@ export class WorkspaceDialogComponent implements OnInit {
 
   getResult() {
     const workspace: Workspace = {
-      id: this.workspace ? this.workspace.id : undefined,
-      name: this.workspaceFromGroup.controls['nameFormControl'].value,
-      description: this.workspaceFromGroup.controls['discriptionFormControl']
-        .value,
+      ...this.data,
+      name: this.name.value,
+      description: this.description.value,
+      metaInfo: {
+        color: this.selectedColor,
+      },
       users: [],
       projects: [],
     };
 
-    this.store.dispatch(createWorkspace({ workspace }));
+    if (this.isEditMode) {
+      this.store.dispatch(editWorkspace({ workspace }));
+    } else {
+      this.store.dispatch(createWorkspace({ workspace }));
+    }
 
     this.dialogRef.close();
+  }
+
+  getColorLabel(value: string) {
+    const obj = this.colors.find(color => color.color === value);
+    return obj && obj.name;
   }
 }

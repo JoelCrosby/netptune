@@ -28,6 +28,21 @@ export const createWorkspaceFail = createAction(
   props<{ error: any }>()
 );
 
+export const editWorkspace = createAction(
+  '[Workspaces] Edit Workspace',
+  props<{ workspace: Workspace }>()
+);
+
+export const editWorkspaceSuccess = createAction(
+  '[Workspaces] Edit Workspace Success',
+  props<{ workspace: Workspace }>()
+);
+
+export const editWorkspaceFail = createAction(
+  '[Workspaces] Edit Workspace Fail',
+  props<{ error: any }>()
+);
+
 export const deleteWorkspace = createAction(
   '[Workspaces] Delete Workspace',
   props<{ workspace: Workspace }>()

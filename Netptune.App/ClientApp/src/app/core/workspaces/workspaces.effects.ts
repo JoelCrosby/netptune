@@ -44,6 +44,18 @@ export class WorkspacesEffects {
     )
   );
 
+  editWorkspace$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.editWorkspace),
+      switchMap(action =>
+        this.workspacesService.put(action.workspace).pipe(
+          map(workspace => actions.editWorkspaceSuccess({ workspace })),
+          catchError(error => of(actions.editWorkspaceFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private workspacesService: WorkspacesService

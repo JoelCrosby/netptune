@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
+using Netptune.Models.Meta;
 using Netptune.Models.Relationships;
 
 namespace Netptune.Models
@@ -13,6 +14,8 @@ namespace Netptune.Models
         public string Description { get; set; }
 
         public string Slug { get; set; }
+
+        public WorkspaceMeta MetaInfo { get; set; }
 
         #region NavigationProperties
 

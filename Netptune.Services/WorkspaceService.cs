@@ -69,7 +69,16 @@ namespace Netptune.Services
 
         public async Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user)
         {
-            var result = await WorkspaceRepository.UpdateWorkspace(workspace, user);
+            var result = await WorkspaceRepository.GetAsync(workspace.Id);
+
+            if (result is null) return null;
+
+            result.Name = workspace.Name;
+            result.Description = workspace.Description;
+            result.ModifiedByUserId = user.Id;
+            result.MetaInfo = workspace.MetaInfo;
+
+            await UnitOfWork.CompleteAsync();
 
             await UnitOfWork.CompleteAsync();
 

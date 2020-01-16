@@ -9,5 +9,11 @@ export interface Workspace extends Basemodel {
   users: AppUser[];
   projects: Project[];
 
+  metaInfo?: WorkspaceMeta;
+
   slug?: string;
+}
+
+export interface WorkspaceMeta {
+  color?: string;
 }
