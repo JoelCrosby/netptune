@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories;
@@ -12,6 +7,10 @@ using Netptune.Models;
 using Netptune.Models.Enums;
 using Netptune.Models.ViewModels.ProjectTasks;
 using Netptune.Repositories.Common;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Netptune.Repositories
 {

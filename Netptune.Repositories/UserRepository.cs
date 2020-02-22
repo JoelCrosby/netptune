@@ -48,7 +48,7 @@ namespace Netptune.Repositories
 
         public Task<AppUser> GetByEmail(string email)
         {
-            return Context.AppUsers.FirstOrDefaultAsync(x => x.Email == email);
+            return Entities.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public Task<bool> IsUserInWorkspace(string userId, int workspaceId)

@@ -1,5 +1,4 @@
-import { moveTaskInBoardGroup } from './../../store/groups/board-groups.actions';
-import { TaskViewModel } from './../../../../core/models/view-models/project-task-dto';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { takeUntil } from 'rxjs/operators';
 import {
   AfterViewInit,
