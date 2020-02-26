@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
 import { AddProjectRequest, Project } from '@core/models/project';
 import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';

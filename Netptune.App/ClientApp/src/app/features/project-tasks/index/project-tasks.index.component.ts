@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TaskStatus } from '@app/core/enums/project-task-status';
 import { TaskDialogComponent } from '@app/shared/dialogs/task-dialog/task-dialog.component';
 import { dropIn, fadeIn } from '@core/animations/animations';

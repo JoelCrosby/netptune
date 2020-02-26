@@ -1,12 +1,13 @@
 import { selectAllUsers } from './../store/users.selectors';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
 import { dropIn } from '@core/animations/animations';
 import { AppUser } from '@core/models/appuser';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { UsernameConverter } from '@core/models/converters/username.converter';
 import { loadUsers } from '../store/users.actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-users',

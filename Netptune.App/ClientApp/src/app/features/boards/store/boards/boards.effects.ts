@@ -16,7 +16,7 @@ import {
   filter,
 } from 'rxjs/operators';
 import * as actions from './boards.actions';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class BoardsEffects {

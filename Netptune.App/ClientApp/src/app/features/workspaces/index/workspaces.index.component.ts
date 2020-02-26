@@ -1,18 +1,17 @@
-import { TextHelpers } from '@core/util/text-helpers';
-import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { Component, OnInit } from '@angular/core';
-import { dropIn } from '@core/animations/animations';
-import { Workspace } from '@core/models/workspace';
-import { AppState } from '@core/core.state';
-import { Store } from '@ngrx/store';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
-import { Router } from '@angular/router';
-import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
+import { dropIn } from '@core/animations/animations';
+import { AppState } from '@core/core.state';
+import { Workspace } from '@core/models/workspace';
+import { TextHelpers } from '@core/util/text-helpers';
 import {
   deleteWorkspace,
   loadWorkspaces,
 } from '@core/workspaces/workspaces.actions';
+import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-workspaces',

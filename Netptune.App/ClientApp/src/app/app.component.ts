@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';

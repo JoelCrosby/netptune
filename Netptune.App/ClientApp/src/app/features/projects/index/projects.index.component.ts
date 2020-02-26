@@ -1,6 +1,6 @@
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';

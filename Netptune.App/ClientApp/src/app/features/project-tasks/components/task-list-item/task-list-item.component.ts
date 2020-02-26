@@ -4,7 +4,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@core/util/text-helpers';
 

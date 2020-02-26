@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { createProjectTask } from '@app/features/project-tasks/store/tasks.actions';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';

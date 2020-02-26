@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Project } from '@core/models/project';
 import { ProjectTask } from '@core/models/project-task';
 
@@ -25,16 +25,25 @@ export class TaskDetailDialogComponent implements OnInit {
   }
 
   projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    nameFormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
     projectFormControl: new FormControl(),
     descriptionFormControl: new FormControl(),
   });
 
   async ngOnInit() {
     if (this.task) {
-      this.projectFromGroup.controls['nameFormControl'].setValue(this.task.name);
-      this.projectFromGroup.controls['projectFormControl'].setValue(this.task.projectId);
-      this.projectFromGroup.controls['descriptionFormControl'].setValue(this.task.description);
+      this.projectFromGroup.controls['nameFormControl'].setValue(
+        this.task.name
+      );
+      this.projectFromGroup.controls['projectFormControl'].setValue(
+        this.task.projectId
+      );
+      this.projectFromGroup.controls['descriptionFormControl'].setValue(
+        this.task.description
+      );
     } else {
     }
   }
@@ -48,7 +57,8 @@ export class TaskDetailDialogComponent implements OnInit {
       ...this.task,
       name: this.projectFromGroup.controls['nameFormControl'].value,
       projectId: this.projectFromGroup.controls['projectFormControl'].value,
-      description: this.projectFromGroup.controls['descriptionFormControl'].value,
+      description: this.projectFromGroup.controls['descriptionFormControl']
+        .value,
     };
 
     this.dialogRef.close(taskResult);

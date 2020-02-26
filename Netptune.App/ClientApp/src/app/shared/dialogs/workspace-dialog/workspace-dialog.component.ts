@@ -1,17 +1,12 @@
-import { editWorkspace } from './../../../core/workspaces/workspaces.actions';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  Validators,
-  FormBuilder,
-} from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Workspace } from '@core/models/workspace';
-import { AppState } from '@core/core.state';
-import { Store } from '@ngrx/store';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { colorDictionary } from '@app/core/colors/colors';
 import { createWorkspace } from '@app/core/workspaces/workspaces.actions';
-import { avatarColors, colorDictionary } from '@app/core/colors/colors';
+import { AppState } from '@core/core.state';
+import { Workspace } from '@core/models/workspace';
+import { editWorkspace } from '@core/workspaces/workspaces.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-workspace-dialog',

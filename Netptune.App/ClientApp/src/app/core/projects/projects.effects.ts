@@ -14,7 +14,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ProjectsEffects {
