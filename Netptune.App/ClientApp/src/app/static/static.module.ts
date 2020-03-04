@@ -3,10 +3,11 @@ import { SharedModule } from '@app/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageContainerComponent } from './components/page-container/page-container.component';
+import { UsernamePipe } from './pipes/username.pipe';
 
 @NgModule({
   declarations: [PageContainerComponent],
   imports: [CommonModule, SharedModule],
-  exports: [PageContainerComponent],
+  exports: [PageContainerComponent, UsernamePipe],
 })
 export class StaticModule {}

@@ -1,11 +1,11 @@
-import { selectAllBoardGroups } from './../../store/groups/board-groups.selectors';
+import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selectors';
 import { BoardGroup, BoardGroupType } from '@app/core/models/board-group';
-import * as actions from './../../store/groups/board-groups.actions';
+import * as actions from '@boards/store/groups/board-groups.actions';
 import {
   loadBoards,
   createBoard,
   selectBoard,
-} from './../../store/boards/boards.actions';
+} from '@boards/store/boards/boards.actions';
 import { Component, OnInit } from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { AppState } from '@core/core.state';
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import {
   selectAllBoards,
   selectCurrentBoard,
-} from './../../store/boards/boards.selectors';
+} from '@boards/store/boards/boards.selectors';
 import { tap, first, map } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';

@@ -22,6 +22,14 @@
     "paths": {
       "@app/*": ["app/*"],
       "@core/*": ["app/core/*"],
+      "@auth/*": ["app/features/auth/*"],
+      "@boards/*": ["app/features/boards/*"],
+      "@profile/*": ["app/features/profile/*"],
+      "@project-tasks/*": ["app/features/project-tasks/*"],
+      "@projects/*": ["app/features/projects/*"],
+      "@settings/*": ["app/features/settings/*"],
+      "@users/*": ["app/features/users/*"],
+      "@workspaces/*": ["app/features/workspaces/*"],
       "@env/*": [
         "environments/*"
       ],
