@@ -13,8 +13,9 @@ namespace Netptune.Repositories.Configuration
     {
         public static void AddNetptuneRepository(this IServiceCollection services, Action<NetptuneRepositoryOptions> optionsAction)
         {
-            if (optionsAction == null)
+            if (optionsAction is null)
                 throw new ArgumentNullException(nameof(optionsAction));
+
             var netptuneRepositoryOptions = new NetptuneRepositoryOptions();
 
             optionsAction(netptuneRepositoryOptions);

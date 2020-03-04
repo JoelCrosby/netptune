@@ -56,12 +56,12 @@ namespace Netptune.Services
 
             // TODO: Replace exceptions with return result type.
 
-            if (user == null)
+            if (user is null)
             {
                 throw new Exception("user not found");
             }
 
-            if (workspace == null)
+            if (workspace is null)
             {
                 throw new Exception("workspace not found");
             }
@@ -73,7 +73,7 @@ namespace Netptune.Services
 
             var result = await UserRepository.InviteUserToWorkspace(userId, workspaceId);
 
-            if (result == null) throw new Exception();
+            if (result is null) throw new Exception();
 
             await UnitOfWork.CompleteAsync();
 

@@ -47,7 +47,7 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                return await GetProjectViewModel(project.Id);
+                return await GetProjectViewModel(project);
             });
         }
 
@@ -95,11 +95,6 @@ namespace Netptune.Services
         private Task<ProjectViewModel> GetProjectViewModel(Project project)
         {
             return ProjectRepository.GetProjectViewModel(project.Id);
-        }
-
-        private Task<ProjectViewModel> GetProjectViewModel(int projectId)
-        {
-            return ProjectRepository.GetProjectViewModel(projectId);
         }
     }
 }

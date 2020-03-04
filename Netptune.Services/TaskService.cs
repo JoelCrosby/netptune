@@ -136,13 +136,11 @@ namespace Netptune.Services
                 .Where(item => item.ProjectTaskId == request.TaskId)
                 .ToList();
 
-            if (existing.Any())
+
+            foreach (var item in existing)
             {
-                foreach (var item in existing)
-                {
-                    newGroup
-                        .TasksInGroups.Remove(item);
-                }
+                newGroup
+                    .TasksInGroups.Remove(item);
             }
 
             var newRelational = new ProjectTaskInBoardGroup
