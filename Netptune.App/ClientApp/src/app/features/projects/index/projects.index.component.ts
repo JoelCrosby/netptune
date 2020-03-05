@@ -7,8 +7,6 @@ import { AppState } from '@core/core.state';
 import { Project } from '@core/models/project';
 import { Store } from '@ngrx/store';
 import { ProjectDialogComponent } from '@app/shared/dialogs/project-dialog/project-dialog.component';
-import { AppUser } from '@core/models/appuser';
-import { UsernameConverter } from '@core/models/converters/username.converter';
 import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@app/core/util/text-helpers';
 import { selectAllProjects } from '@app/core/projects/projects.selectors';
@@ -39,10 +37,6 @@ export class ProjectsComponent implements OnInit {
 
   showAddModal() {
     this.dialog.open<ProjectDialogComponent>(ProjectDialogComponent);
-  }
-
-  toDisplay(user: AppUser) {
-    return UsernameConverter.toDisplay(user);
   }
 
   deleteClicked(project: ProjectViewModel) {

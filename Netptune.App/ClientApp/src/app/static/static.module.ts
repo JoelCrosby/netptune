@@ -6,7 +6,7 @@ import { PageContainerComponent } from './components/page-container/page-contain
 import { UsernamePipe } from './pipes/username.pipe';
 
 @NgModule({
-  declarations: [PageContainerComponent],
+  declarations: [PageContainerComponent, UsernamePipe],
   imports: [CommonModule, SharedModule],
   exports: [PageContainerComponent, UsernamePipe],
 })
