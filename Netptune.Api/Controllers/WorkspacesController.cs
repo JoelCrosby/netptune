@@ -16,13 +16,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class WorkspacesController : ControllerBase
     {
-        private readonly IWorkspaceService _workspaceService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IWorkspaceService WorkspaceService;
+        private readonly UserManager<AppUser> UserManager;
 
         public WorkspacesController(IWorkspaceService workspaceService, UserManager<AppUser> userManager)
         {
-            _workspaceService = workspaceService;
-            _userManager = userManager;
+            WorkspaceService = workspaceService;
+            UserManager = userManager;
         }
 
         // GET: api/Workspaces
@@ -31,8 +31,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<Workspace>))]
         public async Task<IActionResult> GetWorkspaces()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _workspaceService.GetWorkspaces(user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await WorkspaceService.GetWorkspaces(user);
 
             return Ok(result);
         }
@@ -44,7 +44,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> GetWorkspace([FromRoute] string slug)
         {
-            var result = await _workspaceService.GetWorkspace(slug);
+            var result = await WorkspaceService.GetWorkspace(slug);
 
             return Ok(result);
         }
@@ -57,8 +57,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> PutWorkspace([FromBody] Workspace workspace)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _workspaceService.UpdateWorkspace(workspace, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await WorkspaceService.UpdateWorkspace(workspace, user);
 
             return Ok(result);
         }
@@ -69,8 +69,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> PostWorkspace([FromBody] Workspace workspace)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _workspaceService.AddWorkspace(workspace, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await WorkspaceService.AddWorkspace(workspace, user);
 
             return Ok(result);
         }
@@ -81,7 +81,7 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
-            var result = await _workspaceService.DeleteWorkspace(id);
+            var result = await WorkspaceService.DeleteWorkspace(id);
 
             return Ok(result);
         }

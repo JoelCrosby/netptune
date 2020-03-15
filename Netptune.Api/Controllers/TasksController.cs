@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +8,9 @@ using Netptune.Models;
 using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.ProjectTasks;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Netptune.Api.Controllers
 {
     [Authorize]
@@ -18,13 +18,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class ProjectTasksController : ControllerBase
     {
-        private readonly ITaskService _taskService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly ITaskService TaskService;
+        private readonly UserManager<AppUser> UserManager;
 
         public ProjectTasksController(ITaskService taskService, UserManager<AppUser> userManager)
         {
-            _taskService = taskService;
-            _userManager = userManager;
+            TaskService = taskService;
+            UserManager = userManager;
         }
 
         // GET: api/ProjectTasks
@@ -33,7 +33,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
         public async Task<IActionResult> GetTasks(string workspaceSlug)
         {
-            var result = await _taskService.GetTasks(workspaceSlug);
+            var result = await TaskService.GetTasks(workspaceSlug);
 
             return Ok(result);
         }
@@ -45,7 +45,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> GetTask([FromRoute] int id)
         {
-            var result = await _taskService.GetTask(id);
+            var result = await TaskService.GetTask(id);
 
             return Ok(result);
         }
@@ -57,7 +57,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
-            var result = await _taskService.UpdateTask(task);
+            var result = await TaskService.UpdateTask(task);
 
             return Ok(result);
         }
@@ -69,8 +69,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest task)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _taskService.AddTask(task, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await TaskService.AddTask(task, user);
 
             return Ok(result);
         }
@@ -82,8 +82,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _taskService.DeleteTask(id, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await TaskService.DeleteTask(id, user);
 
             return Ok(result);
         }
@@ -95,7 +95,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(ProjectTaskCounts))]
         public async Task<IActionResult> GetProjectTaskCount(int projectId)
         {
-            var result = await _taskService.GetProjectTaskCount(projectId);
+            var result = await TaskService.GetProjectTaskCount(projectId);
 
             return Ok(result);
         }
@@ -108,8 +108,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] MoveTaskInGroupRequest request)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _taskService.MoveTaskInBoardGroup(request, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await TaskService.MoveTaskInBoardGroup(request, user);
 
             return Ok(result);
         }

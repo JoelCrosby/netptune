@@ -19,9 +19,9 @@ namespace Netptune.Services.Authentication
 {
     public class NetptuneAuthService : INetptuneAuthService
     {
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly INetptuneUnitOfWork _unitOfWork;
+        private readonly SignInManager<AppUser> SignInManager;
+        private readonly UserManager<AppUser> UserManager;
+        private readonly INetptuneUnitOfWork UnitOfWork;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -34,9 +34,9 @@ namespace Netptune.Services.Authentication
             INetptuneUnitOfWork unitOfWork
             )
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _unitOfWork = unitOfWork;
+            SignInManager = signInManager;
+            UserManager = userManager;
+            UnitOfWork = unitOfWork;
 
             Issuer = configuration["Tokens:Issuer"];
             SecurityKey = configuration["Tokens:SecurityKey"];
@@ -45,15 +45,15 @@ namespace Netptune.Services.Authentication
 
         public async Task<LoginResult> LogIn(TokenRequest model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
 
             if (!result.Succeeded) return LoginResult.Failed("Username or password is incorrect");
 
-            var appUser = await _userManager.FindByEmailAsync(model.Email);
+            var appUser = await UserManager.FindByEmailAsync(model.Email);
 
             appUser.LastLoginTime = DateTime.UtcNow;
 
-            await _unitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync();
 
             return LoginResult.Success(GenerateToken(appUser));
         }
@@ -68,7 +68,7 @@ namespace Netptune.Services.Authentication
                 Lastname = model.Lastname
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
@@ -80,14 +80,14 @@ namespace Netptune.Services.Authentication
                 return RegisterResult.Failed(string.Join(", ", result.Errors));
             }
 
-            var appUser = await _userManager.FindByEmailAsync(model.Email);
+            var appUser = await UserManager.FindByEmailAsync(model.Email);
 
-            await _signInManager.SignInAsync(appUser, false);
+            await SignInManager.SignInAsync(appUser, false);
 
             appUser.RegistrationDate = DateTime.UtcNow;
             appUser.LastLoginTime = DateTime.UtcNow;
 
-            await _unitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync();
 
             return RegisterResult.Success(GenerateToken(appUser));
         }

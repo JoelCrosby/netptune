@@ -16,13 +16,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class BoardGroupsController : ControllerBase
     {
-        private readonly IBoardGroupService _boardGroupService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IBoardGroupService BoardGroupService;
+        private readonly UserManager<AppUser> UserManager;
 
         public BoardGroupsController(IBoardGroupService boardGroupService, UserManager<AppUser> userManager)
         {
-            _boardGroupService = boardGroupService;
-            _userManager = userManager;
+            BoardGroupService = boardGroupService;
+            UserManager = userManager;
         }
 
         // GET: api/boardgroups
@@ -31,7 +31,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<BoardGroup>))]
         public async Task<IActionResult> GetBoardGroups(int boardId)
         {
-            var result = await _boardGroupService.GetBoardGroups(boardId);
+            var result = await BoardGroupService.GetBoardGroups(boardId);
 
             return Ok(result);
         }
@@ -43,7 +43,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(BoardGroup))]
         public async Task<IActionResult> GetBoardGroup([FromRoute] int id)
         {
-            var result = await _boardGroupService.GetBoardGroup(id);
+            var result = await BoardGroupService.GetBoardGroup(id);
 
             return Ok(result);
         }
@@ -55,7 +55,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(BoardGroup))]
         public async Task<IActionResult> PutBoardGroup([FromBody] BoardGroup boardGroup)
         {
-            var result = await _boardGroupService.UpdateBoardGroup(boardGroup);
+            var result = await BoardGroupService.UpdateBoardGroup(boardGroup);
 
             return Ok(result);
         }
@@ -67,7 +67,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(BoardGroup))]
         public async Task<IActionResult> PostBoardGroup([FromBody] BoardGroup boardGroup)
         {
-            var result = await _boardGroupService.AddBoardGroup(boardGroup);
+            var result = await BoardGroupService.AddBoardGroup(boardGroup);
 
             return Ok(result);
         }
@@ -79,8 +79,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(BoardGroup))]
         public async Task<IActionResult> DeleteBoardGroup([FromRoute] int id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _boardGroupService.DeleteBoardGroup(id, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await BoardGroupService.DeleteBoardGroup(id, user);
 
             return Ok(result);
         }

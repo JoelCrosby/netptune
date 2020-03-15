@@ -1,9 +1,11 @@
-﻿using Netptune.Models.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Netptune.Models.Enums;
 
 namespace Netptune.Models.Requests
 {
     public class AddProjectTaskRequest
     {
+        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }

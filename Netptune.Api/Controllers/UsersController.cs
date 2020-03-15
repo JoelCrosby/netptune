@@ -16,13 +16,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IUserService _userService;
+        private readonly UserManager<AppUser> UserManager;
+        private readonly IUserService UserService;
 
         public UsersController(UserManager<AppUser> userManager, IUserService userService)
         {
-            _userManager = userManager;
-            _userService = userService;
+            UserManager = userManager;
+            UserService = userService;
         }
 
         // GET: api/AppUsers
@@ -31,7 +31,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<AppUser>))]
         public async Task<IActionResult> GetWorkspaceUsersAsync(string workspaceSlug)
         {
-            var result = await _userService.GetWorkspaceUsers(workspaceSlug);
+            var result = await UserService.GetWorkspaceUsers(workspaceSlug);
 
             return Ok(result);
         }
@@ -43,7 +43,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
-            var result = await _userService.Get(id);
+            var result = await UserService.Get(id);
 
             return Ok(result);
         }
@@ -53,8 +53,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> UpdateUser([FromBody] AppUser user)
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var result = await _userService.Update(user, userId);
+            var userId = UserManager.GetUserId(HttpContext.User);
+            var result = await UserService.Update(user, userId);
 
             return Ok(result);
         }
@@ -67,7 +67,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> Invite(string userId, int workspaceId)
         {
-            var result = await _userService.InviteUserToWorkspace(userId, workspaceId);
+            var result = await UserService.InviteUserToWorkspace(userId, workspaceId);
 
             return Ok(result);
         }
@@ -79,7 +79,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
-            var result = await _userService.GetByEmail(email);
+            var result = await UserService.GetByEmail(email);
 
             return Ok(result);
         }

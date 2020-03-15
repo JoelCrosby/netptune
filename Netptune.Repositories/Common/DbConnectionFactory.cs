@@ -8,11 +8,11 @@ namespace Netptune.Repositories.Common
 {
     public abstract class DbConnectionFactory : IDbConnectionFactory
     {
-        private readonly string _connectionString;
+        private readonly string ConnectionString;
 
         protected DbConnectionFactory(string connectionString)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Netptune.Repositories.Common
         /// <returns>Database connection to use with dapper</returns>
         public IDbConnection StartConnection()
         {
-            var connection = new SqlConnection(_connectionString);
+            var connection = new SqlConnection(ConnectionString);
 
             connection.Open();
 

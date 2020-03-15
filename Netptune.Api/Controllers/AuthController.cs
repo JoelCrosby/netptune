@@ -14,11 +14,11 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly INetptuneAuthService _authenticationService;
+        private readonly INetptuneAuthService AuthenticationService;
 
         public AuthController(INetptuneAuthService authenticationService)
         {
-            _authenticationService = authenticationService;
+            AuthenticationService = authenticationService;
         }
 
         [HttpPost]
@@ -29,7 +29,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AuthenticationTicket))]
         public async Task<IActionResult> Login([FromBody] TokenRequest model)
         {
-            var result = await _authenticationService.LogIn(model);
+            var result = await AuthenticationService.LogIn(model);
 
             if (!result.IsSuccess) return Unauthorized(result.Message);
 
@@ -44,7 +44,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AuthenticationTicket))]
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
-            var result = await _authenticationService.Register(model);
+            var result = await AuthenticationService.Register(model);
 
             if (!result.IsSuccess) return Unauthorized(result.Message);
 

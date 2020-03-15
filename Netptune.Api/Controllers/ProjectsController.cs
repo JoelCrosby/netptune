@@ -17,13 +17,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjectService _projectService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IProjectService ProjectService;
+        private readonly UserManager<AppUser> UserManager;
 
         public ProjectsController(IProjectService projectService, UserManager<AppUser> userManager)
         {
-            _projectService = projectService;
-            _userManager = userManager;
+            ProjectService = projectService;
+            UserManager = userManager;
         }
 
         // GET: api/Projects/5
@@ -32,7 +32,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<Project>))]
         public async Task<IActionResult> GetProjects(string workspaceSlug)
         {
-            var result = await _projectService.GetProjects(workspaceSlug);
+            var result = await ProjectService.GetProjects(workspaceSlug);
 
             return Ok(result);
         }
@@ -44,7 +44,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> GetProject([FromRoute] int id)
         {
-            var result = await _projectService.GetProject(id);
+            var result = await ProjectService.GetProject(id);
 
             return Ok(result);
         }
@@ -56,8 +56,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> PutProject([FromBody] Project project)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _projectService.UpdateProject(project, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await ProjectService.UpdateProject(project, user);
 
             return Ok(result);
         }
@@ -68,8 +68,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Project))]
         public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _projectService.AddProject(request, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await ProjectService.AddProject(request, user);
 
             return Ok(result);
         }
@@ -80,8 +80,8 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _projectService.DeleteProject(id, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await ProjectService.DeleteProject(id, user);
 
             return Ok(result);
         }

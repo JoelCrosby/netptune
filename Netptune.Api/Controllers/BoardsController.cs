@@ -16,13 +16,13 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class BoardsController : ControllerBase
     {
-        private readonly IBoardService _boardService;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IBoardService BoardService;
+        private readonly UserManager<AppUser> UserManager;
 
         public BoardsController(IBoardService boardService, UserManager<AppUser> userManager)
         {
-            _boardService = boardService;
-            _userManager = userManager;
+            BoardService = boardService;
+            UserManager = userManager;
         }
 
         // GET: api/boards
@@ -31,7 +31,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<Board>))]
         public async Task<IActionResult> GetBoards(int projectId)
         {
-            var result = await _boardService.GetBoards(projectId);
+            var result = await BoardService.GetBoards(projectId);
 
             return Ok(result);
         }
@@ -43,7 +43,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> GetBoard([FromRoute] int id)
         {
-            var result = await _boardService.GetBoard(id);
+            var result = await BoardService.GetBoard(id);
 
             return Ok(result);
         }
@@ -55,7 +55,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> PutBoard([FromBody] Board board)
         {
-            var result = await _boardService.UpdateBoard(board);
+            var result = await BoardService.UpdateBoard(board);
 
             return Ok(result);
         }
@@ -67,7 +67,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> PostBoard([FromBody] Board board)
         {
-            var result = await _boardService.AddBoard(board);
+            var result = await BoardService.AddBoard(board);
 
             return Ok(result);
         }
@@ -79,8 +79,8 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _boardService.DeleteBoard(id, user);
+            var user = await UserManager.GetUserAsync(User);
+            var result = await BoardService.DeleteBoard(id, user);
 
             return Ok(result);
         }
