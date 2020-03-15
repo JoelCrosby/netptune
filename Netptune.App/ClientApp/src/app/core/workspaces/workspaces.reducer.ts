@@ -10,7 +10,7 @@ const reducer = createReducer(
     loadingError: error,
   })),
   on(actions.loadWorkspacesSuccess, (state, { workspaces }) =>
-    adapter.addAll(workspaces, { ...state, loading: false, loaded: true })
+    adapter.setAll(workspaces, { ...state, loading: false, loaded: true })
   ),
   on(actions.createWorkspace, state => ({ ...state, loadingCreate: true })),
   on(actions.createWorkspaceFail, (state, { error }) => ({

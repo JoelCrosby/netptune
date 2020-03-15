@@ -11,7 +11,7 @@ const reducer = createReducer(
     loadProjectsError: error,
   })),
   on(actions.loadProjectTasksSuccess, (state, { tasks }) =>
-    adapter.addAll(tasks, {
+    adapter.setAll(tasks, {
       ...state,
       loading: false,
       loaded: true,

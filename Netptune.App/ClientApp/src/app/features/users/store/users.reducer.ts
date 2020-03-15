@@ -12,7 +12,7 @@ const reducer = createReducer(
     loadUsersError: error,
   })),
   on(actions.loadUsersSuccess, (state, { users }) =>
-    adapter.addAll(users, { ...state, loading: false, loaded: true })
+    adapter.setAll(users, { ...state, loading: false, loaded: true })
   )
 );
 
