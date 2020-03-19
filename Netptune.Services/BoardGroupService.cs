@@ -31,11 +31,10 @@ namespace Netptune.Services
                 var tasks = group
                     .TasksInGroups
                     .OrderBy(item => item.SortOrder)
-                    .Select(item => item.ProjectTask);
+                    .Select(item => item.ProjectTask.ToViewModel())
+                    .OrderBy(item => item.SortOrder);
 
-                var viewModels = tasks.Select(task => task.ToViewModel());
-
-                group.Tasks.AddRange(viewModels.OrderBy(item => item.SortOrder));
+                group.Tasks.AddRange(tasks);
             }
 
             return groups;
