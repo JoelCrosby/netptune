@@ -18,6 +18,6 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Build Api Project
-      run: dotnet publish \Netptune.Api\Netptune.Api.csproj --configuration Release
+      run: dotnet publish Netptune.Api/Netptune.Api.csproj --configuration Release
     - name: Build Client App Project
-      run: dotnet publish \Netptune.App\Netptune.App.csproj --configuration Release
+      run: dotnet publish Netptune.App/Netptune.App.csproj --configuration Release
