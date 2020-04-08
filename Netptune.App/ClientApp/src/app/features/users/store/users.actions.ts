@@ -1,6 +1,8 @@
 import { AppUser } from '@core/models/appuser';
 import { props, createAction } from '@ngrx/store';
 
+export const clearState = createAction('[Users] Clear State');
+
 export const loadUsers = createAction('[Users] Load Users');
 
 export const loadUsersSuccess = createAction(

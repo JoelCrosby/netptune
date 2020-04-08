@@ -2,6 +2,8 @@ import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 
+export const clearState = createAction('[ProjectTasks] Clear State');
+
 export const loadProjectTasks = createAction(
   '[ProjectTasks] Load ProjectTasks'
 );

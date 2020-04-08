@@ -2,6 +2,8 @@ import { BoardGroup } from '@app/core/models/board-group';
 import { createAction, props } from '@ngrx/store';
 import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
 
+export const clearState = createAction('[BoardGroups] Clear State');
+
 export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
 export const loadBoardGroupsSuccess = createAction(

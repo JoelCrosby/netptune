@@ -2,6 +2,8 @@ import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createAction, props } from '@ngrx/store';
 
+export const clearState = createAction('[Projects] Clear State');
+
 export const loadProjects = createAction('[Projects] Load Projects');
 
 export const loadProjectsSuccess = createAction(

@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
+import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 
 @Injectable()
 export class UsersEffects {
@@ -16,11 +17,15 @@ export class UsersEffects {
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.usersService.getUsersInWorkspace(workspace.slug).pipe(
-          map(users => actions.loadUsersSuccess({ users })),
-          catchError(error => of(actions.loadUsersFail({ error })))
+          map((users) => actions.loadUsersSuccess({ users })),
+          catchError((error) => of(actions.loadUsersFail({ error })))
         )
       )
     )
+  );
+
+  onWorkspaceSelected$ = createEffect(() =>
+    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
   constructor(

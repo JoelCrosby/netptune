@@ -4,7 +4,8 @@ import { adapter, initialState, TasksState } from './tasks.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadProjectTasks, state => ({ ...state, loading: true })),
+  on(actions.clearState, () => initialState),
+  on(actions.loadProjectTasks, (state) => ({ ...state, loading: true })),
   on(actions.loadProjectTasksFail, (state, { error }) => ({
     ...state,
     loading: false,
@@ -17,7 +18,10 @@ const reducer = createReducer(
       loaded: true,
     })
   ),
-  on(actions.createProjectTask, state => ({ ...state, loadingNewTask: true })),
+  on(actions.createProjectTask, (state) => ({
+    ...state,
+    loadingNewTask: true,
+  })),
   on(actions.createProjectTasksFail, (state, { error }) => ({
     ...state,
     loadingNewTask: false,
@@ -30,7 +34,7 @@ const reducer = createReducer(
       createdTask: task,
     })
   ),
-  on(actions.editProjectTask, state => ({
+  on(actions.editProjectTask, (state) => ({
     ...state,
     editState: { loading: true },
   })),
@@ -44,7 +48,7 @@ const reducer = createReducer(
       editState: { loading: false },
     })
   ),
-  on(actions.deleteProjectTask, state => ({
+  on(actions.deleteProjectTask, (state) => ({
     ...state,
     deleteState: { loading: true },
   })),
@@ -62,7 +66,7 @@ const reducer = createReducer(
     ...state,
     selectedTask: task,
   })),
-  on(actions.clearSelectedTask, state => ({
+  on(actions.clearSelectedTask, (state) => ({
     ...state,
     selectedTask: undefined,
   })),

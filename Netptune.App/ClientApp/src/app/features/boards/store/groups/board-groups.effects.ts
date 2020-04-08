@@ -15,6 +15,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 
 @Injectable()
 export class BoardGroupsEffects {
@@ -25,8 +26,8 @@ export class BoardGroupsEffects {
       filter(([_, board]) => board !== undefined),
       switchMap(([_, board]) =>
         this.boardGroupsService.get(board.id).pipe(
-          map(boardGroups => actions.loadBoardGroupsSuccess({ boardGroups })),
-          catchError(error => of(actions.loadBoardGroupsFail({ error })))
+          map((boardGroups) => actions.loadBoardGroupsSuccess({ boardGroups })),
+          catchError((error) => of(actions.loadBoardGroupsFail({ error })))
         )
       )
     )
@@ -35,10 +36,10 @@ export class BoardGroupsEffects {
   createBoardGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createBoardGroup),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardGroupsService.post(action.boardGroup).pipe(
-          map(boardGroup => actions.createBoardGroupSuccess({ boardGroup })),
-          catchError(error => of(actions.createBoardGroupFail({ error })))
+          map((boardGroup) => actions.createBoardGroupSuccess({ boardGroup })),
+          catchError((error) => of(actions.createBoardGroupFail({ error })))
         )
       )
     )
@@ -47,11 +48,11 @@ export class BoardGroupsEffects {
   deleteBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardGroupsService.delete(action.boardGroup).pipe(
           tap(() => this.snackbar.open('Board Group Deleted')),
-          map(boardGroup => actions.deleteBoardGroupSuccess({ boardGroup })),
-          catchError(error => of(actions.deleteBoardGroupFail({ error })))
+          map((boardGroup) => actions.deleteBoardGroupSuccess({ boardGroup })),
+          catchError((error) => of(actions.deleteBoardGroupFail({ error })))
         )
       )
     )
@@ -60,10 +61,10 @@ export class BoardGroupsEffects {
   editBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.editBoardGroup),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardGroupsService.put(action.boardGroup).pipe(
-          map(boardGroup => actions.editBoardGroupSuccess({ boardGroup })),
-          catchError(error => of(actions.editBoardGroupFail({ error })))
+          map((boardGroup) => actions.editBoardGroupSuccess({ boardGroup })),
+          catchError((error) => of(actions.editBoardGroupFail({ error })))
         )
       )
     )
@@ -72,13 +73,17 @@ export class BoardGroupsEffects {
   moveTaskInBoardGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardGroupsService.moveTaskInBoardGroup(action.request).pipe(
           map(actions.moveTaskInBoardGroupSuccess),
-          catchError(error => of(actions.moveTaskInBoardGroupFail({ error })))
+          catchError((error) => of(actions.moveTaskInBoardGroupFail({ error })))
         )
       )
     )
+  );
+
+  onWorkspaceSelected$ = createEffect(() =>
+    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
   constructor(

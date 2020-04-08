@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 import { Board } from '@app/core/models/board';
 
+export const clearState = createAction('[Boards] Clear State');
+
 export const loadBoards = createAction('[Boards] Load Boards');
 
 export const loadBoardsSuccess = createAction(

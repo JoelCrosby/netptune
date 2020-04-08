@@ -5,7 +5,8 @@ import { UsersState } from './users.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadUsers, state => ({ ...state, loading: true })),
+  on(actions.clearState, () => initialState),
+  on(actions.loadUsers, (state) => ({ ...state, loading: true })),
   on(actions.loadUsersFail, (state, { error }) => ({
     ...state,
     loading: false,

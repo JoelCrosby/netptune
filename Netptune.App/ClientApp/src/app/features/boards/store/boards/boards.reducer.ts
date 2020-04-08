@@ -4,7 +4,8 @@ import * as actions from './boards.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadBoards, state => ({ ...state, loading: true })),
+  on(actions.clearState, () => initialState),
+  on(actions.loadBoards, (state) => ({ ...state, loading: true })),
   on(actions.loadBoardsFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -12,7 +13,7 @@ const reducer = createReducer(
   on(actions.loadBoardsSuccess, (state, { boards }) =>
     adapter.setAll(boards, { ...state, loading: false, loaded: true })
   ),
-  on(actions.createBoard, state => ({ ...state, loading: true })),
+  on(actions.createBoard, (state) => ({ ...state, loading: true })),
   on(actions.createBoardFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -27,7 +28,7 @@ const reducer = createReducer(
     ...state,
     currentBoard: board,
   })),
-  on(actions.deleteBoard, state => ({
+  on(actions.deleteBoard, (state) => ({
     ...state,
     deleteState: { loading: true },
   })),
