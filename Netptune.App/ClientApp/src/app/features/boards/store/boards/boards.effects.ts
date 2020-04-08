@@ -17,6 +17,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './boards.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 
 @Injectable()
 export class BoardsEffects {
@@ -27,8 +28,8 @@ export class BoardsEffects {
       filter(([_, project]) => project !== undefined),
       switchMap(([_, project]) =>
         this.boardsService.get(project.id).pipe(
-          map(boards => actions.loadBoardsSuccess({ boards })),
-          catchError(error => of(actions.loadBoardsFail({ error })))
+          map((boards) => actions.loadBoardsSuccess({ boards })),
+          catchError((error) => of(actions.loadBoardsFail({ error })))
         )
       )
     )
@@ -50,10 +51,10 @@ export class BoardsEffects {
   createBoard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createBoard),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardsService.post(action.board).pipe(
-          map(board => actions.createBoardSuccess({ board })),
-          catchError(error => of(actions.createBoardFail({ error })))
+          map((board) => actions.createBoardSuccess({ board })),
+          catchError((error) => of(actions.createBoardFail({ error })))
         )
       )
     )
@@ -62,11 +63,11 @@ export class BoardsEffects {
   deleteBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoard),
-      switchMap(action =>
+      switchMap((action) =>
         this.boardsService.delete(action.board).pipe(
           tap(() => this.snackbar.open('Board Deleted')),
-          map(board => actions.deleteBoardSuccess({ board })),
-          catchError(error => of(actions.deleteBoardFail({ error })))
+          map((board) => actions.deleteBoardSuccess({ board })),
+          catchError((error) => of(actions.deleteBoardFail({ error })))
         )
       )
     )
@@ -75,8 +76,12 @@ export class BoardsEffects {
   selectBoard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.selectBoard),
-      map(_ => loadBoardGroups())
+      map((_) => loadBoardGroups())
     )
+  );
+
+  onWorkspaceSelected$ = createEffect(() =>
+    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
   constructor(

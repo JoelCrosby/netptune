@@ -15,6 +15,7 @@ import {
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectWorkspace } from '../workspaces/workspaces.actions';
 
 @Injectable()
 export class ProjectsEffects {
@@ -24,8 +25,8 @@ export class ProjectsEffects {
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.projectsService.get(workspace.slug).pipe(
-          map(projects => actions.loadProjectsSuccess({ projects })),
-          catchError(error => of(actions.loadProjectsFail({ error })))
+          map((projects) => actions.loadProjectsSuccess({ projects })),
+          catchError((error) => of(actions.loadProjectsFail({ error })))
         )
       )
     )
@@ -47,10 +48,10 @@ export class ProjectsEffects {
   createProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProject),
-      switchMap(action =>
+      switchMap((action) =>
         this.projectsService.post(action.project).pipe(
-          map(project => actions.createProjectSuccess({ project })),
-          catchError(error => of(actions.createProjectFail({ error })))
+          map((project) => actions.createProjectSuccess({ project })),
+          catchError((error) => of(actions.createProjectFail({ error })))
         )
       )
     )
@@ -59,14 +60,18 @@ export class ProjectsEffects {
   deleteProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteProject),
-      switchMap(action =>
+      switchMap((action) =>
         this.projectsService.delete(action.project).pipe(
           tap(() => this.snackbar.open('Project Deleted')),
-          map(project => actions.deleteProjectSuccess({ project })),
-          catchError(error => of(actions.deleteProjectFail({ error })))
+          map((project) => actions.deleteProjectSuccess({ project })),
+          catchError((error) => of(actions.deleteProjectFail({ error })))
         )
       )
     )
+  );
+
+  onWorkspaceSelected$ = createEffect(() =>
+    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
   constructor(

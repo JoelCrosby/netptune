@@ -4,7 +4,8 @@ import * as actions from './projects.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadProjects, state => ({ ...state, loading: true })),
+  on(actions.clearState, () => initialState),
+  on(actions.loadProjects, (state) => ({ ...state, loading: true })),
   on(actions.loadProjectsFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -12,7 +13,7 @@ const reducer = createReducer(
   on(actions.loadProjectsSuccess, (state, { projects }) =>
     adapter.setAll(projects, { ...state, loading: false, loaded: true })
   ),
-  on(actions.createProject, state => ({ ...state, loading: true })),
+  on(actions.createProject, (state) => ({ ...state, loading: true })),
   on(actions.createProjectFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -27,7 +28,7 @@ const reducer = createReducer(
     ...state,
     currentProject: project,
   })),
-  on(actions.deleteProject, state => ({
+  on(actions.deleteProject, (state) => ({
     ...state,
     deleteState: { loading: true },
   })),

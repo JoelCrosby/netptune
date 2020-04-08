@@ -4,7 +4,8 @@ import * as actions from './board-groups.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadBoardGroups, state => ({ ...state, loading: true })),
+  on(actions.clearState, () => initialState),
+  on(actions.loadBoardGroups, (state) => ({ ...state, loading: true })),
   on(actions.loadBoardGroupsFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -12,7 +13,7 @@ const reducer = createReducer(
   on(actions.loadBoardGroupsSuccess, (state, { boardGroups }) =>
     adapter.setAll(boardGroups, { ...state, loading: false, loaded: true })
   ),
-  on(actions.createBoardGroup, state => ({ ...state, loading: true })),
+  on(actions.createBoardGroup, (state) => ({ ...state, loading: true })),
   on(actions.createBoardGroupFail, (state, { error }) => ({
     ...state,
     loadingError: error,
@@ -27,7 +28,7 @@ const reducer = createReducer(
     ...state,
     currentBoardGroup: boardGroup,
   })),
-  on(actions.deleteBoardGroup, state => ({
+  on(actions.deleteBoardGroup, (state) => ({
     ...state,
     deleteState: { loading: true },
   })),

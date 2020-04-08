@@ -14,6 +14,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
+import { selectWorkspace } from '../../../core/workspaces/workspaces.actions';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -23,8 +24,8 @@ export class ProjectTasksEffects {
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.projectTasksService.get(workspace.slug).pipe(
-          map(tasks => actions.loadProjectTasksSuccess({ tasks })),
-          catchError(error => of(actions.loadProjectTasksFail(error)))
+          map((tasks) => actions.loadProjectTasksSuccess({ tasks })),
+          catchError((error) => of(actions.loadProjectTasksFail(error)))
         )
       )
     )
@@ -33,11 +34,11 @@ export class ProjectTasksEffects {
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProjectTask),
-      switchMap(action =>
+      switchMap((action) =>
         this.projectTasksService.post(action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
-          map(task => actions.createProjectTasksSuccess({ task })),
-          catchError(error => of(actions.createProjectTasksFail({ error })))
+          map((task) => actions.createProjectTasksSuccess({ task })),
+          catchError((error) => of(actions.createProjectTasksFail({ error })))
         )
       )
     )
@@ -46,11 +47,11 @@ export class ProjectTasksEffects {
   editProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.editProjectTask),
-      switchMap(action =>
+      switchMap((action) =>
         this.projectTasksService.put(action.task).pipe(
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
-          map(task => actions.editProjectTasksSuccess({ task })),
-          catchError(error => of(actions.editProjectTasksFail({ error })))
+          map((task) => actions.editProjectTasksSuccess({ task })),
+          catchError((error) => of(actions.editProjectTasksFail({ error })))
         )
       )
     )
@@ -59,14 +60,18 @@ export class ProjectTasksEffects {
   deleteProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteProjectTask),
-      switchMap(action =>
+      switchMap((action) =>
         this.projectTasksService.delete(action.task).pipe(
           tap(() => this.snackbar.open('Task deleted')),
-          map(task => actions.deleteProjectTasksSuccess({ task })),
-          catchError(error => of(actions.deleteProjectTasksFail({ error })))
+          map((task) => actions.deleteProjectTasksSuccess({ task })),
+          catchError((error) => of(actions.deleteProjectTasksFail({ error })))
         )
       )
     )
+  );
+
+  onWorkspaceSelected$ = createEffect(() =>
+    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
   constructor(
