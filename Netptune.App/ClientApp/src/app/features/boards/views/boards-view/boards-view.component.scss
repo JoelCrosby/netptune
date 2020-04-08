@@ -56,3 +56,13 @@
 .board-groups.cdk-drop-list-dragging .board-group:not(.cdk-drag-placeholder) {
   transition: transform .5s cubic-bezier(0, 0, .2, 1);
 }
+
+.board-group-header:hover {
+  .delete-board-group-btn {
+    visibility: visible;
+  }
+}
+
+.delete-board-group-btn {
+  visibility: hidden;
+}
