@@ -1,12 +1,13 @@
 ﻿
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Netptune.Core.Extensions;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Enums;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
