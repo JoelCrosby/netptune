@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,7 +45,7 @@ namespace Netptune.Api
 
             if (Environment.IsDevelopment())
             {
-                ConfigureDatabase(services).GetAwaiter().GetResult();
+                ConfigureDatabase(services);
             }
         }
 
@@ -78,13 +76,13 @@ namespace Netptune.Api
             );
         }
 
-        private static async Task ConfigureDatabase(IServiceCollection services)
+        private static void ConfigureDatabase(IServiceCollection services)
         {
             using var serviceScope = services.BuildServiceProvider().CreateScope();
 
             var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
 
-            await context.Database.EnsureCreatedAsync();
+            context.Database.EnsureCreated();
         }
     }
 }
