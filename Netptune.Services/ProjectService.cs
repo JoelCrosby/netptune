@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Netptune.Core.Repositories;
+﻿using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
+using Netptune.Models.Enums;
 using Netptune.Models.Relationships;
 using Netptune.Models.Requests;
 using Netptune.Models.ViewModels.Projects;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -41,6 +42,35 @@ namespace Netptune.Services
                     UserId = user.Id
                 });
 
+                project.ProjectBoards.Add(new Board
+                {
+                    Identifier = GenerateDefaultBoardId(project),
+                    Name = project.Name,
+                    OwnerId = project.OwnerId,
+                    BoardGroups = new[]
+                    {
+                        new BoardGroup
+                        {
+                            Name = "Backlog",
+                            Type = BoardGroupType.Backlog,
+                            SortOrder = 1D
+                        },
+                        new BoardGroup
+                        {
+                            Name = "Todo",
+                            Type = BoardGroupType.Basic,
+                            SortOrder = 1.1D
+                        },
+                        new BoardGroup
+                        {
+                            Name = "Done",
+                            Type = BoardGroupType.Done,
+                            SortOrder = 1.3D
+                        }
+                    }
+
+                });
+
                 var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
                 workspace.Projects.Add(project);
@@ -49,6 +79,11 @@ namespace Netptune.Services
 
                 return await GetProjectViewModel(project);
             });
+        }
+
+        private static string GenerateDefaultBoardId(Project project)
+        {
+            return $"{project.Name.ToLowerInvariant()}-default-board";
         }
 
         public async Task<ProjectViewModel> DeleteProject(int id, AppUser user)
