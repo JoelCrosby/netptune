@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Entities.EntityMaps.BaseMaps;
 using Netptune.Models;
+using Netptune.Models.Enums;
 
 namespace Netptune.Entities.EntityMaps
 {
@@ -23,6 +24,11 @@ namespace Netptune.Entities.EntityMaps
             builder
                 .Property(board => board.Identifier)
                 .HasMaxLength(128)
+                .IsRequired();
+
+            builder
+                .Property(board => board.BoardType)
+                .HasDefaultValue(BoardType.UserDefined)
                 .IsRequired();
 
             builder

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using Netptune.Models.BaseEntities;
+using Netptune.Models.Enums;
 
-using Netptune.Models.BaseEntities;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Netptune.Models
 {
@@ -12,6 +13,8 @@ namespace Netptune.Models
         public string Identifier { get; set; }
 
         public int ProjectId { get; set; }
+
+        public BoardType BoardType { get; set; }
 
         #region NavigationProperties
 
