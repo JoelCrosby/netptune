@@ -1,10 +1,12 @@
 .inline-task-container {
   border-radius: .2rem;
+  overflow: hidden;
+  padding: .4rem;
 }
 
 .inline-task-textarea {
   border: 0;
   font-family: inherit;
   font-size: 16px;
-  padding: .4rem;
+  width: 100%;
 }

@@ -8,6 +8,7 @@
   $background: map-get($theme, background);
 
   .inline-task-textarea {
+    color: mat-color($foreground, text);
     background-color: mat-color($background, card);
   }
 
