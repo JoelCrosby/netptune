@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Models;
+using Netptune.Models.Enums;
 using Netptune.Repositories.Common;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Netptune.Repositories
 {
@@ -19,12 +20,27 @@ namespace Netptune.Repositories
         {
         }
 
-        public Task<List<Board>> GetBoardsInProject(int projectId)
+        public Task<List<Board>> GetBoardsInProject(int projectId, bool includeGroups = false)
         {
-            return Entities
+            var query = Entities
+                .Where(board => board.ProjectId == projectId)
+                .Where(board => !board.IsDeleted);
+
+            if (!includeGroups) return query.ToListAsync();
+
+            return query.Include(board => board.BoardGroups).ToListAsync();
+        }
+        
+        public Task<Board> GetDefaultBoardInProject(int projectId, bool includeGroups = false)
+        {
+            var query = Entities
                 .Where(board => board.ProjectId == projectId)
                 .Where(board => !board.IsDeleted)
-                .ToListAsync();
+                .Where(board => board.BoardType == BoardType.Default);
+          
+            if (!includeGroups) return query.FirstOrDefaultAsync();
+
+            return query.Include(board => board.BoardGroups).FirstOrDefaultAsync();
         }
 
         public async Task<Board> DeleteBoard(int id, AppUser user)

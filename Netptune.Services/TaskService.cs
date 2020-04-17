@@ -42,15 +42,47 @@ namespace Netptune.Services
                 WorkspaceId = workspace.Id
             };
 
-            var project = UnitOfWork.Projects.GetAsync(request.ProjectId);
+            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId);
 
             if (project is null) throw new Exception("ProjectId cannot be null.");
+
+            if (IsBacklogTask(task))
+            {
+                var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
+
+                if (defaultBoard is null)
+                {
+                    throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
+                }
+
+                var backlogGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == BoardGroupType.Backlog);
+
+                if (backlogGroup is null)
+                {
+                    throw new Exception($"Board '{defaultBoard.Name}' With Id {defaultBoard.Id} does not have a group of type {nameof(BoardGroupType.Backlog)}.");
+                }
+
+                backlogGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
+                {
+                    SortOrder = request.SortOrder,
+                    BoardGroup = backlogGroup,
+                    ProjectTask = task
+                });
+            }
 
             var result = await TaskRepository.AddAsync(task);
 
             await UnitOfWork.CompleteAsync();
 
             return await TaskRepository.GetTaskViewModel(result.Id);
+        }
+
+        private static bool IsBacklogTask(ProjectTask request)
+        {
+            var isNew = request.Status == ProjectTaskStatus.New;
+            var isInactive = request.Status == ProjectTaskStatus.InActive;
+
+            return isNew || isInactive;
         }
 
         public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
