@@ -52,7 +52,7 @@ namespace Netptune.Repositories.Common
 
         public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback)
         {
-            using var transaction = Context.Database.BeginTransaction();
+            await using var transaction = Context.Database.BeginTransaction();
 
             try
             {
@@ -66,23 +66,23 @@ namespace Netptune.Repositories.Common
             }
             catch (Exception ex)
             {
-                throw new UnitofWorkTransactionException("UnitofWork Transaction Failed. See Inner exception for details.", ex);
+                throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
             }
         }
     }
 
-    public class UnitofWorkTransactionException : Exception
+    public class UnitOfWorkTransactionException : Exception
     {
-        public UnitofWorkTransactionException()
+        public UnitOfWorkTransactionException()
         {
         }
 
-        public UnitofWorkTransactionException(string message)
+        public UnitOfWorkTransactionException(string message)
             : base(message)
         {
         }
 
-        public UnitofWorkTransactionException(string message, Exception inner)
+        public UnitOfWorkTransactionException(string message, Exception inner)
             : base(message, inner)
         {
         }

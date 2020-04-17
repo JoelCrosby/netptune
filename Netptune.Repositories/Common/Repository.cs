@@ -200,6 +200,7 @@ namespace Netptune.Repositories.Common
             if (string.IsNullOrEmpty(pageQuery.Sort)) return results;
 
             var order = pageQuery.SortDescending ? "desc" : "asc";
+
             return results.OrderBy($"{pageQuery.Sort} {order}");
         }
 
