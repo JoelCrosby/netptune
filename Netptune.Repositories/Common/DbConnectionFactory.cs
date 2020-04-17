@@ -8,7 +8,7 @@ namespace Netptune.Repositories.Common
 {
     public abstract class DbConnectionFactory : IDbConnectionFactory
     {
-        private readonly string ConnectionString;
+        protected readonly string ConnectionString;
 
         protected DbConnectionFactory(string connectionString)
         {

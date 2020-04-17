@@ -48,7 +48,11 @@ namespace Netptune.Repositories
 
         public Task<AppUser> GetByEmail(string email)
         {
-            return Entities.FirstOrDefaultAsync(x => x.Email == email);
+            if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
+            var match = email.Normalize();
+
+            return Entities.FirstOrDefaultAsync(x => x.NormalizedEmail == match);
         }
 
         public Task<bool> IsUserInWorkspace(string userId, int workspaceId)
