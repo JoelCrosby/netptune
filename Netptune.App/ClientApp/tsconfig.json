@@ -32,9 +32,6 @@
       "@workspaces/*": ["app/features/workspaces/*"],
       "@env/*": [
         "environments/*"
-      ],
-      "@testing/*": [
-        "testing/*"
       ]
     }
   },
