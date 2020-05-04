@@ -1,0 +1,20 @@
+{
+  "name": "netptune",
+  "version": "1.0.0",
+  "description": "A Simple project task tracking application",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "cd Netptune.App/ClientApp && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoelCrosby/Netptune.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JoelCrosby/Netptune/issues"
+  },
+  "homepage": "https://github.com/JoelCrosby/Netptune#readme"
+}
