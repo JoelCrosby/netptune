@@ -29,7 +29,6 @@ export const selectIsAuthenticated = createSelector(
     if (!user || !user.expires) return false;
 
     const expires = new Date(user.expires);
-    console.log(expires);
 
     return expires.getTime() > new Date().getTime();
   }

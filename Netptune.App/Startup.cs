@@ -1,3 +1,4 @@
+using System.IO;
 using AutoMapper;
 
 using Microsoft.AspNetCore.Builder;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 using Netptune.Entities.Configuration;
@@ -30,8 +32,6 @@ namespace Netptune.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
-
             var connectionString = Configuration.GetConnectionString("ProjectsDatabase");
 
             services.AddCors();
@@ -45,6 +45,8 @@ namespace Netptune.App
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
             services.AddNetptuneServices();
+
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
 
             if (Environment.IsDevelopment())
             {
@@ -61,18 +63,23 @@ namespace Netptune.App
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
                 app.UseHttpsRedirection();
-            }
 
+                var spaPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/dist");
+
+                app.UseSpaStaticFiles(new StaticFileOptions
+                {
+                    RequestPath = "/app",
+                    FileProvider = new PhysicalFileProvider(spaPath),
+                });
+            }
 
             app.UseStaticFiles(new StaticFileOptions
             {
                 ContentTypeProvider = GetFileExtensionContentTypeProvider()
             });
-
-            app.UseSpaStaticFiles();
 
             app.UseRouting();
 

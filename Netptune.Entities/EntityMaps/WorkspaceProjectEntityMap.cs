@@ -14,7 +14,7 @@ namespace Netptune.Entities.EntityMaps
             // (Many-to-many) Workspace > Project
 
             builder
-                .HasKey(workspaceProject => new { workspaceProject.WorkspaceId, workspaceProject.ProjectId });
+                .HasAlternateKey(workspaceProject => new { workspaceProject.WorkspaceId, workspaceProject.ProjectId });
 
             builder
                 .HasOne(workspaceProject => workspaceProject.Workspace)

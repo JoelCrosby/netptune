@@ -39,7 +39,7 @@ export class WorkspaceDialogComponent implements OnInit {
   }
 
   get isEditMode() {
-    return this.data !== undefined || null;
+    return !!this.data;
   }
 
   constructor(
@@ -84,7 +84,7 @@ export class WorkspaceDialogComponent implements OnInit {
   }
 
   getColorLabel(value: string) {
-    const obj = this.colors.find(color => color.color === value);
+    const obj = this.colors.find((color) => color.color === value);
     return obj && obj.name;
   }
 }

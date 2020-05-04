@@ -22,7 +22,8 @@ namespace Netptune.Entities.Configuration
             services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
+                //options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
+                options.UseSqlite("Data Source=netptune.sqlite");
             });
 
             return services;
