@@ -1,5 +1,7 @@
 <div class="board-group-card">
+
   <ng-content></ng-content>
+
   <div
     #container
     class="task-container"
@@ -24,11 +26,18 @@
   </div>
 
     <div class="create-task" *ngIf="(focused$ | async) && !inlineActive">
-      <button mat-button color="primary" (click)="inlineActive = true">
+      <button
+        mat-button color="primary"
+        (click)="inlineActive = true"
+      >
         ADD TASK
       </button>
     </div>
-    <app-board-group-task-inline *ngIf="inlineActive" (canceled)="onInlineCanceled()">
+
+    <app-board-group-task-inline
+      *ngIf="inlineActive"
+      (canceled)="onInlineCanceled()"
+    >
     </app-board-group-task-inline>
 
   </div>
