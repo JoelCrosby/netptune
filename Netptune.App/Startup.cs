@@ -30,7 +30,7 @@ namespace Netptune.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist/netptune");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
 
             var connectionString = Configuration.GetConnectionString("ProjectsDatabase");
 
