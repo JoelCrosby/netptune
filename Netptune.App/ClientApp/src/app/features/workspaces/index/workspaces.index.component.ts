@@ -33,7 +33,10 @@ export class WorkspacesComponent implements OnInit {
   }
 
   openWorkspaceDialog() {
-    this.dialog.open(WorkspaceDialogComponent);
+    this.dialog.open(WorkspaceDialogComponent, {
+      data: null,
+      width: '600px',
+    });
   }
 
   onEditClicked(workspace: Workspace) {
@@ -55,7 +58,7 @@ export class WorkspacesComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result) {
           this.store.dispatch(deleteWorkspace({ workspace }));
         }

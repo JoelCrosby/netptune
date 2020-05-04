@@ -14,7 +14,7 @@ namespace Netptune.Entities.EntityMaps
             // (Many-to-many) Workspace > AppUser
 
             builder
-                .HasKey(workspaceUser => new { workspaceUser.WorkspaceId, workspaceUser.UserId });
+                .HasAlternateKey(workspaceUser => new { workspaceUser.WorkspaceId, workspaceUser.UserId });
 
             builder
                 .HasOne(workspaceUser => workspaceUser.Workspace)

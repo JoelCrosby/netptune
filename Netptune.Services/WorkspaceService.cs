@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Netptune.Core.Extensions;
+﻿using Netptune.Core.Encoding;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Models;
 using Netptune.Models.Relationships;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -26,7 +26,7 @@ namespace Netptune.Services
             workspace.CreatedByUserId = user.Id;
             workspace.OwnerId = user.Id;
 
-            workspace.Slug = workspace.Name.ToUrlSlug();
+            workspace.Slug = UrlSlugger.ToUrlSlug(workspace.Name);
 
             workspace.WorkspaceUsers.Add(new WorkspaceAppUser
             {

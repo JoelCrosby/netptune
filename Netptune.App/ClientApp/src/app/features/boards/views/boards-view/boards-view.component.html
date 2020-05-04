@@ -1,23 +1,5 @@
 <app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
 
-  <div class="action-bar">
-
-    <button mat-button [matMenuTriggerFor]="belowMenu">
-      {{ selectedBoardName$ | async }}
-    </button>
-
-    <mat-menu #belowMenu="matMenu" yPosition="below">
-      <button
-        mat-menu-item
-        *ngFor="let board of boards$ | async"
-        (click)="boardClicked(board)"
-      >
-        {{ board.name }}
-      </button>
-    </mat-menu>
-
-  </div>
-
   <div
     cdkDropList
     class="board-groups"
@@ -43,7 +25,6 @@
         </button>
       </span>
     </app-board-group>
-
 
   </div>
 

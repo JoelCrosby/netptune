@@ -14,7 +14,7 @@ namespace Netptune.Entities.EntityMaps
             // (Many-to-many) Project > AppUser
 
             builder
-                .HasKey(projectUser => new { projectUser.ProjectId, projectUser.UserId });
+                .HasAlternateKey(projectUser => new { projectUser.ProjectId, projectUser.UserId });
 
             builder
                 .HasOne(projectUser => projectUser.Project)

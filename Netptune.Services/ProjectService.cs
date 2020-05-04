@@ -47,6 +47,7 @@ namespace Netptune.Services
                     Identifier = GenerateDefaultBoardId(project),
                     Name = project.Name,
                     OwnerId = project.OwnerId,
+                    BoardType = BoardType.Default,
                     BoardGroups = new[]
                     {
                         new BoardGroup
