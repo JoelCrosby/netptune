@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A Simple project task tracking application",
   "main": "index.js",
-  "start": {
-    "postinstall": "cd Netptune.App/ClientApp && npm install && npm run publish"
+  "scripts": {
+    "postinstall": "npm install --prefix Netptune.App/ClientApp; npm install npm run publish --prefix Netptune.App/ClientApp"
   },
   "repository": {
     "type": "git",
