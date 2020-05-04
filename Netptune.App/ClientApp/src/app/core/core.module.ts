@@ -29,7 +29,7 @@ import { WorkspacesEffects } from './workspaces/workspaces.effects';
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
-        strictStateImmutability: true,
+        strictStateImmutability: false,
         strictActionImmutability: true,
       },
     }),

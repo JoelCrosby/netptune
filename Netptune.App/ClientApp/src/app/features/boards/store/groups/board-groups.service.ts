@@ -1,5 +1,5 @@
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BoardGroup } from '@app/core/models/board-group';
 import { environment } from '@env/environment';
@@ -12,7 +12,7 @@ export class BoardGroupsService {
     return this.http.get<BoardGroup[]>(
       environment.apiEndpoint + `api/boardgroups`,
       {
-        params: new HttpParams().append('boardId', boardId.toString()),
+        params: { boardId: boardId.toString() },
       }
     );
   }

@@ -6,6 +6,8 @@
 
         Backlog = 1,
         
-        Done = 2
+        Done = 2,
+
+        Todo = 3,
     }
 }

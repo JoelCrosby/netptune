@@ -38,5 +38,20 @@ namespace Netptune.Repositories
 
                 .ToListAsync();
         }
+
+        public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId)
+        {
+            return Entities
+
+                .Where(group => group.TasksInGroups
+                    .Where(x => !x.IsDeleted)
+                    .Select(x => x.ProjectTaskId)
+                    .Contains(taskId))
+
+                .Include(group => group.TasksInGroups)
+                    .ThenInclude(relational => relational.ProjectTask)
+
+                .ToListAsync();
+        }
     }
 }

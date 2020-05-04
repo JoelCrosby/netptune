@@ -75,6 +75,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   drop(event: CdkDragDrop<TaskViewModel[]>) {
+    console.log({ container: event.container.data });
+
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,

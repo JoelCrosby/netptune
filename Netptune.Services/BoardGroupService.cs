@@ -31,7 +31,9 @@ namespace Netptune.Services
                 var tasks = group
                     .TasksInGroups
                     .OrderBy(item => item.SortOrder)
-                    .Select(item => item.ProjectTask.ToViewModel())
+                    .Select(item => item.ProjectTask)
+                    .Where(task => !task.IsDeleted)
+                    .Select(task => task.ToViewModel())
                     .OrderBy(item => item.SortOrder);
 
                 group.Tasks.AddRange(tasks);
