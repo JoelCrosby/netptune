@@ -4,7 +4,7 @@
   "description": "A Simple project task tracking application",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm install --prefix Netptune.App/ClientApp; npm run publish --prefix Netptune.App/ClientApp"
+    "postinstall": "cd Netptune.App/ClientApp && (npm install && npm run publish)"
   },
   "repository": {
     "type": "git",

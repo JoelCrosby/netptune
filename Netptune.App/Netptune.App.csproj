@@ -32,4 +32,17 @@
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
   </ItemGroup>
 
+  <Target Name="PublishRunWebpack" Condition="'$(Configuration)' == 'Release'" AfterTargets="ComputeFilesToPublish">
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**" />
+      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
 </Project>
