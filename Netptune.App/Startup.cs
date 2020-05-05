@@ -67,7 +67,7 @@ namespace Netptune.App
                 app.UseHsts();
                 app.UseHttpsRedirection();
 
-                var spaPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/dist");
+                var spaPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.FullName, "dist");
 
                 app.UseSpaStaticFiles(new StaticFileOptions
                 {
