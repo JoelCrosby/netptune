@@ -48,10 +48,7 @@ namespace Netptune.App
 
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "../dist");
 
-            if (Environment.IsDevelopment())
-            {
-                ConfigureDatabase(services);
-            }
+            ConfigureDatabase(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
