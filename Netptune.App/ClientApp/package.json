@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "postinstall": "node node_modules/@angular/compiler-cli/ngcc/index",
     "start": "ng serve --open",
     "build": "ng build",
     "publish": "ng build --configuration=production --prod",
