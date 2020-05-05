@@ -27,4 +27,12 @@ function move(oldPath, newPath, callback) {
   }
 }
 
-move('/dist', '/heroku_output/ClientApp')
+function postPublish() {
+  var env = process.env.ENV;
+
+  if (env !== 'heroku') return;
+
+  move('/dist', '/heroku_output/ClientApp')
+}
+
+postPublish();
