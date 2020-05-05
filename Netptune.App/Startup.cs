@@ -46,7 +46,7 @@ namespace Netptune.App
 
             services.AddNetptuneServices();
 
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "../dist");
 
             if (Environment.IsDevelopment())
             {
