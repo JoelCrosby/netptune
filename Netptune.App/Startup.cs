@@ -17,6 +17,7 @@ using Netptune.Services.Configuration;
 
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Netptune.App
 {
@@ -135,7 +136,25 @@ namespace Netptune.App
 
             if (envConstring is null) return appSettingsConString;
 
-            return envConstring;
+            return ParseConnectionString(envConstring);
+        }
+
+        private static string ParseConnectionString(string value)
+        {
+            value.Replace("//", "");
+
+            var delimiterChars = new [] { '/', ':', '@', '?' };
+            var conn = value.Split(delimiterChars);
+
+            conn = conn.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            var user = conn[1];
+            var pass = conn[2];
+            var server = conn[3];
+            var database = conn[5];
+            var port = conn[4];
+
+            return $"host={server};port={port};database={database};uid={user};pwd={pass};sslmode=Require;Trust Server Certificate=true;Timeout=1000";
         }
     }
 }
