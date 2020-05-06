@@ -39,7 +39,7 @@ namespace Netptune.Entities.Contexts
         {
             if (optionsBuilder.IsConfigured) return;
 
-            optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=Netptune;Integrated Security=True;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

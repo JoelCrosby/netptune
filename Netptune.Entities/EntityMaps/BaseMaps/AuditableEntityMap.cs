@@ -21,7 +21,7 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
             builder
                 .Property(entity => entity.CreatedAt)
                 .HasColumnName("CreatedAt")
-                .HasDefaultValueSql("GetDate()");
+                .HasDefaultValueSql("NOW()");
 
             builder
                 .Property(entity => entity.UpdatedAt)
