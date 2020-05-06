@@ -1,4 +1,3 @@
-using System.IO;
 using AutoMapper;
 
 using Microsoft.AspNetCore.Builder;
@@ -16,23 +15,26 @@ using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
 
+using System;
+using System.IO;
+
 namespace Netptune.App
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Environment { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            Environment = environment;
+            WebHostEnvironment = webHostEnvironment;
             Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("ProjectsDatabase");
+            var connectionString = GetConnectionString();
 
             services.AddCors();
             services.AddControllers();
@@ -120,6 +122,20 @@ namespace Netptune.App
             var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
 
             context.Database.EnsureCreated();
+        }
+
+        private string GetConnectionString()
+        {
+            var appSettingsConString = Configuration.GetConnectionString("ProjectsDatabase");
+            var envVar = Configuration["ConnectionStringEnvironmentVariable"];
+
+            if (envVar is null) return appSettingsConString;
+
+            var envConstring = Environment.GetEnvironmentVariable(envVar);
+
+            if (envConstring is null) return appSettingsConString;
+
+            return envConstring;
         }
     }
 }

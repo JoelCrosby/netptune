@@ -1,29 +1,28 @@
-﻿using System;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Entities.Contexts;
+
+using System;
 
 namespace Netptune.Entities.Configuration
 {
     public static class NetptuneEntitiesConfiguration
     {
-        public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitiesOptions> optionsAction)
+        public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitiesOptions> configuration)
         {
-            if (optionsAction == null)
-                throw new ArgumentNullException(nameof(optionsAction));
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
 
             var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
-            optionsAction(netptuneEntitiesOptions);
+            configuration(netptuneEntitiesOptions);
 
-            services.Configure(optionsAction);
+            services.Configure(configuration);
 
             services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
-                //options.UseSqlServer(netptuneEntitiesOptions.ConnectionString);
-                options.UseSqlite("Data Source=netptune.sqlite");
+                options.UseNpgsql(netptuneEntitiesOptions.ConnectionString);
             });
 
             return services;
