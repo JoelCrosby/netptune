@@ -16,5 +16,7 @@ namespace Netptune.Core.UnitOfWork
         IBoardRepository Boards { get; }
 
         IBoardGroupRepository BoardGroups { get; }
+
+        ITaskInGroupRepository ProjectTasksInGroups { get; }
     }
 }

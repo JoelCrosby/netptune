@@ -4,12 +4,24 @@ namespace Netptune.Core.Repositories.Common
 {
     public interface IAuditableEntity
     {
-        DateTime DateCreated { get; set; }
+        bool IsDeleted { get; set; }
 
-        DateTime? DateModified { get; set; }
+        byte[] Version { get; set; }
 
-        DateTime? DateDeleted { get; set; }
+        DateTime CreatedAt { get; set; }
 
-        bool Deleted { get; set; }
+        DateTime? UpdatedAt { get; set; }
+
+        #region ForeignKeys
+
+        string CreatedByUserId { get; set; }
+
+        string ModifiedByUserId { get; set; }
+
+        string DeletedByUserId { get; set; }
+
+        string OwnerId { get; set; }
+
+        #endregion
     }
 }

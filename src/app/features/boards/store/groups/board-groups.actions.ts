@@ -4,6 +4,8 @@ import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-requ
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
+// Load Board Groups
+
 export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
 export const loadBoardGroupsSuccess = createAction(
@@ -15,6 +17,8 @@ export const loadBoardGroupsFail = createAction(
   '[BoardGroups] Load Board Groups Fail',
   props<{ error: any }>()
 );
+
+// Create Board Group
 
 export const createBoardGroup = createAction(
   '[BoardGroups] Create Board Group',
@@ -31,10 +35,14 @@ export const createBoardGroupFail = createAction(
   props<{ error: any }>()
 );
 
+// Select Board Group
+
 export const selectBoardGroup = createAction(
   '[BoardGroups] Select Board Group',
   props<{ boardGroup: BoardGroup }>()
 );
+
+// Delete Board Group
 
 export const deleteBoardGroup = createAction(
   '[BoardGroups] Delete Board Group',
@@ -51,6 +59,8 @@ export const deleteBoardGroupFail = createAction(
   props<{ error: any }>()
 );
 
+// Edit Board Group
+
 export const editBoardGroup = createAction(
   '[BoardGroups] Edit Board Group',
   props<{ boardGroup: BoardGroup }>()
@@ -65,6 +75,8 @@ export const editBoardGroupFail = createAction(
   '[BoardGroups] Edit Board Group Fail',
   props<{ error: any }>()
 );
+
+// Move Task In BoardGroup
 
 export const moveTaskInBoardGroup = createAction(
   '[BoardGroups] Move Task In BoardGroup',

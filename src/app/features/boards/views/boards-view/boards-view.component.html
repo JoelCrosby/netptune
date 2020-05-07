@@ -16,7 +16,7 @@
       [cdkDragData]="group"
       [group]="group"
       [siblingIds]="getsiblingIds(group, groups)"
-      [dragListId]="getDragListId(group)"
+      [dragListId]="group.id.toString()"
     >
       <span class="board-group-header" cdkDragHandle>
         {{ group.name }}

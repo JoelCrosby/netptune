@@ -38,7 +38,7 @@ export class BoardsViewComponent implements OnInit {
     this.selectedBoard$ = this.store.pipe(select(selectCurrentBoard));
     this.selectedBoardName$ = this.store.pipe(
       select(selectCurrentBoard),
-      map(board => board && board.name)
+      map((board) => board && board.name)
     );
     this.store.dispatch(loadBoards());
     this.store.dispatch(actions.loadBoardGroups());
@@ -52,12 +52,8 @@ export class BoardsViewComponent implements OnInit {
 
   getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {
     return groups
-      .filter(item => item.id !== group.id)
-      .map(item => `bg-${item.id.toString()}`);
-  }
-
-  getDragListId(group: BoardGroup) {
-    return `bg-${group.id.toString()}`;
+      .filter((item) => item.id !== group.id)
+      .map((item) => item.id.toString());
   }
 
   drop(event: CdkDragDrop<BoardGroup[]>) {
@@ -102,7 +98,7 @@ export class BoardsViewComponent implements OnInit {
       .select(selectCurrentProject)
       .pipe(
         first(),
-        tap(project => {
+        tap((project) => {
           this.store.dispatch(
             createBoard({
               board: {
@@ -122,7 +118,7 @@ export class BoardsViewComponent implements OnInit {
       .select(selectCurrentBoard)
       .pipe(
         first(),
-        tap(board => {
+        tap((board) => {
           this.store.dispatch(
             actions.createBoardGroup({
               boardGroup: {
