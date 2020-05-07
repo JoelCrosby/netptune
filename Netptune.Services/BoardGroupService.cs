@@ -30,6 +30,7 @@ namespace Netptune.Services
             {
                 var tasks = group
                     .TasksInGroups
+                    .Where(item => !item.IsDeleted)
                     .OrderBy(item => item.SortOrder)
                     .Select(item => item.ProjectTask)
                     .Where(task => !task.IsDeleted)

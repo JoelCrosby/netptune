@@ -14,6 +14,7 @@ namespace Netptune.Repositories.UnitOfWork
         public IUserRepository Users { get; }
         public IBoardRepository Boards { get; }
         public IBoardGroupRepository BoardGroups { get; }
+        public ITaskInGroupRepository ProjectTasksInGroups { get; }
 
         public NetptuneUnitOfWork(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
         {
@@ -23,6 +24,7 @@ namespace Netptune.Repositories.UnitOfWork
             Workspaces = new WorkspaceRepository(context, connectionFactory);
             Boards = new BoardRepository(context, connectionFactory);
             BoardGroups = new BoardGroupRepository(context, connectionFactory);
+            ProjectTasksInGroups = new TaskInGroupRepository(context, connectionFactory);
         }
     }
 }

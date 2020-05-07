@@ -154,59 +154,81 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        public async Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user)
+        public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
-                var relational = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
+                return MoveTaskInGroup(request);
+            }
 
-                var task = relational
-                    .TasksInGroups
-                    .FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
+            return TransferTaskInGroups(request, user);
+        }
 
-                if (task is null)
+        private Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request, AppUser user)
+        {
+            return UnitOfWork.Transaction(async () =>
+            {
+                var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
+                var itemToRemove = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, oldGroup.Id);
+                
+                if (itemToRemove is { })
                 {
-                    return null;
+                    await UnitOfWork.ProjectTasksInGroups.DeletePermanent(itemToRemove.Id);
                 }
 
-                task.SortOrder = request.SortOrder;
+                var tasks = await UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId);
+
+                var existing = tasks
+                    .Where(item => item.Id == request.TaskId)
+                    .ToList();
+
+                foreach (var item in existing)
+                {
+                    await UnitOfWork.ProjectTasksInGroups.DeletePermanent(item.Id);
+                }
+
+                var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
+
+                if (newGroup.Type == BoardGroupType.Done)
+                {
+                    var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
+
+                    task.Status = ProjectTaskStatus.Complete;
+                }
+
+                var newRelational = new ProjectTaskInBoardGroup
+                {
+                    ProjectTaskId = request.TaskId,
+                    BoardGroupId = request.NewGroupId,
+                    SortOrder = request.SortOrder,
+                };
+
+                await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational);
 
                 await UnitOfWork.CompleteAsync();
 
-                return task;
-            }
+                return newRelational;
+            });
+        }
 
-            var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
-            var itemToRemove = oldGroup.TasksInGroups.FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
+        private async Task<ProjectTaskInBoardGroup> MoveTaskInGroup(MoveTaskInGroupRequest request)
+        {
+            var relational = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
 
-            oldGroup.TasksInGroups.Remove(itemToRemove);
-
-            var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
-
-            var existing = newGroup
+            var task = relational
                 .TasksInGroups
-                .Where(item => item.ProjectTaskId == request.TaskId)
-                .ToList();
+                .FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
 
-
-            foreach (var item in existing)
+            if (task is null)
             {
-                newGroup
-                    .TasksInGroups.Remove(item);
+                return null;
             }
 
-            var newRelational = new ProjectTaskInBoardGroup
-            {
-                ProjectTaskId = request.TaskId,
-                BoardGroupId = request.NewGroupId,
-                SortOrder = request.SortOrder,
-            };
-
-            newGroup.TasksInGroups.Add(newRelational);
+            task.SortOrder = request.SortOrder;
 
             await UnitOfWork.CompleteAsync();
 
-            return newRelational;
+            return task;
         }
 
         private async Task RemoveTaskFromGroups(int taskId)

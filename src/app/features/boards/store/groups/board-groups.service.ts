@@ -26,7 +26,7 @@ export class BoardGroupsService {
 
   moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
     return this.http.post<BoardGroup>(
-      environment.apiEndpoint + 'api/porojecttasks/movetaskingrouprequest',
+      environment.apiEndpoint + 'api/projecttasks/movetaskingrouprequest',
       request
     );
   }

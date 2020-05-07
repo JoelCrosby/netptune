@@ -11,5 +11,7 @@ namespace Netptune.Core.Repositories
         Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId);
 
         Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId);
+
+        Task<List<ProjectTask>> GetTasksInGroup(int groupId);
     }
 }

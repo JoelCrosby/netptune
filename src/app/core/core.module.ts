@@ -30,7 +30,7 @@ import { WorkspacesEffects } from './workspaces/workspaces.effects';
       metaReducers,
       runtimeChecks: {
         strictStateImmutability: false,
-        strictActionImmutability: true,
+        strictActionImmutability: false,
       },
     }),
     StoreRouterConnectingModule.forRoot(),

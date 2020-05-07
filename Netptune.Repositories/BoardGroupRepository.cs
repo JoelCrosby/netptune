@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Models;
 using Netptune.Repositories.Common;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Netptune.Repositories
 {
@@ -51,6 +51,14 @@ namespace Netptune.Repositories
                 .Include(group => group.TasksInGroups)
                     .ThenInclude(relational => relational.ProjectTask)
 
+                .ToListAsync();
+        }
+
+        public Task<List<ProjectTask>> GetTasksInGroup(int groupId)
+        {
+            return Context.ProjectTaskInBoardGroups
+                .Where(item => item.BoardGroupId == groupId)
+                .Select(item => item.ProjectTask)
                 .ToListAsync();
         }
     }
