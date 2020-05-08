@@ -52,7 +52,7 @@ namespace Netptune.Repositories.Common
 
         public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback)
         {
-            await using var transaction = Context.Database.BeginTransaction();
+            await using var transaction = await Context.Database.BeginTransactionAsync();
 
             try
             {
@@ -60,7 +60,7 @@ namespace Netptune.Repositories.Common
 
                 // Commit transaction if all commands succeed, transaction will auto-rollback
                 // when disposed if either commands fails
-                transaction.Commit();
+                await transaction.CommitAsync();
 
                 return result;
             }

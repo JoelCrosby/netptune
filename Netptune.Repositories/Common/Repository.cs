@@ -172,13 +172,13 @@ namespace Netptune.Repositories.Common
             return ApplyPagination(entities, pageQuery);
         }
 
-        private static IPagedResult<TEntity> GetPagedResult(IQueryable<TEntity> entities, IPageQuery pagequery)
+        private static IPagedResult<TEntity> GetPagedResult(IQueryable<TEntity> entities, IPageQuery pageQuery)
         {
             return new Core.Models.Repository.PagedResult<TEntity>
             {
-                PageCount = (entities.Count() + pagequery.PageSize - 1) / pagequery.PageSize,
-                CurrentPage = pagequery.Page,
-                PageSize = pagequery.PageSize,
+                PageCount = (entities.Count() + pageQuery.PageSize - 1) / pageQuery.PageSize,
+                CurrentPage = pageQuery.Page,
+                PageSize = pageQuery.PageSize,
                 RowCount = entities.Count()
             };
         }

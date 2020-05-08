@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core;
-using Netptune.Core.Meta;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 using System.Text.Json;
@@ -38,10 +38,9 @@ namespace Netptune.Entities.EntityMaps
 
             builder
                 .Property(workspace => workspace.MetaInfo)
-                .HasConversion(
-                    value => JsonSerializer.Serialize(value, JsonOptions),
-                    value => JsonSerializer.Deserialize<WorkspaceMeta>(value, null))
+                .HasColumnType("jsonb")
                 .IsRequired();
+
 
             // (One-to-One) Workspace > Task
 

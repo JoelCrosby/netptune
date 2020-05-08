@@ -24,18 +24,19 @@ namespace Netptune.Services
 
         public async Task<List<BoardGroup>> GetBoardGroups(int boardId)
         {
-            var groups = await BoardGroups.GetBoardGroupsInBoard(boardId);
+            var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
 
             foreach (var group in groups)
             {
-                var tasks = group
+                var tasksInGroups = group
                     .TasksInGroups
                     .Where(item => !item.IsDeleted)
                     .OrderBy(item => item.SortOrder)
-                    .Select(item => item.ProjectTask)
+                    .ToList();
+                    
+                var tasks = tasksInGroups.Select(item => item.ProjectTask)
                     .Where(task => !task.IsDeleted)
-                    .Select(task => task.ToViewModel())
-                    .OrderBy(item => item.SortOrder);
+                    .Select(task => task.ToViewModel());
 
                 group.Tasks.AddRange(tasks);
             }

@@ -6,6 +6,8 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Netptune.Repositories
@@ -23,6 +25,14 @@ namespace Netptune.Repositories
                 entity.ProjectTaskId == taskId
                 && entity.BoardGroupId == groupId
                 && !entity.IsDeleted);
+        }
+
+        public Task<List<ProjectTaskInBoardGroup>> GetProjectTasksInGroup(int groupId)
+        {
+            return Entities
+                .Where(entity => entity.BoardGroupId == groupId && !entity.IsDeleted)
+                .OrderBy(entity => entity.SortOrder)
+                .ToListAsync();
         }
     }
 }
