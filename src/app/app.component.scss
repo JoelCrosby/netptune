@@ -20,9 +20,10 @@ main,
   display: flex;
   flex-direction: column;
   padding: .4rem .2rem;
+  align-items: center;
 
   .app-workspace-link {
-    margin: .4rem auto;
+    margin: .4rem 0;
     text-decoration: none;
     text-align: center;
     vertical-align: middle;
@@ -34,5 +35,6 @@ main,
     width: 48px;
     height: 48px;
     border-radius: .2rem;
+    cursor: pointer !important;
   }
 }

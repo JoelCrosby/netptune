@@ -19,6 +19,8 @@
           *ngFor="let workspace of workspaces$ | async"
           [routerLink]="['/app/', workspace.slug]"
           [style.backgroundColor]="workspace?.metaInfo.color"
+          [matTooltip]="workspace?.name"
+          matTooltipPosition="right"
         >
           {{ workspace.name[0] }}
         </a>
