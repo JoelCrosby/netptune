@@ -111,7 +111,6 @@ namespace Netptune.Services
             };
         }
 
-
         public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
         {
             var task = await TaskRepository.GetAsync(id);
