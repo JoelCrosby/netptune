@@ -1,10 +1,5 @@
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-} from '@angular/core';
 
 @Component({
   selector: 'app-board-group-card',
