@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
+using Netptune.Core.MappingProfiles;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
-using Netptune.Models.MappingProfiles;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
@@ -143,7 +143,7 @@ namespace Netptune.App
         {
             value.Replace("//", "");
 
-            var delimiterChars = new [] { '/', ':', '@', '?' };
+            var delimiterChars = new[] { '/', ':', '@', '?' };
             var conn = value.Split(delimiterChars);
 
             conn = conn.Where(x => !string.IsNullOrEmpty(x)).ToArray();

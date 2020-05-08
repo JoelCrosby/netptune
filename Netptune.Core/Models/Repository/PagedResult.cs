@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Netptune.Core.Repositories.Common;
 
-using Netptune.Core.Repositories.Common;
+using System.Collections.Generic;
 
 namespace Netptune.Core.Models.Repository
 {

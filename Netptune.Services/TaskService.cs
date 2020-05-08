@@ -1,11 +1,12 @@
-﻿using Netptune.Core.Repositories;
+﻿using Netptune.Core;
+using Netptune.Core.Enums;
+using Netptune.Core.Relationships;
+using Netptune.Core.Repositories;
+using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Models;
-using Netptune.Models.Enums;
-using Netptune.Models.Relationships;
-using Netptune.Models.Requests;
-using Netptune.Models.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.ProjectTasks;
 
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,16 @@ namespace Netptune.Services
 
         public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request, AppUser user)
         {
-            var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
+            var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace, true);
+
+            var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks.Cast<ISortable>());
 
             var task = new ProjectTask
             {
                 Name = request.Name,
                 Description = request.Description,
                 Status = request.Status ?? ProjectTaskStatus.New,
-                SortOrder = request.SortOrder,
+                SortOrder = sortOrder,
                 ProjectId = request.ProjectId,
                 AssigneeId = request.AssigneeId,
                 OwnerId = user.Id,
@@ -42,22 +45,11 @@ namespace Netptune.Services
                 WorkspaceId = workspace.Id
             };
 
-            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId);
+            var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == request.ProjectId);
 
             if (project is null) throw new Exception("ProjectId cannot be null.");
 
-            if (IsBacklogTask(task))
-            {
-                await AddTaskToBoardGroup(request, project, task, BoardGroupType.Backlog);
-            }
-            else if (IsTodoTask(task))
-            {
-                await AddTaskToBoardGroup(request, project, task, BoardGroupType.Todo);
-            }
-            else if (IsCompleteTask(task))
-            {
-                await AddTaskToBoardGroup(request, project, task, BoardGroupType.Done);
-            }
+            await AddTaskToBoardGroup(project, task, sortOrder);
 
             var result = await TaskRepository.AddAsync(task);
 
@@ -66,7 +58,16 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        private async Task AddTaskToBoardGroup(AddProjectTaskRequest request, Project project, ProjectTask task, BoardGroupType boardGroupType)
+        private static double GetSortOrder(IEnumerable<ISortable> projectTasks)
+        {
+            var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
+
+            if (largest is null) throw new Exception("Could not determine sort order.");
+
+            return largest.SortOrder + 1;
+        }
+
+        private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
         {
             var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
 
@@ -75,32 +76,24 @@ namespace Netptune.Services
                 throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
             }
 
+            var boardGroupType = task.Status switch
+            {
+                ProjectTaskStatus.New => BoardGroupType.Todo,
+                ProjectTaskStatus.InActive => BoardGroupType.Todo,
+                ProjectTaskStatus.Complete => BoardGroupType.Done,
+                ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
+                ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
+                _ => BoardGroupType.Backlog
+            };
+
             var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
 
             boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {
-                SortOrder = request.SortOrder,
+                SortOrder = sortOrder,
                 BoardGroup = boardGroup,
                 ProjectTask = task
             });
-        }
-
-        private static bool IsBacklogTask(ProjectTask task)
-        {
-            var isNew = task.Status == ProjectTaskStatus.New;
-            var isInactive = task.Status == ProjectTaskStatus.InActive;
-
-            return isNew || isInactive;
-        }
-
-        private static bool IsTodoTask(ProjectTask task)
-        {
-            return task.Status == ProjectTaskStatus.AwaitingClassification;
-        }
-
-        private static bool IsCompleteTask(ProjectTask task)
-        {
-            return task.Status == ProjectTaskStatus.Complete;
         }
 
         public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
@@ -161,16 +154,16 @@ namespace Netptune.Services
                 return MoveTaskInGroup(request);
             }
 
-            return TransferTaskInGroups(request, user);
+            return TransferTaskInGroups(request);
         }
 
-        private Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request, AppUser user)
+        private Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request)
         {
             return UnitOfWork.Transaction(async () =>
             {
                 var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
                 var itemToRemove = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, oldGroup.Id);
-                
+
                 if (itemToRemove is { })
                 {
                     await UnitOfWork.ProjectTasksInGroups.DeletePermanent(itemToRemove.Id);

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
-using Netptune.Models;
 using Netptune.Repositories.Common;
 
 using System.Collections.Generic;

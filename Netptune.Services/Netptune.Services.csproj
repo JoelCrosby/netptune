@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
-    <ProjectReference Include="..\Netptune.Models\Netptune.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+
+using Netptune.Core;
+using Netptune.Core.Authentication;
+using Netptune.Core.Authentication.Models;
+using Netptune.Core.Models.Authentication;
+using Netptune.Core.UnitOfWork;
+
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-
-using Netptune.Core.Authentication;
-using Netptune.Core.Authentication.Models;
-using Netptune.Core.Models.Authentication;
-using Netptune.Core.UnitOfWork;
-using Netptune.Models;
 
 namespace Netptune.Services.Authentication
 {

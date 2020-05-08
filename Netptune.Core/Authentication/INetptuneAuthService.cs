@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-
-using Netptune.Core.Authentication.Models;
+﻿using Netptune.Core.Authentication.Models;
 using Netptune.Core.Models.Authentication;
+
+using System.Threading.Tasks;
 
 namespace Netptune.Core.Authentication
 {

@@ -1,16 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+
+using Netptune.Core;
+using Netptune.Core.Relationships;
+using Netptune.Core.Repositories;
+using Netptune.Core.Repositories.Common;
+using Netptune.Entities.Contexts;
+using Netptune.Repositories.Common;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
-
-using Netptune.Core.Repositories;
-using Netptune.Core.Repositories.Common;
-using Netptune.Entities.Contexts;
-using Netptune.Models;
-using Netptune.Models.Relationships;
-using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
 {

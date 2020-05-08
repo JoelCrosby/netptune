@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
-using Netptune.Models;
-using Netptune.Models.Enums;
-using Netptune.Models.ViewModels.ProjectTasks;
 using Netptune.Repositories.Common;
 
 using System.Collections.Generic;

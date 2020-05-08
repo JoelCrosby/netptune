@@ -8,7 +8,7 @@ using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Models
 {
-    public class ProjectTask : AuditableEntity<int>
+    public class ProjectTask : AuditableEntity<int>, ISortable
     {
         public string Name { get; set; }
 

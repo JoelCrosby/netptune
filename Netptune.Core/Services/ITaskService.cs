@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Netptune.Core.Relationships;
+using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.ProjectTasks;
 
-using Netptune.Models;
-using Netptune.Models.Relationships;
-using Netptune.Models.Requests;
-using Netptune.Models.ViewModels.ProjectTasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Core.Services
 {
