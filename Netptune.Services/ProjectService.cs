@@ -1,11 +1,11 @@
-﻿using Netptune.Core.Repositories;
+﻿using Netptune.Core;
+using Netptune.Core.Enums;
+using Netptune.Core.Relationships;
+using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Models;
-using Netptune.Models.Enums;
-using Netptune.Models.Relationships;
-using Netptune.Models.Requests;
-using Netptune.Models.ViewModels.Projects;
+using Netptune.Core.ViewModels.Projects;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -90,7 +90,7 @@ namespace Netptune.Services
         public async Task<ProjectViewModel> DeleteProject(int id, AppUser user)
         {
             var project = await ProjectRepository.GetAsync(id);
-            
+
             if (project is null) return null;
 
             project.IsDeleted = true;
@@ -100,7 +100,7 @@ namespace Netptune.Services
 
             return await GetProjectViewModel(project);
         }
-        
+
         public async Task<ProjectViewModel> GetProject(int id)
         {
             var result = await ProjectRepository.GetAsync(id);
@@ -118,7 +118,7 @@ namespace Netptune.Services
             var result = await ProjectRepository.GetAsync(project.Id);
 
             if (result is null) return null;
-            
+
             result.Name = project.Name;
             result.Description = project.Description;
             result.ModifiedByUserId = user.Id;

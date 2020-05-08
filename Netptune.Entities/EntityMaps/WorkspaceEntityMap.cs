@@ -1,9 +1,10 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using Netptune.Core;
+using Netptune.Core.Meta;
 using Netptune.Entities.EntityMaps.BaseMaps;
-using Netptune.Models;
-using Netptune.Models.Meta;
+
+using System.Text.Json;
 
 namespace Netptune.Entities.EntityMaps
 {

@@ -20,7 +20,7 @@ namespace Netptune.Repositories.Configuration
 
             optionsAction(netptuneRepositoryOptions);
 
-            services.Configure(optionsAction); 
+            services.Configure(optionsAction);
 
             services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(netptuneRepositoryOptions.ConnectionString));
             services.AddScoped<INetptuneUnitOfWork, NetptuneUnitOfWork>();

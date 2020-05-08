@@ -1,5 +1,4 @@
-﻿using Netptune.Models;
-using Netptune.Models.BaseEntities;
+﻿using Netptune.Core.BaseEntities;
 
 using System.Threading.Tasks;
 

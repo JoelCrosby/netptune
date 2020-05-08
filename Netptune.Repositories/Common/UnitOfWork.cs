@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories.Common;
+
+using System;
+using System.Threading.Tasks;
 
 namespace Netptune.Repositories.Common
 {

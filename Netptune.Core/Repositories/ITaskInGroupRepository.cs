@@ -1,5 +1,5 @@
-﻿using Netptune.Core.Repositories.Common;
-using Netptune.Models.Relationships;
+﻿using Netptune.Core.Relationships;
+using Netptune.Core.Repositories.Common;
 
 using System.Threading.Tasks;
 

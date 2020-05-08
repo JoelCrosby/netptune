@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Models;
-using Netptune.Models.Requests;
-using Netptune.Models.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.ProjectTasks;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,8 +1,8 @@
-﻿using System.Data;
-
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 using Netptune.Core.Repositories.Common;
+
+using System.Data;
 
 namespace Netptune.Repositories.Common
 {

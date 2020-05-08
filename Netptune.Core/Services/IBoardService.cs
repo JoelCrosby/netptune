@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Models;
-
 namespace Netptune.Core.Services
 {
     public interface IBoardService

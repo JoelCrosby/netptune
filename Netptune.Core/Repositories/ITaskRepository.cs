@@ -1,9 +1,8 @@
+using Netptune.Core.Repositories.Common;
+using Netptune.Core.ViewModels.ProjectTasks;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Netptune.Core.Repositories.Common;
-using Netptune.Models;
-using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Repositories
 {

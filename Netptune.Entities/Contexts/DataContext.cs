@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using Netptune.Models;
-using Netptune.Models.BaseEntities;
-using Netptune.Models.Relationships;
+using Netptune.Core;
+using Netptune.Core.BaseEntities;
+using Netptune.Core.Relationships;
+
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Netptune.Entities.Contexts
 {

@@ -1,9 +1,9 @@
-﻿using Netptune.Core.Encoding;
+﻿using Netptune.Core;
+using Netptune.Core.Encoding;
+using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Models;
-using Netptune.Models.Relationships;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

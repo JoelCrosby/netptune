@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 
-using AutoMapper;
-
+using Netptune.Core;
+using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Models;
-using Netptune.Models.Relationships;
-using Netptune.Models.ViewModels.Users;
+using Netptune.Core.ViewModels.Users;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Services
 {

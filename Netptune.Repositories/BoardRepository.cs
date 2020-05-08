@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
-using Netptune.Models;
-using Netptune.Models.Enums;
 using Netptune.Repositories.Common;
 
 using System.Collections.Generic;
@@ -30,14 +30,14 @@ namespace Netptune.Repositories
 
             return query.Include(board => board.BoardGroups).ToListAsync();
         }
-        
+
         public Task<Board> GetDefaultBoardInProject(int projectId, bool includeGroups = false)
         {
             var query = Entities
                 .Where(board => board.ProjectId == projectId)
                 .Where(board => !board.IsDeleted)
                 .Where(board => board.BoardType == BoardType.Default);
-          
+
             if (!includeGroups) return query.FirstOrDefaultAsync();
 
             return query.Include(board => board.BoardGroups).FirstOrDefaultAsync();

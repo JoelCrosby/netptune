@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Models;
-using Netptune.Models.Requests;
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Api.Controllers
 {

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Users;
 
-using Netptune.Models;
-using Netptune.Models.Relationships;
-using Netptune.Models.ViewModels.Users;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Core.Services
 {

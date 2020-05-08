@@ -14,7 +14,7 @@ namespace Netptune.Models.Requests
 
         public int ProjectId { get; set; }
 
-        public double SortOrder { get; set; }
+        public double? SortOrder { get; set; }
 
         public string Workspace { get; set; }
 

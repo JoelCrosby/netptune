@@ -1,11 +1,11 @@
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+
+using System.Threading.Tasks;
 
 namespace Netptune.Api.Controllers
 {

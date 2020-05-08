@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core;
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Repositories.Common;
-using Netptune.Models;
 
 using System.Threading.Tasks;
-using Netptune.Models.BaseEntities;
 
 namespace Netptune.Repositories.Common
 {

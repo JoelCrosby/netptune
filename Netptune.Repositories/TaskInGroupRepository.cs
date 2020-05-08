@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
-using Netptune.Models.Relationships;
 using Netptune.Repositories.Common;
 
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace Netptune.Repositories
 
         public Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId, int groupId)
         {
-            return Entities.FirstOrDefaultAsync(entity => 
+            return Entities.FirstOrDefaultAsync(entity =>
                 entity.ProjectTaskId == taskId
                 && entity.BoardGroupId == groupId
                 && !entity.IsDeleted);
