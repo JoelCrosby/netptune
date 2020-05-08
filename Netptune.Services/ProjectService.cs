@@ -59,7 +59,7 @@ namespace Netptune.Services
                         new BoardGroup
                         {
                             Name = "Todo",
-                            Type = BoardGroupType.Basic,
+                            Type = BoardGroupType.Todo,
                             SortOrder = 1.1D
                         },
                         new BoardGroup

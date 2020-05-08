@@ -2,7 +2,6 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
-using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -30,7 +29,7 @@ namespace Netptune.Services
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace, true);
 
-            var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks.Cast<ISortable>());
+            var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks);
 
             var task = new ProjectTask
             {
@@ -58,7 +57,7 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        private static double GetSortOrder(IEnumerable<ISortable> projectTasks)
+        private static double GetSortOrder(IEnumerable<ProjectTask> projectTasks)
         {
             var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
 
