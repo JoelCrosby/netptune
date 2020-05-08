@@ -22,7 +22,10 @@
 			"**/Netptune.UnitTests": true,
 			"**/bazel-out/**": true,
 			"**/dist/**": true,
-			"**/node_modules/**": true
+			"**/node_modules/**": true,
+			"**/*.sln": true,
+			"**/*.sln.DotSettings": true,
+			"**/*.cs": true,
 		},
 		"search.exclude": {
 			"**/node_modules": true,
@@ -51,7 +54,10 @@
 			"**/Netptune.UnitTests": true,
 			"**/bazel-out/**": true,
 			"**/dist/**": true,
-			"**/node_modules/**": true
+			"**/node_modules/**": true,
+			"**/*.sln": true,
+			"**/*.sln.DotSettings": true,
+			"**/*.cs": true,
 		}
 	}
 }
