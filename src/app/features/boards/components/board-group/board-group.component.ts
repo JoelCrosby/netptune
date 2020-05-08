@@ -62,17 +62,16 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   }
 
   drop(event: CdkDragDrop<TaskViewModel[]>) {
-    const { data } = event.item;
+    const { data: task } = event.item;
 
     this.store.dispatch(
       moveTaskInBoardGroup({
         request: {
           newGroupId: +event.container.id,
           oldGroupId: +event.previousContainer.id,
-          taskId: data.id,
+          taskId: task.id,
           currentIndex: event.currentIndex,
           previousIndex: event.previousIndex,
-          tasks: event.container.data,
         },
       })
     );

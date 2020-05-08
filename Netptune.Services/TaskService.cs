@@ -156,12 +156,15 @@ namespace Netptune.Services
             return TransferTaskInGroups(request);
         }
 
-        private Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request)
+        private async Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request)
         {
-            return UnitOfWork.Transaction(async () =>
+            await UnitOfWork.Transaction(async () =>
             {
                 var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
-                var itemToRemove = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, oldGroup.Id);
+
+                var itemToRemove = await UnitOfWork
+                    .ProjectTasksInGroups
+                    .GetProjectTaskInGroup(request.TaskId, oldGroup.Id);
 
                 if (itemToRemove is { })
                 {
@@ -171,7 +174,7 @@ namespace Netptune.Services
                 var tasks = await UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId);
 
                 var existing = tasks
-                    .Where(item => item.Id == request.TaskId)
+                    .Where(x => x.Id == request.TaskId)
                     .ToList();
 
                 foreach (var item in existing)
@@ -192,7 +195,7 @@ namespace Netptune.Services
                 {
                     ProjectTaskId = request.TaskId,
                     BoardGroupId = request.NewGroupId,
-                    SortOrder = request.SortOrder,
+                    SortOrder = 1,
                 };
 
                 await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational);
@@ -201,26 +204,65 @@ namespace Netptune.Services
 
                 return newRelational;
             });
+
+            var taskInBoardGroup = await UnitOfWork
+                .ProjectTasksInGroups
+                .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
+
+            var sortOrder = await GetTaskInGroupSortOrder(
+                request.NewGroupId,
+                request.TaskId,
+                request.PreviousIndex,
+                request.CurrentIndex,
+                true);
+
+            taskInBoardGroup.SortOrder = sortOrder;
+
+            return taskInBoardGroup;
         }
 
         private async Task<ProjectTaskInBoardGroup> MoveTaskInGroup(MoveTaskInGroupRequest request)
         {
-            var relational = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
+            var item = await UnitOfWork
+                .ProjectTasksInGroups
+                .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
 
-            var task = relational
-                .TasksInGroups
-                .FirstOrDefault(item => item.ProjectTaskId == request.TaskId);
-
-            if (task is null)
-            {
-                return null;
-            }
-
-            task.SortOrder = request.SortOrder;
+            item.SortOrder = await GetTaskInGroupSortOrder(
+                request.NewGroupId,
+                request.TaskId,
+                request.PreviousIndex,
+                request.CurrentIndex);
 
             await UnitOfWork.CompleteAsync();
 
-            return task;
+            return item;
+        }
+
+        private async Task<double> GetTaskInGroupSortOrder
+            (int groupId, int taskId, int previousIndex, int currentIndex, bool isNewItem = false)
+        {
+            var tasks = await UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(groupId);
+            var item = tasks.FirstOrDefault(task => task.ProjectTaskId == taskId);
+
+            if (item is null)
+            {
+                throw new Exception($"Task with id of {taskId} does not exist in group {groupId}.");
+            }
+
+            if (!isNewItem)
+            {
+                tasks.RemoveAt(previousIndex);
+            }
+
+            tasks.Insert(currentIndex, item);
+
+            var preIndex = currentIndex - 1;
+            var nextIndex = currentIndex + 1;
+
+            var preOrder = tasks.ElementAtOrDefault(preIndex)?.SortOrder;
+            var nextOrder = tasks.ElementAtOrDefault(nextIndex)?.SortOrder;
+
+           return GetNewSortOrder(preOrder, nextOrder);
         }
 
         private async Task RemoveTaskFromGroups(int taskId)
@@ -235,6 +277,26 @@ namespace Netptune.Services
             {
                 taskInGroup.IsDeleted = true;
             }
+        }
+
+        private static double GetNewSortOrder(double? preOrder, double? nextOrder)
+        {
+            if (!nextOrder.HasValue && preOrder.HasValue)
+            {
+                return preOrder.Value + 1;
+            }
+
+            if (nextOrder.HasValue && !preOrder.HasValue)
+            {
+                return Math.Abs(nextOrder.Value) < 0.1 ? -1 : nextOrder.Value * 0.9;
+            }
+
+            if (nextOrder.HasValue)
+            {
+                return (preOrder.Value + nextOrder.Value) / 2;
+            }
+
+            return 0;
         }
     }
 }

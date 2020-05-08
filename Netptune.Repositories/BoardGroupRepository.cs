@@ -19,9 +19,9 @@ namespace Netptune.Repositories
         {
         }
 
-        public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId)
+        public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
         {
-            return Entities
+            var query = Entities
 
                 .Where(boardGroup => boardGroup.BoardId == boardId)
                 .Where(boardGroup => !boardGroup.IsDeleted)
@@ -34,14 +34,14 @@ namespace Netptune.Repositories
 
                 .Include(group => group.TasksInGroups)
                     .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Project)
+                        .ThenInclude(task => task.Project);
 
-                .ToListAsync();
+            return query.ApplyReadonly(isReadonly);
         }
 
-        public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId)
+        public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false)
         {
-            return Entities
+            var query = Entities
 
                 .Where(group => group.TasksInGroups
                     .Where(x => !x.IsDeleted)
@@ -49,17 +49,18 @@ namespace Netptune.Repositories
                     .Contains(taskId))
 
                 .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask)
+                    .ThenInclude(relational => relational.ProjectTask);
 
-                .ToListAsync();
+            return query.ApplyReadonly(isReadonly);
         }
 
-        public Task<List<ProjectTask>> GetTasksInGroup(int groupId)
+        public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false)
         {
-            return Context.ProjectTaskInBoardGroups
+            var query = Context.ProjectTaskInBoardGroups
                 .Where(item => item.BoardGroupId == groupId)
-                .Select(item => item.ProjectTask)
-                .ToListAsync();
+                .Select(item => item.ProjectTask);
+
+            return query.ApplyReadonly(isReadonly);
         }
     }
 }

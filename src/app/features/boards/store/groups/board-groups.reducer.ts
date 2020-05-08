@@ -24,13 +24,13 @@ const moveTaskInBoardGroup = (
     );
   }
 
-  const groups = request.tasks;
+  const tasks = state.entities[request.newGroupId].tasks;
 
-  const prevGroup = groups[request.currentIndex - 1];
-  const nextGroup = groups[request.currentIndex + 1];
+  const prevTask = tasks[request.currentIndex - 1];
+  const nextTask = tasks[request.currentIndex + 1];
 
-  const preOrder = prevGroup?.sortOrder;
-  const nextOrder = nextGroup?.sortOrder;
+  const preOrder = prevTask?.sortOrder;
+  const nextOrder = nextTask?.sortOrder;
 
   const sortOrder = getNewSortOrder(preOrder, nextOrder);
 
