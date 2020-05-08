@@ -75,15 +75,7 @@ namespace Netptune.Services
                 throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
             }
 
-            var boardGroupType = task.Status switch
-            {
-                ProjectTaskStatus.New => BoardGroupType.Todo,
-                ProjectTaskStatus.InActive => BoardGroupType.Todo,
-                ProjectTaskStatus.Complete => BoardGroupType.Done,
-                ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
-                ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
-                _ => BoardGroupType.Backlog
-            };
+            var boardGroupType = GetGroupTypeFromTaskStatus(task.Status);
 
             var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
 
@@ -94,6 +86,31 @@ namespace Netptune.Services
                 ProjectTask = task
             });
         }
+
+        private static BoardGroupType GetGroupTypeFromTaskStatus(ProjectTaskStatus status)
+        {
+            return status switch
+            {
+                ProjectTaskStatus.New => BoardGroupType.Todo,
+                ProjectTaskStatus.InActive => BoardGroupType.Todo,
+                ProjectTaskStatus.Complete => BoardGroupType.Done,
+                ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
+                ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
+                _ => BoardGroupType.Backlog
+            };
+        }
+
+        private static ProjectTaskStatus GetTaskStatusFromGroupType(BoardGroupType type)
+        {
+            return type switch
+            {
+                BoardGroupType.Todo => ProjectTaskStatus.InProgress,
+                BoardGroupType.Done => ProjectTaskStatus.Complete,
+                BoardGroupType.Backlog => ProjectTaskStatus.InActive,
+                _ => ProjectTaskStatus.InActive
+            };
+        }
+
 
         public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
         {
@@ -183,19 +200,15 @@ namespace Netptune.Services
                 }
 
                 var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
+                var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
 
-                if (newGroup.Type == BoardGroupType.Done)
-                {
-                    var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
-
-                    task.Status = ProjectTaskStatus.Complete;
-                }
-
+                task.Status = GetTaskStatusFromGroupType(newGroup.Type);
+                
                 var newRelational = new ProjectTaskInBoardGroup
                 {
                     ProjectTaskId = request.TaskId,
                     BoardGroupId = request.NewGroupId,
-                    SortOrder = 1,
+                    SortOrder = -1,
                 };
 
                 await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational);
@@ -217,6 +230,8 @@ namespace Netptune.Services
                 true);
 
             taskInBoardGroup.SortOrder = sortOrder;
+
+            await UnitOfWork.CompleteAsync();
 
             return taskInBoardGroup;
         }
@@ -249,11 +264,7 @@ namespace Netptune.Services
                 throw new Exception($"Task with id of {taskId} does not exist in group {groupId}.");
             }
 
-            if (!isNewItem)
-            {
-                tasks.RemoveAt(previousIndex);
-            }
-
+            tasks.RemoveAt(!isNewItem ? previousIndex : 0);
             tasks.Insert(currentIndex, item);
 
             var preIndex = currentIndex - 1;
@@ -288,7 +299,8 @@ namespace Netptune.Services
 
             if (nextOrder.HasValue && !preOrder.HasValue)
             {
-                return Math.Abs(nextOrder.Value) < 0.1 ? -1 : nextOrder.Value * 0.9;
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                return nextOrder.Value == 0 ? -1 : nextOrder.Value * 0.9;
             }
 
             if (nextOrder.HasValue)
@@ -296,7 +308,7 @@ namespace Netptune.Services
                 return (preOrder.Value + nextOrder.Value) / 2;
             }
 
-            return 0;
+            return 1;
         }
     }
 }
