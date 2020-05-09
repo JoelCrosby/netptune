@@ -16,7 +16,6 @@ export class SettingsIndexComponent implements OnInit {
   themes = [
     { value: 'DEFAULT-THEME', label: 'Light' },
     { value: 'DARK-THEME', label: 'Dark' },
-    { value: 'CORPORATE-THEME', label: 'Corporate' },
   ];
 
   constructor(private store: Store<SettingsState>) {}
