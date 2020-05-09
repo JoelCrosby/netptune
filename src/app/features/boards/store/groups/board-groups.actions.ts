@@ -91,3 +91,13 @@ export const moveTaskInBoardGroupFail = createAction(
   '[BoardGroups] Move Task In BoardGroup Fail',
   props<{ error: any }>()
 );
+
+export const setIsDragging = createAction(
+  '[BoardGroups] Set Is Dragging',
+  props<{ isDragging: boolean }>()
+);
+
+export const setIsInlineActive = createAction(
+  '[BoardGroups] Set Is Inline Active',
+  props<{ isInlineActive: boolean }>()
+);

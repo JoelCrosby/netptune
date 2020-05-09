@@ -36,3 +36,13 @@ export const selectCurrentBoardGroup = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.currentBoardGroup
 );
+
+export const selectIsDragging = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.isDragging
+);
+
+export const selectIsInlineActive = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.isInlineActive
+);
