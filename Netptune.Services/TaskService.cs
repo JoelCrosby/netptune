@@ -148,6 +148,11 @@ namespace Netptune.Services
 
             if (result is null) return null;
 
+            if (result.Status != projectTask.Status)
+            {
+                await PutTaskInBoardGroup(projectTask, result);
+            }
+
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
             result.Status = projectTask.Status;
@@ -155,11 +160,49 @@ namespace Netptune.Services
             result.OwnerId = projectTask.OwnerId;
             result.AssigneeId = projectTask.AssigneeId;
 
+            await UnitOfWork.CompleteAsync();
+
+            return await TaskRepository.GetTaskViewModel(result.Id);
+        }
+
+        private async Task PutTaskInBoardGroup(ProjectTask projectTask, ProjectTask result)
+        {
             await RemoveTaskFromGroups(projectTask.Id);
 
             await UnitOfWork.CompleteAsync();
 
-            return await TaskRepository.GetTaskViewModel(result.Id);
+            if (result.ProjectId is null)
+            {
+                return;
+            }
+
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, true);
+
+            if (defaultBoard is null)
+            {
+                throw new Exception($"Project With Id {result.ProjectId.Value} does not have a default board.");
+            }
+
+            var groupType = GetGroupTypeFromTaskStatus(projectTask.Status);
+
+            var group = defaultBoard.BoardGroups
+                .Where(item => !item.IsDeleted)
+                .OrderBy(item => item.SortOrder)
+                .FirstOrDefault(item => item.Type == groupType);
+
+            if (group is null)
+            {
+                return;
+            }
+
+            var sortOrder = group.TasksInGroups.LastOrDefault()?.SortOrder ?? 0 + 1;
+
+            group?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            {
+                BoardGroupId = group.Id,
+                ProjectTaskId = projectTask.Id,
+                SortOrder = sortOrder,
+            });
         }
 
         public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user)

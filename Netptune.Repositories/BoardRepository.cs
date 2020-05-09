@@ -40,7 +40,10 @@ namespace Netptune.Repositories
 
             if (!includeGroups) return query.FirstOrDefaultAsync();
 
-            return query.Include(board => board.BoardGroups).FirstOrDefaultAsync();
+            return query
+                .Include(board => board.BoardGroups)
+                .ThenInclude(group => group.TasksInGroups)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Board> DeleteBoard(int id, AppUser user)
