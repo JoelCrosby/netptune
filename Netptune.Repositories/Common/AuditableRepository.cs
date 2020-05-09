@@ -40,6 +40,8 @@ namespace Netptune.Repositories.Common
         {
             var entity = await GetAsync(id);
 
+            if (entity is null) return null;
+
             Entities.Remove(entity);
 
             return entity;
