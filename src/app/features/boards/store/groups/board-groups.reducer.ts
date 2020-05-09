@@ -45,7 +45,15 @@ const reducer = createReducer(
   ),
   on(actions.moveTaskInBoardGroup, (state, { request }) =>
     moveTaskInBoardGroup(state, request)
-  )
+  ),
+  on(actions.setIsDragging, (state, { isDragging }) => ({
+    ...state,
+    isDragging,
+  })),
+  on(actions.setIsInlineActive, (state, { isInlineActive }) => ({
+    ...state,
+    isInlineActive,
+  }))
 );
 
 export function boardGroupsReducer(

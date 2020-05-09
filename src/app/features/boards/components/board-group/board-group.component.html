@@ -21,24 +21,27 @@
       *ngFor="let task of group.tasks"
       [cdkDragData]="task"
       [task]="task"
+      (cdkDragStarted)="onDragStarted()"
+      (cdkDragReleased)="onDragEnded()"
     >
     </app-board-group-card>
-  </div>
 
-    <div class="create-task" *ngIf="(focused$ | async) && !inlineActive">
+    <div class="create-task" *ngIf="showAddButton$ | async">
       <button
         mat-button color="primary"
-        (click)="inlineActive = true"
+        (click)="onAddTaskClicked()"
       >
         ADD TASK
       </button>
     </div>
 
     <app-board-group-task-inline
-      *ngIf="inlineActive"
+      *ngIf="isInlineActive$ | async"
       (canceled)="onInlineCanceled()"
     >
     </app-board-group-task-inline>
+  </div>
+
 
   </div>
 </div>

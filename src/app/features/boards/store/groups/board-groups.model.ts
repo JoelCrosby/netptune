@@ -14,8 +14,12 @@ export const initialState = adapter.getInitialState({
   loading: false,
   loaded: false,
   loadingCreate: false,
+  isDragging: false,
+  isInlineActive: false,
 });
 
 export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
   currentBoardGroup?: BoardGroup;
+  isDragging: boolean;
+  isInlineActive: boolean;
 }
