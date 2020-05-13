@@ -22,9 +22,9 @@ h1 .app-name {
   font-weight: 500;
 }
 
-h1 .nav-title {
-  font-weight: 400;
-  font-size: 1rem;
+.nav-title {
+  font-weight: 400 !important;
+  font-size: 1.3rem !important;
   margin: 0;
 }
 
@@ -78,4 +78,5 @@ h1 .nav-title {
 
 main {
   padding-top: 56px;
+  height: calc(100vh - 56px);
 }
