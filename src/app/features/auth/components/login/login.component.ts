@@ -79,8 +79,4 @@ export class LoginComponent implements OnDestroy {
       })
     );
   }
-
-  onCreateAccountClicked() {
-    this.router.navigate(['/auth/register']);
-  }
 }

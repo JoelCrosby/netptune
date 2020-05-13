@@ -55,20 +55,18 @@
         mat-stroked-button
         color="primary"
         type="submit"
-        class="w-100 form-action-button"
       >
         Sign in
       </button>
 
-      <button
+      <a
         mat-button
         color="primary"
         type="button"
-        class="w-100 form-action-button"
-        (click)="onCreateAccountClicked()"
+        [routerLink]="['/auth/register']"
       >
         Create Account
-      </button>
+      </a>
     </div>
   </form>
 </div>
