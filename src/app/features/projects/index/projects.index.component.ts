@@ -36,12 +36,12 @@ export class ProjectsComponent implements OnInit {
   }
 
   showAddModal() {
-    this.dialog.open<ProjectDialogComponent>(ProjectDialogComponent);
+    this.dialog.open(ProjectDialogComponent);
   }
 
   deleteClicked(project: ProjectViewModel) {
     this.dialog
-      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+      .open(ConfirmDialogComponent, {
         data: {
           title: 'Are you sure you want to delete this project?',
           content: `${TextHelpers.truncate(project.name)}`,
@@ -49,7 +49,7 @@ export class ProjectsComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result) {
           this.store.dispatch(actions.deleteProject({ project }));
         }
