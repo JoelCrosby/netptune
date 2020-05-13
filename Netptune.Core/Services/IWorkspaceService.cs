@@ -9,11 +9,11 @@ namespace Netptune.Core.Services
 
         Task<Workspace> GetWorkspace(int id);
 
-        Task<List<Workspace>> GetWorkspaces(AppUser user);
+        Task<List<Workspace>> GetWorkspaces();
 
-        Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user);
+        Task<Workspace> UpdateWorkspace(Workspace workspace);
 
-        Task<Workspace> AddWorkspace(Workspace workspace, AppUser user);
+        Task<Workspace> AddWorkspace(Workspace workspace);
 
         Task<Workspace> DeleteWorkspace(int id);
     }

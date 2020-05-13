@@ -21,20 +21,19 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<TaskViewModel> GetTaskViewModel(int taskId)
+        public Task<TaskViewModel> GetTaskViewModel(int taskId)
         {
-            var task = await Entities
+            return Entities
                 .Where(x => x.Id == taskId)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
+                .Select(task => task.ToViewModel())
                 .FirstOrDefaultAsync();
-
-            return task?.ToViewModel();
         }
 
-        public async Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug)
+        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug)
         {
             var tasks = Entities
                 .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
@@ -43,7 +42,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner);
 
-            return await tasks.Select(task => task.ToViewModel()).ToListAsync();
+            return tasks.Select(task => task.ToViewModel()).ToListAsync();
         }
 
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)

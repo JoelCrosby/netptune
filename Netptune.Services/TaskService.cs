@@ -1,5 +1,6 @@
 ﻿using Netptune.Core;
 using Netptune.Core.Enums;
+using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
@@ -16,18 +17,21 @@ namespace Netptune.Services
 {
     public class TaskService : ITaskService
     {
-        protected readonly ITaskRepository TaskRepository;
-        protected readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly ITaskRepository TaskRepository;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService IdentityService;
 
-        public TaskService(INetptuneUnitOfWork unitOfWork)
+        public TaskService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             TaskRepository = unitOfWork.Tasks;
             UnitOfWork = unitOfWork;
+            IdentityService = identityService;
         }
 
-        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request, AppUser user)
+        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request)
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace, true);
+            var user = await IdentityService.GetCurrentUser();
 
             var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks);
 
@@ -75,7 +79,7 @@ namespace Netptune.Services
                 throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
             }
 
-            var boardGroupType = GetGroupTypeFromTaskStatus(task.Status);
+            var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
 
             var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
 
@@ -87,33 +91,10 @@ namespace Netptune.Services
             });
         }
 
-        private static BoardGroupType GetGroupTypeFromTaskStatus(ProjectTaskStatus status)
-        {
-            return status switch
-            {
-                ProjectTaskStatus.New => BoardGroupType.Todo,
-                ProjectTaskStatus.InActive => BoardGroupType.Todo,
-                ProjectTaskStatus.Complete => BoardGroupType.Done,
-                ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
-                ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
-                _ => BoardGroupType.Backlog
-            };
-        }
-
-        private static ProjectTaskStatus GetTaskStatusFromGroupType(BoardGroupType type)
-        {
-            return type switch
-            {
-                BoardGroupType.Todo => ProjectTaskStatus.InProgress,
-                BoardGroupType.Done => ProjectTaskStatus.Complete,
-                BoardGroupType.Backlog => ProjectTaskStatus.InActive,
-                _ => ProjectTaskStatus.InActive
-            };
-        }
-
-        public async Task<TaskViewModel> DeleteTask(int id, AppUser user)
+        public async Task<TaskViewModel> DeleteTask(int id)
         {
             var task = await TaskRepository.GetAsync(id);
+            var user = await IdentityService.GetCurrentUser();
 
             if (task is null) return null;
 
@@ -183,7 +164,7 @@ namespace Netptune.Services
                 throw new Exception($"Project With Id {result.ProjectId.Value} does not have a default board.");
             }
 
-            var groupType = GetGroupTypeFromTaskStatus(projectTask.Status);
+            var groupType = projectTask.Status.GetGroupTypeFromTaskStatus();
 
             var group = defaultBoard.BoardGroups
                 .Where(item => !item.IsDeleted)
@@ -197,7 +178,7 @@ namespace Netptune.Services
 
             var sortOrder = group.TasksInGroups.LastOrDefault()?.SortOrder ?? 0 + 1;
 
-            group?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            group.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {
                 BoardGroupId = group.Id,
                 ProjectTaskId = projectTask.Id,
@@ -205,7 +186,7 @@ namespace Netptune.Services
             });
         }
 
-        public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user)
+        public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
@@ -244,7 +225,7 @@ namespace Netptune.Services
                 var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
                 var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
 
-                task.Status = GetTaskStatusFromGroupType(newGroup.Type);
+                task.Status = newGroup.Type.GetTaskStatusFromGroupType();
                 
                 var newRelational = new ProjectTaskInBoardGroup
                 {
@@ -315,7 +296,7 @@ namespace Netptune.Services
             var preOrder = tasks.ElementAtOrDefault(preIndex)?.SortOrder;
             var nextOrder = tasks.ElementAtOrDefault(nextIndex)?.SortOrder;
 
-           return GetNewSortOrder(preOrder, nextOrder);
+           return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
         }
 
         private async Task RemoveTaskFromGroups(int taskId)
@@ -330,27 +311,6 @@ namespace Netptune.Services
             {
                 taskInGroup.IsDeleted = true;
             }
-        }
-
-        private static double GetNewSortOrder(double? preOrder, double? nextOrder)
-        {
-            if (!nextOrder.HasValue && preOrder.HasValue)
-            {
-                return preOrder.Value + 1;
-            }
-
-            if (nextOrder.HasValue && !preOrder.HasValue)
-            {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                return nextOrder.Value == 0 ? -1 : nextOrder.Value * 0.9;
-            }
-
-            if (nextOrder.HasValue)
-            {
-                return (preOrder.Value + nextOrder.Value) / 2;
-            }
-
-            return 1;
         }
     }
 }

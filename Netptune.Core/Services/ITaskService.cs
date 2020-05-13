@@ -15,12 +15,12 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> UpdateTask(ProjectTask projectTask);
 
-        Task<TaskViewModel> AddTask(AddProjectTaskRequest request, AppUser user);
+        Task<TaskViewModel> AddTask(AddProjectTaskRequest request);
 
-        Task<TaskViewModel> DeleteTask(int id, AppUser user);
+        Task<TaskViewModel> DeleteTask(int id);
 
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
 
-        Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request, AppUser user);
+        Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
     }
 }

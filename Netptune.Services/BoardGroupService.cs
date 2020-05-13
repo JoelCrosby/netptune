@@ -11,13 +11,15 @@ namespace Netptune.Services
 {
     public class BoardGroupService : IBoardGroupService
     {
-        protected readonly INetptuneUnitOfWork UnitOfWork;
-        protected readonly IBoardGroupRepository BoardGroups;
-        protected readonly IBoardRepository Boards;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService IdentityService;
+        private readonly IBoardGroupRepository BoardGroups;
+        private readonly IBoardRepository Boards;
 
-        public BoardGroupService(INetptuneUnitOfWork unitOfWork)
+        public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
+            IdentityService = identityService;
             Boards = unitOfWork.Boards;
             BoardGroups = unitOfWork.BoardGroups;
         }
@@ -77,11 +79,12 @@ namespace Netptune.Services
             return boardGroup;
         }
 
-        public async Task<BoardGroup> DeleteBoardGroup(int id, AppUser user)
+        public async Task<BoardGroup> DeleteBoardGroup(int id)
         {
             var boardGroup = await BoardGroups.GetAsync(id);
+            var user = await IdentityService.GetCurrentUser();
 
-            if (boardGroup is null) return null;
+            if (boardGroup is null || user is null) return null;
 
             boardGroup.IsDeleted = true;
             boardGroup.DeletedByUserId = user.Id;

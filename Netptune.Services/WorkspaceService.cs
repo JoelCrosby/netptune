@@ -5,6 +5,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,17 +13,21 @@ namespace Netptune.Services
 {
     public class WorkspaceService : IWorkspaceService
     {
-        protected readonly INetptuneUnitOfWork UnitOfWork;
-        protected readonly IWorkspaceRepository WorkspaceRepository;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService IdentityService;
+        private readonly IWorkspaceRepository WorkspaceRepository;
 
-        public WorkspaceService(INetptuneUnitOfWork unitOfWork)
+        public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
+            IdentityService = identityService;
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
-        public async Task<Workspace> AddWorkspace(Workspace workspace, AppUser user)
+        public async Task<Workspace> AddWorkspace(Workspace workspace)
         {
+            var user = await IdentityService.GetCurrentUser();
+
             workspace.CreatedByUserId = user.Id;
             workspace.OwnerId = user.Id;
 
@@ -62,13 +67,20 @@ namespace Netptune.Services
             return WorkspaceRepository.GetBySlug(slug);
         }
 
-        public Task<List<Workspace>> GetWorkspaces(AppUser user)
+        public async Task<List<Workspace>> GetWorkspaces()
         {
-            return WorkspaceRepository.GetWorkspaces(user);
+            var user = await IdentityService.GetCurrentUser();
+
+            return await WorkspaceRepository.GetWorkspaces(user);
         }
 
-        public async Task<Workspace> UpdateWorkspace(Workspace workspace, AppUser user)
+        public async Task<Workspace> UpdateWorkspace(Workspace workspace)
         {
+            var user = await IdentityService.GetCurrentUser();
+
+            if (workspace is null) throw new ArgumentNullException(nameof(workspace));
+            if (user is null) throw new ArgumentNullException(nameof(user));
+
             var result = await WorkspaceRepository.GetAsync(workspace.Id);
 
             if (result is null) return null;
@@ -78,7 +90,13 @@ namespace Netptune.Services
             result.ModifiedByUserId = user.Id;
             result.MetaInfo = workspace.MetaInfo;
 
-            await UnitOfWork.CompleteAsync();
+            if (workspace.IsDeleted)
+            {
+                result.IsDeleted = true;
+                result.DeletedByUserId = user.Id;
+            }
+
+            result.UpdatedAt = DateTime.UtcNow;
 
             await UnitOfWork.CompleteAsync();
 

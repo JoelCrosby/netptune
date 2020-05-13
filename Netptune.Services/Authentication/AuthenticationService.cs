@@ -106,7 +106,7 @@ namespace Netptune.Services.Authentication
                 Token = GenerateJwtToken(appUser, expireDays),
                 UserId = appUser.Id,
                 EmailAddress = appUser.Email,
-                DisplayName = GetUserDisplayName(appUser),
+                DisplayName = appUser.GetDisplayName(),
                 Issued = DateTime.Now,
                 Expires = expireDays
             };
@@ -132,16 +132,6 @@ namespace Netptune.Services.Authentication
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private static string GetUserDisplayName(AppUser user)
-        {
-            if (string.IsNullOrEmpty(user.Firstname) || string.IsNullOrEmpty(user.Lastname))
-            {
-                return user.Email;
-            }
-
-            return $"{user.Firstname} {user.Lastname}";
         }
     }
 }

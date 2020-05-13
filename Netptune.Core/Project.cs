@@ -41,6 +41,5 @@ namespace Netptune.Core
         public ICollection<Board> ProjectBoards { get; set; } = new HashSet<Board>();
 
         #endregion
-
     }
 }

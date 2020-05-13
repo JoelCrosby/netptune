@@ -16,12 +16,10 @@ namespace Netptune.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<AppUser> UserManager;
         private readonly IUserService UserService;
 
-        public UsersController(UserManager<AppUser> userManager, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            UserManager = userManager;
             UserService = userService;
         }
 
@@ -53,8 +51,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(AppUser))]
         public async Task<IActionResult> UpdateUser([FromBody] AppUser user)
         {
-            var userId = UserManager.GetUserId(HttpContext.User);
-            var result = await UserService.Update(user, userId);
+            var result = await UserService.Update(user);
 
             return Ok(result);
         }

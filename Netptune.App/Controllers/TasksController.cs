@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core;
@@ -19,12 +18,10 @@ namespace Netptune.Api.Controllers
     public class ProjectTasksController : ControllerBase
     {
         private readonly ITaskService TaskService;
-        private readonly UserManager<AppUser> UserManager;
 
-        public ProjectTasksController(ITaskService taskService, UserManager<AppUser> userManager)
+        public ProjectTasksController(ITaskService taskService)
         {
             TaskService = taskService;
-            UserManager = userManager;
         }
 
         // GET: api/ProjectTasks
@@ -69,8 +66,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest task)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await TaskService.AddTask(task, user);
+            var result = await TaskService.AddTask(task);
 
             return Ok(result);
         }
@@ -82,8 +78,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await TaskService.DeleteTask(id, user);
+            var result = await TaskService.DeleteTask(id);
 
             return Ok(result);
         }
@@ -108,8 +103,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] MoveTaskInGroupRequest request)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await TaskService.MoveTaskInBoardGroup(request, user);
+            var result = await TaskService.MoveTaskInBoardGroup(request);
 
             return Ok(result);
         }
