@@ -34,6 +34,7 @@ export class TaskListItemComponent {
   deleteClicked() {
     this.dialog
       .open(ConfirmDialogComponent, {
+        width: '600px',
         data: {
           title: 'Are you sure you want to delete task?',
           content: `Delete task - ${TextHelpers.truncate(this.task.name)}`,

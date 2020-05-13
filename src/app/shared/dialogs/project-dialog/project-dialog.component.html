@@ -3,22 +3,47 @@
 <form [formGroup]="projectFromGroup">
 
   <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Enter Project Name</mat-label>
-    <input matInput id="name" class="form-control" placeholder="Project Name" formControlName="nameFormControl" name="name"
-      required>
+    <mat-label>
+      Enter Project Name
+    </mat-label>
+    <input
+      matInput
+      id="name"
+      class="form-control"
+      placeholder="Project Name"
+      formControlName="nameFormControl"
+      name="name"
+      required
+    >
     <mat-hint>Required</mat-hint>
   </mat-form-field>
 
   <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Enter Project Repository</mat-label>
-    <input matInput id="url" class="form-control" placeholder="Repository Url" formControlName="repositoryUrlFormControl"
-      name="url">
+    <mat-label>
+      Enter Project Repository
+    </mat-label>
+    <input
+      matInput
+      id="url"
+      class="form-control"
+      placeholder="Repository Url"
+      formControlName="repositoryUrlFormControl"
+      name="url"
+    >
   </mat-form-field>
 
   <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Enter Project Description</mat-label>
-    <textarea matInput id="description" class="form-control" formControlName="descriptionFormControl" placeholder="Description"
-      name="description" aria-label="With textarea"></textarea>
+    <mat-label>
+      Enter Project Description
+    </mat-label>
+    <textarea
+      matInput
+      id="description"
+      class="form-control"
+      formControlName="descriptionFormControl"
+      placeholder="Description"
+      name="description" aria-label="With textarea"
+    ></textarea>
   </mat-form-field>
 
 </form>
