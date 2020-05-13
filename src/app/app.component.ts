@@ -12,6 +12,7 @@ import { MediaService } from '@core/media/media.service';
 import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticated$ = this.store.pipe(select(selectIsAuthenticated));
-    this.store.dispatch(loadWorkspaces());
+    this.authenticated$ = this.store.pipe(
+      select(selectIsAuthenticated),
+      tap((value) => {
+        if (value) this.store.dispatch(loadWorkspaces());
+      })
+    );
   }
 }
