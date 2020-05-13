@@ -11,10 +11,6 @@ export class ConfirmDialogComponent {
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogOptions = {}
   ) {}
-
-  close(): void {
-    this.dialogRef.close();
-  }
 }
 
 export interface ConfirmDialogOptions {

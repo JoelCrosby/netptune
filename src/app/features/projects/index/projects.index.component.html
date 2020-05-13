@@ -1,4 +1,4 @@
-<app-page-container [verticalPadding]="false">
+<app-page-container>
 
   <div class="action-bar">
     <button
@@ -41,8 +41,18 @@
 
           <mat-menu #appMenu="matMenu">
             <ng-template matMenuContent>
-              <button mat-menu-item>Edit</button>
-              <button mat-menu-item (click)="deleteClicked(project)">Delete</button>
+              <button mat-menu-item>
+                <mat-icon class="material-icons-outlined">
+                  edit
+                </mat-icon>
+                <span>Edit Project</span>
+              </button>
+              <button mat-menu-item (click)="deleteClicked(project)">
+                <mat-icon class="material-icons-outlined">
+                  delete
+                </mat-icon>
+                <span>Delete Project</span>
+              </button>
             </ng-template>
           </mat-menu>
 

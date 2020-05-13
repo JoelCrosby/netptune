@@ -49,6 +49,7 @@ export class WorkspacesComponent implements OnInit {
   deleteClicked(workspace: Workspace) {
     this.dialog
       .open(ConfirmDialogComponent, {
+        width: '600px',
         data: {
           title: 'Delete Workspace',
           content: `Are you sure you want to delete ${TextHelpers.truncate(

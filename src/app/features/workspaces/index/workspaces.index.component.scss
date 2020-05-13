@@ -1,9 +1,12 @@
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 mat-card {
-  min-width: 300px;
-  min-height: 200px;
   margin-bottom: 2rem;
   padding: 1.6rem;
-  border-top: #6611d6 solid 2px;
 }
 
 .card-group {
@@ -34,10 +37,4 @@ mat-card {
 
 .action-mat-icon {
   margin-right: .6rem;
-}
-
-mat-card-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }

@@ -42,6 +42,7 @@ export class ProjectsComponent implements OnInit {
   deleteClicked(project: ProjectViewModel) {
     this.dialog
       .open(ConfirmDialogComponent, {
+        width: '600px',
         data: {
           title: 'Are you sure you want to delete this project?',
           content: `${TextHelpers.truncate(project.name)}`,
