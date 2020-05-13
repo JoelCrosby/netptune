@@ -64,26 +64,5 @@ namespace Netptune.Repositories
                 CreatedAt = project.CreatedAt
             };
         }
-
-        public async Task<Project> AddProject(Project project)
-        {
-            var result = await Entities.AddAsync(project);
-
-            return result.Entity;
-        }
-
-        public async Task<Project> DeleteProject(int id)
-        {
-            var result = await Entities.FindAsync(id);
-
-            if (result is null)
-            {
-                return null;
-            }
-
-            Entities.Remove(result);
-
-            return result;
-        }
     }
 }

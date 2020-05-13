@@ -10,4 +10,18 @@
 
         Todo = 3,
     }
+
+    public static class BoardGroupTypeExtensions
+    {
+        public static ProjectTaskStatus GetTaskStatusFromGroupType(this BoardGroupType type)
+        {
+            return type switch
+            {
+                BoardGroupType.Todo => ProjectTaskStatus.InProgress,
+                BoardGroupType.Done => ProjectTaskStatus.Complete,
+                BoardGroupType.Backlog => ProjectTaskStatus.InActive,
+                _ => ProjectTaskStatus.InActive
+            };
+        }
+    }
 }

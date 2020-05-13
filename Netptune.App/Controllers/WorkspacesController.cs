@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core;
@@ -17,12 +16,10 @@ namespace Netptune.Api.Controllers
     public class WorkspacesController : ControllerBase
     {
         private readonly IWorkspaceService WorkspaceService;
-        private readonly UserManager<AppUser> UserManager;
 
-        public WorkspacesController(IWorkspaceService workspaceService, UserManager<AppUser> userManager)
+        public WorkspacesController(IWorkspaceService workspaceService)
         {
             WorkspaceService = workspaceService;
-            UserManager = userManager;
         }
 
         // GET: api/Workspaces
@@ -31,8 +28,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(List<Workspace>))]
         public async Task<IActionResult> GetWorkspaces()
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await WorkspaceService.GetWorkspaces(user);
+            var result = await WorkspaceService.GetWorkspaces();
 
             return Ok(result);
         }
@@ -57,8 +53,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> PutWorkspace([FromBody] Workspace workspace)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await WorkspaceService.UpdateWorkspace(workspace, user);
+            var result = await WorkspaceService.UpdateWorkspace(workspace);
 
             return Ok(result);
         }
@@ -69,8 +64,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> PostWorkspace([FromBody] Workspace workspace)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await WorkspaceService.AddWorkspace(workspace, user);
+            var result = await WorkspaceService.AddWorkspace(workspace);
 
             return Ok(result);
         }

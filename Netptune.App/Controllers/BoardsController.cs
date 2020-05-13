@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core;
@@ -17,12 +16,10 @@ namespace Netptune.Api.Controllers
     public class BoardsController : ControllerBase
     {
         private readonly IBoardService BoardService;
-        private readonly UserManager<AppUser> UserManager;
 
-        public BoardsController(IBoardService boardService, UserManager<AppUser> userManager)
+        public BoardsController(IBoardService boardService)
         {
             BoardService = boardService;
-            UserManager = userManager;
         }
 
         // GET: api/boards
@@ -79,8 +76,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
-            var user = await UserManager.GetUserAsync(User);
-            var result = await BoardService.DeleteBoard(id, user);
+            var result = await BoardService.DeleteBoard(id);
 
             return Ok(result);
         }

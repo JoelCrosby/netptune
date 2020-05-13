@@ -14,7 +14,7 @@ namespace Netptune.Core.Services
 
         Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug);
 
-        Task<UserViewModel> Update(AppUser user, string userId);
+        Task<UserViewModel> Update(AppUser user);
 
         Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
     }

@@ -62,7 +62,7 @@ namespace Netptune.Core
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
                 AssigneeUsername = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
-                AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
+                AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
                 OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
                 ProjectName = Project == null ? string.Empty : Project.Name
             };

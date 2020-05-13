@@ -13,6 +13,6 @@ namespace Netptune.Core.Services
 
         Task<BoardGroup> AddBoardGroup(BoardGroup boardGroup);
 
-        Task<BoardGroup> DeleteBoardGroup(int id, AppUser user);
+        Task<BoardGroup> DeleteBoardGroup(int id);
     }
 }

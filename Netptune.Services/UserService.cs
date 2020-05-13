@@ -15,10 +15,10 @@ namespace Netptune.Services
 {
     public class UserService : IUserService
     {
-        protected readonly INetptuneUnitOfWork UnitOfWork;
-        protected readonly IMapper Mapper;
-        protected readonly IUserRepository UserRepository;
-        protected readonly IWorkspaceRepository WorkspaceRepository;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IMapper Mapper;
+        private readonly IUserRepository UserRepository;
+        private readonly IWorkspaceRepository WorkspaceRepository;
 
         public UserService(INetptuneUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -80,7 +80,7 @@ namespace Netptune.Services
             return result;
         }
 
-        public async Task<UserViewModel> Update(AppUser user, string userId)
+        public async Task<UserViewModel> Update(AppUser user)
         {
             var updatedUser = await UserRepository.GetAsync(user.Id);
 

@@ -45,17 +45,5 @@ namespace Netptune.Repositories
                 .ThenInclude(group => group.TasksInGroups)
                 .FirstOrDefaultAsync();
         }
-
-        public async Task<Board> DeleteBoard(int id, AppUser user)
-        {
-            var board = await Entities.FindAsync(id);
-
-            if (board is null) return null;
-
-            board.IsDeleted = true;
-            board.DeletedByUserId = user.Id;
-
-            return board;
-        }
     }
 }

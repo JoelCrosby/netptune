@@ -12,10 +12,10 @@ namespace Netptune.Core.Services
 
         Task<ProjectViewModel> GetProject(int id);
 
-        Task<ProjectViewModel> UpdateProject(Project project, AppUser user);
+        Task<ProjectViewModel> UpdateProject(Project project);
 
-        Task<ProjectViewModel> AddProject(AddProjectRequest request, AppUser user);
+        Task<ProjectViewModel> AddProject(AddProjectRequest request);
 
-        Task<ProjectViewModel> DeleteProject(int id, AppUser user);
+        Task<ProjectViewModel> DeleteProject(int id);
     }
 }

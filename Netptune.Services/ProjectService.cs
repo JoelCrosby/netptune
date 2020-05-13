@@ -14,19 +14,23 @@ namespace Netptune.Services
 {
     public class ProjectService : IProjectService
     {
-        protected readonly IProjectRepository ProjectRepository;
-        protected readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IProjectRepository ProjectRepository;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService IdentityService;
 
-        public ProjectService(INetptuneUnitOfWork unitOfWork)
+        public ProjectService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             ProjectRepository = unitOfWork.Projects;
             UnitOfWork = unitOfWork;
+            IdentityService = identityService;
         }
 
-        public Task<ProjectViewModel> AddProject(AddProjectRequest request, AppUser user)
+        public Task<ProjectViewModel> AddProject(AddProjectRequest request)
         {
             return UnitOfWork.Transaction(async () =>
             {
+                var user = await IdentityService.GetCurrentUser();
+
                 var project = new Project
                 {
                     Name = request.Name,
@@ -87,9 +91,10 @@ namespace Netptune.Services
             return $"{project.Name.ToLowerInvariant()}-default-board";
         }
 
-        public async Task<ProjectViewModel> DeleteProject(int id, AppUser user)
+        public async Task<ProjectViewModel> DeleteProject(int id)
         {
             var project = await ProjectRepository.GetAsync(id);
+            var user = await IdentityService.GetCurrentUser();
 
             if (project is null) return null;
 
@@ -113,9 +118,10 @@ namespace Netptune.Services
             return ProjectRepository.GetProjects(workspaceSlug);
         }
 
-        public async Task<ProjectViewModel> UpdateProject(Project project, AppUser user)
+        public async Task<ProjectViewModel> UpdateProject(Project project)
         {
             var result = await ProjectRepository.GetAsync(project.Id);
+            var user = await IdentityService.GetCurrentUser();
 
             if (result is null) return null;
 

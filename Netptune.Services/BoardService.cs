@@ -12,12 +12,14 @@ namespace Netptune.Services
 {
     public class BoardService : IBoardService
     {
-        protected readonly INetptuneUnitOfWork UnitOfWork;
-        protected readonly IBoardRepository Boards;
+        private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService IdentityService;
+        private readonly IBoardRepository Boards;
 
-        public BoardService(INetptuneUnitOfWork unitOfWork)
+        public BoardService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
+            IdentityService = identityService;
             Boards = unitOfWork.Boards;
         }
 
@@ -84,9 +86,10 @@ namespace Netptune.Services
             return result;
         }
 
-        public async Task<Board> DeleteBoard(int id, AppUser user)
+        public async Task<Board> DeleteBoard(int id)
         {
             var board = await Boards.GetAsync(id);
+            var user = await IdentityService.GetCurrentUser();
 
             if (board is null) return null;
 
