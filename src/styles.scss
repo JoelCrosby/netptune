@@ -6,9 +6,7 @@
 @import './styles/components';
 @import './styles/spinners';
 @import './styles/typography';
-
-// Bootstrap Grid
-@import './styles/bootstrap';
+@import './styles/containers.scss';
 
 // Angular Material Theming core
 @import '~@angular/material/theming';
