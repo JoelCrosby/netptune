@@ -113,8 +113,4 @@ export class RegisterComponent implements OnDestroy {
       })
     );
   }
-
-  backToLoginClicked() {
-    this.router.navigate(['/auth/login']);
-  }
 }

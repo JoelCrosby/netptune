@@ -91,20 +91,20 @@
         mat-stroked-button
         color="primary"
         type="submit"
-        class="w-100 form-action-button"
+        class="form-action-button"
       >
         Register Account
       </button>
 
-      <button
+      <a
         mat-button
         color="primary"
         type="button"
-        class="w-100 form-action-button"
-        (click)="backToLoginClicked()"
+        class="form-action-button"
+        [routerLink]="['/auth/login']"
       >
         Back to Log in
-      </button>
+    </a>
     </div>
   </form>
 </div>
