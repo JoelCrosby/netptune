@@ -13,7 +13,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss', '../../auth.styles.scss'],
+  styleUrls: ['./register.component.scss'],
   animations: [pullIn],
 })
 export class RegisterComponent implements OnDestroy {
