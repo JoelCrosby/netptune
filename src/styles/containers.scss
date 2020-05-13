@@ -1,0 +1,25 @@
+.auth-page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    width: 500px;
+    max-width: 500px;
+
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+
+  .auth-title {
+    font: 400 16px/28px Roboto, 'Helvetica Neue', sans-serif;
+    letter-spacing: normal;
+    margin: 0 0 16px;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
