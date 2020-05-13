@@ -33,7 +33,7 @@ export class TaskListItemComponent {
 
   deleteClicked() {
     this.dialog
-      .open<ConfirmDialogComponent>(ConfirmDialogComponent, {
+      .open(ConfirmDialogComponent, {
         data: {
           title: 'Are you sure you want to delete task?',
           content: `Delete task - ${TextHelpers.truncate(this.task.name)}`,
@@ -41,7 +41,7 @@ export class TaskListItemComponent {
         },
       })
       .afterClosed()
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result) {
           this.store.dispatch(actions.deleteProjectTask({ task: this.task }));
         }
