@@ -13,7 +13,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../../auth.styles.scss'],
+  styleUrls: ['./login.component.scss'],
   animations: [pullIn],
 })
 export class LoginComponent implements OnDestroy {
