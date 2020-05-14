@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-using Netptune.Core;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Entities;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.UnitOfWork;
 

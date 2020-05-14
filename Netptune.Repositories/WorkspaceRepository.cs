@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-using Netptune.Core;
+using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;

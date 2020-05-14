@@ -4,7 +4,7 @@ using Netptune.Core.Enums;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class Board : AuditableEntity<int>
     {

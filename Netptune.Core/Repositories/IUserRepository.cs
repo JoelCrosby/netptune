@@ -1,3 +1,4 @@
+using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
 

@@ -5,7 +5,7 @@ using Netptune.Core.Relationships;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class Workspace : AuditableEntity<int>
     {

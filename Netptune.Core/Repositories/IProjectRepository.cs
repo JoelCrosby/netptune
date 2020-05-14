@@ -1,4 +1,5 @@
-﻿using Netptune.Core.Repositories.Common;
+﻿using Netptune.Core.Entities;
+using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Projects;
 
 using System.Collections.Generic;

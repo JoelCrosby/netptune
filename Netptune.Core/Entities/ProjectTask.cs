@@ -6,7 +6,7 @@ using Netptune.Core.ViewModels.ProjectTasks;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class ProjectTask : AuditableEntity<int>
     {

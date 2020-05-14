@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Netptune.Core.Entities;
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Netptune.Core.Services

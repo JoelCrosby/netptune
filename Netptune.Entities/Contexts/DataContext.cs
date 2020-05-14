@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using Netptune.Core;
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 
 using System;

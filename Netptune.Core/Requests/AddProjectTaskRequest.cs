@@ -1,4 +1,5 @@
-﻿using Netptune.Core.Enums;
+﻿using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 
 using System.ComponentModel.DataAnnotations;
 

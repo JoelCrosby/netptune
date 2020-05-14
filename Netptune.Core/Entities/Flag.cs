@@ -1,6 +1,6 @@
 ﻿using Netptune.Core.BaseEntities;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class Flag : AuditableEntity<int>
     {

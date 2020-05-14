@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Core;
+using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 

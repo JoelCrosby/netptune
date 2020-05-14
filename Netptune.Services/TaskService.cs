@@ -1,4 +1,4 @@
-﻿using Netptune.Core;
+﻿using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
@@ -226,7 +226,7 @@ namespace Netptune.Services
                 var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
 
                 task.Status = newGroup.Type.GetTaskStatusFromGroupType();
-                
+
                 var newRelational = new ProjectTaskInBoardGroup
                 {
                     ProjectTaskId = request.TaskId,
@@ -296,7 +296,7 @@ namespace Netptune.Services
             var preOrder = tasks.ElementAtOrDefault(preIndex)?.SortOrder;
             var nextOrder = tasks.ElementAtOrDefault(nextIndex)?.SortOrder;
 
-           return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
+            return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
         }
 
         private async Task RemoveTaskFromGroups(int taskId)

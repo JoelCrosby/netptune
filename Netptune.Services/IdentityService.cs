@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-using Netptune.Core;
+using Netptune.Core.Entities;
 using Netptune.Core.Services;
 
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace Netptune.Services
 
             return UserManager.GetUserAsync(user);
         }
-        
+
         public async Task<string> GetCurrentUserEmail()
         {
             var user = await GetCurrentUser();

@@ -1,4 +1,5 @@
-﻿using Netptune.Core.Requests;
+﻿using Netptune.Core.Entities;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Projects;
 
 using System.Collections.Generic;

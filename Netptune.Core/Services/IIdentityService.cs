@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Netptune.Core.Entities;
+
+using System.Threading.Tasks;
 
 namespace Netptune.Core.Services
 {
