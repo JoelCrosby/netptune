@@ -25,6 +25,8 @@ bin/
 Bin/
 obj/
 Obj/
+dist/
+Dist/
 
 # Local db folder
 localdb/
