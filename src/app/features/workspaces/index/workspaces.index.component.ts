@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@app/shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { WorkspaceDialogComponent } from '@app/shared/dialogs/workspace-dialog/workspace-dialog.component';
+import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';

@@ -18,6 +18,7 @@ import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './settings/settings.effects';
 import { CoreEffects } from './state/core.effects';
 import { WorkspacesEffects } from './workspaces/workspaces.effects';
+import { EntryModule } from '../entry/entry.module';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { WorkspacesEffects } from './workspaces/workspaces.effects';
       : StoreDevtoolsModule.instrument({
           name: 'Netptune',
         }),
+    EntryModule,
   ],
   providers: [
     AuthGuardService,

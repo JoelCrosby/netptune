@@ -22,6 +22,7 @@
     "paths": {
       "@app/*": ["app/*"],
       "@core/*": ["app/core/*"],
+      "@entry/*": ["app/entry/*"],
       "@auth/*": ["app/features/auth/*"],
       "@boards/*": ["app/features/boards/*"],
       "@profile/*": ["app/features/profile/*"],
