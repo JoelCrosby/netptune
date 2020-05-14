@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Repositories.Common;
 
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Netptune.Repositories.Common
     /// <typeparam name="TId"></typeparam>
     public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, IRepository<TEntity, TId>
         where TContext : DbContext
-        where TEntity : class
+        where TEntity : class, IKeyedEntity<TId>
     {
         protected readonly TContext Context;
         protected readonly DbSet<TEntity> Entities;
@@ -44,16 +45,16 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Entity of the defined type</returns>
-        public virtual async Task<TEntity> GetAsync(TId id)
+        public virtual ValueTask<TEntity> GetAsync(TId id)
         {
-            return await Entities.FindAsync(id);
+            return Entities.FindAsync(id);
         }
 
         /// <summary>
         /// Return all Entities
         /// </summary>
         /// <returns>List of Entities</returns>
-        public virtual IList<TEntity> GetAll()
+        public virtual List<TEntity> GetAll()
         {
             return Entities.ToList();
         }
@@ -62,9 +63,27 @@ namespace Netptune.Repositories.Common
         /// Return all Entities async
         /// </summary>
         /// <returns>List of Entities</returns>
-        public virtual async Task<IList<TEntity>> GetAllAsync()
+        public virtual Task<List<TEntity>> GetAllAsync()
         {
-            return await Entities.ToListAsync();
+            return Entities.ToListAsync();
+        }
+
+        /// <summary>
+        /// Return all Entities from given IDs
+        /// </summary>
+        /// <returns>List of Entities</returns>
+        public virtual List<TEntity> GetAllById(IEnumerable<TId> ids)
+        {
+            return Entities.Where(entity => ids.Contains(entity.Id)).ToList();
+        }
+
+        /// <summary>
+        /// Return all Entities from given IDs async
+        /// </summary>
+        /// <returns>List of Entities</returns>
+        public Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids)
+        {
+            return Entities.Where(entity => ids.Contains(entity.Id)).ToListAsync();
         }
 
         /// <summary>
@@ -80,9 +99,9 @@ namespace Netptune.Repositories.Common
         /// Return all Entities Within the given page query async.
         /// </summary>
         /// <returns>List of Entities</returns>
-        public virtual async Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery)
+        public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery)
         {
-            return await PaginateToPagedResultAsync(Entities, pageQuery);
+            return PaginateToPagedResultAsync(Entities, pageQuery);
         }
 
         /// <summary>

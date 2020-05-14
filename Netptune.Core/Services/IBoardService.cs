@@ -9,7 +9,7 @@ namespace Netptune.Core.Services
     {
         Task<List<Board>> GetBoards(int projectId);
 
-        Task<Board> GetBoard(int id);
+        ValueTask<Board> GetBoard(int id);
 
         Task<Board> UpdateBoard(Board board);
 

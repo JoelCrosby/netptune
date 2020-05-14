@@ -46,7 +46,7 @@ namespace Netptune.Services
             return groups;
         }
 
-        public Task<BoardGroup> GetBoardGroup(int id)
+        public ValueTask<BoardGroup> GetBoardGroup(int id)
         {
             return BoardGroups.GetAsync(id);
         }

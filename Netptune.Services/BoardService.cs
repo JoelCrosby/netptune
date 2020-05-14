@@ -28,7 +28,7 @@ namespace Netptune.Services
             return Boards.GetBoardsInProject(projectId);
         }
 
-        public Task<Board> GetBoard(int id)
+        public ValueTask<Board> GetBoard(int id)
         {
             return Boards.GetAsync(id);
         }

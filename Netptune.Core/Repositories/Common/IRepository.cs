@@ -23,19 +23,31 @@ namespace Netptune.Core.Repositories.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Entity of the defined type</returns>
-        Task<TEntity> GetAsync(TId id);
+        ValueTask<TEntity> GetAsync(TId id);
 
         /// <summary>
         /// Return all Entities
         /// </summary>
         /// <returns>List of Entities</returns>
-        IList<TEntity> GetAll();
+        List<TEntity> GetAll();
 
         /// <summary>
         /// Return all Entities async
         /// </summary>
         /// <returns>List of Entities</returns>
-        Task<IList<TEntity>> GetAllAsync();
+        Task<List<TEntity>> GetAllAsync();
+
+        /// <summary>
+        /// Return all Entities from given IDs
+        /// </summary>
+        /// <returns>List of Entities</returns>
+        List<TEntity> GetAllById(IEnumerable<TId> ids);
+
+        /// <summary>
+        /// Return all Entities from given IDs async
+        /// </summary>
+        /// <returns>List of Entities</returns>
+        Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids);
 
         /// <summary>
         /// Return all Entities Within the given page query.

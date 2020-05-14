@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Netptune.Core.BaseEntities
 {
-    public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>
+    public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableEntity<TValue>
     {
         public bool IsDeleted { get; set; }
 
