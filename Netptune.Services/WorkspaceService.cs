@@ -57,7 +57,7 @@ namespace Netptune.Services
             return workspace;
         }
 
-        public Task<Workspace> GetWorkspace(int id)
+        public ValueTask<Workspace> GetWorkspace(int id)
         {
             return WorkspaceRepository.GetAsync(id);
         }

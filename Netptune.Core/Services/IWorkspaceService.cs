@@ -9,7 +9,7 @@ namespace Netptune.Core.Services
     {
         Task<Workspace> GetWorkspace(string slug);
 
-        Task<Workspace> GetWorkspace(int id);
+        ValueTask<Workspace> GetWorkspace(int id);
 
         Task<List<Workspace>> GetWorkspaces();
 
