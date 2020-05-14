@@ -50,6 +50,10 @@
       flex-direction: row;
       align-items: center;
       justify-content: flex-end;
+
+      .task-complete {
+        margin: 0 .8rem;
+      }
     }
 
     .chip-list {

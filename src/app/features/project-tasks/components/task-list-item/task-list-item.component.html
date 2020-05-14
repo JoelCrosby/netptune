@@ -20,6 +20,13 @@
 
     <div class="task-footer">
 
+      <mat-icon
+        class="task-complete"
+        *ngIf="task.status === 1"
+      >
+        done
+      </mat-icon>
+
       <div class="chip-list">
         <mat-chip-list ariaOrientation="horizontal">
             <mat-chip color="primary">

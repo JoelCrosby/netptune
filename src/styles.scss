@@ -22,6 +22,7 @@
 @import './styles/reset.scss-theme';
 @import './styles/spinners.scss-theme';
 @import './styles/components.scss-theme';
+@import './styles/colors.scss-theme';
 @import './app/app.component.scss-theme';
 @import './app/features/workspaces/shell/shell.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
@@ -37,6 +38,7 @@
   @include reset-theme($theme);
   @include spinners-theme($theme);
   @include components-theme($theme);
+  @include colors-theme($theme);
   @include app-component-theme($theme);
   @include app-shell-component-theme($theme);
   @include task-list-group-component-theme($theme);
