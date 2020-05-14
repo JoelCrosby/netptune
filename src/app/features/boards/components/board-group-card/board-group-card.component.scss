@@ -14,6 +14,15 @@
   line-height: 1.4rem;
 }
 
-.task-card-user-chip {
+.card-footer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
   align-self: flex-end;
+  width: 100%;
+  margin-top: .2rem;
+
+  .task-card-user-chip {
+    justify-self: flex-end;
+  }
 }

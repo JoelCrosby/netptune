@@ -12,10 +12,6 @@
     background-color: mat-color($background, card);
   }
 
-  .done {
-    fill: green;
-  }
-
   .task-header-title .mat-icon {
     color: rgba(mat-color($foreground, icon), .3);
   }
