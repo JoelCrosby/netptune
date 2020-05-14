@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 
+using Netptune.Core.Entities;
 using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.MappingProfiles

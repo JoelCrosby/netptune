@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class BoardGroup : AuditableEntity<int>
     {

@@ -1,4 +1,4 @@
-﻿using Netptune.Core;
+﻿using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;

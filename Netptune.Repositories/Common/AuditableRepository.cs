@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Netptune.Core;
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 
 using System.Threading.Tasks;

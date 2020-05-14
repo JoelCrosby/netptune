@@ -3,7 +3,7 @@ using Netptune.Core.Enums;
 
 using System.Text.Json.Serialization;
 
-namespace Netptune.Core
+namespace Netptune.Core.Entities
 {
     public class Post : AuditableEntity<int>
     {

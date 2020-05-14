@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using Netptune.Core;
+using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;

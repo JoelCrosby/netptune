@@ -6,8 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-using Netptune.Core;
 using Netptune.Core.Authentication;
+using Netptune.Core.Entities;
 
 using System.Text;
 

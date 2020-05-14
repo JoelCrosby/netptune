@@ -1,3 +1,4 @@
+using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 
 using System.Collections.Generic;

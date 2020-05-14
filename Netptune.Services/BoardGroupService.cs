@@ -1,4 +1,4 @@
-﻿using Netptune.Core;
+﻿using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -35,7 +35,7 @@ namespace Netptune.Services
                     .Where(item => !item.IsDeleted)
                     .OrderBy(item => item.SortOrder)
                     .ToList();
-                    
+
                 var tasks = tasksInGroups.Select(item => item.ProjectTask)
                     .Where(task => !task.IsDeleted)
                     .Select(task => task.ToViewModel());
