@@ -141,12 +141,11 @@ namespace Netptune.App
 
         private static string ParseConnectionString(string value)
         {
-            value.Replace("//", "");
-
-            var delimiterChars = new[] { '/', ':', '@', '?' };
-            var conn = value.Split(delimiterChars);
-
-            conn = conn.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var conn = value
+                .Replace("//", "")
+                .Split(new[] { '/', ':', '@', '?' })
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
 
             var user = conn[1];
             var pass = conn[2];
