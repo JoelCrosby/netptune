@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,22 +87,28 @@ namespace Netptune.Entities.Contexts
 
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(entry =>
-                entry.Entity is AuditableEntity<int>
-             && (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-            );
+            var entities = ChangeTracker
+                .Entries<IAuditableEntity<int>>()
+                .Where(entry => entry.State == EntityState.Added || entry.State == EntityState.Modified);
 
+            var entitiesString = ChangeTracker
+                .Entries<IAuditableEntity<string>>()
+                .Where(entry => entry.State == EntityState.Added || entry.State == EntityState.Modified);
+
+            AddTimeStamps(entities);
+            AddTimeStamps(entitiesString);
+        }
+
+        private static void AddTimeStamps<T>(IEnumerable<EntityEntry<IAuditableEntity<T>>> entities)
+        {
             foreach (var entity in entities)
             {
-                if (entity.Entity is AuditableEntity<int> auditableEntity)
+                if (entity.State == EntityState.Added)
                 {
-                    if (entity.State == EntityState.Added)
-                    {
-                        auditableEntity.CreatedAt = DateTime.UtcNow;
-                    }
-
-                    auditableEntity.UpdatedAt = DateTime.UtcNow;
+                    entity.Entity.CreatedAt = DateTime.UtcNow;
                 }
+
+                entity.Entity.UpdatedAt = DateTime.UtcNow;
             }
         }
     }
