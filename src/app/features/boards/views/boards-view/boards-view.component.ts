@@ -27,15 +27,15 @@ export class BoardsViewComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.boards$ = this.store.pipe(select(BoardSelectors.selectAllBoards));
-    this.groups$ = this.store.pipe(select(GroupSelectors.selectAllBoardGroups));
-    this.selectedBoard$ = this.store.pipe(
-      select(BoardSelectors.selectCurrentBoard)
-    );
+    this.boards$ = this.store.select(BoardSelectors.selectAllBoards);
+    this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
+    this.selectedBoard$ = this.store.select(BoardSelectors.selectCurrentBoard);
+
     this.selectedBoardName$ = this.store.pipe(
       select(BoardSelectors.selectCurrentBoard),
       map((board) => board && board.name)
     );
+
     this.store.dispatch(BoardActions.loadBoards());
     this.store.dispatch(GroupActions.loadBoardGroups());
   }
@@ -89,7 +89,7 @@ export class BoardsViewComponent implements OnInit {
     );
   }
 
-  createBoard() {
+  createBoard({ name, identifier }: { name: string; identifier: string }) {
     this.store
       .select(selectCurrentProject)
       .pipe(
@@ -98,8 +98,8 @@ export class BoardsViewComponent implements OnInit {
           this.store.dispatch(
             BoardActions.createBoard({
               board: {
-                name: 'Todo',
-                identifier: 'todo-0',
+                name,
+                identifier,
                 projectId: project.id,
               },
             })
