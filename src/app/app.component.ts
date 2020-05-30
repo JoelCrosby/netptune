@@ -38,9 +38,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.authenticated$ = this.store.pipe(
       select(selectIsAuthenticated),
-      tap((value) => {
-        if (value) this.store.dispatch(loadWorkspaces());
-      })
+      tap((value) => value && this.store.dispatch(loadWorkspaces()))
     );
   }
 }
