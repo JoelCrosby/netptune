@@ -4,6 +4,8 @@ import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Projects] Clear State');
 
+// Load Projects
+
 export const loadProjects = createAction('[Projects] Load Projects');
 
 export const loadProjectsSuccess = createAction(
@@ -15,6 +17,8 @@ export const loadProjectsFail = createAction(
   '[Projects] Load Projects Fail',
   props<{ error: any }>()
 );
+
+// Create Project
 
 export const createProject = createAction(
   '[Projects] Create Project',
@@ -31,10 +35,14 @@ export const createProjectFail = createAction(
   props<{ error: any }>()
 );
 
+// Select Project
+
 export const selectProject = createAction(
   '[Projects] Select Project',
   props<{ project: ProjectViewModel }>()
 );
+
+// Delete Project
 
 export const deleteProject = createAction(
   '[Projects] Delete Project',

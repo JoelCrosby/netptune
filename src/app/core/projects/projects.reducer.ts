@@ -11,7 +11,12 @@ const reducer = createReducer(
     loadingError: error,
   })),
   on(actions.loadProjectsSuccess, (state, { projects }) =>
-    adapter.setAll(projects, { ...state, loading: false, loaded: true })
+    adapter.setAll(projects, {
+      ...state,
+      loading: false,
+      loaded: true,
+      currentProject: projects && projects[0],
+    })
   ),
   on(actions.createProject, (state) => ({ ...state, loading: true })),
   on(actions.createProjectFail, (state, { error }) => ({
@@ -22,6 +27,7 @@ const reducer = createReducer(
     adapter.addOne(project, {
       ...state,
       loadingCreate: false,
+      currentProject: state.currentProject ?? project,
     })
   ),
   on(actions.selectProject, (state, { project }) => ({
