@@ -4,10 +4,11 @@ import { createEntityAdapter } from '@ngrx/entity';
 
 export const adapter = createEntityAdapter<ProjectViewModel>();
 
-export const initialState = adapter.getInitialState({
+export const initialState: ProjectsState = adapter.getInitialState({
   loading: false,
   loaded: false,
   loadingCreate: false,
+  currentProject: undefined,
 });
 
 export interface ProjectsState extends AsyncEntityState<ProjectViewModel> {
