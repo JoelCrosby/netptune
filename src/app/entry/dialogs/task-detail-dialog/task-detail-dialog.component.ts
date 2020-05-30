@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Project } from '@core/models/project';
@@ -8,12 +14,13 @@ import { ProjectTask } from '@core/models/project-task';
   selector: 'app-task-detail-dialog',
   templateUrl: './task-detail-dialog.component.html',
   styleUrls: ['./task-detail-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDetailDialogComponent implements OnInit {
-  public task: ProjectTask;
-  public projects: Project[] = [];
+  task: ProjectTask;
+  projects: Project[] = [];
 
-  public selectedTypeValue: number;
+  selectedTypeValue: number;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
@@ -24,28 +31,17 @@ export class TaskDetailDialogComponent implements OnInit {
     }
   }
 
-  projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    projectFormControl: new FormControl(),
-    descriptionFormControl: new FormControl(),
-  });
+  projectFromGroup: FormGroup;
 
-  async ngOnInit() {
-    if (this.task) {
-      this.projectFromGroup.controls['nameFormControl'].setValue(
-        this.task.name
-      );
-      this.projectFromGroup.controls['projectFormControl'].setValue(
-        this.task.projectId
-      );
-      this.projectFromGroup.controls['descriptionFormControl'].setValue(
-        this.task.description
-      );
-    } else {
-    }
+  ngOnInit() {
+    this.projectFromGroup = new FormGroup({
+      nameFormControl: new FormControl(this.task?.name, [
+        Validators.required,
+        Validators.minLength(4),
+      ]),
+      projectFormControl: new FormControl(this.task?.projectId),
+      descriptionFormControl: new FormControl(this.task?.description),
+    });
   }
 
   close(): void {
@@ -55,10 +51,9 @@ export class TaskDetailDialogComponent implements OnInit {
   getResult() {
     const taskResult: ProjectTask = {
       ...this.task,
-      name: this.projectFromGroup.controls['nameFormControl'].value,
-      projectId: this.projectFromGroup.controls['projectFormControl'].value,
-      description: this.projectFromGroup.controls['descriptionFormControl']
-        .value,
+      name: this.projectFromGroup.get('nameFormControl').value,
+      projectId: this.projectFromGroup.get('projectFormControl').value,
+      description: this.projectFromGroup.get('descriptionFormControl').value,
     };
 
     this.dialogRef.close(taskResult);

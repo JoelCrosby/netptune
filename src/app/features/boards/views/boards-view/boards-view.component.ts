@@ -1,20 +1,13 @@
-import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selectors';
 import { BoardGroup, BoardGroupType } from '@app/core/models/board-group';
-import * as actions from '@boards/store/groups/board-groups.actions';
-import {
-  loadBoards,
-  createBoard,
-  selectBoard,
-} from '@boards/store/boards/boards.actions';
-import { Component, OnInit } from '@angular/core';
+import * as GroupActions from '@boards/store/groups/board-groups.actions';
+import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import * as BoardActions from '@boards/store/boards/boards.actions';
+import * as BoardSelectors from '@boards/store/boards/boards.selectors';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-  selectAllBoards,
-  selectCurrentBoard,
-} from '@boards/store/boards/boards.selectors';
 import { tap, first, map } from 'rxjs/operators';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -23,6 +16,7 @@ import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 @Component({
   templateUrl: './boards-view.component.html',
   styleUrls: ['./boards-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardsViewComponent implements OnInit {
   boards$: Observable<Board[]>;
@@ -33,19 +27,21 @@ export class BoardsViewComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.boards$ = this.store.pipe(select(selectAllBoards));
-    this.groups$ = this.store.pipe(select(selectAllBoardGroups));
-    this.selectedBoard$ = this.store.pipe(select(selectCurrentBoard));
+    this.boards$ = this.store.pipe(select(BoardSelectors.selectAllBoards));
+    this.groups$ = this.store.pipe(select(GroupSelectors.selectAllBoardGroups));
+    this.selectedBoard$ = this.store.pipe(
+      select(BoardSelectors.selectCurrentBoard)
+    );
     this.selectedBoardName$ = this.store.pipe(
-      select(selectCurrentBoard),
+      select(BoardSelectors.selectCurrentBoard),
       map((board) => board && board.name)
     );
-    this.store.dispatch(loadBoards());
-    this.store.dispatch(actions.loadBoardGroups());
+    this.store.dispatch(BoardActions.loadBoards());
+    this.store.dispatch(GroupActions.loadBoardGroups());
   }
 
   boardClicked(board: Board) {
-    this.store.dispatch(selectBoard({ board }));
+    this.store.dispatch(BoardActions.selectBoard({ board }));
   }
 
   showAddModal() {}
@@ -84,7 +80,7 @@ export class BoardsViewComponent implements OnInit {
 
   moveBoardGroup(boardGroup: BoardGroup, sortOrder: number) {
     this.store.dispatch(
-      actions.editBoardGroup({
+      GroupActions.editBoardGroup({
         boardGroup: {
           ...boardGroup,
           sortOrder,
@@ -100,7 +96,7 @@ export class BoardsViewComponent implements OnInit {
         first(),
         tap((project) => {
           this.store.dispatch(
-            createBoard({
+            BoardActions.createBoard({
               board: {
                 name: 'Todo',
                 identifier: 'todo-0',
@@ -115,12 +111,12 @@ export class BoardsViewComponent implements OnInit {
 
   createBoardGroup(name: string, sortOrder: number) {
     this.store
-      .select(selectCurrentBoard)
+      .select(BoardSelectors.selectCurrentBoard)
       .pipe(
         first(),
         tap((board) => {
           this.store.dispatch(
-            actions.createBoardGroup({
+            GroupActions.createBoardGroup({
               boardGroup: {
                 name,
                 sortOrder,

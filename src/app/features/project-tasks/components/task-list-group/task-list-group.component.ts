@@ -1,5 +1,10 @@
 import { AppState } from '@core/core.state';
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Observable } from 'rxjs';
 import { fadeIn, dropIn } from '@core/animations/animations';
@@ -17,6 +22,7 @@ import { getNewSortOrder } from '@core/util/sort-order-helper';
   selector: 'app-task-list-group',
   templateUrl: './task-list-group.component.html',
   styleUrls: ['./task-list-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeIn, dropIn],
 })
 export class TaskListGroupComponent implements OnInit {

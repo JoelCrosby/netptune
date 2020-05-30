@@ -1,10 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
-import * as actions from '@core/auth/store/auth.actions';
+import * as AuthActions from '@core/auth/store/auth.actions';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Subject } from 'rxjs';
@@ -14,6 +14,7 @@ import { takeUntil, tap } from 'rxjs/operators';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [pullIn],
 })
 export class RegisterComponent implements OnDestroy {
@@ -64,14 +65,10 @@ export class RegisterComponent implements OnDestroy {
     return this.registerGroup.get('password1');
   }
 
-  constructor(
-    private router: Router,
-    private store: Store<AppState>,
-    updates$: Actions
-  ) {
+  constructor(private store: Store<AppState>, updates$: Actions) {
     updates$
       .pipe(
-        ofType(actions.registerFail),
+        ofType(AuthActions.registerFail),
         takeUntil(this.destroyed$),
         tap(() => this.registerGroup.enable())
       )
@@ -103,7 +100,7 @@ export class RegisterComponent implements OnDestroy {
     }
 
     this.store.dispatch(
-      actions.register({
+      AuthActions.register({
         request: {
           firstname,
           lastname,

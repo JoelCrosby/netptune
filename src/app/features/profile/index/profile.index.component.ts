@@ -1,19 +1,20 @@
-import { selectUpdateProfileLoading } from './../store/profile.selectors';
+import { selectUpdateProfileLoading } from '@profile/store/profile.selectors';
 import { AppUser } from '@core/models/appuser';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import * as actions from '@core/auth/store/auth.actions';
+import * as AuthActions from '@core/auth/store/auth.actions';
 import { AppState } from '@core/core.state';
 import { Store, select } from '@ngrx/store';
 import { tap, take, filter, shareReplay } from 'rxjs/operators';
-import { selectProfile } from '../store/profile.selectors';
-import { loadProfile, updateProfile } from './../store/profile.actions';
+import { selectProfile } from '@profile/store/profile.selectors';
+import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.index.component.html',
   styleUrls: ['./profile.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit {
   profileGroup = new FormGroup({
@@ -38,21 +39,23 @@ export class ProfileComponent implements OnInit {
 
   constructor(private store: Store<AppState>) {}
 
-  onLogoutClicked = () => this.store.dispatch(actions.logout());
+  onLogoutClicked = () => this.store.dispatch(AuthActions.logout());
 
   ngOnInit() {
     this.store.dispatch(loadProfile());
     this.loadingUpdate$ = this.store.pipe(
       select(selectUpdateProfileLoading),
-      tap(loading => (loading ? this.profileGroup.disable() : this.profileGroup.enable())),
+      tap((loading) =>
+        loading ? this.profileGroup.disable() : this.profileGroup.enable()
+      ),
       shareReplay()
     );
     this.store
       .select(selectProfile)
       .pipe(
-        filter(profile => !!profile),
+        filter((profile) => !!profile),
         take(1),
-        tap(profile => {
+        tap((profile) => {
           this.profile = profile;
           this.firstname.setValue(profile.firstname);
           this.lastname.setValue(profile.lastname);

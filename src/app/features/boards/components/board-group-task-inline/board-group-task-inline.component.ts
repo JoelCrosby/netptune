@@ -1,16 +1,16 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   OnDestroy,
   OnInit,
   Output,
   ViewChild,
-  EventEmitter,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
+import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 
 @Component({

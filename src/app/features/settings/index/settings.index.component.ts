@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SettingsState } from '@core/settings/settings.model';
@@ -9,6 +9,7 @@ import { changeTheme } from '@core/settings/settings.actions';
   selector: 'app-settings-index',
   templateUrl: './settings.index.component.html',
   styleUrls: ['./settings.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsIndexComponent implements OnInit {
   settings$: Observable<SettingsState>;

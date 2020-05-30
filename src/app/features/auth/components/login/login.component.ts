@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { pullIn } from '@core/animations/animations';
-import * as actions from '@core/auth/store/auth.actions';
+import * as AuthActions from '@core/auth/store/auth.actions';
 import { AuthState } from '@core/auth/store/auth.models';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
 import { Actions, ofType } from '@ngrx/effects';
@@ -14,6 +14,7 @@ import { takeUntil, tap } from 'rxjs/operators';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [pullIn],
 })
 export class LoginComponent implements OnDestroy {
@@ -41,7 +42,7 @@ export class LoginComponent implements OnDestroy {
   ) {
     updates$
       .pipe(
-        ofType(actions.loginFail),
+        ofType(AuthActions.loginFail),
         takeUntil(this.destroyed$),
         tap(() => this.loginGroup.enable())
       )
@@ -71,7 +72,7 @@ export class LoginComponent implements OnDestroy {
     }
 
     this.store.dispatch(
-      actions.tryLogin({
+      AuthActions.tryLogin({
         request: {
           email,
           password,

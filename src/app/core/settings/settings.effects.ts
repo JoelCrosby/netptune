@@ -51,7 +51,6 @@ export class SettingsEffects {
   constructor(
     private actions$: Actions<Action>,
     private store: Store<SettingsState>,
-    private overlayContainer: OverlayContainer,
     private localStorageService: LocalStorageService
   ) {}
 }

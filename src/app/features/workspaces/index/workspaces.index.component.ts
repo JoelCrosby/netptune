@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
@@ -6,10 +6,7 @@ import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { TextHelpers } from '@core/util/text-helpers';
-import {
-  deleteWorkspace,
-  loadWorkspaces,
-} from '@core/workspaces/workspaces.actions';
+import * as WorkspaceActions from '@core/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 
@@ -17,6 +14,7 @@ import { Store } from '@ngrx/store';
   selector: 'app-workspaces',
   templateUrl: './workspaces.index.component.html',
   styleUrls: ['./workspaces.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [dropIn],
 })
 export class WorkspacesComponent implements OnInit {
@@ -25,7 +23,7 @@ export class WorkspacesComponent implements OnInit {
   constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.store.dispatch(loadWorkspaces());
+    this.store.dispatch(WorkspaceActions.loadWorkspaces());
   }
 
   trackById(index: number, workspace: Workspace) {
@@ -61,7 +59,7 @@ export class WorkspacesComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.store.dispatch(deleteWorkspace({ workspace }));
+          this.store.dispatch(WorkspaceActions.deleteWorkspace({ workspace }));
         }
       });
   }

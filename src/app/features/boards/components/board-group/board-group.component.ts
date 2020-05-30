@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ViewChild,
   OnInit,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { AppState } from '@app/core/core.state';
 import { BoardGroup } from '@app/core/models/board-group';
@@ -14,13 +15,14 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent, Subject, Observable } from 'rxjs';
 import { takeUntil, withLatestFrom, map } from 'rxjs/operators';
-import * as BoardGroupActions from '../../store/groups/board-groups.actions';
-import * as BoardGroupSelectors from '../../store/groups/board-groups.selectors';
+import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
+import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 
 @Component({
   selector: 'app-board-group',
   templateUrl: './board-group.component.html',
   styleUrls: ['./board-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId: string;

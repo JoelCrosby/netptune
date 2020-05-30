@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { createProjectTask } from '@app/features/project-tasks/store/tasks.actions';
@@ -9,23 +16,23 @@ import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
 import { selectProject } from '@core/state/core.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
-import {
-  selectAllProjects,
-  selectCurrentProject,
-} from '@app/core/projects/projects.selectors';
+import * as WorkspaceSelectors from '@app/core/workspaces/workspaces.selectors';
+import * as ProjectSelectors from '@app/core/projects/projects.selectors';
 import { loadProjects } from '@app/core/projects/projects.actions';
 
 @Component({
   selector: 'app-task-dialog',
   templateUrl: './task-dialog.component.html',
   styleUrls: ['./task-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDialogComponent implements OnInit, OnDestroy {
   task: ProjectTask;
-  projects$ = this.store.select(selectAllProjects);
-  currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
-  currentProject$ = this.store.select(selectCurrentProject);
+  projects$ = this.store.select(ProjectSelectors.selectAllProjects);
+  currentWorkspace$ = this.store.select(
+    WorkspaceSelectors.SelectCurrentWorkspace
+  );
+  currentProject$ = this.store.select(ProjectSelectors.selectCurrentProject);
   subs = new Subscription();
 
   showDescriptionField = false;
@@ -71,7 +78,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     } else {
       this.projectFromGroup.reset();
       this.subs.add(
-        this.currentProject$.subscribe(project => {
+        this.currentProject$.subscribe((project) => {
           this.project.setValue(project);
         })
       );
@@ -93,7 +100,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
 
   getResult() {
     this.subs.add(
-      this.currentWorkspace$.subscribe(workspace => {
+      this.currentWorkspace$.subscribe((workspace) => {
         const task: AddProjectTaskRequest = {
           name: this.name.value,
           description: this.description.value,
