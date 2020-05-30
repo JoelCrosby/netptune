@@ -1,4 +1,6 @@
 .task-card {
+  transition: background-color .2s ease-in-out;
+
   .task-header {
     display: flex;
     flex-direction: row;
