@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
@@ -12,6 +19,7 @@ import { createProject } from '@app/core/projects/projects.actions';
   selector: 'app-project-dialog',
   templateUrl: './project-dialog.component.html',
   styleUrls: ['./project-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDialogComponent implements OnInit, OnDestroy {
   project: Project;
@@ -67,7 +75,7 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
   }
 
   getResult() {
-    this.subs = this.currentWorkspace$.subscribe(workspace => {
+    this.subs = this.currentWorkspace$.subscribe((workspace) => {
       const project: AddProjectRequest = {
         name: this.name.value,
         description: this.description.value,

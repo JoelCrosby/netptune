@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
-import {
-  selectCurrentUserDisplayName,
-  selectIsAuthenticated,
-} from '@core/auth/store/auth.selectors';
+import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { AppState, selectPageTitle } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
@@ -14,6 +16,7 @@ import { Observable } from 'rxjs';
 @Component({
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav: MatSidenav;
@@ -41,8 +44,12 @@ export class ShellComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticated$ = this.store.pipe(select(selectIsAuthenticated));
-    this.displayName$ = this.store.pipe(select(selectCurrentUserDisplayName));
+    this.authenticated$ = this.store.pipe(
+      select(AuthSelectors.selectIsAuthenticated)
+    );
+    this.displayName$ = this.store.pipe(
+      select(AuthSelectors.selectCurrentUserDisplayName)
+    );
     this.pageTitle$ = this.store.pipe(select(selectPageTitle));
   }
 

@@ -8,6 +8,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AppState } from '@core/core.state';
@@ -31,11 +32,8 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { selectInlineEditActive } from '../../store/tasks.selectors';
-import {
-  createProjectTask,
-  setInlineEditActive,
-} from './../../store/tasks.actions';
+import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
+import * as TaskActions from '@project-tasks/store/tasks.actions';
 import { User } from '@core/auth/store/auth.models';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 
@@ -43,6 +41,7 @@ import { selectCurrentProject } from '@app/core/projects/projects.selectors';
   selector: 'app-task-inline',
   templateUrl: './task-inline.component.html',
   styleUrls: ['./task-inline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.New;
@@ -81,7 +80,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     this.currentUser$ = this.store.pipe(select(selectCurrentUser));
 
     this.inlineEditActive$ = this.store.pipe(
-      select(selectInlineEditActive),
+      select(TaskSelectors.selectInlineEditActive),
       shareReplay()
     );
 
@@ -90,14 +89,16 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     }).pipe(
       takeUntil(this.onDestroy$),
       throttleTime(200),
-      tap(event => {
+      tap((event) => {
         if (
           this.editActive &&
           !this.containerElementRef.nativeElement.contains(event.target) &&
           !this.formElementRef.nativeElement.contains(event.target)
         ) {
           this.editActive = false;
-          this.store.dispatch(setInlineEditActive({ active: false }));
+          this.store.dispatch(
+            TaskActions.setInlineEditActive({ active: false })
+          );
           this.outsideClickSubscription.unsubscribe();
           this.cd.detectChanges();
         }
@@ -112,7 +113,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
 
   addTaskClicked() {
     this.editActive = true;
-    this.store.dispatch(setInlineEditActive({ active: true }));
+    this.store.dispatch(TaskActions.setInlineEditActive({ active: true }));
     this.outsideClickSubscription = this.outSideClickListener$.subscribe();
     this.cd.detectChanges();
     this.inputElementRef.nativeElement.focus();
@@ -146,7 +147,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       assigneeId: user.userId,
     };
 
-    this.store.dispatch(createProjectTask({ task }));
+    this.store.dispatch(TaskActions.createProjectTask({ task }));
 
     this.taskGroup.reset();
   }

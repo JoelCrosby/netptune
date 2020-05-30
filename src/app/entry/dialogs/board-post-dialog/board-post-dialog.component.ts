@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Post } from '@core/models/post';
@@ -7,6 +13,7 @@ import { Post } from '@core/models/post';
   selector: 'app-board-post-dialog',
   templateUrl: './board-post-dialog.component.html',
   styleUrls: ['./board-post-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPostDialogComponent implements OnInit {
   postFromGroup = new FormGroup({

@@ -1,4 +1,6 @@
-<h1 mat-dialog-title>{{ task ? 'Edit Task' : 'Add new Task'}}</h1>
+<h1 mat-dialog-title>
+  {{ task ? 'Edit Task' : 'Add new Task'}}
+</h1>
 
 <form [formGroup]="projectFromGroup">
 
@@ -13,7 +15,9 @@
     <mat-label>Task Project</mat-label>
     <mat-select id="type" name="type" placeholder="Project" formControlName="projectFormControl">
       <mat-option>None</mat-option>
-      <mat-option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</mat-option>
+      <mat-option *ngFor="let project of projects" [value]="project.id">
+        {{ project.name }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 

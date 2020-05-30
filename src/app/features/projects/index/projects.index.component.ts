@@ -1,5 +1,5 @@
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { dropIn } from '@core/animations/animations';
@@ -10,12 +10,13 @@ import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-di
 import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@app/core/util/text-helpers';
 import { selectAllProjects } from '@app/core/projects/projects.selectors';
-import * as actions from '@app/core/projects/projects.actions';
+import * as ProjectsActions from '@app/core/projects/projects.actions';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.index.component.html',
   styleUrls: ['./projects.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [dropIn],
 })
 export class ProjectsComponent implements OnInit {
@@ -28,7 +29,7 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(actions.loadProjects());
+    this.store.dispatch(ProjectsActions.loadProjects());
   }
 
   trackById(index: number, project: Project) {
@@ -52,7 +53,7 @@ export class ProjectsComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.store.dispatch(actions.deleteProject({ project }));
+          this.store.dispatch(ProjectsActions.deleteProject({ project }));
         }
       });
   }

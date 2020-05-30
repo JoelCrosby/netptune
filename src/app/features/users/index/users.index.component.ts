@@ -1,5 +1,5 @@
 import { selectAllUsers } from '@users/store/users.selectors';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { dropIn } from '@core/animations/animations';
 import { AppUser } from '@core/models/appuser';
 import { Store, select } from '@ngrx/store';
@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
   selector: 'app-users',
   templateUrl: './users.index.component.html',
   styleUrls: ['./users.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [dropIn],
 })
 export class UsersComponent implements OnInit {

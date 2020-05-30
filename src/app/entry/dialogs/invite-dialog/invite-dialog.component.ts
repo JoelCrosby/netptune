@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -6,6 +12,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-invite-dialog',
   templateUrl: './invite-dialog.component.html',
   styleUrls: ['./invite-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InviteDialogComponent implements OnInit {
   inviteFromGroup = new FormGroup({

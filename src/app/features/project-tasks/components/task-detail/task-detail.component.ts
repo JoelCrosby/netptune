@@ -1,13 +1,14 @@
-import { clearSelectedTask } from './../../store/tasks.actions';
-import { Component, OnInit } from '@angular/core';
+import { clearSelectedTask } from '@project-tasks/store/tasks.actions';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
-import { selectSelectedTask } from '../../store/tasks.selectors';
+import { selectSelectedTask } from '@project-tasks/store/tasks.selectors';
 
 @Component({
   selector: 'app-task-detail',
   templateUrl: './task-detail.component.html',
   styleUrls: ['./task-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDetailComponent implements OnInit {
   $task = this.store.select(selectSelectedTask);

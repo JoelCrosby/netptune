@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TaskStatus } from '@app/core/enums/project-task-status';
@@ -6,23 +6,24 @@ import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.comp
 import { dropIn, fadeIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
-import * as actions from '../store/tasks.actions';
-import * as selectors from '../store/tasks.selectors';
+import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
 
 @Component({
   selector: 'app-project-tasks',
   templateUrl: './project-tasks.index.component.html',
   styleUrls: ['./project-tasks.index.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeIn, dropIn],
 })
 export class ProjectTasksComponent implements OnInit {
-  myTasks$ = this.store.pipe(select(selectors.selectTasksOwner));
-  completedTasks$ = this.store.pipe(select(selectors.selectTasksCompleted));
-  backlogTasks$ = this.store.pipe(select(selectors.selectTasksBacklog));
+  myTasks$ = this.store.pipe(select(TaskSelectors.selectTasksOwner));
+  completedTasks$ = this.store.pipe(select(TaskSelectors.selectTasksCompleted));
+  backlogTasks$ = this.store.pipe(select(TaskSelectors.selectTasksBacklog));
 
-  loaded$ = this.store.pipe(select(selectors.selectTasksLoaded));
+  loaded$ = this.store.pipe(select(TaskSelectors.selectTasksLoaded));
 
-  selectedTask$ = this.store.pipe(select(selectors.selectSelectedTask));
+  selectedTask$ = this.store.pipe(select(TaskSelectors.selectSelectedTask));
 
   taskGroups = [
     {
@@ -57,7 +58,7 @@ export class ProjectTasksComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(actions.loadProjectTasks());
+    this.store.dispatch(TaskActions.loadProjectTasks());
   }
 
   showAddModal() {
