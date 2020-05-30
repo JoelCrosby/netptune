@@ -200,11 +200,9 @@ namespace Netptune.Services
         {
             await UnitOfWork.Transaction(async () =>
             {
-                var oldGroup = await UnitOfWork.BoardGroups.GetAsync(request.OldGroupId);
-
                 var itemToRemove = await UnitOfWork
                     .ProjectTasksInGroups
-                    .GetProjectTaskInGroup(request.TaskId, oldGroup.Id);
+                    .GetProjectTaskInGroup(request.TaskId, request.OldGroupId);
 
                 if (itemToRemove is { })
                 {
