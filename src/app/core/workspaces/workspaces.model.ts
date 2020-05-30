@@ -4,7 +4,7 @@ import { createEntityAdapter } from '@ngrx/entity';
 
 export const adapter = createEntityAdapter<Workspace>();
 
-export const initialState = adapter.getInitialState({
+export const initialState: WorkspacesState = adapter.getInitialState({
   loading: false,
   loaded: false,
   loadingCreate: false,

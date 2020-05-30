@@ -10,7 +10,7 @@ export const adapter = createEntityAdapter<BoardGroup>({
   sortComparer: sortBySortOrder,
 });
 
-export const initialState = adapter.getInitialState({
+export const initialState: BoardGroupsState = adapter.getInitialState({
   loading: false,
   loaded: false,
   loadingCreate: false,

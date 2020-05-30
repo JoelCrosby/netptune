@@ -1,4 +1,4 @@
-import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
+import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 
@@ -65,7 +65,7 @@ export const deleteProjectTasksFail = createAction(
 
 export const selectTask = createAction(
   '[ProjectTasks] Select Task',
-  props<{ task: ProjectTask }>()
+  props<{ task: TaskViewModel }>()
 );
 
 export const clearSelectedTask = createAction(
