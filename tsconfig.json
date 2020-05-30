@@ -31,9 +31,8 @@
       "@settings/*": ["app/features/settings/*"],
       "@users/*": ["app/features/users/*"],
       "@workspaces/*": ["app/features/workspaces/*"],
-      "@env/*": [
-        "environments/*"
-      ]
+      "@shared/*": ["app/shared/*"],
+      "@env/*": ["environments/*"]
     }
   },
   "angularCompilerOptions": {
