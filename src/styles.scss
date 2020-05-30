@@ -22,6 +22,7 @@
 @import './styles/reset.scss-theme';
 @import './styles/spinners.scss-theme';
 @import './styles/components.scss-theme';
+@import './styles/containers.scss-theme';
 @import './styles/colors.scss-theme';
 @import './app/app.component.scss-theme';
 @import './app/features/workspaces/shell/shell.component.scss-theme';
@@ -49,6 +50,7 @@
   @include boards-view-component-theme($theme);
   @include board-group-component-theme($theme);
   @include board-group-task-inline-component-theme($theme);
+  @include containers-theme($theme);
 }
 
 .default-theme {
