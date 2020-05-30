@@ -1,23 +1,23 @@
-import { loadBoardGroups } from './../groups/board-groups.actions';
-import { selectCurrentBoard } from './boards.selectors';
-import { selectCurrentProject } from '@core/projects/projects.selectors';
-import { BoardsService } from './boards.service';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppState } from '@core/core.state';
+import { selectCurrentProject } from '@core/projects/projects.selectors';
+import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
   catchError,
+  filter,
   map,
   switchMap,
-  withLatestFrom,
   tap,
-  filter,
+  withLatestFrom,
 } from 'rxjs/operators';
+import { loadBoardGroups } from './../groups/board-groups.actions';
 import * as actions from './boards.actions';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { selectWorkspace } from '@core/workspaces/workspaces.actions';
+import { selectCurrentBoard } from './boards.selectors';
+import { BoardsService } from './boards.service';
 
 @Injectable()
 export class BoardsEffects {
