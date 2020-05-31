@@ -50,9 +50,13 @@ const reducer = createReducer(
     ...state,
     isDragging,
   })),
-  on(actions.setIsInlineActive, (state, { isInlineActive }) => ({
+  on(actions.setInlineActive, (state, { groupId }) => ({
     ...state,
-    isInlineActive,
+    inlineActive: groupId,
+  })),
+  on(actions.clearInlineActive, (state) => ({
+    ...state,
+    inlineActive: undefined,
   }))
 );
 

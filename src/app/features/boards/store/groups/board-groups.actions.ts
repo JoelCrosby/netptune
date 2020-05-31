@@ -97,7 +97,11 @@ export const setIsDragging = createAction(
   props<{ isDragging: boolean }>()
 );
 
-export const setIsInlineActive = createAction(
+export const setInlineActive = createAction(
   '[BoardGroups] Set Is Inline Active',
-  props<{ isInlineActive: boolean }>()
+  props<{ groupId: number }>()
+);
+
+export const clearInlineActive = createAction(
+  '[BoardGroups] Clear Inline Active'
 );
