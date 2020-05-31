@@ -44,5 +44,6 @@ export const selectIsDragging = createSelector(
 
 export const selectIsInlineActive = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.isInlineActive
+  (state: BoardGroupsState, props: { groupId: number }) =>
+    props.groupId === state.inlineActive
 );

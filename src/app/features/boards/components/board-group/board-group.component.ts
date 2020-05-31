@@ -1,22 +1,28 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
   OnDestroy,
-  ViewChild,
   OnInit,
-  ChangeDetectionStrategy,
+  ViewChild,
 } from '@angular/core';
 import { AppState } from '@app/core/core.state';
 import { BoardGroup } from '@app/core/models/board-group';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { Store } from '@ngrx/store';
-import { BehaviorSubject, fromEvent, Subject, Observable } from 'rxjs';
-import { takeUntil, withLatestFrom, map } from 'rxjs/operators';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { Store } from '@ngrx/store';
+import {
+  BehaviorSubject,
+  combineLatest,
+  fromEvent,
+  Observable,
+  Subject,
+} from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-board-group',
@@ -45,12 +51,17 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.focused$ = this.focusedSubject.pipe();
     this.isDragging$ = this.store.select(BoardGroupSelectors.selectIsDragging);
+
     this.isInlineActive$ = this.store.select(
-      BoardGroupSelectors.selectIsInlineActive
+      BoardGroupSelectors.selectIsInlineActive,
+      { groupId: this.group.id }
     );
 
-    this.showAddButton$ = this.focused$.pipe(
-      withLatestFrom(this.isDragging$, this.isInlineActive$),
+    this.showAddButton$ = combineLatest([
+      this.focused$,
+      this.isDragging$,
+      this.isInlineActive$,
+    ]).pipe(
       map(
         ([focused, isDragging, isInlineActive]) =>
           focused && !isDragging && !isInlineActive
@@ -81,14 +92,12 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onAddTaskClicked() {
     this.store.dispatch(
-      BoardGroupActions.setIsInlineActive({ isInlineActive: true })
+      BoardGroupActions.setInlineActive({ groupId: this.group.id })
     );
   }
 
   onInlineCanceled() {
-    this.store.dispatch(
-      BoardGroupActions.setIsInlineActive({ isInlineActive: false })
-    );
+    this.store.dispatch(BoardGroupActions.clearInlineActive());
   }
 
   drop(event: CdkDragDrop<TaskViewModel[]>) {
