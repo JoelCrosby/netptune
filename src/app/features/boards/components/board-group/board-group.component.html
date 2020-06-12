@@ -18,7 +18,7 @@
     <app-board-group-card
       cdkDrag
       class="board-group-task-card"
-      *ngFor="let task of group.tasks"
+      *ngFor="let task of group.tasks; trackBy:task?.id"
       [cdkDragData]="task"
       [task]="task"
       (cdkDragStarted)="onDragStarted()"
