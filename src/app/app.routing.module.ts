@@ -13,7 +13,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'app/:workspace',
+    path: 'ws/:workspace',
     resolve: [WorkspaceResolver],
     canActivate: [AuthGuardService],
     component: ShellComponent,
