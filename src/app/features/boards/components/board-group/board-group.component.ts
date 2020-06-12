@@ -123,4 +123,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   onDragEnded() {
     this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: false }));
   }
+
+  trackGroupTask(_: number, task: TaskViewModel) {
+    return task?.id;
+  }
 }
