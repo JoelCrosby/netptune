@@ -108,25 +108,4 @@ export class BoardsViewComponent implements OnInit {
       )
       .subscribe();
   }
-
-  createBoardGroup(name: string, sortOrder: number) {
-    this.store
-      .select(BoardSelectors.selectCurrentBoard)
-      .pipe(
-        first(),
-        tap((board) => {
-          this.store.dispatch(
-            GroupActions.createBoardGroup({
-              boardGroup: {
-                name,
-                sortOrder,
-                boardId: board.id,
-                type: BoardGroupType.Basic,
-              },
-            })
-          );
-        })
-      )
-      .subscribe();
-  }
 }
