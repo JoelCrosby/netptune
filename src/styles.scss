@@ -25,6 +25,8 @@
 @import './styles/containers.scss-theme';
 @import './styles/colors.scss-theme';
 @import './app/app.component.scss-theme';
+@import './app/static/components/spinner/spinner.component.scss-theme.scss';
+@import './app/static/components/avatar/avatar.component.scss-theme.scss';
 @import './app/features/workspaces/shell/shell.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
@@ -43,6 +45,8 @@
   @include colors-theme($theme);
   @include app-component-theme($theme);
   @include app-shell-component-theme($theme);
+  @include app-spinner-component-theme($theme);
+  @include app-avatar-component-theme($theme);
   @include task-list-group-component-theme($theme);
   @include task-list-item-component-theme($theme);
   @include project-tasks-component-theme($theme);

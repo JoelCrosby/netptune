@@ -9,11 +9,18 @@
     matInput
     [formControl]="taskInputControl"
     cdkTextareaAutosize
-    cdkAutosizeMinRows="3"
+    cdkAutosizeMinRows="2"
     cdkAutosizeMaxRows="12"
     #autosize="cdkTextareaAutosize"
     (keyup.enter)="onSubmit()"
     placeholder="What do you need to get done?"
   >
   </textarea>
+  <div class="inline-task-footer">
+    <app-spinner
+      *ngIf="createInProgress$ | async"
+      diameter="1.4rem"
+    >
+    </app-spinner>
+  </div>
 </div>
