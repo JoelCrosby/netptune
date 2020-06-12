@@ -12,7 +12,7 @@
     <app-board-group
       cdkDrag
       class="board-group"
-      *ngFor="let group of groups"
+      *ngFor="let group of groups; trackBy:group?.id"
       [cdkDragData]="group"
       [group]="group"
       [siblingIds]="getsiblingIds(group, groups)"
