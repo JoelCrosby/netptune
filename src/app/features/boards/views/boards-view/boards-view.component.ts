@@ -108,4 +108,8 @@ export class BoardsViewComponent implements OnInit {
       )
       .subscribe();
   }
+
+  trackBoardGroup(_: number, group: BoardGroup) {
+    return group?.id;
+  }
 }
