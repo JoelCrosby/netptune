@@ -52,7 +52,14 @@ namespace Netptune.Services
 
             if (project is null) throw new Exception("ProjectId cannot be null.");
 
-            await AddTaskToBoardGroup(project, task, sortOrder);
+            if (request.BoardGroupId.HasValue)
+            {
+                await AddTaskToBoardGroup(request.BoardGroupId.Value, task, sortOrder);
+            }
+            else
+            {
+                await AddTaskToBoardGroup(project, task, sortOrder);
+            }
 
             var result = await TaskRepository.AddAsync(task);
 
@@ -68,6 +75,20 @@ namespace Netptune.Services
             if (largest is null) throw new Exception("Could not determine sort order.");
 
             return largest.SortOrder + 1;
+        }
+
+        private async Task AddTaskToBoardGroup(int boardId, ProjectTask task, double sortOrder)
+        {
+            var boardGroup = await UnitOfWork.BoardGroups.GetAsync(boardId);
+
+            task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
+
+            boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            {
+                SortOrder = sortOrder,
+                BoardGroup = boardGroup,
+                ProjectTask = task
+            });
         }
 
         private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)

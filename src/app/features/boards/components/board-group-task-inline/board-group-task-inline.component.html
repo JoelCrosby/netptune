@@ -1,12 +1,18 @@
-<div class="inline-task-container" #taskInlineContainer>
+<div
+  class="inline-task-container"
+  [class.create-in-progress]="createInProgress$ | async"
+  #taskInlineContainer
+>
   <textarea
     class="inline-task-textarea"
     #taskInput
     matInput
+    [formControl]="taskInputControl"
     cdkTextareaAutosize
-    #autosize="cdkTextareaAutosize"
     cdkAutosizeMinRows="3"
     cdkAutosizeMaxRows="12"
+    #autosize="cdkTextareaAutosize"
+    (keyup.enter)="onSubmit()"
   >
   </textarea>
 </div>

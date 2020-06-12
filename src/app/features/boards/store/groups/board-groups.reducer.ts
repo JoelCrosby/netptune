@@ -58,6 +58,8 @@ const reducer = createReducer(
     ...state,
     inlineActive: undefined,
   }))
+
+  // ProjectTaskActions
 );
 
 export function boardGroupsReducer(

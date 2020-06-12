@@ -9,9 +9,28 @@ import {
   OnInit,
   Output,
   ViewChild,
+  Input,
 } from '@angular/core';
-import { fromEvent, Subject, Subscription } from 'rxjs';
-import { takeUntil, tap, throttleTime } from 'rxjs/operators';
+import {
+  fromEvent,
+  Subject,
+  Subscription,
+  combineLatest,
+  Observable,
+  BehaviorSubject,
+} from 'rxjs';
+import { takeUntil, tap, throttleTime, first } from 'rxjs/operators';
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import { Workspace } from '@app/core/models/workspace';
+import { User } from '@app/core/auth/store/auth.models';
+import { select, Store } from '@ngrx/store';
+import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
+import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
+import { AddProjectTaskRequest } from '@app/core/models/project-task';
+import { AppState } from '@app/core/core.state';
+import { FormControl } from '@angular/forms';
+import * as TaskActions from '@project-tasks/store/tasks.actions';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -24,12 +43,21 @@ export class BoardGroupTaskInlineComponent
   @ViewChild('taskInput') inputElementRef: ElementRef;
   @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
 
+  @Input() boardGroupId: number;
   @Output() canceled = new EventEmitter();
+
+  taskInputControl = new FormControl();
 
   onDestroy$ = new Subject();
   outsideClickSubscription: Subscription;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  currentWorkspace$: Observable<Workspace>;
+  currentProject$: Observable<ProjectViewModel>;
+  currentUser$: Observable<User>;
+
+  createInProgress$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private cd: ChangeDetectorRef, private store: Store<AppState>) {}
 
   ngOnInit() {
     fromEvent(document, 'mousedown', {
@@ -45,6 +73,10 @@ export class BoardGroupTaskInlineComponent
 
   ngAfterViewInit() {
     this.inputElementRef.nativeElement.focus();
+
+    this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
+    this.currentProject$ = this.store.pipe(select(selectCurrentProject));
+    this.currentUser$ = this.store.pipe(select(selectCurrentUser));
   }
 
   ngOnDestroy() {
@@ -57,5 +89,33 @@ export class BoardGroupTaskInlineComponent
       this.canceled.emit();
       this.cd.detectChanges();
     }
+  }
+
+  onSubmit() {
+    combineLatest([
+      this.currentWorkspace$,
+      this.currentProject$,
+      this.currentUser$,
+    ])
+      .pipe(first())
+      .subscribe({
+        next: ([workspace, project, user]) =>
+          this.createTask(workspace, project, user),
+      });
+  }
+
+  createTask(workspace: Workspace, project: ProjectViewModel, user: User) {
+    const task: AddProjectTaskRequest = {
+      name: this.taskInputControl.value,
+      workspace: workspace.slug,
+      projectId: project.id,
+      assigneeId: user.userId,
+      boardGroupId: this.boardGroupId,
+    };
+
+    this.store.dispatch(TaskActions.createProjectTask({ task }));
+
+    this.createInProgress$.next(true);
+    this.taskInputControl.disable();
   }
 }
