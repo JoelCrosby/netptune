@@ -6,6 +6,7 @@ import { PageContainerComponent } from './components/page-container/page-contain
 import { UsernamePipe } from './pipes/username.pipe';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { AvatarPipe } from './pipes/avatar.pipe';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -13,8 +14,15 @@ import { AvatarPipe } from './pipes/avatar.pipe';
     UsernamePipe,
     AvatarComponent,
     AvatarPipe,
+    SpinnerComponent,
   ],
   imports: [CommonModule, SharedModule],
-  exports: [PageContainerComponent, UsernamePipe, AvatarComponent, AvatarPipe],
+  exports: [
+    PageContainerComponent,
+    UsernamePipe,
+    AvatarComponent,
+    AvatarPipe,
+    SpinnerComponent,
+  ],
 })
 export class StaticModule {}

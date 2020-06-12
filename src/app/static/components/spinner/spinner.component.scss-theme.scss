@@ -1,0 +1,22 @@
+@import '~@angular/material/theming';
+
+@mixin app-spinner-component-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .loader {
+    background: linear-gradient(to right, mat-color($primary) 10%, rgba(129, 55, 241, 0) 42%);
+  }
+
+  .loader::after {
+    background: mat-color($background, card);
+  }
+
+  .loader::before {
+    background: mat-color($primary);
+  }
+
+}
