@@ -14,6 +14,7 @@ import {
   filter,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
+import * as ProjectTaskActions from '@project-tasks/store/tasks.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 
@@ -42,6 +43,13 @@ export class BoardGroupsEffects {
           catchError((error) => of(actions.createBoardGroupFail({ error })))
         )
       )
+    )
+  );
+
+  createProjectTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProjectTaskActions.createProjectTasksSuccess),
+      map(() => actions.loadBoardGroups())
     )
   );
 

@@ -30,8 +30,9 @@ export interface AddProjectTaskRequest {
   status?: TaskStatus;
 
   projectId: number;
+  boardGroupId?: number;
 
-  sortOrder: number;
+  sortOrder?: number;
 
   workspace: string;
 

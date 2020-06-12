@@ -16,6 +16,8 @@ namespace Netptune.Core.Requests
 
         public int ProjectId { get; set; }
 
+        public int? BoardGroupId { get; set; }
+
         public double? SortOrder { get; set; }
 
         public string Workspace { get; set; }

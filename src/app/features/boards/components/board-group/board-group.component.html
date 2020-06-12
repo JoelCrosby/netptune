@@ -38,6 +38,7 @@
     <app-board-group-task-inline
       *ngIf="isInlineActive$ | async"
       (canceled)="onInlineCanceled()"
+      [boardGroupId]="group.id"
     >
     </app-board-group-task-inline>
   </div>

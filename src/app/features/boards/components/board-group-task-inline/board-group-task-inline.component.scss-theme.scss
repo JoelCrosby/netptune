@@ -13,7 +13,7 @@
   }
 
   .inline-task-container {
-    border: 2px solid mat-color($primary, 400, .4);
+    border: 4px solid mat-color($primary, 400, .6);
     background-color: mat-color($background, card);
     box-shadow: 1px 2px 4px mat-color($foreground, text, .1) !important;
   }
