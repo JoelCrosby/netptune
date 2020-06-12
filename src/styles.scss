@@ -34,6 +34,7 @@
 @import './app/features/boards/views/boards-view/boards-view.component.scss-theme.scss';
 @import './app/features/boards/components/board-group/board-group.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-task-inline/board-group-task-inline.component.scss-theme.scss';
+@import './app/features/boards/components/create-board-group/create-board-group.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
@@ -50,6 +51,7 @@
   @include boards-view-component-theme($theme);
   @include board-group-component-theme($theme);
   @include board-group-task-inline-component-theme($theme);
+  @include create-board-group-component-theme($theme);
   @include containers-theme($theme);
 }
 

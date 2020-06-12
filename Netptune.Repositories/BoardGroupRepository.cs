@@ -66,5 +66,22 @@ namespace Netptune.Repositories
 
             return query.ApplyReadonly(isReadonly);
         }
+
+        public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId)
+        {
+            var sortOrders = await Entities
+
+                .Where(boardGroup => boardGroup.BoardId == boardId)
+                .Where(boardGroup => !boardGroup.IsDeleted)
+
+                .OrderBy(boardGroup => boardGroup.SortOrder)
+
+                .AsNoTracking()
+
+                .Select(boardGroup => boardGroup.SortOrder)
+                .ToListAsync();
+
+            return sortOrders.Max() + 1;
+        }
     }
 }

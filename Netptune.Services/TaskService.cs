@@ -81,9 +81,11 @@ namespace Netptune.Services
         {
             var boardGroup = await UnitOfWork.BoardGroups.GetAsync(boardId);
 
+            if (boardGroup is null) throw new Exception($"BoardGroup with id of {boardId} does not exist.");
+
             task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
 
-            boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {
                 SortOrder = sortOrder,
                 BoardGroup = boardGroup,

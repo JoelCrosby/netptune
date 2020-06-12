@@ -1,4 +1,5 @@
 ﻿using Netptune.Core.Entities;
+using Netptune.Core.Requests;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Netptune.Core.Services
 
         Task<BoardGroup> UpdateBoardGroup(BoardGroup boardGroup);
 
-        Task<BoardGroup> AddBoardGroup(BoardGroup boardGroup);
+        Task<BoardGroup> AddBoardGroup(AddBoardGroupRequest boardGroup);
 
         Task<BoardGroup> DeleteBoardGroup(int id);
     }
