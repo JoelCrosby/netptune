@@ -8,6 +8,7 @@ import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialo
 import { BoardPostDialogComponent } from '@entry/dialogs/board-post-dialog/board-post-dialog.component';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { SharedModule } from '@app/shared/shared.module';
+import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-group-dialog.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { SharedModule } from '@app/shared/shared.module';
     InviteDialogComponent,
     BoardPostDialogComponent,
     WorkspaceDialogComponent,
+    BoardGroupDialogComponent,
   ],
   imports: [CommonModule, SharedModule],
 })

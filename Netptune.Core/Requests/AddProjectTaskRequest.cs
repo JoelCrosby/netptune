@@ -14,7 +14,8 @@ namespace Netptune.Core.Requests
 
         public ProjectTaskStatus? Status { get; set; }
 
-        public int ProjectId { get; set; }
+        [Required]
+        public int? ProjectId { get; set; }
 
         public int? BoardGroupId { get; set; }
 

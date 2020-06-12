@@ -1,10 +1,14 @@
 ﻿using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Netptune.Services
@@ -66,11 +70,22 @@ namespace Netptune.Services
         }
 
 
-        public async Task<BoardGroup> AddBoardGroup(BoardGroup boardGroup)
+        public async Task<BoardGroup> AddBoardGroup(AddBoardGroupRequest request)
         {
-            var board = await Boards.GetAsync(boardGroup.BoardId);
+            var boardId = request.BoardId ?? throw new ArgumentNullException(nameof(request.BoardId));
+
+            var board = await Boards.GetAsync(boardId);
 
             if (board is null) return null;
+
+            var sortOrder = request.SortOrder ?? await BoardGroups.GetBoardGroupDefaultSortOrder(boardId);
+
+            var boardGroup = new BoardGroup
+            {
+               Name = request.Name,
+               Type = request.Type ?? BoardGroupType.Basic,
+               SortOrder = sortOrder,
+            };
 
             board.BoardGroups.Add(boardGroup);
 

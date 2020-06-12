@@ -1,6 +1,7 @@
 import { BoardGroup } from '@app/core/models/board-group';
 import { createAction, props } from '@ngrx/store';
 import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
+import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -22,7 +23,7 @@ export const loadBoardGroupsFail = createAction(
 
 export const createBoardGroup = createAction(
   '[BoardGroups] Create Board Group',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ request: AddBoardGroupRequest }>()
 );
 
 export const createBoardGroupSuccess = createAction(

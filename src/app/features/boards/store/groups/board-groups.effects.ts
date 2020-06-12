@@ -38,7 +38,7 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.createBoardGroup),
       switchMap((action) =>
-        this.boardGroupsService.post(action.boardGroup).pipe(
+        this.boardGroupsService.post(action.request).pipe(
           map((boardGroup) => actions.createBoardGroupSuccess({ boardGroup })),
           catchError((error) => of(actions.createBoardGroupFail({ error })))
         )

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BoardGroup } from '@app/core/models/board-group';
 import { environment } from '@env/environment';
+import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
 
 @Injectable()
 export class BoardGroupsService {
@@ -17,10 +18,10 @@ export class BoardGroupsService {
     );
   }
 
-  post(boardGorup: BoardGroup) {
+  post(request: AddBoardGroupRequest) {
     return this.http.post<BoardGroup>(
       environment.apiEndpoint + 'api/boardgroups',
-      boardGorup
+      request
     );
   }
 

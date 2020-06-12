@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
 using System.Collections.Generic;
@@ -62,9 +63,9 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(BoardGroup))]
-        public async Task<IActionResult> PostBoardGroup([FromBody] BoardGroup boardGroup)
+        public async Task<IActionResult> PostBoardGroup([FromBody] AddBoardGroupRequest request)
         {
-            var result = await BoardGroupService.AddBoardGroup(boardGroup);
+            var result = await BoardGroupService.AddBoardGroup(request);
 
             return Ok(result);
         }
