@@ -32,15 +32,7 @@
     background-color: mat-color($background, card);
   }
 
-  .task-inline-container.edit-mode {
-    border-bottom: 1px solid mat-color($background, disabled-button, .06);
-  }
-
   .inline-task-form .mat-icon {
     color: rgba(mat-color($foreground, icon), .1);
-  }
-
-  .inline-task-form .mat-checkbox-frame {
-    border-color: rgba(mat-color($foreground, icon), .1) !important;
   }
 }

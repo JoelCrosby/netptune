@@ -19,7 +19,10 @@
       [dragListId]="group.id.toString()"
     >
       <span class="board-group-header" cdkDragHandle>
-        {{ group.name }}
+        <div class="title">
+          {{ group.name }}
+          <span>{{ group.tasks.length }}</span>
+        </div>
         <button mat-icon-button class="delete-board-group-btn">
           <mat-icon>close</mat-icon>
         </button>

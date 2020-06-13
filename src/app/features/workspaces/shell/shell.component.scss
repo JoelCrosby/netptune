@@ -17,7 +17,6 @@ $tool-bar-height: 10rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 2.6rem 4.6rem;
 }
 
 .app-logo {
@@ -95,5 +94,5 @@ h1 .app-name {
 
 main {
   padding-top: $tool-bar-height;
-  height: calc(100vh - $tool-bar-height);
+  height: calc(100vh - #{$tool-bar-height});
 }
