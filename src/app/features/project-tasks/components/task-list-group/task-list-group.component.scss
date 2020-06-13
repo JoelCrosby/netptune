@@ -7,23 +7,22 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  margin-bottom: 1.4rem;
+  height: 100%;
+  border-radius: .3rem;
+  padding: .6rem;
 }
 
 .task-list-group {
   min-height: 4rem;
 }
 
-@media (min-width: 600px) {
-  .task-list {
-    min-height: 196px;
-    border-radius: .2rem;
-    overflow: hidden;
-    display: block;
-  }
-
-  h4 {
-    margin-left: 0;
-  }
+.task-drag {
+  margin-bottom: .3rem;
+  border: 0 !important;
+  border-radius: .2rem;
+  overflow: hidden;
 }
 
 // Drag n drop styling.

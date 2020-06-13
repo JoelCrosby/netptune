@@ -13,25 +13,27 @@
   }
 
   .app-toolbar {
-    color: mat-color($foreground, text);
+    color: mat-color($foreground, text, .6);
   }
 
-  .app-toolbar-shadow {
-    border-bottom: 1px solid mat-color($background, border);
+  .app-menu-link {
+    color: rgba(255, 255, 255, 1);
   }
 
   .app-sidenav {
-    border-right: 1px solid mat-color($background, border);
-    background-color: mat-color($background, card);
+    background-color: mat-color($background, side-bar);
   }
 
   .router-link-active {
+    border-top-left-radius: 12rem;
+    border-bottom-left-radius: 12rem;
     background-color: mat-color($primary);
-    color: invert(mat-color($foreground, text)) !important;
+    color: rgba(255, 255, 255, .8);
   }
 
   .router-link-active:hover,
   .router-link-active:focus {
+    color: rgba(255, 255, 255, .8) !important;
     background-color: lighten(mat-color($primary), 10) !important;
   }
 }

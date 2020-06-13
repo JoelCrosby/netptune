@@ -21,9 +21,11 @@ $mat-light-theme-foreground: (
 
 // Background palette for light themes.
 $mat-light-theme-background: (
-  status-bar: #fafafa,
+  side-bar: #3D375C,
+  board-group: #F8F8F8,
+  status-bar: #fff,
   app-bar:    #fff,
-  background: #fafafa,
+  background: #fff,
   hover:      rgba(#000, .02),
   card:       #fff,
   dialog:     #fff,

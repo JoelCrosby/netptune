@@ -7,27 +7,12 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  @media only screen and (max-width: 600px) {
-    .task-list {
-      background-color: mat-color($background, card);
-      border-left: 0 !important;
-      border-right: 0 !important;
-      border-top: 1px solid mat-color($background, disabled-button);
-      border-bottom: 1px solid mat-color($background, disabled-button);
-      box-shadow: 1px 2px 4px rgba(0, 0, 0, .03);
-    }
-  }
-
   .task-list {
-    background-color: mat-color($background, card);
-    box-shadow: 1px 2px 4px rgba(0, 0, 0, .1);
-    border: 1px solid mat-color($background, border);
-    border-radius: .2rem;
+    background-color: darken(mat-color($background, board-group), 1);
   }
 
   .task-drag {
     background-color: mat-color($background);
-    border-bottom: 1px solid mat-color($background, disabled-button, .08);
   }
 
   .empty-list-img,
