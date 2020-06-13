@@ -13,7 +13,7 @@
   }
 
   .task-card:hover {
-    background-color: mat-color($background, hover);
+    background-color: darken(mat-color($background, card), 2);
   }
 
   .task-header-title .mat-icon {

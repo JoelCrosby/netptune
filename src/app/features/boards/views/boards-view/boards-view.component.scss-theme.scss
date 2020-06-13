@@ -14,6 +14,14 @@
     align-items: center;
     text-transform: uppercase;
 
+    span {
+      color: mat-color($foreground, text, .3);
+    }
+
+    .title {
+      color: mat-color($foreground, text, .6);
+    }
+
     button,
     .mat-icon {
       height: 16px;

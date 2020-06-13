@@ -1,29 +1,36 @@
 .tasks-container {
-  transition: all .6s;
+  h4 {
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: .125px;
+    font-size: 14px;
+  }
+
+  .task-list {
+    min-height: 196px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-bottom: 1.4rem;
+    height: 100%;
+    border-radius: .3rem;
+    padding: .6rem;
+  }
+
+  .task-list-group {
+    min-height: 4rem;
+  }
+
+  .task-drag {
+    margin-bottom: .3rem;
+    border: 0 !important;
+    border-radius: .2rem;
+    overflow: hidden;
+  }
 }
 
-.task-list {
-  min-height: 196px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  margin-bottom: 1.4rem;
-  height: 100%;
-  border-radius: .3rem;
-  padding: .6rem;
-}
 
-.task-list-group {
-  min-height: 4rem;
-}
-
-.task-drag {
-  margin-bottom: .3rem;
-  border: 0 !important;
-  border-radius: .2rem;
-  overflow: hidden;
-}
 
 // Drag n drop styling.
 .cdk-drag-preview {
@@ -31,8 +38,8 @@
   border-radius: .4rem;
   overflow: hidden;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2),
-              0 8px 10px 1px rgba(0, 0, 0, .14),
-              0 3px 14px 2px rgba(0, 0, 0, .12);
+  0 8px 10px 1px rgba(0, 0, 0, .14),
+  0 3px 14px 2px rgba(0, 0, 0, .12);
 }
 
 .cdk-drag-placeholder {

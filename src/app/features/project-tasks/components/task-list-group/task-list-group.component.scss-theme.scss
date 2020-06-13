@@ -7,12 +7,19 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .task-list {
-    background-color: darken(mat-color($background, board-group), 1);
-  }
+  .tasks-container {
+    h4 {
+      color: mat-color($foreground, text, .6);
+    }
 
-  .task-drag {
-    background-color: mat-color($background);
+    .task-list {
+      background-color: darken(mat-color($background, board-group), 1);
+    }
+
+
+    .task-drag {
+      background-color: mat-color($background);
+    }
   }
 
   .empty-list-img,
