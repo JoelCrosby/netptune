@@ -94,22 +94,3 @@
     }
   }
 }
-
-
-@media only screen and (max-width: 900px) {
-  .task-header {
-    flex-direction: column;
-  }
-
-  .chip-list {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .mat-card:not([class*='mat-elevation-z']) {
-    background-color: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-}

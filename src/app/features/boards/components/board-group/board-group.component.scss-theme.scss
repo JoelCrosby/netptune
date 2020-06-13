@@ -8,7 +8,6 @@
   $background: map-get($theme, background);
 
   .board-group-card {
-    background-color: darken(mat-color($background, background), 1);
-    border: 1px solid mat-color($background, border, .04);
+    background-color: darken(mat-color($background, board-group), 1);
   }
 }
