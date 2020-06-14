@@ -238,10 +238,7 @@ namespace Netptune.Services
                     .Where(x => x.Id == request.TaskId)
                     .ToList();
 
-                foreach (var item in existing)
-                {
-                    await UnitOfWork.ProjectTasksInGroups.DeletePermanent(item.Id);
-                }
+                await UnitOfWork.ProjectTasksInGroups.DeletePermanent(existing.Select(item => item.Id));
 
                 var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
                 var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
