@@ -23,7 +23,7 @@ import { takeUntil, tap, throttleTime, first } from 'rxjs/operators';
 import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { Workspace } from '@app/core/models/workspace';
 import { User } from '@app/core/auth/store/auth.models';
-import { select, Store } from '@ngrx/store';
+import { select, Store, Action } from '@ngrx/store';
 import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
 import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
@@ -31,6 +31,8 @@ import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { AppState } from '@app/core/core.state';
 import { FormControl } from '@angular/forms';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -57,7 +59,11 @@ export class BoardGroupTaskInlineComponent
 
   createInProgress$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private cd: ChangeDetectorRef, private store: Store<AppState>) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private store: Store<AppState>,
+    private actions$: Actions<Action>
+  ) {}
 
   ngOnInit() {
     fromEvent(document, 'mousedown', {
@@ -67,6 +73,19 @@ export class BoardGroupTaskInlineComponent
         takeUntil(this.onDestroy$),
         throttleTime(200),
         tap(this.handleDocumentClick.bind(this))
+      )
+      .subscribe();
+
+    this.actions$
+      .pipe(
+        takeUntil(this.onDestroy$),
+        ofType(BoardGroupActions.loadBoardGroupsSuccess),
+        tap(() => {
+          this.createInProgress$.next(false);
+          this.taskInputControl.reset();
+          this.taskInputControl.enable();
+          this.inputElementRef.nativeElement.focus();
+        })
       )
       .subscribe();
   }
