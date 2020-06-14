@@ -9,9 +9,10 @@ import { StoreModule } from '@ngrx/store';
 import { UsersEffects } from './store/users.effects';
 import { usersReducer } from './store/users.reducer';
 import { StaticModule } from '@app/static/static.module';
+import { UsersViewComponent } from './views/users-view/users-view.component';
 
 @NgModule({
-  declarations: [UsersComponent],
+  declarations: [UsersComponent, UsersViewComponent],
   imports: [
     SharedModule,
     StaticModule,

@@ -1,5 +1,7 @@
 <app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
 
+  <app-page-header [title]="selectedBoardName$ | async"></app-page-header>
+
   <div
     cdkDropList
     class="board-groups"

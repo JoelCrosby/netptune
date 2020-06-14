@@ -7,6 +7,7 @@ import { UsernamePipe } from './pipes/username.pipe';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { AvatarPipe } from './pipes/avatar.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     AvatarComponent,
     AvatarPipe,
     SpinnerComponent,
+    PageHeaderComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -23,6 +25,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     AvatarComponent,
     AvatarPipe,
     SpinnerComponent,
+    PageHeaderComponent,
   ],
 })
 export class StaticModule {}
