@@ -24,6 +24,9 @@
   letter-spacing: .4rem;
   font-size: 1.3rem;
   font-weight: 500;
+  border-top-left-radius: 12rem;
+  border-bottom-left-radius: 12rem;
+  overflow: hidden;
 }
 
 .app-sub-header {
@@ -59,10 +62,15 @@ h1 .app-name {
 .app-menu-link {
   color: rgba(255, 255, 255, .6) !important;
   height: 2.6rem !important;
+  border-top-left-radius: 12rem;
+  border-bottom-left-radius: 12rem;
+  overflow: hidden;
+  margin-bottom: .8rem;
 }
 
 .app-sidenav {
   width: 200px;
+  border: 0 !important;
 }
 
 main {

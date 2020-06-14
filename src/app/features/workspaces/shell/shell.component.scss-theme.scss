@@ -25,15 +25,13 @@
   }
 
   .router-link-active {
-    border-top-left-radius: 12rem;
-    border-bottom-left-radius: 12rem;
-    background-color: mat-color($primary);
+    background-color: lighten(mat-color($background, side-bar), 8);
     color: rgba(255, 255, 255, .8);
   }
 
   .router-link-active:hover,
   .router-link-active:focus {
     color: rgba(255, 255, 255, .8) !important;
-    background-color: lighten(mat-color($primary), 10) !important;
+    background-color: lighten(mat-color($background, side-bar), 10) !important;
   }
 }

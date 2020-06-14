@@ -4,22 +4,18 @@
 
   <ng-container *ngIf="settings$ | async as settings">
 
-    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-
-      <mat-form-field class="mb-3 col-lg-4 col-md-6 col-sm-12 no-gutters px-0" appearance="outline">
-        <mat-label>Theme</mat-label>
-        <mat-select
-          placeholder="Select Theme"
-          (selectionChange)="onThemeSelect($event)"
-          [ngModel]="settings.theme"
-        >
-          <mat-option *ngFor="let theme of themes" [value]="theme.value">
-            {{ theme.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Theme</mat-label>
+      <mat-select
+        placeholder="Select Theme"
+        (selectionChange)="onThemeSelect($event)"
+        [ngModel]="settings.theme"
+      >
+        <mat-option *ngFor="let theme of themes" [value]="theme.value">
+          {{ theme.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
   </ng-container>
 
