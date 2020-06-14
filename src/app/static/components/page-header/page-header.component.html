@@ -1,5 +1,18 @@
 <header class="page-header">
-  <h1 class="page-header-title">
-    {{ title }}
-  </h1>
+  <div class="header-top-row">
+    <h1 class="page-header-title">
+      {{ title }}
+    </h1>
+
+    <div class="header-actions">
+      <div
+        matRipple
+        class="header-primary-action"
+        (click)="actionClick.emit()"
+        *ngIf="actionTitle"
+      >
+        {{ actionTitle }}
+      </div>
+    </div>
+  </div>
 </header>

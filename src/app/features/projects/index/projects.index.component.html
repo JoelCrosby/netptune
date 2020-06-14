@@ -1,18 +1,11 @@
 <app-page-container  [marginBottom]="true">
 
-  <app-page-header title="Projects">
-
+  <app-page-header
+    title="Projects"
+    actionTitle="Create Project"
+    (actionClick)="showAddModal()"
+  >
   </app-page-header>
-
-  <div class="action-bar">
-    <button
-      mat-stroked-button
-      color="primary"
-      (click)="showAddModal()"
-    >
-      Create Project
-    </button>
-  </div>
 
   <div class="card-group">
     <mat-card *ngFor="let project of projects$ | async; let i = index; trackBy: trackById" class="project-card">

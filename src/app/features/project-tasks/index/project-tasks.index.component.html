@@ -1,6 +1,10 @@
 <app-page-container [marginBottom]="true">
 
-  <app-page-header title="Tasks"></app-page-header>
+  <app-page-header title="Tasks"
+    actionTitle="Create Task"
+    (actionClick)="showAddModal()"
+  >
+  </app-page-header>
 
   <div class="task-list-view">
 
