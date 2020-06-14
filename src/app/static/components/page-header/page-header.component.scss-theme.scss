@@ -1,0 +1,25 @@
+@import '~@angular/material/theming';
+
+@mixin app-page-header-component-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .header-top-row {
+    border-bottom: 2px solid mat-color($background, border);
+  }
+
+  .header-actions {
+    .header-primary-action {
+      background-color: mat-color($primary);
+      color: #fff;
+    }
+
+    .header-primary-action:hover {
+      background-color: lighten(mat-color($primary), 4);
+    }
+  }
+}
