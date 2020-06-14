@@ -8,11 +8,12 @@
 
 .board-groups {
   width: 100%;
-  height: 100%;
+  max-height: calc(100vh - 180px);
   display: flex;
   flex-direction: row;
   flex: 1;
   padding-bottom: 1rem;
+  overflow: scroll;
 }
 
 .board-group {
