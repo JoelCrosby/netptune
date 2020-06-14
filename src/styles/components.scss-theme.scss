@@ -10,7 +10,6 @@
   .mat-card:not([class*='mat-elevation-z']) {
     background-color: mat-color($background, card) !important;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
-    border: 1px solid mat-color($background, border);
     transition: background-color .2s ease-in;
   }
 
