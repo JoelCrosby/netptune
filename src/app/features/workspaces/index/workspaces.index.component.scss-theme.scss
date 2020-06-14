@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+
+@mixin app-workspaces-index-component-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .card-group {
+    background-color: darken(mat-color($background, board-group), 1);
+  }
+}

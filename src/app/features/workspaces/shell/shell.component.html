@@ -32,21 +32,6 @@
 
   <mat-sidenav-content>
 
-    <div class="app-toolbar" *ngIf="authenticated$ | async as authenticated">
-      <ng-container *ngIf="mobileQuery.matches || (!authenticated); else pageTitle">
-        <button mat-icon-button (click)="onToggleSideNav()" *ngIf="authenticated">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <h1 class="app-name">Netptune</h1>
-      </ng-container>
-      <ng-template #pageTitle>
-        <h1 class="nav-title">{{ pageTitle$ | async }}</h1>
-      </ng-template>
-
-      <span class="toolbar-spacer"></span>
-
-    </div>
-
     <main>
       <router-outlet></router-outlet>
     </main>

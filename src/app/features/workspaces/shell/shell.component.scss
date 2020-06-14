@@ -1,5 +1,3 @@
-$tool-bar-height: 10rem;
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -21,6 +19,11 @@ $tool-bar-height: 10rem;
 
 .app-logo {
   color: rgba(255, 255, 255, .6) !important;
+  height: 63px !important;
+  text-transform: uppercase;
+  letter-spacing: .4rem;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 .app-sub-header {
@@ -44,10 +47,6 @@ h1 .app-name {
 }
 
 .app-sidenav-container {
-  flex: 1;
-}
-
-.app-sidenav-container {
   flex: 1 0 auto;
 }
 
@@ -62,37 +61,10 @@ h1 .app-name {
   height: 2.6rem !important;
 }
 
-.app-logo {
-  height: 63px !important;
-  text-transform: uppercase;
-  letter-spacing: .4rem;
-  font-size: 1.3rem;
-  font-weight: 500;
-}
-
-.toolbar-username {
-  font-weight: 400;
-  font-size: 1rem;
-  margin-right: 1rem;
-}
-
 .app-sidenav {
   width: 200px;
 }
 
-.app-toolbar {
-  height: $tool-bar-height;
-  z-index: 4;
-  position: fixed;
-  top: 0;
-  width: calc(100% - 264px);
-}
-
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
-
 main {
-  padding-top: $tool-bar-height;
-  height: calc(100vh - #{$tool-bar-height});
+  height: 100vh;
 }

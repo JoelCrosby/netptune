@@ -1,6 +1,11 @@
-<app-page-container>
+<app-page-container [marginBottom]="true">
+
+  <app-page-header title="Workspaces">
+
+  </app-page-header>
 
   <div class="card-group">
+
     <mat-card *ngFor="let workspace of workspaces$ | async; let i = index; trackBy: trackById">
       <mat-card-title>
         {{ workspace.name }}

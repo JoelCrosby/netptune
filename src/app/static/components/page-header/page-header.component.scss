@@ -1,0 +1,10 @@
+.page-header {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+
+  .page-header-title {
+    font-weight: 400;
+    font-size: 2rem;
+  }
+}

@@ -1,17 +1,17 @@
-import { BoardGroup, BoardGroupType } from '@app/core/models/board-group';
-import * as GroupActions from '@boards/store/groups/board-groups.actions';
-import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Board } from '@app/core/models/board';
+import { BoardGroup } from '@app/core/models/board-group';
+import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 import * as BoardActions from '@boards/store/boards/boards.actions';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Board } from '@app/core/models/board';
+import * as GroupActions from '@boards/store/groups/board-groups.actions';
+import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap, first, map } from 'rxjs/operators';
-import { selectCurrentProject } from '@app/core/projects/projects.selectors';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import { first, map, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './boards-view.component.html',
