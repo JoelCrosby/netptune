@@ -4,7 +4,7 @@
 
   <div
     cdkDropList
-    class="board-groups"
+    class="board-groups custom-scroll"
     *ngIf="groups$ | async as groups"
     cdkDropListOrientation="horizontal"
     (cdkDropListDropped)="drop($event)"

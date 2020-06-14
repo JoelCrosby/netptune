@@ -16,4 +16,20 @@
   .mat-card:not([class*='mat-elevation-z']):hover {
     background-color: mat-color($background, hover) !important;
   }
+
+  .custom-scroll::-webkit-scrollbar {
+    width: 18px;
+    height: 18px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background: mat-color($foreground, text, 0.2);
+    border-radius: 10px;
+    background-clip: padding-box;
+  }
 }
