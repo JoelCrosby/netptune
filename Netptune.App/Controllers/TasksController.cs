@@ -64,9 +64,9 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest task)
+        public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest request)
         {
-            var result = await TaskService.AddTask(task);
+            var result = await TaskService.AddTask(request);
 
             return Ok(result);
         }

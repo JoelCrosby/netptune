@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
@@ -46,5 +47,13 @@ namespace Netptune.Repositories.Common
 
             return entity;
         }
+
+        public async Task DeletePermanent(IEnumerable<TId> idList)
+        {
+            var entities = await GetAllByIdAsync(idList);
+
+            Entities.RemoveRange(entities);
+        }
     }
 }
+

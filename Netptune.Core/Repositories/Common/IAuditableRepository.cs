@@ -1,4 +1,5 @@
-﻿using Netptune.Core.BaseEntities;
+﻿using System.Collections.Generic;
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 
 using System.Threading.Tasks;
@@ -28,5 +29,12 @@ namespace Netptune.Core.Repositories.Common
         /// <param name="id"></param>
         /// <returns></returns>
         Task<TEntity> DeletePermanent(TId id);
+
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        Task DeletePermanent(IEnumerable<TId> idList);
     }
 }
