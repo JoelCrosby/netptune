@@ -14,6 +14,10 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
+                .Property(task => task.ProjectScopeId)
+                .IsRequired();
+
+            builder
                 .Property(task => task.Name)
                 .HasMaxLength(128)
                 .IsRequired();
@@ -25,6 +29,11 @@ namespace Netptune.Entities.EntityMaps
             builder
                 .Property(task => task.Status)
                 .HasDefaultValue(ProjectTaskStatus.New)
+                .IsRequired();
+
+            builder
+                .Property(task => task.IsFlagged)
+                .HasDefaultValue(true)
                 .IsRequired();
 
             builder

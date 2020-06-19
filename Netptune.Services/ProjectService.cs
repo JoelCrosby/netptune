@@ -37,7 +37,7 @@ namespace Netptune.Services
                     Description = request.Description,
                     CreatedByUserId = user.Id,
                     OwnerId = user.Id,
-                    RepositoryUrl = request.RepositoryUrl
+                    RepositoryUrl = request.RepositoryUrl,
                 };
 
                 project.ProjectUsers.Add(new ProjectUser

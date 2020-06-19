@@ -40,6 +40,7 @@ namespace Netptune.Services
                 Name = request.Name,
                 Description = request.Description,
                 Status = request.Status ?? ProjectTaskStatus.New,
+                IsFlagged = request.IsFlagged,
                 SortOrder = sortOrder,
                 ProjectId = request.ProjectId,
                 AssigneeId = request.AssigneeId,
@@ -163,6 +164,7 @@ namespace Netptune.Services
             result.SortOrder = projectTask.SortOrder;
             result.OwnerId = projectTask.OwnerId;
             result.AssigneeId = projectTask.AssigneeId;
+            result.IsFlagged = projectTask.IsFlagged;
 
             await UnitOfWork.CompleteAsync();
 
