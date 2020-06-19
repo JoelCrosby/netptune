@@ -18,6 +18,8 @@ namespace Netptune.Core.ViewModels.ProjectTasks
 
         public ProjectTaskStatus Status { get; set; }
 
+        public bool IsFlagged { get; set; }
+
         public double SortOrder { get; set; }
 
         public int? ProjectId { get; set; }

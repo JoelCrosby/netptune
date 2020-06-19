@@ -14,6 +14,8 @@ namespace Netptune.Core.Requests
 
         public ProjectTaskStatus? Status { get; set; }
 
+        public bool IsFlagged { get; set; }
+
         [Required]
         public int? ProjectId { get; set; }
 

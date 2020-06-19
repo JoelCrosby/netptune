@@ -10,6 +10,8 @@ namespace Netptune.Core.Entities
 {
     public class ProjectTask : AuditableEntity<int>
     {
+        public string ProjectScopeId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -17,6 +19,8 @@ namespace Netptune.Core.Entities
         public ProjectTaskStatus Status { get; set; }
 
         public double SortOrder { get; set; }
+
+        public bool IsFlagged { get; set; }
 
         #region ForeignKeys
 
@@ -56,6 +60,7 @@ namespace Netptune.Core.Entities
                 Name = Name,
                 Description = Description,
                 Status = Status,
+                IsFlagged = IsFlagged,
                 SortOrder = SortOrder,
                 ProjectId = ProjectId,
                 WorkspaceId = WorkspaceId,
