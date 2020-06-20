@@ -1,4 +1,9 @@
-﻿using Netptune.Core.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
@@ -7,11 +12,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {

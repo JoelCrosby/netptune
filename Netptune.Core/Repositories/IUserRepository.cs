@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Core.Repositories
 {

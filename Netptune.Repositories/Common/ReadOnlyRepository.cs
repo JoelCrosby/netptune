@@ -1,6 +1,6 @@
-﻿using Netptune.Core.Repositories.Common;
+﻿using System.Data;
 
-using System.Data;
+using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Repositories.Common
 {

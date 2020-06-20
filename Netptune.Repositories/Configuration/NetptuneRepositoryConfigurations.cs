@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Repositories.ConnectionFactories;
 using Netptune.Repositories.UnitOfWork;
-
-using System;
 
 namespace Netptune.Repositories.Configuration
 {
