@@ -41,7 +41,7 @@ namespace Netptune.Entities.Contexts
         {
             if (optionsBuilder.IsConfigured) return;
 
-            optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;Username=postgres;Password=admin;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
