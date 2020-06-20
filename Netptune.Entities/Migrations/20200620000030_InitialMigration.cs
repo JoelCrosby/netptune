@@ -1,6 +1,9 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Migrations;
+
 using Netptune.Core.Meta;
+
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Netptune.Entities.Migrations
@@ -9,7 +12,7 @@ namespace Netptune.Entities.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

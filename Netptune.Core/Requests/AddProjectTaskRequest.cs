@@ -1,7 +1,7 @@
-﻿using Netptune.Core.Entities;
-using Netptune.Core.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
-using System.ComponentModel.DataAnnotations;
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests
 {

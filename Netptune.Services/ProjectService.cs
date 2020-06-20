@@ -1,4 +1,7 @@
-﻿using Netptune.Core.Entities;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -6,9 +9,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {

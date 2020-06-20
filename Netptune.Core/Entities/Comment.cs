@@ -1,8 +1,8 @@
-﻿using Netptune.Core.BaseEntities;
-using Netptune.Core.Enums;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
+using Netptune.Core.BaseEntities;
+using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities
 {

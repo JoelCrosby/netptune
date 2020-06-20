@@ -1,6 +1,6 @@
-﻿using Netptune.Core.Enums;
+﻿using System;
 
-using System;
+using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.ProjectTasks
 {

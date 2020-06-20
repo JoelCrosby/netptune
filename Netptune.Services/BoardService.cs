@@ -1,12 +1,12 @@
-﻿using Netptune.Core.Encoding;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
