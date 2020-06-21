@@ -14,10 +14,11 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { loadBoardGroups } from './../groups/board-groups.actions';
+import { loadBoardGroups } from '@boards/store/groups/board-groups.actions';
 import * as actions from './boards.actions';
 import { selectCurrentBoard } from './boards.selectors';
 import { BoardsService } from './boards.service';
+import { loadProjectsSuccess } from '@app/core/projects/projects.actions';
 
 @Injectable()
 export class BoardsEffects {
@@ -25,7 +26,7 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(actions.loadBoards),
       withLatestFrom(this.store.select(selectCurrentProject)),
-      filter(([_, project]) => project !== undefined),
+      filter(([_, project]) => !!project),
       switchMap(([_, project]) =>
         this.boardsService.get(project.id).pipe(
           map((boards) => actions.loadBoardsSuccess({ boards })),
@@ -77,6 +78,13 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(actions.selectBoard),
       map((_) => loadBoardGroups())
+    )
+  );
+
+  onProjectsLoaded$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadProjectsSuccess),
+      map(() => actions.loadBoards())
     )
   );
 
