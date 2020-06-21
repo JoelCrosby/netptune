@@ -1,10 +1,5 @@
-﻿using System;
-
+﻿
 using Microsoft.EntityFrameworkCore.Migrations;
-
-using Netptune.Core.Meta;
-
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Netptune.Entities.Migrations
 {
