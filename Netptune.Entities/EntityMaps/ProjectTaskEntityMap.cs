@@ -14,6 +14,10 @@ namespace Netptune.Entities.EntityMaps
             base.Configure(builder);
 
             builder
+                .Property(task => task.ProjectScopeId)
+                .IsRequired();
+
+            builder
                 .Property(task => task.Name)
                 .HasMaxLength(128)
                 .IsRequired();
@@ -28,11 +32,20 @@ namespace Netptune.Entities.EntityMaps
                 .IsRequired();
 
             builder
+                .Property(task => task.IsFlagged)
+                .HasDefaultValue(false)
+                .IsRequired();
+
+            builder
                 .HasOne(task => task.Assignee)
                 .WithMany(user => user.Tasks)
                 .HasForeignKey(task => task.AssigneeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder
+                .HasIndex(task => new { task.ProjectId, task.ProjectScopeId })
+                .IsUnique();
 
             builder
                 .Property(task => task.OwnerId)

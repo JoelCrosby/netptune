@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Entities;
-
-using System.Text;
 
 namespace Netptune.Services.Authentication
 {

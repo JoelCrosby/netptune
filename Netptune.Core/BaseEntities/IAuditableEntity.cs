@@ -1,6 +1,6 @@
-﻿using Netptune.Core.Entities;
+﻿using System;
 
-using System;
+using Netptune.Core.Entities;
 
 namespace Netptune.Core.BaseEntities
 {

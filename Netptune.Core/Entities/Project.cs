@@ -1,8 +1,8 @@
-using Netptune.Core.BaseEntities;
-using Netptune.Core.Relationships;
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
+using Netptune.Core.BaseEntities;
+using Netptune.Core.Relationships;
 
 namespace Netptune.Core.Entities
 {
@@ -13,6 +13,8 @@ namespace Netptune.Core.Entities
         public string Description { get; set; }
 
         public string RepositoryUrl { get; set; }
+
+        public string Key { get; set; }
 
         #region ForeignKeys
 

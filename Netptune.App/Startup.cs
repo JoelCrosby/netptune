@@ -1,3 +1,7 @@
+using System;
+using System.IO;
+using System.Linq;
+
 using AutoMapper;
 
 using Microsoft.AspNetCore.Builder;
@@ -14,10 +18,6 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
-
-using System;
-using System.IO;
-using System.Linq;
 
 namespace Netptune.App
 {

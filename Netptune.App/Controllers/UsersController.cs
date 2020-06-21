@@ -1,12 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Api.Controllers
 {
@@ -42,6 +42,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await UserService.Get(id);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -51,6 +53,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> UpdateUser([FromBody] AppUser user)
         {
             var result = await UserService.Update(user);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }
@@ -76,6 +80,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
             var result = await UserService.GetByEmail(email);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }

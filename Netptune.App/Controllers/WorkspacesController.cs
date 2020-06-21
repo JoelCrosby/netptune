@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Api.Controllers
 {
@@ -42,6 +42,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await WorkspaceService.GetWorkspace(slug);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -76,6 +78,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
             var result = await WorkspaceService.DeleteWorkspace(id);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }

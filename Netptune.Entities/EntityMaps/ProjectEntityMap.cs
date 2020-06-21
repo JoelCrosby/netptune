@@ -26,9 +26,18 @@ namespace Netptune.Entities.EntityMaps
                 .HasMaxLength(1024);
 
             builder
+                .Property(project => project.Key)
+                .HasMaxLength(6)
+                .IsRequired();
+
+            builder
                 .HasOne(project => project.Workspace)
                 .WithMany(workspace => workspace.Projects)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder
+                .HasIndex(task => new { task.WorkspaceId, task.Key })
+                .IsUnique();
 
             // (One-to-One) Project > Task
 

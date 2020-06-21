@@ -18,6 +18,10 @@ namespace Netptune.Core.Entities
 
         public double SortOrder { get; set; }
 
+        public int ProjectScopeId { get; set; }
+
+        public bool IsFlagged { get; set; }
+
         #region ForeignKeys
 
         public string AssigneeId { get; set; }
@@ -56,6 +60,9 @@ namespace Netptune.Core.Entities
                 Name = Name,
                 Description = Description,
                 Status = Status,
+                ProjectScopeId = ProjectScopeId,
+                SystemId = $"{Project.Key}-{ProjectScopeId}",
+                IsFlagged = IsFlagged,
                 SortOrder = SortOrder,
                 ProjectId = ProjectId,
                 WorkspaceId = WorkspaceId,

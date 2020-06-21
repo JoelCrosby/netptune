@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
-
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {

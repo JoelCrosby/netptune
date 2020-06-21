@@ -1,9 +1,9 @@
-﻿using Netptune.Core.BaseEntities;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
-
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Netptune.Core.Entities
 {
