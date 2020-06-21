@@ -12,6 +12,9 @@ import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { TextHelpers } from '@app/core/util/text-helpers';
 
 @Component({
   templateUrl: './boards-view.component.html',
@@ -24,7 +27,7 @@ export class BoardsViewComponent implements OnInit {
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.boards$ = this.store.select(BoardSelectors.selectAllBoards);
@@ -111,5 +114,23 @@ export class BoardsViewComponent implements OnInit {
 
   trackBoardGroup(_: number, group: BoardGroup) {
     return group?.id;
+  }
+
+  onDeleteGroupClicked(boardGroup: BoardGroup) {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: '600px',
+        data: {
+          title: 'Are you sure you want to delete group?',
+          content: `Delete group - ${TextHelpers.truncate(boardGroup.name)}`,
+          confirm: 'Delete',
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.store.dispatch(GroupActions.deleteBoardGroup({ boardGroup }));
+        }
+      });
   }
 }
