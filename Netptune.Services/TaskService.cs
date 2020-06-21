@@ -166,6 +166,11 @@ namespace Netptune.Services
             return TaskRepository.GetTaskViewModel(id);
         }
 
+        public Task<TaskViewModel> GetTask(string systemId, string workspaceSlug)
+        {
+            return TaskRepository.GetTaskViewModel(systemId, workspaceSlug);
+        }
+
         public Task<List<TaskViewModel>> GetTasks(string workspaceSlug)
         {
             return TaskRepository.GetTasksAsync(workspaceSlug);

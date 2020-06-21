@@ -14,6 +14,8 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> GetTask(int id);
 
+        Task<TaskViewModel> GetTask(string systemId, string workspaceSlug);
+
         Task<TaskViewModel> UpdateTask(ProjectTask projectTask);
 
         Task<TaskViewModel> AddTask(AddProjectTaskRequest request);

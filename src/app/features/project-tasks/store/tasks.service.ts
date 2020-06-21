@@ -12,28 +12,27 @@ export class ProjectTasksService {
 
   get(workspaceSlug: string) {
     return this.http.get<TaskViewModel[]>(
-      environment.apiEndpoint +
-        `api/ProjectTasks?workspaceSlug=${workspaceSlug}`
+      environment.apiEndpoint + `api/tasks?workspaceSlug=${workspaceSlug}`
     );
   }
 
   post(task: AddProjectTaskRequest) {
     return this.http.post<TaskViewModel>(
-      environment.apiEndpoint + `api/ProjectTasks`,
+      environment.apiEndpoint + `api/tasks`,
       task
     );
   }
 
   put(task: ProjectTask) {
     return this.http.put<TaskViewModel>(
-      environment.apiEndpoint + `api/ProjectTasks`,
+      environment.apiEndpoint + `api/tasks`,
       task
     );
   }
 
   delete(task: ProjectTask) {
     return this.http.delete<TaskViewModel>(
-      environment.apiEndpoint + `api/ProjectTasks/${task.id}`
+      environment.apiEndpoint + `api/tasks/${task.id}`
     );
   }
 }
