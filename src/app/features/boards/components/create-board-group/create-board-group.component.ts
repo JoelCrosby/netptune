@@ -22,6 +22,7 @@ export class CreateBoardGroupComponent {
         first(),
         tap((boardId) =>
           this.dialog.open(BoardGroupDialogComponent, {
+            width: '600px',
             data: {
               boardId,
             },
