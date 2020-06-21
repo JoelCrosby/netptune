@@ -380,6 +380,71 @@ namespace Netptune.Entities.Migrations
                     b.ToTable("BoardGroups");
                 });
 
+            modelBuilder.Entity("Netptune.Core.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("character varying(32768)")
+                        .HasMaxLength(32768);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnName("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("DeletedByUserId");
+
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Netptune.Core.Entities.Flag", b =>
                 {
                     b.Property<int>("Id")
@@ -546,6 +611,11 @@ namespace Netptune.Entities.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("character varying(6)")
+                        .HasMaxLength(6);
+
                     b.Property<string>("ModifiedByUserId")
                         .HasColumnType("text");
 
@@ -583,7 +653,8 @@ namespace Netptune.Entities.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("WorkspaceId");
+                    b.HasIndex("WorkspaceId", "Key")
+                        .IsUnique();
 
                     b.ToTable("Projects");
                 });
@@ -622,6 +693,11 @@ namespace Netptune.Entities.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsFlagged")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("ModifiedByUserId")
                         .HasColumnType("text");
 
@@ -635,6 +711,9 @@ namespace Netptune.Entities.Migrations
                         .HasColumnType("text");
 
                     b.Property<int?>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectScopeId")
                         .HasColumnType("integer");
 
                     b.Property<double>("SortOrder")
@@ -670,11 +749,76 @@ namespace Netptune.Entities.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("ProjectId");
-
                     b.HasIndex("WorkspaceId");
 
+                    b.HasIndex("ProjectId", "ProjectScopeId")
+                        .IsUnique();
+
                     b.ToTable("ProjectTasks");
+                });
+
+            modelBuilder.Entity("Netptune.Core.Entities.Reaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CreatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnName("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("DeletedByUserId");
+
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Reactions");
                 });
 
             modelBuilder.Entity("Netptune.Core.Entities.Workspace", b =>
@@ -1003,6 +1147,29 @@ namespace Netptune.Entities.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Netptune.Core.Entities.Comment", b =>
+                {
+                    b.HasOne("Netptune.Core.Entities.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Netptune.Core.Entities.Flag", b =>
                 {
                     b.HasOne("Netptune.Core.Entities.AppUser", "CreatedByUser")
@@ -1122,6 +1289,35 @@ namespace Netptune.Entities.Migrations
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Netptune.Core.Entities.Reaction", b =>
+                {
+                    b.HasOne("Netptune.Core.Entities.Comment", "Comment")
+                        .WithMany("Reactions")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Netptune.Core.Entities.Workspace", b =>

@@ -8,11 +8,13 @@ export interface ProjectTask extends Basemodel {
   name: string;
   description: string;
   status: TaskStatus;
+  isFlagged: boolean;
 
   sortOrder: number;
 
   project: Project;
   projectId: number;
+  projectScopeId: number;
 
   workspace: Workspace;
   workspaceId: number;
@@ -28,6 +30,7 @@ export interface AddProjectTaskRequest {
   name: string;
   description?: string;
   status?: TaskStatus;
+  isFlagged?: boolean;
 
   projectId: number;
   boardGroupId?: number;

@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -6,12 +12,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Netptune.Entities.Contexts
 {
@@ -26,6 +26,8 @@ namespace Netptune.Entities.Contexts
         public DbSet<Post> Posts { get; set; }
         public DbSet<Board> Boards { get; set; }
         public DbSet<BoardGroup> BoardGroups { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
@@ -41,7 +43,7 @@ namespace Netptune.Entities.Contexts
         {
             if (optionsBuilder.IsConfigured) return;
 
-            optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;Username=postgres;Password=admin;");
+            optionsBuilder.UseNpgsql("User Id=gkgvtdnhnemudi;Host=ec2-54-247-169-129.eu-west-1.compute.amazonaws.com;Port=5432;Database=dd4grp5ccmbv9g;SSLMode=Require");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

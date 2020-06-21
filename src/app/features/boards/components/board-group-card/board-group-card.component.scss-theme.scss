@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+
+@mixin board-group-card-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .card-footer {
+    .task-scope-id {
+      background-color: mat-color($foreground, text, .1);
+    }
+  }
+}

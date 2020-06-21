@@ -1,14 +1,14 @@
-﻿using Netptune.Core.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -81,9 +81,9 @@ namespace Netptune.Services
 
             var boardGroup = new BoardGroup
             {
-               Name = request.Name,
-               Type = request.Type ?? BoardGroupType.Basic,
-               SortOrder = sortOrder,
+                Name = request.Name,
+                Type = request.Type ?? BoardGroupType.Basic,
+                SortOrder = sortOrder,
             };
 
             board.BoardGroups.Add(boardGroup);

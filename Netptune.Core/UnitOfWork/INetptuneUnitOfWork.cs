@@ -18,5 +18,9 @@ namespace Netptune.Core.UnitOfWork
         IBoardGroupRepository BoardGroups { get; }
 
         ITaskInGroupRepository ProjectTasksInGroups { get; }
+
+        ICommentRepository Comments { get; }
+
+        IReactionRepository Reactions { get; }
     }
 }

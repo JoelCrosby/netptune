@@ -10,6 +10,10 @@
 
   .task-card {
     background-color: mat-color($background, card);
+
+    .task-scope-id {
+      background-color: mat-color($foreground, text, .1);
+    }
   }
 
   .task-card:hover {

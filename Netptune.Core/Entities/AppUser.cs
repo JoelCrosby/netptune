@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
-
-using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Netptune.Core.Entities
 {

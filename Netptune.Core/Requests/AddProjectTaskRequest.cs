@@ -1,7 +1,7 @@
-﻿using Netptune.Core.Entities;
-using Netptune.Core.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
-using System.ComponentModel.DataAnnotations;
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests
 {
@@ -13,6 +13,8 @@ namespace Netptune.Core.Requests
         public string Description { get; set; }
 
         public ProjectTaskStatus? Status { get; set; }
+
+        public bool IsFlagged { get; set; }
 
         [Required]
         public int? ProjectId { get; set; }

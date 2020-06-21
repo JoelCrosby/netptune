@@ -1,4 +1,8 @@
-﻿using Netptune.Core.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -6,9 +10,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -37,7 +38,7 @@ namespace Netptune.Services
                     Description = request.Description,
                     CreatedByUserId = user.Id,
                     OwnerId = user.Id,
-                    RepositoryUrl = request.RepositoryUrl
+                    RepositoryUrl = request.RepositoryUrl,
                 };
 
                 project.ProjectUsers.Add(new ProjectUser
@@ -75,6 +76,9 @@ namespace Netptune.Services
                     }
 
                 });
+
+                project.Key = await GetProjectKey(project) ??
+                              throw new Exception("Failed to generate unique project Key for project.");
 
                 var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
@@ -137,6 +141,29 @@ namespace Netptune.Services
         private Task<ProjectViewModel> GetProjectViewModel(Project project)
         {
             return ProjectRepository.GetProjectViewModel(project.Id);
+        }
+
+        private Task<string> GetProjectKey(Project project)
+        {
+            var key = project.Name.Substring(0, 3).ToLowerInvariant();
+
+            async Task<string> TryGetKey(string currentKey, int keyLength)
+            {
+                while (true)
+                {
+                    var isAvailable = await ProjectRepository.IsProjectKeyAvailable(currentKey, project.WorkspaceId);
+
+                    if (isAvailable) return key;
+
+                    var nextKey = project.Name.Substring(0, keyLength).ToLowerInvariant();
+
+                    currentKey = nextKey;
+
+                    keyLength += 1;
+                }
+            }
+
+            return TryGetKey(key, 3);
         }
     }
 }

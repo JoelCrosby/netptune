@@ -1,9 +1,9 @@
-﻿using Netptune.Core.Entities;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Projects;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netptune.Core.Repositories
 {
@@ -12,5 +12,9 @@ namespace Netptune.Core.Repositories
         Task<List<ProjectViewModel>> GetProjects(string workspaceSlug);
 
         Task<ProjectViewModel> GetProjectViewModel(int id);
+
+        Task<int?> GetNextScopeId(int id);
+
+        Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
     }
 }

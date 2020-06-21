@@ -11,6 +11,10 @@
     >
     </app-avatar>
 
+    <div class="task-scope-id">
+      {{ task.systemId }}
+    </div>
+
     <mat-icon
     class="task-complete"
     *ngIf="task.status === 1"
