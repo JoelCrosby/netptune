@@ -25,7 +25,7 @@
           {{ group.name }}
           <span>{{ group.tasks.length }}</span>
         </div>
-        <button mat-icon-button class="delete-board-group-btn">
+        <button mat-icon-button class="delete-board-group-btn" (click)="onDeleteGroupClicked(group)">
           <mat-icon>close</mat-icon>
         </button>
       </span>
