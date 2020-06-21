@@ -14,6 +14,7 @@ export interface ProjectTask extends Basemodel {
 
   project: Project;
   projectId: number;
+  projectScopeId: number;
 
   workspace: Workspace;
   workspaceId: number;

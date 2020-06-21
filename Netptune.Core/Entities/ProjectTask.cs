@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
-
-using Netptune.Core.BaseEntities;
+﻿using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.ProjectTasks;
+
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Netptune.Core.Entities
 {
     public class ProjectTask : AuditableEntity<int>
     {
-        public string ProjectScopeId { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -19,6 +17,8 @@ namespace Netptune.Core.Entities
         public ProjectTaskStatus Status { get; set; }
 
         public double SortOrder { get; set; }
+
+        public int ProjectScopeId { get; set; }
 
         public bool IsFlagged { get; set; }
 
@@ -60,6 +60,8 @@ namespace Netptune.Core.Entities
                 Name = Name,
                 Description = Description,
                 Status = Status,
+                ProjectScopeId = ProjectScopeId,
+                SystemId = $"{Project.Key}-{ProjectScopeId}",
                 IsFlagged = IsFlagged,
                 SortOrder = SortOrder,
                 ProjectId = ProjectId,

@@ -12,9 +12,13 @@ namespace Netptune.Core.ViewModels.ProjectTasks
 
         public string OwnerId { get; set; }
 
+        public int ProjectScopeId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public string SystemId { get; set; }
 
         public ProjectTaskStatus Status { get; set; }
 

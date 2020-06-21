@@ -5,4 +5,5 @@ export interface TaskViewModel extends ProjectTask {
   ownerUsername: string;
   assigneePictureUrl: string;
   projectName: string;
+  systemId: string;
 }

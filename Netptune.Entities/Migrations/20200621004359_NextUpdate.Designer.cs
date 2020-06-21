@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Netptune.Core.Meta;
 using Netptune.Entities.Contexts;
@@ -10,9 +11,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netptune.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200621004359_NextUpdate")]
+    partial class NextUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -611,11 +613,6 @@ namespace Netptune.Entities.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("character varying(6)")
-                        .HasMaxLength(6);
-
                     b.Property<string>("ModifiedByUserId")
                         .HasColumnType("text");
 
@@ -653,8 +650,7 @@ namespace Netptune.Entities.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("WorkspaceId", "Key")
-                        .IsUnique();
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Projects");
                 });
@@ -749,10 +745,9 @@ namespace Netptune.Entities.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("WorkspaceId");
+                    b.HasIndex("ProjectId");
 
-                    b.HasIndex("ProjectId", "ProjectScopeId")
-                        .IsUnique();
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("ProjectTasks");
                 });

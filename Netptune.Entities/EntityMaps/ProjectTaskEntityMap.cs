@@ -33,7 +33,7 @@ namespace Netptune.Entities.EntityMaps
 
             builder
                 .Property(task => task.IsFlagged)
-                .HasDefaultValue(true)
+                .HasDefaultValue(false)
                 .IsRequired();
 
             builder
@@ -42,6 +42,10 @@ namespace Netptune.Entities.EntityMaps
                 .HasForeignKey(task => task.AssigneeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder
+                .HasIndex(task => new { task.ProjectId, task.ProjectScopeId })
+                .IsUnique();
 
             builder
                 .Property(task => task.OwnerId)

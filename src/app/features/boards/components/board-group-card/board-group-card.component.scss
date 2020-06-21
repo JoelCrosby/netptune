@@ -22,6 +22,14 @@
   align-self: flex-end;
   width: 100%;
   margin-top: .2rem;
+  align-items: center;
+
+  .task-scope-id {
+    border-radius: 4px;
+    padding: .2rem .4rem;
+    height: 1rem;
+    font-size: 14px;
+  }
 
   .task-card-user-chip {
     justify-self: flex-end;

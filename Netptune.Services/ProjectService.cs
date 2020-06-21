@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -76,6 +77,9 @@ namespace Netptune.Services
 
                 });
 
+                project.Key = await GetProjectKey(project) ??
+                              throw new Exception("Failed to generate unique project Key for project.");
+
                 var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
                 workspace.Projects.Add(project);
@@ -137,6 +141,29 @@ namespace Netptune.Services
         private Task<ProjectViewModel> GetProjectViewModel(Project project)
         {
             return ProjectRepository.GetProjectViewModel(project.Id);
+        }
+
+        private Task<string> GetProjectKey(Project project)
+        {
+            var key = project.Name.Substring(0, 3).ToLowerInvariant();
+
+            async Task<string> TryGetKey(string currentKey, int keyLength)
+            {
+                while (true)
+                {
+                    var isAvailable = await ProjectRepository.IsProjectKeyAvailable(currentKey, project.WorkspaceId);
+
+                    if (isAvailable) return key;
+
+                    var nextKey = project.Name.Substring(0, keyLength).ToLowerInvariant();
+
+                    currentKey = nextKey;
+
+                    keyLength += 1;
+                }
+            }
+
+            return TryGetKey(key, 3);
         }
     }
 }

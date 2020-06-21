@@ -13,6 +13,9 @@
         <mat-icon>drag_indicator</mat-icon>
       </button>
       <mat-checkbox color="primary" [(ngModel)]="checked"></mat-checkbox>
+      <div class="task-scope-id">
+        {{ task.systemId }}
+      </div>
       <div class="title" (click)="titleClicked()">
         {{ task.name }}
       </div>

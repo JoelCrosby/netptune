@@ -29,11 +29,38 @@ namespace Netptune.Repositories
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
+                .AsNoTracking()
                 .Select(task => task.ToViewModel())
                 .FirstOrDefaultAsync();
         }
 
-        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug)
+        public Task<TaskViewModel> GetTaskViewModel(string systemId, int workspaceId)
+        {
+            var parts = systemId.Split("-");
+
+            var hasProjectId = int.TryParse(parts.LastOrDefault(), out var projectScopeId);
+
+            if (!hasProjectId) return null;
+
+            var projectKey = parts.First();
+
+            var project = Context.Projects
+                    .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspaceId);
+
+            if (project is null) return null;
+
+            return Entities
+                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == project.Id)
+                .OrderBy(x => x.SortOrder)
+                .Include(x => x.Assignee)
+                .Include(x => x.Project)
+                .Include(x => x.Owner)
+                .AsNoTracking()
+                .Select(task => task.ToViewModel())
+                .FirstOrDefaultAsync();
+        }
+
+        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false)
         {
             var tasks = Entities
                 .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
@@ -42,13 +69,16 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner);
 
-            return tasks.Select(task => task.ToViewModel()).ToListAsync();
+            return tasks
+                .Select(task => task.ToViewModel())
+                .ApplyReadonly(isReadonly);
         }
 
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
         {
             var tasks = await Entities
                 .Where(x => x.ProjectId == projectId && !x.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
 
             return new ProjectTaskCounts

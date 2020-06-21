@@ -32,12 +32,16 @@ namespace Netptune.Services
         {
             var user = await UserRepository.GetAsync(userId);
 
+            if (user is null) return null;
+
             return MapUser(user);
         }
 
         public async Task<UserViewModel> GetByEmail(string email)
         {
             var user = await UserRepository.GetByEmail(email);
+
+            if (user is null) return null;
 
             return MapUser(user);
         }
@@ -84,11 +88,8 @@ namespace Netptune.Services
         {
             var updatedUser = await UserRepository.GetAsync(user.Id);
 
-            if (updatedUser is null)
-            {
-                return null;
-            }
-
+            if (updatedUser is null) return null;
+            
             updatedUser.PhoneNumber = user.PhoneNumber;
             updatedUser.Firstname = user.Firstname;
             updatedUser.Lastname = user.Lastname;
