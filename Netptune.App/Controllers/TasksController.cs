@@ -44,6 +44,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await TaskService.GetTask(id);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -55,6 +57,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
         {
             var result = await TaskService.UpdateTask(task);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }
@@ -80,6 +84,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await TaskService.DeleteTask(id);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -104,6 +110,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> PostTask([FromBody] MoveTaskInGroupRequest request)
         {
             var result = await TaskService.MoveTaskInBoardGroup(request);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }

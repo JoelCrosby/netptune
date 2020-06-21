@@ -50,6 +50,8 @@ namespace Netptune.Services
         {
             var workspace = await WorkspaceRepository.GetAsync(id);
 
+            if (workspace is null) return null;
+
             workspace.IsDeleted = true;
 
             await UnitOfWork.CompleteAsync();

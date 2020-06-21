@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,26 @@ namespace Netptune.Repositories
                 .Include(project => project.Owner)
                 .Select(project => GetViewModel(project))
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<int?> GetNextScopeId(int id)
+        {
+            return Task.Run(() =>
+            {
+                return Entities
+                    .Include(x => x.ProjectTasks)
+                    .FirstOrDefault(x => x.Id == id)
+                    ?.ProjectTasks.Count + 2;
+            });
+        }
+
+        public Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
+        {
+            return Task.Run(() =>
+                Entities
+                    .Where(project => project.WorkspaceId == workspaceId)
+                    .AsNoTracking()
+                    .All(project => project.Key != key));
         }
 
         private static ProjectViewModel GetViewModel(Project project)

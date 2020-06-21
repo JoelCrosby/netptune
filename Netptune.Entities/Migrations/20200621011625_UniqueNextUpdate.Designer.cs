@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Netptune.Core.Meta;
 using Netptune.Entities.Contexts;
@@ -10,9 +11,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netptune.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200621011625_UniqueNextUpdate")]
+    partial class UniqueNextUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -612,7 +614,6 @@ namespace Netptune.Entities.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Key")
-                        .IsRequired()
                         .HasColumnType("character varying(6)")
                         .HasMaxLength(6);
 
@@ -653,8 +654,7 @@ namespace Netptune.Entities.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("WorkspaceId", "Key")
-                        .IsUnique();
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Projects");
                 });

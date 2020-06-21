@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Netptune.Core.Entities;
+﻿using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
@@ -12,6 +7,12 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -40,13 +41,13 @@ namespace Netptune.Services
                 Name = request.Name,
                 Description = request.Description,
                 Status = request.Status ?? ProjectTaskStatus.New,
-                IsFlagged = request.IsFlagged,
                 SortOrder = sortOrder,
                 ProjectId = request.ProjectId,
                 AssigneeId = request.AssigneeId,
                 OwnerId = user.Id,
                 Workspace = workspace,
-                WorkspaceId = workspace.Id
+                WorkspaceId = workspace.Id,
+                
             };
 
             var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == request.ProjectId);
@@ -64,7 +65,32 @@ namespace Netptune.Services
 
             var result = await TaskRepository.AddAsync(task);
 
-            await UnitOfWork.CompleteAsync();
+            var saveTryCount = 4;
+
+            async Task SaveTask()
+            {
+                var scopeId = await GetNextProjectScopeId(project.Id);
+
+                if (!scopeId.HasValue) throw new Exception($"Unable to get scope id for project with id {project.Id}.");
+
+                result.ProjectScopeId = scopeId.Value;
+
+                try
+                {
+                    await UnitOfWork.CompleteAsync();
+
+                    saveTryCount = 0;
+                }
+                catch (DBConcurrencyException)
+                {
+                    saveTryCount--;
+                }
+            }
+
+            while (saveTryCount > 0)
+            {
+                await SaveTask();
+            }
 
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
@@ -161,10 +187,10 @@ namespace Netptune.Services
             result.Name = projectTask.Name;
             result.Description = projectTask.Description;
             result.Status = projectTask.Status;
+            result.IsFlagged = projectTask.IsFlagged;
             result.SortOrder = projectTask.SortOrder;
             result.OwnerId = projectTask.OwnerId;
             result.AssigneeId = projectTask.AssigneeId;
-            result.IsFlagged = projectTask.IsFlagged;
 
             await UnitOfWork.CompleteAsync();
 
@@ -285,6 +311,8 @@ namespace Netptune.Services
                 .ProjectTasksInGroups
                 .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
 
+            if (item is null) return null;
+
             item.SortOrder = await GetTaskInGroupSortOrder(
                 request.NewGroupId,
                 request.TaskId,
@@ -331,6 +359,11 @@ namespace Netptune.Services
             {
                 taskInGroup.IsDeleted = true;
             }
+        }
+
+        private Task<int?> GetNextProjectScopeId(int projectId)
+        {
+            return UnitOfWork.Projects.GetNextScopeId(projectId);
         }
     }
 }

@@ -42,6 +42,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await WorkspaceService.GetWorkspace(slug);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -76,6 +78,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
             var result = await WorkspaceService.DeleteWorkspace(id);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }

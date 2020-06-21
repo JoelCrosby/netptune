@@ -14,6 +14,8 @@ namespace Netptune.Core.Entities
 
         public string RepositoryUrl { get; set; }
 
+        public string Key { get; set; }
+
         #region ForeignKeys
 
         public int WorkspaceId { get; set; }

@@ -12,5 +12,9 @@ namespace Netptune.Core.Repositories
         Task<List<ProjectViewModel>> GetProjects(string workspaceSlug);
 
         Task<ProjectViewModel> GetProjectViewModel(int id);
+
+        Task<int?> GetNextScopeId(int id);
+
+        Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
     }
 }
