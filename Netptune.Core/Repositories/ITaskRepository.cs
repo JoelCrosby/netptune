@@ -11,6 +11,8 @@ namespace Netptune.Core.Repositories
     {
         Task<TaskViewModel> GetTaskViewModel(int id);
 
+        Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug);
+
         Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false);
 
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);

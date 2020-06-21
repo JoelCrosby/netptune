@@ -15,27 +15,27 @@ namespace Netptune.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ProjectTasksController : ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly ITaskService TaskService;
 
-        public ProjectTasksController(ITaskService taskService)
+        public TasksController(ITaskService taskService)
         {
             TaskService = taskService;
         }
 
-        // GET: api/ProjectTasks
+        // GET: api/Tasks?workspaceSlug=workspace
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
-        public async Task<IActionResult> GetTasks(string workspaceSlug)
+        public async Task<IActionResult> GetTasks([FromQuery] string workspaceSlug)
         {
             var result = await TaskService.GetTasks(workspaceSlug);
 
             return Ok(result);
         }
 
-        // GET: api/ProjectTasks/5
+        // GET: api/Tasks/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,7 +49,22 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // PUT: api/ProjectTasks
+        // GET: api/Tasks/detail?systemId=proj-5&workspace=workspace
+        [HttpGet]
+        [Route("detail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
+        public async Task<IActionResult> GetTask([FromQuery] string systemId, [FromQuery] string workspace)
+        {
+            var result = await TaskService.GetTask(systemId, workspace);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // PUT: api/Tasks
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,7 +78,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/ProjectTasks
+        // POST: api/Tasks
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,7 +90,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/ProjectTasks/5
+        // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -89,9 +104,9 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/ProjectTasks/GetProjectTaskCount/5
+        // GET: api/Tasks/count/5
         [HttpGet]
-        [Route("GetProjectTaskCount")]
+        [Route("count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(ProjectTaskCounts))]
         public async Task<IActionResult> GetProjectTaskCount(int projectId)
@@ -101,7 +116,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/ProjectTasks/MoveTaskInGroup
+        // POST: api/Tasks/MoveTaskInGroup
         [HttpPost]
         [Route("MoveTaskInGroupRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]

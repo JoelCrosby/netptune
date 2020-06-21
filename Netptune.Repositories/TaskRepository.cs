@@ -34,7 +34,7 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public Task<TaskViewModel> GetTaskViewModel(string systemId, int workspaceId)
+        public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug)
         {
             var parts = systemId.Split("-");
 
@@ -44,13 +44,17 @@ namespace Netptune.Repositories
 
             var projectKey = parts.First();
 
-            var project = Context.Projects
-                    .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspaceId);
+            var workspace = await Context.Workspaces.FirstOrDefaultAsync(x => x.Slug == workspaceSlug);
+
+            if (workspace is null) return null;
+
+            var project = await Context.Projects
+                    .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspace.Id);
 
             if (project is null) return null;
 
-            return Entities
-                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == project.Id)
+            return await Entities
+                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspace.Id && x.ProjectId == project.Id)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
@@ -62,14 +66,12 @@ namespace Netptune.Repositories
 
         public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false)
         {
-            var tasks = Entities
+            return Entities
                 .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
-                .Include(x => x.Owner);
-
-            return tasks
+                .Include(x => x.Owner)
                 .Select(task => task.ToViewModel())
                 .ApplyReadonly(isReadonly);
         }
