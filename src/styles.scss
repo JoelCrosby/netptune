@@ -33,7 +33,7 @@
 @import './app/features/workspaces/index/workspaces.index.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
-@import './app/features/project-tasks/index/project-tasks.index.component.scss-theme';
+@import './app/features/project-tasks/components/task-list/task-list.component.scss-theme.scss';
 @import './app/features/projects/components/projects-list/projects-list.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-inline/task-inline.component.scss-theme.scss';
 @import './app/features/boards/views/boards-view/boards-view.component.scss-theme.scss';
@@ -56,7 +56,7 @@
   @include workspaces-index-theme($theme);
   @include task-list-group-theme($theme);
   @include task-list-item-theme($theme);
-  @include project-tasks-theme($theme);
+  @include project-tasks-list-theme($theme);
   @include projects-list-theme($theme);
   @include task-inline-theme($theme);
   @include boards-view-theme($theme);

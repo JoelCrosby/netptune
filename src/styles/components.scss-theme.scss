@@ -32,8 +32,12 @@
 
   .custom-scroll::-webkit-scrollbar-thumb {
     border: 6px solid transparent;
-    background: mat-color($foreground, text, 0.2);
+    background: mat-color($foreground, text, .2);
     border-radius: 10px;
     background-clip: padding-box;
+  }
+
+  .cdk-overlay-dark-backdrop {
+    background-color: darken(mat-color($primary, .5), 42);
   }
 }

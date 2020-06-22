@@ -1,0 +1,23 @@
+<div class="task-list-view custom-scroll">
+
+  <div class="task-list-main" [class.task-list-shrink]="selectedTask$ | async">
+    <div class="drag-group" cdkDropListGroup>
+      <app-task-list-group
+        class="mb-5"
+        *ngFor="let group of taskGroups"
+        [tasks]="group.tasks | async"
+        [header]="group.header"
+        [groupName]="group.groupName"
+        [status]="group.status"
+        [emptyMessage]="group.emptyMessage"
+        [loaded]="loaded$"
+      >
+      </app-task-list-group>
+    </div>
+  </div>
+
+  <div class="task-detail-aside" *ngIf="selectedTask$ | async">
+    <app-task-detail></app-task-detail>
+  </div>
+
+</div>

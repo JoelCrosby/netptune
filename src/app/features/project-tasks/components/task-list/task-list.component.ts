@@ -1,22 +1,20 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TaskStatus } from '@app/core/enums/project-task-status';
-import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
-import { dropIn, fadeIn } from '@core/animations/animations';
-import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
+import { TaskStatus } from '@app/core/enums/project-task-status';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { AppState } from '@app/core/core.state';
+import { TaskDialogComponent } from '@app/entry/dialogs/task-dialog/task-dialog.component';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
 import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
 
 @Component({
-  selector: 'app-project-tasks',
-  templateUrl: './project-tasks.index.component.html',
-  styleUrls: ['./project-tasks.index.component.scss'],
+  selector: 'app-task-list',
+  templateUrl: './task-list.component.html',
+  styleUrls: ['./task-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [fadeIn, dropIn],
 })
-export class ProjectTasksComponent implements OnInit {
+export class TaskListComponent implements OnInit {
   myTasks$ = this.store.pipe(select(TaskSelectors.selectTasksOwner));
   completedTasks$ = this.store.pipe(select(TaskSelectors.selectTasksCompleted));
   backlogTasks$ = this.store.pipe(select(TaskSelectors.selectTasksBacklog));
