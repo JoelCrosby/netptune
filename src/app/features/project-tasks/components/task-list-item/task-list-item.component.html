@@ -1,6 +1,5 @@
 <div
   class="task-card"
-  [class.task-item-selected]="checked"
   [class.flagged]="task.isFlagged"
 >
   <div class="task-header">
@@ -16,7 +15,7 @@
       >
         <mat-icon class="drag">drag_indicator</mat-icon>
       </button>
-      <mat-checkbox color="primary" [(ngModel)]="checked"></mat-checkbox>
+      <mat-checkbox color="primary"></mat-checkbox>
       <div class="task-scope-id">
         {{ task.systemId }}
       </div>

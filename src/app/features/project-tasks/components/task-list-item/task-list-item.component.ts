@@ -1,27 +1,22 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { toggleChip } from '@core/animations/animations';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TextHelpers } from '@core/util/text-helpers';
-
+import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { Store } from '@ngrx/store';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
-import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: '[app-task-list-item]',
   templateUrl: './task-list-item.component.html',
   styleUrls: ['./task-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [toggleChip],
 })
 export class TaskListItemComponent {
   @Input() task: TaskViewModel;
-
-  checked = false;
 
   constructor(private store: Store<AppState>, public dialog: MatDialog) {}
 
