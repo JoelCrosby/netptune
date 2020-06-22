@@ -35,4 +35,16 @@ export class ProjectTasksService {
       environment.apiEndpoint + `api/tasks/${task.id}`
     );
   }
+
+  detail(systemId: string, workspaceSlug: string) {
+    return this.http.get<TaskViewModel>(
+      environment.apiEndpoint + 'api/tasks/detail',
+      {
+        params: {
+          workspace: workspaceSlug,
+          systemId,
+        },
+      }
+    );
+  }
 }

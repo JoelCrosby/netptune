@@ -1,39 +1,135 @@
-<h1 mat-dialog-title>
-  {{ task ? 'Edit Task' : 'Add new Task'}}
-</h1>
+<div class="task-detail-dialog" *ngIf="task$ | async as task; else loading">
 
-<form [formGroup]="projectFromGroup">
+  <div class="detail-title">
 
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Enter Task Summary</mat-label>
-    <input matInput id="name" class="form-control" placeholder="Task Summary" formControlName="nameFormControl" name="name"
-      required>
-    <mat-hint>Required</mat-hint>
-  </mat-form-field>
+    <h1 mat-dialog-title>{{ task.name }}</h1>
 
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Task Project</mat-label>
-    <mat-select id="type" name="type" placeholder="Project" formControlName="projectFormControl">
-      <mat-option>None</mat-option>
-      <mat-option *ngFor="let project of projects" [value]="project.id">
-        {{ project.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-icon
+      class="task-complete"
+      *ngIf="task.status === 1"
+    >
+      done
+    </mat-icon>
 
-  <mat-form-field class="w-100" appearance="outline">
-    <mat-label>Enter Task Description</mat-label>
-    <textarea matInput id="description" class="form-control" formControlName="descriptionFormControl" placeholder="Description"
-      name="description" aria-label="With textarea"></textarea>
-  </mat-form-field>
+    <div class="task-scope-id">
+      {{ task.systemId }}
+    </div>
+  </div>
 
-</form>
+  <div class="detail-container">
+
+    <div class="detail-form">
+      <form [formGroup]="projectFromGroup">
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Enter Task Summary</mat-label>
+          <input
+            matInput
+            id="name"
+            class="form-control"
+            placeholder="Task Summary"
+            formControlName="nameFormControl"
+            name="name"
+            required
+          >
+          <mat-hint>Required</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Task Project</mat-label>
+          <mat-select
+            id="type"
+            name="type"
+            placeholder="Project"
+            formControlName="projectFormControl"
+          >
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let project of projects$ | async" [value]="project.id">
+              {{ project.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Enter Task Description</mat-label>
+          <textarea
+            matInput id="description"
+            class="form-control"
+            formControlName="descriptionFormControl"
+            placeholder="Description"
+            name="description"
+            aria-label="With textarea"
+            rows="6"
+          ></textarea>
+        </mat-form-field>
+
+      </form>
+    </div>
+
+    <div class="detail-column">
+
+      <div class="detail-list">
+        <div class="detail-list-item">
+          <h4>Assignee</h4>
+          <mat-chip-list>
+            <mat-chip>{{ task.assigneeUsername }} </mat-chip>
+          </mat-chip-list>
+        </div>
+        <div class="detail-list-item">
+          <h4>Status</h4>
+          <mat-chip-list>
+            <mat-chip>{{ getTaskStatus(task.status) }} </mat-chip>
+          </mat-chip-list>
+        </div>
+        <div class="detail-list-item">
+          <h4>Project</h4>
+          <mat-chip-list>
+            <mat-chip>{{ task.projectName }} </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <h4>Actions</h4>
+
+        <div class="actions-row">
+          <button
+            mat-icon-button
+            aria-label="Delete Task"
+            matTooltip="Delete Task"
+          >
+          <mat-icon>delete</mat-icon>
+        </button>
+          <button
+            mat-icon-button
+            aria-label="Flag Task"
+            matTooltip="Flag Task"
+            [color]="task.isFlagged ? 'warn' : ''"
+          >
+          <mat-icon>flag</mat-icon>
+        </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="close()">Close</button>
+    <div class="mr-2"></div>
+    <button mat-flat-button color="primary" type="button">
+      {{ task ? 'Save Changes' : 'Save Task'}}
+    </button>
+  </div>
 
 
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="close()">Close</button>
-  <div class="mr-2"></div>
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
-    {{ task ? 'Save Changes' : 'Save Task'}}
-  </button>
 </div>
+
+<ng-template #loading>
+  <div class="task-detail-loading">
+
+    <mat-spinner diameter="32"></mat-spinner>
+
+  </div>
+</ng-template>

@@ -73,6 +73,14 @@ const reducer = createReducer(
   on(actions.setInlineEditActive, (state, { active }) => ({
     ...state,
     inlineEditActive: active,
+  })),
+  on(actions.loadTaskDetailsSuccess, (state, { task }) => ({
+    ...state,
+    detailTask: task,
+  })),
+  on(actions.clearTaskDetail, (state) => ({
+    ...state,
+    detailTask: undefined,
   }))
 );
 

@@ -57,3 +57,8 @@ export const selectInlineEditActive = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.inlineEditActive
 );
+
+export const selectDetailTask = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.detailTask
+);

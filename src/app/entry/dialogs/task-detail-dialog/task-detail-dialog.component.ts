@@ -1,14 +1,25 @@
 import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   Inject,
   OnInit,
   Optional,
-  ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Project } from '@core/models/project';
-import { ProjectTask } from '@core/models/project-task';
+import { AppState } from '@app/core/core.state';
+import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import * as ProjectActions from '@app/core/projects/projects.actions';
+import * as ProjectSelectors from '@app/core/projects/projects.selectors';
+import * as TaskActions from '@app/features/project-tasks/store/tasks.actions';
+import * as TaskSelectors from '@app/features/project-tasks/store/tasks.selectors';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { TaskStatus } from '@app/core/enums/project-task-status';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -16,46 +27,57 @@ import { ProjectTask } from '@core/models/project-task';
   styleUrls: ['./task-detail-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDetailDialogComponent implements OnInit {
-  task: ProjectTask;
-  projects: Project[] = [];
+export class TaskDetailDialogComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  task$: Observable<TaskViewModel>;
+  projects$: Observable<ProjectViewModel[]>;
 
   selectedTypeValue: number;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectTask
-  ) {
-    if (data) {
-      this.task = data;
-    }
-  }
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
+    private store: Store<AppState>
+  ) {}
 
   projectFromGroup: FormGroup;
 
   ngOnInit() {
+    this.task$ = this.store
+      .select(TaskSelectors.selectDetailTask)
+      .pipe(tap((task) => this.buildForm(task)));
+
+    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
+  }
+
+  ngAfterViewInit() {
+    this.store.dispatch(
+      TaskActions.loadTaskDetails({ systemId: this.data.systemId })
+    );
+
+    this.store.dispatch(ProjectActions.loadProjects());
+  }
+
+  buildForm(task: TaskViewModel) {
     this.projectFromGroup = new FormGroup({
-      nameFormControl: new FormControl(this.task?.name, [
+      nameFormControl: new FormControl(task?.name, [
         Validators.required,
         Validators.minLength(4),
       ]),
-      projectFormControl: new FormControl(this.task?.projectId),
-      descriptionFormControl: new FormControl(this.task?.description),
+      projectFormControl: new FormControl(task?.projectId),
+      descriptionFormControl: new FormControl(task?.description),
     });
   }
 
-  close(): void {
+  close() {
     this.dialogRef.close();
   }
 
-  getResult() {
-    const taskResult: ProjectTask = {
-      ...this.task,
-      name: this.projectFromGroup.get('nameFormControl').value,
-      projectId: this.projectFromGroup.get('projectFormControl').value,
-      description: this.projectFromGroup.get('descriptionFormControl').value,
-    };
+  ngOnDestroy() {
+    this.store.dispatch(TaskActions.clearTaskDetail());
+  }
 
-    this.dialogRef.close(taskResult);
+  getTaskStatus(status: TaskStatus) {
+    return TaskStatus[status];
   }
 }

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-board-group-card',
@@ -9,4 +11,13 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 })
 export class BoardGroupCardComponent {
   @Input() task: TaskViewModel;
+
+  constructor(private dialog: MatDialog) {}
+
+  onTaskClicked() {
+    this.dialog.open(TaskDetailDialogComponent, {
+      width: '800px',
+      data: this.task,
+    });
+  }
 }

@@ -1,4 +1,4 @@
-<mat-card class="group-task-card">
+<mat-card class="group-task-card" (click)="onTaskClicked()">
   <div class="task-name-text">
     {{ task.name }}
   </div>
@@ -11,16 +11,18 @@
     >
     </app-avatar>
 
-    <div class="task-scope-id">
-      {{ task.systemId }}
-    </div>
+    <div class="bottom-left">
+      <div class="task-scope-id">
+        {{ task.systemId }}
+      </div>
 
-    <mat-icon
-    class="task-complete"
-    *ngIf="task.status === 1"
-    >
-      done
-    </mat-icon>
+      <mat-icon
+      class="task-complete"
+      *ngIf="task.status === 1"
+      >
+        done
+      </mat-icon>
+    </div>
   </div>
 
 </mat-card>

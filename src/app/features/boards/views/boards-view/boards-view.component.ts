@@ -1,5 +1,10 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  AfterViewInit,
+} from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
 import { selectCurrentProject } from '@app/core/projects/projects.selectors';
@@ -11,7 +16,7 @@ import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { first, map, tap, startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { TextHelpers } from '@app/core/util/text-helpers';
@@ -21,24 +26,31 @@ import { TextHelpers } from '@app/core/util/text-helpers';
   styleUrls: ['./boards-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardsViewComponent implements OnInit {
+export class BoardsViewComponent implements OnInit, AfterViewInit {
   boards$: Observable<Board[]>;
   groups$: Observable<BoardGroup[]>;
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
+  loading$: Observable<boolean>;
 
   constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.boards$ = this.store.select(BoardSelectors.selectAllBoards);
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
+
     this.selectedBoard$ = this.store.select(BoardSelectors.selectCurrentBoard);
+    this.loading$ = this.store
+      .select(GroupSelectors.selectBoardGroupsLoading)
+      .pipe(startWith(true));
 
     this.selectedBoardName$ = this.store.pipe(
       select(BoardSelectors.selectCurrentBoard),
       map((board) => board && board.name)
     );
+  }
 
+  ngAfterViewInit() {
     this.store.dispatch(BoardActions.loadBoards());
     this.store.dispatch(GroupActions.loadBoardGroups());
   }

@@ -2,38 +2,46 @@
 
   <app-page-header [title]="selectedBoardName$ | async"></app-page-header>
 
-  <div
-    cdkDropList
-    class="board-groups custom-scroll"
-    *ngIf="groups$ | async as groups"
-    cdkDropListOrientation="horizontal"
-    (cdkDropListDropped)="drop($event)"
-    [cdkDropListData]="groups"
-  >
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="board-groups-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
 
-    <app-board-group
-      cdkDrag
-      class="board-group"
-      *ngFor="let group of groups; trackBy:trackBoardGroup"
-      [cdkDragData]="group"
-      [group]="group"
-      [siblingIds]="getsiblingIds(group, groups)"
-      [dragListId]="group.id.toString()"
+  <ng-template #elseTemplate>
+    <div
+      cdkDropList
+      class="board-groups custom-scroll"
+      *ngIf="groups$ | async as groups"
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListData]="groups"
     >
-      <span class="board-group-header" cdkDragHandle>
-        <div class="title">
-          {{ group.name }}
-          <span>{{ group.tasks.length }}</span>
-        </div>
-        <button mat-icon-button class="delete-board-group-btn" (click)="onDeleteGroupClicked(group)">
-          <mat-icon>close</mat-icon>
-        </button>
-      </span>
-    </app-board-group>
 
-    <app-create-board-group class="board-group">
-    </app-create-board-group>
+      <app-board-group
+        cdkDrag
+        class="board-group"
+        *ngFor="let group of groups; trackBy:trackBoardGroup"
+        [cdkDragData]="group"
+        [group]="group"
+        [siblingIds]="getsiblingIds(group, groups)"
+        [dragListId]="group.id.toString()"
+      >
+        <span class="board-group-header" cdkDragHandle>
+          <div class="title">
+            {{ group.name }}
+            <span>{{ group.tasks.length }}</span>
+          </div>
+          <button mat-icon-button class="delete-board-group-btn" (click)="onDeleteGroupClicked(group)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </span>
+      </app-board-group>
 
-  </div>
+      <app-create-board-group class="board-group">
+      </app-create-board-group>
+
+    </div>
+  </ng-template>
 
 </app-page-container>

@@ -24,12 +24,21 @@
   margin-top: .2rem;
   align-items: center;
 
-  .task-scope-id {
-    border-radius: 4px;
-    padding: .2rem .4rem;
-    height: 1rem;
-    font-size: 14px;
+  .bottom-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .task-scope-id {
+      border-radius: 4px;
+      padding: .2rem .4rem;
+      height: 1rem;
+      font-size: 14px;
+      margin-right: .6rem;
+    }
   }
+
+
 
   .task-card-user-chip {
     justify-self: flex-end;
