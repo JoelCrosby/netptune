@@ -10,7 +10,12 @@
       ></div>
       <mat-card-title>{{ project.name }}</mat-card-title>
       <mat-card-subtitle>
-        <a [href]="project.repositoryUrl">{{ project.repositoryUrl }}</a>
+        <a
+          [href]="project.repositoryUrl"
+          target="_blank"
+        >
+          {{ project.repositoryUrl }}
+        </a>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
