@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { UsersRoutingModule } from './users-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { UsersComponent } from './index/users.index.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
 import { UsersService } from './store/users.service';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -12,7 +12,7 @@ import { StaticModule } from '@app/static/static.module';
 import { UsersViewComponent } from './views/users-view/users-view.component';
 
 @NgModule({
-  declarations: [UsersComponent, UsersViewComponent],
+  declarations: [UsersListComponent, UsersViewComponent],
   imports: [
     SharedModule,
     StaticModule,

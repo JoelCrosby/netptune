@@ -1,0 +1,49 @@
+.user-card-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 140px;
+  grid-gap: 1em;
+
+  .mat-card {
+    margin-bottom: 0 !important;
+  }
+}
+
+.mat-chip {
+  i {
+    margin-right: .6rem;
+  }
+}
+
+.user-header-image {
+  background-image: url('assets/apple-touch-icon.png');
+  background-size: cover;
+}
+
+.card-group {
+  padding: .6rem;
+  border-radius: .4rem;
+}
+
+.mat-card > .mat-card-actions:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0;
+}
+
+mat-card-header {
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-chips {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
