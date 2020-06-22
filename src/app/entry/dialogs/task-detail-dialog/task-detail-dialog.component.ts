@@ -18,7 +18,7 @@ import * as TaskActions from '@app/features/project-tasks/store/tasks.actions';
 import * as TaskSelectors from '@app/features/project-tasks/store/tasks.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, first } from 'rxjs/operators';
 import { TaskStatus } from '@app/core/enums/project-task-status';
 
 @Component({
@@ -79,5 +79,25 @@ export class TaskDetailDialogComponent
 
   getTaskStatus(status: TaskStatus) {
     return TaskStatus[status];
+  }
+
+  onFlagClicked() {
+    this.task$
+      .pipe(
+        first(),
+        tap((viewModel) => {
+          const task: TaskViewModel = {
+            ...viewModel,
+            isFlagged: !viewModel.isFlagged,
+          };
+
+          this.store.dispatch(
+            TaskActions.editProjectTask({
+              task,
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 }

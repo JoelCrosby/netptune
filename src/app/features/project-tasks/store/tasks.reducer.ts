@@ -46,6 +46,7 @@ const reducer = createReducer(
     adapter.upsertOne(task, {
       ...state,
       editState: { loading: false },
+      detailTask: task.id === state.detailTask?.id ? task : state.detailTask,
     })
   ),
   on(actions.deleteProjectTask, (state) => ({

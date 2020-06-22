@@ -1,7 +1,8 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as actions from './board-groups.actions';
+import * as TaskActions from '@project-tasks/store/tasks.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
-import { moveTaskInBoardGroup } from './board-group.utils';
+import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
 
 const reducer = createReducer(
   initialState,
@@ -57,7 +58,8 @@ const reducer = createReducer(
   on(actions.clearInlineActive, (state) => ({
     ...state,
     inlineActive: undefined,
-  }))
+  })),
+  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
 
   // ProjectTaskActions
 );

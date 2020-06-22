@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-di
 import { TextHelpers } from '@core/util/text-helpers';
 
 import * as TaskActions from '@project-tasks/store/tasks.actions';
+import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: '[app-task-list-item]',
@@ -25,11 +26,10 @@ export class TaskListItemComponent {
   constructor(private store: Store<AppState>, public dialog: MatDialog) {}
 
   titleClicked() {
-    this.store.dispatch(TaskActions.selectTask({ task: this.task }));
-  }
-
-  editClicked() {
-    this.store.dispatch(TaskActions.editProjectTask({ task: this.task }));
+    this.dialog.open(TaskDetailDialogComponent, {
+      width: '800px',
+      data: this.task,
+    });
   }
 
   deleteClicked() {

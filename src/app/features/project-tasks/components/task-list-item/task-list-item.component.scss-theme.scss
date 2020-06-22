@@ -20,7 +20,7 @@
     background-color: darken(mat-color($background, card), 2);
   }
 
-  .task-header-title .mat-icon {
+  .task-header-title .drag {
     color: rgba(mat-color($foreground, icon), .3);
   }
 

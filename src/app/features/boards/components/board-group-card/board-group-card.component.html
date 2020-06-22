@@ -1,15 +1,27 @@
-<mat-card class="group-task-card" (click)="onTaskClicked()">
+<mat-card
+  class="group-task-card"
+  [class.flagged]="task.isFlagged"
+  (click)="onTaskClicked()"
+>
   <div class="task-name-text">
     {{ task.name }}
   </div>
 
   <div class="card-footer">
-    <app-avatar
-      size="24"
-      class="task-card-user-chip"
-      [name]="task.ownerUsername"
-    >
-    </app-avatar>
+    <div class="bottom-right">
+      <mat-icon
+        *ngIf="task.isFlagged"
+        color="warn"
+      >
+        flag
+      </mat-icon>
+      <app-avatar
+        size="24"
+        class="task-card-user-chip"
+        [name]="task.ownerUsername"
+      >
+      </app-avatar>
+    </div>
 
     <div class="bottom-left">
       <div class="task-scope-id">

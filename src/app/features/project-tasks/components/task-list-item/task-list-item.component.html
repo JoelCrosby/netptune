@@ -1,4 +1,8 @@
-<div class="task-card" [class.task-item-selected]="checked">
+<div
+  class="task-card"
+  [class.task-item-selected]="checked"
+  [class.flagged]="task.isFlagged"
+>
   <div class="task-header">
 
     <div class="task-header-title">
@@ -10,7 +14,7 @@
         [matTooltipShowDelay]="1200"
         [matMenuTriggerFor]="menu"
       >
-        <mat-icon>drag_indicator</mat-icon>
+        <mat-icon class="drag">drag_indicator</mat-icon>
       </button>
       <mat-checkbox color="primary" [(ngModel)]="checked"></mat-checkbox>
       <div class="task-scope-id">
@@ -19,6 +23,13 @@
       <div class="title" (click)="titleClicked()">
         {{ task.name }}
       </div>
+      <mat-icon
+        *ngIf="task.isFlagged"
+        color="warn"
+        class="flag"
+      >
+        flag
+      </mat-icon>
     </div>
 
     <div class="task-footer">
