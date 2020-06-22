@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin project-tasks-component-theme($theme) {
+@mixin project-tasks-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);

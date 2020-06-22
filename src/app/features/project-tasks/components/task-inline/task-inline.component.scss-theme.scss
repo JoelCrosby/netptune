@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin app-task-inline-component-theme($theme) {
+@mixin task-inline-theme($theme) {
 
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);

@@ -25,5 +25,9 @@
     "**/node_modules/**": true
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "tslint.configFile": "./tslint.json"
+  "tslint.configFile": "./tslint.json",
+  "[html]": {
+    "editor.defaultFormatter": "stringham.angular-template-formatter"
+  },
+  "angular-template-formatter.indentWidth": 2,
 }

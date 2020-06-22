@@ -1,0 +1,32 @@
+.card-group {
+  padding: .6rem;
+  border-radius: .4rem;
+}
+
+.project-header-image {
+  background-image: url('assets/apple-touch-icon.png');
+  background-size: cover;
+}
+
+.mat-card > .mat-card-actions:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0;
+}
+
+mat-card-header {
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-chips {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
