@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared/shared.module';
-import { SettingsIndexComponent } from './index/settings.index.component';
+import { SettingsViewComponent } from './views/settings-view/settings-view.component';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { StaticModule } from '@app/static/static.module';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
-  declarations: [SettingsIndexComponent],
+  declarations: [SettingsComponent, SettingsViewComponent],
   imports: [CommonModule, SharedModule, StaticModule, SettingsRoutingModule],
 })
 export class SettingsModule {}

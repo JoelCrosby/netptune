@@ -6,12 +6,12 @@ import { selectSettings } from '@core/settings/settings.selectors';
 import { changeTheme } from '@core/settings/settings.actions';
 
 @Component({
-  selector: 'app-settings-index',
-  templateUrl: './settings.index.component.html',
-  styleUrls: ['./settings.index.component.scss'],
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsIndexComponent implements OnInit {
+export class SettingsComponent implements OnInit {
   settings$: Observable<SettingsState>;
 
   themes = [
