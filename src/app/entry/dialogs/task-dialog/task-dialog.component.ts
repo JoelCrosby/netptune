@@ -35,8 +35,6 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   currentProject$ = this.store.select(ProjectSelectors.selectCurrentProject);
   subs = new Subscription();
 
-  showDescriptionField = false;
-
   selectedTypeValue: number;
 
   get name() {
@@ -85,11 +83,11 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subs.unsubscribe();
   }
 
-  close(): void {
+  close() {
     this.dialogRef.close();
   }
 
@@ -102,8 +100,8 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.currentWorkspace$.subscribe((workspace) => {
         const task: AddProjectTaskRequest = {
-          name: this.name.value,
-          description: this.description.value,
+          name: (this.name.value as string).trim(),
+          description: (this.description.value as string).trim(),
           workspace: workspace.slug,
           projectId: (this.project.value as Project).id,
           assigneeId: undefined,

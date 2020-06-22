@@ -125,7 +125,7 @@ export class BoardGroupTaskInlineComponent
 
   createTask(workspace: Workspace, project: ProjectViewModel, user: User) {
     const task: AddProjectTaskRequest = {
-      name: this.taskInputControl.value,
+      name: (this.taskInputControl.value as string).trim(),
       workspace: workspace.slug,
       projectId: project.id,
       assigneeId: user.userId,

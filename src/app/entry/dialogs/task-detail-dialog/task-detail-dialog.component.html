@@ -21,9 +21,9 @@
     <div class="detail-form">
       <form [formGroup]="projectFromGroup">
 
-        <mat-form-field class="w-100" appearance="outline">
+        <mat-form-field class="w-100" appearance="fill">
           <mat-label>Enter Task Summary</mat-label>
-          <input
+          <textarea
             matInput
             id="name"
             class="form-control"
@@ -31,11 +31,16 @@
             formControlName="nameFormControl"
             name="name"
             required
-          >
+            rows="1"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+          ></textarea>
           <mat-hint>Required</mat-hint>
         </mat-form-field>
 
-        <mat-form-field class="w-100" appearance="outline">
+        <mat-form-field class="w-100" appearance="fill">
           <mat-label>Task Project</mat-label>
           <mat-select
             id="type"
@@ -50,7 +55,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field class="w-100" appearance="outline">
+        <mat-form-field class="w-100" appearance="fill">
           <mat-label>Enter Task Description</mat-label>
           <textarea
             matInput id="description"
@@ -60,6 +65,10 @@
             name="description"
             aria-label="With textarea"
             rows="6"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="6"
+            cdkAutosizeMaxRows="9"
           ></textarea>
         </mat-form-field>
 
