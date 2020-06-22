@@ -2,20 +2,41 @@
 
 <form [formGroup]="inviteFromGroup">
 
-  <mat-form-field class="w-100" appearance="fill">
-    <mat-label>Enter User's Email Address</mat-label>
-    <input matInput id="name" class="form-control" placeholder="Email Address" formControlName="emailFormControl" name="email"
-      required>
-    <mat-hint>Required</mat-hint>
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
+    <mat-label>Email Address</mat-label>
+    <input
+      matInput
+      id="name"
+      class="form-control"
+      placeholder="Enter User's Email Address"
+      formControlName="emailFormControl"
+      name="email"
+      required
+    >
   </mat-form-field>
 
 </form>
 
-
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="close()">Close</button>
+<div
+  mat-dialog-actions
+  align="end"
+>
+  <button
+    mat-stroked-button
+    (click)="close()"
+  >
+    Close
+  </button>
   <div class="mr-2"></div>
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
     Invite User
   </button>
 </div>
