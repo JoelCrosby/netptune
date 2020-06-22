@@ -91,5 +91,12 @@ namespace Netptune.Repositories
                 BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned)
             };
         }
+
+        public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
+        {
+            var taskCount = await Entities.CountAsync(x => x.ProjectId == projectId);
+            
+            return taskCount + 1 + increment;
+        }
     }
 }
