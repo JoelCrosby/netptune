@@ -1,5 +1,5 @@
 .card-group {
-  padding: 2rem;
+  padding: .6rem;
   border-radius: .4rem;
 }
 
@@ -11,6 +11,11 @@
 .mat-card > .mat-card-actions:last-child {
   margin-bottom: 0 !important;
   padding-bottom: 0;
+}
+
+mat-card-header {
+  align-items: center;
+  margin-bottom: .6rem;
 }
 
 mat-card-title {
