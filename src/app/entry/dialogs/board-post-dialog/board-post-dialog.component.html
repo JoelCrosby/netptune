@@ -2,19 +2,41 @@
 
 <form [formGroup]="postFromGroup">
 
-  <mat-form-field class="w-100" appearance="fill">
-    <mat-label>Enter Post Title</mat-label>
-    <input matInput id="name" class="form-control" placeholder="Enter title..." formControlName="titleFormControl" name="title"
-      required>
-    <mat-hint>Required</mat-hint>
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
+    <mat-label>Title</mat-label>
+    <input
+      matInput
+      id="name"
+      class="form-control"
+      placeholder="Enter Post Title"
+      formControlName="titleFormControl"
+      name="title"
+      required
+    >
   </mat-form-field>
 
 </form>
 
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="close()">Close</button>
+<div
+  mat-dialog-actions
+  align="end"
+>
+  <button
+    mat-stroked-button
+    (click)="close()"
+  >
+    Close
+  </button>
   <div class="mr-2"></div>
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
     Save Post
   </button>
 </div>
