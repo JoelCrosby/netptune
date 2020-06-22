@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SettingsIndexComponent } from './index/settings.index.component';
+import { SettingsViewComponent } from './views/settings-view/settings-view.component';
 
-const routes: Routes = [{ path: '**', component: SettingsIndexComponent }];
+const routes: Routes = [{ path: '**', component: SettingsViewComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
