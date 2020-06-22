@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin create-board-group-component-theme($theme) {
+@mixin create-board-group-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);

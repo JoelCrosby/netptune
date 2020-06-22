@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin app-avatar-component-theme($theme) {
+@mixin avatar-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
