@@ -3,6 +3,8 @@ import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-requ
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 import { getTaskStatusFromGroupType } from '@app/core/project-tasks/status-utils';
+import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
+import { BoardGroup } from '@app/core/models/board-group';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
@@ -44,6 +46,28 @@ export const moveTaskInBoardGroup = (
       ...task,
       sortOrder,
       status: getTaskStatusFromGroupType(newGroup.type),
+    };
+  });
+
+  return state;
+};
+
+export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
+  const getGroupWithTask = () => {
+    for (const g of Object.values(state.entities)) {
+      if (g.tasks.findIndex((x) => x.id === task.id) !== -1) {
+        return g;
+      }
+    }
+  };
+
+  const group: BoardGroup = getGroupWithTask();
+
+  group.tasks = group.tasks.map((item) => {
+    if (item.id !== task.id) return item;
+
+    return {
+      ...task,
     };
   });
 

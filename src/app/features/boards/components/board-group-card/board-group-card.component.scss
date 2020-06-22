@@ -24,6 +24,16 @@
   margin-top: .2rem;
   align-items: center;
 
+  .bottom-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    mat-icon {
+      margin-right: .6rem;
+    }
+  }
+
   .bottom-left {
     display: flex;
     flex-direction: row;
