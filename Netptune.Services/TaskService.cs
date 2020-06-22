@@ -1,4 +1,6 @@
-﻿using Netptune.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
@@ -65,11 +67,13 @@ namespace Netptune.Services
 
             var result = await TaskRepository.AddAsync(task);
 
-            var saveTryCount = 4;
+            var saveCounter = 0;
 
-            async Task SaveTask()
+            async Task SaveTask(int increment)
             {
-                var scopeId = await GetNextProjectScopeId(project.Id);
+                if (saveCounter > 4) throw new Exception($"Save Task failed after {saveCounter + 1} attempts.");
+
+                var scopeId = await GetNextProjectScopeId(project.Id, increment);
 
                 if (!scopeId.HasValue) throw new Exception($"Unable to get scope id for project with id {project.Id}.");
 
@@ -78,19 +82,16 @@ namespace Netptune.Services
                 try
                 {
                     await UnitOfWork.CompleteAsync();
-
-                    saveTryCount = 0;
                 }
-                catch (DBConcurrencyException)
+                catch (Exception ex) when (ex is DBConcurrencyException || ex is DbUpdateException)
                 {
-                    saveTryCount--;
+                    saveCounter++;
+
+                    await SaveTask(saveCounter);
                 }
             }
 
-            while (saveTryCount > 0)
-            {
-                await SaveTask();
-            }
+            await SaveTask(saveCounter);
 
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
@@ -99,7 +100,7 @@ namespace Netptune.Services
         {
             var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
 
-            if (largest is null) throw new Exception("Could not determine sort order.");
+            if (largest is null) return 0;
 
             return largest.SortOrder + 1;
         }
@@ -366,9 +367,9 @@ namespace Netptune.Services
             }
         }
 
-        private Task<int?> GetNextProjectScopeId(int projectId)
+        private Task<int?> GetNextProjectScopeId(int projectId, int increment = 0)
         {
-            return UnitOfWork.Projects.GetNextScopeId(projectId);
+            return TaskRepository.GetNextScopeId(projectId, increment);
         }
     }
 }
