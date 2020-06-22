@@ -24,7 +24,7 @@ export const selectBoardGroupEntities = createSelector(
 
 export const selectBoardGroupsLoading = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.loading
+  (state: BoardGroupsState) => state.loading && !state.loaded
 );
 
 export const selectBoardGroupsLoaded = createSelector(

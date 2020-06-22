@@ -70,6 +70,19 @@ export class ProjectTasksEffects {
     )
   );
 
+  loadTaskDetail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadTaskDetails),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([action, workspace]) =>
+        this.projectTasksService.detail(action.systemId, workspace.slug).pipe(
+          map((task) => actions.loadTaskDetailsSuccess({ task })),
+          catchError((error) => of(actions.loadTaskDetailsFail({ error })))
+        )
+      )
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
