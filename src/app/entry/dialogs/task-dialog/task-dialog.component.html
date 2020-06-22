@@ -1,38 +1,93 @@
-<h1 mat-dialog-title>{{ task ? 'Edit Task' : 'Add new Task'}}</h1>
+<h1 mat-dialog-title>
+  {{ task ? 'Edit Task' : 'Add new Task'}}
+</h1>
 
 <form [formGroup]="projectFromGroup">
 
-  <mat-form-field class="w-100" appearance="outline">
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
     <mat-label>Enter Task Summary</mat-label>
-    <textarea matInput id="name" class="form-control" formControlName="nameFormControl" placeholder="What do you need to get done?"
-      name="name" aria-label="With textarea" required></textarea>
-      <mat-hint>Required</mat-hint>
+    <textarea
+      matInput
+      class="form-control"
+      formControlName="nameFormControl"
+      placeholder="What do you need to get done?"
+      name="name"
+      rows="1"
+      required
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="1"
+      cdkAutosizeMaxRows="5"
+    ></textarea>
   </mat-form-field>
 
   <br>
 
-  <mat-form-field class="w-100" appearance="outline">
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
     <mat-label>Task Project</mat-label>
-    <mat-select id="type" name="type" placeholder="Project" formControlName="projectFormControl" (selectionChange)="selectProject()">
+    <mat-select
+      name="type"
+      placeholder="Project"
+      formControlName="projectFormControl"
+      (selectionChange)="selectProject()"
+    >
       <mat-option>None</mat-option>
-      <mat-option *ngFor="let project of projects$ | async" [value]="project">{{ project.name }}</mat-option>
+      <mat-option
+        *ngFor="let project of projects$ | async"
+        [value]="project"
+      >
+        {{ project.name }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
   <br>
 
-  <mat-form-field class="w-100" appearance="outline" *ngIf="showDescriptionField">
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
     <mat-label>Enter Task Description</mat-label>
-    <input matInput id="description" class="form-control" placeholder="Task Summary" formControlName="descriptionFormControl" name="Description">
+    <textarea
+      matInput
+      class="form-control"
+      formControlName="descriptionFormControl"
+      placeholder="Task Summary"
+      rows="3"
+      name="description"
+      required
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="3"
+      cdkAutosizeMaxRows="6"
+    ></textarea>
   </mat-form-field>
 
 </form>
 
-
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="close()">Close</button>
+<div
+  mat-dialog-actions
+  align="end"
+>
+  <button
+    mat-stroked-button
+    (click)="close()"
+  >
+    Close
+  </button>
   <div class="mr-2"></div>
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
     {{ task ? 'Save Changes' : 'Save Task'}}
   </button>
 </div>

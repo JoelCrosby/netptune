@@ -40,4 +40,12 @@
   .cdk-overlay-dark-backdrop {
     background-color: darken(mat-color($primary, .5), 42);
   }
+
+  .mat-form-field-underline {
+    display: none;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 4px !important;
+  }
 }
