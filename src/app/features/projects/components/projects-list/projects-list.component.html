@@ -1,56 +1,64 @@
-<div class="card-group">
-  <mat-card
-    *ngFor="let project of projects$ | async; let i = index; trackBy: trackById"
-    class="project-card"
-  >
-    <mat-card-header>
-      <div
-        mat-card-avatar
-        class="project-header-image"
-      ></div>
-      <mat-card-title>{{ project.name }}</mat-card-title>
-      <mat-card-subtitle>
-        <a
-          [href]="project.repositoryUrl"
-          target="_blank"
-        >
-          {{ project.repositoryUrl }}
-        </a>
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>{{ project.description }}</p>
+<ng-container *ngIf="loading$ | async; else elseTemplate">
+  <div class="projects-loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+</ng-container>
 
-      <div class="card-chips">
-        <mat-chip-list>
-          <mat-chip>Owner {{ project.ownerDisplayName }}</mat-chip>
-          <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
-          <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
-        </mat-chip-list>
+<ng-template #elseTemplate>
+  <div class="card-group">
+    <mat-card
+      *ngFor="let project of projects$ | async; let i = index; trackBy: trackById"
+      class="project-card"
+    >
+      <mat-card-header>
+        <div
+          mat-card-avatar
+          class="project-header-image"
+        ></div>
+        <mat-card-title>{{ project.name }}</mat-card-title>
+        <mat-card-subtitle>
+          <a
+            [href]="project.repositoryUrl"
+            target="_blank"
+          >
+            {{ project.repositoryUrl }}
+          </a>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ project.description }}</p>
 
-        <mat-menu #appMenu="matMenu">
-          <ng-template matMenuContent>
-            <button mat-menu-item>
-              <mat-icon class="material-icons-outlined">edit</mat-icon>
-              <span>Edit Project</span>
-            </button>
-            <button
-              mat-menu-item
-              (click)="deleteClicked(project)"
-            >
-              <mat-icon class="material-icons-outlined">delete</mat-icon>
-              <span>Delete Project</span>
-            </button>
-          </ng-template>
-        </mat-menu>
+        <div class="card-chips">
+          <mat-chip-list>
+            <mat-chip>Owner {{ project.ownerDisplayName }}</mat-chip>
+            <mat-chip>Updated {{ project.updatedAt | date }}</mat-chip>
+            <mat-chip>Created {{ project.createdAt | date }}</mat-chip>
+          </mat-chip-list>
 
-        <button
-          mat-icon-button
-          [matMenuTriggerFor]="appMenu"
-        >
-          <mat-icon>more_vert</mat-icon>
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
+          <mat-menu #appMenu="matMenu">
+            <ng-template matMenuContent>
+              <button mat-menu-item>
+                <mat-icon class="material-icons-outlined">edit</mat-icon>
+                <span>Edit Project</span>
+              </button>
+              <button
+                mat-menu-item
+                (click)="deleteClicked(project)"
+              >
+                <mat-icon class="material-icons-outlined">delete</mat-icon>
+                <span>Delete Project</span>
+              </button>
+            </ng-template>
+          </mat-menu>
+
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="appMenu"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

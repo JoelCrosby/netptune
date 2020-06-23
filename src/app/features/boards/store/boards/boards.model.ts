@@ -5,7 +5,7 @@ import { createEntityAdapter } from '@ngrx/entity';
 export const adapter = createEntityAdapter<Board>();
 
 export const initialState: BoardsState = adapter.getInitialState({
-  loading: false,
+  loading: true,
   loaded: false,
   loadingCreate: false,
 });

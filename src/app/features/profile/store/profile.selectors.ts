@@ -1,6 +1,5 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProfileState } from './profile.model';
-import { AppState } from '@core/core.state';
 
 export const selectProfileFeature = createFeatureSelector<ProfileState>(
   'profile'
@@ -13,7 +12,7 @@ export const selectProfile = createSelector(
 
 export const selectProfileLoading = createSelector(
   selectProfileFeature,
-  (state: ProfileState) => state.loadProfileloading
+  (state: ProfileState) => state.loadProfileloading && !state.profileloaded
 );
 
 export const selectProfileLoaded = createSelector(

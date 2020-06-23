@@ -11,6 +11,6 @@ export interface ProfileState {
 
 export const initialState: ProfileState = {
   profileloaded: false,
-  loadProfileloading: false,
+  loadProfileloading: true,
   updateProfileLoading: false,
 };

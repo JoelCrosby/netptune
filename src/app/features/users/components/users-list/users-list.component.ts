@@ -10,8 +10,9 @@ import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import { loadUsers } from '@users/store/users.actions';
-import { selectAllUsers } from '@users/store/users.selectors';
+import * as UsersSelectors from '@users/store/users.selectors';
 import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
@@ -21,6 +22,7 @@ import { Observable } from 'rxjs';
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
   users$: Observable<AppUser[]>;
+  loading$: Observable<boolean>;
 
   constructor(
     public snackBar: MatSnackBar,
@@ -29,7 +31,10 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.users$ = this.store.pipe(select(selectAllUsers));
+    this.users$ = this.store.pipe(select(UsersSelectors.selectAllUsers));
+    this.loading$ = this.store
+      .select(UsersSelectors.selectUsersLoading)
+      .pipe(startWith(true));
   }
 
   ngAfterViewInit() {

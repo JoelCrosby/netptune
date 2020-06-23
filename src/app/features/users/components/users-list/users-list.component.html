@@ -1,20 +1,31 @@
-<div class="card-group">
-
-  <div class="user-card-group">
-    <mat-card *ngFor="let user of users$ | async; let i=index; trackBy:trackById;">
-      <mat-card-header>
-        <div mat-card-avatar class="user-header-image"></div>
-        <mat-card-title>{{ user | username }}</mat-card-title>
-        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-chip-list>
-          <mat-chip> {{ user.lastLoginTime | date }}</mat-chip>
-          <mat-chip> {{ user.registrationDate | date }}</mat-chip>
-        </mat-chip-list>
-      </mat-card-content>
-    </mat-card>
+<ng-container *ngIf="loading$ | async; else elseTemplate">
+  <div class="users-loading">
+    <mat-spinner diameter="32"></mat-spinner>
   </div>
+</ng-container>
 
-</div>
 
+<ng-template #elseTemplate>
+  <div class="card-group">
+
+    <div class="user-card-group">
+      <mat-card *ngFor="let user of users$ | async as users; let i=index; trackBy:trackById;">
+        <mat-card-header>
+          <div
+            mat-card-avatar
+            class="user-header-image"
+          ></div>
+          <mat-card-title>{{ user | username }}</mat-card-title>
+          <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-chip-list>
+            <mat-chip>{{ user.lastLoginTime | date }}</mat-chip>
+            <mat-chip>{{ user.registrationDate | date }}</mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+</ng-template>

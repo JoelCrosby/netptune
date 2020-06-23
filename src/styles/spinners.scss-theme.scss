@@ -9,18 +9,18 @@
 
   @keyframes typing {
     0% {
-      background-color: rgba(255, 255, 255, 1);
-      box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 rgba(255, 255, 255, .2);
+      background-color: mat-color($background, background);
+      box-shadow: 12px 0 0 0 mat-color($primary, .2), 24px 0 0 0 mat-color($primary, .2);
     }
 
     25% {
-      background-color: rgba(255, 255, 255, .4);
-      box-shadow: 12px 0 0 0 rgba(255, 255, 255, 2), 24px 0 0 0 rgba(255, 255, 255, .2);
+      background-color: mat-color($primary, .4);
+      box-shadow: 12px 0 0 0 mat-color($primary, 2), 24px 0 0 0 mat-color($primary, .2);
     }
 
     75% {
-      background-color: rgba(255, 255, 255, .4);
-      box-shadow: 12px 0 0 0 rgba(255, 255, 255, .2), 24px 0 0 0 rgba(255, 255, 255, 1);
+      background-color: mat-color($primary, .4);
+      box-shadow: 12px 0 0 0 mat-color($primary, .2), 24px 0 0 0 mat-color($background, background);
     }
   }
 }

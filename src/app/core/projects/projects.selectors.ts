@@ -16,7 +16,7 @@ export const selectProjectsEntities = createSelector(
 
 export const selectProjectsLoading = createSelector(
   selectProjectsFeature,
-  (state: ProjectsState) => state.loading
+  (state: ProjectsState) => state.loading && !state.loaded
 );
 
 export const selectProjectsLoaded = createSelector(

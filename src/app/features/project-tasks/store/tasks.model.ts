@@ -7,7 +7,7 @@ import { ProjectTask as TaskModel } from '@app/core/models/project-task';
 export const adapter = createEntityAdapter<TaskViewModel>();
 
 export const initialState: TasksState = adapter.getInitialState({
-  loading: false,
+  loading: true,
   loaded: false,
   loadingCreate: false,
   loadingNewTask: false,

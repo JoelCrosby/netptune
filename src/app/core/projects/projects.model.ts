@@ -5,7 +5,7 @@ import { createEntityAdapter } from '@ngrx/entity';
 export const adapter = createEntityAdapter<ProjectViewModel>();
 
 export const initialState: ProjectsState = adapter.getInitialState({
-  loading: false,
+  loading: true,
   loaded: false,
   loadingCreate: false,
   currentProject: undefined,
