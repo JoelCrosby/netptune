@@ -8,7 +8,6 @@ import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 import { ProjectTasksEffects } from './store/tasks.effects';
 import { projectTasksReducer } from './store/tasks.reducer';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
-import { TaskDetailComponent } from './components/task-detail/task-detail.component';
 import { StaticModule } from '@app/static/static.module';
 import { TaskInlineComponent } from './components/task-inline/task-inline.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -18,7 +17,6 @@ import { TaskListComponent } from './components/task-list/task-list.component';
     ProjectTasksViewComponent,
     TaskListGroupComponent,
     TaskListItemComponent,
-    TaskDetailComponent,
     TaskInlineComponent,
     TaskListComponent,
   ],

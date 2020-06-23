@@ -11,7 +11,7 @@ export const adapter = createEntityAdapter<BoardGroup>({
 });
 
 export const initialState: BoardGroupsState = adapter.getInitialState({
-  loading: false,
+  loading: true,
   loaded: false,
   loadingCreate: false,
   isDragging: false,

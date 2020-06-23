@@ -16,7 +16,7 @@ export const selectWorkspacesEntities = createSelector(
 
 export const selectWorkspacesLoading = createSelector(
   selectWorkspacesFeature,
-  (state: WorkspacesState) => state.loading
+  (state: WorkspacesState) => state.loading && !state.loaded
 );
 
 export const selectWorkspacesLoaded = createSelector(

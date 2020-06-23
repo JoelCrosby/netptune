@@ -17,7 +17,7 @@ export const selectAllUsers = createSelector(selectUsers, selectAll);
 
 export const selectUsersLoading = createSelector(
   selectUsersFeature,
-  (state: UsersState) => state.loading
+  (state: UsersState) => state.loading && !state.loaded
 );
 
 export const selectUsersLoaded = createSelector(

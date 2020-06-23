@@ -40,7 +40,7 @@ export const selectTasksBacklog = createSelector(selectTasks, (tasks) =>
 
 export const selectTasksLoading = createSelector(
   selectTasksFeature,
-  (state: TasksState) => state.loading
+  (state: TasksState) => state.loading && !state.loaded
 );
 
 export const selectTasksLoaded = createSelector(
