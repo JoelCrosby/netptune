@@ -96,52 +96,6 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        private static double GetSortOrder(IEnumerable<ProjectTask> projectTasks)
-        {
-            var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
-
-            if (largest is null) return 0;
-
-            return largest.SortOrder + 1;
-        }
-
-        private async Task AddTaskToBoardGroup(int boardId, ProjectTask task, double sortOrder)
-        {
-            var boardGroup = await UnitOfWork.BoardGroups.GetAsync(boardId);
-
-            if (boardGroup is null) throw new Exception($"BoardGroup with id of {boardId} does not exist.");
-
-            task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
-
-            boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
-            {
-                SortOrder = sortOrder,
-                BoardGroup = boardGroup,
-                ProjectTask = task
-            });
-        }
-
-        private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
-        {
-            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
-
-            if (defaultBoard is null)
-            {
-                throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
-            }
-
-            var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
-
-            var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
-
-            boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
-            {
-                SortOrder = sortOrder,
-                BoardGroup = boardGroup,
-                ProjectTask = task
-            });
-        }
-
         public async Task<TaskViewModel> DeleteTask(int id)
         {
             var task = await TaskRepository.GetAsync(id);
@@ -240,6 +194,52 @@ namespace Netptune.Services
                 BoardGroupId = group.Id,
                 ProjectTaskId = projectTask.Id,
                 SortOrder = sortOrder,
+            });
+        }
+
+        private static double GetSortOrder(IEnumerable<ProjectTask> projectTasks)
+        {
+            var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
+
+            if (largest is null) return 0;
+
+            return largest.SortOrder + 1;
+        }
+
+        private async Task AddTaskToBoardGroup(int boardId, ProjectTask task, double sortOrder)
+        {
+            var boardGroup = await UnitOfWork.BoardGroups.GetAsync(boardId);
+
+            if (boardGroup is null) throw new Exception($"BoardGroup with id of {boardId} does not exist.");
+
+            task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
+
+            boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            {
+                SortOrder = sortOrder,
+                BoardGroup = boardGroup,
+                ProjectTask = task
+            });
+        }
+
+        private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
+        {
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
+
+            if (defaultBoard is null)
+            {
+                throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
+            }
+
+            var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
+
+            var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
+
+            boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+            {
+                SortOrder = sortOrder,
+                BoardGroup = boardGroup,
+                ProjectTask = task
             });
         }
 

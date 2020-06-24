@@ -14,6 +14,7 @@ namespace Netptune.Services.Configuration
             services.AddTransient<IWorkspaceService, WorkspaceService>();
             services.AddTransient<IBoardService, BoardService>();
             services.AddTransient<IBoardGroupService, BoardGroupService>();
+            services.AddTransient<ICommentService, CommentService>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<IIdentityService, IdentityService>();

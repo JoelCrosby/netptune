@@ -11,6 +11,10 @@ namespace Netptune.Core.Repositories
     {
         Task<TaskViewModel> GetTaskViewModel(int id);
 
+        Task<ProjectTask> GetTask(string systemId, string workspaceSlug);
+
+        Task<int> GetTaskInternalId(string systemId, string workspaceSlug);
+
         Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug);
 
         Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false);

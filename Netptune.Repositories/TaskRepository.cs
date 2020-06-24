@@ -34,7 +34,30 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<int> GetTaskInternalId(string systemId, string workspaceSlug)
+        {
+            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+
+            return await entity.Select(x => x.Id).FirstOrDefaultAsync();
+        }
+
+        public async Task<ProjectTask> GetTask(string systemId, string workspaceSlug)
+        {
+            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+
+            return await entity.FirstOrDefaultAsync();
+        }
+
         public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug)
+        {
+            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+
+            return await entity
+                .Select(task => task.ToViewModel())
+                .FirstOrDefaultAsync();
+        }
+
+        private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceSlug, bool isReadonly = false)
         {
             var parts = systemId.Split("-");
 
@@ -44,24 +67,26 @@ namespace Netptune.Repositories
 
             var projectKey = parts.First();
 
-            var workspace = await Context.Workspaces.FirstOrDefaultAsync(x => x.Slug == workspaceSlug);
+            var workspace = await Context.Workspaces
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Slug == workspaceSlug);
 
             if (workspace is null) return null;
 
             var project = await Context.Projects
-                    .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspace.Id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspace.Id);
 
             if (project is null) return null;
 
-            return await Entities
+            var queryable = Entities
                 .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspace.Id && x.ProjectId == project.Id)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
-                .Include(x => x.Owner)
-                .AsNoTracking()
-                .Select(task => task.ToViewModel())
-                .FirstOrDefaultAsync();
+                .Include(x => x.Owner);
+                
+            return isReadonly ? queryable.AsNoTracking() : queryable;
         }
 
         public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false)
