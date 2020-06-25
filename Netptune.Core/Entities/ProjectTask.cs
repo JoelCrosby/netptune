@@ -66,6 +66,7 @@ namespace Netptune.Core.Entities
                 SortOrder = SortOrder,
                 ProjectId = ProjectId,
                 WorkspaceId = WorkspaceId,
+                WorkspaceSlug = Workspace.Slug,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
                 AssigneeUsername = Assignee == null ? string.Empty : Assignee.GetDisplayName(),

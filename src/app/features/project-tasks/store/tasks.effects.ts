@@ -14,7 +14,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
-import { selectWorkspace } from '../../../core/workspaces/workspaces.actions';
+import { selectWorkspace } from '@core/workspaces/workspaces.actions';
 
 @Injectable()
 export class ProjectTasksEffects {

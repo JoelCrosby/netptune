@@ -30,6 +30,8 @@ namespace Netptune.Core.ViewModels.ProjectTasks
 
         public int? WorkspaceId { get; set; }
 
+        public string WorkspaceSlug { get; set; }
+
         public DateTimeOffset CreatedAt { get; set; }
 
         public DateTimeOffset? UpdatedAt { get; set; }

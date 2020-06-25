@@ -38,7 +38,11 @@ namespace Netptune.Repositories
 
                 .Include(group => group.TasksInGroups)
                     .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Project);
+                        .ThenInclude(task => task.Project)
+
+                .Include(group => group.TasksInGroups)
+                    .ThenInclude(relational => relational.ProjectTask)
+                        .ThenInclude(task => task.Workspace);
 
             return query.ApplyReadonly(isReadonly);
         }

@@ -13,11 +13,11 @@ namespace Netptune.App.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CommentController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly ICommentService CommentService;
 
-        public CommentController(ICommentService commentService)
+        public CommentsController(ICommentService commentService)
         {
             CommentService = commentService;
         }
@@ -37,7 +37,7 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // GET: api/comment/taskId?workspace=workspaceSlug
+        // GET: api/comments/taskId?workspace=workspaceSlug
         [HttpGet("{systemId}")]
         [Route("task")]
         [ProducesResponseType(StatusCodes.Status200OK)]

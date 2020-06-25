@@ -6,4 +6,5 @@ export interface TaskViewModel extends ProjectTask {
   assigneePictureUrl: string;
   projectName: string;
   systemId: string;
+  workspaceSlug: string;
 }
