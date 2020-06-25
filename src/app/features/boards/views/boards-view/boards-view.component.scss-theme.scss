@@ -20,14 +20,15 @@
 
     .title {
       color: mat-color($foreground, text, .6);
+
+      .title-input:hover,
+      .title-input.edit-active {
+        background-color: mat-color($primary, .06);
+      }
     }
 
-    button,
+    .delete-board-group-btn
     .mat-icon {
-      height: 16px;
-      width: 16px;
-      line-height: 16px;
-      align-self: flex-end;
       color: mat-color($foreground, icon, .4);
     }
   }

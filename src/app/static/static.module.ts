@@ -8,6 +8,7 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { AvatarPipe } from './pipes/avatar.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { InlineEditInputComponent } from './components/inline-edit-input/inline-edit-input.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     AvatarPipe,
     SpinnerComponent,
     PageHeaderComponent,
+    InlineEditInputComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -26,6 +28,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     AvatarPipe,
     SpinnerComponent,
     PageHeaderComponent,
+    InlineEditInputComponent,
   ],
 })
 export class StaticModule {}
