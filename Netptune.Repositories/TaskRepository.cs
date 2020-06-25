@@ -29,6 +29,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
+                .Include(x => x.Workspace)
                 .AsNoTracking()
                 .Select(task => task.ToViewModel())
                 .FirstOrDefaultAsync();
@@ -84,7 +85,8 @@ namespace Netptune.Repositories
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
-                .Include(x => x.Owner);
+                .Include(x => x.Owner)
+                .Include(x => x.Workspace);
                 
             return isReadonly ? queryable.AsNoTracking() : queryable;
         }
@@ -97,6 +99,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
+                .Include(x => x.Workspace)
                 .Select(task => task.ToViewModel())
                 .ApplyReadonly(isReadonly);
         }
