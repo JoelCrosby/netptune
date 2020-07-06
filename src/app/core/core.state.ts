@@ -12,14 +12,14 @@ import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { SettingsState } from './settings/settings.model';
-import { settingsReducer } from './settings/settings.reducer';
-import { CoreState } from './state/core.model';
-import { coreReducer } from './state/core.reducer';
-import { WorkspacesState } from './workspaces/workspaces.model';
-import { workspacesReducer } from './workspaces/workspaces.reducer';
-import { ProjectsState } from './projects/projects.model';
-import { projectsReducer } from './projects/projects.reducer';
+import { SettingsState } from './store/settings/settings.model';
+import { settingsReducer } from './store/settings/settings.reducer';
+import { CoreState } from './store/core/core.model';
+import { coreReducer } from './store/core/core.reducer';
+import { WorkspacesState } from './store/workspaces/workspaces.model';
+import { workspacesReducer } from './store/workspaces/workspaces.reducer';
+import { ProjectsState } from './store/projects/projects.model';
+import { projectsReducer } from './store/projects/projects.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,

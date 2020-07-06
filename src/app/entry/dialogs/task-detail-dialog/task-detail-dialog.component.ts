@@ -3,26 +3,31 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
+  OnDestroy,
   OnInit,
   Optional,
-  OnDestroy,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
+import { TaskStatus } from '@core/enums/project-task-status';
+import { Comment } from '@core/models/comment';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import * as ProjectActions from '@core/projects/projects.actions';
-import * as ProjectSelectors from '@core/projects/projects.selectors';
+import * as ProjectActions from '@core/store/projects/projects.actions';
+import * as ProjectSelectors from '@core/store/projects/projects.selectors';
+import { Store } from '@ngrx/store';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
 import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
-import { Store } from '@ngrx/store';
-import { Observable, from, concat, combineLatest } from 'rxjs';
-import { tap, first, withLatestFrom, map, filter } from 'rxjs/operators';
-import { TaskStatus } from '@core/enums/project-task-status';
-import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
-import { Workspace } from '@core/models/workspace';
-import { Comment } from '@core/models/comment';
+import { Observable, Subject } from 'rxjs';
+import {
+  first,
+  tap,
+  withLatestFrom,
+  takeUntil,
+  debounceTime,
+  filter,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -38,6 +43,8 @@ export class TaskDetailDialogComponent
 
   selectedTypeValue: number;
 
+  onDestroy$ = new Subject();
+
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
@@ -46,11 +53,24 @@ export class TaskDetailDialogComponent
 
   projectFromGroup: FormGroup;
 
-  ngOnInit() {
-    this.task$ = this.store.select(TaskSelectors.selectDetailTask).pipe(
-      tap((task) => {
-        if (!task) return;
+  get name() {
+    return this.projectFromGroup.get('name');
+  }
 
+  get project() {
+    return this.projectFromGroup.get('project');
+  }
+
+  get description() {
+    return this.projectFromGroup.get('description');
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit');
+
+    this.task$ = this.store.select(TaskSelectors.selectDetailTask).pipe(
+      filter((task) => !!task),
+      tap((task) => {
         this.buildForm(task);
         this.loadComments(task);
       })
@@ -69,28 +89,77 @@ export class TaskDetailDialogComponent
 
   buildForm(task: TaskViewModel) {
     this.projectFromGroup = new FormGroup({
-      nameFormControl: new FormControl(task?.name, [
-        Validators.required,
-        Validators.minLength(4),
-      ]),
-      projectFormControl: new FormControl(task?.projectId),
-      descriptionFormControl: new FormControl(task?.description),
+      name: new FormControl(task?.name, {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.minLength(4)],
+      }),
+      project: new FormControl(task?.projectId, {
+        updateOn: 'blur',
+        validators: [Validators.required],
+      }),
+      description: new FormControl(task?.description, {
+        updateOn: 'blur',
+        validators: [],
+      }),
     });
+
+    this.monitorInputs(task);
   }
 
-  loadComments(task: TaskViewModel) {
-    const options = {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiam9lbGNyb3NieUBsaXZlLmNvLnVrIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJkZTFhNDE0My05M2M5LTQzZTEtOGMwMy05MGVlNWFkODBmZWQiLCJleHAiOjE1OTMyOTIxMTksImlzcyI6Ik5ldHB0dW5lLmNvbSIsImF1ZCI6Ik5ldHB0dW5lLmNvbSJ9.F8c2knl6sn4QnuIIlVZGtz2te2-OakrUHEb82Pj55pY',
-      },
-    };
+  monitorInputs(task: TaskViewModel) {
+    this.name.valueChanges
+      .pipe(
+        takeUntil(this.onDestroy$),
+        debounceTime(300),
+        tap((name) => {
+          const updated: TaskViewModel = {
+            ...task,
+            name,
+          };
 
-    this.comments$ = from(
-      fetch(
-        `/api/comments/${task.systemId}?workspace=${task.workspaceSlug}`,
-        options
-      ).then((res) => res.json())
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
+
+    this.project.valueChanges
+      .pipe(
+        takeUntil(this.onDestroy$),
+        debounceTime(300),
+        tap((projectId) => {
+          const updated: TaskViewModel = {
+            ...task,
+            projectId,
+          };
+
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
+
+    this.description.valueChanges
+      .pipe(
+        takeUntil(this.onDestroy$),
+        debounceTime(300),
+        tap((description) => {
+          const updated: TaskViewModel = {
+            ...task,
+            description,
+          };
+
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
+  }
+
+  loadComments(task: TaskViewModel) {}
+
+  updateTask(task: TaskViewModel) {
+    this.store.dispatch(
+      TaskActions.editProjectTask({
+        task,
+      })
     );
   }
 
@@ -100,6 +169,8 @@ export class TaskDetailDialogComponent
 
   ngOnDestroy() {
     this.store.dispatch(TaskActions.clearTaskDetail());
+    this.onDestroy$.complete();
+    this.onDestroy$.unsubscribe();
   }
 
   getTaskStatus(status: TaskStatus) {

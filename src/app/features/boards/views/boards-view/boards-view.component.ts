@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
-import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 import * as BoardActions from '@boards/store/boards/boards.actions';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';

@@ -16,6 +16,9 @@
       font-size: 14px;
       cursor: pointer;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
     }
 
     .input-group-prepend {
@@ -46,6 +49,24 @@
       margin-top: auto;
       margin-bottom: auto;
       align-items: center;
+      flex: 1;
+      overflow: hidden;
+
+      .task-action {
+        flex: 0 0 40px;
+      }
+
+      .task-scope-id {
+        flex: 0 0 40px;
+      }
+
+      .task-checkbox {
+        flex: 0 0 16px;
+      }
+
+      .flag {
+        flex: 0;
+      }
 
       .mat-checkbox {
         margin: auto;
@@ -57,6 +78,7 @@
       flex-direction: row;
       align-items: center;
       justify-content: flex-end;
+      flex: 0 0 160px;
 
       .task-complete {
         margin: 0 .8rem;

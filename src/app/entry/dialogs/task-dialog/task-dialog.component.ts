@@ -13,12 +13,12 @@ import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
-import { selectProject } from '@core/state/core.actions';
+import { selectProject } from '@core/store/core/core.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import * as WorkspaceSelectors from '@app/core/workspaces/workspaces.selectors';
-import * as ProjectSelectors from '@app/core/projects/projects.selectors';
-import { loadProjects } from '@app/core/projects/projects.actions';
+import * as WorkspaceSelectors from '@core/store/workspaces/workspaces.selectors';
+import * as ProjectSelectors from '@core/store/projects/projects.selectors';
+import { loadProjects } from '@core/store/projects/projects.actions';
 
 @Component({
   selector: 'app-task-dialog',

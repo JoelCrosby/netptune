@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
+import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -14,7 +14,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
-import { selectWorkspace } from '@core/workspaces/workspaces.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 
 @Injectable()
 export class ProjectTasksEffects {

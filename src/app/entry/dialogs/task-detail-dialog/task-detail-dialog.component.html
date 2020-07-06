@@ -28,7 +28,7 @@
             id="name"
             class="form-control"
             placeholder="Enter Task Summary"
-            formControlName="nameFormControl"
+            formControlName="name"
             name="name"
             required
             rows="1"
@@ -45,9 +45,8 @@
             id="type"
             name="type"
             placeholder="Task Project"
-            formControlName="projectFormControl"
+            formControlName="project"
           >
-            <mat-option>None</mat-option>
             <mat-option *ngFor="let project of projects$ | async" [value]="project.id">
               {{ project.name }}
             </mat-option>
@@ -59,7 +58,7 @@
           <textarea
             matInput id="description"
             class="form-control"
-            formControlName="descriptionFormControl"
+            formControlName="description"
             placeholder="Enter Task Description"
             name="description"
             aria-label="With textarea"

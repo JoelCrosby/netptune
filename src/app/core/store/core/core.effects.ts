@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { tap, withLatestFrom } from 'rxjs/operators';
-import { AppState, selectCoreState } from '../core.state';
-import { LocalStorageService } from '../local-storage/local-storage.service';
+import { AppState, selectCoreState } from '@core/core.state';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import * as actions from './core.actions';
 
 export const CORE_KEY = 'CORE';

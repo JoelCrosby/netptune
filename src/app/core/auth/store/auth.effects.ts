@@ -1,9 +1,10 @@
-import { User } from './auth.models';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppState } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
-import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
-import { Action, Store, select } from '@ngrx/store';
+import { clearSttings } from '@core/store/settings/settings.actions';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Action, select, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
@@ -15,9 +16,8 @@ import {
 } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
-import { AppState } from '@core/core.state';
+import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
-import { clearSttings } from '@app/core/settings/settings.actions';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -62,11 +62,11 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(actions.tryLogin),
         debounceTime(debounce, scheduler),
-        switchMap(action =>
+        switchMap((action) =>
           this.authService.login(action.request).pipe(
             map((userInfo: User) => actions.loginSuccess({ userInfo })),
             tap(() => this.router.navigate(['/workspaces'])),
-            catchError(error => of(actions.loginFail({ error })))
+            catchError((error) => of(actions.loginFail({ error })))
           )
         )
       )
@@ -77,11 +77,11 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(actions.register),
         debounceTime(debounce, scheduler),
-        switchMap(action =>
+        switchMap((action) =>
           this.authService.register(action.request).pipe(
             map((userInfo: User) => actions.registerSuccess({ userInfo })),
             tap(() => this.router.navigate(['/workspaces'])),
-            catchError(error => of(actions.registerFail({ error })))
+            catchError((error) => of(actions.registerFail({ error })))
           )
         )
       )

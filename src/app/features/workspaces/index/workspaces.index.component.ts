@@ -6,8 +6,8 @@ import { dropIn } from '@core/animations/animations';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { TextHelpers } from '@core/util/text-helpers';
-import * as WorkspaceActions from '@core/workspaces/workspaces.actions';
-import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
+import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
+import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({
