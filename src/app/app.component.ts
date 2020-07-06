@@ -1,4 +1,4 @@
-import { loadWorkspaces } from '@core/workspaces/workspaces.actions';
+import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
-import { selectAllWorkspaces } from '@core/workspaces/workspaces.selectors';
+import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';

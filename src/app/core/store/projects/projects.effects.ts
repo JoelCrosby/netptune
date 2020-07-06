@@ -1,7 +1,7 @@
-import { selectCurrentProject } from '@core/projects/projects.selectors';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { Injectable } from '@angular/core';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
+import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';

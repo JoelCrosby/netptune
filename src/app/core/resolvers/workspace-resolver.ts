@@ -1,10 +1,10 @@
-import { loadProjects } from '@app/core/projects/projects.actions';
+import { loadProjects } from '@core/store/projects/projects.actions';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
-import { selectWorkspace } from '@core/workspaces/workspaces.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -24,7 +24,7 @@ export class WorkspaceResolver implements Resolve<Workspace> {
         environment.apiEndpoint + `api/workspaces/${workspaceSlug}`
       )
       .pipe(
-        tap(workspace => {
+        tap((workspace) => {
           this.store.dispatch(selectWorkspace({ workspace }));
           this.store.dispatch(loadProjects());
         })

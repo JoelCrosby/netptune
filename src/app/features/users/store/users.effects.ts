@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AppState } from '@core/core.state';
-import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
+import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
-import { selectWorkspace } from '@core/workspaces/workspaces.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 
 @Injectable()
 export class UsersEffects {

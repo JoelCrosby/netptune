@@ -13,7 +13,7 @@ import { AppState, selectPageTitle } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { loadProjects } from '@app/core/projects/projects.actions';
+import { loadProjects } from '@core/store/projects/projects.actions';
 
 @Component({
   templateUrl: './shell.component.html',

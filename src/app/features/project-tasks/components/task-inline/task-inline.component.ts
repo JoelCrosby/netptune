@@ -16,7 +16,7 @@ import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Workspace } from '@core/models/workspace';
-import { SelectCurrentWorkspace } from '@core/workspaces/workspaces.selectors';
+import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import {
   combineLatest,
@@ -35,7 +35,7 @@ import {
 import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
 import { User } from '@core/auth/store/auth.models';
-import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 
 @Component({
   selector: 'app-task-inline',

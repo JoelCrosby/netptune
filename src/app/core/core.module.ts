@@ -1,4 +1,4 @@
-import { ProjectsEffects } from './projects/projects.effects';
+import { ProjectsEffects } from './store/projects/projects.effects';
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -15,9 +15,9 @@ import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthEffects } from './auth/store/auth.effects';
 import { metaReducers, reducers } from './core.state';
 import { CustomSerializer } from './router/custom-serializer';
-import { SettingsEffects } from './settings/settings.effects';
-import { CoreEffects } from './state/core.effects';
-import { WorkspacesEffects } from './workspaces/workspaces.effects';
+import { SettingsEffects } from './store/settings/settings.effects';
+import { CoreEffects } from './store/core/core.effects';
+import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { EntryModule } from '../entry/entry.module';
 
 @NgModule({

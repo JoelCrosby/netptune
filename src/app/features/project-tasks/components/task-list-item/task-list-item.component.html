@@ -6,6 +6,7 @@
 
     <div class="task-header-title">
       <button
+        class="task-action"
         cdkDragHandle
         mat-icon-button
         aria-label="more"
@@ -15,13 +16,21 @@
       >
         <mat-icon class="drag">drag_indicator</mat-icon>
       </button>
-      <mat-checkbox color="primary"></mat-checkbox>
+
+      <mat-checkbox
+        class="task-checkbox"
+        color="primary"
+      >
+      </mat-checkbox>
+
       <div class="task-scope-id">
         {{ task.systemId }}
       </div>
+
       <div class="title" (click)="titleClicked()">
         {{ task.name }}
       </div>
+
       <mat-icon
         *ngIf="task.isFlagged"
         color="warn"

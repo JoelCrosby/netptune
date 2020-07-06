@@ -24,8 +24,8 @@ import { ProjectViewModel } from '@app/core/models/view-models/project-view-mode
 import { Workspace } from '@app/core/models/workspace';
 import { User } from '@app/core/auth/store/auth.models';
 import { select, Store, Action } from '@ngrx/store';
-import { SelectCurrentWorkspace } from '@app/core/workspaces/workspaces.selectors';
-import { selectCurrentProject } from '@app/core/projects/projects.selectors';
+import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
 import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { AppState } from '@app/core/core.state';

@@ -7,6 +7,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  // Material Cards
+
   .mat-card:not([class*='mat-elevation-z']) {
     background-color: mat-color($background, card) !important;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
@@ -20,6 +22,8 @@
   .mat-card.flagged:not([class*='mat-elevation-z']):hover {
     background-color: mat-color($warn, .24) !important;
   }
+
+  // Custom Scrollbars
 
   .custom-scroll::-webkit-scrollbar {
     width: 18px;
@@ -37,9 +41,13 @@
     background-clip: padding-box;
   }
 
+  // Modal Backdrops
+
   .cdk-overlay-dark-backdrop {
     background-color: darken(mat-color($primary, .5), 42);
   }
+
+  // Form Fileds
 
   .mat-form-field-underline {
     display: none;
@@ -47,5 +55,11 @@
 
   .mat-form-field-appearance-fill .mat-form-field-flex {
     border-radius: 4px !important;
+  }
+
+  // tooltips
+
+  .mat-tooltip {
+    background-color: invert(mat-color($background, card));
   }
 }

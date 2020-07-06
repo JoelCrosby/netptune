@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { SettingsState } from '@core/settings/settings.model';
-import { selectSettings } from '@core/settings/settings.selectors';
-import { changeTheme } from '@core/settings/settings.actions';
+import { SettingsState } from '@core/store/settings/settings.model';
+import { selectSettings } from '@core/store/settings/settings.selectors';
+import { changeTheme } from '@core/store/settings/settings.actions';
 
 @Component({
   selector: 'app-settings',

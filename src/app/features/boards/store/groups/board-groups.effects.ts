@@ -16,7 +16,7 @@ import {
 import * as actions from './board-groups.actions';
 import * as ProjectTaskActions from '@project-tasks/store/tasks.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { selectWorkspace } from '@core/workspaces/workspaces.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 
 @Injectable()
 export class BoardGroupsEffects {

@@ -11,6 +11,10 @@
 
   h1 {
     font-weight: 400;
+    white-space: nowrap;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .task-scope-id {
@@ -19,6 +23,7 @@
     height: 1rem;
     font-size: 14px;
     margin-left: auto;
+    white-space: nowrap;
   }
 }
 
@@ -48,11 +53,19 @@
 
         mat-chip {
           margin: .2rem 0 1rem;
+          min-height: 24px !important;
         }
       }
     }
 
     .bottom-row {
+      h4 {
+        font-weight: 500;
+        font-size: 14px;
+        letter-spacing: .125px;
+        margin: 1rem 0 .4rem;
+      }
+
       .actions-row {
         display: flex;
         flex-direction: row;
@@ -64,7 +77,7 @@
 }
 
 .task-detail-loading {
-  height: 460px;
+  height: 516px;
   display: flex;
   flex-direction: column;
   justify-content: center;
