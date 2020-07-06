@@ -29,7 +29,13 @@
       >
         <span class="board-group-header" cdkDragHandle>
           <div class="title">
-            <app-inline-edit-input class="title-input" [value]="group.name"></app-inline-edit-input>
+            <app-inline-edit-input
+              class="title-input"
+              [value]="group.name"
+              (submitted)="onGroupNameSubmitted($event, group)"
+            >
+            </app-inline-edit-input>
+
             <span>{{ group.tasks.length }}</span>
           </div>
           <button mat-icon-button class="delete-board-group-btn" (click)="onDeleteGroupClicked(group)">

@@ -5,7 +5,7 @@
       type="text"
       class="inline-edit-input"
       [formControl]="control"
-      (keydown.enter)="onSubmit()"
+      (keydown.enter)="onSubmit(input.value)"
     >
   </ng-container>
 

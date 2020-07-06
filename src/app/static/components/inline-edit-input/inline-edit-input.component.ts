@@ -14,7 +14,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { DocumentService } from '@app/static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, first, tap } from 'rxjs/operators';
+import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-inline-edit-input',
@@ -28,7 +28,9 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   @HostBinding('class.edit-active') editActiveClass: boolean;
   @Output() submitted = new EventEmitter<string>();
 
-  control = new FormControl();
+  control = new FormControl('', {
+    updateOn: 'blur',
+  });
 
   isEditActiveSubject = new BehaviorSubject<boolean>(false);
   isEditActive$ = this.isEditActiveSubject.pipe(
@@ -47,6 +49,13 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
     this.document.documentClicked().subscribe({
       next: this.handleDocumentClick.bind(this),
     });
+
+    this.control.valueChanges
+      .pipe(
+        takeUntil(this.onDestroy$),
+        tap((value) => this.onSubmit(value))
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {
@@ -80,7 +89,8 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit() {
-    this.submitted.emit(this.control.value);
+  onSubmit(value: string) {
+    this.submitted.emit(value);
+    this.isEditActiveSubject.next(false);
   }
 }

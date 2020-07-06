@@ -145,4 +145,15 @@ export class BoardsViewComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
+  onGroupNameSubmitted(value: any, group: BoardGroup) {
+    if (value instanceof Event) return;
+
+    const boardGroup = {
+      ...group,
+      name: value,
+    };
+
+    this.store.dispatch(GroupActions.editBoardGroup({ boardGroup }));
+  }
 }
