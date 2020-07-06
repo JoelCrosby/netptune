@@ -3,6 +3,8 @@ import * as actions from './board-groups.actions';
 import * as TaskActions from '@project-tasks/store/tasks.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
+import { BoardGroup } from '@app/core/models/board-group';
+import { Update } from '@ngrx/entity';
 
 const reducer = createReducer(
   initialState,
@@ -30,6 +32,14 @@ const reducer = createReducer(
     ...state,
     currentBoardGroup: boardGroup,
   })),
+  on(actions.editBoardGroup, (state, { boardGroup }) => {
+    const update: Update<BoardGroup> = {
+      id: boardGroup.id,
+      changes: boardGroup,
+    };
+
+    return adapter.updateOne(update, state);
+  }),
   on(actions.deleteBoardGroup, (state) => ({
     ...state,
     deleteState: { loading: true },
