@@ -1,0 +1,42 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@app/*": ["app/*"],
+      "@core/*": ["app/core/*"],
+      "@entry/*": ["app/entry/*"],
+      "@auth/*": ["app/features/auth/*"],
+      "@boards/*": ["app/features/boards/*"],
+      "@profile/*": ["app/features/profile/*"],
+      "@project-tasks/*": ["app/features/project-tasks/*"],
+      "@projects/*": ["app/features/projects/*"],
+      "@settings/*": ["app/features/settings/*"],
+      "@users/*": ["app/features/users/*"],
+      "@workspaces/*": ["app/features/workspaces/*"],
+      "@shared/*": ["app/shared/*"],
+      "@env/*": ["environments/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

@@ -1,42 +1,14 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "src",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "emitDecoratorMetadata": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "paths": {
-      "@app/*": ["app/*"],
-      "@core/*": ["app/core/*"],
-      "@entry/*": ["app/entry/*"],
-      "@auth/*": ["app/features/auth/*"],
-      "@boards/*": ["app/features/boards/*"],
-      "@profile/*": ["app/features/profile/*"],
-      "@project-tasks/*": ["app/features/project-tasks/*"],
-      "@projects/*": ["app/features/projects/*"],
-      "@settings/*": ["app/features/settings/*"],
-      "@users/*": ["app/features/users/*"],
-      "@workspaces/*": ["app/features/workspaces/*"],
-      "@shared/*": ["app/shared/*"],
-      "@env/*": ["environments/*"]
+  "files": [],
+  "references": [
+    {
+      "path": "./src/tsconfig.app.json"
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
-  }
+  ]
 }
