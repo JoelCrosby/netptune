@@ -101,7 +101,11 @@ import {
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { floatLabel: 'always', hideRequiredControl: true },
+      useValue: {
+        floatLabel: 'always',
+        hideRequiredControl: true,
+        hideRequiredMarker: true,
+      },
     },
   ],
 })
