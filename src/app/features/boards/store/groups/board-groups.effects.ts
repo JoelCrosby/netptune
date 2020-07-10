@@ -14,7 +14,7 @@ import {
   filter,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import * as ProjectTaskActions from '@project-tasks/store/tasks.actions';
+import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 

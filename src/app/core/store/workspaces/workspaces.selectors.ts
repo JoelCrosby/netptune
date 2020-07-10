@@ -1,4 +1,4 @@
-import { AppState, selectWorkspacesFeature } from '@core/core.state';
+import { selectWorkspacesFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { adapter, WorkspacesState } from './workspaces.model';
 
@@ -28,7 +28,3 @@ export const SelectCurrentWorkspace = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.currentWorkspace
 );
-
-export interface State extends AppState {
-  workspaces: WorkspacesState;
-}

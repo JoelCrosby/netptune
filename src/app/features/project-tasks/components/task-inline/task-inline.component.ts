@@ -32,8 +32,8 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { User } from '@core/auth/store/auth.models';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 
