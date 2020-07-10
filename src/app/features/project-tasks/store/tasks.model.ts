@@ -1,8 +1,8 @@
-import { AsyncEntityState } from '@app/core/entity/async-entity-state';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { ActionState, DefaultActionState } from '@app/core/types/action-state';
-import { ProjectTask as TaskModel } from '@app/core/models/project-task';
+import { ActionState, DefaultActionState } from '@core/types/action-state';
+import { ProjectTask as TaskModel } from '@core/models/project-task';
 
 export const adapter = createEntityAdapter<TaskViewModel>();
 

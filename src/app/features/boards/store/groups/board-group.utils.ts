@@ -2,7 +2,7 @@ import { BoardGroupsState } from './board-groups.model';
 import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
-import { getTaskStatusFromGroupType } from '@app/core/project-tasks/status-utils';
+import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 import { BoardGroup } from '@app/core/models/board-group';
 
@@ -40,7 +40,9 @@ export const moveTaskInBoardGroup = (
   state.entities[request.newGroupId].tasks = state.entities[
     request.newGroupId
   ].tasks.map((task) => {
-    if (task.id !== request.taskId) return task;
+    if (task.id !== request.taskId) {
+      return task;
+    }
 
     return {
       ...task,
@@ -59,12 +61,16 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
         return g;
       }
     }
+
+    return undefined;
   };
 
   const group: BoardGroup = getGroupWithTask();
 
   group.tasks = group.tasks.map((item) => {
-    if (item.id !== task.id) return item;
+    if (item.id !== task.id) {
+      return item;
+    }
 
     return {
       ...task,

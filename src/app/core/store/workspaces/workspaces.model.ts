@@ -1,4 +1,4 @@
-import { AsyncEntityState } from '@core/entity/async-entity-state';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { Workspace } from '@core/models/workspace';
 import { createEntityAdapter } from '@ngrx/entity';
 

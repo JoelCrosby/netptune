@@ -7,7 +7,7 @@
 <ng-template #elseTemplate>
   <div class="card-group">
     <mat-card
-      *ngFor="let project of projects$ | async; let i = index; trackBy: trackById"
+      *ngFor="let project of projects$ | async; trackBy: trackById"
       class="project-card"
     >
       <mat-card-header>

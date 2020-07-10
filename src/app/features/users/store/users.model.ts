@@ -1,5 +1,5 @@
-import { AsyncEntityState } from '@app/core/entity/async-entity-state';
-import { AppUser } from '@app/core/models/appuser';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
+import { AppUser } from '@core/models/appuser';
 import { createEntityAdapter } from '@ngrx/entity';
 
 export const adapter = createEntityAdapter<AppUser>();

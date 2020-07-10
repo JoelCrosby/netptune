@@ -9,15 +9,17 @@ export class TextHelpers {
 }
 
 export const toWordCase = (value: string): string | undefined => {
-  if (!value) return;
+  if (!value) {
+    return undefined;
+  }
 
   return value
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-    .map(char => char.toLowerCase())
-    .map(word =>
+    .map((char) => char.toLowerCase())
+    .map((word) =>
       word.replace(
         /\w\S*/g,
-        match =>
+        (match) =>
           match.charAt(0).toUpperCase() + match.substring(1).toLowerCase()
       )
     )

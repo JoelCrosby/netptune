@@ -56,6 +56,11 @@
 			"**/*.sln": true,
 			"**/*.sln.DotSettings": true,
 			"**/*.cs": true,
-		}
-	}
+		},
+
+		"angular-template-formatter.indentWidth": 2,
+		"[html]": {
+			"editor.defaultFormatter": "stringham.angular-template-formatter"
+		},
+	},
 }

@@ -1,5 +1,5 @@
-import { BoardGroup } from '@app/core/models/board-group';
-import { AsyncEntityState } from '@core/entity/async-entity-state';
+import { BoardGroup } from '@core/models/board-group';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 
 export function sortBySortOrder(a: BoardGroup, b: BoardGroup): number {
