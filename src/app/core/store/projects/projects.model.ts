@@ -1,4 +1,4 @@
-import { AsyncEntityState } from '@core/entity/async-entity-state';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createEntityAdapter } from '@ngrx/entity';
 

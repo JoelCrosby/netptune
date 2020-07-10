@@ -57,7 +57,7 @@ export class ProjectsListComponent implements OnInit, AfterViewInit {
       });
   }
 
-  trackById(index: number, project: Project) {
+  trackById(index: number, project: ProjectViewModel) {
     return project.id;
   }
 }

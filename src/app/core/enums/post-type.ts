@@ -1,5 +1,4 @@
 export enum PostType {
-    Board,
-    Comment
+  Board = 0,
+  Comment = 1,
 }
-

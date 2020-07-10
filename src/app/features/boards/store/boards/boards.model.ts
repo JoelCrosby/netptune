@@ -1,5 +1,5 @@
-import { Board } from '@app/core/models/board';
-import { AsyncEntityState } from '@core/entity/async-entity-state';
+import { Board } from '@core/models/board';
+import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 
 export const adapter = createEntityAdapter<Board>();

@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     this.mobileQuery = this.mediaService.mobileQuery;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.authenticated$ = this.store.pipe(
       select(selectIsAuthenticated),
       tap((value) => value && this.store.dispatch(loadWorkspaces()))

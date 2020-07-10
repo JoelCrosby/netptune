@@ -24,8 +24,6 @@
     "**/dist/**": true,
     "**/node_modules/**": true
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "tslint.configFile": "./tslint.json",
   "[html]": {
     "editor.defaultFormatter": "stringham.angular-template-formatter"
   },

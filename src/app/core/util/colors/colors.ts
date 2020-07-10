@@ -1,4 +1,4 @@
-import { toWordCase } from '../util/text-helpers';
+import { toWordCase } from '@core/util/text-helpers';
 
 export enum colors100 {
   red = '#FFCDD2',
@@ -89,7 +89,7 @@ export const avatarColors = [
 ];
 
 export const colorDictionary = () => {
-  return Object.keys(colors500).map(color => {
+  return Object.keys(colors500).map((color) => {
     return {
       name: toWordCase(color),
       color: colors500[color],
