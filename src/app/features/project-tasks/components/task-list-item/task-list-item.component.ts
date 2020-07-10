@@ -7,7 +7,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TextHelpers } from '@core/util/text-helpers';
 import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Store } from '@ngrx/store';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 
 @Component({
   selector: '[app-task-list-item]',

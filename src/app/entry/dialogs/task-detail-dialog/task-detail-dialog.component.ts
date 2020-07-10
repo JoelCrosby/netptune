@@ -17,8 +17,8 @@ import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
-import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
+import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import { Observable, Subject } from 'rxjs';
 import {
   first,

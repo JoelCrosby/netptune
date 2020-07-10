@@ -6,10 +6,8 @@ import { merge, of } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './settings.actions';
 import { SettingsState } from './settings.model';
-import {
-  selectEffectiveTheme,
-  selectSettingsState,
-} from './settings.selectors';
+import { selectEffectiveTheme } from './settings.selectors';
+import { selectSettingsState, AppState } from '@app/core/core.state';
 
 const INIT = of('app-init-effect-trigger');
 
@@ -49,7 +47,7 @@ export class SettingsEffects {
 
   constructor(
     private actions$: Actions<Action>,
-    private store: Store<SettingsState>,
+    private store: Store<AppState>,
     private localStorageService: LocalStorageService
   ) {}
 }

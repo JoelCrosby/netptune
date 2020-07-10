@@ -5,6 +5,7 @@ import {
   createFeatureSelector,
   createSelector,
   MetaReducer,
+  MemoizedSelector,
 } from '@ngrx/store';
 import { authReducer } from './auth/store/auth.reducer';
 import { AuthState } from './auth/store/auth.models';
@@ -20,6 +21,8 @@ import { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
+import { TasksState } from './store/tasks/tasks.model';
+import { projectTasksReducer } from './store/tasks/tasks.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
@@ -28,6 +31,7 @@ export const reducers: ActionReducerMap<AppState> = {
   settings: settingsReducer,
   workspaces: workspacesReducer,
   projects: projectsReducer,
+  tasks: projectTasksReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = [
@@ -62,6 +66,10 @@ export const selectProjectsFeature = createFeatureSelector<
   ProjectsState
 >('projects');
 
+export const selectTasksFeature = createFeatureSelector<AppState, TasksState>(
+  'tasks'
+);
+
 export const selectRouterState = createFeatureSelector<
   RouterReducerState<RouterStateUrl>
 >('router');
@@ -79,4 +87,5 @@ export interface AppState {
   settings: SettingsState;
   workspaces: WorkspacesState;
   projects: ProjectsState;
+  tasks: TasksState;
 }

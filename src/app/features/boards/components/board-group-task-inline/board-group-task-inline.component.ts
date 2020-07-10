@@ -30,7 +30,7 @@ import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
 import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { AppState } from '@app/core/core.state';
 import { FormControl } from '@angular/forms';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Actions, ofType } from '@ngrx/effects';
 

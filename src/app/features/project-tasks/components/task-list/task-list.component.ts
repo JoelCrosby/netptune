@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AppState } from '@app/core/core.state';
 import { TaskDialogComponent } from '@app/entry/dialogs/task-dialog/task-dialog.component';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
-import * as TaskSelectors from '@project-tasks/store/tasks.selectors';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
+import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 
 @Component({
   selector: 'app-task-list',

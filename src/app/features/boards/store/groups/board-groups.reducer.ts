@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as actions from './board-groups.actions';
-import * as TaskActions from '@project-tasks/store/tasks.actions';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
 import { BoardGroup } from '@app/core/models/board-group';

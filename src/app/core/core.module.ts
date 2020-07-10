@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { environment } from '@env/environment';
+import { EntryModule } from '@entry/entry.module';
 import { EffectsModule } from '@ngrx/effects';
 import {
   RouterStateSerializer,
@@ -18,7 +19,7 @@ import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './store/settings/settings.effects';
 import { CoreEffects } from './store/core/core.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
-import { EntryModule } from '../entry/entry.module';
+import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { EntryModule } from '../entry/entry.module';
       SettingsEffects,
       WorkspacesEffects,
       ProjectsEffects,
+      ProjectTasksEffects,
     ]),
     environment.production
       ? []

@@ -14,7 +14,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { TaskStatus } from '@app/core/enums/project-task-status';
-import * as actions from '../../store/tasks.actions';
+import * as actions from '@core/store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 
