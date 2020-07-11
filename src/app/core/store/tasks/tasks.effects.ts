@@ -83,6 +83,33 @@ export class ProjectTasksEffects {
     )
   );
 
+  loadComments$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.loadComments),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([action, workspace]) =>
+        this.projectTasksService
+          .getComments(action.systemId, workspace.slug)
+          .pipe(
+            map((comments) => actions.loadCommentsSuccess({ comments })),
+            catchError((error) => of(actions.loadCommentsFail({ error })))
+          )
+      )
+    )
+  );
+
+  addComment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.addComment),
+      switchMap((action) =>
+        this.projectTasksService.postComment(action.request).pipe(
+          map((comment) => actions.addCommentSuccess({ comment })),
+          catchError((error) => of(actions.addCommentFail({ error })))
+        )
+      )
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );

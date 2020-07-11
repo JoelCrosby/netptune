@@ -1,9 +1,10 @@
 import { EntityState } from '@ngrx/entity';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface AsyncEntityState<TEntity> extends EntityState<TEntity> {
   loading: boolean;
   loaded: boolean;
-  loadingError?: any;
+  loadingError?: HttpErrorResponse;
   loadingCreate: boolean;
-  createError?: any;
+  createError?: HttpErrorResponse;
 }

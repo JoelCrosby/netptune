@@ -25,7 +25,7 @@ const reducer = createReducer(
   on(actions.createProjectTasksFail, (state, { error }) => ({
     ...state,
     loadingNewTask: false,
-    createNewTaskError: error,
+    createError: error,
   })),
   on(actions.createProjectTasksSuccess, (state, { task }) =>
     adapter.addOne(task, {
@@ -79,9 +79,18 @@ const reducer = createReducer(
     ...state,
     detailTask: task,
   })),
+  on(actions.loadCommentsSuccess, (state, { comments }) => ({
+    ...state,
+    comments,
+  })),
+  on(actions.addCommentSuccess, (state, { comment }) => ({
+    ...state,
+    comments: [...state.comments, comment],
+  })),
   on(actions.clearTaskDetail, (state) => ({
     ...state,
     detailTask: undefined,
+    comments: [],
   }))
 );
 
