@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { environment } from '@env/environment';
+import { Comment } from '@core/models/comment';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +45,24 @@ export class ProjectTasksService {
         params: {
           workspace: workspaceSlug,
           systemId,
+        },
+      }
+    );
+  }
+
+  postComment(request: AddCommentRequest) {
+    return this.http.post<Comment>(
+      environment.apiEndpoint + 'api/tasks/detail',
+      request
+    );
+  }
+
+  getComments(systemId: string, workspaceSlug: string) {
+    return this.http.get<Comment[]>(
+      environment.apiEndpoint + `api/comments/task/${systemId}`,
+      {
+        params: {
+          workspace: workspaceSlug,
         },
       }
     );

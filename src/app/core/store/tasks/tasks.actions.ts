@@ -1,6 +1,9 @@
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import { Comment } from '@core/models/comment';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -17,7 +20,7 @@ export const loadProjectTasksSuccess = createAction(
 
 export const loadProjectTasksFail = createAction(
   '[ProjectTasks] Load ProjectTasks Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Create Task
@@ -34,7 +37,7 @@ export const createProjectTasksSuccess = createAction(
 
 export const createProjectTasksFail = createAction(
   '[ProjectTasks] Create Project Task Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Edit Task
@@ -51,7 +54,7 @@ export const editProjectTasksSuccess = createAction(
 
 export const editProjectTasksFail = createAction(
   '[ProjectTasks] Edit Project Task Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Delete Task
@@ -68,7 +71,7 @@ export const deleteProjectTasksSuccess = createAction(
 
 export const deleteProjectTasksFail = createAction(
   '[ProjectTasks] Delete Project Task Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Select Task
@@ -91,7 +94,7 @@ export const loadTaskDetails = createAction(
 
 export const loadTaskDetailsFail = createAction(
   '[ProjectTasks] Load Task Detail Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const loadTaskDetailsSuccess = createAction(
@@ -108,4 +111,36 @@ export const clearTaskDetail = createAction('[ProjectTasks] Clear Task detail');
 export const setInlineEditActive = createAction(
   '[ProjectTasks] Set Inline Edit Active',
   props<{ active: boolean }>()
+);
+
+// Comments
+
+export const loadComments = createAction(
+  '[ProjectTasks] Load Comments',
+  props<{ systemId: string }>()
+);
+
+export const loadCommentsSuccess = createAction(
+  '[ProjectTasks] Load Comments Success ',
+  props<{ comments: Comment[] }>()
+);
+
+export const loadCommentsFail = createAction(
+  '[ProjectTasks] Load Comments Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+export const addComment = createAction(
+  '[ProjectTasks] Add Comment',
+  props<{ request: AddCommentRequest }>()
+);
+
+export const addCommentSuccess = createAction(
+  '[ProjectTasks] Add Comment Success',
+  props<{ comment: Comment }>()
+);
+
+export const addCommentFail = createAction(
+  '[ProjectTasks] Add Comment Fail',
+  props<{ error: HttpErrorResponse }>()
 );
