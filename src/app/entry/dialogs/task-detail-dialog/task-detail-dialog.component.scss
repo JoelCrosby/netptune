@@ -87,3 +87,18 @@
   justify-content: center;
   align-items: center;
 }
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+
+  .comments-list-item {
+    margin-bottom: .4rem;
+    margin-left: 1rem;
+
+    span {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+}

@@ -52,7 +52,7 @@ export class ProjectTasksService {
 
   postComment(request: AddCommentRequest) {
     return this.http.post<Comment>(
-      environment.apiEndpoint + 'api/tasks/detail',
+      environment.apiEndpoint + 'api/comments/task',
       request
     );
   }

@@ -56,7 +56,8 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Description</mat-label>
           <textarea
-            matInput id="description"
+            matInput
+            id="description"
             class="form-control"
             formControlName="description"
             placeholder="Enter Task Description"
@@ -74,35 +75,33 @@
 
       <div class="comments-container">
 
-        <mat-form-field class="w-100" appearance="fill">
-          <textarea
-            matInput id="description"
-            class="form-control"
-            placeholder="Add Comment"
-            name="description"
-            aria-label="With textarea"
-            rows="1"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="9"
-          ></textarea>
-          <mat-icon
-            matSuffix
-            class="material-icons-outlined"
-          >
-            chat_bubble_outline
-          </mat-icon>
-        </mat-form-field>
+        <form [formGroup]="commentsFromGroup" (ngSubmit)="onCommentSubmit()">
+          <mat-form-field class="w-100" appearance="fill">
+            <input
+              matInput
+              id="comment"
+              formControlName="comment"
+              class="form-control"
+              placeholder="Add Comment"
+              name="description"
+            >
+            <mat-icon
+              matSuffix
+              class="material-icons-outlined"
+            >
+              chat_bubble_outline
+            </mat-icon>
+          </mat-form-field>
+        </form>
 
         <div class="comments-list">
           <div
             class="comments-list-item"
             *ngFor="let comment of comments$ | async"
           >
-            <p>
+            <span>
               {{ comment.body }}
-            </p>
+            </span>
           </div>
         </div>
 
