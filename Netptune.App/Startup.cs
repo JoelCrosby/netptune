@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 
-using AutoMapper;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
-using Netptune.Core.MappingProfiles;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Configuration;
@@ -39,8 +36,6 @@ namespace Netptune.App
 
             services.AddCors();
             services.AddControllers();
-
-            services.AddAutoMapper(typeof(UserMaps));
 
             services.AddNeptuneAuthentication(Configuration);
 

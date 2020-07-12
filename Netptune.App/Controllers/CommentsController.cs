@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.App.Controllers
 {
@@ -27,7 +28,7 @@ namespace Netptune.App.Controllers
         [Route("task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(TaskViewModel))]
+        [Produces("application/json", Type = typeof(Comment))]
         public async Task<IActionResult> PostTaskComment([FromBody] AddCommentRequest request)
         {
             var result = await CommentService.AddCommentToTask(request);
@@ -38,11 +39,10 @@ namespace Netptune.App.Controllers
         }
 
         // GET: api/comments/taskId?workspace=workspaceSlug
-        [HttpGet("{systemId}")]
-        [Route("task")]
+        [Route("task/{systemId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(TaskViewModel))]
+        [Produces("application/json", Type = typeof(List<Comment>))]
         public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId, [FromQuery] string workspace)
         {
             var result = await CommentService.GetCommentsForTask(systemId, workspace);

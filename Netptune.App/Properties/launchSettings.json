@@ -17,7 +17,6 @@
     },
     "Netptune.Api": {
       "commandName": "Project",
-      "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_URLS": "http://localhost:7400",
         "ASPNETCORE_ENVIRONMENT": "Development"

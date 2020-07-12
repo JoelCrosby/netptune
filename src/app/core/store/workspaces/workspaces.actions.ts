@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const loadWorkspaces = createAction('[Workspaces] Load Workspaces');
 
@@ -10,7 +11,7 @@ export const loadWorkspacesSuccess = createAction(
 
 export const loadWorkspacesFail = createAction(
   '[Workspaces] Load Workspaces Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const createWorkspace = createAction(
@@ -25,7 +26,7 @@ export const createWorkspaceSuccess = createAction(
 
 export const createWorkspaceFail = createAction(
   '[Workspaces] Create Workspace Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const editWorkspace = createAction(
@@ -40,7 +41,7 @@ export const editWorkspaceSuccess = createAction(
 
 export const editWorkspaceFail = createAction(
   '[Workspaces] Edit Workspace Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const deleteWorkspace = createAction(
@@ -55,7 +56,7 @@ export const deleteWorkspaceSuccess = createAction(
 
 export const deleteWorkspaceFail = createAction(
   '[Workspaces] Load Workspaces Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const selectWorkspace = createAction(
