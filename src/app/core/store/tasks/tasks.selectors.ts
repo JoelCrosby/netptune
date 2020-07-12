@@ -56,3 +56,8 @@ export const selectDetailTask = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.detailTask
 );
+
+export const selectComments = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.comments
+);

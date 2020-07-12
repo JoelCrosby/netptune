@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -75,6 +75,7 @@ namespace Netptune.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
             var result = await WorkspaceService.DeleteWorkspace(id);

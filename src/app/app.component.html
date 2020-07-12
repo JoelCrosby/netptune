@@ -1,5 +1,8 @@
 <main>
-  <mat-sidenav-container class="app-shell" [class.app-is-mobile]="mobileQuery.matches">
+  <mat-sidenav-container
+    class="app-shell"
+    [class.app-is-mobile]="mobileQuery.matches"
+  >
     <mat-sidenav
       [opened]="!mobileQuery.matches && (authenticated$ | async)"
       [mode]="mobileQuery.matches ? 'over' : 'side'"
@@ -7,10 +10,19 @@
       class="app-shell-sidenav"
     >
       <mat-nav-list>
-        <a class="main-logo" [routerLink]="['/workspaces']">
-          <img src="assets/apple-touch-icon.png" alt="Netptune logo" width="48" height="48">
+        <a
+          class="main-logo"
+          [routerLink]="['/workspaces']"
+        >
+          <img
+            src="assets/apple-touch-icon.png"
+            alt="Netptune logo"
+            width="48"
+            height="48"
+          >
         </a>
       </mat-nav-list>
+
 
       <div class="workspace-nav-list">
         <a
@@ -25,6 +37,7 @@
           {{ workspace.name[0] }}
         </a>
       </div>
+
 
     </mat-sidenav>
     <mat-sidenav-content>

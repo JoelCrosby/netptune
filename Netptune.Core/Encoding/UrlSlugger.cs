@@ -1,10 +1,10 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Netptune.Core.Encoding
 {
-    public class UrlSlugger
+    public static class UrlSlugger
     {
         // white space, em-dash, en-dash, underscore
         static readonly Regex WordDelimiters = new Regex(@"[\s—–_]", RegexOptions.Compiled);
@@ -15,7 +15,7 @@ namespace Netptune.Core.Encoding
         // multiple hyphens
         static readonly Regex MultipleHyphens = new Regex(@"-{2,}", RegexOptions.Compiled);
 
-        public static string ToUrlSlug(string value)
+        public static string ToUrlSlug(this string value)
         {
             // convert to lower case
             value = value.ToLowerInvariant();

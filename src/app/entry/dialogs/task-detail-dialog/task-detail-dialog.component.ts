@@ -77,6 +77,7 @@ export class TaskDetailDialogComponent
     );
 
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
+    this.comments$ = this.store.select(TaskSelectors.selectComments);
   }
 
   ngAfterViewInit() {
@@ -153,7 +154,9 @@ export class TaskDetailDialogComponent
       .subscribe();
   }
 
-  loadComments(task: TaskViewModel) {}
+  loadComments(task: TaskViewModel) {
+    this.store.dispatch(TaskActions.loadComments({ systemId: task.systemId }));
+  }
 
   updateTask(task: TaskViewModel) {
     this.store.dispatch(

@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Core.MappingProfiles;
 using Netptune.Core.Services;
 
 namespace Netptune.Services.Configuration
@@ -8,6 +11,8 @@ namespace Netptune.Services.Configuration
     {
         public static void AddNetptuneServices(this IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(UserMaps));
+
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<IUserService, UserService>();

@@ -16,10 +16,10 @@ import { AppState } from '../core.state';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private store: Store<AppState>) {}
 
-  intercept(
-    req: HttpRequest<any>,
+  intercept<T>(
+    req: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     return this.store.select(selectAuthToken).pipe(
       first(),
       switchMap((token: string) => {
@@ -33,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  isApiRequest(req: HttpRequest<any>): boolean {
+  isApiRequest<T>(req: HttpRequest<T>): boolean {
     return req.url.startsWith(environment.apiEndpoint);
   }
 }

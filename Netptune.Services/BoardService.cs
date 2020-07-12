@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Encoding;
@@ -40,7 +40,7 @@ namespace Netptune.Services
             if (result is null) return null;
 
             result.Name = board.Name;
-            result.Identifier = UrlSlugger.ToUrlSlug(board.Identifier);
+            result.Identifier = board.Identifier.ToUrlSlug();
 
             await UnitOfWork.CompleteAsync();
 
@@ -49,7 +49,7 @@ namespace Netptune.Services
 
         public async Task<Board> AddBoard(Board board)
         {
-            board.Identifier = UrlSlugger.ToUrlSlug(board.Identifier);
+            board.Identifier = board.Identifier.ToUrlSlug();
 
             board.BoardGroups.Add(new BoardGroup
             {
