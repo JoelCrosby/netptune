@@ -16,18 +16,12 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
-import { Store } from '@ngrx/store';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
+import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import {
-  first,
-  tap,
-  withLatestFrom,
-  takeUntil,
-  debounceTime,
-  filter,
-} from 'rxjs/operators';
+import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
+import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -52,6 +46,7 @@ export class TaskDetailDialogComponent
   ) {}
 
   projectFromGroup: FormGroup;
+  commentsFromGroup: FormGroup;
 
   get name() {
     return this.projectFromGroup.get('name');
@@ -65,9 +60,11 @@ export class TaskDetailDialogComponent
     return this.projectFromGroup.get('description');
   }
 
-  ngOnInit() {
-    console.log('ngOnInit');
+  get comment() {
+    return this.commentsFromGroup.get('comment');
+  }
 
+  ngOnInit() {
     this.task$ = this.store.select(TaskSelectors.selectDetailTask).pipe(
       filter((task) => !!task),
       tap((task) => {
@@ -101,6 +98,12 @@ export class TaskDetailDialogComponent
       description: new FormControl(task?.description, {
         updateOn: 'blur',
         validators: [],
+      }),
+    });
+
+    this.commentsFromGroup = new FormGroup({
+      comment: new FormControl('', {
+        updateOn: 'change',
       }),
     });
 
@@ -156,6 +159,31 @@ export class TaskDetailDialogComponent
 
   loadComments(task: TaskViewModel) {
     this.store.dispatch(TaskActions.loadComments({ systemId: task.systemId }));
+  }
+
+  onCommentSubmit() {
+    console.log('onCommentSubmit');
+
+    const value = this.comment.value as string;
+
+    if (!value) return;
+
+    this.task$
+      .pipe(
+        first(),
+        tap((viewModel) => {
+          const request: AddCommentRequest = {
+            comment: value.trim(),
+            systemId: viewModel.systemId,
+            workspaceSlug: viewModel.workspaceSlug,
+          };
+
+          this.store.dispatch(TaskActions.addComment({ request }));
+
+          this.comment.reset();
+        })
+      )
+      .subscribe();
   }
 
   updateTask(task: TaskViewModel) {
