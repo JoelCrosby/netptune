@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
+using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
@@ -43,6 +44,11 @@ namespace Netptune.App
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
             services.AddNetptuneServices();
+            services.AddSendGridEmailService(options =>
+            {
+                options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
+                options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
+            });
 
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "../dist");
 
@@ -62,7 +68,11 @@ namespace Netptune.App
                 app.UseHsts();
                 app.UseHttpsRedirection();
 
-                var spaPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())?.FullName, "dist");
+                var parentDir = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
+
+                if (string.IsNullOrEmpty(parentDir)) throw new Exception("Unable to get parent Directory");
+
+                var spaPath = Path.Combine(parentDir, "dist");
 
                 app.UseSpaStaticFiles(new StaticFileOptions
                 {
@@ -127,11 +137,11 @@ namespace Netptune.App
 
             if (envVar is null) return appSettingsConString;
 
-            var envConstring = Environment.GetEnvironmentVariable(envVar);
+            var envConString = Environment.GetEnvironmentVariable(envVar);
 
-            if (envConstring is null) return appSettingsConString;
+            if (envConString is null) return appSettingsConString;
 
-            return ParseConnectionString(envConstring);
+            return ParseConnectionString(envConString);
         }
 
         private static string ParseConnectionString(string value)
