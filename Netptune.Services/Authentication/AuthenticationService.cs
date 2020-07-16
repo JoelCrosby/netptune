@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,7 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Entities;
+using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
+using Netptune.Core.Models.Messaging;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Authentication
@@ -22,6 +24,7 @@ namespace Netptune.Services.Authentication
         private readonly SignInManager<AppUser> SignInManager;
         private readonly UserManager<AppUser> UserManager;
         private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IEmailService Email;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -31,12 +34,14 @@ namespace Netptune.Services.Authentication
             IConfiguration configuration,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            INetptuneUnitOfWork unitOfWork
+            INetptuneUnitOfWork unitOfWork,
+            IEmailService email
             )
         {
             SignInManager = signInManager;
             UserManager = userManager;
             UnitOfWork = unitOfWork;
+            Email = email;
 
             Issuer = configuration["Tokens:Issuer"];
             SecurityKey = configuration["Tokens:SecurityKey"];
@@ -88,6 +93,14 @@ namespace Netptune.Services.Authentication
             appUser.LastLoginTime = DateTime.UtcNow;
 
             await UnitOfWork.CompleteAsync();
+
+            await Email.Send(new SendEmailModel
+            {
+                ToDisplayName = $"{appUser.Firstname} {appUser.Lastname}",
+                Subject = "Welcome To Netptune",
+                RawTextContent = "Thanks for registering with Netptune.",
+                ToAddress = appUser.Email,
+            });
 
             return RegisterResult.Success(GenerateToken(appUser));
         }
