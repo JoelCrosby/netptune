@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +27,7 @@ namespace Netptune.Services.Authentication
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             });
