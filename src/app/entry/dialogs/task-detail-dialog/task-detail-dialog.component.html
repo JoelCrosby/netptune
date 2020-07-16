@@ -1,4 +1,4 @@
-<div class="task-detail-dialog" *ngIf="task$ | async as task; else loading">
+<ng-container *ngIf="task$ | async as task; else loading">
 
   <div class="detail-title">
 
@@ -16,164 +16,216 @@
     </div>
   </div>
 
-  <div class="detail-container">
+  <mat-dialog-content class="task-detail-dialog">
 
-    <div class="detail-form">
-      <form [formGroup]="projectFromGroup">
 
-        <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Task Summary</mat-label>
-          <textarea
-            matInput
-            id="name"
-            class="form-control"
-            placeholder="Enter Task Summary"
-            formControlName="name"
-            name="name"
-            required
-            rows="1"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
-          ></textarea>
-        </mat-form-field>
+    <div class="detail-container">
 
-        <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Project</mat-label>
-          <mat-select
-            id="type"
-            name="type"
-            placeholder="Task Project"
-            formControlName="project"
-          >
-            <mat-option *ngFor="let project of projects$ | async" [value]="project.id">
-              {{ project.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="detail-form">
+        <form [formGroup]="projectFromGroup">
 
-        <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            id="description"
-            class="form-control"
-            formControlName="description"
-            placeholder="Enter Task Description"
-            name="description"
-            aria-label="With textarea"
-            rows="6"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="6"
-            cdkAutosizeMaxRows="9"
-          ></textarea>
-        </mat-form-field>
-
-      </form>
-
-      <div class="comments-container">
-
-        <form [formGroup]="commentsFromGroup" (ngSubmit)="onCommentSubmit()">
           <mat-form-field class="w-100" appearance="fill">
-            <input
+            <mat-label>Task Summary</mat-label>
+            <textarea
               matInput
-              id="comment"
-              formControlName="comment"
+              id="name"
               class="form-control"
-              placeholder="Add Comment"
-              name="description"
-            >
-            <mat-icon
-              matSuffix
-              class="material-icons-outlined"
-            >
-              chat_bubble_outline
-            </mat-icon>
+              placeholder="Enter Task Summary"
+              formControlName="name"
+              name="name"
+              required
+              rows="1"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+            ></textarea>
           </mat-form-field>
+
+          <!-- <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Project</mat-label>
+            <mat-select
+              id="type"
+              name="type"
+              placeholder="Task Project"
+              formControlName="project"
+            >
+              <mat-option *ngFor="let project of projects$ | async" [value]="project.id">
+                {{ project.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              id="description"
+              class="form-control"
+              formControlName="description"
+              placeholder="Enter Task Description"
+              name="description"
+              aria-label="With textarea"
+              rows="3"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="9"
+            ></textarea>
+          </mat-form-field>
+
         </form>
 
-        <div class="comments-list">
-          <div
-            class="comments-list-item"
-            *ngFor="let comment of comments$ | async"
-          >
-            <span>
-              {{ comment.body }}
-            </span>
+        <div class="comments-container" *ngIf="user$ | async as user">
+
+          <div class="comments-input">
+            <app-avatar
+              size="24"
+              class="task-card-user-chip"
+              [name]="user.displayName"
+            >
+            </app-avatar>
+
+            <form [formGroup]="commentsFromGroup" (ngSubmit)="onCommentSubmit()">
+              <mat-form-field class="w-100" appearance="fill">
+                <input
+                  matInput
+                  id="comment"
+                  formControlName="comment"
+                  class="form-control"
+                  placeholder="Add Comment"
+                  name="description"
+                >
+                <mat-icon
+                  matSuffix
+                  class="material-icons-outlined"
+                >
+                  chat_bubble_outline
+                </mat-icon>
+              </mat-form-field>
+            </form>
+          </div>
+
+          <div class="comments-list">
+            <div
+              class="comments-list-item"
+              *ngFor="let comment of comments$ | async"
+            >
+              <app-avatar
+                size="24"
+                class="task-card-user-chip"
+                [name]="comment.userDisplayName"
+              >
+              </app-avatar>
+              <div class="comment-body">
+                <span class="comment-user-display-name">
+                  {{ comment.userDisplayName }}
+
+                  <small>
+                    {{ comment.createdAt | fromNow }}
+                  </small>
+                </span>
+                <span class="comment-body-text">
+                  {{ comment.body }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="detail-column">
+
+        <div class="detail-list">
+          <div class="detail-list-item">
+            <h4>Assignee</h4>
+
+            <app-avatar
+              size="24"
+              class="task-card-user-chip"
+              [name]="task.assigneeUsername"
+            >
+            </app-avatar>
+          </div>
+          <div class="detail-list-item">
+            <h4>Reporter</h4>
+
+            <app-avatar
+              size="24"
+              class="task-card-user-chip"
+              [name]="task.ownerUsername"
+            >
+            </app-avatar>
+          </div>
+          <div class="detail-list-item">
+            <h4>Status</h4>
+            <mat-chip-list>
+              <mat-chip>{{ getTaskStatus(task.status) }} </mat-chip>
+            </mat-chip-list>
+          </div>
+          <div class="detail-list-item">
+            <h4>Project</h4>
+            <mat-chip-list>
+              <mat-chip [matMenuTriggerFor]="menu">
+                {{ task.projectName }}
+              </mat-chip>
+            </mat-chip-list>
+
+            <mat-menu #menu="matMenu">
+              <small>Change Project</small>
+              <button
+                mat-menu-item
+                *ngFor="let project of projects$ | async"
+                (click)="selectProject(project.id)"
+              >
+                {{ project.name }}
+              </button>
+            </mat-menu>
+
+          </div>
+        </div>
+
+        <div class="bottom-row">
+          <h4>Actions</h4>
+
+          <div class="actions-row">
+            <button
+              mat-icon-button
+              mat-stroked-button
+              aria-label="Delete Task"
+              matTooltip="Delete Task"
+            >
+            <mat-icon class="material-icons-outlined">
+              delete
+            </mat-icon>
+          </button>
+            <button
+              mat-icon-button
+              mat-stroked-button
+              aria-label="Flag Task"
+              matTooltip="Flag Task"
+              color="warn"
+              (click)="onFlagClicked()"
+            >
+            <mat-icon [class.material-icons-outlined]="!task.isFlagged">
+              flag
+            </mat-icon>
+          </button>
           </div>
         </div>
 
       </div>
 
     </div>
-
-    <div class="detail-column">
-
-      <div class="detail-list">
-        <div class="detail-list-item">
-          <h4>Assignee</h4>
-
-          <app-avatar
-            size="24"
-            class="task-card-user-chip"
-            [name]="task.ownerUsername"
-          >
-          </app-avatar>
-        </div>
-        <div class="detail-list-item">
-          <h4>Status</h4>
-          <mat-chip-list>
-            <mat-chip>{{ getTaskStatus(task.status) }} </mat-chip>
-          </mat-chip-list>
-        </div>
-        <div class="detail-list-item">
-          <h4>Project</h4>
-          <mat-chip-list>
-            <mat-chip>{{ task.projectName }} </mat-chip>
-          </mat-chip-list>
-        </div>
-      </div>
-
-      <div class="bottom-row">
-        <h4>Actions</h4>
-
-        <div class="actions-row">
-          <button
-            mat-icon-button
-            mat-stroked-button
-            aria-label="Delete Task"
-            matTooltip="Delete Task"
-          >
-          <mat-icon class="material-icons-outlined">
-            delete
-          </mat-icon>
-        </button>
-          <button
-            mat-icon-button
-            mat-stroked-button
-            aria-label="Flag Task"
-            matTooltip="Flag Task"
-            color="warn"
-            (click)="onFlagClicked()"
-          >
-          <mat-icon [class.material-icons-outlined]="!task.isFlagged">
-            flag
-          </mat-icon>
-        </button>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
+  </mat-dialog-content>
 
   <div mat-dialog-actions align="end">
     <button mat-stroked-button (click)="close()">Close</button>
   </div>
 
-</div>
+</ng-container>
 
 <ng-template #loading>
   <div class="task-detail-loading">

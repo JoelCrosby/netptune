@@ -1,9 +1,20 @@
-export interface Comment {
+export interface CommentViewModel {
+  id: number;
+  userDisplayName: string;
+  userId: number;
   body: string;
   entityId: number;
-  entityType: entityType;
+  entityType: EntityType;
+  reactions: Reaction[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export enum entityType {
+export enum EntityType {
   task = 0,
+}
+
+export interface Reaction {
+  id: number;
+  value: string;
 }

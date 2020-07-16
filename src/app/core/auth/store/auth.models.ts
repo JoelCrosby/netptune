@@ -19,12 +19,12 @@ export interface User {
   email: string;
   email_verified: boolean;
   name: string;
-  username: string;
+  displayName: string;
   given_name: string;
   family_name: string;
   picture: string;
   zoneinfo: string;
   expires: Date;
   token: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }

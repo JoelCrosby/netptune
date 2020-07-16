@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Core.Entities
 {
@@ -20,5 +22,21 @@ namespace Netptune.Core.Entities
         public ICollection<Reaction> Reactions { get; set; } = new HashSet<Reaction>();
 
         #endregion
+
+        public CommentViewModel ToViewModel()
+        {
+            return new CommentViewModel
+            {
+                Id = Id,
+                UserDisplayName = Owner.GetDisplayName(),
+                UserId = OwnerId,
+                Body = Body,
+                EntityId = EntityId,
+                EntityType = EntityType,
+                Reactions = Reactions.ToList(),
+                CreatedAt = CreatedAt,
+                UpdatedAt = UpdatedAt,
+            };
+        }
     }
 }

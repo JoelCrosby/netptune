@@ -88,17 +88,49 @@
   align-items: center;
 }
 
+.comments-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  form {
+    flex: 1;
+    margin-left: .8rem;
+  }
+
+  app-avatar {
+    padding-bottom: 1.34375em;
+  }
+}
+
 .comments-list {
   display: flex;
   flex-direction: column;
 
   .comments-list-item {
-    margin-bottom: .4rem;
-    margin-left: 1rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .comment-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comment-user-display-name {
+      font-weight: 500;
+      margin-bottom: .4rem;
+
+      small {
+        opacity: .6;
+      }
+    }
 
     span {
       font-size: 14px;
       font-weight: 400;
+      margin-left: .8rem;
     }
   }
 }
