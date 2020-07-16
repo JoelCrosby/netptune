@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -24,14 +25,18 @@ namespace Netptune.Services
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
-        public async Task<Workspace> AddWorkspace(Workspace workspace)
+        public async Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
         {
             var user = await IdentityService.GetCurrentUser();
 
-            workspace.CreatedByUserId = user.Id;
-            workspace.OwnerId = user.Id;
-
-            workspace.Slug = UrlSlugger.ToUrlSlug(workspace.Name);
+            var workspace = new Workspace
+            {
+                Name = request.Name,
+                Description = request.Description,
+                CreatedByUserId = user.Id,
+                OwnerId = user.Id,
+                Slug = request.Name.ToUrlSlug(),
+            };
 
             workspace.WorkspaceUsers.Add(new WorkspaceAppUser
             {

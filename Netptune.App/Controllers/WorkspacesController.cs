@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
 namespace Netptune.Api.Controllers
@@ -64,9 +65,9 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(Workspace))]
-        public async Task<IActionResult> PostWorkspace([FromBody] Workspace workspace)
+        public async Task<IActionResult> PostWorkspace([FromBody] AddWorkspaceRequest request)
         {
-            var result = await WorkspaceService.AddWorkspace(workspace);
+            var result = await WorkspaceService.AddWorkspace(request);
 
             return Ok(result);
         }

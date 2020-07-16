@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
 
 namespace Netptune.Core.Services
 {
@@ -15,7 +16,7 @@ namespace Netptune.Core.Services
 
         Task<Workspace> UpdateWorkspace(Workspace workspace);
 
-        Task<Workspace> AddWorkspace(Workspace workspace);
+        Task<Workspace> AddWorkspace(AddWorkspaceRequest request);
 
         Task<Workspace> DeleteWorkspace(int id);
     }
