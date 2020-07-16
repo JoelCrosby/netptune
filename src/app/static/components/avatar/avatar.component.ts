@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Input,
 } from '@angular/core';
+import { avatarColourUtil } from '@core/util/colors/color-util';
 
 @Component({
   selector: 'app-avatar',
@@ -14,6 +15,9 @@ import {
 export class AvatarComponent implements OnInit {
   @Input() name: string;
   @Input() size: string;
+
+  backgroundColor = avatarColourUtil.getColourForKey(this.name);
+  color = '#fff';
 
   constructor() {}
 
