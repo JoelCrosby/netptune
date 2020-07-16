@@ -114,9 +114,13 @@
       <div class="detail-list">
         <div class="detail-list-item">
           <h4>Assignee</h4>
-          <mat-chip-list>
-            <mat-chip>{{ task.assigneeUsername }} </mat-chip>
-          </mat-chip-list>
+
+          <app-avatar
+            size="24"
+            class="task-card-user-chip"
+            [name]="task.ownerUsername"
+          >
+          </app-avatar>
         </div>
         <div class="detail-list-item">
           <h4>Status</h4>

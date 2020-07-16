@@ -9,6 +9,7 @@ import { BoardPostDialogComponent } from '@entry/dialogs/board-post-dialog/board
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-group-dialog.component';
+import { StaticModule } from '@app/static/static.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,6 @@ import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-gr
     WorkspaceDialogComponent,
     BoardGroupDialogComponent,
   ],
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, StaticModule],
 })
 export class EntryModule {}
