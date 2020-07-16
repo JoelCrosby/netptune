@@ -9,9 +9,12 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { User } from '@app/core/auth/store/auth.models';
+import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
+import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
-import { Comment } from '@core/models/comment';
+import { CommentViewModel } from '@core/models/comment';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectActions from '@core/store/projects/projects.actions';
@@ -20,8 +23,14 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
-import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import {
+  debounceTime,
+  filter,
+  first,
+  takeUntil,
+  tap,
+  map,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -33,7 +42,8 @@ export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit {
   task$: Observable<TaskViewModel>;
   projects$: Observable<ProjectViewModel[]>;
-  comments$: Observable<Comment[]>;
+  comments$: Observable<CommentViewModel[]>;
+  user$: Observable<User>;
 
   selectedTypeValue: number;
 
@@ -50,10 +60,6 @@ export class TaskDetailDialogComponent
 
   get name() {
     return this.projectFromGroup.get('name');
-  }
-
-  get project() {
-    return this.projectFromGroup.get('project');
   }
 
   get description() {
@@ -75,6 +81,7 @@ export class TaskDetailDialogComponent
 
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
     this.comments$ = this.store.select(TaskSelectors.selectComments);
+    this.user$ = this.store.select(selectCurrentUser);
   }
 
   ngAfterViewInit() {
@@ -90,10 +97,6 @@ export class TaskDetailDialogComponent
       name: new FormControl(task?.name, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(4)],
-      }),
-      project: new FormControl(task?.projectId, {
-        updateOn: 'blur',
-        validators: [Validators.required],
       }),
       description: new FormControl(task?.description, {
         updateOn: 'blur',
@@ -119,21 +122,6 @@ export class TaskDetailDialogComponent
           const updated: TaskViewModel = {
             ...task,
             name,
-          };
-
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
-
-    this.project.valueChanges
-      .pipe(
-        takeUntil(this.onDestroy$),
-        debounceTime(300),
-        tap((projectId) => {
-          const updated: TaskViewModel = {
-            ...task,
-            projectId,
           };
 
           this.updateTask(updated);
@@ -212,17 +200,29 @@ export class TaskDetailDialogComponent
     this.task$
       .pipe(
         first(),
-        tap((viewModel) => {
-          const task: TaskViewModel = {
-            ...viewModel,
-            isFlagged: !viewModel.isFlagged,
+        tap((task) => {
+          const updated: TaskViewModel = {
+            ...task,
+            isFlagged: !task.isFlagged,
           };
 
-          this.store.dispatch(
-            TaskActions.editProjectTask({
-              task,
-            })
-          );
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
+  }
+
+  selectProject(projectId: number) {
+    this.task$
+      .pipe(
+        first(),
+        tap((task) => {
+          const updated: TaskViewModel = {
+            ...task,
+            projectId,
+          };
+
+          this.updateTask(updated);
         })
       )
       .subscribe();

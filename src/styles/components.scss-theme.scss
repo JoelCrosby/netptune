@@ -62,4 +62,18 @@
   .mat-tooltip {
     background-color: invert(mat-color($background, card));
   }
+
+  // Mat Menus
+
+  .mat-menu-content {
+    small {
+      font-weight: 500;
+      letter-spacing: .125px;
+      font-size: 12px;
+      opacity: .6;
+      padding: 0 16px;
+      line-height: 24px;
+      height: 24px;
+    }
+  }
 }

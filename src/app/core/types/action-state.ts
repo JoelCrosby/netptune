@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export interface ActionState {
   loading: boolean;
-  error?: any;
+  error?: HttpErrorResponse;
 }
 
 export const DefaultActionState: ActionState = {

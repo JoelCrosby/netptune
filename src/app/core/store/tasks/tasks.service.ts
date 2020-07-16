@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { environment } from '@env/environment';
-import { Comment } from '@core/models/comment';
+import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 
 @Injectable({
@@ -51,14 +51,14 @@ export class ProjectTasksService {
   }
 
   postComment(request: AddCommentRequest) {
-    return this.http.post<Comment>(
+    return this.http.post<CommentViewModel>(
       environment.apiEndpoint + 'api/comments/task',
       request
     );
   }
 
   getComments(systemId: string, workspaceSlug: string) {
-    return this.http.get<Comment[]>(
+    return this.http.get<CommentViewModel[]>(
       environment.apiEndpoint + `api/comments/task/${systemId}`,
       {
         params: {

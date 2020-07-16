@@ -7,10 +7,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .task-detail-dialog {
-    .task-scope-id {
-      background-color: mat-color($primary, .2);
-    }
+  .task-scope-id {
+    background-color: mat-color($primary, .2);
   }
 
   .actions-row {

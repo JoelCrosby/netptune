@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -7,6 +7,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Services
 {
@@ -23,7 +24,7 @@ namespace Netptune.Services
             Comments = unitOfWork.Comments;
         }
 
-        public async Task<Comment> AddCommentToTask(AddCommentRequest request)
+        public async Task<CommentViewModel> AddCommentToTask(AddCommentRequest request)
         {
             var userId = await Identity.GetCurrentUserId();
             var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
@@ -40,14 +41,14 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return comment;
+            return await Comments.GetCommentViewModel(comment.Id);
         }
 
-        public async Task<List<Comment>> GetCommentsForTask(string systemId, string workspaceSlug)
+        public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId, string workspaceSlug)
         {
             var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceSlug);
 
-            return await Comments.GetCommentsForTask(taskId, true);
+            return await Comments.GetCommentViewModelsForTask(taskId, true);
         }
     }
 }

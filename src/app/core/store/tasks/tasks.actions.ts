@@ -3,7 +3,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
-import { Comment } from '@core/models/comment';
+import { CommentViewModel } from '@core/models/comment';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -122,7 +122,7 @@ export const loadComments = createAction(
 
 export const loadCommentsSuccess = createAction(
   '[ProjectTasks] Load Comments Success ',
-  props<{ comments: Comment[] }>()
+  props<{ comments: CommentViewModel[] }>()
 );
 
 export const loadCommentsFail = createAction(
@@ -137,7 +137,7 @@ export const addComment = createAction(
 
 export const addCommentSuccess = createAction(
   '[ProjectTasks] Add Comment Success',
-  props<{ comment: Comment }>()
+  props<{ comment: CommentViewModel }>()
 );
 
 export const addCommentFail = createAction(
