@@ -103,16 +103,22 @@ namespace Netptune.Services.Authentication
             return RegisterResult.Success(GenerateToken(appUser));
         }
 
-        public async Task<IdentityResult> ConfirmEmail(string userId, string code)
+        public async Task<RegisterResult> ConfirmEmail(string userId, string code)
         {
             var user = await UserManager.FindByIdAsync(userId);
 
-            return await UserManager.ConfirmEmailAsync(user, code);
+            if (user is null) return null;
+
+            return await ConfirmEmail(user, code);
         }
 
-        public Task<IdentityResult> ConfirmEmail(AppUser appUser, string code)
+        public async Task<RegisterResult> ConfirmEmail(AppUser user, string code)
         {
-            return UserManager.ConfirmEmailAsync(appUser, code);
+            var result = await UserManager.ConfirmEmailAsync(user, code);
+
+            if (!result.Succeeded) return null;
+
+            return RegisterResult.Success(GenerateToken(user));
         }
 
         private async Task SendWelcomeEmail(AppUser appUser)
@@ -121,8 +127,8 @@ namespace Netptune.Services.Authentication
 
             var callbackUrl = Origin
                 .AppendPathSegments("app", "auth", "confirm")
-                .SetQueryParam("userId", appUser.Id)
-                .SetQueryParam("code", confirmEmailCode);
+                .SetQueryParam("userId", appUser.Id, true)
+                .SetQueryParam("code", Uri.EscapeDataString(confirmEmailCode), true);
 
             var rawTextContent = $"Thanks for registering with Netptune. Confirm your email address with the following link. {callbackUrl}";
 

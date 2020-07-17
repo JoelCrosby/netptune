@@ -87,6 +87,21 @@ export class AuthEffects {
       )
   );
 
+  confirmEmail$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.confirmEmail),
+        debounceTime(debounce, scheduler),
+        switchMap((action) =>
+          this.authService.confirmEmail(action.request).pipe(
+            map((userInfo: User) => actions.confirmEmailSuccess({ userInfo })),
+            tap(() => this.router.navigate(['/workspaces'])),
+            catchError((error) => of(actions.confirmEmailFail({ error })))
+          )
+        )
+      )
+  );
+
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.logout),

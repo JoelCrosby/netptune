@@ -2,11 +2,13 @@ export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   currentUser?: User;
+  confirmEmailLoading: boolean;
 }
 
 export const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
+  confirmEmailLoading: false,
 };
 
 export interface LoginRequest {
@@ -27,4 +29,9 @@ export interface User {
   expires: Date;
   token: string;
   [key: string]: unknown;
+}
+
+export interface ConfirmEmailRequest {
+  userId: string;
+  code: string;
 }

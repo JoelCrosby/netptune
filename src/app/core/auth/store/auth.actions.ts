@@ -1,6 +1,9 @@
 import { RegisterRequest } from '@core/models/register-request';
 import { createAction, props } from '@ngrx/store';
-import { User, LoginRequest } from './auth.models';
+import { User, LoginRequest, ConfirmEmailRequest } from './auth.models';
+import { HttpErrorResponse } from '@angular/common/http';
+
+// Login
 
 export const tryLogin = createAction(
   '[Auth] Try Login',
@@ -14,10 +17,14 @@ export const loginSuccess = createAction(
 
 export const loginFail = createAction(
   '[Auth] Login Failed',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
+// Logout
+
 export const logout = createAction('[Auth] Logout');
+
+// Register
 
 export const register = createAction(
   '[Auth] Register',
@@ -31,5 +38,22 @@ export const registerSuccess = createAction(
 
 export const registerFail = createAction(
   '[Auth] Register Failed',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Confirm email
+
+export const confirmEmail = createAction(
+  '[Auth] Confirm Email',
+  props<{ request: ConfirmEmailRequest }>()
+);
+
+export const confirmEmailSuccess = createAction(
+  '[Auth] Confirm Email Succeded',
+  props<{ userInfo: User }>()
+);
+
+export const confirmEmailFail = createAction(
+  '[Auth] Confirm Email Failed',
+  props<{ error: HttpErrorResponse }>()
 );

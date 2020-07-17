@@ -33,3 +33,8 @@ export const selectIsAuthenticated = createSelector(
     return expires.getTime() > new Date().getTime();
   }
 );
+
+export const selectIsConfirmEmailLoading = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.confirmEmailLoading
+);

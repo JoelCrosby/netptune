@@ -9,10 +9,18 @@ import { RegisterComponent } from './components/register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { StaticModule } from '@app/static/static.module';
 import { ConfirmViewComponent } from './views/confirm-view/confirm-view.component';
+import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent, ConfirmViewComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, StaticModule, AuthRoutingModule],
-  providers: [],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
+    StaticModule,
+    AuthRoutingModule,
+  ],
+  providers: [ConfirmEmailResolver],
 })
 export class AuthModule {}
