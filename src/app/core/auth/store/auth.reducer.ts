@@ -4,31 +4,46 @@ import { AuthState, initialState } from './auth.models';
 
 const reducer = createReducer(
   initialState,
-  on(actions.tryLogin, state => ({ ...state, loading: true })),
+  on(actions.tryLogin, (state) => ({ ...state, loading: true })),
   on(actions.loginSuccess, (state, { userInfo }) => ({
     ...state,
     isAuthenticated: true,
     loading: false,
     currentUser: userInfo,
   })),
-  on(actions.loginFail, state => ({
+  on(actions.loginFail, (state) => ({
     ...state,
     isAuthenticated: false,
     loading: false,
   })),
-  on(actions.register, state => ({ ...state, loading: true })),
+  on(actions.register, (state) => ({ ...state, loading: true })),
   on(actions.registerSuccess, (state, { userInfo }) => ({
     ...state,
     isAuthenticated: true,
     loading: false,
     currentUser: userInfo,
   })),
-  on(actions.registerFail, state => ({
+  on(actions.registerFail, (state) => ({
     ...state,
     isAuthenticated: false,
     loading: false,
   })),
-  on(actions.logout, state => ({
+  on(actions.confirmEmail, (state) => ({
+    ...state,
+    confirmEmailLoading: true,
+  })),
+  on(actions.confirmEmailSuccess, (state, { userInfo }) => ({
+    ...state,
+    isAuthenticated: true,
+    confirmEmailLoading: false,
+    currentUser: userInfo,
+  })),
+  on(actions.confirmEmailFail, (state) => ({
+    ...state,
+    isAuthenticated: false,
+    confirmEmailLoading: false,
+  })),
+  on(actions.logout, (state) => ({
     ...state,
     loading: false,
     isAuthenticated: false,

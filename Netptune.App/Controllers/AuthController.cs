@@ -70,11 +70,14 @@ namespace Netptune.Api.Controllers
                 return Unauthorized();
             }
 
-            var result = await AuthenticationService.ConfirmEmail(userId, code);
+            // Encoding for plus symbols is going wonky some where ...
+            var decodedCode = code.Replace(' ', '+');
 
-            if (!result.Succeeded) return Unauthorized();
+            var result = await AuthenticationService.ConfirmEmail(userId, decodedCode);
 
-            return Ok(result);
+            if (result is null) return Unauthorized();
+
+            return Ok(result.Ticket);
         }
     }
 }

@@ -1,1 +1,5 @@
-<p>confirm-view works!</p>
+<ng-container *ngIf="loading$ | async">
+  <div class="confirm-email-loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+</ng-container>
