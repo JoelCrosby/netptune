@@ -11,6 +11,14 @@
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
     <UserSecretsId>db9b879b-2e9c-473b-a319-3ee3a0ea36c6</UserSecretsId>
+
+    <!-- This group contains project properties for RazorLight on .NET Core -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+
   </PropertyGroup>
 
   <ItemGroup>
