@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +42,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await BoardService.GetBoard(id);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -77,6 +79,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
             var result = await BoardService.DeleteBoard(id);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }

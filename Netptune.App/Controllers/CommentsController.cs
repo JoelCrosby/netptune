@@ -47,6 +47,8 @@ namespace Netptune.App.Controllers
         {
             var result = await CommentService.GetCommentsForTask(systemId, workspace);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
     }
