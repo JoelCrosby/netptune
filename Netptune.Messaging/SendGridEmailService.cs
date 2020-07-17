@@ -13,11 +13,13 @@ namespace Netptune.Messaging
 {
     public class SendGridEmailService : IEmailService
     {
+        private readonly IEmailRenderService EmailRenderer;
         private readonly EmailOptions Options;
         private readonly string SendGridAPIKey;
 
-        public SendGridEmailService(IOptionsMonitor<EmailOptions> options)
+        public SendGridEmailService(IOptionsMonitor<EmailOptions> options, IEmailRenderService emailRenderer)
         {
+            EmailRenderer = emailRenderer;
             Options = options.CurrentValue;
 
             SendGridAPIKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
@@ -38,7 +40,7 @@ namespace Netptune.Messaging
             var to = new EmailAddress(model.ToAddress, model.ToDisplayName);
 
             var plainTextContent = model.RawTextContent;
-            var htmlContent = model.RawTextContent;
+            var htmlContent = await EmailRenderer.Render(model);
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 

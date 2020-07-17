@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
+using Flurl;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +31,7 @@ namespace Netptune.Services.Authentication
         protected readonly string Issuer;
         protected readonly string SecurityKey;
         protected readonly string ExpireDays;
+        protected readonly string Origin;
 
         public NetptuneAuthService(
             IConfiguration configuration,
@@ -46,6 +49,7 @@ namespace Netptune.Services.Authentication
             Issuer = configuration["Tokens:Issuer"];
             SecurityKey = configuration["Tokens:SecurityKey"];
             ExpireDays = configuration["Tokens:ExpireDays"];
+            Origin = configuration["Origin"];
         }
 
         public async Task<LoginResult> LogIn(TokenRequest model)
@@ -94,15 +98,46 @@ namespace Netptune.Services.Authentication
 
             await UnitOfWork.CompleteAsync();
 
+            await SendWelcomeEmail(appUser);
+
+            return RegisterResult.Success(GenerateToken(appUser));
+        }
+
+        public async Task<IdentityResult> ConfirmEmail(string userId, string code)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+
+            return await UserManager.ConfirmEmailAsync(user, code);
+        }
+
+        public Task<IdentityResult> ConfirmEmail(AppUser appUser, string code)
+        {
+            return UserManager.ConfirmEmailAsync(appUser, code);
+        }
+
+        private async Task SendWelcomeEmail(AppUser appUser)
+        {
+            var confirmEmailCode = await UserManager.GenerateEmailConfirmationTokenAsync(appUser);
+
+            var callbackUrl = Origin
+                .AppendPathSegments("app", "auth", "confirm")
+                .SetQueryParam("userId", appUser.Id)
+                .SetQueryParam("code", confirmEmailCode);
+
+            var rawTextContent = $"Thanks for registering with Netptune. Confirm your email address with the following link. {callbackUrl}";
+
             await Email.Send(new SendEmailModel
             {
                 ToDisplayName = $"{appUser.Firstname} {appUser.Lastname}",
                 Subject = "Welcome To Netptune",
-                RawTextContent = "Thanks for registering with Netptune.",
+                RawTextContent = rawTextContent,
                 ToAddress = appUser.Email,
+                Action = "Confirm Email",
+                Link = callbackUrl,
+                PreHeader = "Thanks for signing up",
+                Name = appUser.Firstname,
+                Message = "Thanks for registering with Netptune. \n\n Confirm your email address with the following link."
             });
-
-            return RegisterResult.Success(GenerateToken(appUser));
         }
 
         private DateTime GetExpireDays()

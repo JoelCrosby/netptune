@@ -13,7 +13,7 @@ namespace Netptune.Core.Repositories
 
         Task<ProjectTask> GetTask(string systemId, string workspaceSlug);
 
-        Task<int> GetTaskInternalId(string systemId, string workspaceSlug);
+        Task<int?> GetTaskInternalId(string systemId, string workspaceSlug);
 
         Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug);
 

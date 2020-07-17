@@ -35,11 +35,13 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> GetTaskInternalId(string systemId, string workspaceSlug)
+        public async Task<int?> GetTaskInternalId(string systemId, string workspaceSlug)
         {
             var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
 
-            return await entity.Select(x => x.Id).FirstOrDefaultAsync();
+            var task = await entity.FirstOrDefaultAsync();
+
+            return task?.Id;
         }
 
         public async Task<ProjectTask> GetTask(string systemId, string workspaceSlug)
