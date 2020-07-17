@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -34,6 +34,9 @@ namespace Netptune.Services
         public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request)
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace, true);
+
+            if (workspace is null) return null;
+
             var user = await IdentityService.GetCurrentUser();
 
             var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks);

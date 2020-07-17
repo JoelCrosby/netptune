@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -113,6 +113,8 @@ namespace Netptune.Services
         public async Task<ProjectViewModel> GetProject(int id)
         {
             var result = await ProjectRepository.GetAsync(id);
+
+            if (result is null) return null;
 
             return await GetProjectViewModel(result);
         }
