@@ -12,7 +12,7 @@
     cdkAutosizeMinRows="2"
     cdkAutosizeMaxRows="12"
     #autosize="cdkTextareaAutosize"
-    (keyup.enter)="onSubmit()"
+    (keydown.enter)="onSubmit($event)"
     placeholder="What do you need to get done?"
   >
   </textarea>
