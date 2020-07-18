@@ -28,23 +28,7 @@ export class TaskListItemComponent {
   }
 
   deleteClicked() {
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        width: '600px',
-        data: {
-          title: 'Are you sure you want to delete task?',
-          content: `Delete task - ${TextHelpers.truncate(this.task.name)}`,
-          confirm: 'Delete',
-        },
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result) {
-          this.store.dispatch(
-            TaskActions.deleteProjectTask({ task: this.task })
-          );
-        }
-      });
+    this.store.dispatch(TaskActions.deleteProjectTask({ task: this.task }));
   }
 
   markCompleteClicked() {

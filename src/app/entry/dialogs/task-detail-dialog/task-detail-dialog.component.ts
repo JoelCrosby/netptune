@@ -21,16 +21,10 @@ import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import {
-  debounceTime,
-  filter,
-  first,
-  takeUntil,
-  tap,
-  map,
-} from 'rxjs/operators';
+import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -52,7 +46,8 @@ export class TaskDetailDialogComponent
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private actions$: Actions<Action>
   ) {}
 
   projectFromGroup: FormGroup;
@@ -223,6 +218,26 @@ export class TaskDetailDialogComponent
           };
 
           this.updateTask(updated);
+        })
+      )
+      .subscribe();
+  }
+
+  deleteClicked() {
+    this.actions$
+      .pipe(
+        ofType(TaskActions.deleteProjectTasksSuccess),
+        takeUntil(this.onDestroy$),
+        first(),
+        tap(() => this.dialogRef.close())
+      )
+      .subscribe();
+
+    this.task$
+      .pipe(
+        first(),
+        tap((task) => {
+          this.store.dispatch(TaskActions.deleteProjectTask({ task }));
         })
       )
       .subscribe();
