@@ -39,8 +39,6 @@ export class ProfileComponent implements OnInit {
 
   constructor(private store: Store<AppState>) {}
 
-  onLogoutClicked = () => this.store.dispatch(AuthActions.logout());
-
   ngOnInit() {
     this.store.dispatch(loadProfile());
     this.loadingUpdate$ = this.store.pipe(
@@ -74,5 +72,9 @@ export class ProfileComponent implements OnInit {
     };
 
     this.store.dispatch(updateProfile({ profile }));
+  }
+
+  onLogoutClicked() {
+    this.store.dispatch(AuthActions.logout());
   }
 }

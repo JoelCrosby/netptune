@@ -18,6 +18,8 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '@core/services/confirmation.service';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -28,17 +30,9 @@ export class AuthEffects {
     private localStorageService: LocalStorageService,
     private router: Router,
     private authService: AuthService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private confirmation: ConfirmationService
   ) {}
-
-  logOut$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(actions.logout),
-        tap(() => this.router.navigate(['auth/login']))
-      ),
-    { dispatch: false }
-  );
 
   persistSettings = createEffect(
     () =>
@@ -47,6 +41,7 @@ export class AuthEffects {
           actions.loginFail,
           actions.loginSuccess,
           actions.logout,
+          actions.logoutSuccess,
           actions.tryLogin,
           actions.registerSuccess,
           actions.confirmEmailSuccess
@@ -107,7 +102,23 @@ export class AuthEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.logout),
-      map(() => clearSttings())
+      switchMap(() =>
+        this.confirmation.open(LOGOUT_CONFIRMATION).pipe(
+          map((result) => {
+            if (!result) return { type: 'NO_ACTION' };
+
+            this.router.navigate(['auth/login']);
+            return actions.logoutSuccess();
+          })
+        )
+      )
     )
   );
 }
+
+const LOGOUT_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Logout',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to logout?',
+  title: 'Logout',
+};
