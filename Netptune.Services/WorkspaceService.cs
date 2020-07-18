@@ -36,6 +36,7 @@ namespace Netptune.Services
                 CreatedByUserId = user.Id,
                 OwnerId = user.Id,
                 Slug = request.Name.ToUrlSlug(),
+                MetaInfo = request.MetaInfo
             };
 
             workspace.WorkspaceUsers.Add(new WorkspaceAppUser
