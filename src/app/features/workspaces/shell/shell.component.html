@@ -28,6 +28,26 @@
       </a>
     </mat-nav-list>
 
+    <mat-nav-list>
+      <h3 matSubheader class="app-sub-header">
+        Settings
+      </h3>
+      <a
+        mat-list-item
+        *ngFor="let link of bottomLinks"
+        [routerLink]="link.value"
+        class="app-menu-link"
+        routerLinkActive="router-link-active"
+      >
+      <mat-icon mat-list-icon class="material-icons-round">
+        {{ link.icon }}
+      </mat-icon>
+      <p mat-line>
+        {{ link.label }}
+      </p>
+      </a>
+    </mat-nav-list>
+
   </mat-sidenav>
 
   <mat-sidenav-content>

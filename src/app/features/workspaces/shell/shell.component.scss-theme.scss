@@ -20,18 +20,29 @@
     color: rgba(255, 255, 255, 1);
   }
 
+  .app-menu-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    background-color: lighten(mat-color($background, side-bar), 8) !important;
+  }
+
   .app-sidenav {
     background-color: mat-color($background, side-bar);
+
+    .mat-drawer-inner-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   }
 
   .router-link-active {
-    background-color: lighten(mat-color($background, side-bar), 8);
-    color: rgba(255, 255, 255, .8);
+    background-color: lighten(mat-color($background, side-bar), 10);
+    color: rgba(255, 255, 255, 1);
   }
 
   .router-link-active:hover,
   .router-link-active:focus {
-    color: rgba(255, 255, 255, .8) !important;
-    background-color: lighten(mat-color($background, side-bar), 10) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    background-color: lighten(mat-color($background, side-bar), 12) !important;
   }
 }
