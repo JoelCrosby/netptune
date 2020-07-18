@@ -53,9 +53,23 @@
     display: none;
   }
 
-  .mat-form-field-appearance-fill .mat-form-field-flex {
-    border-radius: 4px !important;
+  .mat-form-field-appearance-fill {
+    .mat-form-field-flex {
+      border-radius: 4px !important;
+    }
+
+
+    .mat-form-field-infix {
+      padding: .75em 0 !important;
+    }
   }
+
+  .mat-form-field-appearance-fill.no-floating-label {
+    .mat-form-field-infix {
+      border-top: 0 !important;
+    }
+  }
+
 
   // Mat Menus
 
