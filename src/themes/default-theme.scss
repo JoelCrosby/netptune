@@ -37,6 +37,7 @@ $mat-light-theme-background: (
   disabled-button-toggle: map-get($mat-grey, 200),
   unselected-chip: map-get($mat-grey, 300),
   disabled-list-option: map-get($mat-grey, 200),
+  tooltip: rgb(44, 44, 44),
   border: rgba(0, 0, 0, .08),
 );
 
