@@ -32,6 +32,10 @@ export class ShellComponent implements OnInit, AfterViewInit {
     { label: 'Tasks', value: ['./tasks'], icon: 'check_box' },
     { label: 'Boards', value: ['./boards'], icon: 'table_chart' },
     { label: 'Users', value: ['./users'], icon: 'supervised_user_circle' },
+  ];
+
+  bottomLinks = [
+    { label: 'Profile', value: ['./profile'], icon: 'perm_identity' },
     { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
   ];
 
