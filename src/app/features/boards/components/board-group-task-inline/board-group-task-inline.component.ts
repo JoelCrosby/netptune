@@ -110,7 +110,9 @@ export class BoardGroupTaskInlineComponent
     }
   }
 
-  onSubmit() {
+  onSubmit(event?: Event) {
+    event?.preventDefault();
+
     combineLatest([
       this.currentWorkspace$,
       this.currentProject$,
