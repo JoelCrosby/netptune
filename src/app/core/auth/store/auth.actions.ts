@@ -24,6 +24,8 @@ export const loginFail = createAction(
 
 export const logout = createAction('[Auth] Logout');
 
+export const logoutSuccess = createAction('[Auth] Logout Success');
+
 // Register
 
 export const register = createAction(

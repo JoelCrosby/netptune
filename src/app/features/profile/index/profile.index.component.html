@@ -1,6 +1,11 @@
 <app-page-container [showProgress]="loadingUpdate$ | async">
 
-  <app-page-header title="Profile"></app-page-header>
+  <app-page-header
+    title="Profile"
+    actionTitle="Logout"
+    (actionClick)="onLogoutClicked()"
+  >
+  </app-page-header>
 
   <form [formGroup]="profileGroup" class="px-0">
 
@@ -23,11 +28,11 @@
     </mat-form-field>
 
     <button
-      mat-button
+      mat-stroked-button
       (click)="updateClicked()"
       [disabled]="loadingUpdate$ | async"
     >
-      Update
+      Update Profile
     </button>
 
   </form>

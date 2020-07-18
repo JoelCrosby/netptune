@@ -42,12 +42,6 @@ const reducer = createReducer(
     ...state,
     isAuthenticated: false,
     confirmEmailLoading: false,
-  })),
-  on(actions.logout, (state) => ({
-    ...state,
-    loading: false,
-    isAuthenticated: false,
-    currentUser: undefined,
   }))
 );
 
