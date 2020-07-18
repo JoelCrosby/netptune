@@ -15,6 +15,8 @@ import {
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -61,10 +63,18 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.deleteProjectTask),
       switchMap((action) =>
-        this.projectTasksService.delete(action.task).pipe(
-          tap(() => this.snackbar.open('Task deleted')),
-          map((task) => actions.deleteProjectTasksSuccess({ task })),
-          catchError((error) => of(actions.deleteProjectTasksFail({ error })))
+        this.confirmation.open(DELETE_TASK_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.projectTasksService.delete(action.task).pipe(
+              tap(() => this.snackbar.open('Task deleted')),
+              map((task) => actions.deleteProjectTasksSuccess({ task })),
+              catchError((error) =>
+                of(actions.deleteProjectTasksFail({ error }))
+              )
+            );
+          })
         )
       )
     )
@@ -117,7 +127,15 @@ export class ProjectTasksEffects {
   constructor(
     private actions$: Actions<Action>,
     private projectTasksService: ProjectTasksService,
+    private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private store: Store<AppState>
   ) {}
 }
+
+const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to delete this task?',
+  title: 'Delete Task',
+};

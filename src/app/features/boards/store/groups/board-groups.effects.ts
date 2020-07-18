@@ -53,6 +53,13 @@ export class BoardGroupsEffects {
     )
   );
 
+  taskDeleted$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProjectTaskActions.deleteProjectTasksSuccess),
+      map(() => actions.loadBoardGroups())
+    )
+  );
+
   deleteBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
