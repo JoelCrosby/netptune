@@ -47,7 +47,9 @@ export class AuthEffects {
           actions.loginFail,
           actions.loginSuccess,
           actions.logout,
-          actions.tryLogin
+          actions.tryLogin,
+          actions.registerSuccess,
+          actions.confirmEmailSuccess
         ),
         withLatestFrom(this.store.pipe(select(selectAuthState))),
         tap(([action, settings]) =>
