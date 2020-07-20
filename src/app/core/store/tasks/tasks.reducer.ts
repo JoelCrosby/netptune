@@ -5,6 +5,9 @@ import { adapter, initialState, TasksState } from './tasks.model';
 const reducer = createReducer(
   initialState,
   on(actions.clearState, () => initialState),
+
+  // Load Tasks
+
   on(actions.loadProjectTasks, (state) => ({ ...state, loading: true })),
   on(actions.loadProjectTasksFail, (state, { error }) => ({
     ...state,
@@ -18,6 +21,9 @@ const reducer = createReducer(
       loaded: true,
     })
   ),
+
+  // Create Task
+
   on(actions.createProjectTask, (state) => ({
     ...state,
     loadingNewTask: true,
@@ -34,6 +40,9 @@ const reducer = createReducer(
       createdTask: task,
     })
   ),
+
+  // Edit Task
+
   on(actions.editProjectTask, (state) => ({
     ...state,
     editState: { loading: true },
@@ -49,6 +58,9 @@ const reducer = createReducer(
       detailTask: task.id === state.detailTask?.id ? task : state.detailTask,
     })
   ),
+
+  // Delete Task
+
   on(actions.deleteProjectTask, (state) => ({
     ...state,
     deleteState: { loading: true },
@@ -63,6 +75,9 @@ const reducer = createReducer(
       deleteState: { loading: false },
     })
   ),
+
+  // Select Task
+
   on(actions.selectTask, (state, { task }) => ({
     ...state,
     selectedTask: task,
@@ -71,18 +86,30 @@ const reducer = createReducer(
     ...state,
     selectedTask: undefined,
   })),
+
+  // Set Inline Edit Active
+
   on(actions.setInlineEditActive, (state, { active }) => ({
     ...state,
     inlineEditActive: active,
   })),
+
+  // Load Task Details
+
   on(actions.loadTaskDetailsSuccess, (state, { task }) => ({
     ...state,
     detailTask: task,
   })),
+
+  // Load Comments
+
   on(actions.loadCommentsSuccess, (state, { comments }) => ({
     ...state,
     comments,
   })),
+
+  // Add Comment
+
   on(actions.addCommentSuccess, (state, { comment }) => ({
     ...state,
     comments: [...state.comments, comment].sort(
@@ -90,6 +117,9 @@ const reducer = createReducer(
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     ),
   })),
+
+  // Clear Task Detail
+
   on(actions.clearTaskDetail, (state) => ({
     ...state,
     detailTask: undefined,
