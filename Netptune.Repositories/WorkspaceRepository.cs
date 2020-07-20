@@ -39,12 +39,8 @@ namespace Netptune.Repositories
 
         public Task<List<Workspace>> GetWorkspaces(AppUser user)
         {
-            // Load the relationship table.
-            Entities.Include(m => m.WorkspaceUsers).ThenInclude(e => e.User);
-
-            // Select workspaces
             return Context.WorkspaceAppUsers
-                .Where(x => x.User.Id == user.Id)
+                .Where(x => x.UserId == user.Id)
                 .Select(w => w.Workspace)
                 .Where(x => !x.IsDeleted)
                 .ToListAsync();
