@@ -1,6 +1,7 @@
 import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createAction, props } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const clearState = createAction('[Projects] Clear State');
 
@@ -15,7 +16,7 @@ export const loadProjectsSuccess = createAction(
 
 export const loadProjectsFail = createAction(
   '[Projects] Load Projects Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Create Project
@@ -32,7 +33,7 @@ export const createProjectSuccess = createAction(
 
 export const createProjectFail = createAction(
   '[Projects] Create Project Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Select Project
@@ -56,5 +57,5 @@ export const deleteProjectSuccess = createAction(
 
 export const deleteProjectFail = createAction(
   '[Projects] Delete Project Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );

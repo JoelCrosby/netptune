@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
+import { AppState, selectSettingsState } from '@app/core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { merge, of } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './settings.actions';
-import { SettingsState } from './settings.model';
 import { selectEffectiveTheme } from './settings.selectors';
-import { selectSettingsState, AppState } from '@app/core/core.state';
 
 const INIT = of('app-init-effect-trigger');
 
