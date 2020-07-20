@@ -19,6 +19,7 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -30,7 +31,8 @@ export class AuthEffects {
     private router: Router,
     private authService: AuthService,
     private store: Store<AppState>,
-    private confirmation: ConfirmationService
+    private confirmation: ConfirmationService,
+    private snackbar: MatSnackBar
   ) {}
 
   persistSettings = createEffect(
@@ -43,7 +45,9 @@ export class AuthEffects {
           actions.logoutSuccess,
           actions.tryLogin,
           actions.registerSuccess,
-          actions.confirmEmailSuccess
+          actions.registerFail,
+          actions.confirmEmailSuccess,
+          actions.confirmEmailFail
         ),
         withLatestFrom(this.store.pipe(select(selectAuthState))),
         tap(([action, settings]) =>
@@ -92,9 +96,23 @@ export class AuthEffects {
           this.authService.confirmEmail(action.request).pipe(
             map((userInfo: User) => actions.confirmEmailSuccess({ userInfo })),
             tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => this.snackbar.open('Email confirmed successfully')),
             catchError((error) => of(actions.confirmEmailFail({ error })))
           )
         )
+      )
+  );
+
+  confirmEmailFail$ = createEffect(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.confirmEmailFail),
+        debounceTime(debounce, scheduler),
+        tap(() => this.router.navigate(['/auth/login'])),
+        tap(() =>
+          this.snackbar.open('Email confirmation code is invalid or expired')
+        ),
+        map(() => actions.logoutSuccess())
       )
   );
 
