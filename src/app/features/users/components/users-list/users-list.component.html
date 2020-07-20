@@ -14,7 +14,9 @@
           <div
             mat-card-avatar
             class="user-header-image"
-          ></div>
+          >
+            <app-avatar [name]="user.displayName" size="32"></app-avatar>
+          </div>
           <mat-card-title>{{ user | username }}</mat-card-title>
           <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
         </mat-card-header>
