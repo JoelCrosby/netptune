@@ -85,7 +85,10 @@ const reducer = createReducer(
   })),
   on(actions.addCommentSuccess, (state, { comment }) => ({
     ...state,
-    comments: [...state.comments, comment],
+    comments: [...state.comments, comment].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    ),
   })),
   on(actions.clearTaskDetail, (state) => ({
     ...state,
