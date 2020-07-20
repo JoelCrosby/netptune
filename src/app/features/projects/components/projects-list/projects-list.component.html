@@ -13,8 +13,10 @@
       <mat-card-header>
         <div
           mat-card-avatar
-          class="project-header-image"
-        ></div>
+          class="user-header-image"
+        >
+          <app-avatar [name]="project.name" size="32"></app-avatar>
+        </div>
         <mat-card-title>{{ project.name }}</mat-card-title>
         <mat-card-subtitle>
           <a
