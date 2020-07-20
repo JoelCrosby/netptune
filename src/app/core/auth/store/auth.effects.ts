@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { AppState } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
-import { clearSttings } from '@core/store/settings/settings.actions';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
@@ -18,8 +19,6 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { ConfirmationService } from '@core/services/confirmation.service';
 
 export const AUTH_KEY = 'AUTH';
 
