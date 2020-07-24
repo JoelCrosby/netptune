@@ -9,7 +9,7 @@ import { BoardsRoutingModule } from './boards-routing.module';
 import { BoardsEffects } from './store/boards/boards.effects';
 import { boardsReducer } from './store/boards/boards.reducer';
 import { BoardsService } from './store/boards/boards.service';
-import { BoardsViewComponent } from './views/boards-view/boards-view.component';
+import { BoardGroupsViewComponent } from './views/board-groups-view/board-groups-view.component';
 import { boardGroupsReducer } from './store/groups/board-groups.reducer';
 import { BoardGroupComponent } from './components/board-group/board-group.component';
 import { BoardGroupTaskInlineComponent } from './components/board-group-task-inline/board-group-task-inline.component';
@@ -18,7 +18,7 @@ import { CreateBoardGroupComponent } from './components/create-board-group/creat
 
 @NgModule({
   declarations: [
-    BoardsViewComponent,
+    BoardGroupsViewComponent,
     BoardGroupComponent,
     BoardGroupTaskInlineComponent,
     BoardGroupCardComponent,

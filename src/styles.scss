@@ -36,7 +36,7 @@
 @import './app/features/project-tasks/components/task-list/task-list.component.scss-theme.scss';
 @import './app/features/projects/components/projects-list/projects-list.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-inline/task-inline.component.scss-theme.scss';
-@import './app/features/boards/views/boards-view/boards-view.component.scss-theme.scss';
+@import './app/features/boards/views/board-groups-view/board-groups-view.component.scss-theme.scss';
 @import './app/features/boards/components/board-group/board-group.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-card/board-group-card.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-task-inline/board-group-task-inline.component.scss-theme.scss';
@@ -59,7 +59,7 @@
   @include project-tasks-list-theme($theme);
   @include projects-list-theme($theme);
   @include task-inline-theme($theme);
-  @include boards-view-theme($theme);
+  @include board-groups-view-theme($theme);
   @include board-group-theme($theme);
   @include board-group-task-inline-theme($theme);
   @include create-board-group-theme($theme);
