@@ -21,7 +21,7 @@ namespace Netptune.Repositories
 
         public Task<Workspace> GetBySlug(string slug)
         {
-            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug);
+            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
         }
 
         public Task<Workspace> GetBySlug(string slug, bool includeRelated)
@@ -31,10 +31,10 @@ namespace Netptune.Repositories
                 return Entities
                     .Include(workspace => workspace.Projects)
                     .ThenInclude(project => project.ProjectTasks)
-                    .FirstOrDefaultAsync(workspace => workspace.Slug == slug);
+                    .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
             }
 
-            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug);
+            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
         }
 
         public Task<List<Workspace>> GetWorkspaces(AppUser user)
@@ -44,6 +44,11 @@ namespace Netptune.Repositories
                 .Select(w => w.Workspace)
                 .Where(x => !x.IsDeleted)
                 .ToListAsync();
+        }
+
+        public Task<bool> Exists(string slug)
+        {
+            return Entities.AnyAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
         }
     }
 }

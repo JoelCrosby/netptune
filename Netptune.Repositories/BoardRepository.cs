@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,5 +45,13 @@ namespace Netptune.Repositories
                 .ThenInclude(group => group.TasksInGroups)
                 .FirstOrDefaultAsync();
         }
+
+        public Task<List<Board>> GetBoards(string slug)
+        {
+            return (from b in Entities
+                    join p in Context.Projects on b.ProjectId equals p.Id
+                    join w in Context.Workspaces on p.WorkspaceId equals w.Id
+                    where w.Slug == slug && !w.IsDeleted && !b.IsDeleted && !p.IsDeleted
+                    select b).ToListAsync();        }
     }
 }
