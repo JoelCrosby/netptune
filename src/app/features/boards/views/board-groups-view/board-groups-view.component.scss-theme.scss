@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin boards-view-theme($theme) {
+@mixin board-groups-view-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
