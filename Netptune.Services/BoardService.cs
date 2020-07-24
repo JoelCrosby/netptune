@@ -100,5 +100,14 @@ namespace Netptune.Services
 
             return board;
         }
+
+        public async Task<List<Board>> GetBoardsInWorkspace(string slug)
+        {
+            var worksapceExists = await UnitOfWork.Workspaces.Exists(slug);
+
+            if (!worksapceExists) return null;
+
+            return await Boards.GetBoards(slug);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -16,5 +16,7 @@ namespace Netptune.Core.Services
         Task<Board> AddBoard(Board board);
 
         Task<Board> DeleteBoard(int id);
+
+        Task<List<Board>> GetBoardsInWorkspace(string slug);
     }
 }
