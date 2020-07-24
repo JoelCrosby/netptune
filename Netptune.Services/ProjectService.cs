@@ -47,35 +47,7 @@ namespace Netptune.Services
                     UserId = user.Id
                 });
 
-                project.ProjectBoards.Add(new Board
-                {
-                    Identifier = GenerateDefaultBoardId(project),
-                    Name = project.Name,
-                    OwnerId = project.OwnerId,
-                    BoardType = BoardType.Default,
-                    BoardGroups = new[]
-                    {
-                        new BoardGroup
-                        {
-                            Name = "Backlog",
-                            Type = BoardGroupType.Backlog,
-                            SortOrder = 1D
-                        },
-                        new BoardGroup
-                        {
-                            Name = "Todo",
-                            Type = BoardGroupType.Todo,
-                            SortOrder = 1.1D
-                        },
-                        new BoardGroup
-                        {
-                            Name = "Done",
-                            Type = BoardGroupType.Done,
-                            SortOrder = 1.3D
-                        }
-                    }
-
-                });
+                project.ProjectBoards.Add(GenerateDefaultBoard(project));
 
                 project.Key = await GetProjectKey(project) ??
                               throw new Exception("Failed to generate unique project Key for project.");
@@ -90,9 +62,41 @@ namespace Netptune.Services
             });
         }
 
-        private static string GenerateDefaultBoardId(Project project)
+        private static Board GenerateDefaultBoard(Project project)
         {
-            return $"{project.Name.ToLowerInvariant()}-default-board";
+            return new Board
+            {
+                Identifier = GenerateDefaultBoardId(project.Name),
+                Name = project.Name,
+                OwnerId = project.OwnerId,
+                BoardType = BoardType.Default,
+                BoardGroups = new[]
+                {
+                    new BoardGroup
+                    {
+                        Name = "Backlog",
+                        Type = BoardGroupType.Backlog,
+                        SortOrder = 1D
+                    },
+                    new BoardGroup
+                    {
+                        Name = "Todo",
+                        Type = BoardGroupType.Todo,
+                        SortOrder = 1.1D
+                    },
+                    new BoardGroup
+                    {
+                        Name = "Done",
+                        Type = BoardGroupType.Done,
+                        SortOrder = 1.3D
+                    }
+                }
+            };
+        }
+
+        private static string GenerateDefaultBoardId(string projectName)
+        {
+            return $"{projectName.ToLowerInvariant()}-default-board";
         }
 
         public async Task<ProjectViewModel> DeleteProject(int id)
