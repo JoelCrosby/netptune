@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Entities
 {
@@ -25,6 +26,21 @@ namespace Netptune.Core.Entities
         public Project Project { get; set; }
 
         #endregion
+
+        public BoardViewModel ToViewModel()
+        {
+            return new BoardViewModel
+            {
+                Id = Id,
+                Name = Name,
+                Identifier = Identifier,
+                ProjectId = ProjectId,
+                BoardType = BoardType,
+                CreatedAt = CreatedAt,
+                UpdatedAt = UpdatedAt,
+                OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
+            };
+        }
 
     }
 }

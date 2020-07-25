@@ -1,0 +1,32 @@
+.boards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 140px;
+  grid-gap: 1em;
+  padding: .6rem;
+  border-radius: .4rem;
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: contents;
+  }
+}
+
+.mat-card > .mat-card-actions:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0;
+}
+
+mat-card-header {
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +8,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services
 {
@@ -27,7 +27,16 @@ namespace Netptune.Services
             BoardGroups = unitOfWork.BoardGroups;
         }
 
-        public async Task<List<BoardGroup>> GetBoardGroups(int boardId)
+        public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier)
+        {
+            var boardId = await Boards.GetIdByIndentifier(boardIdentifier);
+
+            if (!boardId.HasValue) return null;
+
+            return await GetBoardGroups(boardId.Value);
+        }
+
+        public async Task<BoardGroupsViewModel> GetBoardGroups(int boardId)
         {
             var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
 
@@ -46,7 +55,13 @@ namespace Netptune.Services
                 group.Tasks.AddRange(tasks);
             }
 
-            return groups;
+            var board = await UnitOfWork.Boards.GetViewModel(boardId);
+
+            return new BoardGroupsViewModel
+            {
+                Groups = groups,
+                Board = board,
+            };
         }
 
         public ValueTask<BoardGroup> GetBoardGroup(int id)

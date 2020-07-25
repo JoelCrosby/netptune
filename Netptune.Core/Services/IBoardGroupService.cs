@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Services
 {
     public interface IBoardGroupService
     {
-        Task<List<BoardGroup>> GetBoardGroups(int boardId);
+        Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier);
+
+        Task<BoardGroupsViewModel> GetBoardGroups(int boardId);
 
         ValueTask<BoardGroup> GetBoardGroup(int id);
 

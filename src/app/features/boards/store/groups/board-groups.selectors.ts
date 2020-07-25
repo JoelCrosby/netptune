@@ -1,5 +1,6 @@
+import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
 import { AppState } from '@core/core.state';
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
 
 export interface State extends AppState {
@@ -46,4 +47,14 @@ export const selectIsInlineActive = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState, props: { groupId: number }) =>
     props.groupId === state.inlineActive
+);
+
+export const selectBoard = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.board
+);
+
+export const selectBoardId = createSelector(
+  selectBoard,
+  (state: BoardViewModel) => state.id
 );

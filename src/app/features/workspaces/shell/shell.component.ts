@@ -1,9 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
-  AfterViewInit,
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -13,14 +12,13 @@ import { AppState, selectPageTitle } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { loadProjects } from '@core/store/projects/projects.actions';
 
 @Component({
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShellComponent implements OnInit, AfterViewInit {
+export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav: MatSidenav;
 
   authenticated$: Observable<boolean>;
@@ -57,10 +55,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
       select(AuthSelectors.selectCurrentUserDisplayName)
     );
     this.pageTitle$ = this.store.pipe(select(selectPageTitle));
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(loadProjects());
   }
 
   onToggleSideNav = () => this.sideNav.toggle();

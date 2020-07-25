@@ -15,6 +15,8 @@ import { BoardGroupComponent } from './components/board-group/board-group.compon
 import { BoardGroupTaskInlineComponent } from './components/board-group-task-inline/board-group-task-inline.component';
 import { BoardGroupCardComponent } from './components/board-group-card/board-group-card.component';
 import { CreateBoardGroupComponent } from './components/create-board-group/create-board-group.component';
+import { BoardsViewComponent } from './views/boards-view/boards-view.component';
+import { BoardsGridComponent } from './components/boards-grid/boards-grid.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { CreateBoardGroupComponent } from './components/create-board-group/creat
     BoardGroupTaskInlineComponent,
     BoardGroupCardComponent,
     CreateBoardGroupComponent,
+    BoardsViewComponent,
+    BoardsGridComponent,
   ],
   imports: [
     SharedModule,

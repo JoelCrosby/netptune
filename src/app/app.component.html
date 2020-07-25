@@ -31,7 +31,7 @@
           class="app-workspace-link"
           routerLinkActive="router-link-active"
           *ngFor="let workspace of workspaces$ | async"
-          [routerLink]="['/ws/', workspace.slug]"
+          [routerLink]="['/', workspace.slug]"
           [style.backgroundColor]="workspace?.metaInfo.color"
           [matTooltip]="workspace?.name"
           matTooltipPosition="right"

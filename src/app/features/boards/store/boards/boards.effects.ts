@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SelectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
+import { loadBoardGroups } from '@boards/store/groups/board-groups.actions';
 import { AppState } from '@core/core.state';
-import { selectCurrentProject } from '@core/store/projects/projects.selectors';
+import { loadProjectsSuccess } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -14,38 +16,22 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { loadBoardGroups } from '@boards/store/groups/board-groups.actions';
 import * as actions from './boards.actions';
-import { selectCurrentBoard } from './boards.selectors';
 import { BoardsService } from './boards.service';
-import { loadProjectsSuccess } from '@core/store/projects/projects.actions';
 
 @Injectable()
 export class BoardsEffects {
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoards),
-      withLatestFrom(this.store.select(selectCurrentProject)),
-      filter(([_, project]) => !!project),
-      switchMap(([_, project]) =>
-        this.boardsService.get(project.id).pipe(
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      filter(([_, workspace]) => !!workspace),
+      switchMap(([_, workspace]) =>
+        this.boardsService.getByWorksapce(workspace.slug).pipe(
           map((boards) => actions.loadBoardsSuccess({ boards })),
           catchError((error) => of(actions.loadBoardsFail({ error })))
         )
       )
-    )
-  );
-
-  loadBoardsSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.loadBoardsSuccess),
-      withLatestFrom(this.store.select(selectCurrentBoard)),
-      map(([action, selected]) => {
-        if (selected) return { type: '[N/A]' };
-        return actions.selectBoard({
-          board: action.boards && action.boards[0],
-        });
-      })
     )
   );
 
@@ -71,20 +57,6 @@ export class BoardsEffects {
           catchError((error) => of(actions.deleteBoardFail({ error })))
         )
       )
-    )
-  );
-
-  selectBoard$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.selectBoard),
-      map((_) => loadBoardGroups())
-    )
-  );
-
-  onProjectsLoaded$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadProjectsSuccess),
-      map(() => actions.loadBoards())
     )
   );
 

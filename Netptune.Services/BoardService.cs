@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Netptune.Core.Encoding;
@@ -7,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services
 {
@@ -101,13 +103,15 @@ namespace Netptune.Services
             return board;
         }
 
-        public async Task<List<Board>> GetBoardsInWorkspace(string slug)
+        public async Task<List<BoardViewModel>> GetBoardsInWorkspace(string slug)
         {
             var worksapceExists = await UnitOfWork.Workspaces.Exists(slug);
 
             if (!worksapceExists) return null;
 
-            return await Boards.GetBoards(slug);
+            var results = await Boards.GetBoards(slug, true);
+
+            return results.Select(result => result.ToViewModel()).ToList();
         }
     }
 }
