@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppState } from '@app/core/core.state';
-import { BoardGroupDialogComponent } from '@app/entry/dialogs/board-group-dialog/board-group-dialog.component';
-import * as BoardSelectors from '@boards/store/boards/boards.selectors';
+import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { Store } from '@ngrx/store';
 import { first, tap } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ export class CreateBoardGroupComponent {
 
   onClick() {
     this.store
-      .select(BoardSelectors.selectCurrentBoardId)
+      .select(GroupSelectors.selectBoardId)
       .pipe(
         first(),
         tap((boardId) =>

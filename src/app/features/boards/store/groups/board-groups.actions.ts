@@ -1,7 +1,9 @@
-import { BoardGroup } from '@app/core/models/board-group';
+import { BoardGroup } from '@core/models/board-group';
 import { createAction, props } from '@ngrx/store';
-import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
-import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
+import { HttpErrorResponse } from '@angular/common/http';
+import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -11,12 +13,12 @@ export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
 export const loadBoardGroupsSuccess = createAction(
   '[BoardGroups] Load Board Groups Success ',
-  props<{ boardGroups: BoardGroup[] }>()
+  props<{ boardGroups: BoardGroupsViewModel }>()
 );
 
 export const loadBoardGroupsFail = createAction(
   '[BoardGroups] Load Board Groups Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Create Board Group
@@ -33,7 +35,7 @@ export const createBoardGroupSuccess = createAction(
 
 export const createBoardGroupFail = createAction(
   '[BoardGroups] Create Board Group Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Select Board Group
@@ -57,7 +59,7 @@ export const deleteBoardGroupSuccess = createAction(
 
 export const deleteBoardGroupFail = createAction(
   '[BoardGroups] Delete Board Group Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Edit Board Group
@@ -74,7 +76,7 @@ export const editBoardGroupSuccess = createAction(
 
 export const editBoardGroupFail = createAction(
   '[BoardGroups] Edit Board Group Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 // Move Task In BoardGroup
@@ -90,7 +92,7 @@ export const moveTaskInBoardGroupSuccess = createAction(
 
 export const moveTaskInBoardGroupFail = createAction(
   '[BoardGroups] Move Task In BoardGroup Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 export const setIsDragging = createAction(

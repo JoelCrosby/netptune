@@ -24,10 +24,6 @@ const reducer = createReducer(
       loadingCreate: false,
     })
   ),
-  on(actions.selectBoard, (state, { board }) => ({
-    ...state,
-    currentBoard: board,
-  })),
   on(actions.deleteBoard, (state) => ({
     ...state,
     deleteState: { loading: true },

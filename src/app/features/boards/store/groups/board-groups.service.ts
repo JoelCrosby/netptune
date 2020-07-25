@@ -2,6 +2,7 @@ import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BoardGroup } from '@app/core/models/board-group';
+import { BoardGroupsViewModel } from '@app/core/models/view-models/board-groups-view-model';
 import { environment } from '@env/environment';
 import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
 
@@ -9,12 +10,9 @@ import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
 export class BoardGroupsService {
   constructor(private http: HttpClient) {}
 
-  get(boardId: number) {
-    return this.http.get<BoardGroup[]>(
-      environment.apiEndpoint + `api/boardgroups`,
-      {
-        params: { boardId: boardId.toString() },
-      }
+  get(boardId: string) {
+    return this.http.get<BoardGroupsViewModel>(
+      environment.apiEndpoint + `api/boardgroups/board/${boardId}`
     );
   }
 

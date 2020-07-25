@@ -26,7 +26,6 @@ export class WorkspaceResolver implements Resolve<Workspace> {
       .pipe(
         tap((workspace) => {
           this.store.dispatch(selectWorkspace({ workspace }));
-          this.store.dispatch(loadProjects());
         })
       );
   }

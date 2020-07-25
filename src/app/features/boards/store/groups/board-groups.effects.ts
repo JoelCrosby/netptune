@@ -1,7 +1,11 @@
-import { selectCurrentBoard } from '../boards/boards.selectors';
-import { BoardGroupsService } from './board-groups.service';
 import { Injectable } from '@angular/core';
-import { AppState } from '@core/core.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { AppState, selectRouterState } from '@core/core.state';
+import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -9,29 +13,45 @@ import {
   catchError,
   map,
   switchMap,
-  withLatestFrom,
   tap,
-  filter,
+  withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
 export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoardGroups),
-      withLatestFrom(this.store.select(selectCurrentBoard)),
-      filter(([_, board]) => board !== undefined),
-      switchMap(([_, board]) =>
-        this.boardGroupsService.get(board.id).pipe(
+      withLatestFrom(this.store.select(selectRouterState)),
+      map(([action, router]) => {
+        const id = router.state.params.id;
+        return [action, id];
+      }),
+      switchMap(([action, id]) =>
+        this.boardGroupsService.get(id).pipe(
           map((boardGroups) => actions.loadBoardGroupsSuccess({ boardGroups })),
           catchError((error) => of(actions.loadBoardGroupsFail({ error })))
         )
       )
     )
+  );
+
+  loadBoardGroupsFail$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.loadBoardGroupsFail),
+        tap(() => {
+          const url = this.router.routerState.snapshot.url;
+          const parts = url.split('/');
+          parts.pop();
+          const base = parts.join('/');
+
+          this.router.navigateByUrl(base);
+        })
+      ),
+    { dispatch: false }
   );
 
   createBoardGroup$ = createEffect(() =>
@@ -64,10 +84,18 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
       switchMap((action) =>
-        this.boardGroupsService.delete(action.boardGroup).pipe(
-          tap(() => this.snackbar.open('Board Group Deleted')),
-          map((boardGroup) => actions.deleteBoardGroupSuccess({ boardGroup })),
-          catchError((error) => of(actions.deleteBoardGroupFail({ error })))
+        this.confirmation.open(DELETE_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.boardGroupsService.delete(action.boardGroup).pipe(
+              tap(() => this.snackbar.open('Board Group Deleted')),
+              map((boardGroup) =>
+                actions.deleteBoardGroupSuccess({ boardGroup })
+              ),
+              catchError((error) => of(actions.deleteBoardGroupFail({ error })))
+            );
+          })
         )
       )
     )
@@ -105,6 +133,15 @@ export class BoardGroupsEffects {
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
     private store: Store<AppState>,
-    private snackbar: MatSnackBar
+    private confirmation: ConfirmationService,
+    private snackbar: MatSnackBar,
+    private router: Router
   ) {}
 }
+
+const DELETE_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to delete this group?',
+  title: 'Delete Group',
+};

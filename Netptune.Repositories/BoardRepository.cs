@@ -8,6 +8,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -46,12 +47,33 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public Task<List<Board>> GetBoards(string slug)
+        public Task<List<Board>> GetBoards(string slug, bool isReadonly = false)
         {
             return (from b in Entities
                     join p in Context.Projects on b.ProjectId equals p.Id
                     join w in Context.Workspaces on p.WorkspaceId equals w.Id
                     where w.Slug == slug && !w.IsDeleted && !b.IsDeleted && !p.IsDeleted
-                    select b).ToListAsync();        }
+                    select b)
+                .Include(x => x.Owner)
+                .ApplyReadonly(isReadonly);
+        }
+
+        public async Task<int?> GetIdByIndentifier(string indentifier)
+        {
+            var result = await (from b in Entities where b.Identifier == indentifier select b.Id).ToListAsync();
+
+            if (result.Any()) return result.FirstOrDefault();
+
+            return null;
+        }
+
+        public async Task<BoardViewModel> GetViewModel(int id)
+        {
+            var result = await Entities.FirstOrDefaultAsync(board => board.Id == id && !board.IsDeleted);
+
+            if (result is null) return null;
+
+            return result.ToViewModel();
+        }
     }
 }

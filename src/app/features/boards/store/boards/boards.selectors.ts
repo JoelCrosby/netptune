@@ -27,13 +27,3 @@ export const selectBoardsLoaded = createSelector(
   selectBoardsFeature,
   (state: BoardsState) => state.loaded
 );
-
-export const selectCurrentBoard = createSelector(
-  selectBoardsFeature,
-  (state: BoardsState) => state.currentBoard
-);
-
-export const selectCurrentBoardId = createSelector(
-  selectCurrentBoard,
-  (state: Board) => state.id
-);
