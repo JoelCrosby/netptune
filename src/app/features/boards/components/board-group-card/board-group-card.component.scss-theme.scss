@@ -14,6 +14,6 @@
   }
 
   .group-task-card.flagged {
-    background-color: mat-color($warn, .14) !important;
+    background-color: mix(mat-color($warn), mat-color($background, board-group), 15%) !important;
   }
 }

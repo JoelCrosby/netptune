@@ -81,6 +81,10 @@ ul {
 
 // Angular MAterial Modal Class
 
+.mat-dialog-content {
+  @extend .custom-scroll
+}
+
 .app-modal-class {
   transition: max-height .3s ease-out;
   height: auto;
