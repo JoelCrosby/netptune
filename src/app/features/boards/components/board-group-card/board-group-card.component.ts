@@ -18,6 +18,7 @@ export class BoardGroupCardComponent {
     this.dialog.open(TaskDetailDialogComponent, {
       width: '800px',
       data: this.task,
+      panelClass: 'app-modal-class',
     });
   }
 }

@@ -78,3 +78,15 @@ ul {
   border-radius: .4rem !important;
   height: .4rem !important;
 }
+
+// Angular MAterial Modal Class
+
+.app-modal-class {
+  transition: max-height .3s ease-out;
+  height: auto;
+  max-height: 40vh;
+}
+
+.app-modal-class.content-loaded {
+  max-height: 80vh;
+}
