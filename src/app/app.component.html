@@ -32,11 +32,15 @@
           routerLinkActive="router-link-active"
           *ngFor="let workspace of workspaces$ | async"
           [routerLink]="['/', workspace.slug]"
-          [style.backgroundColor]="workspace?.metaInfo.color"
           [matTooltip]="workspace?.name"
           matTooltipPosition="right"
         >
-          {{ workspace.name[0] }}
+          <div
+            class="app-workspace-link-inner"
+            [style.backgroundColor]="workspace?.metaInfo.color"
+          >
+            {{ workspace.name[0] }}
+          </div>
         </a>
       </div>
 

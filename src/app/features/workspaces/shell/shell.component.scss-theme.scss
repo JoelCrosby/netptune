@@ -35,13 +35,13 @@
     }
   }
 
-  .router-link-active {
+  .app-menu-link.router-link-active {
     background-color: lighten(mat-color($background, side-bar), 10);
     color: rgba(255, 255, 255, 1);
   }
 
-  .router-link-active:hover,
-  .router-link-active:focus {
+  .app-menu-link.router-link-active:hover,
+  .app-menu-link.router-link-active:focus {
     color: rgba(255, 255, 255, 1) !important;
     background-color: lighten(mat-color($background, side-bar), 12) !important;
   }

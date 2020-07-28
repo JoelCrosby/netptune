@@ -18,7 +18,25 @@
 
   .workspace-nav-list {
     .app-workspace-link {
-      color: mat-color($background, card);
+      color: mat-color($background, card, .8);
+    }
+
+    .app-workspace-link:hover {
+      color: rgba(255, 255, 255, 1) !important;
+
+      .app-workspace-link-inner {
+        opacity: 1 !important;
+      }
+    }
+
+    .app-workspace-link.router-link-active {
+      color: rgba(255, 255, 255, 1) !important;
+      border: 2px solid  rgba(255, 255, 255, .8) !important;
+      padding: 3px;
+
+      .app-workspace-link-inner {
+        opacity: 1 !important;
+      }
     }
   }
 }

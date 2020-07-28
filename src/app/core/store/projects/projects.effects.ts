@@ -21,7 +21,7 @@ import { selectWorkspace } from '../workspaces/workspaces.actions';
 export class ProjectsEffects {
   loadProjects$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(actions.loadProjects),
+      ofType(actions.loadProjects, selectWorkspace),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.projectsService.get(workspace.slug).pipe(
