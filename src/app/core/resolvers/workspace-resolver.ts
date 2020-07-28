@@ -1,4 +1,3 @@
-import { loadProjects } from '@core/store/projects/projects.actions';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
