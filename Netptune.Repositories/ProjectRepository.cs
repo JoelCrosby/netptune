@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,7 +20,7 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
+        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug, bool isReadonly = false)
         {
             var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceSlug);
 
@@ -35,28 +35,28 @@ namespace Netptune.Repositories
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
                 .Select(project => GetViewModel(project))
-                .ToListAsync();
+                .ApplyReadonly(isReadonly);
         }
 
-        public Task<ProjectViewModel> GetProjectViewModel(int id)
+        public Task<ProjectViewModel> GetProjectViewModel(int id, bool isReadonly = false)
         {
             Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
             return Entities
-                .Where(project => project.Id == id)
+                .Where(project => project.Id == id && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
                 .Select(project => GetViewModel(project))
+                .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync();
         }
 
         public Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
         {
-            return Task.Run(() =>
-                Entities
-                    .Where(project => project.WorkspaceId == workspaceId)
+            return Entities
                     .AsNoTracking()
-                    .All(project => project.Key != key));
+                    .Where(project => project.WorkspaceId == workspaceId)
+                    .AllAsync(project => project.Key != key);
         }
 
         private static ProjectViewModel GetViewModel(Project project)

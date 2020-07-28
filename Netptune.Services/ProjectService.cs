@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
@@ -58,7 +59,7 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                return await GetProjectViewModel(project);
+                return await ProjectRepository.GetProjectViewModel(project.Id, true);
             });
         }
 
@@ -96,10 +97,10 @@ namespace Netptune.Services
 
         private static string GenerateDefaultBoardId(string projectName)
         {
-            return $"{projectName.ToLowerInvariant()}-default-board";
+            return $"{projectName.ToLowerInvariant().ToUrlSlug()}-default-board";
         }
 
-        public async Task<ProjectViewModel> DeleteProject(int id)
+        public async Task<Project> DeleteProject(int id)
         {
             var project = await ProjectRepository.GetAsync(id);
             var user = await IdentityService.GetCurrentUser();
@@ -111,21 +112,17 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return await GetProjectViewModel(project);
+            return project;
         }
 
-        public async Task<ProjectViewModel> GetProject(int id)
+        public Task<ProjectViewModel> GetProject(int id)
         {
-            var result = await ProjectRepository.GetAsync(id);
-
-            if (result is null) return null;
-
-            return await GetProjectViewModel(result);
+            return ProjectRepository.GetProjectViewModel(id, true); ;
         }
 
         public Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
         {
-            return ProjectRepository.GetProjects(workspaceSlug);
+            return ProjectRepository.GetProjects(workspaceSlug, true);
         }
 
         public async Task<ProjectViewModel> UpdateProject(Project project)
@@ -141,12 +138,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return await GetProjectViewModel(result);
-        }
-
-        private Task<ProjectViewModel> GetProjectViewModel(Project project)
-        {
-            return ProjectRepository.GetProjectViewModel(project.Id);
+            return await ProjectRepository.GetProjectViewModel(result.Id, true);
         }
 
         private Task<string> GetProjectKey(Project project)
