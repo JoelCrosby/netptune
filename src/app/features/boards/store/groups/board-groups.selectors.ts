@@ -58,3 +58,13 @@ export const selectBoardId = createSelector(
   selectBoard,
   (state: BoardViewModel) => state.id
 );
+
+export const selectBoardProject = createSelector(
+  selectBoard,
+  (state: BoardViewModel) => state.project
+);
+
+export const selectBoardProjectId = createSelector(
+  selectBoard,
+  (state: BoardViewModel) => state.projectId
+);

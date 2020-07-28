@@ -1,5 +1,6 @@
 using System;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.Boards
@@ -13,6 +14,8 @@ namespace Netptune.Core.ViewModels.Boards
         public string Identifier { get; set; }
 
         public int ProjectId { get; set; }
+
+        public Project Project { get; set; }
 
         public BoardType BoardType { get; set; }
 
