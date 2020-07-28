@@ -20,7 +20,7 @@
   }
 
   .mat-card.flagged:not([class*='mat-elevation-z']):hover {
-    background-color: mat-color($warn, .24) !important;
+    background-color: mix(mat-color($warn), mat-color($background, board-group), 24%) !important;
   }
 
   // Custom Scrollbars
