@@ -5,7 +5,6 @@ import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-di
 import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
-import { BoardPostDialogComponent } from '@entry/dialogs/board-post-dialog/board-post-dialog.component';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-group-dialog.component';
@@ -18,7 +17,6 @@ import { StaticModule } from '@app/static/static.module';
     TaskDialogComponent,
     TaskDetailDialogComponent,
     InviteDialogComponent,
-    BoardPostDialogComponent,
     WorkspaceDialogComponent,
     BoardGroupDialogComponent,
   ],
