@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -17,6 +17,6 @@ namespace Netptune.Core.Services
 
         Task<ProjectViewModel> AddProject(AddProjectRequest request);
 
-        Task<ProjectViewModel> DeleteProject(int id);
+        Task<Project> DeleteProject(int id);
     }
 }

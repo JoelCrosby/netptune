@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +43,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await ProjectService.GetProject(id);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 
@@ -54,6 +56,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> PutProject([FromBody] Project project)
         {
             var result = await ProjectService.UpdateProject(project);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }
@@ -76,6 +80,8 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
             var result = await ProjectService.DeleteProject(id);
+
+            if (result is null) return NotFound();
 
             return Ok(result);
         }
