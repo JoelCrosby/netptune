@@ -183,8 +183,8 @@ export class TaskDetailDialogComponent
 
   ngOnDestroy() {
     this.store.dispatch(TaskActions.clearTaskDetail());
+    this.onDestroy$.next();
     this.onDestroy$.complete();
-    this.onDestroy$.unsubscribe();
   }
 
   getTaskStatus(status: TaskStatus) {

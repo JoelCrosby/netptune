@@ -59,8 +59,8 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.onDestroy$.next();
     this.onDestroy$.complete();
-    this.onDestroy$.unsubscribe();
   }
 
   handleDocumentClick(target: EventTarget) {

@@ -18,7 +18,7 @@ import { takeUntil, tap } from 'rxjs/operators';
   animations: [pullIn],
 })
 export class RegisterComponent implements OnDestroy {
-  destroyed$ = new Subject<boolean>();
+  onDestroy$ = new Subject();
   $authLoading = this.store.select(selectAuthLoading);
 
   registerGroup = new FormGroup({
@@ -69,15 +69,15 @@ export class RegisterComponent implements OnDestroy {
     updates$
       .pipe(
         ofType(AuthActions.registerFail),
-        takeUntil(this.destroyed$),
+        takeUntil(this.onDestroy$),
         tap(() => this.registerGroup.enable())
       )
       .subscribe();
   }
 
   ngOnDestroy() {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   register() {

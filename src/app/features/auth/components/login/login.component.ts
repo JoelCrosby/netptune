@@ -18,7 +18,7 @@ import { takeUntil, tap } from 'rxjs/operators';
   animations: [pullIn],
 })
 export class LoginComponent implements OnDestroy {
-  destroyed$ = new Subject<boolean>();
+  onDestroy$ = new Subject();
   $authLoading = this.store.select(selectAuthLoading);
   hidePassword = true;
 
@@ -43,15 +43,15 @@ export class LoginComponent implements OnDestroy {
     updates$
       .pipe(
         ofType(AuthActions.loginFail),
-        takeUntil(this.destroyed$),
+        takeUntil(this.onDestroy$),
         tap(() => this.loginGroup.enable())
       )
       .subscribe();
   }
 
   ngOnDestroy() {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   login() {

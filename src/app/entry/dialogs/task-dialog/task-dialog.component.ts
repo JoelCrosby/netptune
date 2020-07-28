@@ -1,24 +1,27 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Inject,
   OnDestroy,
   OnInit,
   Optional,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { createProjectTask } from '@core/store/tasks/tasks.actions';
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import { Workspace } from '@app/core/models/workspace';
 import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
-import { ProjectTask, AddProjectTaskRequest } from '@core/models/project-task';
+import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { selectProject } from '@core/store/core/core.actions';
-import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import * as WorkspaceSelectors from '@core/store/workspaces/workspaces.selectors';
-import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
+import * as ProjectSelectors from '@core/store/projects/projects.selectors';
+import { createProjectTask } from '@core/store/tasks/tasks.actions';
+import * as WorkspaceSelectors from '@core/store/workspaces/workspaces.selectors';
+import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { first, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-dialog',
@@ -28,14 +31,13 @@ import { loadProjects } from '@core/store/projects/projects.actions';
 })
 export class TaskDialogComponent implements OnInit, OnDestroy {
   task: ProjectTask;
-  projects$ = this.store.select(ProjectSelectors.selectAllProjects);
-  currentWorkspace$ = this.store.select(
-    WorkspaceSelectors.SelectCurrentWorkspace
-  );
-  currentProject$ = this.store.select(ProjectSelectors.selectCurrentProject);
-  subs = new Subscription();
+  projects$: Observable<ProjectViewModel[]>;
+  currentWorkspace$: Observable<Workspace>;
+  currentProject$: Observable<ProjectViewModel>;
 
   selectedTypeValue: number;
+
+  onDestroy$ = new Subject();
 
   get name() {
     return this.projectFromGroup.get('nameFormControl');
@@ -67,6 +69,14 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
+    this.currentWorkspace$ = this.store.select(
+      WorkspaceSelectors.SelectCurrentWorkspace
+    );
+    this.currentProject$ = this.store.select(
+      ProjectSelectors.selectCurrentProject
+    );
+    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
+
     this.store.dispatch(loadProjects());
 
     if (this.task) {
@@ -75,16 +85,18 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
       this.description.setValue(this.task.description);
     } else {
       this.projectFromGroup.reset();
-      this.subs.add(
-        this.currentProject$.subscribe((project) => {
+
+      this.currentProject$
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe((project) => {
           this.project.setValue(project);
-        })
-      );
+        });
     }
   }
 
   ngOnDestroy() {
-    this.subs.unsubscribe();
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   close() {
@@ -96,24 +108,22 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     this.store.dispatch(selectProject({ project }));
   }
 
-  getResult() {
-    this.subs.add(
-      this.currentWorkspace$.subscribe((workspace) => {
-        const task: AddProjectTaskRequest = {
-          name: (this.name.value as string).trim(),
-          description: (this.description.value as string).trim(),
-          workspace: workspace.slug,
-          projectId: (this.project.value as Project).id,
-          assigneeId: undefined,
-          assignee: undefined,
-          status: TaskStatus.New,
-          sortOrder: 0,
-        };
+  saveClicked() {
+    this.currentWorkspace$.pipe(first()).subscribe((workspace) => {
+      const task: AddProjectTaskRequest = {
+        name: (this.name.value as string).trim(),
+        description: (this.description.value as string).trim(),
+        workspace: workspace.slug,
+        projectId: (this.project.value as Project).id,
+        assigneeId: undefined,
+        assignee: undefined,
+        status: TaskStatus.New,
+        sortOrder: 0,
+      };
 
-        this.store.dispatch(createProjectTask({ task }));
+      this.store.dispatch(createProjectTask({ task }));
 
-        this.dialogRef.close();
-      })
-    );
+      this.dialogRef.close();
+    });
   }
 }
