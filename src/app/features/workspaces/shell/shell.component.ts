@@ -8,10 +8,11 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
-import { AppState, selectPageTitle } from '@core/core.state';
+import { AppState } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { selectPageTitle } from '@core/core.route.selectors';
 
 @Component({
   templateUrl: './shell.component.html',

@@ -4,6 +4,8 @@ import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request'
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
+import { AddProjectTaskRequest } from '@app/core/models/project-task';
+import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -107,4 +109,21 @@ export const setInlineActive = createAction(
 
 export const clearInlineActive = createAction(
   '[BoardGroups] Clear Inline Active'
+);
+
+// Create Task
+
+export const createProjectTask = createAction(
+  '[BoardGroups] Create Project Task',
+  props<{ task: AddProjectTaskRequest }>()
+);
+
+export const createProjectTasksSuccess = createAction(
+  '[BoardGroups] Create Project Task Success',
+  props<{ task: TaskViewModel }>()
+);
+
+export const createProjectTasksFail = createAction(
+  '[BoardGroups] Create Project Task Fail',
+  props<{ error: HttpErrorResponse }>()
 );

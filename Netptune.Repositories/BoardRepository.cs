@@ -67,9 +67,12 @@ namespace Netptune.Repositories
             return null;
         }
 
-        public async Task<BoardViewModel> GetViewModel(int id)
+        public async Task<BoardViewModel> GetViewModel(int id, bool isReadonly = false)
         {
-            var result = await Entities.FirstOrDefaultAsync(board => board.Id == id && !board.IsDeleted);
+            var result = await Entities
+                .IsReadonly(isReadonly)
+                .Include(board => board.Project)
+                .FirstOrDefaultAsync(board => board.Id == id && !board.IsDeleted);
 
             if (result is null) return null;
 

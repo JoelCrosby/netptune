@@ -3,26 +3,24 @@ import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import {
   ActionReducerMap,
   createFeatureSelector,
-  createSelector,
   MetaReducer,
-  MemoizedSelector,
 } from '@ngrx/store';
-import { authReducer } from './auth/store/auth.reducer';
 import { AuthState } from './auth/store/auth.models';
+import { authReducer } from './auth/store/auth.reducer';
 import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { SettingsState } from './store/settings/settings.model';
-import { settingsReducer } from './store/settings/settings.reducer';
 import { CoreState } from './store/core/core.model';
 import { coreReducer } from './store/core/core.reducer';
-import { WorkspacesState } from './store/workspaces/workspaces.model';
-import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
+import { SettingsState } from './store/settings/settings.model';
+import { settingsReducer } from './store/settings/settings.reducer';
 import { TasksState } from './store/tasks/tasks.model';
 import { projectTasksReducer } from './store/tasks/tasks.reducer';
+import { WorkspacesState } from './store/workspaces/workspaces.model';
+import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
@@ -68,16 +66,6 @@ export const selectProjectsFeature = createFeatureSelector<
 
 export const selectTasksFeature = createFeatureSelector<AppState, TasksState>(
   'tasks'
-);
-
-export const selectRouterState = createFeatureSelector<
-  RouterReducerState<RouterStateUrl>
->('router');
-
-export const selectPageTitle = createSelector(
-  selectRouterState,
-  (state: RouterReducerState<RouterStateUrl>) =>
-    state && state.state && state.state.title
 );
 
 export interface AppState {

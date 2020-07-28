@@ -1,11 +1,18 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
+import { AppState } from '@core/core.state';
+import {
+  selectRouterState,
+  selectRouterStateUrl,
+  selectRouterParam,
+  isBoardGroupsRoute,
+} from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { AppState, selectRouterState } from '@core/core.state';
 import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -15,6 +22,7 @@ import {
   switchMap,
   tap,
   withLatestFrom,
+  filter,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
 import { BoardGroupsService } from './board-groups.service';
@@ -24,11 +32,7 @@ export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoardGroups),
-      withLatestFrom(this.store.select(selectRouterState)),
-      map(([action, router]) => {
-        const id = router.state.params.id;
-        return [action, id];
-      }),
+      withLatestFrom(this.store.select(selectRouterParam, 'id')),
       switchMap(([action, id]) =>
         this.boardGroupsService.get(id).pipe(
           map((boardGroups) => actions.loadBoardGroupsSuccess({ boardGroups })),
@@ -68,7 +72,20 @@ export class BoardGroupsEffects {
 
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProjectTaskActions.createProjectTasksSuccess),
+      ofType(actions.createProjectTask),
+      switchMap((action) =>
+        this.projectTasksService.post(action.task).pipe(
+          tap(() => this.snackbar.open('Task created')),
+          map((task) => actions.createProjectTasksSuccess({ task })),
+          catchError((error) => of(actions.createProjectTasksFail({ error })))
+        )
+      )
+    )
+  );
+
+  createProjectTasksSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.createProjectTasksSuccess),
       map(() => actions.loadBoardGroups())
     )
   );
@@ -76,6 +93,8 @@ export class BoardGroupsEffects {
   taskDeleted$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProjectTaskActions.deleteProjectTasksSuccess),
+      withLatestFrom(this.store.select(isBoardGroupsRoute)),
+      filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups())
     )
   );
@@ -132,6 +151,7 @@ export class BoardGroupsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
+    private projectTasksService: ProjectTasksService,
     private store: Store<AppState>,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
