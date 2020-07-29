@@ -10,6 +10,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { InlineEditInputComponent } from './components/inline-edit-input/inline-edit-input.component';
 import { FromNowPipe } from './pipes/from-now.pipe';
+import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { FromNowPipe } from './pipes/from-now.pipe';
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    ScrollShadowDirective,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -32,6 +34,7 @@ import { FromNowPipe } from './pipes/from-now.pipe';
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    ScrollShadowDirective,
   ],
 })
 export class StaticModule {}
