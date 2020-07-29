@@ -11,6 +11,7 @@
   <ng-template #elseTemplate>
     <div
       cdkDropList
+      appScrollShadow
       class="board-groups custom-scroll"
       *ngIf="groups$ | async as groups"
       cdkDropListOrientation="horizontal"
