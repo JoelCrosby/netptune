@@ -9,7 +9,6 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { AppState } from '@app/core/core.state';
 import { BoardGroup } from '@app/core/models/board-group';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -46,7 +45,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showAddButton$: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.focused$ = this.focusedSubject.pipe();

@@ -1,14 +1,15 @@
-import { selectUpdateProfileLoading } from '@profile/store/profile.selectors';
-import { AppUser } from '@core/models/appuser';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
-import { AppState } from '@core/core.state';
-import { Store, select } from '@ngrx/store';
-import { tap, take, filter, shareReplay } from 'rxjs/operators';
-import { selectProfile } from '@profile/store/profile.selectors';
+import { AppUser } from '@core/models/appuser';
+import { select, Store } from '@ngrx/store';
 import { loadProfile, updateProfile } from '@profile/store/profile.actions';
+import {
+  selectProfile,
+  selectUpdateProfileLoading,
+} from '@profile/store/profile.selectors';
 import { Observable } from 'rxjs';
+import { filter, shareReplay, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -37,7 +38,7 @@ export class ProfileComponent implements OnInit {
     return this.profileGroup.get('email');
   }
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.store.dispatch(loadProfile());

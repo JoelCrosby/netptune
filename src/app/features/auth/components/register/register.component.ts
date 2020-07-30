@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -62,7 +61,7 @@ export class RegisterComponent implements OnDestroy {
     return this.registerGroup.get('password1');
   }
 
-  constructor(private store: Store<AppState>, updates$: Actions) {
+  constructor(private store: Store, updates$: Actions) {
     updates$
       .pipe(
         ofType(AuthActions.registerFail),

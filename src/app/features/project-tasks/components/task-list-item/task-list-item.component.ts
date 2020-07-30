@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { TextHelpers } from '@core/util/text-helpers';
-import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { Store } from '@ngrx/store';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: '[app-task-list-item]',
@@ -18,7 +15,7 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 export class TaskListItemComponent {
   @Input() task: TaskViewModel;
 
-  constructor(private store: Store<AppState>, public dialog: MatDialog) {}
+  constructor(private store: Store, public dialog: MatDialog) {}
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {

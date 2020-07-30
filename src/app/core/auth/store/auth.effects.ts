@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { AppState } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -19,7 +19,6 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -30,7 +29,7 @@ export class AuthEffects {
     private localStorageService: LocalStorageService,
     private router: Router,
     private authService: AuthService,
-    private store: Store<AppState>,
+    private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar
   ) {}

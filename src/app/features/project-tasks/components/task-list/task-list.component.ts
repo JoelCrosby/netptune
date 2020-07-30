@@ -1,12 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { TaskStatus } from '@app/core/enums/project-task-status';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AppState } from '@app/core/core.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TaskStatus } from '@app/core/enums/project-task-status';
 import { TaskDialogComponent } from '@app/entry/dialogs/task-dialog/task-dialog.component';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
+import { select, Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-task-list',
@@ -52,7 +51,7 @@ export class TaskListComponent implements OnInit {
   constructor(
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 
   ngOnInit() {

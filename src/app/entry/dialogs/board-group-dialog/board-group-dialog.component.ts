@@ -1,15 +1,13 @@
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   Inject,
+  OnInit,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AppState } from '@app/core/core.state';
-import { Store } from '@ngrx/store';
-import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
+import { Store } from '@ngrx/store';
 
 export interface BoardGroupDialogData {
   boardId: number;
@@ -25,7 +23,7 @@ export class BoardGroupDialogComponent implements OnInit {
   groupFormControl = new FormControl();
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData
   ) {}

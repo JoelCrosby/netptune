@@ -14,7 +14,6 @@ import {
 import { FormControl } from '@angular/forms';
 import { User } from '@app/core/auth/store/auth.models';
 import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
-import { AppState } from '@app/core/core.state';
 import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { Workspace } from '@app/core/models/workspace';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
@@ -59,7 +58,7 @@ export class BoardGroupTaskInlineComponent
 
   constructor(
     private cd: ChangeDetectorRef,
-    private store: Store<AppState>,
+    private store: Store,
     private actions$: Actions<Action>
   ) {}
 

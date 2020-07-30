@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
-import { AppState } from '@core/core.state';
 import {
-  selectRouterState,
-  selectRouterStateUrl,
-  selectRouterParam,
   isBoardGroupsRoute,
+  selectRouterParam,
 } from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
@@ -18,11 +15,11 @@ import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
   catchError,
+  filter,
   map,
   switchMap,
   tap,
   withLatestFrom,
-  filter,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
 import { BoardGroupsService } from './board-groups.service';
@@ -152,7 +149,7 @@ export class BoardGroupsEffects {
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
     private projectTasksService: ProjectTasksService,
-    private store: Store<AppState>,
+    private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private router: Router

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { environment } from '@env/environment';
@@ -11,7 +10,7 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceResolver implements Resolve<Workspace> {
-  constructor(private http: HttpClient, private store: Store<AppState>) {}
+  constructor(private http: HttpClient, private store: Store) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Workspace> {
     return this.get(route.paramMap.get('workspace'));

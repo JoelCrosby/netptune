@@ -1,6 +1,6 @@
-import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { Injectable } from '@angular/core';
-import { AppState } from '@core/core.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -9,13 +9,12 @@ import {
   catchError,
   map,
   switchMap,
-  withLatestFrom,
   tap,
+  withLatestFrom,
 } from 'rxjs/operators';
+import { selectWorkspace } from '../workspaces/workspaces.actions';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { selectWorkspace } from '../workspaces/workspaces.actions';
 
 @Injectable()
 export class ProjectsEffects {
@@ -77,7 +76,7 @@ export class ProjectsEffects {
   constructor(
     private actions$: Actions<Action>,
     private projectsService: ProjectsService,
-    private store: Store<AppState>,
+    private store: Store,
     private snackbar: MatSnackBar
   ) {}
 }

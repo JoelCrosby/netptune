@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { colorDictionary } from '@core/util/colors/colors';
-import { createWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
-import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
+import {
+  createWorkspace,
+  editWorkspace,
+} from '@core/store/workspaces/workspaces.actions';
+import { colorDictionary } from '@core/util/colors/colors';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -43,7 +44,7 @@ export class WorkspaceDialogComponent implements OnInit {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: Workspace
   ) {}

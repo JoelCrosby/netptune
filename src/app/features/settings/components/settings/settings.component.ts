@@ -1,10 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { changeTheme } from '@core/store/settings/settings.actions';
 import { SettingsState } from '@core/store/settings/settings.model';
 import { selectSettings } from '@core/store/settings/settings.selectors';
-import { changeTheme } from '@core/store/settings/settings.actions';
-import { AppState } from '@app/core/core.state';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -20,7 +19,7 @@ export class SettingsComponent implements OnInit {
     { value: 'DARK-THEME', label: 'Dark' },
   ];
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.settings$ = this.store.select(selectSettings);

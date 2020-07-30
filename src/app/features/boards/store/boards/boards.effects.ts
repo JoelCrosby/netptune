@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SelectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
-import { loadBoardGroups } from '@boards/store/groups/board-groups.actions';
-import { AppState } from '@core/core.state';
-import { loadProjectsSuccess } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -67,7 +64,7 @@ export class BoardsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardsService: BoardsService,
-    private store: Store<AppState>,
+    private store: Store,
     private snackbar: MatSnackBar
   ) {}
 }

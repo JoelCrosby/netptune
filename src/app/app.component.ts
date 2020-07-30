@@ -1,4 +1,3 @@
-import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,8 +6,8 @@ import {
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { MediaService } from '@core/media/media.service';
+import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -28,10 +27,7 @@ export class AppComponent implements OnInit {
 
   mobileQuery: MediaQueryList;
 
-  constructor(
-    private store: Store<AppState>,
-    private mediaService: MediaService
-  ) {
+  constructor(private store: Store, private mediaService: MediaService) {
     this.mobileQuery = this.mediaService.mobileQuery;
   }
 

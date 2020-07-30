@@ -1,6 +1,5 @@
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -8,14 +7,18 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { AppState } from '@core/core.state';
+import { User } from '@core/auth/store/auth.models';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { Workspace } from '@core/models/workspace';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
+import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import {
@@ -32,10 +35,6 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import * as TaskActions from '@core/store/tasks/tasks.actions';
-import { User } from '@core/auth/store/auth.models';
-import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 
 @Component({
   selector: 'app-task-inline',
@@ -72,7 +71,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   @ViewChild('taskInlineForm') formElementRef: ElementRef;
   @ViewChild('taskInput') inputElementRef: ElementRef;
 
-  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
+  constructor(private store: Store, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
