@@ -1,5 +1,6 @@
 import { AppUser } from '@core/models/appuser';
 import { props, createAction } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const clearState = createAction('[Users] Clear State');
 
@@ -12,5 +13,5 @@ export const loadUsersSuccess = createAction(
 
 export const loadUsersFail = createAction(
   '[Users] Load Users Fail',
-  props<{ error: any }>()
+  props<{ error: HttpErrorResponse | Error }>()
 );
