@@ -1,7 +1,5 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { pullIn } from '@core/animations/animations';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { AuthState } from '@core/auth/store/auth.models';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
@@ -15,7 +13,6 @@ import { takeUntil, tap } from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [pullIn],
 })
 export class LoginComponent implements OnDestroy {
   onDestroy$ = new Subject();
@@ -35,11 +32,7 @@ export class LoginComponent implements OnDestroy {
     return this.loginGroup.get('password');
   }
 
-  constructor(
-    private router: Router,
-    private store: Store<AuthState>,
-    updates$: Actions
-  ) {
+  constructor(private store: Store<AuthState>, updates$: Actions) {
     updates$
       .pipe(
         ofType(AuthActions.loginFail),

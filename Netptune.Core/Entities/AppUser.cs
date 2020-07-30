@@ -28,10 +28,10 @@ namespace Netptune.Core.Entities
         #region NavigationProperties
 
         [JsonIgnore]
-        public DateTimeOffset? LastLoginTime { get; set; }
+        public DateTime? LastLoginTime { get; set; }
 
         [JsonIgnore]
-        public DateTimeOffset? RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
 
         [JsonIgnore]
         public ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new HashSet<WorkspaceAppUser>();

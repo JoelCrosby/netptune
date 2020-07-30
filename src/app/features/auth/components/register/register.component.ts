@@ -1,12 +1,10 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { pullIn } from '@core/animations/animations';
-import { AppState } from '@core/core.state';
-import { Store } from '@ngrx/store';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { selectAuthLoading } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
@@ -15,7 +13,6 @@ import { takeUntil, tap } from 'rxjs/operators';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [pullIn],
 })
 export class RegisterComponent implements OnDestroy {
   onDestroy$ = new Subject();
