@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import { loadUsers } from '@users/store/users.actions';
@@ -27,7 +26,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   constructor(
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 
   ngOnInit() {

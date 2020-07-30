@@ -9,11 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
-import { TextHelpers } from '@app/core/util/text-helpers';
-import { ConfirmDialogComponent } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -29,7 +26,7 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
 
-  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);

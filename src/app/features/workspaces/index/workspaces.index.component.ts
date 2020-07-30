@@ -1,13 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { dropIn } from '@core/animations/animations';
-import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
-import { TextHelpers } from '@core/util/text-helpers';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
+import { TextHelpers } from '@core/util/text-helpers';
+import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -20,7 +19,7 @@ import { Store } from '@ngrx/store';
 export class WorkspacesComponent implements OnInit {
   workspaces$ = this.store.select(selectAllWorkspaces);
 
-  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.store.dispatch(WorkspaceActions.loadWorkspaces());

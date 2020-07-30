@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppState, selectSettingsState } from '@app/core/core.state';
+import { selectSettingsState } from '@app/core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
@@ -46,7 +46,7 @@ export class SettingsEffects {
 
   constructor(
     private actions$: Actions<Action>,
-    private store: Store<AppState>,
+    private store: Store,
     private localStorageService: LocalStorageService
   ) {}
 }

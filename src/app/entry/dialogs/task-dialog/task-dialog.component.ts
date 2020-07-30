@@ -10,7 +10,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { Workspace } from '@app/core/models/workspace';
-import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
@@ -50,7 +49,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProjectTask
   ) {

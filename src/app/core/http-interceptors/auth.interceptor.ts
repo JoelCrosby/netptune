@@ -10,11 +10,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { selectAuthToken } from '../auth/store/auth.selectors';
-import { AppState } from '../core.state';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   intercept<T>(
     req: HttpRequest<T>,

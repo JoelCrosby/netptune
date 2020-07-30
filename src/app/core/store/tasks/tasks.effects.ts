@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppState } from '@core/core.state';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -14,9 +16,6 @@ import {
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
-import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -129,7 +128,7 @@ export class ProjectTasksEffects {
     private projectTasksService: ProjectTasksService,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 }
 
