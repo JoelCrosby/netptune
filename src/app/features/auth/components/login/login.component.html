@@ -7,13 +7,19 @@
     ></mat-progress-bar>
   </div>
 
-  <form [formGroup]="loginGroup" (ngSubmit)="login()">
+  <form
+    [formGroup]="loginGroup"
+    (ngSubmit)="login()"
+  >
 
-    <img src="assets/apple-touch-icon.png" alt="Netptune Logo" width="72" height="72">
+    <img
+      src="assets/apple-touch-icon.png"
+      alt="Netptune Logo"
+      width="72"
+      height="72"
+    >
 
-    <h3 class="mat-typography auth-title">
-      Sign in to continue
-    </h3>
+    <h3 class="mat-typography auth-title">Sign in to continue</h3>
 
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
@@ -24,14 +30,14 @@
         name="email"
         formControlName="email"
         autocomplete="username"
-      />
-      <mat-error *ngIf="email.hasError('password') && !email.hasError('required')">
-        Please enter a valid email address
-      </mat-error>
+      >
+      <mat-error *ngIf="email.hasError('password') && !email.hasError('required')">Please enter a valid email address</mat-error>
       <mat-error *ngIf="email.hasError('required')">
-        Email is <strong>required</strong>
+        Email is
+        <strong>required</strong>
       </mat-error>
     </mat-form-field>
+
 
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
@@ -40,17 +46,23 @@
         id="password"
         placeholder="Enter Password"
         [type]="hidePassword ? 'password' : 'text'"
-        name="password"
+        name="current-password"
         formControlName="password"
         autocomplete="current-password"
-      />
-      <mat-icon matSuffix (click)="hidePassword = !hidePassword" class="cursor-pointer"
-        >{{ hidePassword ? 'visibility_off' : 'visibility' }}
+      >
+      <mat-icon
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        class="cursor-pointer"
+      >
+        {{ hidePassword ? 'visibility_off' : 'visibility' }}
       </mat-icon>
       <mat-error *ngIf="password.hasError('required')">
-        Password is <strong>required</strong>
+        Password is
+        <strong>required</strong>
       </mat-error>
     </mat-form-field>
+
 
     <div class="button-container">
       <button

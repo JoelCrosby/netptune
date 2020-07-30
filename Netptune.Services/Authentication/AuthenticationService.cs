@@ -17,7 +17,6 @@ using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
-using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Authentication
 {
@@ -25,7 +24,6 @@ namespace Netptune.Services.Authentication
     {
         private readonly SignInManager<AppUser> SignInManager;
         private readonly UserManager<AppUser> UserManager;
-        private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IEmailService Email;
 
         protected readonly string Issuer;
@@ -37,13 +35,11 @@ namespace Netptune.Services.Authentication
             IConfiguration configuration,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            INetptuneUnitOfWork unitOfWork,
             IEmailService email
             )
         {
             SignInManager = signInManager;
             UserManager = userManager;
-            UnitOfWork = unitOfWork;
             Email = email;
 
             Issuer = configuration["Tokens:Issuer"];
@@ -62,7 +58,7 @@ namespace Netptune.Services.Authentication
 
             appUser.LastLoginTime = DateTime.UtcNow;
 
-            await UnitOfWork.CompleteAsync();
+            await UserManager.UpdateAsync(appUser);
 
             return LoginResult.Success(GenerateToken(appUser));
         }
@@ -96,7 +92,7 @@ namespace Netptune.Services.Authentication
             appUser.RegistrationDate = DateTime.UtcNow;
             appUser.LastLoginTime = DateTime.UtcNow;
 
-            await UnitOfWork.CompleteAsync();
+            await UserManager.UpdateAsync(appUser);
 
             await SendWelcomeEmail(appUser);
 
