@@ -11,8 +11,10 @@ export class MediaService {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
   }
 
-  addListener(listener: ((this: MediaQueryList, ev: MediaQueryListEvent) => any) | null) {
+  addListener(
+    listener: ((this: MediaQueryList, ev: MediaQueryListEvent) => void) | null
+  ) {
     listener.call(listener, this.mobileQuery);
-    this.mobileQuery.addListener(listener);
+    this.mobileQuery.addEventListener('change', listener);
   }
 }

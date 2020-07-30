@@ -1,11 +1,12 @@
 import { AppUser } from '@core/models/appuser';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface ProfileState {
   profile?: AppUser;
   profileloaded: boolean;
   loadProfileloading: boolean;
-  loadProfileError?: any;
-  updateProfileError?: any;
+  loadProfileError?: HttpErrorResponse | Error;
+  updateProfileError?: HttpErrorResponse | Error;
   updateProfileLoading: boolean;
 }
 
