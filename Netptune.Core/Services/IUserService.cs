@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Relationships;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Services
@@ -17,6 +17,6 @@ namespace Netptune.Core.Services
 
         Task<UserViewModel> Update(AppUser user);
 
-        Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
+        Task<ClientResponse> InviteUserToWorkspace(string userId, int workspaceId);
     }
 }

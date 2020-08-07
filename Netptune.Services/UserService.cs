@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using AutoMapper;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
@@ -53,7 +53,7 @@ namespace Netptune.Services
             return MapUsers(users);
         }
 
-        public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
+        public async Task<ClientResponse> InviteUserToWorkspace(string userId, int workspaceId)
         {
             var user = await UserRepository.GetAsync(userId);
             var workspace = await WorkspaceRepository.GetAsync(workspaceId);
@@ -62,17 +62,17 @@ namespace Netptune.Services
 
             if (user is null)
             {
-                throw new Exception("user not found");
+                ClientResponse.Failed("user not found");
             }
 
             if (workspace is null)
             {
-                throw new Exception("workspace not found");
+                ClientResponse.Failed("workspace not found");
             }
 
             if (await UserRepository.IsUserInWorkspace(userId, workspaceId))
             {
-                throw new Exception("User is already a member of the workspace");
+                ClientResponse.Failed("User is already a member of the workspace");
             }
 
             var result = await UserRepository.InviteUserToWorkspace(userId, workspaceId);
@@ -81,7 +81,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return result;
+            return ClientResponse.Success();
         }
 
         public async Task<UserViewModel> Update(AppUser user)
