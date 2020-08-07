@@ -117,7 +117,7 @@ namespace Netptune.Services
 
         public Task<ProjectViewModel> GetProject(int id)
         {
-            return ProjectRepository.GetProjectViewModel(id, true); ;
+            return ProjectRepository.GetProjectViewModel(id, true);
         }
 
         public Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
