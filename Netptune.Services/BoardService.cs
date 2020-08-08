@@ -30,9 +30,9 @@ namespace Netptune.Services
             return Boards.GetBoardsInProject(projectId);
         }
 
-        public ValueTask<Board> GetBoard(int id)
+        public Task<Board> GetBoard(int id)
         {
-            return Boards.GetAsync(id);
+            return Boards.GetAsync(id, true);
         }
 
         public async Task<Board> UpdateBoard(Board board)
@@ -105,9 +105,9 @@ namespace Netptune.Services
 
         public async Task<List<BoardViewModel>> GetBoardsInWorkspace(string slug)
         {
-            var worksapceExists = await UnitOfWork.Workspaces.Exists(slug);
+            var workspaceExists = await UnitOfWork.Workspaces.Exists(slug);
 
-            if (!worksapceExists) return null;
+            if (!workspaceExists) return null;
 
             var results = await Boards.GetBoards(slug, true);
 

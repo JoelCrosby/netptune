@@ -12,7 +12,7 @@ namespace Netptune.Core.Services
 
         Task<BoardGroupsViewModel> GetBoardGroups(int boardId);
 
-        ValueTask<BoardGroup> GetBoardGroup(int id);
+        Task<BoardGroup> GetBoardGroup(int id);
 
         Task<BoardGroup> UpdateBoardGroup(BoardGroup boardGroup);
 

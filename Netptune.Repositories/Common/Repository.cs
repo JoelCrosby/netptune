@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -31,77 +33,111 @@ namespace Netptune.Repositories.Common
         }
 
         /// <summary>
+        /// Builds Equals a compilable Predicate Expression for use with EF
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        protected static Expression<Func<TEntity, bool>> EqualsPredicate(TId id)
+        {
+            Expression<Func<TEntity, TId>> selector = x => x.Id;
+            Expression<Func<TId>> closure = () => id;
+
+            return Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Equal(selector.Body, closure.Body),
+                selector.Parameters);
+        }
+
+        /// <summary>
         /// Basic get query using entity id
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>Entity of the defined type</returns>
-        public virtual TEntity Get(TId id)
+        public virtual TEntity Get(TId id, bool isReadonly = false)
         {
-            return Entities.Find(id);
+            return Entities.IsReadonly(isReadonly).FirstOrDefault(EqualsPredicate(id));
         }
+
 
         /// <summary>
         /// Basic get query using entity id async
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>Entity of the defined type</returns>
-        public virtual ValueTask<TEntity> GetAsync(TId id)
+        public virtual Task<TEntity> GetAsync(TId id, bool isReadonly = false)
         {
-            return Entities.FindAsync(id);
+            return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(EqualsPredicate(id));
         }
 
         /// <summary>
         /// Return all Entities
         /// </summary>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public virtual List<TEntity> GetAll()
+        public virtual List<TEntity> GetAll(bool isReadonly = false)
         {
-            return Entities.ToList();
+            return Entities.IsReadonly(isReadonly).ToList();
         }
 
         /// <summary>
         /// Return all Entities async
         /// </summary>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public virtual Task<List<TEntity>> GetAllAsync()
+        public virtual Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
         {
-            return Entities.ToListAsync();
+            return Entities.IsReadonly(isReadonly).ToListAsync();
         }
 
         /// <summary>
         /// Return all Entities from given IDs
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public virtual List<TEntity> GetAllById(IEnumerable<TId> ids)
+        public virtual List<TEntity> GetAllById(IEnumerable<TId> ids, bool isReadonly = false)
         {
-            return Entities.Where(entity => ids.Contains(entity.Id)).ToList();
+            return Entities
+                .Where(entity => ids.Contains(entity.Id))
+                .IsReadonly(isReadonly)
+                .ToList();
         }
 
         /// <summary>
         /// Return all Entities from given IDs async
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids)
+        public Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
         {
-            return Entities.Where(entity => ids.Contains(entity.Id)).ToListAsync();
+            return Entities
+                .Where(entity => ids.Contains(entity.Id))
+                .IsReadonly(isReadonly)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Return all Entities Within the given page query.
         /// </summary>
+        /// <param name="pageQuery"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public virtual IPagedResult<TEntity> GetPagedResults(IPageQuery pageQuery)
+        public virtual IPagedResult<TEntity> GetPagedResults(IPageQuery pageQuery, bool isReadonly = false)
         {
-            return PaginateToPagedResult(Entities, pageQuery);
+            return PaginateToPagedResult(Entities.IsReadonly(isReadonly), pageQuery);
         }
 
         /// <summary>
         /// Return all Entities Within the given page query async.
         /// </summary>
+        /// <param name="pageQuery"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery)
+        public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery, bool isReadonly = false)
         {
-            return PaginateToPagedResultAsync(Entities, pageQuery);
+            return PaginateToPagedResultAsync(Entities.IsReadonly(isReadonly), pageQuery);
         }
 
         /// <summary>

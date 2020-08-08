@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Netptune.Core.Repositories.Common
@@ -15,51 +15,63 @@ namespace Netptune.Core.Repositories.Common
         /// Basic get query using entity id
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>Entity of the defined type</returns>
-        TEntity Get(TId id);
+        TEntity Get(TId id, bool isReadonly = false);
 
         /// <summary>
         /// Basic get query using entity id async
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>Entity of the defined type</returns>
-        ValueTask<TEntity> GetAsync(TId id);
+        Task<TEntity> GetAsync(TId id, bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities
         /// </summary>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        List<TEntity> GetAll();
+        List<TEntity> GetAll(bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities async
         /// </summary>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        Task<List<TEntity>> GetAllAsync();
+        Task<List<TEntity>> GetAllAsync(bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities from given IDs
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        List<TEntity> GetAllById(IEnumerable<TId> ids);
+        List<TEntity> GetAllById(IEnumerable<TId> ids, bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities from given IDs async
         /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids);
+        Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities Within the given page query.
         /// </summary>
+        /// <param name="pageQuery"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        IPagedResult<TEntity> GetPagedResults(IPageQuery pageQuery);
+        IPagedResult<TEntity> GetPagedResults(IPageQuery pageQuery, bool isReadonly = false);
 
         /// <summary>
         /// Return all Entities Within the given page query async.
         /// </summary>
+        /// <param name="pageQuery"></param>
+        /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery);
+        Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery, bool isReadonly = false);
 
         /// <summary>
         /// Add Entity to store
