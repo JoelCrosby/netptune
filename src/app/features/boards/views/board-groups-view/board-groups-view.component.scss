@@ -13,7 +13,7 @@
   flex-direction: row;
   flex: 1;
   padding-bottom: 1rem;
-  overflow: scroll;
+  overflow-x: scroll;
 }
 
 .board-group {
@@ -24,6 +24,7 @@
   flex-direction: column;
   justify-content: stretch;
   align-items: stretch;
+  overflow: hidden;
 }
 
 .board-group:last-child {
