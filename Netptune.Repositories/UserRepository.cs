@@ -50,9 +50,21 @@ namespace Netptune.Repositories
         {
             if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
-            var match = email.Normalize();
+            var match = email.Trim().Normalize();
 
             return Entities.FirstOrDefaultAsync(x => x.NormalizedEmail == match);
+        }
+
+        public Task<string> GetUserIdByEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
+
+            var match = email.Trim().Normalize();
+
+            return Entities
+                .Where(user => user.NormalizedEmail == match)
+                .Select(user => user.Id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<bool> IsUserInWorkspace(string userId, int workspaceId)

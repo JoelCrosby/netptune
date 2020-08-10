@@ -43,7 +43,12 @@ namespace Netptune.App
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
-            services.AddNetptuneServices();
+            services.AddNetptuneServices(options =>
+            {
+                options.HostingOptions.ClientOrigin = Configuration["Origin"];
+                options.HostingOptions.ContentRootPath = WebHostEnvironment.ContentRootPath;
+            });
+
             services.AddSendGridEmailService(options =>
             {
                 options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
@@ -148,7 +153,7 @@ namespace Netptune.App
         {
             var conn = value
                 .Replace("//", "")
-                .Split(new[] { '/', ':', '@', '?' })
+                .Split('/', ':', '@', '?')
                 .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
 
