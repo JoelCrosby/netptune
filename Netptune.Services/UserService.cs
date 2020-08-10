@@ -4,7 +4,11 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
+using Flurl;
+
 using Netptune.Core.Entities;
+using Netptune.Core.Messaging;
+using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -17,13 +21,21 @@ namespace Netptune.Services
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IMapper Mapper;
+        private readonly IEmailService Email;
+        private readonly IHostingService Hosting;
         private readonly IUserRepository UserRepository;
         private readonly IWorkspaceRepository WorkspaceRepository;
 
-        public UserService(INetptuneUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(
+            INetptuneUnitOfWork unitOfWork,
+            IMapper mapper,
+            IEmailService email,
+            IHostingService hosting)
         {
             UnitOfWork = unitOfWork;
             Mapper = mapper;
+            Email = email;
+            Hosting = hosting;
             UserRepository = unitOfWork.Users;
             WorkspaceRepository = unitOfWork.Workspaces;
         }
@@ -53,33 +65,36 @@ namespace Netptune.Services
             return MapUsers(users);
         }
 
-        public async Task<ClientResponse> InviteUserToWorkspace(string userId, int workspaceId)
+        public async Task<ClientResponse> InviteUserToWorkspace(string emailAddress, int workspaceId)
         {
-            var user = await UserRepository.GetAsync(userId);
             var workspace = await WorkspaceRepository.GetAsync(workspaceId);
-
-            // TODO: Replace exceptions with return result type.
-
-            if (user is null)
-            {
-                ClientResponse.Failed("user not found");
-            }
 
             if (workspace is null)
             {
-                ClientResponse.Failed("workspace not found");
+                return ClientResponse.Failed("workspace not found");
             }
 
-            if (await UserRepository.IsUserInWorkspace(userId, workspaceId))
+            var user = await UserRepository.GetByEmail(emailAddress);
+
+            if (user is null)
             {
-                ClientResponse.Failed("User is already a member of the workspace");
+                return ClientResponse.Failed("user not found");
             }
 
-            var result = await UserRepository.InviteUserToWorkspace(userId, workspaceId);
+            var existing = await UserRepository.IsUserInWorkspace(user.Id, workspaceId);
+
+            if (existing)
+            {
+                return ClientResponse.Failed("User is already a member of the workspace");
+            }
+
+            var result = await UserRepository.InviteUserToWorkspace(user.Id, workspaceId);
 
             if (result is null) throw new Exception();
 
             await UnitOfWork.CompleteAsync();
+
+            await SendUserInviteEmail(user, workspace);
 
             return ClientResponse.Success();
         }
@@ -97,6 +112,26 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return MapUser(updatedUser);
+        }
+
+        private Task SendUserInviteEmail(AppUser user, Workspace workspace)
+        {
+            var uri = Hosting.ClientOrigin
+                .AppendPathSegments("app", workspace.Slug)
+                .SetQueryParam("userId", user.Id, true)
+                .SetQueryParam("refer", "invite");
+
+            return Email.Send(new SendEmailModel
+            {
+                ToAddress = user.Email,
+                ToDisplayName = user.GetDisplayName(),
+                Name = user.Firstname,
+                Action = "Got to the Workspace",
+                Link = uri,
+                Message = $"Hi you've been invited to join the {workspace} in Netptune.",
+                Subject = "Netptune workspace invitation.",
+                PreHeader = $"Hi you've been invited to join the {workspace} in Netptune."
+            });
         }
 
         private UserViewModel MapUser(AppUser user)

@@ -126,7 +126,7 @@ namespace Netptune.Services.Authentication
                 .SetQueryParam("userId", appUser.Id, true)
                 .SetQueryParam("code", Uri.EscapeDataString(confirmEmailCode), true);
 
-            var rawTextContent = $"Thanks for registering with Netptune. Confirm your email address with the following link. {callbackUrl}";
+            var rawTextContent = $"Thanks for registering with Netptune. Please confirm your email address with the following link. {callbackUrl}";
 
             await Email.Send(new SendEmailModel
             {
@@ -138,7 +138,7 @@ namespace Netptune.Services.Authentication
                 Link = callbackUrl,
                 PreHeader = "Thanks for signing up",
                 Name = appUser.Firstname,
-                Message = "Thanks for registering with Netptune. \n\n Confirm your email address with the following link."
+                Message = "Thanks for registering with Netptune. \n\n Please confirm your email address with the following link."
             });
         }
 

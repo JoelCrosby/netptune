@@ -11,6 +11,8 @@ namespace Netptune.Core.Repositories
     {
         Task<AppUser> GetByEmail(string email);
 
+        Task<string> GetUserIdByEmail(string email);
+
         Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug);
 
         Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
