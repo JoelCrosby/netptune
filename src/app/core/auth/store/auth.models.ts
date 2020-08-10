@@ -1,8 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   currentUser?: User;
   confirmEmailLoading: boolean;
+  loginError?: HttpErrorResponse | Error;
 }
 
 export const initialState: AuthState = {

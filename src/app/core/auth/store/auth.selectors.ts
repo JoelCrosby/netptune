@@ -18,6 +18,11 @@ export const selectAuthToken = createSelector(
   (user: User) => user && user.token
 );
 
+export const selectLoginError = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.loginError
+);
+
 export const selectCurrentUserDisplayName = createSelector(
   selectCurrentUser,
   (user: User) => user && (user.displayName || user.email)
