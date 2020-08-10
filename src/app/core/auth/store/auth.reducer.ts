@@ -11,9 +11,10 @@ const reducer = createReducer(
     loading: false,
     currentUser: userInfo,
   })),
-  on(actions.loginFail, (state) => ({
+  on(actions.loginFail, (state, { error }) => ({
     ...state,
     isAuthenticated: false,
+    loginError: error,
     loading: false,
   })),
   on(actions.register, (state) => ({ ...state, loading: true })),
