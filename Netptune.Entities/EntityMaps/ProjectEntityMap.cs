@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -36,7 +36,7 @@ namespace Netptune.Entities.EntityMaps
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder
-                .HasIndex(task => new { task.WorkspaceId, task.Key })
+                .HasIndex(project => new { project.WorkspaceId, project.Key })
                 .IsUnique();
 
             // (One-to-One) Project > Task

@@ -31,6 +31,10 @@ namespace Netptune.Services
         {
             return UnitOfWork.Transaction(async () =>
             {
+                var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
+
+                if (workspace is null) return null;
+
                 var user = await IdentityService.GetCurrentUser();
 
                 var project = new Project
@@ -48,12 +52,15 @@ namespace Netptune.Services
                     UserId = user.Id
                 });
 
+                var projectKey = await GetProjectKey(project, workspace.Id);
+
+                if (projectKey is null)
+                {
+                    throw new Exception("Failed to generate unique project Key for project.");
+                }
+
+                project.Key = projectKey;
                 project.ProjectBoards.Add(GenerateDefaultBoard(project));
-
-                project.Key = await GetProjectKey(project) ??
-                              throw new Exception("Failed to generate unique project Key for project.");
-
-                var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
 
                 workspace.Projects.Add(project);
 
@@ -67,7 +74,7 @@ namespace Netptune.Services
         {
             return new Board
             {
-                Identifier = GenerateDefaultBoardId(project.Name),
+                Identifier = GenerateDefaultBoardId(project.Key),
                 Name = project.Name,
                 OwnerId = project.OwnerId,
                 BoardType = BoardType.Default,
@@ -95,9 +102,9 @@ namespace Netptune.Services
             };
         }
 
-        private static string GenerateDefaultBoardId(string projectName)
+        private static string GenerateDefaultBoardId(string projectKey)
         {
-            return $"{projectName.ToLowerInvariant().ToUrlSlug()}-default-board";
+            return $"{projectKey.ToLowerInvariant().ToUrlSlug()}-default-board";
         }
 
         public async Task<Project> DeleteProject(int id)
@@ -141,27 +148,29 @@ namespace Netptune.Services
             return await ProjectRepository.GetProjectViewModel(result.Id, true);
         }
 
-        private Task<string> GetProjectKey(Project project)
+        private Task<string> GetProjectKey(Project project, int workspaceId)
         {
-            var key = project.Name.Substring(0, 3).ToLowerInvariant();
+            const int keyLength = 4;
 
-            async Task<string> TryGetKey(string currentKey, int keyLength)
+            var key = project.Name.Substring(0, keyLength).ToLowerInvariant();
+
+            async Task<string> TryGetKey(string currentKey, int currentKeyLength)
             {
                 while (true)
                 {
-                    var isAvailable = await ProjectRepository.IsProjectKeyAvailable(currentKey, project.WorkspaceId);
+                    var isAvailable = await ProjectRepository.IsProjectKeyAvailable(currentKey, workspaceId);
 
-                    if (isAvailable) return key;
+                    if (isAvailable) return currentKey;
 
-                    var nextKey = project.Name.Substring(0, keyLength).ToLowerInvariant();
+                    var nextKey = project.Name.Substring(0, currentKeyLength + 1).ToLowerInvariant();
 
                     currentKey = nextKey;
 
-                    keyLength += 1;
+                    currentKeyLength += 1;
                 }
             }
 
-            return TryGetKey(key, 3);
+            return TryGetKey(key, keyLength);
         }
     }
 }
