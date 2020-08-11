@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +66,8 @@ namespace Netptune.Repositories.Common
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
             }
         }
