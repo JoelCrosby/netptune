@@ -1,0 +1,21 @@
+<div class="inline-edit">
+  <ng-container *ngIf="isEditActive$ | async; else elseTemplate">
+    <textarea
+      #textarea
+      #autosize="cdkTextareaAutosize"
+      class="inline-edit-input custom-scroll"
+      cdkTextareaAutosize
+      [cdkAutosizeMinRows]="minRows"
+      [cdkAutosizeMaxRows]="maxRows"
+      [formControl]="control"
+    ></textarea>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div
+      class="inline-edit-label"
+    >
+      {{ control.value }}
+    </div>
+  </ng-template>
+</div>

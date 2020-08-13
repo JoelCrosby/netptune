@@ -11,6 +11,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { InlineEditInputComponent } from './components/inline-edit-input/inline-edit-input.component';
 import { FromNowPipe } from './pipes/from-now.pipe';
 import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
+import { InlineTextAreaComponent } from './components/inline-text-area/inline-text-area.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
     InlineEditInputComponent,
     FromNowPipe,
     ScrollShadowDirective,
+    InlineTextAreaComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -35,6 +37,7 @@ import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
     InlineEditInputComponent,
     FromNowPipe,
     ScrollShadowDirective,
+    InlineTextAreaComponent,
   ],
 })
 export class StaticModule {}

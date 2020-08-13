@@ -28,7 +28,6 @@
             <mat-label>Task Summary</mat-label>
             <textarea
               matInput
-              id="name"
               class="form-control"
               placeholder="Enter Task Summary"
               formControlName="name"
@@ -42,25 +41,10 @@
             ></textarea>
           </mat-form-field>
 
-          <!-- <mat-form-field class="w-100" appearance="fill">
-            <mat-label>Project</mat-label>
-            <mat-select
-              id="type"
-              name="type"
-              placeholder="Task Project"
-              formControlName="project"
-            >
-              <mat-option *ngFor="let project of projects$ | async" [value]="project.id">
-                {{ project.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Description</mat-label>
             <textarea
               matInput
-              id="description"
               class="form-control"
               formControlName="description"
               placeholder="Enter Task Description"
@@ -90,7 +74,6 @@
               <mat-form-field class="w-100 no-floating-label" appearance="fill">
                 <input
                   matInput
-                  id="comment"
                   formControlName="comment"
                   class="form-control"
                   placeholder="Add Comment"
