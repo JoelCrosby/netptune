@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 
 namespace Netptune.Api.Controllers
@@ -64,10 +66,10 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(AppUser))]
-        public async Task<IActionResult> Invite(string userId, int workspaceId)
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> Invite(InviteUsersRequest request)
         {
-            var result = await UserService.InviteUserToWorkspace(userId, workspaceId);
+            var result = await UserService.InviteUsersToWorkspace(request.EmailAddresses, request.WorkspaceSlug);
 
             return Ok(result);
         }

@@ -130,10 +130,14 @@ namespace Netptune.Services.Authentication
 
             await Email.Send(new SendEmailModel
             {
-                ToDisplayName = $"{appUser.Firstname} {appUser.Lastname}",
+                SendTo = new SendTo
+                {
+                    Address = appUser.Email,
+                    DisplayName = $"{appUser.Firstname} {appUser.Lastname}",
+                },
+                Reason = "email confirmation",
                 Subject = "Welcome To Netptune",
                 RawTextContent = rawTextContent,
-                ToAddress = appUser.Email,
                 Action = "Confirm Email",
                 Link = callbackUrl,
                 PreHeader = "Thanks for signing up",

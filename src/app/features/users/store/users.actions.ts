@@ -18,7 +18,17 @@ export const loadUsersFail = createAction(
 
 // Invite user to workspace
 
-export const inviteUserToWorkspace = createAction(
-  '[Users] Invite user to workspace',
-  props<{ emailAddres: string }>()
+export const inviteUsersToWorkspace = createAction(
+  '[Users] Invite users to workspace',
+  props<{ emailAddresses: string[] }>()
+);
+
+export const inviteUsersToWorkspaceSuccess = createAction(
+  '[Users] Invite users to workspace Success ',
+  props<{ users: AppUser[] }>()
+);
+
+export const inviteUsersToWorkspaceFail = createAction(
+  '[Users] Invite users to workspace Fail',
+  props<{ error: HttpErrorResponse | Error }>()
 );

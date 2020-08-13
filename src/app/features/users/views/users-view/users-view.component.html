@@ -1,6 +1,10 @@
 <app-page-container>
 
-  <app-page-header title="Users"></app-page-header>
+  <app-page-header
+    title="Users"
+    actionTitle="Invite Users"
+    (actionClick)="onInviteUsers()"
+  ></app-page-header>
 
   <app-users></app-users>
 
