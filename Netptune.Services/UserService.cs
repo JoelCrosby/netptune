@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -65,36 +66,48 @@ namespace Netptune.Services
             return MapUsers(users);
         }
 
-        public async Task<ClientResponse> InviteUserToWorkspace(string emailAddress, int workspaceId)
+        public Task<ClientResponse> InviteUserToWorkspace(string userId, string workspaceSlug)
         {
-            var workspace = await WorkspaceRepository.GetAsync(workspaceId);
+            return InviteUsersToWorkspace(new[] { userId }, workspaceSlug);
+        }
+
+        public async Task<ClientResponse> InviteUsersToWorkspace(
+            IEnumerable<string> emailAddresses, string workspaceSlug, bool onlyNewUsers = false)
+        {
+            var emailList = emailAddresses.ToList();
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug);
 
             if (workspace is null)
             {
                 return ClientResponse.Failed("workspace not found");
             }
 
-            var user = await UserRepository.GetByEmail(emailAddress);
+            if (emailList.Count == 0)
+            {
+                return ClientResponse.Failed("no email addresses provided");
+            }
 
-            if (user is null)
+            var users = await UserRepository.GetByEmailRange(emailList);
+
+            if (users.Count == 0)
             {
                 return ClientResponse.Failed("user not found");
             }
 
-            var existing = await UserRepository.IsUserInWorkspace(user.Id, workspaceId);
+            var userIds = users.Select(user => user.Id).ToList();
+            var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
 
-            if (existing)
-            {
-                return ClientResponse.Failed("User is already a member of the workspace");
-            }
+            var newUserIds = userIds.Except(existing).ToList();
 
-            var result = await UserRepository.InviteUserToWorkspace(user.Id, workspaceId);
+            var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
 
             if (result is null) throw new Exception();
 
             await UnitOfWork.CompleteAsync();
 
-            await SendUserInviteEmail(user, workspace);
+            var usersToInvite = onlyNewUsers ? users.Where(user => newUserIds.Contains(user.Id)).ToList() : users;
+
+            await SendUserInviteEmails(usersToInvite, workspace);
 
             return ClientResponse.Success();
         }
@@ -114,24 +127,34 @@ namespace Netptune.Services
             return MapUser(updatedUser);
         }
 
-        private Task SendUserInviteEmail(AppUser user, Workspace workspace)
+        private Task SendUserInviteEmails(IEnumerable<AppUser> users, Workspace workspace)
         {
-            var uri = Hosting.ClientOrigin
-                .AppendPathSegments("app", workspace.Slug)
-                .SetQueryParam("userId", user.Id, true)
-                .SetQueryParam("refer", "invite");
-
-            return Email.Send(new SendEmailModel
+            var emailModels = users.Select(user =>
             {
-                ToAddress = user.Email,
-                ToDisplayName = user.GetDisplayName(),
-                Name = user.Firstname,
-                Action = "Got to the Workspace",
-                Link = uri,
-                Message = $"Hi you've been invited to join the {workspace} in Netptune.",
-                Subject = "Netptune workspace invitation.",
-                PreHeader = $"Hi you've been invited to join the {workspace} in Netptune."
+                var uri = Hosting.ClientOrigin
+                    .AppendPathSegments("app", workspace.Slug)
+                    .SetQueryParam("userId", user.Id, true)
+                    .SetQueryParam("refer", "invite");
+
+                return new SendEmailModel
+                {
+                    SendTo = new SendTo
+                    {
+                        Address = user.Email,
+                        DisplayName = user.GetDisplayName(),
+                    },
+                    Name = user.Firstname,
+                    Action = "Go to Workspace",
+                    Link = uri,
+                    Reason = "workspace invite",
+                    Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
+                    Subject = "Netptune workspace invitation.",
+                    PreHeader = $"Hi you've been invited to join the {workspace.Name} in Netptune.",
+                    RawTextContent = $"Hi you've been invited to join the {workspace.Name} in Netptune. Click the link below to start. \n\n {uri}"
+                };
             });
+
+            return Email.Send(emailModels);
         }
 
         private UserViewModel MapUser(AppUser user)

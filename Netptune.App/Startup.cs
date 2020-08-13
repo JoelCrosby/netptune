@@ -45,8 +45,8 @@ namespace Netptune.App
 
             services.AddNetptuneServices(options =>
             {
-                options.HostingOptions.ClientOrigin = Configuration["Origin"];
-                options.HostingOptions.ContentRootPath = WebHostEnvironment.ContentRootPath;
+                options.ClientOrigin = Configuration["Origin"];
+                options.ContentRootPath = WebHostEnvironment.ContentRootPath;
             });
 
             services.AddSendGridEmailService(options =>

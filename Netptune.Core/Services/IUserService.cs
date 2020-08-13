@@ -17,6 +17,8 @@ namespace Netptune.Core.Services
 
         Task<UserViewModel> Update(AppUser user);
 
-        Task<ClientResponse> InviteUserToWorkspace(string userId, int workspaceId);
+        Task<ClientResponse> InviteUserToWorkspace(string userId, string workspaceSlug);
+
+        Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> userId, string workspaceSlug, bool onlyNewUsers = false);
     }
 }

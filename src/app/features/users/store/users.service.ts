@@ -12,4 +12,14 @@ export class UsersService {
       environment.apiEndpoint + `api/users?workspaceSlug=${workspaceSlug}`
     );
   }
+
+  inviteUsersToWorkspace(emailAddresses: string[], workspaceSlug: string) {
+    return this.http.post<AppUser[]>(
+      environment.apiEndpoint + `api/users/invite`,
+      {
+        workspaceSlug,
+        emailAddresses,
+      }
+    );
+  }
 }

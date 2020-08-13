@@ -12,7 +12,7 @@ namespace Netptune.Services.Configuration
 {
     public static class NetptuneServicesConfiguration
     {
-        public static void AddNetptuneServices(this IServiceCollection services, Action<NetptuneServiceOptions> action)
+        public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
         {
             ConfigureServices(services, action);
 
@@ -32,14 +32,11 @@ namespace Netptune.Services.Configuration
             services.AddScoped<IIdentityService, IdentityService>();
         }
 
-        private static void ConfigureServices(IServiceCollection services, Action<NetptuneServiceOptions> action)
+        private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
         {
             if (action is null) throw new ArgumentNullException(nameof(action));
 
-            var options = new NetptuneServiceOptions
-            {
-                HostingOptions = new HostingOptions(),
-            };
+            var options = new HostingOptions();
 
             action(options);
 

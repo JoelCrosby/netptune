@@ -21,11 +21,12 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug)
+        public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug, bool isReadonly = false)
         {
             var result = await Context.Workspaces
                 .Include(workspace => workspace.WorkspaceUsers)
                 .ThenInclude(workspaceUser => workspaceUser.User)
+                .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceSlug);
 
             return result.WorkspaceUsers.Select(x => x.User).ToList();
@@ -46,16 +47,40 @@ namespace Netptune.Repositories
             return result.Entity;
         }
 
-        public Task<AppUser> GetByEmail(string email)
+        public async Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId)
+        {
+            var invites = userIds.Select(userId => new WorkspaceAppUser
+            {
+                WorkspaceId = workspaceId,
+                UserId = userId
+            }).ToList();
+
+            await Context.WorkspaceAppUsers.AddRangeAsync(invites);
+
+            return invites;
+        }
+
+        public Task<AppUser> GetByEmail(string email, bool isReadonly = false)
         {
             if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
             var match = email.Trim().Normalize();
 
-            return Entities.FirstOrDefaultAsync(x => x.NormalizedEmail == match);
+            return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(x => x.NormalizedEmail == match);
         }
 
-        public Task<string> GetUserIdByEmail(string email)
+        public Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false)
+        {
+            var values = emails.Select(email => email.Trim().ToUpper().Normalize());
+
+            return Entities
+                .Where(x => values.Contains(x.NormalizedEmail))
+                .IsReadonly(isReadonly)
+                .ToListAsync();
+        }
+    
+
+        public Task<string> GetUserIdByEmail(string email, bool isReadonly = false)
         {
             if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
@@ -64,6 +89,7 @@ namespace Netptune.Repositories
             return Entities
                 .Where(user => user.NormalizedEmail == match)
                 .Select(user => user.Id)
+                .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync();
         }
 
@@ -71,6 +97,15 @@ namespace Netptune.Repositories
         {
             return Context.WorkspaceAppUsers
                 .AnyAsync(x => x.UserId == userId && x.WorkspaceId == workspaceId);
+        }
+
+        public Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId)
+        {
+            return Context.WorkspaceAppUsers
+                .Where(x => x.WorkspaceId == workspaceId && userIds.Contains(x.UserId))
+                .Select(x => x.UserId)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }
