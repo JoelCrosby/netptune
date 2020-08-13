@@ -1,32 +1,28 @@
 import { Dictionary } from '@ngrx/entity';
 import { avatarColors } from './colors';
 
-class ColorUtil {
-  readonly availableColors = [...avatarColors];
-  readonly colorDictionary: Dictionary<string> = {};
+const availableColors = [...avatarColors];
+const colorDictionary: Dictionary<string> = {};
 
-  availableColorIndex = 0;
+let availableColorIndex = 0;
 
-  getColourForKey(key: string) {
-    if (this.colorDictionary.hasOwnProperty(key)) {
-      return this.colorDictionary[key];
-    }
-
-    this.colorDictionary[key] = this.getNextAvailableColor();
-
-    return this.colorDictionary[key];
+export const getColourForKey = (key: string) => {
+  if (colorDictionary.hasOwnProperty(key)) {
+    return colorDictionary[key];
   }
 
-  getNextAvailableColor() {
-    if (this.availableColorIndex === this.availableColors.length) {
-      this.availableColorIndex = 0;
-    }
+  colorDictionary[key] = getNextAvailableColor();
 
-    const result = this.availableColors[this.availableColorIndex];
-    this.availableColorIndex++;
+  return colorDictionary[key];
+};
 
-    return result;
+export const getNextAvailableColor = () => {
+  if (availableColorIndex === availableColors.length) {
+    availableColorIndex = 0;
   }
-}
 
-export const avatarColourUtil = new ColorUtil();
+  const result = availableColors[availableColorIndex];
+  availableColorIndex++;
+
+  return result;
+};
