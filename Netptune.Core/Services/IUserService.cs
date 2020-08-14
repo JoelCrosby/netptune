@@ -19,6 +19,8 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse> InviteUserToWorkspace(string userId, string workspaceSlug);
 
-        Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> userId, string workspaceSlug, bool onlyNewUsers = false);
+        Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug, bool onlyNewUsers = false);
+
+        Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug);
     }
 }

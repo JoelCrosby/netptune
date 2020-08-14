@@ -112,6 +112,29 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
+        public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug)
+        {
+            var emailList = emailAddresses.ToList();
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug);
+
+            if (workspace is null)
+            {
+                return ClientResponse.Failed("workspace not found");
+            }
+
+            if (emailList.Count == 0)
+            {
+                return ClientResponse.Failed("no email addresses provided");
+            }
+
+            var users = await UserRepository.GetByEmailRange(emailList);
+            var userIds = users.Select(user => user.Id).ToList();
+
+            await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
+
+            return ClientResponse.Success();
+        }
+
         public async Task<UserViewModel> Update(AppUser user)
         {
             var updatedUser = await UserRepository.GetAsync(user.Id);

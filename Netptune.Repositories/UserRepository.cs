@@ -60,6 +60,17 @@ namespace Netptune.Repositories
             return invites;
         }
 
+        public async Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId)
+        {
+            var toRemove = await Context.WorkspaceAppUsers
+                .Where(item => item.WorkspaceId == workspaceId && userIds.Contains(item.UserId))
+                .ToListAsync();
+
+            Context.WorkspaceAppUsers.RemoveRange(toRemove);
+
+            return toRemove;
+        }
+
         public Task<AppUser> GetByEmail(string email, bool isReadonly = false)
         {
             if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
