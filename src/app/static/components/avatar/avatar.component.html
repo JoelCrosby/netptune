@@ -1,10 +1,11 @@
 <div
   class="avatar-container"
-  [style.height]="size + 'px'"
-  [style.width]="size + 'px'"
+  [style.height]="sizePx"
+  [style.width]="sizePx"
   [style.background-color]="backgroundColor"
   [style.color]="color"
-  [matTooltip]="name"
+  [class.avatar-border]="border"
+  [matTooltip]="tooltip ? name : undefined"
 >
   <span class="avatar-text">
     {{ name | avatar }}

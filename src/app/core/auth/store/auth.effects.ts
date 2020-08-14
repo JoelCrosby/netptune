@@ -19,6 +19,7 @@ import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { User } from './auth.models';
 import { selectAuthState } from './auth.selectors';
+import { openSideNav } from '@app/core/store/layout/layout.actions';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -65,6 +66,7 @@ export class AuthEffects {
           this.authService.login(action.request).pipe(
             map((userInfo: User) => actions.loginSuccess({ userInfo })),
             tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => this.store.dispatch(openSideNav())),
             catchError((error) => of(actions.loginFail({ error })))
           )
         )

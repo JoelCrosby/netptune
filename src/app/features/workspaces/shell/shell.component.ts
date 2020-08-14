@@ -37,12 +37,11 @@ export class ShellComponent implements OnInit {
   ];
 
   bottomLinks = [
-    { label: 'Profile', value: ['./profile'], icon: 'perm_identity' },
     { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
   ];
 
-  sideNavOpen$ = this.store.select(selectSideMenuOpen);
-  sideNavMode$ = this.store.select(selectSideMenuMode);
+  sideMenuOpen$ = this.store.select(selectSideMenuOpen);
+  sideMenuMode$ = this.store.select(selectSideMenuMode);
   fixedInViewport$ = of(true);
 
   constructor(private store: Store, private router: Router) {}

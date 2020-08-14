@@ -14,10 +14,16 @@ import { getColourForKey } from '@core/util/colors/color-util';
 })
 export class AvatarComponent implements OnInit {
   @Input() name: string;
-  @Input() size: string;
+  @Input() size: string | number = '32';
+  @Input() border = false;
+  @Input() tooltip = true;
 
   backgroundColor: string;
   color = '#fff';
+
+  get sizePx() {
+    return this.size + 'px';
+  }
 
   constructor() {}
 
