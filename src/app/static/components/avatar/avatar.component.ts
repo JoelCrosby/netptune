@@ -25,6 +25,12 @@ export class AvatarComponent implements OnInit {
     return this.size + 'px';
   }
 
+  get fontSize() {
+    if (typeof this.size === 'number') return this.size / 2;
+
+    return Number.parseInt(this.size, 2) / 2;
+  }
+
   constructor() {}
 
   ngOnInit() {
