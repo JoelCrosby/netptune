@@ -16,10 +16,12 @@ export class AvatarComponent implements OnInit {
   @Input() name: string;
   @Input() size: string;
 
-  backgroundColor = getColourForKey(this.name);
+  backgroundColor: string;
   color = '#fff';
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.backgroundColor = getColourForKey(this.name);
+  }
 }
