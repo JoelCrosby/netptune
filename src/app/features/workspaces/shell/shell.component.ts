@@ -6,12 +6,16 @@ import {
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import {
+  selectSideMenuOpen,
+  selectSideMenuMode,
+} from '@app/core/store/layout/layout.selectors';
 import { logout } from '@core/auth/store/auth.actions';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { selectPageTitle } from '@core/core.route.selectors';
-import { MediaService } from '@core/media/media.service';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -37,15 +41,11 @@ export class ShellComponent implements OnInit {
     { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
   ];
 
-  mobileQuery: MediaQueryList;
+  sideNavOpen$ = this.store.select(selectSideMenuOpen);
+  sideNavMode$ = this.store.select(selectSideMenuMode);
+  fixedInViewport$ = of(true);
 
-  constructor(
-    private store: Store,
-    private router: Router,
-    private mediaService: MediaService
-  ) {
-    this.mobileQuery = this.mediaService.mobileQuery;
-  }
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit() {
     this.authenticated$ = this.store.pipe(

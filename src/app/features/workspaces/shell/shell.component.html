@@ -1,8 +1,8 @@
-<mat-sidenav-container class="app-container app-sidenav-container" [class.app-is-mobile]="mobileQuery.matches">
+<mat-sidenav-container class="app-container app-sidenav-container">
   <mat-sidenav
-    [opened]="!mobileQuery.matches && (authenticated$ | async)"
-    [mode]="mobileQuery.matches ? 'over' : 'side'"
-    [fixedInViewport]="mobileQuery.matches"
+    [opened]="sideNavOpen$ | async"
+    [mode]="sideNavMode$ | async"
+    [fixedInViewport]="false"
     class="app-sidenav"
   >
     <mat-nav-list>
