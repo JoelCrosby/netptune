@@ -16,7 +16,7 @@ export const loadUsersFail = createAction(
   props<{ error: HttpErrorResponse | Error }>()
 );
 
-// Invite user to workspace
+// Invite users to workspace
 
 export const inviteUsersToWorkspace = createAction(
   '[Users] Invite users to workspace',
@@ -25,10 +25,27 @@ export const inviteUsersToWorkspace = createAction(
 
 export const inviteUsersToWorkspaceSuccess = createAction(
   '[Users] Invite users to workspace Success ',
-  props<{ users: AppUser[] }>()
+  props<{ emailAddresses: string[] }>()
 );
 
 export const inviteUsersToWorkspaceFail = createAction(
   '[Users] Invite users to workspace Fail',
+  props<{ error: HttpErrorResponse | Error }>()
+);
+
+// Remove users from worksapce
+
+export const removeUsersFromWorkspace = createAction(
+  '[Users] Remove users from workspace',
+  props<{ emailAddresses: string[] }>()
+);
+
+export const removeUsersFromWorkspaceSuccess = createAction(
+  '[Users] Remove users from workspace Success ',
+  props<{ emailAddresses: string[] }>()
+);
+
+export const removeUsersFromWorkspaceFail = createAction(
+  '[Users] Remove users from workspace Fail',
   props<{ error: HttpErrorResponse | Error }>()
 );

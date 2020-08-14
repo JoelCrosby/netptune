@@ -22,4 +22,14 @@ export class UsersService {
       }
     );
   }
+
+  removeUsersFromWorkspace(emailAddresses: string[], workspaceSlug: string) {
+    return this.http.post<AppUser[]>(
+      environment.apiEndpoint + `api/users/remove`,
+      {
+        workspaceSlug,
+        emailAddresses,
+      }
+    );
+  }
 }

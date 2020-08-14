@@ -9,12 +9,6 @@
   }
 }
 
-.mat-chip {
-  i {
-    margin-right: .6rem;
-  }
-}
-
 .user-header-image {
   height: 40px;
 }
@@ -29,23 +23,7 @@
   padding-bottom: 0;
 }
 
-mat-card-header {
-  align-items: center;
-  margin-bottom: .6rem;
-}
 
-mat-card-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.card-chips {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .users-loading {
   height: 80vh;

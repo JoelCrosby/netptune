@@ -10,9 +10,10 @@ import { UsersEffects } from './store/users.effects';
 import { usersReducer } from './store/users.reducer';
 import { StaticModule } from '@app/static/static.module';
 import { UsersViewComponent } from './views/users-view/users-view.component';
+import { UserCardComponent } from './components/user-card/user-card.component';
 
 @NgModule({
-  declarations: [UsersListComponent, UsersViewComponent],
+  declarations: [UsersListComponent, UsersViewComponent, UserCardComponent],
   imports: [
     SharedModule,
     StaticModule,
