@@ -50,5 +50,21 @@
     .app-sidenav {
       width: 100vw !important;
     }
+
+    .app-menu-link {
+      height: 4em !important;
+
+      .mat-list-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 32px !important;
+      }
+
+      .mat-line {
+        font-weight: 300 !important;
+        letter-spacing: .5px !important;
+        font-size: 24px !important;
+      }
+    }
   }
 }
