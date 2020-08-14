@@ -4,9 +4,13 @@ import { avatarColors } from './colors';
 const availableColors = [...avatarColors];
 const colorDictionary: Dictionary<string> = {};
 
-let availableColorIndex = 0;
+const colorIndex = {
+  availableColorIndex: 0,
+};
 
 export const getColourForKey = (key: string) => {
+  console.log(key);
+
   if (colorDictionary.hasOwnProperty(key)) {
     return colorDictionary[key];
   }
@@ -17,12 +21,14 @@ export const getColourForKey = (key: string) => {
 };
 
 export const getNextAvailableColor = () => {
-  if (availableColorIndex === availableColors.length) {
-    availableColorIndex = 0;
+  if (colorIndex.availableColorIndex === availableColors.length) {
+    colorIndex.availableColorIndex = 0;
   }
 
-  const result = availableColors[availableColorIndex];
-  availableColorIndex++;
+  const result = availableColors[colorIndex.availableColorIndex];
+  colorIndex.availableColorIndex++;
+
+  console.log({ colorIndex });
 
   return result;
 };
