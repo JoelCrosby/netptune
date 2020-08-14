@@ -62,7 +62,7 @@ namespace Netptune.Api.Controllers
         }
 
         [HttpPost]
-        [Route("Invite")]
+        [Route("invite")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -74,8 +74,21 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("remove")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> RemoveUserFromWorkspace(InviteUsersRequest request)
+        {
+            var result = await UserService.RemoveUsersFromWorkspace(request.EmailAddresses, request.WorkspaceSlug);
+
+            return Ok(result);
+        }
+
         [HttpGet]
-        [Route("GetUserByEmail")]
+        [Route("get-by-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(AppUser))]

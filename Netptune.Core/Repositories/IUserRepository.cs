@@ -21,6 +21,8 @@ namespace Netptune.Core.Repositories
 
         Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId);
 
+        Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId);
+
         Task<bool> IsUserInWorkspace(string userId, int workspaceId);
 
         Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId);
