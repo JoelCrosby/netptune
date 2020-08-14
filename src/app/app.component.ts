@@ -6,7 +6,10 @@ import {
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
-import { MediaService } from '@core/media/media.service';
+import {
+  selectSideMenuOpen,
+  selectIsMobileView,
+} from '@core/store/layout/layout.selectors';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
@@ -24,12 +27,10 @@ export class AppComponent implements OnInit {
 
   authenticated$: Observable<boolean>;
   workspaces$ = this.store.select(selectAllWorkspaces);
+  sideNavOpen$ = this.store.select(selectSideMenuOpen);
+  isMobileView$ = this.store.select(selectIsMobileView);
 
-  mobileQuery: MediaQueryList;
-
-  constructor(private store: Store, private mediaService: MediaService) {
-    this.mobileQuery = this.mediaService.mobileQuery;
-  }
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.authenticated$ = this.store.pipe(

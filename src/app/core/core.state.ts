@@ -13,6 +13,7 @@ import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local
 import { RouterStateUrl } from './router/router.state';
 import { CoreState } from './store/core/core.model';
 import { coreReducer } from './store/core/core.reducer';
+import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
 import { SettingsState } from './store/settings/settings.model';
@@ -26,6 +27,7 @@ export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   router: routerReducer,
   core: coreReducer,
+  layout: layoutReducer,
   settings: settingsReducer,
   workspaces: workspacesReducer,
   projects: projectsReducer,
@@ -47,6 +49,10 @@ export const selectAuthState = createFeatureSelector<AppState, AuthState>(
 
 export const selectCoreState = createFeatureSelector<AppState, CoreState>(
   'core'
+);
+
+export const selectLayoutState = createFeatureSelector<AppState, LayoutState>(
+  'layout'
 );
 
 export const selectSettingsState = createFeatureSelector<
@@ -72,6 +78,7 @@ export interface AppState {
   auth: AuthState;
   router: RouterReducerState<RouterStateUrl>;
   core: CoreState;
+  layout: LayoutState;
   settings: SettingsState;
   workspaces: WorkspacesState;
   projects: ProjectsState;

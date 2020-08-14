@@ -18,6 +18,7 @@ import { metaReducers, reducers } from './core.state';
 import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './store/settings/settings.effects';
 import { CoreEffects } from './store/core/core.effects';
+import { LayoutEffects } from './store/layout/layout.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 
@@ -39,6 +40,7 @@ import { ProjectTasksEffects } from './store/tasks/tasks.effects';
     EffectsModule.forRoot([
       AuthEffects,
       CoreEffects,
+      LayoutEffects,
       SettingsEffects,
       WorkspacesEffects,
       ProjectsEffects,

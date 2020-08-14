@@ -45,4 +45,10 @@
     color: rgba(255, 255, 255, 1) !important;
     background-color: lighten(mat-color($background, side-bar), 12) !important;
   }
+
+  .app-is-mobile {
+    .app-sidenav {
+      width: 100vw !important;
+    }
+  }
 }
