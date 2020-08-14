@@ -2,6 +2,11 @@ import { createSelector } from '@ngrx/store';
 import { selectLayoutState } from '@core/core.state';
 import { LayoutState } from './layout.reducer';
 
+export const selectSideNavOpen = createSelector(
+  selectLayoutState,
+  (state: LayoutState) => state.sideMenuOpen
+);
+
 export const selectSideMenuOpen = createSelector(
   selectLayoutState,
   (state: LayoutState) => state.sideMenuOpen

@@ -44,6 +44,20 @@
         </a>
       </div>
 
+      <div class="bottom-nav-list">
+        <a
+          class="profile-nav-btn"
+          *ngIf="user$ | async as user"
+          [routerLink]="['./profile']"
+        >
+          <app-avatar
+            [name]="user.displayName"
+            [size]="40"
+            [border]="true"
+            [tooltip]="false"
+          ></app-avatar>
+        </a>
+      </div>
 
     </mat-sidenav>
     <mat-sidenav-content>

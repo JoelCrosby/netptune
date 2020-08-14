@@ -27,6 +27,13 @@ const routes: Routes = [
     data: { title: 'Workspaces' },
   },
   {
+    path: 'profile',
+    loadChildren: () =>
+      import('./features/profile/profile.module').then((m) => m.ProfileModule),
+    canActivate: [AuthGuardService],
+    data: { title: 'Profile' },
+  },
+  {
     path: ':workspace',
     resolve: [WorkspaceResolver],
     canActivate: [AuthGuardService],
@@ -80,15 +87,6 @@ const routes: Routes = [
           import('./features/users/users.module').then((m) => m.UsersModule),
         canActivate: [AuthGuardService],
         data: { title: 'Users' },
-      },
-      {
-        path: 'profile',
-        loadChildren: () =>
-          import('./features/profile/profile.module').then(
-            (m) => m.ProfileModule
-          ),
-        canActivate: [AuthGuardService],
-        data: { title: 'Profile' },
       },
       {
         path: 'settings',
