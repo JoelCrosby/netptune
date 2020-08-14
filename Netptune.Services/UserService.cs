@@ -132,6 +132,8 @@ namespace Netptune.Services
 
             await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
 
+            await UnitOfWork.CompleteAsync();
+
             return ClientResponse.Success();
         }
 

@@ -1,0 +1,47 @@
+mat-card-header {
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+mat-card-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.card-chips {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-chip {
+  i {
+    margin-right: .6rem;
+  }
+}
+
+.remove-user-btn {
+  align-self: start;
+  margin-left: auto;
+  display: none;
+  animation: fade-in ease-in-out .24s;
+}
+
+mat-card:hover {
+  .remove-user-btn {
+    display: block;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: .8;
+  }
+}

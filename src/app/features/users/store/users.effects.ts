@@ -14,6 +14,8 @@ import {
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Injectable()
 export class UsersEffects {
@@ -21,7 +23,7 @@ export class UsersEffects {
     this.actions$.pipe(
       ofType(actions.loadUsers),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
+      switchMap(([_, workspace]) =>
         this.usersService.getUsersInWorkspace(workspace.slug).pipe(
           map((users) => actions.loadUsersSuccess({ users })),
           catchError((error) => of(actions.loadUsersFail({ error })))
@@ -34,7 +36,7 @@ export class UsersEffects {
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
-  ionviteUsers$ = createEffect(() =>
+  inviteUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.inviteUsersToWorkspace),
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
@@ -43,7 +45,9 @@ export class UsersEffects {
           .inviteUsersToWorkspace(emailAddresses, workspace.slug)
           .pipe(
             tap(() => this.snackbar.open('Invite(s) Sent')),
-            map((users) => actions.inviteUsersToWorkspaceSuccess({ users })),
+            map(() =>
+              actions.inviteUsersToWorkspaceSuccess({ emailAddresses })
+            ),
             catchError((error) =>
               of(actions.inviteUsersToWorkspaceFail({ error }))
             )
@@ -52,10 +56,44 @@ export class UsersEffects {
     )
   );
 
+  removeUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.removeUsersFromWorkspace),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([{ emailAddresses }, workspace]) =>
+        this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+            return this.usersService
+              .removeUsersFromWorkspace(emailAddresses, workspace.slug)
+              .pipe(
+                tap(() => this.snackbar.open('User(s) removed')),
+                map(() =>
+                  actions.removeUsersFromWorkspaceSuccess({ emailAddresses })
+                ),
+                catchError((error) =>
+                  of(actions.removeUsersFromWorkspaceFail({ error }))
+                )
+              );
+          })
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private usersService: UsersService,
     private snackbar: MatSnackBar,
+    private confirmation: ConfirmationService,
     private store: Store
   ) {}
 }
+
+const REMOVE_USERS_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Remove User(s)',
+  color: 'warn',
+  title: 'Remove users from workspace',
+  message:
+    'This will remove the user(s) from the workspace, but will not remove thier accounts.',
+};

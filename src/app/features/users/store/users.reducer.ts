@@ -14,6 +14,13 @@ const reducer = createReducer(
   })),
   on(actions.loadUsersSuccess, (state, { users }) =>
     adapter.setAll(users, { ...state, loading: false, loaded: true })
+  ),
+  on(actions.removeUsersFromWorkspaceSuccess, (state, { emailAddresses }) =>
+    adapter.removeMany(emailAddresses, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
   )
 );
 
