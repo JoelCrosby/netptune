@@ -9,8 +9,6 @@ const colorIndex = {
 };
 
 export const getColourForKey = (key: string) => {
-  console.log(key);
-
   if (colorDictionary.hasOwnProperty(key)) {
     return colorDictionary[key];
   }
@@ -27,8 +25,6 @@ export const getNextAvailableColor = () => {
 
   const result = availableColors[colorIndex.availableColorIndex];
   colorIndex.availableColorIndex++;
-
-  console.log({ colorIndex });
 
   return result;
 };
