@@ -6,18 +6,15 @@ import {
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import {
-  selectIsAuthenticated,
   selectCurrentUser,
+  selectIsAuthenticated,
 } from '@core/auth/store/auth.selectors';
-import {
-  selectSideMenuOpen,
-  selectIsMobileView,
-} from '@core/store/layout/layout.selectors';
+import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap, withLatestFrom, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -39,12 +36,10 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.sideNavOpen$ = this.store.pipe(
       select(selectIsAuthenticated),
-      withLatestFrom(this.store.select(selectSideMenuOpen)),
       tap(
-        ([authenticated]) =>
+        (authenticated) =>
           authenticated && this.store.dispatch(loadWorkspaces())
-      ),
-      map(([authenticated, sideNavOpen]) => authenticated && sideNavOpen)
+      )
     );
   }
 }
