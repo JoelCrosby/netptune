@@ -29,6 +29,7 @@ namespace Netptune.Core.Entities
             {
                 Id = Id,
                 UserDisplayName = Owner.GetDisplayName(),
+                UserDisplayImage= Owner.PictureUrl,
                 UserId = OwnerId,
                 Body = Body,
                 EntityId = EntityId,

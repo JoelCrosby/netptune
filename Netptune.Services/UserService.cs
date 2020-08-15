@@ -146,6 +146,7 @@ namespace Netptune.Services
             updatedUser.PhoneNumber = user.PhoneNumber;
             updatedUser.Firstname = user.Firstname;
             updatedUser.Lastname = user.Lastname;
+            updatedUser.PictureUrl = user.PictureUrl;
 
             await UnitOfWork.CompleteAsync();
 

@@ -8,5 +8,15 @@
   [matTooltip]="tooltip ? name : undefined"
   [style.font-size]="fontSize"
 >
-    {{ name | avatar }}
+  <ng-container *ngIf="imageUrl; else elseTemplate">
+    <img
+      class="avatar-image"
+      [width]="size"
+      [height]="size"
+      [src]="imageUrl"
+      [alt]="name"
+    >
+  </ng-container>
+  <ng-template #elseTemplate>{{ name | avatar }}</ng-template>
+
 </div>

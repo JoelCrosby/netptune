@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Netptune.Core.Authentication.Models
 {
@@ -11,6 +11,8 @@ namespace Netptune.Core.Authentication.Models
         public string EmailAddress { get; set; }
 
         public string DisplayName { get; set; }
+
+        public string PictureUrl { get; set; }
 
         public DateTime Issued { get; set; }
 

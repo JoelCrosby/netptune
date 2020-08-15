@@ -67,6 +67,7 @@
               size="24"
               class="task-card-user-chip"
               [name]="user.displayName"
+              [imageUrl]="user.pictureUrl"
             >
             </app-avatar>
 
@@ -98,6 +99,7 @@
                 size="24"
                 class="task-card-user-chip"
                 [name]="comment.userDisplayName"
+                [imageUrl]="comment.userDisplayImage"
               >
               </app-avatar>
               <div class="comment-body">
@@ -129,6 +131,7 @@
               size="24"
               class="task-card-user-chip"
               [name]="task.assigneeUsername"
+              [imageUrl]="task.assigneePictureUrl"
             >
             </app-avatar>
           </div>
@@ -139,6 +142,7 @@
               size="24"
               class="task-card-user-chip"
               [name]="task.ownerUsername"
+              [imageUrl]="task.assigneePictureUrl"
             >
             </app-avatar>
           </div>

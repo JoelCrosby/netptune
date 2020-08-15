@@ -1,4 +1,4 @@
-﻿using Netptune.Core.BaseEntities;
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -72,6 +72,7 @@ namespace Netptune.Core.Entities
                 AssigneeUsername = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
                 AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
                 OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
+                OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
                 ProjectName = Project == null ? string.Empty : Project.Name
             };
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Netptune.Core.Enums;
 
@@ -41,6 +41,8 @@ namespace Netptune.Core.ViewModels.ProjectTasks
         public string AssigneePictureUrl { get; set; }
 
         public string OwnerUsername { get; set; }
+
+        public string OwnerPictureUrl { get; set; }
 
         public string ProjectName { get; set; }
     }
