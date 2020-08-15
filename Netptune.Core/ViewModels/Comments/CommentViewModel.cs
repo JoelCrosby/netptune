@@ -12,6 +12,8 @@ namespace Netptune.Core.ViewModels.Comments
 
         public string UserDisplayName { get; set; }
 
+        public string UserDisplayImage { get; set; }
+
         public string UserId { get; set; }
 
         public string Body { get; set; }

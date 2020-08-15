@@ -4,7 +4,7 @@ import { MatDrawerMode } from '@angular/material/sidenav';
 
 const initialState: LayoutState = {
   sideNavOpen: false,
-  sideMenuOpen: false,
+  sideMenuOpen: true,
   isMobileView: false,
   sideNavMode: 'side' as MatDrawerMode,
 };

@@ -162,7 +162,8 @@ namespace Netptune.Services.Authentication
                 EmailAddress = appUser.Email,
                 DisplayName = appUser.GetDisplayName(),
                 Issued = DateTime.Now,
-                Expires = expireDays
+                Expires = expireDays,
+                PictureUrl = appUser.PictureUrl,
             };
         }
 

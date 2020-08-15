@@ -15,6 +15,7 @@ import { getColourForKey } from '@core/util/colors/color-util';
 export class AvatarComponent implements OnInit {
   @Input() name: string;
   @Input() size: string | number = '32';
+  @Input() imageUrl: string;
   @Input() border = false;
   @Input() tooltip = true;
 

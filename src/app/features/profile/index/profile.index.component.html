@@ -27,6 +27,12 @@
       <mat-icon matSuffix>mail</mat-icon>
     </mat-form-field>
 
+    <mat-form-field class="profile-input mb-3" appearance="fill">
+      <mat-label>Image Url</mat-label>
+      <input matInput placeholder="Change Profile Image Url" formControlName="pictureUrl">
+      <mat-icon matSuffix>photo</mat-icon>
+    </mat-form-field>
+
     <button
       mat-stroked-button
       (click)="updateClicked()"

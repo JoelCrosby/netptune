@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
     firstname: new FormControl(),
     lastname: new FormControl(),
     email: new FormControl(),
+    pictureUrl: new FormControl(),
   });
 
   profile: AppUser;
@@ -36,6 +37,9 @@ export class ProfileComponent implements OnInit {
   }
   get email() {
     return this.profileGroup.get('email');
+  }
+  get pictureUrl() {
+    return this.profileGroup.get('pictureUrl');
   }
 
   constructor(private store: Store) {}
@@ -59,6 +63,7 @@ export class ProfileComponent implements OnInit {
           this.firstname.setValue(profile.firstname);
           this.lastname.setValue(profile.lastname);
           this.email.setValue(profile.email);
+          this.pictureUrl.setValue(profile.pictureUrl);
         })
       )
       .subscribe();
@@ -70,6 +75,7 @@ export class ProfileComponent implements OnInit {
       firstname: this.firstname.value,
       lastname: this.lastname.value,
       email: this.email.value,
+      pictureUrl: this.pictureUrl.value,
     };
 
     this.store.dispatch(updateProfile({ profile }));

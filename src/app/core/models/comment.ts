@@ -1,6 +1,7 @@
 export interface CommentViewModel {
   id: number;
   userDisplayName: string;
+  userDisplayImage: string;
   userId: number;
   body: string;
   entityId: number;
