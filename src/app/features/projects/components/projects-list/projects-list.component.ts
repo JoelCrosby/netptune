@@ -38,21 +38,7 @@ export class ProjectsListComponent implements OnInit, AfterViewInit {
   }
 
   deleteClicked(project: ProjectViewModel) {
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        width: '600px',
-        data: {
-          title: 'Are you sure you want to delete this project?',
-          content: `${TextHelpers.truncate(project.name)}`,
-          confirm: 'Delete Project',
-        },
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result) {
-          this.store.dispatch(ProjectsActions.deleteProject({ project }));
-        }
-      });
+    this.store.dispatch(ProjectsActions.deleteProject({ project }));
   }
 
   trackById(index: number, project: ProjectViewModel) {
