@@ -15,6 +15,8 @@ import {
 import { selectWorkspace } from '../workspaces/workspaces.actions';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
+import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -60,10 +62,16 @@ export class ProjectsEffects {
     this.actions$.pipe(
       ofType(actions.deleteProject),
       switchMap((action) =>
-        this.projectsService.delete(action.project).pipe(
-          tap(() => this.snackbar.open('Project Deleted')),
-          map((project) => actions.deleteProjectSuccess({ project })),
-          catchError((error) => of(actions.deleteProjectFail({ error })))
+        this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.projectsService.delete(action.project).pipe(
+              tap(() => this.snackbar.open('Project Deleted')),
+              map((project) => actions.deleteProjectSuccess({ project })),
+              catchError((error) => of(actions.deleteProjectFail({ error })))
+            );
+          })
         )
       )
     )
@@ -76,7 +84,15 @@ export class ProjectsEffects {
   constructor(
     private actions$: Actions<Action>,
     private projectsService: ProjectsService,
+    private confirmation: ConfirmationService,
     private store: Store,
     private snackbar: MatSnackBar
   ) {}
 }
+
+const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete Project',
+  color: 'warn',
+  title: 'Delete Project',
+  message: 'Are you sure you wish to delete this project',
+};
