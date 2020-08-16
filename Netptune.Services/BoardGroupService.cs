@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+using MoreLinq;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
@@ -57,10 +59,20 @@ namespace Netptune.Services
 
             var board = await UnitOfWork.Boards.GetViewModel(boardId);
 
+            var users = groups
+                .SelectMany(group => group.TasksInGroups)
+                .Where(group => !group.IsDeleted)
+                .Select(task => task.ProjectTask)
+                .Where(task => !task.IsDeleted)
+                .Select(task => task.Assignee)
+                .DistinctBy(user => user.UserName)
+                .ToList();
+
             return new BoardGroupsViewModel
             {
                 Groups = groups,
                 Board = board,
+                Users = users,
             };
         }
 

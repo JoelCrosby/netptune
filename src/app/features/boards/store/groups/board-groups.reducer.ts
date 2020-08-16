@@ -20,6 +20,7 @@ const reducer = createReducer(
       loading: false,
       loaded: true,
       board: boardGroups.board,
+      users: boardGroups.users,
     })
   ),
   on(actions.createBoardGroup, (state) => ({ ...state, loading: true })),
