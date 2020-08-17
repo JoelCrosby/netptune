@@ -8,9 +8,9 @@ namespace Netptune.Core.Repositories
 {
     public interface IWorkspaceRepository : IRepository<Workspace, int>
     {
-        Task<Workspace> GetBySlug(string slug);
+        Task<Workspace> GetBySlug(string slug, bool isReadonly = false);
 
-        Task<Workspace> GetBySlug(string slug, bool includeRelated);
+        Task<Workspace> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false);
 
         Task<List<Workspace>> GetWorkspaces(AppUser user);
 

@@ -11,6 +11,8 @@ namespace Netptune.Core.Services
     {
         Task<UserViewModel> Get(string userId);
 
+        Task<List<UserViewModel>> GetAll();
+
         Task<UserViewModel> GetByEmail(string email);
 
         Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug);

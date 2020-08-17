@@ -43,7 +43,7 @@ namespace Netptune.Services
 
         public async Task<UserViewModel> Get(string userId)
         {
-            var user = await UserRepository.GetAsync(userId);
+            var user = await UserRepository.GetAsync(userId, true);
 
             if (user is null) return null;
 
@@ -52,7 +52,7 @@ namespace Netptune.Services
 
         public async Task<UserViewModel> GetByEmail(string email)
         {
-            var user = await UserRepository.GetByEmail(email);
+            var user = await UserRepository.GetByEmail(email, true);
 
             if (user is null) return null;
 
@@ -61,7 +61,14 @@ namespace Netptune.Services
 
         public async Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug)
         {
-            var users = await UserRepository.GetWorkspaceUsers(workspaceSlug);
+            var users = await UserRepository.GetWorkspaceUsers(workspaceSlug, true);
+
+            return MapUsers(users);
+        }
+
+        public async Task<List<UserViewModel>> GetAll()
+        {
+            var users = await UserRepository.GetAllAsync();
 
             return MapUsers(users);
         }
@@ -75,7 +82,7 @@ namespace Netptune.Services
             IEnumerable<string> emailAddresses, string workspaceSlug, bool onlyNewUsers = false)
         {
             var emailList = emailAddresses.ToList();
-            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug);
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug, true);
 
             if (workspace is null)
             {
@@ -87,7 +94,7 @@ namespace Netptune.Services
                 return ClientResponse.Failed("no email addresses provided");
             }
 
-            var users = await UserRepository.GetByEmailRange(emailList);
+            var users = await UserRepository.GetByEmailRange(emailList, true);
 
             if (users.Count == 0)
             {
@@ -115,7 +122,7 @@ namespace Netptune.Services
         public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug)
         {
             var emailList = emailAddresses.ToList();
-            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug);
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug, true);
 
             if (workspace is null)
             {
@@ -127,7 +134,7 @@ namespace Netptune.Services
                 return ClientResponse.Failed("no email addresses provided");
             }
 
-            var users = await UserRepository.GetByEmailRange(emailList);
+            var users = await UserRepository.GetByEmailRange(emailList, true);
             var userIds = users.Select(user => user.Id).ToList();
 
             await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
@@ -167,7 +174,7 @@ namespace Netptune.Services
                     SendTo = new SendTo
                     {
                         Address = user.Email,
-                        DisplayName = user.GetDisplayName(),
+                        DisplayName = user.DisplayName,
                     },
                     Name = user.Firstname,
                     Action = "Go to Workspace",
