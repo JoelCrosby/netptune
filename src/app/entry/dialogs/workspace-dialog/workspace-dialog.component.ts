@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Workspace } from '@core/models/workspace';
@@ -13,6 +19,7 @@ import { Store } from '@ngrx/store';
   selector: 'app-workspace-dialog',
   templateUrl: './workspace-dialog.component.html',
   styleUrls: ['./workspace-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceDialogComponent implements OnInit {
   workspaceFromGroup = new FormGroup({
