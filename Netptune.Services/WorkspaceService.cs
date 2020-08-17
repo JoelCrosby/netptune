@@ -82,6 +82,11 @@ namespace Netptune.Services
             return await WorkspaceRepository.GetWorkspaces(user);
         }
 
+        public Task<List<Workspace>> GetAll()
+        {
+            return WorkspaceRepository.GetAllAsync();
+        }
+
         public async Task<Workspace> UpdateWorkspace(Workspace workspace)
         {
             var user = await IdentityService.GetCurrentUser();

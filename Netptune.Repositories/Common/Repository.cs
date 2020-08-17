@@ -110,7 +110,7 @@ namespace Netptune.Repositories.Common
         /// <param name="ids"></param>
         /// <param name="isReadonly"></param>
         /// <returns>List of Entities</returns>
-        public Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
+        public virtual Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
         {
             return Entities
                 .Where(entity => ids.Contains(entity.Id))
@@ -145,7 +145,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Entity of the defined type</returns>
-        public TEntity Add(TEntity entity)
+        public virtual TEntity Add(TEntity entity)
         {
             var entityResult = Entities.Add(entity);
 
@@ -157,7 +157,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Entity of the defined type</returns>
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async virtual Task<TEntity> AddAsync(TEntity entity)
         {
             var entityResult = await Entities.AddAsync(entity);
 
@@ -169,7 +169,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>Entity of the defined type</returns>
-        public void AddRange(IEnumerable<TEntity> entities)
+        public virtual void AddRange(IEnumerable<TEntity> entities)
         {
             Entities.AddRange(entities);
         }
@@ -179,7 +179,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>Entity of the defined type</returns>
-        public Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public virtual Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
             return Entities.AddRangeAsync(entities);
         }

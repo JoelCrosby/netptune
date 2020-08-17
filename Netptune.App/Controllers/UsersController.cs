@@ -9,6 +9,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Api.Controllers
 {
@@ -24,10 +25,10 @@ namespace Netptune.Api.Controllers
             UserService = userService;
         }
 
-        // GET: api/AppUsers
+        // GET: api/users
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<AppUser>))]
+        [Produces("application/json", Type = typeof(List<UserViewModel>))]
         public async Task<IActionResult> GetWorkspaceUsersAsync(string workspaceSlug)
         {
             var result = await UserService.GetWorkspaceUsers(workspaceSlug);
@@ -35,11 +36,11 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/AppUsers/<guid>
+        // GET: api/users/<guid>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(AppUser))]
+        [Produces("application/json", Type = typeof(UserViewModel))]
         public async Task<IActionResult> GetUserAsync([FromRoute] string id)
         {
             var result = await UserService.Get(id);
@@ -49,9 +50,10 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/users/<id>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(AppUser))]
+        [Produces("application/json", Type = typeof(UserViewModel))]
         public async Task<IActionResult> UpdateUser([FromBody] AppUser user)
         {
             var result = await UserService.Update(user);
@@ -61,6 +63,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // POST: api/users/invite
         [HttpPost]
         [Route("invite")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -74,6 +77,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // POST: api/users/remove
         [HttpPost]
         [Route("remove")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -87,16 +91,29 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/users/get-by-email
         [HttpGet]
         [Route("get-by-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(AppUser))]
+        [Produces("application/json", Type = typeof(UserViewModel))]
         public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
             var result = await UserService.GetByEmail(email);
 
             if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // GET: api/users/all
+        [HttpGet]
+        [Route("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<UserViewModel>))]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await UserService.GetAll();
 
             return Ok(result);
         }

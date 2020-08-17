@@ -14,6 +14,8 @@ namespace Netptune.Core.Services
 
         Task<List<Workspace>> GetWorkspaces();
 
+        Task<List<Workspace>> GetAll();
+
         Task<Workspace> UpdateWorkspace(Workspace workspace);
 
         Task<Workspace> AddWorkspace(AddWorkspaceRequest request);

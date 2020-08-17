@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,32 @@ namespace Netptune.Repositories.Common
             var entities = await GetAllByIdAsync(idList);
 
             Entities.RemoveRange(entities);
+        }
+
+        public override List<TEntity> GetAll(bool isReadonly = false)
+        {
+            return Entities.IsReadonly(isReadonly).Where(entity => !entity.IsDeleted).ToList();
+        }
+
+        public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
+        {
+            return Entities.IsReadonly(isReadonly).ToListAsync();
+        }
+
+        public override List<TEntity> GetAllById(IEnumerable<TId> ids, bool isReadonly = false)
+        {
+            return Entities
+                .Where(entity =>  !entity.IsDeleted && ids.Contains(entity.Id))
+                .IsReadonly(isReadonly)
+                .ToList();
+        }
+
+        public override Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
+        {
+            return Entities
+                .Where(entity => !entity.IsDeleted && ids.Contains(entity.Id))
+                .IsReadonly(isReadonly)
+                .ToListAsync();
         }
     }
 }

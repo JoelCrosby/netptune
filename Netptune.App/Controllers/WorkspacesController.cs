@@ -85,5 +85,16 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/Workspaces/all
+        [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<Workspace>))]
+        public async Task<IActionResult> GetAllWorkspaces()
+        {
+            var result = await WorkspaceService.GetAll();
+
+            return Ok(result);
+        }
     }
 }
