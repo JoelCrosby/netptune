@@ -160,7 +160,7 @@ namespace Netptune.Services.Authentication
                 Token = GenerateJwtToken(appUser, expireDays),
                 UserId = appUser.Id,
                 EmailAddress = appUser.Email,
-                DisplayName = appUser.GetDisplayName(),
+                DisplayName = appUser.DisplayName,
                 Issued = DateTime.Now,
                 Expires = expireDays,
                 PictureUrl = appUser.PictureUrl,

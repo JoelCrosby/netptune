@@ -39,9 +39,8 @@ namespace Netptune.Core.Entities
                 BoardType = BoardType,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
-                OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
+                OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
             };
         }
-
     }
 }
