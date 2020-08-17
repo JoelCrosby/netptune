@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Entities
 {
@@ -48,6 +49,5 @@ namespace Netptune.Core.Entities
         public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
 
         #endregion
-
     }
 }

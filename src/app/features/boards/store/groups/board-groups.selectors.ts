@@ -3,6 +3,7 @@ import { AppState } from '@core/core.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
 import { AppUser } from '@app/core/models/appuser';
+import { Selected } from '@app/core/models/selected';
 
 export interface State extends AppState {
   boardgroups: BoardGroupsState;
@@ -75,14 +76,19 @@ export const selectBoardGroupsSelectedUsers = createSelector(
   (state: BoardGroupsState) => state.selectedUsers
 );
 
+export const selectBoardGroupsSelectedUserIds = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.selectedUsers.map((user) => user.id)
+);
+
 export const selectBoardGroupsUsersModel = createSelector(
   selectBoardGroupUsers,
   selectBoardGroupsSelectedUsers,
-  (users: AppUser[], selectedUsers: AppUser[]) => {
+  (users: AppUser[], selectedUsers: AppUser[]): Selected<AppUser>[] => {
     const selectedUserIds = new Set(selectedUsers.map((user) => user.id));
 
     return users.map((user) => ({
-      user,
+      item: user,
       selected: selectedUserIds.has(user.id),
     }));
   }

@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using AutoMapper;
 using MoreLinq;
 
 using Netptune.Core.Entities;
@@ -11,6 +12,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Services
 {
@@ -18,27 +20,29 @@ namespace Netptune.Services
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
+        private readonly IMapper Mapper;
         private readonly IBoardGroupRepository BoardGroups;
         private readonly IBoardRepository Boards;
 
-        public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+        public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IMapper mapper)
         {
             UnitOfWork = unitOfWork;
             IdentityService = identityService;
+            Mapper = mapper;
             Boards = unitOfWork.Boards;
             BoardGroups = unitOfWork.BoardGroups;
         }
 
-        public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier)
+        public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null)
         {
             var boardId = await Boards.GetIdByIndentifier(boardIdentifier);
 
             if (!boardId.HasValue) return null;
 
-            return await GetBoardGroups(boardId.Value);
+            return await GetBoardGroups(boardId.Value, filter);
         }
 
-        public async Task<BoardGroupsViewModel> GetBoardGroups(int boardId)
+        public async Task<BoardGroupsViewModel> GetBoardGroups(int boardId, BoardGroupsFilter filter = null)
         {
             var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
 
@@ -50,8 +54,11 @@ namespace Netptune.Services
                     .OrderBy(item => item.SortOrder)
                     .ToList();
 
+                var includeUserFilter = filter?.Users?.Any() ?? false;
+
                 var tasks = tasksInGroups.Select(item => item.ProjectTask)
                     .Where(task => !task.IsDeleted)
+                    .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
                     .Select(task => task.ToViewModel());
 
                 group.Tasks.AddRange(tasks);
@@ -59,7 +66,7 @@ namespace Netptune.Services
 
             var board = await UnitOfWork.Boards.GetViewModel(boardId);
 
-            var users = groups
+            var userEntities = groups
                 .SelectMany(group => group.TasksInGroups)
                 .Where(group => !group.IsDeleted)
                 .Select(task => task.ProjectTask)
@@ -67,6 +74,8 @@ namespace Netptune.Services
                 .Select(task => task.Assignee)
                 .DistinctBy(user => user.UserName)
                 .ToList();
+
+            var users = Mapper.Map<List<AppUser>, List<UserViewModel>>(userEntities);
 
             return new BoardGroupsViewModel
             {

@@ -5,14 +5,18 @@ import { BoardGroup } from '@app/core/models/board-group';
 import { BoardGroupsViewModel } from '@app/core/models/view-models/board-groups-view-model';
 import { environment } from '@env/environment';
 import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
+import { Params } from '@angular/router';
 
 @Injectable()
 export class BoardGroupsService {
   constructor(private http: HttpClient) {}
 
-  get(boardId: string) {
+  get(boardId: string, params: Params) {
     return this.http.get<BoardGroupsViewModel>(
-      environment.apiEndpoint + `api/boardgroups/board/${boardId}`
+      environment.apiEndpoint + `api/boardgroups/board/${boardId}`,
+      {
+        params,
+      }
     );
   }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using Netptune.Core.Entities;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.Boards
 {
@@ -10,6 +11,6 @@ namespace Netptune.Core.ViewModels.Boards
 
         public List<BoardGroup> Groups { get; set; }
 
-        public List<AppUser> Users { get; set; }
+        public List<UserViewModel> Users { get; set; }
     }
 }

@@ -2,12 +2,13 @@
 
   <div
     class="board-group-user"
-    *ngFor="let item of users$ | async"
+    *ngFor="let user of users$ | async"
+    [class.selected]="user.selected"
   >
     <app-avatar
-      [class.selected]="item.selected"
-      [name]="item.user.displayName"
-      [imageUrl]="item.user.pictureUrl"
+      [name]="user.item.displayName"
+      [imageUrl]="user.item.pictureUrl"
+      (click)="onUserClicked(user)"
     >
     </app-avatar>
   </div>

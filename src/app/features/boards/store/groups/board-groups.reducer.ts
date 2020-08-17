@@ -14,15 +14,20 @@ const reducer = createReducer(
     ...state,
     loadingError: error,
   })),
-  on(actions.loadBoardGroupsSuccess, (state, { boardGroups }) =>
-    adapter.setAll(boardGroups.groups, {
+  on(actions.loadBoardGroupsSuccess, (state, { boardGroups, selectedIds }) => {
+    const selectedIdMap = new Set(selectedIds);
+
+    return adapter.setAll(boardGroups.groups, {
       ...state,
       loading: false,
       loaded: true,
       board: boardGroups.board,
       users: boardGroups.users,
-    })
-  ),
+      selectedUsers: boardGroups.users.filter((user) =>
+        selectedIdMap.has(user.id)
+      ),
+    });
+  }),
   on(actions.createBoardGroup, (state) => ({ ...state, loading: true })),
   on(actions.createBoardGroupFail, (state, { error }) => ({
     ...state,
@@ -75,9 +80,23 @@ const reducer = createReducer(
     ...state,
     inlineActive: undefined,
   })),
-  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
+
+  on(actions.toggleUserSelection, (state, { user }) => {
+    const exists = state.selectedUsers.find((item) => item.id === user.id);
+
+    const selectedUsers = exists
+      ? state.selectedUsers.filter((item) => item.id !== user.id)
+      : [...state.selectedUsers, user];
+
+    return {
+      ...state,
+      selectedUsers,
+    };
+  }),
 
   // ProjectTaskActions
+
+  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
 );
 
 export function boardGroupsReducer(

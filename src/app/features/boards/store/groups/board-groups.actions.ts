@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
 import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
+import { AppUser } from '@app/core/models/appuser';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -15,7 +16,7 @@ export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
 export const loadBoardGroupsSuccess = createAction(
   '[BoardGroups] Load Board Groups Success ',
-  props<{ boardGroups: BoardGroupsViewModel }>()
+  props<{ boardGroups: BoardGroupsViewModel; selectedIds: string[] }>()
 );
 
 export const loadBoardGroupsFail = createAction(
@@ -126,4 +127,11 @@ export const createProjectTasksSuccess = createAction(
 export const createProjectTasksFail = createAction(
   '[BoardGroups] Create Project Task Fail',
   props<{ error: HttpErrorResponse }>()
+);
+
+// Selected Users
+
+export const toggleUserSelection = createAction(
+  '[BoardGroups] Toggle Users Selection',
+  props<{ user: AppUser }>()
 );

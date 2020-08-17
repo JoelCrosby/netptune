@@ -38,9 +38,12 @@ namespace Netptune.Api.Controllers
         [HttpGet("board/{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<BoardGroup>))]
-        public async Task<IActionResult> GetBoardGroups(string identifier)
+        public async Task<IActionResult> GetBoardGroups(string identifier, [FromQuery] List<string> users)
         {
-            var result = await BoardGroupService.GetBoardGroups(identifier);
+            var result = await BoardGroupService.GetBoardGroups(identifier, new BoardGroupsFilter
+            {
+                Users = users,
+            });
 
             if (result is null) return NotFound();
 

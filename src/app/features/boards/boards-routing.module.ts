@@ -8,6 +8,7 @@ const routes: Routes = [
   {
     path: ':id',
     component: BoardGroupsViewComponent,
+    runGuardsAndResolvers: 'always',
   },
   { path: '**', component: BoardsViewComponent },
 ];
