@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@app/core/auth/store/auth.actions';
 import { ConfirmEmailRequest } from '@app/core/auth/store/auth.models';
@@ -10,6 +15,7 @@ import { first, tap } from 'rxjs/operators';
 @Component({
   templateUrl: './confirm-view.component.html',
   styleUrls: ['./confirm-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
   private request: ConfirmEmailRequest;
@@ -22,7 +28,6 @@ export class ConfirmViewComponent implements OnInit, AfterViewInit {
         first(),
         tap((data) => {
           this.request = data.confirmEmail as ConfirmEmailRequest;
-          console.log({ request: this.request });
         })
       )
       .subscribe();
