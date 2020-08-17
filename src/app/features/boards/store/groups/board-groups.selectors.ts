@@ -2,6 +2,7 @@ import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
 import { AppState } from '@core/core.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
+import { AppUser } from '@app/core/models/appuser';
 
 export interface State extends AppState {
   boardgroups: BoardGroupsState;
@@ -62,6 +63,29 @@ export const selectBoardId = createSelector(
 export const selectBoardProject = createSelector(
   selectBoard,
   (state: BoardViewModel) => state.project
+);
+
+export const selectBoardGroupUsers = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.users
+);
+
+export const selectBoardGroupsSelectedUsers = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.selectedUsers
+);
+
+export const selectBoardGroupsUsersModel = createSelector(
+  selectBoardGroupUsers,
+  selectBoardGroupsSelectedUsers,
+  (users: AppUser[], selectedUsers: AppUser[]) => {
+    const selectedUserIds = new Set(selectedUsers.map((user) => user.id));
+
+    return users.map((user) => ({
+      user,
+      selected: selectedUserIds.has(user.id),
+    }));
+  }
 );
 
 export const selectBoardProjectId = createSelector(

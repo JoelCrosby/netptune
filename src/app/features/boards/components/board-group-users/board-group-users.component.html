@@ -1,0 +1,15 @@
+<div class="board-group-users">
+
+  <div
+    class="board-group-user"
+    *ngFor="let item of users$ | async"
+  >
+    <app-avatar
+      [class.selected]="item.selected"
+      [name]="item.user.displayName"
+      [imageUrl]="item.user.pictureUrl"
+    >
+    </app-avatar>
+  </div>
+
+</div>

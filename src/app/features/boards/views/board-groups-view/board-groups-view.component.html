@@ -1,6 +1,8 @@
 <app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
 
-  <app-page-header [title]="selectedBoardName$ | async"></app-page-header>
+  <app-page-header [title]="selectedBoardName$ | async">
+    <app-board-group-users></app-board-group-users>
+  </app-page-header>
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">
     <div class="board-groups-loading">

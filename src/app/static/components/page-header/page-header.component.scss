@@ -10,6 +10,12 @@
     justify-content: space-between;
     height: 82px;
 
+    .header-top-row-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
     .page-header-title {
       font-weight: 400;
       font-size: 2rem;

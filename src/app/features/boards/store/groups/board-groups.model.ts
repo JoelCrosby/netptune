@@ -19,11 +19,13 @@ export const initialState: BoardGroupsState = adapter.getInitialState({
   isDragging: false,
   isInlineActive: false,
   users: [],
+  selectedUsers: [],
 });
 
 export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
   board?: BoardViewModel;
   users: AppUser[];
+  selectedUsers: AppUser[];
   currentBoardGroup?: BoardGroup;
   isDragging: boolean;
   inlineActive?: number;

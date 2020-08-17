@@ -7,9 +7,15 @@
   </div>
 
   <div class="header-top-row">
-    <h1 class="page-header-title">
-      {{ title }}
-    </h1>
+    <div class="header-top-row-left">
+      <h1 class="page-header-title">
+        {{ title }}
+      </h1>
+
+      <div class="header-tool-bar">
+        <ng-content></ng-content>
+      </div>
+    </div>
 
     <div class="header-actions">
       <div
