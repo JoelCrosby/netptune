@@ -144,8 +144,6 @@ export class TaskDetailDialogComponent
   }
 
   onCommentSubmit() {
-    console.log('onCommentSubmit');
-
     const value = this.comment.value as string;
 
     if (!value) return;
@@ -184,10 +182,6 @@ export class TaskDetailDialogComponent
     this.store.dispatch(TaskActions.clearTaskDetail());
     this.onDestroy$.next();
     this.onDestroy$.complete();
-  }
-
-  getTaskStatus(status: TaskStatus) {
-    return TaskStatus[status];
   }
 
   onFlagClicked() {

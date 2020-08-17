@@ -10,6 +10,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { InlineEditInputComponent } from './components/inline-edit-input/inline-edit-input.component';
 import { FromNowPipe } from './pipes/from-now.pipe';
+import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
 import { InlineTextAreaComponent } from './components/inline-text-area/inline-text-area.component';
 
@@ -23,6 +24,7 @@ import { InlineTextAreaComponent } from './components/inline-text-area/inline-te
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    TaskStatusPipe,
     ScrollShadowDirective,
     InlineTextAreaComponent,
   ],
@@ -36,6 +38,7 @@ import { InlineTextAreaComponent } from './components/inline-text-area/inline-te
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    TaskStatusPipe,
     ScrollShadowDirective,
     InlineTextAreaComponent,
   ],

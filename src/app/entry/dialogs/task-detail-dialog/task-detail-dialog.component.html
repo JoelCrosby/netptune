@@ -149,7 +149,7 @@
           <div class="detail-list-item">
             <h4>Status</h4>
             <mat-chip-list>
-              <mat-chip>{{ getTaskStatus(task.status) }} </mat-chip>
+              <mat-chip>{{ task.status | taskStatus }} </mat-chip>
             </mat-chip-list>
           </div>
           <div class="detail-list-item">
