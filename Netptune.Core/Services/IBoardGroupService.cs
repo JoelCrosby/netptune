@@ -8,9 +8,9 @@ namespace Netptune.Core.Services
 {
     public interface IBoardGroupService
     {
-        Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier);
+        Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null);
 
-        Task<BoardGroupsViewModel> GetBoardGroups(int boardId);
+        Task<BoardGroupsViewModel> GetBoardGroups(int boardId, BoardGroupsFilter filter = null);
 
         Task<BoardGroup> GetBoardGroup(int id);
 

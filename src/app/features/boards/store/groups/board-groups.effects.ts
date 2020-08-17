@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
 import {
   isBoardGroupsRoute,
@@ -23,16 +23,26 @@ import {
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
 import { BoardGroupsService } from './board-groups.service';
+import { selectBoardGroupsSelectedUserIds } from './board-groups.selectors';
 
 @Injectable()
 export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoardGroups),
-      withLatestFrom(this.store.select(selectRouterParam, 'id')),
-      switchMap(([action, id]) =>
-        this.boardGroupsService.get(id).pipe(
-          map((boardGroups) => actions.loadBoardGroupsSuccess({ boardGroups })),
+      withLatestFrom(
+        this.store.select(selectRouterParam, 'id'),
+        this.route.queryParamMap,
+        this.route.queryParams
+      ),
+      switchMap(([_, id, paramMap, params]) =>
+        this.boardGroupsService.get(id, params).pipe(
+          map((boardGroups) =>
+            actions.loadBoardGroupsSuccess({
+              boardGroups,
+              selectedIds: paramMap.getAll('users'),
+            })
+          ),
           catchError((error) => of(actions.loadBoardGroupsFail({ error })))
         )
       )
@@ -145,6 +155,21 @@ export class BoardGroupsEffects {
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
+  toggleUserSelection$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.toggleUserSelection),
+        withLatestFrom(this.store.select(selectBoardGroupsSelectedUserIds)),
+        tap(async ([_, users]) => {
+          await this.router.navigate([], {
+            queryParams: { users },
+          });
+          this.store.dispatch(actions.loadBoardGroups());
+        })
+      ),
+    { dispatch: false }
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
@@ -152,7 +177,8 @@ export class BoardGroupsEffects {
     private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 }
 
