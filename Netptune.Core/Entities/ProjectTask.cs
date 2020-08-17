@@ -69,9 +69,9 @@ namespace Netptune.Core.Entities
                 WorkspaceSlug = Workspace.Slug,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
-                AssigneeUsername = Assignee == null ? string.Empty : Assignee.GetDisplayName(),
+                AssigneeUsername = Assignee == null ? string.Empty : Assignee.DisplayName,
                 AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
-                OwnerUsername = Owner == null ? string.Empty : Owner.GetDisplayName(),
+                OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
                 OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
                 ProjectName = Project == null ? string.Empty : Project.Name
             };

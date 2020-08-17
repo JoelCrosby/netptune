@@ -17,7 +17,9 @@ namespace Netptune.Core.Entities
 
         public string PictureUrl { get; set; }
 
-        public string GetDisplayName()
+        public string DisplayName => GetDisplayName();
+
+        private string GetDisplayName()
         {
             if (string.IsNullOrWhiteSpace(Firstname) && string.IsNullOrWhiteSpace(Lastname))
                 return UserName;
