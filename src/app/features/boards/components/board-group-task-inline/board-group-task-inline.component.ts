@@ -11,7 +11,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { User } from '@app/core/auth/store/auth.models';
 import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
 import { AddProjectTaskRequest } from '@app/core/models/project-task';
@@ -45,7 +45,10 @@ export class BoardGroupTaskInlineComponent
   @Input() boardGroupId: number;
   @Output() canceled = new EventEmitter();
 
-  taskInputControl = new FormControl();
+  taskInputControl = new FormControl(null, [
+    Validators.required,
+    Validators.maxLength(256),
+  ]);
 
   onDestroy$ = new Subject();
   outsideClickSubscription: Subscription;

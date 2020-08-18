@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -8,8 +8,10 @@ namespace Netptune.Core.Requests
     public class AddProjectTaskRequest
     {
         [Required]
+        [MaxLength(256)]
         public string Name { get; set; }
 
+        [MaxLength(4096)]
         public string Description { get; set; }
 
         public ProjectTaskStatus? Status { get; set; }
