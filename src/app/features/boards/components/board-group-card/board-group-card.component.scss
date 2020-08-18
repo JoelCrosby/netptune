@@ -8,11 +8,13 @@
   cursor: pointer;
   margin-bottom: .3rem;
   border: 0 !important;
+  overflow: hidden;
 }
 
 .task-name-text {
   margin-bottom: 0;
   line-height: 1.4rem;
+  word-break: break-word;
 }
 
 .card-footer {
