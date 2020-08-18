@@ -18,6 +18,41 @@
           [task]="taskItem"
           [cdkDragData]="taskItem"
         >
+          <button
+            class="task-action"
+            cdkDragHandle
+            mat-icon-button
+            aria-label="more"
+            matTooltip="click for more options. click and hold to drag task"
+            [matTooltipShowDelay]="1200"
+            [matMenuTriggerData]="{ task: taskItem }"
+            [matMenuTriggerFor]="menu"
+          >
+            <mat-icon class="drag">drag_indicator</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <ng-template matMenuContent let-task="task">
+              <button mat-menu-item (click)="markCompleteClicked(task)">
+                <mat-icon class="material-icons-outlined">
+                  done
+                </mat-icon>
+                <span>Mark Complete</span>
+              </button>
+              <button mat-menu-item (click)="moveToBacklogClicked(task)">
+                <mat-icon class="material-icons-outlined">
+                  assignment_returned_outline
+                </mat-icon>
+                <span>Move to Backlog</span>
+              </button>
+              <button mat-menu-item (click)="deleteClicked(task)">
+                <mat-icon class="material-icons-outlined">
+                  delete
+                </mat-icon>
+                <span>Delete</span>
+              </button>
+            </ng-template>
+          </mat-menu>
         </div>
         <app-task-inline [status]="status" [siblings]="tasks"></app-task-inline>
       </div>

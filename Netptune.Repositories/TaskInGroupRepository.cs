@@ -12,7 +12,7 @@ using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
 {
-    public class TaskInGroupRepository : AuditableRepository<DataContext, ProjectTaskInBoardGroup, int>, ITaskInGroupRepository
+    public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardGroup, int>, ITaskInGroupRepository
     {
         public TaskInGroupRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)
@@ -23,16 +23,23 @@ namespace Netptune.Repositories
         {
             return Entities.FirstOrDefaultAsync(entity =>
                 entity.ProjectTaskId == taskId
-                && entity.BoardGroupId == groupId
-                && !entity.IsDeleted);
+                && entity.BoardGroupId == groupId);
         }
 
         public Task<List<ProjectTaskInBoardGroup>> GetProjectTasksInGroup(int groupId)
         {
             return Entities
-                .Where(entity => entity.BoardGroupId == groupId && !entity.IsDeleted)
+                .Where(entity => entity.BoardGroupId == groupId)
                 .OrderBy(entity => entity.SortOrder)
                 .ToListAsync();
+        }
+
+        public Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId)
+        {
+            return Entities
+                .Where(entity => entity.ProjectTaskId == taskId)
+                .OrderBy(entity => entity.SortOrder)
+                .FirstOrDefaultAsync();
         }
     }
 }

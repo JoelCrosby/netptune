@@ -52,7 +52,6 @@ namespace Netptune.Repositories
             var query = Entities
 
                 .Where(group => group.TasksInGroups
-                    .Where(x => !x.IsDeleted)
                     .Select(x => x.ProjectTaskId)
                     .Contains(taskId))
 

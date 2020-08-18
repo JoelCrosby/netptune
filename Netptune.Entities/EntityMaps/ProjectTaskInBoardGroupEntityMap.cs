@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class ProjectTaskInBoardGroupEntityMap : AuditableEntityMap<ProjectTaskInBoardGroup, int>
+    public class ProjectTaskInBoardGroupEntityMap : KeyedEntityMap<ProjectTaskInBoardGroup, int>
     {
         public override void Configure(EntityTypeBuilder<ProjectTaskInBoardGroup> builder)
         {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -16,7 +16,7 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> GetTask(string systemId, string workspaceSlug);
 
-        Task<TaskViewModel> UpdateTask(ProjectTask projectTask);
+        Task<TaskViewModel> UpdateTask(UpdateProjectTaskRequest request);
 
         Task<TaskViewModel> AddTask(AddProjectTaskRequest request);
 

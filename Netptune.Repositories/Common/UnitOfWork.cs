@@ -49,15 +49,46 @@ namespace Netptune.Repositories.Common
         /// After completion commits the changes, if it fails it rolls the changes back
         /// </summary>
         /// <param name="callback"></param>
-
-        public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback)
+        /// <param name="disableChangeDetection"></param>
+        public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
         {
-            await using var transaction = await Context.Database.BeginTransactionAsync();
+            var transaction = await Context.Database.BeginTransactionAsync();
 
             try
             {
-                var result = await callback();
+                Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
 
+                await callback();
+                // Commit transaction if all commands succeed, transaction will auto-rollback
+                // when disposed if either commands fails
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new UnitOfWorkTransactionException(
+                    "UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+            }
+            finally
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Executes the passed function in a single transaction.
+        /// After completion commits the changes, if it fails it rolls the changes back
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="disableChangeDetection"></param>
+        public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback, bool disableChangeDetection = false)
+        {
+            var transaction = await Context.Database.BeginTransactionAsync();
+
+            try
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
+
+                var result = await callback();
                 // Commit transaction if all commands succeed, transaction will auto-rollback
                 // when disposed if either commands fails
                 await transaction.CommitAsync();
@@ -66,9 +97,11 @@ namespace Netptune.Repositories.Common
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-
                 throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+            }
+            finally
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = true;
             }
         }
     }
