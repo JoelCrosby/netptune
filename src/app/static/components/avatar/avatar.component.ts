@@ -18,7 +18,7 @@ export class AvatarComponent implements OnInit {
   @Input() imageUrl: string;
   @Input() border = false;
   @Input() tooltip = true;
-  @Input() borderRadius = '50%';
+  @Input() borderRadius: string | number = '50%';
 
   backgroundColor: string;
   color = '#fff';
