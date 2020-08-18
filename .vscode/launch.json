@@ -23,12 +23,11 @@
       }
     },
     {
-      "type": "chrome",
+      "type": "edge",
       "request": "launch",
-      "name": "Karma Tests",
-      "sourceMaps": true,
-      "webRoot": "${workspaceRoot}",
-      "url": "http://localhost:9876/debug.html",
+      "name": "Launch Edge",
+      "url": "http://localhost:6400/app",
+      "webRoot": "${workspaceFolder}",
       "pathMapping": {
         "/": "${workspaceRoot}",
         "/base/": "${workspaceRoot}/"
