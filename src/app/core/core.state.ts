@@ -20,6 +20,8 @@ import { SettingsState } from './store/settings/settings.model';
 import { settingsReducer } from './store/settings/settings.reducer';
 import { TasksState } from './store/tasks/tasks.model';
 import { projectTasksReducer } from './store/tasks/tasks.reducer';
+import { UsersState } from './store/users/users.model';
+import { usersReducer } from './store/users/users.reducer';
 import { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
@@ -32,6 +34,7 @@ export const reducers: ActionReducerMap<AppState> = {
   workspaces: workspacesReducer,
   projects: projectsReducer,
   tasks: projectTasksReducer,
+  users: usersReducer,
 };
 
 export const metaReducers: MetaReducer<AppState>[] = [
@@ -74,6 +77,10 @@ export const selectTasksFeature = createFeatureSelector<AppState, TasksState>(
   'tasks'
 );
 
+export const selectUsersFeature = createFeatureSelector<AppState, UsersState>(
+  'users'
+);
+
 export interface AppState {
   auth: AuthState;
   router: RouterReducerState<RouterStateUrl>;
@@ -83,4 +90,5 @@ export interface AppState {
   workspaces: WorkspacesState;
   projects: ProjectsState;
   tasks: TasksState;
+  users: UsersState;
 }

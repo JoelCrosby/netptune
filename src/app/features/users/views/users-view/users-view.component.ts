@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InviteDialogComponent } from '@app/entry/dialogs/invite-dialog/invite-dialog.component';
 import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { inviteUsersToWorkspace } from '@users/store/users.actions';
+import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
 
 @Component({
   templateUrl: './users-view.component.html',

@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { AppUser } from '@core/models/appuser';
 import { environment } from '@env/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UsersService {
   constructor(private http: HttpClient) {}
 

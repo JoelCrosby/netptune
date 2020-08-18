@@ -6,7 +6,8 @@
     >
       <app-avatar
         [name]="user.displayName"
-        size="32"
+        [imageUrl]="user.pictureUrl"
+        size="42"
       ></app-avatar>
     </div>
     <mat-card-title>{{ user | username }}</mat-card-title>
