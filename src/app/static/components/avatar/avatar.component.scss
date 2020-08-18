@@ -1,5 +1,4 @@
 .avatar-container {
-  border-radius: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -12,7 +11,7 @@
 
 .avatar-image {
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 100% !important;
 }
 
 .avatar-border {
