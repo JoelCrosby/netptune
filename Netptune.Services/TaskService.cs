@@ -33,7 +33,7 @@ namespace Netptune.Services
 
         public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request)
         {
-            var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace, true);
+            var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(request.Workspace, true);
 
             if (workspace is null) return null;
 
@@ -52,7 +52,6 @@ namespace Netptune.Services
                 OwnerId = user.Id,
                 Workspace = workspace,
                 WorkspaceId = workspace.Id,
-                
             };
 
             var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == request.ProjectId);
