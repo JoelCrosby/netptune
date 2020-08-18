@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AppUser } from '@app/core/models/appuser';
 import { Store } from '@ngrx/store';
-import { removeUsersFromWorkspace } from '@users/store/users.actions';
+import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 
 @Component({
   selector: 'app-user-card',

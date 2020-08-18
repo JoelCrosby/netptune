@@ -8,8 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
-import { loadUsers } from '@users/store/users.actions';
-import * as UsersSelectors from '@users/store/users.selectors';
+import { loadUsers } from '@core/store/users/users.actions';
+import * as UsersSelectors from '@core/store/users/users.selectors';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
