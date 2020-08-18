@@ -135,3 +135,13 @@
     }
   }
 }
+
+.user-menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  app-avatar {
+    flex: 0 0 32px;
+  }
+}

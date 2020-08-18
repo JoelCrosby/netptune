@@ -132,8 +132,30 @@
               class="task-card-user-chip"
               [name]="task.assigneeUsername"
               [imageUrl]="task.assigneePictureUrl"
+              [matMenuTriggerFor]="assigneeMenu"
             >
             </app-avatar>
+
+            <mat-menu #assigneeMenu="matMenu">
+              <small>Change Assignee</small>
+              <button
+                mat-menu-item
+                *ngFor="let user of users$ | async"
+                (click)="selectAssignee(user)"
+              >
+                <div class="user-menu-item">
+                  <app-avatar
+                    [imageUrl]="user.pictureUrl"
+                    size="24"
+                  >
+                  </app-avatar>
+                  <span>
+                    {{ user.displayName }}
+                  </span>
+                </div>
+              </button>
+            </mat-menu>
+
           </div>
           <div class="detail-list-item">
             <h4>Reporter</h4>
@@ -142,7 +164,7 @@
               size="24"
               class="task-card-user-chip"
               [name]="task.ownerUsername"
-              [imageUrl]="task.assigneePictureUrl"
+              [imageUrl]="task.ownerPictureUrl"
             >
             </app-avatar>
           </div>
@@ -155,12 +177,12 @@
           <div class="detail-list-item">
             <h4>Project</h4>
             <mat-chip-list>
-              <mat-chip [matMenuTriggerFor]="menu">
+              <mat-chip [matMenuTriggerFor]="projectsMenu">
                 {{ task.projectName }}
               </mat-chip>
             </mat-chip-list>
 
-            <mat-menu #menu="matMenu">
+            <mat-menu #projectsMenu="matMenu">
               <small>Change Project</small>
               <button
                 mat-menu-item

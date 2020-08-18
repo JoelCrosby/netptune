@@ -20,10 +20,13 @@ import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
+import * as UsersSelectors from '@core/store/users/users.selectors';
+import * as UsersActions from '@core/store/users/users.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
+import { AppUser } from '@app/core/models/appuser';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -35,6 +38,7 @@ export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit {
   task$: Observable<TaskViewModel>;
   projects$: Observable<ProjectViewModel[]>;
+  users$: Observable<AppUser[]>;
   comments$: Observable<CommentViewModel[]>;
   user$: Observable<User>;
 
@@ -76,6 +80,7 @@ export class TaskDetailDialogComponent
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
     this.comments$ = this.store.select(TaskSelectors.selectComments);
     this.user$ = this.store.select(selectCurrentUser);
+    this.users$ = this.store.select(UsersSelectors.selectAllUsers);
   }
 
   ngAfterViewInit() {
@@ -84,6 +89,7 @@ export class TaskDetailDialogComponent
     );
 
     this.store.dispatch(ProjectActions.loadProjects());
+    this.store.dispatch(UsersActions.loadUsers());
   }
 
   buildForm(task: TaskViewModel) {
@@ -208,6 +214,24 @@ export class TaskDetailDialogComponent
           const updated: TaskViewModel = {
             ...task,
             projectId,
+          };
+
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
+  }
+
+  selectAssignee(user: AppUser) {
+    this.task$
+      .pipe(
+        first(),
+        tap((task) => {
+          const updated: TaskViewModel = {
+            ...task,
+            assigneeId: user.id,
+            assigneePictureUrl: user.pictureUrl,
+            assigneeUsername: user.userName,
           };
 
           this.updateTask(updated);

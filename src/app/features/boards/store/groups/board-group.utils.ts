@@ -57,7 +57,7 @@ export const moveTaskInBoardGroup = (
 export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
   const getGroupWithTask = () => {
     for (const g of Object.values(state.entities)) {
-      if (g.tasks.findIndex((x) => x.id === task.id) !== -1) {
+      if (g?.tasks.findIndex((x) => x.id === task.id) !== -1) {
         return g;
       }
     }
@@ -66,6 +66,8 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
   };
 
   const group: BoardGroup = getGroupWithTask();
+
+  if (!group) return state;
 
   group.tasks = group.tasks.map((item) => {
     if (item.id !== task.id) {
