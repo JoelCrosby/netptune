@@ -9,12 +9,15 @@ import {
   selectCurrentUser,
   selectIsAuthenticated,
 } from '@core/auth/store/auth.selectors';
-import { selectIsMobileView } from '@core/store/layout/layout.selectors';
+import {
+  selectIsMobileView,
+  selectSideNavOpen,
+} from '@core/store/layout/layout.selectors';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, withLatestFrom, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -34,12 +37,10 @@ export class AppComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.sideNavOpen$ = this.store.pipe(
-      select(selectIsAuthenticated),
-      tap(
-        (authenticated) =>
-          authenticated && this.store.dispatch(loadWorkspaces())
-      )
-    );
+    (this.sideNavOpen$ = this.store.select(selectIsAuthenticated).pipe(
+      withLatestFrom(this.store.select(selectSideNavOpen)),
+      map(([authenticated, isNavOpen]) => authenticated && isNavOpen)
+    )),
+      tap(() => this.store.dispatch(loadWorkspaces()));
   }
 }
