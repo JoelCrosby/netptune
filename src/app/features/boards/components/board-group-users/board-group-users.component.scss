@@ -1,12 +1,15 @@
 .board-group-users {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
+  flex-direction: row-reverse;
   align-items: center;
-  margin: 0 6.8rem;
 
   .board-group-user {
-    margin-left: -3.8rem;
+    display: inline-block;
     border-radius: 50%;
     cursor: pointer;
+  }
+
+  .board-group-user:not(:last-child) {
+    margin-left: -8px;
   }
 }
