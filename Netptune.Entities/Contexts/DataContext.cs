@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Hosting;
+
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
@@ -17,8 +17,6 @@ namespace Netptune.Entities.Contexts
 {
     public class DataContext : IdentityDbContext<AppUser>
     {
-        private readonly IWebHostEnvironment Environment;
-
         // Core data models
         public DbSet<Project> Projects { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
@@ -39,18 +37,12 @@ namespace Netptune.Entities.Contexts
 
         public DataContext() { }
 
-        public DataContext(DbContextOptions<DataContext> context, IWebHostEnvironment environment) : base(context)
+        public DataContext(DbContextOptions<DataContext> context) : base(context)
         {
-            Environment = environment;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (Environment.IsDevelopment())
-            {
-                optionsBuilder.EnableSensitiveDataLogging();
-            }
-
             if (optionsBuilder.IsConfigured) return;
 
             optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;Username=postgres;Password=admin;");
