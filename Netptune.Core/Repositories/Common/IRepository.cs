@@ -100,5 +100,26 @@ namespace Netptune.Core.Repositories.Common
         /// <param name="entities"></param>
         /// <returns>Entity of the defined type</returns>
         Task AddRangeAsync(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// Permanently Deletes the entity.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<TEntity> DeletePermanent(TId id);
+
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        Task DeletePermanent(IEnumerable<TId> idList);
+
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        Task DeletePermanent(IEnumerable<TEntity> entities);
     }
 }

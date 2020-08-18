@@ -83,4 +83,30 @@ export class TaskListGroupComponent implements OnInit {
       })
     );
   }
+
+  deleteClicked(task: TaskViewModel) {
+    this.store.dispatch(actions.deleteProjectTask({ task }));
+  }
+
+  markCompleteClicked(task: TaskViewModel) {
+    this.store.dispatch(
+      actions.editProjectTask({
+        task: {
+          ...task,
+          status: TaskStatus.Complete,
+        },
+      })
+    );
+  }
+
+  moveToBacklogClicked(task: TaskViewModel) {
+    this.store.dispatch(
+      actions.editProjectTask({
+        task: {
+          ...task,
+          status: TaskStatus.InActive,
+        },
+      })
+    );
+  }
 }

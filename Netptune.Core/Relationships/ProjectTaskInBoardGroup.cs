@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 
 namespace Netptune.Core.Relationships
 {
-    public class ProjectTaskInBoardGroup : AuditableEntity<int>
+    public class ProjectTaskInBoardGroup : KeyedEntity<int>
     {
         public int ProjectTaskId { get; set; }
 

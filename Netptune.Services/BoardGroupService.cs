@@ -50,7 +50,6 @@ namespace Netptune.Services
             {
                 var tasksInGroups = group
                     .TasksInGroups
-                    .Where(item => !item.IsDeleted)
                     .OrderBy(item => item.SortOrder)
                     .ToList();
 
@@ -68,7 +67,6 @@ namespace Netptune.Services
 
             var userEntities = groups
                 .SelectMany(group => group.TasksInGroups)
-                .Where(group => !group.IsDeleted)
                 .Select(task => task.ProjectTask)
                 .Where(task => !task.IsDeleted)
                 .Select(task => task.Assignee)

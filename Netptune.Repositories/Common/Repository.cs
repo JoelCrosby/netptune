@@ -227,6 +227,47 @@ namespace Netptune.Repositories.Common
             return ApplyPagination(entities, pageQuery);
         }
 
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<TEntity> DeletePermanent(TId id)
+        {
+            var entity = await GetAsync(id);
+
+            if (entity is null) return null;
+
+            Entities.Remove(entity);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        public async Task DeletePermanent(IEnumerable<TId> idList)
+        {
+            var entities = await GetAllByIdAsync(idList);
+
+            Entities.RemoveRange(entities);
+        }
+
+        /// <summary>
+        /// Permanently Deletes the given entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public Task DeletePermanent(IEnumerable<TEntity> entities)
+        {
+            Entities.RemoveRange(entities);
+
+            return Task.CompletedTask;
+        }
+    
+
         private static IPagedResult<TEntity> GetPagedResult(IQueryable<TEntity> entities, IPageQuery pageQuery)
         {
             return new Core.Models.Repository.PagedResult<TEntity>

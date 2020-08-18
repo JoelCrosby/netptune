@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -69,9 +69,9 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PutTask([FromBody] ProjectTask task)
+        public async Task<IActionResult> PutTask([FromBody] UpdateProjectTaskRequest request)
         {
-            var result = await TaskService.UpdateTask(task);
+            var result = await TaskService.UpdateTask(request);
 
             if (result is null) return NotFound();
 

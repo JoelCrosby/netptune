@@ -38,24 +38,6 @@ namespace Netptune.Repositories.Common
             return entity;
         }
 
-        public async Task<TEntity> DeletePermanent(TId id)
-        {
-            var entity = await GetAsync(id);
-
-            if (entity is null) return null;
-
-            Entities.Remove(entity);
-
-            return entity;
-        }
-
-        public async Task DeletePermanent(IEnumerable<TId> idList)
-        {
-            var entities = await GetAllByIdAsync(idList);
-
-            Entities.RemoveRange(entities);
-        }
-
         public override List<TEntity> GetAll(bool isReadonly = false)
         {
             return Entities.IsReadonly(isReadonly).Where(entity => !entity.IsDeleted).ToList();

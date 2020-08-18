@@ -108,6 +108,8 @@ namespace Netptune.Services
             task.IsDeleted = true;
             task.DeletedByUserId = user.Id;
 
+            await RemoveTaskFromGroups(id);
+
             await UnitOfWork.CompleteAsync();
 
             return await TaskRepository.GetTaskViewModel(task.Id);
@@ -133,35 +135,38 @@ namespace Netptune.Services
             return TaskRepository.GetTasksAsync(workspaceSlug);
         }
 
-        public async Task<TaskViewModel> UpdateTask(ProjectTask projectTask)
+        public async Task<TaskViewModel> UpdateTask(UpdateProjectTaskRequest request)
         {
-            if (projectTask is null) throw new ArgumentNullException(nameof(projectTask));
+            if (request?.Id is null) throw new ArgumentNullException(nameof(request));
 
-            var result = await TaskRepository.GetAsync(projectTask.Id);
+            var result = await TaskRepository.GetAsync(request.Id.Value);
 
             if (result is null) return null;
 
-            if (result.Status != projectTask.Status)
+            await UnitOfWork.Transaction(async () =>
             {
-                await PutTaskInBoardGroup(projectTask, result);
-            }
+                if (request.Status.HasValue && result.Status != request.Status.Value)
+                {
+                    await PutTaskInBoardGroup(request.Status.Value, result);
+                }
 
-            result.Name = projectTask.Name;
-            result.Description = projectTask.Description;
-            result.Status = projectTask.Status;
-            result.IsFlagged = projectTask.IsFlagged;
-            result.SortOrder = projectTask.SortOrder;
-            result.OwnerId = projectTask.OwnerId;
-            result.AssigneeId = projectTask.AssigneeId;
+                result.Name = request.Name;
+                result.Description = request.Description;
+                result.Status = request.Status ?? result.Status;
+                result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
+                result.SortOrder = request.SortOrder ?? result.SortOrder;
+                result.OwnerId = request.OwnerId;
+                result.AssigneeId = request.AssigneeId;
 
-            await UnitOfWork.CompleteAsync();
+                await UnitOfWork.CompleteAsync();
+            });
 
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        private async Task PutTaskInBoardGroup(ProjectTask projectTask, ProjectTask result)
+        private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
         {
-            await RemoveTaskFromGroups(projectTask.Id);
+            await RemoveTaskFromGroups(result.Id);
 
             await UnitOfWork.CompleteAsync();
 
@@ -177,7 +182,7 @@ namespace Netptune.Services
                 throw new Exception($"Project With Id {result.ProjectId.Value} does not have a default board.");
             }
 
-            var groupType = projectTask.Status.GetGroupTypeFromTaskStatus();
+            var groupType = status.GetGroupTypeFromTaskStatus();
 
             var group = defaultBoard.BoardGroups
                 .Where(item => !item.IsDeleted)
@@ -194,7 +199,7 @@ namespace Netptune.Services
             group.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {
                 BoardGroupId = group.Id,
-                ProjectTaskId = projectTask.Id,
+                ProjectTaskId = result.Id,
                 SortOrder = sortOrder,
             });
         }
@@ -363,10 +368,9 @@ namespace Netptune.Services
                 .Select(boardGroup => boardGroup.TasksInGroups.Where(x => x.ProjectTaskId == taskId))
                 .SelectMany(taskInGroups => taskInGroups);
 
-            foreach (var taskInGroup in taskInGroupsToDelete)
-            {
-                taskInGroup.IsDeleted = true;
-            }
+            await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
+
+            await UnitOfWork.CompleteAsync();
         }
 
         private Task<int?> GetNextProjectScopeId(int projectId, int increment = 0)

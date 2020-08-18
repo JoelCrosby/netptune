@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 namespace Netptune.Core.Repositories.Common
 {
     /// <summary>
-    /// Container thats holds references to all repositories to provide data access to your application
+    /// Container that's holds references to all repositories to provide data access to your application
     /// </summary>
     public interface IUnitOfWork
     {
@@ -25,6 +25,15 @@ namespace Netptune.Core.Repositories.Common
         /// After completion commits the changes, if it fails it rolls the changes back
         /// </summary>
         /// <param name="callback"></param>
-        Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback);
+        /// <param name="disableChangeDetection"></param>
+        Task Transaction(Func<Task> callback, bool disableChangeDetection = false);
+
+        /// <summary>
+        /// Executes the passed function in a single transaction.
+        /// After completion commits the changes, if it fails it rolls the changes back
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="disableChangeDetection"></param>
+        Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback, bool disableChangeDetection = false);
     }
 }
