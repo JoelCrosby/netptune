@@ -1,7 +1,10 @@
 <app-page-container [marginBottom]="true">
 
-  <app-page-header title="Workspaces">
-
+  <app-page-header
+    title="Workspaces"
+    actionTitle="Create Workspace"
+    (actionClick)="openWorkspaceDialog()"
+  >
   </app-page-header>
 
   <div class="card-group">
@@ -15,7 +18,7 @@
       </mat-card-title>
       <mat-card-content>
         <p>{{ workspace.description }}</p>
-        <small class="text-muted">Last updated {{ workspace.updatedAt | date: 'shortTime' }}</small>
+        <small class="text-muted">Last updated {{ workspace.updatedAt | fromNow }}</small>
       </mat-card-content>
 
       <mat-card-actions>
@@ -49,20 +52,26 @@
       </mat-card-actions>
     </mat-card>
 
-    <mat-card>
-      <div class="card-body">
-        <h5 class="card-title">Create a new Workspace</h5>
+    <mat-card class="create-workspace-card">
+      <mat-card-title>
+        Create a new Workspace
+      </mat-card-title>
+      <mat-card-content>
         <p class="card-text">
           Worksapces allow for team collobaration on multiple projectes and are the foundation of all workflows within
           Neptuna.
         </p>
 
         <mat-card-actions>
-          <button mat-button color="primary" (click)="openWorkspaceDialog()">Create</button>
+          <button mat-stroked-button color="primary" (click)="openWorkspaceDialog()">
+            Create Workspace
+          </button>
         </mat-card-actions>
-      </div>
+      </mat-card-content>
       <div class="card-footer">
-        <small class="text-muted">Created with by ❤ Joel</small>
+        <small class="text-muted">
+          Created with by ❤ Joel
+        </small>
       </div>
     </mat-card>
   </div>

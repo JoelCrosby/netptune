@@ -8,7 +8,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .card-group {
-    background-color: darken(mat-color($background, board-group), 1);
+  .create-workspace-card.mat-card:not([class*='mat-elevation-z']) {
+    background-color: transparent !important;
+    box-shadow: none !important;
   }
 }

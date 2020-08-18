@@ -18,4 +18,8 @@
       border: 1px solid mat-color($background, border);
     }
   }
+
+  .card-group {
+    background-color: darken(mat-color($background, board-group), 1);
+  }
 }
