@@ -1,0 +1,12 @@
+<app-page-container [showProgress]="loadingUpdate$ | async">
+
+  <app-page-header
+    title="Profile"
+    actionTitle="Logout"
+    (actionClick)="onLogoutClicked()"
+  >
+  </app-page-header>
+
+  <app-update-profile></app-update-profile>
+
+</app-page-container>

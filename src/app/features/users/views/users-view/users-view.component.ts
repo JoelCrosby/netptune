@@ -1,19 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InviteDialogComponent } from '@app/entry/dialogs/invite-dialog/invite-dialog.component';
-import { first } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
 import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
+import { Store } from '@ngrx/store';
+import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './users-view.component.html',
   styleUrls: ['./users-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersViewComponent implements OnInit {
+export class UsersViewComponent {
   constructor(private dialog: MatDialog, private store: Store) {}
-
-  ngOnInit(): void {}
 
   onInviteUsers() {
     const dialogRef = this.dialog.open(InviteDialogComponent, {

@@ -5,19 +5,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import {
-  selectCurrentUser,
-  selectIsAuthenticated,
-} from '@core/auth/store/auth.selectors';
-import {
-  selectIsMobileView,
-  selectSideNavOpen,
-} from '@core/store/layout/layout.selectors';
+import * as AuthSelectors from '@core/auth/store/auth.selectors';
+import * as LayoutSelectors from '@core/store/layout/layout.selectors';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap, withLatestFrom, map } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -31,16 +25,18 @@ export class AppComponent implements OnInit {
   sideNavOpen$: Observable<boolean>;
 
   workspaces$ = this.store.select(selectAllWorkspaces);
-  isMobileView$ = this.store.select(selectIsMobileView);
-  user$ = this.store.select(selectCurrentUser);
+  isMobileView$ = this.store.select(LayoutSelectors.selectIsMobileView);
+  user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    (this.sideNavOpen$ = this.store.select(selectIsAuthenticated).pipe(
-      withLatestFrom(this.store.select(selectSideNavOpen)),
-      map(([authenticated, isNavOpen]) => authenticated && isNavOpen)
-    )),
-      tap(() => this.store.dispatch(loadWorkspaces()));
+    this.sideNavOpen$ = this.store
+      .select(AuthSelectors.selectIsAuthenticated)
+      .pipe(
+        withLatestFrom(this.store.select(LayoutSelectors.selectSideNavOpen)),
+        map(([authenticated, isNavOpen]) => authenticated && isNavOpen),
+        tap(() => this.store.dispatch(loadWorkspaces()))
+      );
   }
 }
