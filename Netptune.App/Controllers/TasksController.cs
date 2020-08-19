@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.ProjectTasks;
