@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { dropIn } from '@core/animations/animations';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
-import { TextHelpers } from '@core/util/text-helpers';
-import { ConfirmDialogComponent } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 
@@ -14,7 +11,6 @@ import { Store } from '@ngrx/store';
   templateUrl: './workspaces.index.component.html',
   styleUrls: ['./workspaces.index.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [dropIn],
 })
 export class WorkspacesComponent implements OnInit {
   workspaces$ = this.store.select(selectAllWorkspaces);
@@ -44,22 +40,6 @@ export class WorkspacesComponent implements OnInit {
   }
 
   deleteClicked(workspace: Workspace) {
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        width: '600px',
-        data: {
-          title: 'Delete Workspace',
-          content: `Are you sure you want to delete ${TextHelpers.truncate(
-            workspace.name
-          )}`,
-          confirm: 'Delete',
-        },
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result) {
-          this.store.dispatch(WorkspaceActions.deleteWorkspace({ workspace }));
-        }
-      });
+    this.store.dispatch(WorkspaceActions.deleteWorkspace({ workspace }));
   }
 }
