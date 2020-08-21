@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@app/core/auth/store/auth.actions';
-import { ConfirmEmailRequest } from '@app/core/auth/store/auth.models';
+import { AuthCodeRequest } from '@app/core/auth/store/auth.models';
 import { selectIsConfirmEmailLoading } from '@app/core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ import { first, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
-  private request: ConfirmEmailRequest;
+  private request: AuthCodeRequest;
 
   loading$: Observable<boolean>;
 
@@ -27,7 +27,7 @@ export class ConfirmViewComponent implements OnInit, AfterViewInit {
       .pipe(
         first(),
         tap((data) => {
-          this.request = data.confirmEmail as ConfirmEmailRequest;
+          this.request = data.confirmEmail as AuthCodeRequest;
         })
       )
       .subscribe();

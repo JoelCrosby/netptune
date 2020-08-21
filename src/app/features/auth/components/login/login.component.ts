@@ -20,8 +20,8 @@ export class LoginComponent implements OnDestroy {
   hidePassword = true;
 
   loginGroup = new FormGroup({
-    email: new FormControl('', [, Validators.email]),
-    password: new FormControl(),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
   });
 
   get email() {
@@ -48,21 +48,15 @@ export class LoginComponent implements OnDestroy {
   }
 
   login() {
-    const loginFormControl = this.email;
-    const passwordFormControl = this.password;
+    if (this.email.invalid || this.password.invalid) {
+      this.email.markAsDirty();
+      this.password.markAsDirty();
 
-    const email = loginFormControl ? loginFormControl.value : undefined;
-    const password = passwordFormControl
-      ? passwordFormControl.value
-      : undefined;
-
-    this.loginGroup.disable();
-
-    if ((!email || !password) && passwordFormControl) {
-      passwordFormControl.reset();
-      this.loginGroup.enable();
       return;
     }
+
+    const email = this.email.value as string;
+    const password = this.password.value as string;
 
     this.store.dispatch(
       AuthActions.tryLogin({

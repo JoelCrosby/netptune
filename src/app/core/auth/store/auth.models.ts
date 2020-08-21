@@ -5,13 +5,16 @@ export interface AuthState {
   loading: boolean;
   currentUser?: User;
   confirmEmailLoading: boolean;
+  requestPasswordResetLoading: boolean;
   loginError?: HttpErrorResponse | Error;
+  requestPasswordResetError?: HttpErrorResponse | Error;
 }
 
 export const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   confirmEmailLoading: false,
+  requestPasswordResetLoading: false,
 };
 
 export interface LoginRequest {
@@ -35,7 +38,13 @@ export interface User {
   [key: string]: unknown;
 }
 
-export interface ConfirmEmailRequest {
+export interface AuthCodeRequest {
   userId: string;
   code: string;
+}
+
+export interface ResetPasswordRequest {
+  userId: string;
+  code: string;
+  password: string;
 }

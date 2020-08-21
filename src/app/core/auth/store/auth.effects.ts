@@ -117,6 +117,55 @@ export class AuthEffects {
       )
   );
 
+  requestPasswordReset$ = createEffect(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.requestPasswordReset),
+        debounceTime(debounce, scheduler),
+        switchMap((action) =>
+          this.authService.requestPasswordReset(action.email).pipe(
+            tap(() => this.snackbar.open('Password reset email has been sent')),
+            tap(() => this.router.navigate(['/auth/login'])),
+            map((response) =>
+              actions.requestPasswordResetSuccess({ response })
+            ),
+            catchError((error) =>
+              of(actions.requestPasswordResetFail({ error }))
+            )
+          )
+        )
+      )
+  );
+
+  resetPassword$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.resetPassword),
+        debounceTime(debounce, scheduler),
+        switchMap((action) =>
+          this.authService.resetPassword(action.request).pipe(
+            map((userInfo: User) => actions.resetPasswordSuccess({ userInfo })),
+            tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => this.snackbar.open('Password has been reset')),
+            catchError((error) => of(actions.resetPasswordFail({ error })))
+          )
+        )
+      )
+  );
+
+  resetPasswordFail$ = createEffect(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.resetPasswordFail),
+        debounceTime(debounce, scheduler),
+        tap(() => this.router.navigate(['/auth/login'])),
+        tap(() =>
+          this.snackbar.open('Reset password request is invalid or expired')
+        ),
+        map(() => actions.logoutSuccess())
+      )
+  );
+
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.logout),

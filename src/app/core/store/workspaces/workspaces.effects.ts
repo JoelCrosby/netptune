@@ -14,7 +14,7 @@ export class WorkspacesEffects {
   loadWorkspaces$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadWorkspaces),
-      switchMap((action) =>
+      switchMap(() =>
         this.workspacesService.get().pipe(
           map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
           catchError((error) => of(actions.loadWorkspacesFail({ error })))
