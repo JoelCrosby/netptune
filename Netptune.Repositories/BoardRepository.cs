@@ -58,9 +58,9 @@ namespace Netptune.Repositories
                 .ApplyReadonly(isReadonly);
         }
 
-        public async Task<int?> GetIdByIndentifier(string indentifier)
+        public async Task<int?> GetIdByIdentifier(string identifier)
         {
-            var result = await (from b in Entities where b.Identifier == indentifier select b.Id).ToListAsync();
+            var result = await (from b in Entities where b.Identifier == identifier select b.Id).ToListAsync();
 
             if (result.Any()) return result.FirstOrDefault();
 
@@ -74,9 +74,7 @@ namespace Netptune.Repositories
                 .Include(board => board.Project)
                 .FirstOrDefaultAsync(board => board.Id == id && !board.IsDeleted);
 
-            if (result is null) return null;
-
-            return result.ToViewModel();
+            return result?.ToViewModel();
         }
     }
 }
