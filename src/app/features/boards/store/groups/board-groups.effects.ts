@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BoardGroupType } from '@app/core/models/board-group';
 import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
 import {
   isBoardGroupsRoute,
@@ -22,8 +23,8 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import { BoardGroupsService } from './board-groups.service';
 import { selectBoardGroupsSelectedUserIds } from './board-groups.selectors';
+import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
 export class BoardGroupsEffects {
@@ -109,8 +110,17 @@ export class BoardGroupsEffects {
   deleteBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
-      switchMap((action) =>
-        this.confirmation.open(DELETE_CONFIRMATION).pipe(
+      switchMap((action) => {
+        if (action.boardGroup.type === BoardGroupType.Done) {
+          return this.confirmation
+            .open({
+              isInfoMessage: true,
+              message: 'You cannot delete the done column',
+            })
+            .pipe(switchMap(() => of({ type: 'NO_ACTION' })));
+        }
+
+        return this.confirmation.open(DELETE_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
@@ -122,8 +132,8 @@ export class BoardGroupsEffects {
               catchError((error) => of(actions.deleteBoardGroupFail({ error })))
             );
           })
-        )
-      )
+        );
+      })
     )
   );
 
