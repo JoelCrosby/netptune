@@ -35,7 +35,7 @@ namespace Netptune.Services
 
         public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null)
         {
-            var boardId = await Boards.GetIdByIndentifier(boardIdentifier);
+            var boardId = await Boards.GetIdByIdentifier(boardIdentifier);
 
             if (!boardId.HasValue) return null;
 
