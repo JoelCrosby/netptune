@@ -2,9 +2,9 @@ namespace Netptune.Core.Responses.Common
 {
     public class ClientResponse
     {
-        public bool IsSuccess { get; set; }
+        public bool IsSuccess { get; protected set; }
 
-        public string Message { get; set; }
+        public string Message { get; protected set; }
 
         public static ClientResponse Success(string message = null)
         {

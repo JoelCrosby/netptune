@@ -1,8 +1,14 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@env/environment';
+import { Injectable } from '@angular/core';
 import { RegisterRequest } from '@core/models/register-request';
-import { LoginRequest, ConfirmEmailRequest, User } from './store/auth.models';
+import { environment } from '@env/environment';
+import { ClientResponse } from '../models/client-response';
+import {
+  AuthCodeRequest,
+  LoginRequest,
+  User,
+  ResetPasswordRequest,
+} from './store/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +30,30 @@ export class AuthService {
     );
   }
 
-  confirmEmail(request: ConfirmEmailRequest) {
-    return this.http.get(environment.apiEndpoint + 'api/auth/confirm-email', {
-      params: { ...request },
-    });
+  confirmEmail(request: AuthCodeRequest) {
+    return this.http.get<User>(
+      environment.apiEndpoint + 'api/auth/confirm-email',
+      {
+        params: { ...request },
+      }
+    );
+  }
+
+  requestPasswordReset(email: string) {
+    return this.http.get<ClientResponse>(
+      environment.apiEndpoint + 'api/auth/request-password-reset',
+      {
+        params: { email },
+      }
+    );
+  }
+
+  resetPassword(request: ResetPasswordRequest) {
+    return this.http.get<User>(
+      environment.apiEndpoint + 'api/auth/reset-password',
+      {
+        params: { ...request },
+      }
+    );
   }
 }

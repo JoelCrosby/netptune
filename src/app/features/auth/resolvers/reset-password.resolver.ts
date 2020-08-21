@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
 
 @Injectable()
-export class ConfirmEmailResolver implements Resolve<AuthCodeRequest> {
+export class ResetPasswordResolver implements Resolve<AuthCodeRequest> {
   resolve(route: ActivatedRouteSnapshot) {
     const userId = route.queryParamMap.get('userId');
     const code = route.queryParamMap.get('code');

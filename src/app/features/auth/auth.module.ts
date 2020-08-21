@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
+import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
+import { ResetPasswordResolver } from './resolvers/reset-password.resolver';
 
 // Components
 import { LoginComponent } from './components/login/login.component';
@@ -9,10 +11,17 @@ import { RegisterComponent } from './components/register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { StaticModule } from '@app/static/static.module';
 import { ConfirmViewComponent } from './views/confirm-view/confirm-view.component';
-import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
+import { RequestPasswordResetComponent } from './components/request-password-reset/request-password-reset.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, ConfirmViewComponent],
+  declarations: [
+    LoginComponent,
+    RegisterComponent,
+    ConfirmViewComponent,
+    RequestPasswordResetComponent,
+    ResetPasswordComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,6 +30,6 @@ import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
     StaticModule,
     AuthRoutingModule,
   ],
-  providers: [ConfirmEmailResolver],
+  providers: [ConfirmEmailResolver, ResetPasswordResolver],
 })
 export class AuthModule {}

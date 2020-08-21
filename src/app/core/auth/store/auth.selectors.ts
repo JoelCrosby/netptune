@@ -43,3 +43,8 @@ export const selectIsConfirmEmailLoading = createSelector(
   selectAuthState,
   (state: AuthState) => state.confirmEmailLoading
 );
+
+export const selectRequestPasswordResetLoading = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.requestPasswordResetLoading
+);

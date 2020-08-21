@@ -17,6 +17,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 
 namespace Netptune.Services.Authentication
 {
@@ -87,13 +89,7 @@ namespace Netptune.Services.Authentication
 
             var appUser = await UserManager.FindByEmailAsync(model.Email);
 
-            await SignInManager.SignInAsync(appUser, false);
-
-            appUser.RegistrationDate = DateTime.UtcNow;
-            appUser.LastLoginTime = DateTime.UtcNow;
-
-            await UserManager.UpdateAsync(appUser);
-
+            await LogNewlyRegisteredUserIn(appUser);
             await SendWelcomeEmail(appUser);
 
             return RegisterResult.Success(GenerateToken(appUser));
@@ -103,7 +99,7 @@ namespace Netptune.Services.Authentication
         {
             var user = await UserManager.FindByIdAsync(userId);
 
-            if (user is null) return null;
+            if (user is null) return RegisterResult.Failed();
 
             return await ConfirmEmail(user, code);
         }
@@ -112,9 +108,59 @@ namespace Netptune.Services.Authentication
         {
             var result = await UserManager.ConfirmEmailAsync(user, code);
 
-            if (!result.Succeeded) return null;
+            if (!result.Succeeded) return RegisterResult.Failed();
 
             return RegisterResult.Success(GenerateToken(user));
+        }
+
+        public async Task<ClientResponse> RequestPasswordReset(RequestPasswordResetRequest request)
+        {
+            var user = await UserManager.FindByEmailAsync(request.Email);
+
+            if (user is null) return ClientResponse.Failed();
+
+            var resetCode = await UserManager.GeneratePasswordResetTokenAsync(user);
+
+            var callbackUrl = Origin
+                .AppendPathSegments("app", "auth", "reset-password")
+                .SetQueryParam("userId", user.Id, true)
+                .SetQueryParam("code", Uri.EscapeDataString(resetCode), true);
+
+            var rawTextContent = $"Here is the password reset link that was requested for your account. {callbackUrl}";
+
+            await Email.Send(new SendEmailModel
+            {
+                SendTo = new SendTo
+                {
+                    Address = user.Email,
+                    DisplayName = $"{user.Firstname} {user.Lastname}",
+                },
+                Reason = "password reset",
+                Subject = "Reset Password",
+                RawTextContent = rawTextContent,
+                Action = "Reset my password",
+                Link = callbackUrl,
+                PreHeader = "Reset Password",
+                Name = user.Firstname,
+                Message = "Click the following link to reset your password."
+            });
+
+            return ClientResponse.Success();
+        }
+
+        public async Task<LoginResult> ResetPassword(ResetPasswordRequest request)
+        {
+            var user = await UserManager.FindByIdAsync(request.UserId);
+
+            if (user is null) return LoginResult.Failed("Password Reset Failed, userId or code was invalid");
+
+            var result = await UserManager.ResetPasswordAsync(user, request.Code, request.Password);
+
+            if (!result.Succeeded) return LoginResult.Failed("Password Reset Failed, userId or code was invalid");
+
+            await LogUserIn(user);
+
+            return LoginResult.Success(GenerateToken(user));
         }
 
         private async Task SendWelcomeEmail(AppUser appUser)
@@ -144,6 +190,21 @@ namespace Netptune.Services.Authentication
                 Name = appUser.Firstname,
                 Message = "Thanks for registering with Netptune. \n\n Please confirm your email address with the following link."
             });
+        }
+
+        private async Task LogNewlyRegisteredUserIn(AppUser appUser)
+        {
+            await SignInManager.SignInAsync(appUser, false);
+            appUser.RegistrationDate = DateTime.UtcNow;
+            appUser.LastLoginTime = DateTime.UtcNow;
+            await UserManager.UpdateAsync(appUser);
+        }
+
+        private async Task LogUserIn(AppUser appUser)
+        {
+            await SignInManager.SignInAsync(appUser, false);
+            appUser.LastLoginTime = DateTime.UtcNow;
+            await UserManager.UpdateAsync(appUser);
         }
 
         private DateTime GetExpireDays()

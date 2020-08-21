@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 
 namespace Netptune.Api.Controllers
 {
@@ -76,6 +78,62 @@ namespace Netptune.Api.Controllers
             var result = await AuthenticationService.ConfirmEmail(userId, decodedCode);
 
             if (result is null) return Unauthorized();
+
+            return Ok(result.Ticket);
+        }
+
+        // GET: api/auth/request-password-reset
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("request-password-reset")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> RequestPasswordReset([FromQuery] string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest();
+            }
+
+            var result = await AuthenticationService.RequestPasswordReset(new RequestPasswordResetRequest
+            {
+                Email = email,
+            });
+
+            return Ok(result);
+        }
+
+        // GET: api/auth/reset-password
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("reset-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json", Type = typeof(AuthenticationTicket))]
+        public async Task<IActionResult> ResetPassword([FromQuery] string userId, [FromQuery] string code, [FromQuery] string password)
+        {
+            if (string.IsNullOrWhiteSpace(userId)
+                || string.IsNullOrWhiteSpace(code)
+                || string.IsNullOrWhiteSpace(password)
+            )
+            {
+                return Unauthorized();
+            }
+
+            // Encoding for plus symbols is going wonky some where ...
+            var decodedCode = code.Replace(' ', '+');
+
+            var result = await AuthenticationService.ResetPassword(new ResetPasswordRequest
+            {
+                Code = decodedCode,
+                UserId = userId,
+                Password = password,
+            });
+
+            if (result is null || !result.IsSuccess) return Unauthorized();
 
             return Ok(result.Ticket);
         }

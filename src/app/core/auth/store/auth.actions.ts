@@ -1,7 +1,13 @@
 import { RegisterRequest } from '@core/models/register-request';
 import { createAction, props } from '@ngrx/store';
-import { User, LoginRequest, ConfirmEmailRequest } from './auth.models';
+import {
+  User,
+  LoginRequest,
+  AuthCodeRequest,
+  ResetPasswordRequest,
+} from './auth.models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ClientResponse } from '@core/models/client-response';
 
 // Login
 
@@ -47,7 +53,7 @@ export const registerFail = createAction(
 
 export const confirmEmail = createAction(
   '[Auth] Confirm Email',
-  props<{ request: ConfirmEmailRequest }>()
+  props<{ request: AuthCodeRequest }>()
 );
 
 export const confirmEmailSuccess = createAction(
@@ -57,5 +63,39 @@ export const confirmEmailSuccess = createAction(
 
 export const confirmEmailFail = createAction(
   '[Auth] Confirm Email Failed',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Request Password Reset
+
+export const requestPasswordReset = createAction(
+  '[Auth] Request Password Reset',
+  props<{ email: string }>()
+);
+
+export const requestPasswordResetSuccess = createAction(
+  '[Auth] Request Password Reset Succeded',
+  props<{ response: ClientResponse }>()
+);
+
+export const requestPasswordResetFail = createAction(
+  '[Auth] Request Password Reset Failed',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Reset Password
+
+export const resetPassword = createAction(
+  '[Auth] Reset Password',
+  props<{ request: ResetPasswordRequest }>()
+);
+
+export const resetPasswordSuccess = createAction(
+  '[Auth] Reset Password Succeded',
+  props<{ userInfo: User }>()
+);
+
+export const resetPasswordFail = createAction(
+  '[Auth] Reset Password Failed',
   props<{ error: HttpErrorResponse }>()
 );

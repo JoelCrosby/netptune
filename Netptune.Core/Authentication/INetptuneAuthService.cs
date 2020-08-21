@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Authentication;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 
 namespace Netptune.Core.Authentication
 {
@@ -15,5 +17,9 @@ namespace Netptune.Core.Authentication
         Task<RegisterResult> ConfirmEmail(string userId, string code);
 
         Task<RegisterResult> ConfirmEmail(AppUser appUser, string code);
+
+        Task<ClientResponse> RequestPasswordReset(RequestPasswordResetRequest request);
+
+        Task<LoginResult> ResetPassword(ResetPasswordRequest request);
     }
 }

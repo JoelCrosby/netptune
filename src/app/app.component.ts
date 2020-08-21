@@ -35,8 +35,8 @@ export class AppComponent implements OnInit {
       .select(AuthSelectors.selectIsAuthenticated)
       .pipe(
         withLatestFrom(this.store.select(LayoutSelectors.selectSideNavOpen)),
-        map(([authenticated, isNavOpen]) => authenticated && isNavOpen),
-        tap(() => this.store.dispatch(loadWorkspaces()))
+        tap(([isAuth]) => isAuth && this.store.dispatch(loadWorkspaces())),
+        map(([isAuth, isNavOpen]) => isAuth && isNavOpen)
       );
   }
 }
