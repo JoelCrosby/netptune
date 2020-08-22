@@ -2,11 +2,13 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { AuthState } from '@core/auth/store/auth.models';
-import { selectAuthLoading } from '@core/auth/store/auth.selectors';
-import { Actions, ofType } from '@ngrx/effects';
+import {
+  selectAuthLoading,
+  selectShowLoginError,
+} from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -15,8 +17,10 @@ import { takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnDestroy {
+  authLoading$: Observable<boolean>;
+  showLoginError$: Observable<boolean>;
   onDestroy$ = new Subject();
-  $authLoading = this.store.select(selectAuthLoading);
+
   hidePassword = true;
 
   loginGroup = new FormGroup({
@@ -32,26 +36,26 @@ export class LoginComponent implements OnDestroy {
     return this.loginGroup.get('password');
   }
 
-  constructor(private store: Store<AuthState>, updates$: Actions) {
-    updates$
-      .pipe(
-        ofType(AuthActions.loginFail),
-        takeUntil(this.onDestroy$),
-        tap(() => this.loginGroup.enable())
-      )
-      .subscribe();
+  constructor(private store: Store<AuthState>) {
+    this.showLoginError$ = this.store.select(selectShowLoginError);
+    this.authLoading$ = this.store.select(selectAuthLoading).pipe(
+      tap((loading) => {
+        if (loading) return this.loginGroup.disable();
+        return this.loginGroup.enable();
+      })
+    );
   }
 
   ngOnDestroy() {
+    this.store.dispatch(AuthActions.clearError({ error: 'loginError' }));
+
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
 
   login() {
     if (this.email.invalid || this.password.invalid) {
-      this.email.markAsDirty();
-      this.password.markAsDirty();
-
+      this.email.markAllAsTouched();
       return;
     }
 
@@ -59,7 +63,7 @@ export class LoginComponent implements OnDestroy {
     const password = this.password.value as string;
 
     this.store.dispatch(
-      AuthActions.tryLogin({
+      AuthActions.login({
         request: {
           email,
           password,

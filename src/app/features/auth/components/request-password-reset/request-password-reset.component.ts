@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Validators, FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { requestPasswordReset } from '@app/core/auth/store/auth.actions';
+import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
-import { requestPasswordReset } from '@app/core/auth/store/auth.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-request-password-reset',
@@ -12,7 +13,7 @@ import { requestPasswordReset } from '@app/core/auth/store/auth.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestPasswordResetComponent implements OnInit {
-  $authLoading: Observable<boolean>;
+  authLoading$: Observable<boolean>;
 
   requestPasswordResetGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -25,7 +26,14 @@ export class RequestPasswordResetComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.$authLoading = this.store.select(selectRequestPasswordResetLoading);
+    this.authLoading$ = this.store
+      .select(selectRequestPasswordResetLoading)
+      .pipe(
+        tap((loading) => {
+          if (loading) return this.requestPasswordResetGroup.disable();
+          return this.requestPasswordResetGroup.enable();
+        })
+      );
   }
 
   requestPasswordReset() {

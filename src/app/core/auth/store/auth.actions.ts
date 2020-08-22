@@ -5,13 +5,14 @@ import {
   LoginRequest,
   AuthCodeRequest,
   ResetPasswordRequest,
+  AuthErrorKey,
 } from './auth.models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClientResponse } from '@core/models/client-response';
 
 // Login
 
-export const tryLogin = createAction(
+export const login = createAction(
   '[Auth] Try Login',
   props<{ request: LoginRequest }>()
 );
@@ -99,3 +100,14 @@ export const resetPasswordFail = createAction(
   '[Auth] Reset Password Failed',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Clear Error
+
+export const clearError = createAction(
+  '[Auth] Clear Error',
+  props<{ error: AuthErrorKey }>()
+);
+
+// Clear User Info
+
+export const clearUserInfo = createAction('[Auth] Clear User Info');

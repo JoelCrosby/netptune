@@ -39,38 +39,37 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(
-          actions.loginFail,
           actions.loginSuccess,
           actions.logout,
           actions.logoutSuccess,
-          actions.tryLogin,
+          actions.login,
           actions.registerSuccess,
           actions.registerFail,
           actions.confirmEmailSuccess,
           actions.confirmEmailFail
         ),
         withLatestFrom(this.store.pipe(select(selectAuthState))),
-        tap(([action, settings]) =>
-          this.localStorageService.setItem(AUTH_KEY, settings)
-        )
+        tap(([_, settings]) => {
+          const { currentUser } = settings;
+          this.localStorageService.setItem(AUTH_KEY, { currentUser });
+        })
       ),
     { dispatch: false }
   );
 
-  tryLogin$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
-        ofType(actions.tryLogin),
-        debounceTime(debounce, scheduler),
-        switchMap((action) =>
-          this.authService.login(action.request).pipe(
-            map((userInfo: User) => actions.loginSuccess({ userInfo })),
-            tap(() => this.router.navigate(['/workspaces'])),
-            tap(() => this.store.dispatch(openSideNav())),
-            catchError((error) => of(actions.loginFail({ error })))
-          )
+  login$ = createEffect(({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+    this.actions$.pipe(
+      ofType(actions.login),
+      debounceTime(debounce, scheduler),
+      switchMap((action) =>
+        this.authService.login(action.request).pipe(
+          map((userInfo: User) => actions.loginSuccess({ userInfo })),
+          tap(() => this.router.navigate(['/workspaces'])),
+          tap(() => this.store.dispatch(openSideNav())),
+          catchError((error) => of(actions.loginFail({ error })))
         )
       )
+    )
   );
 
   register$ = createEffect(
@@ -180,6 +179,15 @@ export class AuthEffects {
         )
       )
     )
+  );
+
+  clearUserInfo$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.clearUserInfo),
+        tap(() => this.localStorageService.removeItem(AUTH_KEY))
+      ),
+    { dispatch: false }
   );
 }
 

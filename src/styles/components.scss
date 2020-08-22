@@ -74,10 +74,17 @@ ul {
   height: 32px !important;
 }
 
-.auth-progress-bar .mat-progress-bar {
-  border-radius: .4rem !important;
-  height: .4rem !important;
+.auth-progress-bar {
+  height: .4rem;
+  margin-bottom: .4rem;
+
+  .mat-progress-bar {
+    border-radius: .4rem !important;
+    height: .4rem !important;
+  }
 }
+
+
 
 // Angular MAterial Modal Class
 

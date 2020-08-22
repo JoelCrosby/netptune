@@ -1,10 +1,13 @@
 <div class="auth-page-container">
 
-  <div class="auth-progress-bar">
-    <mat-progress-bar mode="indeterminate" *ngIf="$authLoading | async"></mat-progress-bar>
-  </div>
-
   <form [formGroup]="registerGroup" (ngSubmit)="register()">
+
+    <div class="auth-progress-bar">
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="authLoading$ | async"
+      ></mat-progress-bar>
+    </div>
 
     <img
       src="assets/apple-touch-icon.png"
@@ -13,9 +16,9 @@
       height="72"
     >
 
-    <h2 class="mat-typography auth-title">
+    <h3 class="auth-title">
       Create new Account
-    </h2>
+    </h3>
 
     <mat-form-field appearance="outline">
       <mat-label>Firstname</mat-label>
@@ -91,18 +94,12 @@
       <mat-error *ngIf="password1.hasError('required')">
         Password is <strong>required</strong>
       </mat-error>
+      <mat-error *ngIf="password1.hasError('noMatch')">
+        Passwords do not macth!
+      </mat-error>
     </mat-form-field>
 
     <div class="button-container">
-      <button
-        mat-stroked-button
-        color="primary"
-        type="submit"
-        class="form-action-button"
-      >
-        Register Account
-      </button>
-
       <a
         mat-button
         color="primary"
@@ -112,6 +109,15 @@
       >
         Back to Log in
       </a>
+
+      <button
+        mat-stroked-button
+        color="primary"
+        type="submit"
+        class="form-action-button"
+      >
+        Register Account
+      </button>
     </div>
   </form>
 </div>

@@ -1,20 +1,29 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { ClientResponse } from '@app/core/models/client-response';
 
 export interface AuthState {
-  isAuthenticated: boolean;
-  loading: boolean;
   currentUser?: User;
-  confirmEmailLoading: boolean;
-  requestPasswordResetLoading: boolean;
+  isAuthenticated: boolean;
+  loginLoading: boolean;
   loginError?: HttpErrorResponse | Error;
+  registerLoading: boolean;
+  registerError?: HttpErrorResponse | Error;
+  confirmEmailLoading: boolean;
+  confirmEmailLoadingError?: HttpErrorResponse | Error;
+  requestPasswordResetLoading: boolean;
   requestPasswordResetError?: HttpErrorResponse | Error;
+  resetPasswordLoading: boolean;
+  resetPasswordError?: HttpErrorResponse | Error;
+  requestPasswordReset?: ClientResponse;
 }
 
 export const initialState: AuthState = {
   isAuthenticated: false,
-  loading: false,
+  loginLoading: false,
+  registerLoading: false,
   confirmEmailLoading: false,
   requestPasswordResetLoading: false,
+  resetPasswordLoading: false,
 };
 
 export interface LoginRequest {
@@ -48,3 +57,10 @@ export interface ResetPasswordRequest {
   code: string;
   password: string;
 }
+
+export type AuthErrorKey =
+  | 'loginError'
+  | 'registerError'
+  | 'requestPasswordResetError'
+  | 'requestPasswordResetError'
+  | 'resetPasswordError';

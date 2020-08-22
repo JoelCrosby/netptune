@@ -1,16 +1,16 @@
 <div class="auth-page-container">
 
-  <div class="auth-progress-bar">
-    <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="$authLoading | async"
-    ></mat-progress-bar>
-  </div>
-
   <form
     [formGroup]="loginGroup"
     (ngSubmit)="login()"
   >
+
+    <div class="auth-progress-bar">
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="authLoading$ | async"
+      ></mat-progress-bar>
+    </div>
 
     <img
       src="assets/apple-touch-icon.png"
@@ -19,7 +19,15 @@
       height="72"
     >
 
-    <h3 class="mat-typography auth-title">Sign in to continue</h3>
+    <h3 class="auth-title">
+      Sign in to continue
+    </h3>
+
+    <div class="auth-error">
+      <div class="auth-error-text" *ngIf="showLoginError$ | async">
+        Username or Password was incorrect
+      </div>
+    </div>
 
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
@@ -63,14 +71,6 @@
 
 
     <div class="button-container">
-      <button
-        mat-stroked-button
-        color="primary"
-        type="submit"
-      >
-        Sign in
-      </button>
-
       <a
         mat-button
         color="primary"
@@ -79,9 +79,18 @@
       >
         Create Account
       </a>
+
+      <button
+        mat-stroked-button
+        color="primary"
+        type="submit"
+      >
+        Sign in
+      </button>
+
     </div>
 
-    <div class="auth-footer">
+    <div class="button-container auth-footer">
       <a
         mat-button
         color="primary"
