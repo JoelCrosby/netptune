@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
-import { selectAuthLoading } from '@core/auth/store/auth.selectors';
-import { Actions, ofType } from '@ngrx/effects';
+import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +14,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnDestroy {
   onDestroy$ = new Subject();
-  $authLoading = this.store.select(selectAuthLoading);
+  authLoading$: Observable<boolean>;
 
   registerGroup = new FormGroup({
     firstname: new FormControl('', [
@@ -61,17 +60,18 @@ export class RegisterComponent implements OnDestroy {
     return this.registerGroup.get('password1');
   }
 
-  constructor(private store: Store, updates$: Actions) {
-    updates$
-      .pipe(
-        ofType(AuthActions.registerFail),
-        takeUntil(this.onDestroy$),
-        tap(() => this.registerGroup.enable())
-      )
-      .subscribe();
+  constructor(private store: Store) {
+    this.authLoading$ = this.store.select(selectRegisterLoading).pipe(
+      tap((loading) => {
+        if (loading) return this.registerGroup.disable();
+        return this.registerGroup.enable();
+      })
+    );
   }
 
   ngOnDestroy() {
+    this.store.dispatch(AuthActions.clearError({ error: 'registerError' }));
+
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
@@ -83,15 +83,14 @@ export class RegisterComponent implements OnDestroy {
     const password: string = this.password0.value;
     const passwordConfirm: string = this.password1.value;
 
-    this.registerGroup.disable();
-
     if (password !== passwordConfirm) {
-      this.registerGroup.enable();
+      this.password1.setErrors({ noMatch: true });
+      this.registerGroup.markAsDirty();
       return;
     }
 
     if (!email || !password) {
-      this.registerGroup.enable();
+      this.registerGroup.markAsDirty();
       return;
     }
 

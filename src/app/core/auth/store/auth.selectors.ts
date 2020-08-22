@@ -5,7 +5,7 @@ export const selectAuthState = createFeatureSelector<AuthState>('auth');
 
 export const selectAuthLoading = createSelector(
   selectAuthState,
-  (state: AuthState) => state.loading
+  (state: AuthState) => state.loginLoading
 );
 
 export const selectCurrentUser = createSelector(
@@ -47,4 +47,19 @@ export const selectIsConfirmEmailLoading = createSelector(
 export const selectRequestPasswordResetLoading = createSelector(
   selectAuthState,
   (state: AuthState) => state.requestPasswordResetLoading
+);
+
+export const selectResetPasswordLoading = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.resetPasswordLoading
+);
+
+export const selectRegisterLoading = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.registerLoading
+);
+
+export const selectShowLoginError = createSelector(
+  selectAuthState,
+  (state: AuthState) => !!state.loginError
 );

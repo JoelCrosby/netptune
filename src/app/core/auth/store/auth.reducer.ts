@@ -4,31 +4,45 @@ import { AuthState, initialState } from './auth.models';
 
 const reducer = createReducer(
   initialState,
-  on(actions.tryLogin, (state) => ({ ...state, loading: true })),
+
+  // Clear User Info
+
+  on(actions.clearUserInfo, () => initialState),
+
+  // Login
+
+  on(actions.login, (state) => ({ ...state, loginLoading: true })),
   on(actions.loginSuccess, (state, { userInfo }) => ({
     ...state,
     isAuthenticated: true,
-    loading: false,
+    loginLoading: false,
     currentUser: userInfo,
   })),
   on(actions.loginFail, (state, { error }) => ({
     ...state,
     isAuthenticated: false,
     loginError: error,
-    loading: false,
+    loginLoading: false,
   })),
-  on(actions.register, (state) => ({ ...state, loading: true })),
+
+  // Register
+
+  on(actions.register, (state) => ({ ...state, registerLoading: true })),
   on(actions.registerSuccess, (state, { userInfo }) => ({
     ...state,
     isAuthenticated: true,
-    loading: false,
+    registerLoading: false,
     currentUser: userInfo,
   })),
-  on(actions.registerFail, (state) => ({
+  on(actions.registerFail, (state, { error }) => ({
     ...state,
     isAuthenticated: false,
-    loading: false,
+    registerLoading: false,
+    registerError: error,
   })),
+
+  // Confirm Email
+
   on(actions.confirmEmail, (state) => ({
     ...state,
     confirmEmailLoading: true,
@@ -39,10 +53,48 @@ const reducer = createReducer(
     confirmEmailLoading: false,
     currentUser: userInfo,
   })),
-  on(actions.confirmEmailFail, (state) => ({
+  on(actions.confirmEmailFail, (state, { error }) => ({
     ...state,
     isAuthenticated: false,
     confirmEmailLoading: false,
+    confirmEmailLoadingError: error,
+  })),
+
+  // Request Password Reset
+
+  on(actions.requestPasswordReset, (state) => ({
+    ...state,
+    requestPasswordResetLoading: true,
+  })),
+  on(actions.requestPasswordResetSuccess, (state, { response }) => ({
+    ...state,
+    requestPasswordResetLoading: false,
+    requestPasswordReset: response,
+  })),
+  on(actions.requestPasswordResetFail, (state, { error }) => ({
+    ...state,
+    isAuthenticated: false,
+    requestPasswordResetLoading: false,
+    requestPasswordResetError: error,
+  })),
+
+  // Reset Password
+
+  on(actions.resetPassword, (state) => ({
+    ...state,
+    resetPasswordLoading: true,
+  })),
+  on(actions.resetPasswordSuccess, (state, { userInfo }) => ({
+    ...state,
+    isAuthenticated: true,
+    resetPasswordLoading: false,
+    currentUser: userInfo,
+  })),
+  on(actions.resetPasswordFail, (state, { error }) => ({
+    ...state,
+    isAuthenticated: false,
+    resetPasswordLoading: false,
+    resetPasswordError: error,
   }))
 );
 

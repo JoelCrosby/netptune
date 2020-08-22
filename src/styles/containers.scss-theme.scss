@@ -22,4 +22,11 @@
   .card-group {
     background-color: darken(mat-color($background, board-group), 1);
   }
+
+  .auth-error {
+    .auth-error-text {
+      background-color: mat-color($warn, .06);
+      color: darken(mat-color($warn), 36);
+    }
+  }
 }

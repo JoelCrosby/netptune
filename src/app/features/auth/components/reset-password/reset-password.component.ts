@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { first, tap } from 'rxjs/operators';
-import { ResetPasswordRequest } from '@app/core/auth/store/auth.models';
 import { resetPassword } from '@app/core/auth/store/auth.actions';
+import { ResetPasswordRequest } from '@app/core/auth/store/auth.models';
+import { selectResetPasswordLoading } from '@app/core/auth/store/auth.selectors';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reset-password',
@@ -14,7 +15,7 @@ import { resetPassword } from '@app/core/auth/store/auth.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
-  $authLoading: Observable<boolean>;
+  authLoading$: Observable<boolean>;
 
   request: ResetPasswordRequest;
 
@@ -46,21 +47,26 @@ export class ResetPasswordComponent implements OnInit {
         })
       )
       .subscribe();
+
+    this.authLoading$ = this.store.select(selectResetPasswordLoading).pipe(
+      tap((loading) => {
+        if (loading) return this.passwordResetGroup.disable();
+        return this.passwordResetGroup.enable();
+      })
+    );
   }
 
   ngOnInit() {}
 
   resetPassword() {
     if (this.password0.invalid || this.password1.invalid) {
-      this.password0.markAsDirty();
-      this.password1.markAsDirty();
+      this.password0.markAllAsTouched();
       return;
     }
 
     if (this.password0.value !== this.password1.value) {
-      this.password0.markAsDirty();
       this.password1.setErrors({ noMatch: true });
-      this.password1.markAsDirty();
+      this.password0.markAllAsTouched();
       return;
     }
 

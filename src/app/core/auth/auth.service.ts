@@ -6,8 +6,8 @@ import { ClientResponse } from '../models/client-response';
 import {
   AuthCodeRequest,
   LoginRequest,
-  User,
   ResetPasswordRequest,
+  User,
 } from './store/auth.models';
 
 @Injectable({
