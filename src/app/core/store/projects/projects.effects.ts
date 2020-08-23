@@ -4,13 +4,14 @@ import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { of, asyncScheduler } from 'rxjs';
 import {
   catchError,
   map,
   switchMap,
   tap,
   withLatestFrom,
+  debounceTime,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
 import * as actions from './projects.actions';
@@ -20,17 +21,19 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Injectable()
 export class ProjectsEffects {
-  loadProjects$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.loadProjects, selectWorkspace),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
-        this.projectsService.get(workspace.slug).pipe(
-          map((projects) => actions.loadProjectsSuccess({ projects })),
-          catchError((error) => of(actions.loadProjectsFail({ error })))
+  loadProjects$ = createEffect(
+    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.loadProjects, selectWorkspace),
+        debounceTime(debounce, scheduler),
+        withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+        switchMap(([_, workspace]) =>
+          this.projectsService.get(workspace.slug).pipe(
+            map((projects) => actions.loadProjectsSuccess({ projects })),
+            catchError((error) => of(actions.loadProjectsFail({ error })))
+          )
         )
       )
-    )
   );
 
   loadProjectsSuccess$ = createEffect(() =>
