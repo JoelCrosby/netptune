@@ -4,23 +4,25 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of, asyncScheduler } from 'rxjs';
+import { catchError, map, switchMap, tap, debounceTime } from 'rxjs/operators';
 import * as actions from './workspaces.actions';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable()
 export class WorkspacesEffects {
-  loadWorkspaces$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.loadWorkspaces),
-      switchMap(() =>
-        this.workspacesService.get().pipe(
-          map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
-          catchError((error) => of(actions.loadWorkspacesFail({ error })))
+  loadWorkspaces$ = createEffect(
+    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.loadWorkspaces),
+        debounceTime(debounce, scheduler),
+        switchMap(() =>
+          this.workspacesService.get().pipe(
+            map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
+            catchError((error) => of(actions.loadWorkspacesFail({ error })))
+          )
         )
       )
-    )
   );
 
   createWorkspace$ = createEffect(() =>
