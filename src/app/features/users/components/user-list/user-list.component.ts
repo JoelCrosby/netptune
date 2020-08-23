@@ -8,18 +8,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
-import { loadUsers } from '@core/store/users/users.actions';
+import {
+  loadUsers,
+  removeUsersFromWorkspace,
+} from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss'],
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersListComponent implements OnInit, AfterViewInit {
+export class UserListComponent implements OnInit, AfterViewInit {
   users$: Observable<AppUser[]>;
   loading$: Observable<boolean>;
 
@@ -42,5 +45,12 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 
   trackById(index: number, user: AppUser) {
     return user.id;
+  }
+
+  onRemoveClicked(user: AppUser) {
+    if (!user) return;
+
+    const emailAddresses = [user.email];
+    this.store.dispatch(removeUsersFromWorkspace({ emailAddresses }));
   }
 }
