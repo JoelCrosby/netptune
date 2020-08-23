@@ -1,0 +1,16 @@
+.remove-user-btn {
+  align-self: start;
+  margin-left: auto;
+  display: block;
+  animation: fade-in ease-in-out .24s;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: .8;
+  }
+}

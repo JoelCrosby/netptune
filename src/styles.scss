@@ -4,6 +4,7 @@
 @import './styles/material';
 @import './styles/utility';
 @import './styles/components';
+@import './styles/lists';
 @import './styles/spinners';
 @import './styles/typography';
 @import './styles/containers.scss';
@@ -24,6 +25,7 @@
 @import './styles/spinners.scss-theme';
 @import './styles/components.scss-theme';
 @import './styles/containers.scss-theme';
+@import './styles/lists.scss-theme';
 @import './styles/colors.scss-theme';
 @import './app/app.component.scss-theme';
 @import './app/static/components/spinner/spinner.component.scss-theme.scss';
@@ -52,6 +54,7 @@
   @include containers-theme($theme);
   @include colors-theme($theme);
   @include component-theme($theme);
+  @include lists-theme($theme);
   @include shell-theme($theme);
   @include spinner-theme($theme);
   @include avatar-theme($theme);
