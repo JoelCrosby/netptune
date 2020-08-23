@@ -7,7 +7,7 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: '[app-task-list-item]',
+  selector: 'app-task-list-item',
   templateUrl: './task-list-item.component.html',
   styleUrls: ['./task-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,10 +10,10 @@
         [cdkDropListData]="{ tasks: tasks, status: status }"
         (cdkDropListDropped)="drop($event)"
       >
-        <div
+        <app-task-list-item
           cdkDrag
           class="task-drag"
-          app-task-list-item
+
           *ngFor="let taskItem of tasks"
           [task]="taskItem"
           [cdkDragData]="taskItem"
@@ -53,8 +53,10 @@
               </button>
             </ng-template>
           </mat-menu>
-        </div>
+        </app-task-list-item>
+
         <app-task-inline [status]="status" [siblings]="tasks"></app-task-inline>
+
       </div>
 
     </ng-container>
