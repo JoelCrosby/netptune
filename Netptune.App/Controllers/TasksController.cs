@@ -129,5 +129,18 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/tasks/export-workspace
+        [HttpGet]
+        [Route("export-workspace/{workspace}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
+        public async Task<IActionResult> ExportWorkspace([FromRoute] string workspace)
+        {
+            var result = await TaskService.ExportWorkspaceTasks(workspace);
+
+            return File(result.Stream, result.ContentType, result.Filename);
+        }
     }
 }
