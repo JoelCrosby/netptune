@@ -1,7 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Extensions;
+using Netptune.Core.Models.Files;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -9,12 +17,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Netptune.Services
 {
@@ -162,6 +164,19 @@ namespace Netptune.Services
             });
 
             return await TaskRepository.GetTaskViewModel(result.Id);
+        }
+
+        public async Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug)
+        {
+            var tasks = await TaskRepository.GetTasksAsync(workspaceSlug);
+            var stream = await tasks.ToCsvStream();
+
+            return new FileResponse
+            {
+                Stream = stream,
+                ContentType = "application/octet-stream",
+                Filename = $"Netptune-Task-Export_{workspaceSlug}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
+            };
         }
 
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
