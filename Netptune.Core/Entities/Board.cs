@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Entities
 {
-    public class Board : AuditableEntity<int>
+    public class Board : WorkspaceEntity<int>
     {
         public string Name { get; set; }
 

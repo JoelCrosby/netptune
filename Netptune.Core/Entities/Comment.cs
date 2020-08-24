@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Core.Entities
 {
-    public class Comment : AuditableEntity<int>
+    public class Comment : WorkspaceEntity<int>
     {
         public string Body { get; set; }
 

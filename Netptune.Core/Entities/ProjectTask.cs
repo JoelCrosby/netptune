@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Netptune.Core.Entities
 {
-    public class ProjectTask : AuditableEntity<int>
+    public class ProjectTask : WorkspaceEntity<int>
     {
         public string Name { get; set; }
 
@@ -28,8 +28,6 @@ namespace Netptune.Core.Entities
 
         public int? ProjectId { get; set; }
 
-        public int? WorkspaceId { get; set; }
-
         #endregion
 
         #region NavigationProperties
@@ -39,9 +37,6 @@ namespace Netptune.Core.Entities
 
         [JsonIgnore]
         public Project Project { get; set; }
-
-        [JsonIgnore]
-        public Workspace Workspace { get; set; }
 
         [JsonIgnore]
         public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();

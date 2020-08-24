@@ -6,7 +6,7 @@ using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class ProjectEntityMap : AuditableEntityMap<Project, int>
+    public class ProjectEntityMap : WorkspaceEntityMap<Project, int>
     {
         public override void Configure(EntityTypeBuilder<Project> builder)
         {

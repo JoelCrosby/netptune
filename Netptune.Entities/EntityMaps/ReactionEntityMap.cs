@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class ReactionEntityMap : AuditableEntityMap<Reaction, int>
+    public class ReactionEntityMap : WorkspaceEntityMap<Reaction, int>
     {
         public override void Configure(EntityTypeBuilder<Reaction> builder)
         {

@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class FlagEntityMap : AuditableEntityMap<Flag, int>
+    public class FlagEntityMap : WorkspaceEntityMap<Flag, int>
     {
         public override void Configure(EntityTypeBuilder<Flag> builder)
         {

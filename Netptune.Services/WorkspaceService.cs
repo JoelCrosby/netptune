@@ -35,7 +35,7 @@ namespace Netptune.Services
                 Description = request.Description,
                 CreatedByUserId = user.Id,
                 OwnerId = user.Id,
-                Slug = request.Name.ToUrlSlug(),
+                Slug = request.Name.ToUrlSlug(true),
                 MetaInfo = request.MetaInfo
             };
 
