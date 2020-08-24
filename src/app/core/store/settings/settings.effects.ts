@@ -19,7 +19,7 @@ export class SettingsEffects {
       this.actions$.pipe(
         ofType(actions.changeTheme),
         withLatestFrom(this.store.pipe(select(selectSettingsState))),
-        tap(([action, settings]) =>
+        tap(([_, settings]) =>
           this.localStorageService.setItem(SETTINGS_KEY, settings)
         )
       ),
@@ -30,7 +30,7 @@ export class SettingsEffects {
     () =>
       merge(INIT, this.actions$.pipe(ofType(actions.changeTheme))).pipe(
         withLatestFrom(this.store.pipe(select(selectEffectiveTheme))),
-        tap(([action, effectiveTheme]) => {
+        tap(([_, effectiveTheme]) => {
           const classList = document.querySelector('body').classList;
           const toRemove = Array.from(classList).filter((item: string) =>
             item.includes('-theme')

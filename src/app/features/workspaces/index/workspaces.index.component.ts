@@ -21,7 +21,7 @@ export class WorkspacesComponent implements OnInit {
     this.store.dispatch(WorkspaceActions.loadWorkspaces());
   }
 
-  trackById(index: number, workspace: Workspace) {
+  trackById(_: number, workspace: Workspace) {
     return workspace.id;
   }
 

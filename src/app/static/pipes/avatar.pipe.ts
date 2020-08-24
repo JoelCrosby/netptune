@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'avatar',
 })
 export class AvatarPipe implements PipeTransform {
-  transform(value: unknown, ...args: unknown[]): unknown {
+  transform(value: unknown): unknown {
     if (typeof value !== 'string') {
       return null;
     }

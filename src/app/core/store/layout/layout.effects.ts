@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Actions, OnInitEffects, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { MediaService, MediaSize } from '@core/services/media.service';
 import { map, withLatestFrom, filter } from 'rxjs/operators';
-import {
-  toggleSideMenu,
-  setIsMobileView,
-  closeSideMenu,
-  openSideMenu,
-} from './layout.actions';
+import { setIsMobileView, closeSideMenu, openSideMenu } from './layout.actions';
 import { selectIsMobileView } from './layout.selectors';
 
 @Injectable()
@@ -47,8 +41,7 @@ export class LayoutEffects implements OnInitEffects {
   constructor(
     private actions$: Actions<Action>,
     private media: MediaService,
-    private store: Store,
-    private snackbar: MatSnackBar
+    private store: Store
   ) {}
 
   ngrxOnInitEffects(): Action {

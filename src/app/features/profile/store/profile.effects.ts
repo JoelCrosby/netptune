@@ -13,7 +13,7 @@ export class ProfileEffects {
     this.actions$.pipe(
       ofType(actions.loadProfile),
       withLatestFrom(this.store.select(selectCurrentUser)),
-      switchMap(([action, user]) =>
+      switchMap(([_, user]) =>
         this.profileService.get(user.userId).pipe(
           map((profile) => actions.loadProfileSuccess({ profile })),
           catchError((error) => of(actions.loadProfileFail({ error })))

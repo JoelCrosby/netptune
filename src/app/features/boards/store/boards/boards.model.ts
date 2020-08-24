@@ -1,4 +1,3 @@
-import { Board } from '@core/models/board';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';

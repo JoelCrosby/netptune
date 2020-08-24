@@ -5,7 +5,6 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
@@ -26,7 +25,7 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
 
-  constructor(private store: Store, private dialog: MatDialog) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);

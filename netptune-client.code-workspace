@@ -44,5 +44,6 @@
 		"[html]": {
 			"editor.defaultFormatter": "stringham.angular-template-formatter"
 		},
+		"typescript.tsdk": "node_modules\\typescript\\lib",
 	},
 }
