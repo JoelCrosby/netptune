@@ -49,6 +49,8 @@
           class="profile-nav-btn"
           *ngIf="user$ | async as user"
           [routerLink]="['./profile']"
+          matTooltip="Profile"
+          matTooltipPosition="right"
         >
           <app-avatar
             [name]="user.displayName"
