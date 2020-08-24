@@ -10,7 +10,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { TaskStatus } from '@app/core/enums/project-task-status';
-import { dropIn, fadeIn } from '@core/animations/animations';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as actions from '@core/store/tasks/tasks.actions';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
@@ -22,7 +21,6 @@ import { Observable } from 'rxjs';
   templateUrl: './task-list-group.component.html',
   styleUrls: ['./task-list-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [fadeIn, dropIn],
 })
 export class TaskListGroupComponent implements OnInit {
   @Input() groupName: string;

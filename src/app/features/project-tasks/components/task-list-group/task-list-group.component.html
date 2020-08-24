@@ -1,9 +1,10 @@
 <div class="tasks-container">
-  <h4> {{ header }} </h4>
+
+  <h4>{{ header }}</h4>
+
   <div class="task-list">
 
     <ng-container *ngIf="(loaded | async) && tasks.length; else elseTemplate">
-
       <div
         cdkDropList
         class="task-list-group"
@@ -30,34 +31,48 @@
             <mat-icon class="drag">drag_indicator</mat-icon>
           </button>
 
+
           <mat-menu #menu="matMenu">
-            <ng-template matMenuContent let-task="task">
-              <button mat-menu-item (click)="markCompleteClicked(task)">
-                <mat-icon class="material-icons-outlined">
-                  done
-                </mat-icon>
+            <ng-template
+              matMenuContent
+              let-task="task"
+            >
+              <button
+                mat-menu-item
+                (click)="markCompleteClicked(task)"
+              >
+                <mat-icon class="material-icons-outlined">done</mat-icon>
                 <span>Mark Complete</span>
               </button>
-              <button mat-menu-item (click)="moveToBacklogClicked(task)">
-                <mat-icon class="material-icons-outlined">
-                  assignment_returned_outline
-                </mat-icon>
+
+              <button
+                mat-menu-item
+                (click)="moveToBacklogClicked(task)"
+              >
+                <mat-icon class="material-icons-outlined">assignment_returned_outline</mat-icon>
                 <span>Move to Backlog</span>
               </button>
-              <button mat-menu-item (click)="deleteClicked(task)">
-                <mat-icon class="material-icons-outlined">
-                  delete
-                </mat-icon>
+
+              <button
+                mat-menu-item
+                (click)="deleteClicked(task)"
+              >
+                <mat-icon class="material-icons-outlined">delete</mat-icon>
                 <span>Delete</span>
               </button>
+
             </ng-template>
           </mat-menu>
         </app-task-list-item>
 
-        <app-task-inline [status]="status" [siblings]="tasks"></app-task-inline>
+
+        <app-task-inline
+          [status]="status"
+          [siblings]="tasks"
+        ></app-task-inline>
+
 
       </div>
-
     </ng-container>
 
     <ng-template #elseTemplate>
@@ -68,9 +83,7 @@
         <div class="list-empty">
           <div class="list-empty-mark">
             <i class="far fa-compass"></i>
-            <h4 class="empty-text">
-              {{ emptyMessage }}
-            </h4>
+            <h4 class="empty-text">{{ emptyMessage }}</h4>
           </div>
         </div>
 
