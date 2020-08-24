@@ -8,22 +8,23 @@ const APP_PREFIX = 'Netptune-';
 export class LocalStorageService {
   constructor() {}
 
-  static loadInitialState<TState>() {
+  static loadInitialState<TState extends object>() {
     return Object.keys(localStorage).reduce((state: TState, storageKey) => {
       if (storageKey.includes(APP_PREFIX)) {
-        const stateKeys = storageKey
+        const stateKeys: (keyof TState)[] = storageKey
           .replace(APP_PREFIX, '')
           .toLowerCase()
           .split('.')
-          .map((key) =>
-            key
-              .split('-')
-              .map((token, index) =>
-                index === 0
-                  ? token
-                  : token.charAt(0).toUpperCase() + token.slice(1)
-              )
-              .join('')
+          .map(
+            (key) =>
+              key
+                .split('-')
+                .map((token, index) =>
+                  index === 0
+                    ? token
+                    : token.charAt(0).toUpperCase() + token.slice(1)
+                )
+                .join('') as keyof TState
           );
         let currentStateRef = state;
         stateKeys.forEach((key, index) => {
@@ -35,8 +36,9 @@ export class LocalStorageService {
             currentStateRef[key] = JSON.parse(item);
             return;
           }
-          currentStateRef[key] = currentStateRef[key] || {};
-          currentStateRef = currentStateRef[key];
+
+          currentStateRef[key] = currentStateRef[key] || ({} as TState[keyof TState]);
+          currentStateRef = (currentStateRef[key] as unknown) as TState;
         });
       }
       return state;

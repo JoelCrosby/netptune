@@ -25,7 +25,7 @@ export class SettingsComponent implements OnInit {
     this.settings$ = this.store.select(selectSettings);
   }
 
-  onThemeSelect({ value: theme }) {
+  onThemeSelect(theme: string) {
     this.store.dispatch(changeTheme({ theme }));
   }
 }

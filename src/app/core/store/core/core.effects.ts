@@ -20,8 +20,6 @@ export class CoreEffects {
   persistSettings = this.actions$.pipe(
     ofType(actions.selectProject),
     withLatestFrom(this.store.pipe(select(selectCoreState))),
-    tap(([action, settings]) =>
-      this.localStorageService.setItem(CORE_KEY, settings)
-    )
+    tap(([_, settings]) => this.localStorageService.setItem(CORE_KEY, settings))
   );
 }

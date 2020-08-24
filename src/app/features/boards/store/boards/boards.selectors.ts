@@ -1,7 +1,6 @@
 import { AppState } from '@core/core.state';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { adapter, BoardsState } from './boards.model';
-import { Board } from '@app/core/models/board';
 
 export interface State extends AppState {
   boards: BoardsState;

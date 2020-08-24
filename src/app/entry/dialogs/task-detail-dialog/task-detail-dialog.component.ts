@@ -12,7 +12,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from '@app/core/auth/store/auth.models';
 import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
 import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { CommentViewModel } from '@core/models/comment';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';

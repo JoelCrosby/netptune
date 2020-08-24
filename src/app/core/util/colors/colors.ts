@@ -92,7 +92,7 @@ export const colorDictionary = () => {
   return Object.keys(colors500).map((color) => {
     return {
       name: toWordCase(color),
-      color: colors500[color],
+      color: (colors500 as { [key: string]: string })[color],
     };
   });
 };

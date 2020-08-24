@@ -1,7 +1,6 @@
 import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
-import { takeUntil, throttleTime, observeOn } from 'rxjs/operators';
-import { AnimationFrameScheduler } from 'rxjs/internal/scheduler/AnimationFrameScheduler';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
   selector: '[appScrollShadow]',

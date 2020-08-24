@@ -43,7 +43,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(loadUsers());
   }
 
-  trackById(index: number, user: AppUser) {
+  trackById(_: number, user: AppUser) {
     return user.id;
   }
 
