@@ -1,10 +1,10 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 
 namespace Netptune.Core.Entities
 {
-    public class Reaction : AuditableEntity<int>
+    public class Reaction : WorkspaceEntity<int>
     {
         public string Value { get; set; }
 

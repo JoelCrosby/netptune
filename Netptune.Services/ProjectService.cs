@@ -104,7 +104,7 @@ namespace Netptune.Services
 
         private static string GenerateDefaultBoardId(string projectKey)
         {
-            return $"{projectKey.ToLowerInvariant().ToUrlSlug()}-default-board";
+            return $"{projectKey.ToLowerInvariant().ToUrlSlug(true)}-default-board";
         }
 
         public async Task<Project> DeleteProject(int id)

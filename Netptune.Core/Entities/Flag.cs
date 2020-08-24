@@ -1,8 +1,8 @@
-﻿using Netptune.Core.BaseEntities;
+using Netptune.Core.BaseEntities;
 
 namespace Netptune.Core.Entities
 {
-    public class Flag : AuditableEntity<int>
+    public class Flag : WorkspaceEntity<int>
     {
         public string Name { get; set; }
 

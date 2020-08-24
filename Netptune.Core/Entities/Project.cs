@@ -6,7 +6,7 @@ using Netptune.Core.Relationships;
 
 namespace Netptune.Core.Entities
 {
-    public class Project : AuditableEntity<int>
+    public class Project : WorkspaceEntity<int>
     {
         public string Name { get; set; }
 
@@ -16,16 +16,7 @@ namespace Netptune.Core.Entities
 
         public string Key { get; set; }
 
-        #region ForeignKeys
-
-        public int WorkspaceId { get; set; }
-
-        #endregion
-
         #region NavigationProperties
-
-        [JsonIgnore]
-        public Workspace Workspace { get; set; }
 
         [JsonIgnore]
         public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();

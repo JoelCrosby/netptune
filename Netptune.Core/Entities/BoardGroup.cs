@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -9,7 +9,7 @@ using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Entities
 {
-    public class BoardGroup : AuditableEntity<int>
+    public class BoardGroup : WorkspaceEntity<int>
     {
         public string Name { get; set; }
 

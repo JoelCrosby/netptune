@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Netptune.Core.Utilities;
 
 namespace Netptune.Core.Encoding
 {
@@ -15,7 +16,7 @@ namespace Netptune.Core.Encoding
         // multiple hyphens
         static readonly Regex MultipleHyphens = new Regex(@"-{2,}", RegexOptions.Compiled);
 
-        public static string ToUrlSlug(this string value)
+        public static string ToUrlSlug(this string value, bool appendUniqueId = false)
         {
             // convert to lower case
             value = value.ToLowerInvariant();
@@ -33,7 +34,11 @@ namespace Netptune.Core.Encoding
             value = MultipleHyphens.Replace(value, "-");
 
             // trim hyphens (-) from ends
-            return value.Trim('-');
+            var result = value.Trim('-');
+
+            if (!appendUniqueId) return result;
+
+            return $"{result}-{UniqueId.Generate(result)}";
         }
 
         private static string RemoveDiacritics(string value)

@@ -5,7 +5,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities
 {
-    public class Post : AuditableEntity<int>
+    public class Post : WorkspaceEntity<int>
     {
         public string Title { get; set; }
 

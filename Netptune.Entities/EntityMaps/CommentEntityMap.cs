@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class CommentEntityMap : AuditableEntityMap<Comment, int>
+    public class CommentEntityMap : WorkspaceEntityMap<Comment, int>
     {
         public override void Configure(EntityTypeBuilder<Comment> builder)
         {

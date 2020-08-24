@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -7,7 +7,7 @@ using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class PostEntityMap : AuditableEntityMap<Post, int>
+    public class PostEntityMap : WorkspaceEntityMap<Post, int>
     {
         public override void Configure(EntityTypeBuilder<Post> builder)
         {
