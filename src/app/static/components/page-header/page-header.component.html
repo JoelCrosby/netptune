@@ -29,6 +29,7 @@
       </button>
 
       <button
+        *ngIf="overflowActions.length"
         matRipple
         class="header-menu-action"
         [matMenuTriggerFor]="overflowMenu"
