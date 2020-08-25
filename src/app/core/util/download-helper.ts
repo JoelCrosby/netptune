@@ -1,4 +1,7 @@
-export const downloadFile = (file: Blob, filename: string) => {
+export const downloadFile = async (
+  file: Blob,
+  filename: string
+): Promise<boolean> => {
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
     console.log('window.navigator.msSaveOrOpenBlob');
 
@@ -9,17 +12,21 @@ export const downloadFile = (file: Blob, filename: string) => {
   a.setAttribute('style', 'display: none');
   document.body.appendChild(a);
 
-  setTimeout(() => {
-    const url = URL.createObjectURL(file);
-    a.href = url;
-    a.download = filename;
-    a.dispatchEvent(
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-    document.body.removeChild(a);
-  }, 0);
+  return new Promise((resovle) => {
+    setTimeout(() => {
+      const url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = filename;
+      a.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        })
+      );
+      document.body.removeChild(a);
+
+      resovle();
+    }, 0);
+  });
 };
