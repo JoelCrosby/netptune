@@ -4,6 +4,7 @@ import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
+import { FileResponse } from '@app/core/types/file-response';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -142,5 +143,19 @@ export const addCommentSuccess = createAction(
 
 export const addCommentFail = createAction(
   '[ProjectTasks] Add Comment Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Export Tasks
+
+export const exportTasks = createAction('[ProjectTasks] Export Tasks');
+
+export const exportTasksSuccess = createAction(
+  '[ProjectTasks] Export Tasks Success',
+  props<{ reponse: FileResponse }>()
+);
+
+export const exportTasksFail = createAction(
+  '[ProjectTasks] Export Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );

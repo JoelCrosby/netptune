@@ -13,6 +13,9 @@
   }
 
   .header-actions {
+    display: flex;
+    flex-direction: row;
+
     .header-primary-action {
       background-color: mat-color($primary);
       color: #fff;
@@ -20,6 +23,24 @@
 
     .header-primary-action:hover {
       background-color: lighten(mat-color($primary), 4);
+    }
+
+    .header-secondary-action {
+      background-color: mat-color($foreground, text, .08);
+      color: mat-color($foreground, text, .7);
+    }
+
+    .header-secondary-action:hover {
+      background-color: mat-color($foreground, text, .2);
+    }
+
+    .header-menu-action {
+      background-color: mat-color($foreground, text, .08);
+      color: mat-color($foreground, text, .4);
+    }
+
+    .header-menu-action:hover {
+      background-color: mat-color($foreground, text, .2);
     }
   }
 }
