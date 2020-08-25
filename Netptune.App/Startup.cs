@@ -97,6 +97,7 @@ namespace Netptune.App
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
+                .WithExposedHeaders("Content-Disposition")
             );
 
             app.UseAuthentication();

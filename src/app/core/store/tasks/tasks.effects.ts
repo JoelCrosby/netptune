@@ -16,6 +16,7 @@ import {
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
+import { downloadFile } from '@core/util/download-helper';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -114,6 +115,20 @@ export class ProjectTasksEffects {
         this.projectTasksService.postComment(action.request).pipe(
           map((comment) => actions.addCommentSuccess({ comment })),
           catchError((error) => of(actions.addCommentFail({ error })))
+        )
+      )
+    )
+  );
+
+  exportTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.exportTasks),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([_, workspace]) =>
+        this.projectTasksService.export(workspace.slug).pipe(
+          tap((reponse) => downloadFile(reponse.file, reponse.filename)),
+          map((reponse) => actions.exportTasksSuccess({ reponse })),
+          catchError((error) => of(actions.exportTasksFail({ error })))
         )
       )
     )

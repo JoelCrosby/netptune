@@ -1,10 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { environment } from '@env/environment';
 import { CommentViewModel } from '@core/models/comment';
+import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { FileResponse } from '@core/types/file-response';
+import { extractFilenameFromHeaders } from '@core/util/header-utils';
+import { environment } from '@env/environment';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -66,5 +70,22 @@ export class ProjectTasksService {
         },
       }
     );
+  }
+
+  export(workspaceSlug: string): Observable<FileResponse> {
+    return this.http
+      .get(
+        environment.apiEndpoint + `api/tasks/export-workspace/${workspaceSlug}`,
+        {
+          observe: 'response',
+          responseType: 'blob',
+        }
+      )
+      .pipe(
+        map((response) => ({
+          file: response.body,
+          filename: extractFilenameFromHeaders(response.headers),
+        }))
+      );
   }
 }
