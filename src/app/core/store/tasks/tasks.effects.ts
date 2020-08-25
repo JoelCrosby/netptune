@@ -126,7 +126,7 @@ export class ProjectTasksEffects {
       withLatestFrom(this.store.select(SelectCurrentWorkspace)),
       switchMap(([_, workspace]) =>
         this.projectTasksService.export(workspace.slug).pipe(
-          tap((reponse) => downloadFile(reponse.file, reponse.filename)),
+          tap(async (res) => await downloadFile(res.file, res.filename)),
           map((reponse) => actions.exportTasksSuccess({ reponse })),
           catchError((error) => of(actions.exportTasksFail({ error })))
         )
