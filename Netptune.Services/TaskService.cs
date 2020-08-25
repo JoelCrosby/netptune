@@ -168,7 +168,7 @@ namespace Netptune.Services
 
         public async Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug)
         {
-            var tasks = await TaskRepository.GetTasksAsync(workspaceSlug);
+            var tasks = await TaskRepository.GetExportTasksAsync(workspaceSlug);
             var stream = await tasks.ToCsvStream();
 
             return new FileResponse

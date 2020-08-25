@@ -4,6 +4,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Netptune.Core.Entities
@@ -74,6 +75,34 @@ namespace Netptune.Core.Entities
                 OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
                 OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
                 ProjectName = Project == null ? string.Empty : Project.Name
+            };
+        }
+
+        public ExportTaskViewModel ToExportViewModel()
+        {
+            return new ExportTaskViewModel
+            {
+                Id = Id,
+                AssigneeId = Assignee == null ? string.Empty : Assignee.Id,
+                OwnerId = OwnerId,
+                Name = Name,
+                Description = Description,
+                Status = Status.ToString(),
+                ProjectScopeId = ProjectScopeId,
+                SystemId = $"{Project.Key}-{ProjectScopeId}",
+                IsFlagged = IsFlagged,
+                SortOrder = SortOrder,
+                ProjectId = ProjectId,
+                WorkspaceId = WorkspaceId,
+                WorkspaceSlug = Workspace.Slug,
+                CreatedAt = CreatedAt,
+                UpdatedAt = UpdatedAt,
+                AssigneeUsername = Assignee == null ? string.Empty : Assignee.DisplayName,
+                AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
+                OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
+                OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
+                ProjectName = Project == null ? string.Empty : Project.Name,
+                Group = ProjectTaskInBoardGroups.FirstOrDefault()?.BoardGroup?.Name,
             };
         }
 
