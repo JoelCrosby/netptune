@@ -21,23 +21,25 @@ namespace Netptune.Repositories
         {
         }
 
-        public Task<List<Board>> GetBoardsInProject(int projectId, bool includeGroups = false)
+        public Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
         {
             var query = Entities
                 .Where(board => board.ProjectId == projectId)
-                .Where(board => !board.IsDeleted);
+                .Where(board => !board.IsDeleted)
+                .IsReadonly(isReadonly);
 
             if (!includeGroups) return query.ToListAsync();
 
             return query.Include(board => board.BoardGroups).ToListAsync();
         }
 
-        public Task<Board> GetDefaultBoardInProject(int projectId, bool includeGroups = false)
+        public Task<Board> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
         {
             var query = Entities
                 .Where(board => board.ProjectId == projectId)
                 .Where(board => !board.IsDeleted)
-                .Where(board => board.BoardType == BoardType.Default);
+                .Where(board => board.BoardType == BoardType.Default)
+                .IsReadonly(isReadonly);
 
             if (!includeGroups) return query.FirstOrDefaultAsync();
 

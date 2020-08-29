@@ -63,7 +63,7 @@ namespace Netptune.Services
                 group.Tasks.AddRange(tasks);
             }
 
-            var board = await UnitOfWork.Boards.GetViewModel(boardId);
+            var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
 
             var userEntities = groups
                 .SelectMany(group => group.TasksInGroups)
