@@ -66,10 +66,6 @@ export class WorkspaceDialogComponent implements OnInit {
     }
   }
 
-  close(): void {
-    this.dialogRef.close();
-  }
-
   getResult() {
     const workspace: Workspace = {
       ...this.data,

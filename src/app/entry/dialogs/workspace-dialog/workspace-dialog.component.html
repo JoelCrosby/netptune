@@ -1,10 +1,18 @@
-<h1 mat-dialog-title>{{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}</h1>
+<h1 mat-dialog-title>
+  {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}
+</h1>
 
-<form class="form-auth" [formGroup]="workspaceFromGroup">
+<form
+  class="form-auth"
+  [formGroup]="workspaceFromGroup"
+>
 
   <div class="name-color-row">
 
-    <mat-form-field class="w-100" appearance="fill">
+    <mat-form-field
+      class="w-100"
+      appearance="fill"
+    >
       <mat-label>Enter Workspace Name</mat-label>
       <input
         matInput
@@ -16,25 +24,38 @@
       >
     </mat-form-field>
 
-    <mat-form-field class="w-100 color-field" appearance="fill">
+    <mat-form-field
+      class="w-100 color-field"
+      appearance="fill"
+    >
       <mat-label>Choose Color</mat-label>
-      <mat-select placeholder="Color" formControlName="color">
+      <mat-select
+        placeholder="Color"
+        formControlName="color"
+      >
+
 
         <mat-select-trigger>
           <div class="color-option">
-            <div class="color-pallete" [style.background-color]="selectedColor"></div>
-            <div class="label">
-              {{ getColorLabel(selectedColor) }}
-            </div>
+            <div
+              class="color-pallete"
+              [style.background-color]="selectedColor"
+            ></div>
+            <div class="label">{{ getColorLabel(selectedColor) }}</div>
           </div>
         </mat-select-trigger>
 
-        <mat-option *ngFor="let item of colors" [value]="item.color">
+
+        <mat-option
+          *ngFor="let item of colors"
+          [value]="item.color"
+        >
           <div class="color-option">
-            <div class="color-pallete" [style.background-color]="item.color"></div>
-            <div class="label">
-              {{ item.name }}
-            </div>
+            <div
+              class="color-pallete"
+              [style.background-color]="item.color"
+            ></div>
+            <div class="label">{{ item.name }}</div>
           </div>
         </mat-option>
       </mat-select>
@@ -42,7 +63,10 @@
 
   </div>
 
-  <mat-form-field class="w-100" appearance="fill">
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
     <mat-label>Enter Workspace Summary</mat-label>
     <textarea
       matInput
@@ -58,9 +82,20 @@
 
 </form>
 
-<div mat-dialog-actions>
-  <button mat-button (click)="close()">Close</button>
-  <button mat-button (click)="getResult()" type="button">
+<div mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    mat-dialog-close
+  >
+    Close
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
     {{ isEditMode ? 'Save Changes' : 'Save Workspace'}}
   </button>
 </div>
