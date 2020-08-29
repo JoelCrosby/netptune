@@ -5,9 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using CsvHelper;
+
 using Microsoft.EntityFrameworkCore;
+
 using MoreLinq.Extensions;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
@@ -212,7 +216,7 @@ namespace Netptune.Services
 
             var newGroups = groups.Where(group => !existingGroupNames.Contains(group));
             var emailAddresses = rows
-                .Select(row => new {row.AssigneeEmail, row.OwnerEmail})
+                .Select(row => new { row.AssigneeEmail, row.OwnerEmail })
                 .Aggregate(new List<string>(), (result, current) =>
                 {
                     result.AddRange(new[]
@@ -238,25 +242,14 @@ namespace Netptune.Services
                 return ClientResponse.Failed($"The following email addresses do not belong to users in Netptune: {missingMessage}");
             }
 
-            // TODO: Assigning of these task properties needs to made way more resilient.
+            var initialScopeId = await GetNextProjectScopeId(project.Id);
 
-            var initialScopeId = await GetNextProjectScopeId(project.Id) ?? throw new Exception("Failed to generate next project scope Id");
-
-            var tasks = rows.Select((row, i) => new ProjectTask
+            if (initialScopeId is null)
             {
-                Name = row.Name,
-                Description = row.Description,
-                WorkspaceId = workspaceId,
-                ProjectId = project.Id,
-                IsFlagged = row.IsFlagged.Trim().ToLowerInvariant() == "true",
-                CreatedAt = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture),
-                UpdatedAt = DateTime.Parse(row.UpdatedAt, CultureInfo.InvariantCulture),
-                SortOrder = double.Parse(row.SortOrder),
-                Status = (ProjectTaskStatus)Enum.Parse(typeof(ProjectTaskStatus), row.Status),
-                AssigneeId = users.FirstOrDefault(user => string.Equals(user.Email, row.AssigneeEmail, StringComparison.InvariantCultureIgnoreCase))?.Id,
-                OwnerId = users.FirstOrDefault(user => string.Equals(user.Email, row.OwnerEmail, StringComparison.InvariantCultureIgnoreCase))?.Id,
-                ProjectScopeId = initialScopeId + i
-            }).ToList();
+                return ClientResponse.Failed("Failed to generate next project scope Id");
+            }
+
+            var tasks = rows.Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value)).ToList();
 
             var boardGroups = newGroups.Select((group, index) => new BoardGroup
             {
@@ -306,6 +299,56 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
+        private static Func<TaskImportRow, int, ProjectTask> CreateImportTask(Project project, int workspaceId, IEnumerable<AppUser> users, int initialScopeId)
+        {
+            var userList = users.ToList();
+
+            static DateTime ParseDateTime(string input)
+            {
+                return DateTime.Parse(input, CultureInfo.InvariantCulture);
+            }
+
+            string FindUserId(string email)
+            {
+                var target = email.Normalize();
+
+                var result = userList.FirstOrDefault(user => string.Equals(
+                    user.NormalizedEmail,
+                    target,
+                    StringComparison.InvariantCultureIgnoreCase
+                    )
+                );
+
+                return result?.Id;
+            }
+
+            static bool ParseBool(string input)
+            {
+                return input.Trim().ToLowerInvariant() == "true";
+            }
+
+            static ProjectTaskStatus ParseStatus(string input)
+            {
+                return (ProjectTaskStatus)Enum.Parse(typeof(ProjectTaskStatus), input);
+            }
+
+            return (row, i) => new ProjectTask
+            {
+                Name = row.Name,
+                Description = row.Description,
+                WorkspaceId = workspaceId,
+                ProjectId = project.Id,
+                IsFlagged = ParseBool(row.IsFlagged),
+                CreatedAt = ParseDateTime(row.CreatedAt),
+                UpdatedAt = ParseDateTime(row.UpdatedAt),
+                SortOrder = double.Parse(row.SortOrder),
+                Status = ParseStatus(row.Status),
+                AssigneeId = FindUserId(row.AssigneeEmail),
+                OwnerId = FindUserId(row.OwnerEmail),
+                ProjectScopeId = initialScopeId + i
+            };
+        }
+
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
         {
             await RemoveTaskFromGroups(result.Id);
@@ -317,7 +360,7 @@ namespace Netptune.Services
                 return;
             }
 
-            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, true);
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, false, true);
 
             if (defaultBoard is null)
             {
@@ -373,7 +416,7 @@ namespace Netptune.Services
 
         private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
         {
-            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true);
 
             if (defaultBoard is null)
             {
