@@ -232,6 +232,16 @@
   </mat-dialog-content>
 
   <div mat-dialog-actions align="end">
+    <div class="task-dates">
+      <div class="created-at" [matTooltip]="task.createdAt | date: 'full'">
+        <label>Created</label>
+        <span>{{ task.createdAt | fromNow }}</span>
+      </div>
+      <div class="updated-at" [matTooltip]="task.updatedAt | date: 'full'">
+        <label>Updated</label>
+        <span>{{ task.updatedAt | fromNow }}</span>
+      </div>
+    </div>
     <button mat-stroked-button (click)="close()">Close</button>
   </div>
 
