@@ -1,6 +1,21 @@
-<app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
+<input
+  #importTasksInput
+  name="file"
+  type="file"
+  class="import-tasks-input"
+  (change)="handleFileInput($event)"
+>
 
-  <app-page-header [title]="selectedBoardName$ | async">
+<app-page-container
+  [marginBottom]="false"
+  [verticalPadding]="false"
+  [fullHeight]="true"
+>
+
+  <app-page-header
+    [title]="selectedBoardName$ | async"
+    [overflowActions]="secondaryActions"
+  >
     <app-board-group-users></app-board-group-users>
   </app-page-header>
 
@@ -30,7 +45,10 @@
         [siblingIds]="getsiblingIds(group, groups)"
         [dragListId]="group.id.toString()"
       >
-        <span class="board-group-header" cdkDragHandle>
+        <span
+          class="board-group-header"
+          cdkDragHandle
+        >
           <div class="title">
             <app-inline-edit-input
               class="title-input"
@@ -41,14 +59,17 @@
 
             <span>{{ group.tasks.length }}</span>
           </div>
-          <button mat-icon-button class="delete-board-group-btn" (click)="onDeleteGroupClicked(group)">
+          <button
+            mat-icon-button
+            class="delete-board-group-btn"
+            (click)="onDeleteGroupClicked(group)"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </span>
       </app-board-group>
 
-      <app-create-board-group class="board-group">
-      </app-create-board-group>
+      <app-create-board-group class="board-group"></app-create-board-group>
 
     </div>
   </ng-template>

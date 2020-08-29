@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -136,11 +137,32 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> ExportWorkspace([FromRoute] string workspace)
+        public async Task<IActionResult> ExportWorkspaceTasks([FromRoute] string workspace)
         {
             var result = await TaskService.ExportWorkspaceTasks(workspace);
 
             return File(result.Stream, result.ContentType, result.Filename);
+        }
+
+        // POST: api/tasks/export-workspace
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("import/{boardId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
+        public async Task<IActionResult> ImportWorkspaceTasks([FromRoute] string boardId, List<IFormFile> files)
+        {
+            if (files is null || files.Count != 1)
+            {
+                return BadRequest("Import File must be provided. Only one file can be uploaded at a time.");
+            }
+
+            var stream = files.First().OpenReadStream();
+
+            var result = await TaskService.ImportWorkspaceTasks(boardId, stream);
+
+            return Ok(result);
         }
     }
 }

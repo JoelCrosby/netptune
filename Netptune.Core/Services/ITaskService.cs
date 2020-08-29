@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 using Netptune.Core.Models.Files;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Services
@@ -27,5 +29,7 @@ namespace Netptune.Core.Services
         Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
         Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug);
+
+        Task<ClientResponse> ImportWorkspaceTasks(string boardId, Stream stream);
     }
 }

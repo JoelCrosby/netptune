@@ -134,6 +134,31 @@ export class ProjectTasksEffects {
     )
   );
 
+  importTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.importTasks),
+      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      switchMap(([action]) =>
+        this.projectTasksService
+          .import(action.boardIdentifier, action.file)
+          .pipe(
+            map((reponse) => actions.importTasksSuccess({ reponse })),
+            tap((response) => {
+              if (response?.reponse?.isSuccess) {
+                this.snackbar.open('Import Successful');
+              } else {
+                this.snackbar.open('Import Failed');
+              }
+            }),
+            catchError((error) => {
+              this.snackbar.open('Import Failed');
+              return of(actions.importTasksFail({ error }));
+            })
+          )
+      )
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );

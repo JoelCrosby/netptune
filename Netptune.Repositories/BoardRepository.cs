@@ -60,11 +60,21 @@ namespace Netptune.Repositories
 
         public async Task<int?> GetIdByIdentifier(string identifier)
         {
-            var result = await (from b in Entities where b.Identifier == identifier select b.Id).ToListAsync();
+            var result = await
+                (from b in Entities where b.Identifier == identifier select b.Id)
+                .ToListAsync();
 
             if (result.Any()) return result.FirstOrDefault();
 
             return null;
+        }
+
+        public Task<Board> GetByIdentifier(string identifier, bool isReadonly = false)
+        {
+            return Entities
+                .Where(board => !board.IsDeleted && board.Identifier == identifier)
+                .IsReadonly(isReadonly)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<BoardViewModel> GetViewModel(int id, bool isReadonly = false)
