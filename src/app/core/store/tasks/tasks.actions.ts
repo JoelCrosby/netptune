@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
 import { FileResponse } from '@app/core/types/file-response';
+import { ClientResponse } from '@app/core/models/client-response';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -157,5 +158,22 @@ export const exportTasksSuccess = createAction(
 
 export const exportTasksFail = createAction(
   '[ProjectTasks] Export Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Import Tasks
+
+export const importTasks = createAction(
+  '[ProjectTasks] Import Tasks',
+  props<{ boardIdentifier: string; file: File }>()
+);
+
+export const importTasksSuccess = createAction(
+  '[ProjectTasks] Import Tasks Success',
+  props<{ reponse: ClientResponse }>()
+);
+
+export const importTasksFail = createAction(
+  '[ProjectTasks] Import Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );

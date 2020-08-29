@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
@@ -87,5 +88,15 @@ export class ProjectTasksService {
           filename: extractFilenameFromHeaders(response.headers),
         }))
       );
+  }
+
+  import(boardIdentifier: string, file: File): Observable<ClientResponse> {
+    const formData = new FormData();
+    formData.append('files', file);
+
+    return this.http.post<ClientResponse>(
+      environment.apiEndpoint + `api/tasks/import/${boardIdentifier}`,
+      formData
+    );
   }
 }

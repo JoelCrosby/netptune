@@ -8,7 +8,7 @@ import {
   selectRouterParam,
 } from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -30,7 +30,7 @@ import { BoardGroupsService } from './board-groups.service';
 export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(actions.loadBoardGroups),
+      ofType(actions.loadBoardGroups, TaskActions.importTasksSuccess),
       withLatestFrom(
         this.store.select(selectRouterParam, 'id'),
         this.route.queryParamMap,
@@ -100,7 +100,7 @@ export class BoardGroupsEffects {
 
   taskDeleted$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProjectTaskActions.deleteProjectTasksSuccess),
+      ofType(TaskActions.deleteProjectTasksSuccess),
       withLatestFrom(this.store.select(isBoardGroupsRoute)),
       filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups())

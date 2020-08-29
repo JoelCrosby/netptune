@@ -3,16 +3,20 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
+import { HeaderAction } from '@app/core/types/header-action';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
@@ -20,10 +24,23 @@ import { map, startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
+  @ViewChild('importTasksInput') importTasksInput: ElementRef;
+
   groups$: Observable<BoardGroup[]>;
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
+
+  private board: Board;
+
+  secondaryActions: HeaderAction[] = [
+    {
+      label: 'Import Tasks',
+      click: () => this.onImportTasksClicked(),
+      icon: 'publish',
+      iconClass: 'material-icons-outlined',
+    },
+  ];
 
   constructor(private store: Store) {}
 
@@ -35,6 +52,7 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
 
     this.selectedBoardName$ = this.store.pipe(
       select(GroupSelectors.selectBoard),
+      tap((board) => (this.board = board)),
       map((board) => board && board.name)
     );
   }
@@ -103,5 +121,21 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
     };
 
     this.store.dispatch(GroupActions.editBoardGroup({ boardGroup }));
+  }
+
+  onImportTasksClicked() {
+    this.importTasksInput?.nativeElement.click();
+  }
+
+  handleFileInput(event: Event) {
+    const files = (event?.target as EventTarget & { files: File[] })?.files;
+
+    if (!files || !files.length) return;
+
+    const file = files[0];
+
+    const boardIdentifier = this.board.identifier;
+
+    this.store.dispatch(TaskActions.importTasks({ boardIdentifier, file }));
   }
 }
