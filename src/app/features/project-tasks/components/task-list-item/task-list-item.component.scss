@@ -56,10 +56,6 @@
         flex: 0 0 40px;
       }
 
-      .task-scope-id {
-        flex: 0 0 40px;
-      }
-
       .task-checkbox {
         flex: 0 0 16px;
       }
@@ -99,6 +95,9 @@
 
     .mat-standard-chip {
       min-height: 24px !important;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .expand-icon {
