@@ -68,6 +68,18 @@ export class WorkspacesEffects {
     )
   );
 
+  isSlugUnique$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.isSlugUniue),
+      switchMap((action) =>
+        this.workspacesService.isSlugUnique(action.slug).pipe(
+          map((response) => actions.isSlugUniueSuccess({ response })),
+          catchError((error) => of(actions.isSlugUniueFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private workspacesService: WorkspacesService,

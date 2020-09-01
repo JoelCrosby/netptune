@@ -19,7 +19,7 @@ import { Workspace } from '@core/models/workspace';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import {
   combineLatest,
@@ -74,7 +74,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   constructor(private store: Store, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
+    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
     this.currentProject$ = this.store.pipe(select(selectCurrentProject));
     this.currentUser$ = this.store.pipe(select(selectCurrentUser));
 

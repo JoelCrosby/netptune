@@ -28,14 +28,14 @@ export class WorkspacesComponent implements OnInit {
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {
       data: null,
-      width: '600px',
+      width: '720px',
     });
   }
 
   onEditClicked(workspace: Workspace) {
     this.dialog.open(WorkspaceDialogComponent, {
       data: workspace,
-      width: '600px',
+      width: '720px',
     });
   }
 

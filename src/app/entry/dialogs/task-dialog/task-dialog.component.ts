@@ -69,7 +69,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentWorkspace$ = this.store.select(
-      WorkspaceSelectors.SelectCurrentWorkspace
+      WorkspaceSelectors.selectCurrentWorkspace
     );
     this.currentProject$ = this.store.select(
       ProjectSelectors.selectCurrentProject

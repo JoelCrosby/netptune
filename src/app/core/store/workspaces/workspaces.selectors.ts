@@ -24,7 +24,22 @@ export const selectWorkspacesLoaded = createSelector(
   (state: WorkspacesState) => state.loaded
 );
 
-export const SelectCurrentWorkspace = createSelector(
+export const selectCurrentWorkspace = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.currentWorkspace
+);
+
+export const selectIsSlugUnique = createSelector(
+  selectWorkspacesFeature,
+  (state: WorkspacesState) => state.isSlugUnique?.isUnique
+);
+
+export const selectIsSlugUniqueLoading = createSelector(
+  selectWorkspacesFeature,
+  (state: WorkspacesState) => state.isSlugUniqueLoading
+);
+
+export const selectIsSlugTaken = createSelector(
+  selectIsSlugUnique,
+  (state?: boolean) => state !== undefined && !state
 );
