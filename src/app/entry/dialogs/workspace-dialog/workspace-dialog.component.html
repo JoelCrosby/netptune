@@ -4,7 +4,7 @@
 
 <form
   class="form-auth"
-  [formGroup]="workspaceFromGroup"
+  [formGroup]="formGroup"
 >
 
   <div class="name-color-row">
@@ -62,6 +62,27 @@
     </mat-form-field>
 
   </div>
+
+  <mat-form-field
+    class="w-100 identifier"
+    appearance="fill"
+  >
+    <mat-label>Enter Workspace Identifier</mat-label>
+    <input
+      matInput
+      id="identifier"
+      class="form-control"
+      placeholder="Workspace Identifier"
+      name="identifier"
+      formControlName="identifier"
+    >
+    <mat-error *ngIf="identifier.hasError('already-taken')">
+      Identifier is already taken
+    </mat-error>
+    <mat-icon matSuffix *ngIf="isUniqueLoading$ | async">
+      <mat-spinner diameter="24"></mat-spinner>
+    </mat-icon>
+  </mat-form-field>
 
   <mat-form-field
     class="w-100"

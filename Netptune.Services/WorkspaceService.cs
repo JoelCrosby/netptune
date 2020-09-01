@@ -7,6 +7,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -35,7 +37,7 @@ namespace Netptune.Services
                 Description = request.Description,
                 CreatedByUserId = user.Id,
                 OwnerId = user.Id,
-                Slug = request.Name.ToUrlSlug(),
+                Slug = request.Slug.ToUrlSlug(),
                 MetaInfo = request.MetaInfo
             };
 
@@ -79,6 +81,8 @@ namespace Netptune.Services
         {
             var user = await IdentityService.GetCurrentUser();
 
+            if (user is null) return null;
+
             return await WorkspaceRepository.GetWorkspaces(user);
         }
 
@@ -114,6 +118,19 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return result;
+        }
+
+        public async Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug)
+        {
+            var slugLower = slug.ToUrlSlug();
+            var exists = await WorkspaceRepository.Exists(slugLower);
+
+            return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+            {
+                Request = slug,
+                Slug = slugLower,
+                IsUnique = !exists
+            });
         }
     }
 }

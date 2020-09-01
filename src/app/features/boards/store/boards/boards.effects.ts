@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SelectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -21,7 +21,7 @@ export class BoardsEffects {
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoards),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       filter(([_, workspace]) => !!workspace),
       switchMap(([_, workspace]) =>
         this.boardsService.getByWorksapce(workspace.slug).pipe(

@@ -96,5 +96,16 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/Workspaces/is-unique
+        [HttpGet("is-unique/{slug}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<Workspace>))]
+        public async Task<IActionResult> IsSlugUnique([FromRoute] string slug)
+        {
+            var result = await WorkspaceService.IsSlugUnique(slug);
+
+            return Ok(result);
+        }
     }
 }

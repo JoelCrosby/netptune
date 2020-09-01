@@ -18,7 +18,7 @@ import { AddProjectTaskRequest } from '@app/core/models/project-task';
 import { Workspace } from '@app/core/models/workspace';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import {
@@ -93,7 +93,7 @@ export class BoardGroupTaskInlineComponent
   ngAfterViewInit() {
     this.inputElementRef.nativeElement.focus();
 
-    this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
+    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
     this.currentProjectId$ = this.store.pipe(
       select(BoardGroupSelectors.selectBoardProjectId)
     );

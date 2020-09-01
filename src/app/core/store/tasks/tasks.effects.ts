@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -23,7 +23,7 @@ export class ProjectTasksEffects {
   loadProjectTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadProjectTasks),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([_, workspace]) =>
         this.projectTasksService.get(workspace.slug).pipe(
           map((tasks) => actions.loadProjectTasksSuccess({ tasks })),
@@ -83,7 +83,7 @@ export class ProjectTasksEffects {
   loadTaskDetail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadTaskDetails),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.projectTasksService.detail(action.systemId, workspace.slug).pipe(
           map((task) => actions.loadTaskDetailsSuccess({ task })),
@@ -96,7 +96,7 @@ export class ProjectTasksEffects {
   loadComments$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadComments),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([action, workspace]) =>
         this.projectTasksService
           .getComments(action.systemId, workspace.slug)
@@ -123,7 +123,7 @@ export class ProjectTasksEffects {
   exportTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.exportTasks),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([_, workspace]) =>
         this.projectTasksService.export(workspace.slug).pipe(
           tap(async (res) => await downloadFile(res.file, res.filename)),
@@ -137,7 +137,7 @@ export class ProjectTasksEffects {
   importTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.importTasks),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([action]) =>
         this.projectTasksService
           .import(action.boardIdentifier, action.file)

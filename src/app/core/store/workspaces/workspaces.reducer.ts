@@ -55,12 +55,26 @@ const reducer = createReducer(
 
   on(actions.deleteWorkspaceSuccess, (state, { workspace }) =>
     adapter.removeOne(workspace.id, state)
-  )
+  ),
+
+  // Is Slug Unique
+
+  on(actions.isSlugUniue, (state) => ({ ...state, isSlugUniqueLoading: true })),
+  on(actions.isSlugUniueFail, (state, { error }) => ({
+    ...state,
+    isSlugUniqueError: error,
+    isSlugUniqueLoading: false,
+  })),
+  on(actions.isSlugUniueSuccess, (state, { response }) => ({
+    ...state,
+    isSlugUnique: response.payload,
+    isSlugUniqueLoading: false,
+  }))
 );
 
 export function workspacesReducer(
   state: WorkspacesState | undefined,
   action: Action
-) {
+): WorkspacesState {
   return reducer(state, action);
 }

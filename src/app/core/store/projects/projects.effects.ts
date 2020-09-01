@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of, asyncScheduler } from 'rxjs';
@@ -26,7 +26,7 @@ export class ProjectsEffects {
       this.actions$.pipe(
         ofType(actions.loadProjects, selectWorkspace),
         debounceTime(debounce, scheduler),
-        withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+        withLatestFrom(this.store.select(selectCurrentWorkspace)),
         switchMap(([_, workspace]) =>
           this.projectsService.get(workspace.slug).pipe(
             map((projects) => actions.loadProjectsSuccess({ projects })),

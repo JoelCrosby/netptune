@@ -12,6 +12,9 @@ namespace Netptune.Core.Requests
         public string Description { get; set; }
 
         [Required]
+        public string Slug { get; set; }
+
+        [Required]
         public WorkspaceMeta MetaInfo { get; set; }
     }
 }
