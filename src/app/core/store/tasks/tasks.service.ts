@@ -95,7 +95,7 @@ export class ProjectTasksService {
     formData.append('files', file);
 
     return this.http.post<ClientResponse>(
-      environment.apiEndpoint + `api/tasks/import/${boardIdentifier}`,
+      environment.apiEndpoint + `api/import/tasks/${boardIdentifier}`,
       formData
     );
   }
