@@ -32,6 +32,7 @@
 @import './app/static/components/avatar/avatar.component.scss-theme.scss';
 @import './app/static/components/page-header/page-header.component.scss-theme.scss';
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
+@import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
 @import './app/features/workspaces/shell/shell.component.scss-theme';
 @import './app/features/workspaces/index/workspaces.index.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
@@ -73,6 +74,7 @@
   @include board-group-card-theme($theme);
   @include task-detail-dialog-theme($theme);
   @include board-group-users-theme($theme);
+  @include workspace-dialog-theme($theme);
 }
 
 .default-theme {
