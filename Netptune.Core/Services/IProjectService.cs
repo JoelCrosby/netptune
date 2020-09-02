@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.Core.Services
@@ -17,6 +18,6 @@ namespace Netptune.Core.Services
 
         Task<ProjectViewModel> AddProject(AddProjectRequest request);
 
-        Task<Project> DeleteProject(int id);
+        Task<ClientResponse> Delete(int id);
     }
 }

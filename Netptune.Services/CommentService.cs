@@ -5,6 +5,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
@@ -53,6 +54,18 @@ namespace Netptune.Services
             if (taskId is null) return null;
 
             return await Comments.GetCommentViewModelsForTask(taskId.Value, true);
+        }
+
+        public async Task<ClientResponse> Delete(int id)
+        {
+            var comment = await Comments.GetAsync(id);
+
+            if (comment is null) return null;
+
+            await Comments.DeletePermanent(comment.Id);
+            await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
         }
     }
 }

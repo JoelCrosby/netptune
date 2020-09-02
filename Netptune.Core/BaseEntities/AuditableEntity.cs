@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.Entities;
@@ -40,6 +40,16 @@ namespace Netptune.Core.BaseEntities
 
         [JsonIgnore]
         public virtual AppUser Owner { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        public void Delete(string userId)
+        {
+            IsDeleted = true;
+            DeletedByUserId = userId;
+        }
 
         #endregion
     }

@@ -91,7 +91,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Board))]
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
-            var result = await BoardService.DeleteBoard(id);
+            var result = await BoardService.Delete(id);
 
             if (result is null) return NotFound();
 

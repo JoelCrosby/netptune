@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -88,19 +89,18 @@ namespace Netptune.Services
             return result;
         }
 
-        public async Task<Board> DeleteBoard(int id)
+        public async Task<ClientResponse> Delete(int id)
         {
             var board = await Boards.GetAsync(id);
-            var user = await IdentityService.GetCurrentUser();
+            var userId = await IdentityService.GetCurrentUserId();
 
-            if (board is null) return null;
+            if (board is null || userId is null) return null;
 
-            board.IsDeleted = true;
-            board.DeletedByUserId = user.Id;
+            board.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
 
-            return board;
+            return ClientResponse.Success();
         }
 
         public async Task<List<BoardViewModel>> GetBoardsInWorkspace(string slug)

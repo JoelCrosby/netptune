@@ -79,7 +79,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
-            var result = await WorkspaceService.DeleteWorkspace(id);
+            var result = await WorkspaceService.Delete(id);
 
             if (result is null) return NotFound();
 

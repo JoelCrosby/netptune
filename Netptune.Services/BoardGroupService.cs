@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using AutoMapper;
+
 using MoreLinq;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -127,19 +130,18 @@ namespace Netptune.Services
             return boardGroup;
         }
 
-        public async Task<BoardGroup> DeleteBoardGroup(int id)
+        public async Task<ClientResponse> Delete(int id)
         {
             var boardGroup = await BoardGroups.GetAsync(id);
-            var user = await IdentityService.GetCurrentUser();
+            var userId = await IdentityService.GetCurrentUserId();
 
-            if (boardGroup is null || user is null) return null;
+            if (boardGroup is null || userId is null) return null;
 
-            boardGroup.IsDeleted = true;
-            boardGroup.DeletedByUserId = user.Id;
+            boardGroup.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
 
-            return boardGroup;
+            return ClientResponse.Success();
         }
     }
 }
