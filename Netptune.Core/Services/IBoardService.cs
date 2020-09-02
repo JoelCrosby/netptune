@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Services
@@ -16,7 +17,7 @@ namespace Netptune.Core.Services
 
         Task<Board> AddBoard(Board board);
 
-        Task<Board> DeleteBoard(int id);
+        Task<ClientResponse> Delete(int id);
 
         Task<List<BoardViewModel>> GetBoardsInWorkspace(string slug);
     }

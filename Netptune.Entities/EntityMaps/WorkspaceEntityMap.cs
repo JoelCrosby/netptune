@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -48,6 +48,7 @@ namespace Netptune.Entities.EntityMaps
                 .HasMany(workspace => workspace.ProjectTasks)
                 .WithOne(task => task.Workspace)
                 .HasForeignKey(task => task.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
         }
     }

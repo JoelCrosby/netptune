@@ -40,14 +40,14 @@ export class WorkspacesEffects {
   deleteWorkspace$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteWorkspace),
-      switchMap((action) =>
+      switchMap(({ workspace }) =>
         this.confirmation.open(DELETE_WORKSPACE_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.workspacesService.delete(action.workspace).pipe(
+            return this.workspacesService.delete(workspace).pipe(
               tap(() => this.snackbar.open('Workspace deleted')),
-              map((workspace) => actions.deleteWorkspaceSuccess({ workspace })),
+              map(() => actions.deleteWorkspaceSuccess({ workspace })),
               catchError((error) => of(actions.deleteWorkspaceFail({ error })))
             );
           })

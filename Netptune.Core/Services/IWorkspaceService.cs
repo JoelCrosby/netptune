@@ -24,6 +24,6 @@ namespace Netptune.Core.Services
 
         Task<Workspace> AddWorkspace(AddWorkspaceRequest request);
 
-        Task<Workspace> DeleteWorkspace(int id);
+        Task<ClientResponse> Delete(int id);
     }
 }

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Services
@@ -18,6 +19,6 @@ namespace Netptune.Core.Services
 
         Task<BoardGroup> AddBoardGroup(AddBoardGroupRequest boardGroup);
 
-        Task<BoardGroup> DeleteBoardGroup(int id);
+        Task<ClientResponse> Delete(int id);
     }
 }

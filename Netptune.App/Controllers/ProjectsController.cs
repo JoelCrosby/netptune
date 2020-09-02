@@ -79,7 +79,7 @@ namespace Netptune.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProject([FromRoute] int id)
         {
-            var result = await ProjectService.DeleteProject(id);
+            var result = await ProjectService.Delete(id);
 
             if (result is null) return NotFound();
 

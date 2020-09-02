@@ -64,14 +64,14 @@ export class ProjectsEffects {
   deleteProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteProject),
-      switchMap((action) =>
+      switchMap(({ project }) =>
         this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.projectsService.delete(action.project).pipe(
+            return this.projectsService.delete(project).pipe(
               tap(() => this.snackbar.open('Project Deleted')),
-              map((project) => actions.deleteProjectSuccess({ project })),
+              map(() => actions.deleteProjectSuccess({ project })),
               catchError((error) => of(actions.deleteProjectFail({ error })))
             );
           })

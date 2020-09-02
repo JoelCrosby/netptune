@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Netptune.Core.Models.Files;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Services
@@ -16,11 +17,11 @@ namespace Netptune.Core.Services
 
         Task<TaskViewModel> GetTask(string systemId, string workspaceSlug);
 
-        Task<TaskViewModel> UpdateTask(UpdateProjectTaskRequest request);
+        Task<TaskViewModel> Update(UpdateProjectTaskRequest request);
 
-        Task<TaskViewModel> AddTask(AddProjectTaskRequest request);
+        Task<TaskViewModel> Create(AddProjectTaskRequest request);
 
-        Task<TaskViewModel> DeleteTask(int id);
+        Task<ClientResponse> Delete(int id);
 
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
 
