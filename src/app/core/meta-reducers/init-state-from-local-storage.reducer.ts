@@ -32,10 +32,15 @@ const logStorageStateChange = (
 ) => {
   const { type, ...payload } = action;
 
-  console.log(`[DEBUG - InitStateFromLocalStorage] action: ${type}`, {
-    payload,
-    oldState: state,
-    newState,
-    mergedState,
-  });
+  console.log(
+    `%c[NGRX][LocalStorage] %c${type}`,
+    'color: #D171E1',
+    'color: inherit',
+    {
+      payload,
+      oldState: state,
+      newState,
+      mergedState,
+    }
+  );
 };
