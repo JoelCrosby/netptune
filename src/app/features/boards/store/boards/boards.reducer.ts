@@ -5,6 +5,9 @@ import * as actions from './boards.actions';
 const reducer = createReducer(
   initialState,
   on(actions.clearState, () => initialState),
+
+  // Load Boards
+
   on(actions.loadBoards, (state) => ({ ...state, loading: true })),
   on(actions.loadBoardsFail, (state, { error }) => ({
     ...state,
@@ -13,6 +16,9 @@ const reducer = createReducer(
   on(actions.loadBoardsSuccess, (state, { boards }) =>
     adapter.setAll(boards, { ...state, loading: false, loaded: true })
   ),
+
+  // Create Board
+
   on(actions.createBoard, (state) => ({ ...state, loading: true })),
   on(actions.createBoardFail, (state, { error }) => ({
     ...state,
@@ -24,6 +30,9 @@ const reducer = createReducer(
       loadingCreate: false,
     })
   ),
+
+  // Delete Board
+
   on(actions.deleteBoard, (state) => ({
     ...state,
     deleteState: { loading: true },

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
+import { Router } from '@angular/router';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -44,17 +47,35 @@ export class BoardsEffects {
     )
   );
 
-  deleteBoards$ = createEffect(() =>
+  deleteBoard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoard),
       switchMap((action) =>
-        this.boardsService.delete(action.board).pipe(
-          tap(() => this.snackbar.open('Board Deleted')),
-          map((board) => actions.deleteBoardSuccess({ board })),
-          catchError((error) => of(actions.deleteBoardFail({ error })))
+        this.confirmation.open(DELETE_BOARD_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.boardsService.delete(action.boardId).pipe(
+              tap(() => this.snackbar.open('Board Deleted')),
+              map((board) => actions.deleteBoardSuccess({ board })),
+              catchError((error) => of(actions.deleteBoardFail({ error })))
+            );
+          })
         )
       )
     )
+  );
+
+  deleteBoardSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.deleteBoardSuccess),
+        withLatestFrom(this.store.select(selectCurrentWorkspace)),
+        tap(([_, workspace]) => {
+          this.router.navigate(['/', workspace.slug, 'boards']);
+        })
+      ),
+    { dispatch: false }
   );
 
   onWorkspaceSelected$ = createEffect(() =>
@@ -65,6 +86,15 @@ export class BoardsEffects {
     private actions$: Actions<Action>,
     private boardsService: BoardsService,
     private store: Store,
-    private snackbar: MatSnackBar
+    private confirmation: ConfirmationService,
+    private snackbar: MatSnackBar,
+    private router: Router
   ) {}
 }
+
+const DELETE_BOARD_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to delete this Board?',
+  title: 'Delete Board',
+};
