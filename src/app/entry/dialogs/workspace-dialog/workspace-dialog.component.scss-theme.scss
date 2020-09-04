@@ -8,7 +8,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .workspace-color-select {
+  .color-select {
     .mat-form-field-infix {
       max-height: 18px;
     }
