@@ -1,7 +1,7 @@
-import { createAction, props } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Board } from '@app/core/models/board';
 import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
-import { HttpErrorResponse } from '@angular/common/http';
+import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Boards] Clear State');
 
@@ -34,7 +34,7 @@ export const createBoardFail = createAction(
 
 export const deleteBoard = createAction(
   '[Boards] Delete Board',
-  props<{ board: BoardViewModel }>()
+  props<{ boardId: number }>()
 );
 
 export const deleteBoardSuccess = createAction(

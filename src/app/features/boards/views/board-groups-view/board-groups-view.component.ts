@@ -11,6 +11,7 @@ import { Board } from '@app/core/models/board';
 import { BoardGroup } from '@app/core/models/board-group';
 import { HeaderAction } from '@app/core/types/header-action';
 import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
@@ -38,6 +39,12 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
       icon: 'publish',
+      iconClass: 'material-icons-outlined',
+    },
+    {
+      label: 'Delete Board',
+      click: () => this.onDeleteBoardClicked(),
+      icon: 'delete',
       iconClass: 'material-icons-outlined',
     },
   ];
@@ -125,6 +132,14 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
 
   onImportTasksClicked() {
     this.importTasksInput?.nativeElement.click();
+  }
+
+  onDeleteBoardClicked() {
+    const boardId = this.board.id;
+
+    if (boardId === undefined || boardId === null) return;
+
+    this.store.dispatch(BoardActions.deleteBoard({ boardId }));
   }
 
   handleFileInput(event: Event) {

@@ -30,9 +30,9 @@ export class BoardsService {
     );
   }
 
-  delete(board: Board) {
+  delete(boardId: number) {
     return this.http.delete<BoardViewModel>(
-      environment.apiEndpoint + `api/boards/${board.id}`
+      environment.apiEndpoint + `api/boards/${boardId}`
     );
   }
 }
