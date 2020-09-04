@@ -6,11 +6,12 @@ import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
+  filter,
   map,
   switchMap,
   tap,
@@ -19,7 +20,7 @@ import {
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { UserResponse } from './auth.models';
-import { selectAuthState } from './auth.selectors';
+import { selectAuthState, selectIsAuthenticated } from './auth.selectors';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -53,20 +54,34 @@ export class AuthEffects implements OnInitEffects {
           actions.registerSuccess,
           actions.registerFail,
           actions.confirmEmailSuccess,
-          actions.confirmEmailFail
+          actions.confirmEmailFail,
+          actions.currentUserSuccess
         ),
-        withLatestFrom(this.store.pipe(select(selectAuthState))),
+        withLatestFrom(this.store.select(selectAuthState)),
         tap(([_, settings]) => {
-          const { token } = settings;
-          this.localStorageService.setItem(AUTH_KEY, { token });
+          const { token, currentUser } = settings;
+          this.localStorageService.setItem(AUTH_KEY, { token, currentUser });
         })
       ),
     { dispatch: false }
   );
 
+  fetchCurrentUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        actions.loginSuccess,
+        actions.registerSuccess,
+        actions.confirmEmailSuccess
+      ),
+      map(() => actions.currentUser())
+    )
+  );
+
   currentUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.currentUser),
+      withLatestFrom(this.store.select(selectIsAuthenticated)),
+      filter(([_, auth]) => auth),
       switchMap(() =>
         this.authService.currentUser().pipe(
           map((user: UserResponse) => actions.currentUserSuccess({ user })),
