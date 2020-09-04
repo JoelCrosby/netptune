@@ -4,7 +4,12 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
@@ -18,7 +23,7 @@ import { filter, first, shareReplay, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateProfileComponent implements OnInit, AfterViewInit {
-  profileGroup = new FormGroup({
+  formGroup = new FormGroup({
     firstname: new FormControl(),
     lastname: new FormControl(),
     email: new FormControl(),
@@ -28,28 +33,47 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
   loadingUpdate$: Observable<boolean>;
 
   get firstname() {
-    return this.profileGroup.get('firstname');
+    return this.formGroup.get('firstname');
   }
   get lastname() {
-    return this.profileGroup.get('lastname');
+    return this.formGroup.get('lastname');
   }
   get email() {
-    return this.profileGroup.get('email');
+    return this.formGroup.get('email');
   }
   get pictureUrl() {
-    return this.profileGroup.get('pictureUrl');
+    return this.formGroup.get('pictureUrl');
   }
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(
       select(ProfileSelectors.selectUpdateProfileLoading),
       tap((loading) =>
-        loading ? this.profileGroup.disable() : this.profileGroup.enable()
+        loading ? this.formGroup.disable() : this.formGroup.enable()
       ),
       shareReplay()
     );
+
+    this.formGroup = this.fb.group({
+      firstname: {
+        updateOn: 'blur',
+        validators: [Validators.required],
+      },
+      lastname: {
+        updateOn: 'blur',
+        validators: [Validators.required],
+      },
+      email: {
+        updateOn: 'blur',
+        validators: [Validators.required],
+      },
+      pictureUrl: {
+        updateOn: 'blur',
+        validators: [Validators.maxLength(1024)],
+      },
+    });
 
     this.store
       .select(ProfileSelectors.selectProfile)
@@ -57,10 +81,10 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
         filter((profile) => !!profile),
         first(),
         tap((profile) => {
-          this.firstname.setValue(profile.firstname);
-          this.lastname.setValue(profile.lastname);
-          this.email.setValue(profile.email);
-          this.pictureUrl.setValue(profile.pictureUrl);
+          this.firstname.setValue(profile.firstname, { emitEvent: false });
+          this.lastname.setValue(profile.lastname, { emitEvent: false });
+          this.email.setValue(profile.email, { emitEvent: false });
+          this.pictureUrl.setValue(profile.pictureUrl, { emitEvent: false });
         })
       )
       .subscribe();
