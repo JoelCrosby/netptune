@@ -137,5 +137,21 @@ namespace Netptune.Api.Controllers
 
             return Ok(result.Ticket);
         }
+
+        // GET: api/auth/current-user
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("current-user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json", Type = typeof(CurrentUserResponse))]
+        public async Task<IActionResult> CurrentUser()
+        {
+            var result = await AuthenticationService.CurrentUser();
+
+            if (result is null) return Unauthorized();
+
+            return Ok(result);
+        }
     }
 }

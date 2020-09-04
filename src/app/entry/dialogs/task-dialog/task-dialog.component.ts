@@ -13,7 +13,6 @@ import { Workspace } from '@app/core/models/workspace';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
-import { selectProject } from '@core/store/core/core.actions';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
@@ -100,11 +99,6 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
 
   close() {
     this.dialogRef.close();
-  }
-
-  selectProject() {
-    const project = this.project.value;
-    this.store.dispatch(selectProject({ project }));
   }
 
   saveClicked() {

@@ -1,25 +1,40 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { ClientResponse } from '@core/models/client-response';
 import { RegisterRequest } from '@core/models/register-request';
 import { createAction, props } from '@ngrx/store';
 import {
-  User,
-  LoginRequest,
   AuthCodeRequest,
-  ResetPasswordRequest,
   AuthErrorKey,
+  LoginRequest,
+  ResetPasswordRequest,
+  UserToken,
+  UserResponse,
 } from './auth.models';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
+
+// Current User
+
+export const currentUser = createAction('[Auth] Current User');
+
+export const currentUserSuccess = createAction(
+  '[Auth] Current User Succeeded',
+  props<{ user: UserResponse }>()
+);
+
+export const currentUserFail = createAction(
+  '[Auth] Current User Failed',
+  props<{ error: HttpErrorResponse }>()
+);
 
 // Login
 
 export const login = createAction(
-  '[Auth] Try Login',
+  '[Auth] Login',
   props<{ request: LoginRequest }>()
 );
 
 export const loginSuccess = createAction(
-  '[Auth] Login Succeded',
-  props<{ userInfo: User }>()
+  '[Auth] Login Succeeded',
+  props<{ token: UserToken }>()
 );
 
 export const loginFail = createAction(
@@ -41,8 +56,8 @@ export const register = createAction(
 );
 
 export const registerSuccess = createAction(
-  '[Auth] Register Succeded',
-  props<{ userInfo: User }>()
+  '[Auth] Register Succeeded',
+  props<{ token: UserToken }>()
 );
 
 export const registerFail = createAction(
@@ -58,8 +73,8 @@ export const confirmEmail = createAction(
 );
 
 export const confirmEmailSuccess = createAction(
-  '[Auth] Confirm Email Succeded',
-  props<{ userInfo: User }>()
+  '[Auth] Confirm Email Succeeded',
+  props<{ token: UserToken }>()
 );
 
 export const confirmEmailFail = createAction(
@@ -75,7 +90,7 @@ export const requestPasswordReset = createAction(
 );
 
 export const requestPasswordResetSuccess = createAction(
-  '[Auth] Request Password Reset Succeded',
+  '[Auth] Request Password Reset Succeeded',
   props<{ response: ClientResponse }>()
 );
 
@@ -92,8 +107,8 @@ export const resetPassword = createAction(
 );
 
 export const resetPasswordSuccess = createAction(
-  '[Auth] Reset Password Succeded',
-  props<{ userInfo: User }>()
+  '[Auth] Reset Password Succeeded',
+  props<{ token: UserToken }>()
 );
 
 export const resetPasswordFail = createAction(

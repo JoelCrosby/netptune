@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { User } from '@core/auth/store/auth.models';
+import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -55,7 +55,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   currentWorkspace$: Observable<Workspace>;
   currentProject$: Observable<ProjectViewModel>;
   inlineEditActive$: Observable<boolean>;
-  currentUser$: Observable<User>;
+  currentUser$: Observable<UserResponse>;
 
   taskGroup = new FormGroup({
     taskName: new FormControl(),
@@ -131,7 +131,11 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       });
   }
 
-  createTask(workspace: Workspace, project: ProjectViewModel, user: User) {
+  createTask(
+    workspace: Workspace,
+    project: ProjectViewModel,
+    user: UserResponse
+  ) {
     const lastSibling =
       this.siblings && this.siblings[this.siblings.length - 1];
 

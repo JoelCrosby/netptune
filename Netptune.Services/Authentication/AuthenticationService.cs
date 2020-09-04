@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Flurl;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ namespace Netptune.Services.Authentication
         private readonly SignInManager<AppUser> SignInManager;
         private readonly UserManager<AppUser> UserManager;
         private readonly IEmailService Email;
+        private readonly IHttpContextAccessor ContextAccessor;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -37,12 +39,14 @@ namespace Netptune.Services.Authentication
             IConfiguration configuration,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IEmailService email
+            IEmailService email,
+            IHttpContextAccessor contextAccessor
             )
         {
             SignInManager = signInManager;
             UserManager = userManager;
             Email = email;
+            ContextAccessor = contextAccessor;
 
             Issuer = configuration["Tokens:Issuer"];
             SecurityKey = configuration["Tokens:SecurityKey"];
@@ -161,6 +165,22 @@ namespace Netptune.Services.Authentication
             await LogUserIn(user);
 
             return LoginResult.Success(GenerateToken(user));
+        }
+
+        public async Task<CurrentUserResponse> CurrentUser()
+        {
+            var principle = ContextAccessor.HttpContext.User;
+            var user = await UserManager.GetUserAsync(principle);
+
+            if (user is null) return null;
+
+            return new CurrentUserResponse
+            {
+                DisplayName = user.DisplayName,
+                EmailAddress = user.Email,
+                PictureUrl = user.PictureUrl,
+                UserId = user.Id,
+            };
         }
 
         private async Task SendWelcomeEmail(AppUser appUser)

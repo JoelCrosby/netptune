@@ -17,7 +17,6 @@ import { AuthEffects } from './auth/store/auth.effects';
 import { metaReducers, reducers } from './core.state';
 import { CustomSerializer } from './router/custom-serializer';
 import { SettingsEffects } from './store/settings/settings.effects';
-import { CoreEffects } from './store/core/core.effects';
 import { LayoutEffects } from './store/layout/layout.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
@@ -33,14 +32,17 @@ import { UsersEffects } from './store/users/users.effects';
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
-        strictStateImmutability: false,
-        strictActionImmutability: false,
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+        strictStateSerializability: true,
+        strictActionSerializability: true,
+        strictActionWithinNgZone: true,
+        strictActionTypeUniqueness: true,
       },
     }),
     StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([
       AuthEffects,
-      CoreEffects,
       LayoutEffects,
       SettingsEffects,
       WorkspacesEffects,

@@ -11,8 +11,6 @@ import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { CoreState } from './store/core/core.model';
-import { coreReducer } from './store/core/core.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
@@ -28,7 +26,6 @@ import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   router: routerReducer,
-  core: coreReducer,
   layout: layoutReducer,
   settings: settingsReducer,
   workspaces: workspacesReducer,
@@ -46,45 +43,21 @@ if (!environment.production) {
   metaReducers.unshift(debug);
 }
 
-export const selectAuthState = createFeatureSelector<AppState, AuthState>(
-  'auth'
-);
+function feature<TState>(name: keyof AppState) {
+  return createFeatureSelector<AppState, TState>(name);
+}
 
-export const selectCoreState = createFeatureSelector<AppState, CoreState>(
-  'core'
-);
-
-export const selectLayoutState = createFeatureSelector<AppState, LayoutState>(
-  'layout'
-);
-
-export const selectSettingsState = createFeatureSelector<
-  AppState,
-  SettingsState
->('settings');
-
-export const selectWorkspacesFeature = createFeatureSelector<
-  AppState,
-  WorkspacesState
->('workspaces');
-
-export const selectProjectsFeature = createFeatureSelector<
-  AppState,
-  ProjectsState
->('projects');
-
-export const selectTasksFeature = createFeatureSelector<AppState, TasksState>(
-  'tasks'
-);
-
-export const selectUsersFeature = createFeatureSelector<AppState, UsersState>(
-  'users'
-);
+export const selectAuthFeature = feature<AuthState>('auth');
+export const selectLayoutFeature = feature<LayoutState>('layout');
+export const selectSettingsFeature = feature<SettingsState>('settings');
+export const selectWorkspacesFeature = feature<WorkspacesState>('workspaces');
+export const selectProjectsFeature = feature<ProjectsState>('projects');
+export const selectTasksFeature = feature<TasksState>('tasks');
+export const selectUsersFeature = feature<UsersState>('users');
 
 export interface AppState {
   auth: AuthState;
   router: RouterReducerState<RouterStateUrl>;
-  core: CoreState;
   layout: LayoutState;
   settings: SettingsState;
   workspaces: WorkspacesState;
