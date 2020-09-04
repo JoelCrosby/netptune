@@ -40,6 +40,9 @@ const reducer = createReducer(
   )
 );
 
-export function boardsReducer(state: BoardsState | undefined, action: Action) {
+export function boardsReducer(
+  state: BoardsState | undefined,
+  action: Action
+): BoardsState {
   return reducer(state, action);
 }

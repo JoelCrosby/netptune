@@ -130,6 +130,6 @@ const reducer = createReducer(
 export function projectTasksReducer(
   state: TasksState | undefined,
   action: Action
-) {
+): TasksState {
   return reducer(state, action);
 }

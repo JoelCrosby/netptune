@@ -24,6 +24,9 @@ const reducer = createReducer(
   )
 );
 
-export function usersReducer(state: UsersState | undefined, action: Action) {
+export function usersReducer(
+  state: UsersState | undefined,
+  action: Action
+): UsersState {
   return reducer(state, action);
 }

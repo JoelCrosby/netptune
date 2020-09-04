@@ -9,6 +9,9 @@ import { Update } from '@ngrx/entity';
 const reducer = createReducer(
   initialState,
   on(actions.clearState, () => initialState),
+
+  // Load Board Groups
+
   on(actions.loadBoardGroups, (state) => ({ ...state, loading: true })),
   on(actions.loadBoardGroupsFail, (state, { error }) => ({
     ...state,
@@ -28,6 +31,9 @@ const reducer = createReducer(
       ),
     });
   }),
+
+  // Create Board Group
+
   on(actions.createBoardGroup, (state) => ({ ...state, loading: true })),
   on(actions.createBoardGroupFail, (state, { error }) => ({
     ...state,
@@ -39,10 +45,16 @@ const reducer = createReducer(
       loadingCreate: false,
     })
   ),
+
+  // Select Board Group
+
   on(actions.selectBoardGroup, (state, { boardGroup }) => ({
     ...state,
     currentBoardGroup: boardGroup,
   })),
+
+  // Edit Board Group
+
   on(actions.editBoardGroup, (state, { boardGroup }) => {
     const update: Update<BoardGroup> = {
       id: boardGroup.id,
@@ -51,6 +63,9 @@ const reducer = createReducer(
 
     return adapter.updateOne(update, state);
   }),
+
+  // Delete Board Group
+
   on(actions.deleteBoardGroup, (state) => ({
     ...state,
     deleteState: { loading: true },
@@ -65,6 +80,9 @@ const reducer = createReducer(
       deleteState: { loading: false },
     })
   ),
+
+  // Move Board Group
+
   on(actions.moveTaskInBoardGroup, (state, { request }) =>
     moveTaskInBoardGroup(state, request)
   ),
@@ -72,6 +90,9 @@ const reducer = createReducer(
     ...state,
     isDragging,
   })),
+
+  // Set Inline Active
+
   on(actions.setInlineActive, (state, { groupId }) => ({
     ...state,
     inlineActive: groupId,
@@ -80,6 +101,8 @@ const reducer = createReducer(
     ...state,
     inlineActive: undefined,
   })),
+
+  // Toggle User Selection
 
   on(actions.toggleUserSelection, (state, { user }) => {
     const exists = state.selectedUsers.find((item) => item.id === user.id);
@@ -102,6 +125,6 @@ const reducer = createReducer(
 export function boardGroupsReducer(
   state: BoardGroupsState | undefined,
   action: Action
-) {
+): BoardGroupsState {
   return reducer(state, action);
 }

@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from '@app/core/auth/store/auth.models';
-import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
-import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import { UserResponse } from '@core/auth/store/auth.models';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -25,7 +25,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -39,7 +39,7 @@ export class TaskDetailDialogComponent
   projects$: Observable<ProjectViewModel[]>;
   users$: Observable<AppUser[]>;
   comments$: Observable<CommentViewModel[]>;
-  user$: Observable<User>;
+  user$: Observable<UserResponse>;
 
   selectedTypeValue: number;
 

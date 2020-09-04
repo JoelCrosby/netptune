@@ -1,9 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@app/core/models/client-response';
+import { ClientResponse } from '@core/models/client-response';
 
 export interface AuthState {
-  currentUser?: User;
+  token?: UserToken;
+  currentUser?: UserResponse;
   isAuthenticated: boolean;
+  currentUserLoading: boolean;
+  currentUserError?: HttpErrorResponse | Error;
   loginLoading: boolean;
   loginError?: HttpErrorResponse | Error;
   registerLoading: boolean;
@@ -19,6 +22,7 @@ export interface AuthState {
 
 export const initialState: AuthState = {
   isAuthenticated: false,
+  currentUserLoading: false,
   loginLoading: false,
   registerLoading: false,
   confirmEmailLoading: false,
@@ -31,16 +35,19 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface User {
+export interface UserResponse {
   userId: string;
   email: string;
+  displayName: string;
+  pictureUrl: string;
+}
+
+export interface UserToken extends UserResponse {
   email_verified: boolean;
   name: string;
-  displayName: string;
   given_name: string;
   family_name: string;
   picture: string;
-  pictureUrl: string;
   zoneinfo: string;
   expires: Date;
   token: string;
