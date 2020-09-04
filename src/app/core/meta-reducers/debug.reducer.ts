@@ -12,12 +12,16 @@ export function debug(
     }
 
     const { type, ...payload } = action;
+    const error = type.includes('Fail');
 
-    console.log(`[DEBUG] action: ${type}`, {
+    const log = console[error ? 'error' : 'info'];
+
+    log(`%c[NGRX] %c${type}`, 'color: #D171E1', 'color: inherit', {
       payload,
       oldState: state,
       newState,
     });
+
     return newState;
   };
 }
