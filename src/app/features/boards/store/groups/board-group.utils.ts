@@ -6,7 +6,7 @@ import { getNewSortOrder } from '@app/core/util/sort-order-helper';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { Update } from '@ngrx/entity';
 import { adapter, BoardGroupsState } from './board-groups.model';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
