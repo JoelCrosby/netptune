@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -36,6 +36,11 @@ namespace Netptune.Entities.EntityMaps
                 .WithMany(project => project.ProjectBoards)
                 .HasForeignKey(board => board.ProjectId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .Property(board => board.MetaInfo)
+                .HasColumnType("jsonb")
+                .IsRequired();
         }
     }
 }

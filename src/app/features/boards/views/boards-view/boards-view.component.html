@@ -1,6 +1,12 @@
 <app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
 
-  <app-page-header title="Boards"></app-page-header>
+  <app-page-header
+    title="Boards"
+    actionTitle="Create Board"
+    (actionClick)="onCreateBoardClicked()"
+  >
+
+  </app-page-header>
 
   <app-boards-grid></app-boards-grid>
 

@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -45,7 +46,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showAddButton$: Observable<boolean>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private zone: NgZone) {}
 
   ngOnInit() {
     this.focused$ = this.focusedSubject.pipe();
@@ -116,11 +117,19 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDragStarted() {
-    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: true }));
+    this.zone.run(() => {
+      this.store.dispatch(
+        BoardGroupActions.setIsDragging({ isDragging: true })
+      );
+    });
   }
 
   onDragEnded() {
-    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: false }));
+    this.zone.run(() => {
+      this.store.dispatch(
+        BoardGroupActions.setIsDragging({ isDragging: false })
+      );
+    });
   }
 
   trackGroupTask(_: number, task: TaskViewModel) {

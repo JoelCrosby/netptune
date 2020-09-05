@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,8 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -36,7 +39,7 @@ namespace Netptune.Services
             return Boards.GetAsync(id, true);
         }
 
-        public async Task<Board> UpdateBoard(Board board)
+        public async Task<ClientResponse<BoardViewModel>> UpdateBoard(Board board)
         {
             var result = await Boards.GetAsync(board.Id);
 
@@ -47,12 +50,26 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return result;
+            var payload = result.ToViewModel();
+
+            return ClientResponse<BoardViewModel>.Success(payload);
         }
 
-        public async Task<Board> AddBoard(Board board)
+        public async Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request)
         {
-            board.Identifier = board.Identifier.ToUrlSlug();
+            if (!request.ProjectId.HasValue)
+            {
+                throw new Exception("ProjectId is required");
+            }
+
+            var board = new Board
+            {
+                Name = request.Name,
+                Identifier = request.Identifier.ToUrlSlug(),
+                ProjectId = request.ProjectId.Value,
+                MetaInfo = request.Meta,
+            };
+
 
             board.BoardGroups.Add(new BoardGroup
             {
@@ -70,23 +87,18 @@ namespace Netptune.Services
 
             board.BoardGroups.Add(new BoardGroup
             {
-                Name = "Pending Review",
-                Type = BoardGroupType.Basic,
-                SortOrder = 1.2D
-            });
-
-            board.BoardGroups.Add(new BoardGroup
-            {
                 Name = "Done",
                 Type = BoardGroupType.Done,
-                SortOrder = 1.3D
+                SortOrder = 1.2D
             });
 
             var result = await Boards.AddAsync(board);
 
             await UnitOfWork.CompleteAsync();
 
-            return result;
+            var payload = result.ToViewModel();
+
+            return ClientResponse<BoardViewModel>.Success(payload);
         }
 
         public async Task<ClientResponse> Delete(int id)
@@ -112,6 +124,19 @@ namespace Netptune.Services
             var results = await Boards.GetBoards(slug, true);
 
             return results.Select(result => result.ToViewModel()).ToList();
+        }
+
+        public async Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier)
+        {
+            var slugLower = identifier.ToUrlSlug();
+            var exists = await Boards.Exists(slugLower);
+
+            return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+            {
+                Request = identifier,
+                Slug = slugLower,
+                IsUnique = !exists
+            });
         }
     }
 }
