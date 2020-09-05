@@ -11,16 +11,18 @@ using MoreLinq.Extensions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Import;
 using Netptune.Core.Models.Import;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Import;
 using Netptune.Core.UnitOfWork;
+using Netptune.Services.Import.Common;
 
 namespace Netptune.Services.Import
 {
-    public class TaskImportService : ITaskImportService
+    public class TaskImportService : ImportService<TaskImportResult>, ITaskImportService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
@@ -31,7 +33,7 @@ namespace Netptune.Services.Import
             IdentityService = identityService;
         }
 
-        public async Task<ClientResponse> ImportWorkspaceTasks(string boardId, Stream stream)
+        public async Task<ClientResponse<TaskImportResult>> ImportWorkspaceTasks(string boardId, Stream stream)
         {
             var userId = await IdentityService.GetCurrentUserId();
 
@@ -40,15 +42,36 @@ namespace Netptune.Services.Import
 
             csv.Configuration.PrepareHeaderForMatch = (header, index) => header.ToLower();
 
+            var headerValidator = new HeaderValidator();
+
+            csv.Configuration.MissingFieldFound = (headerNames, index, context) =>
+            {
+                headerValidator.AddMissingField(headerNames[index]);
+            };
+
+            csv.Configuration.HeaderValidated = (isValid, headerNames, index, context) =>
+            {
+                headerValidator.ValidateHeaderRow(isValid, headerNames, index);
+            };
+
             var rows = await csv.GetRecordsAsync<TaskImportRow>().ToListAsync();
 
-            var groups = rows.Select(row => row.Group.Trim().ToLowerInvariant()).Distinct();
+            var validationResult = headerValidator.GetResult();
 
+            if (!validationResult.IsSuccess)
+            {
+                return Failed("Import File headers did not match expected fields.", new TaskImportResult
+                {
+                    HeaderValidationResult = validationResult,
+                });
+            }
+
+            var groups = rows.Select(row => row.Group.Trim().ToLowerInvariant()).Distinct();
             var board = await UnitOfWork.Boards.GetByIdentifier(boardId, true);
 
             if (board is null)
             {
-                return ClientResponse.Failed($"board with identifier '{boardId}' does not exist.");
+                return Failed($"board with identifier '{boardId}' does not exist.");
             }
 
             var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
@@ -63,11 +86,15 @@ namespace Netptune.Services.Import
                 .Select(row => new { row.AssigneeEmail, row.OwnerEmail })
                 .Aggregate(new List<string>(), (result, current) =>
                 {
-                    result.AddRange(new[]
+                    if (!string.IsNullOrEmpty(current.OwnerEmail))
                     {
-                        current.OwnerEmail,
-                        current.AssigneeEmail
-                    });
+                        result.Add(current.OwnerEmail);
+                    }
+
+                    if (!string.IsNullOrEmpty(current.AssigneeEmail))
+                    {
+                        result.Add(current.AssigneeEmail);
+                    }
 
                     return result;
                 })
@@ -81,16 +108,17 @@ namespace Netptune.Services.Import
                 var existingUserEmails = users.Select(user => user.Email);
                 var missingUserEmails = emailAddresses.Except(existingUserEmails);
 
-                var missingMessage = string.Join(", ", missingUserEmails);
-
-                return ClientResponse.Failed($"The following email addresses do not belong to users in Netptune: {missingMessage}");
+                return Failed("Import File contained email addresses that do not belong to users in Netptune", new TaskImportResult
+                {
+                    MissingEmails = missingUserEmails,
+                });
             }
 
             var initialScopeId = await UnitOfWork.Tasks.GetNextScopeId(project.Id);
 
             if (initialScopeId is null)
             {
-                return ClientResponse.Failed("Failed to generate next project scope Id");
+                return Failed("Failed to generate next project scope Id");
             }
 
             var tasks = rows.Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value)).ToList();
@@ -140,7 +168,7 @@ namespace Netptune.Services.Import
                 await UnitOfWork.CompleteAsync();
             }, true);
 
-            return ClientResponse.Success();
+            return Success();
         }
 
         private static Func<TaskImportRow, int, ProjectTask> CreateImportTask(
