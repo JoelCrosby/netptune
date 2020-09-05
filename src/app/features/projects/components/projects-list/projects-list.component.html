@@ -11,12 +11,6 @@
       class="project-card"
     >
       <mat-card-header>
-        <div
-          mat-card-avatar
-          class="user-header-image"
-        >
-          <app-avatar [name]="project.name" size="32"></app-avatar>
-        </div>
         <mat-card-title>{{ project.name }}</mat-card-title>
         <mat-card-subtitle>
           <a
@@ -31,11 +25,8 @@
         <p>{{ project.description }}</p>
 
         <div class="card-chips">
-          <mat-chip-list>
-            <mat-chip>Owner {{ project.ownerDisplayName }}</mat-chip>
-            <mat-chip>Updated {{ project.updatedAt | fromNow }}</mat-chip>
-            <mat-chip>Created {{ project.createdAt | fromNow }}</mat-chip>
-          </mat-chip-list>
+          <small class="text-muted">Owner {{ project.ownerDisplayName }}</small>
+          <small class="text-muted">Last updated {{ project.updatedAt | fromNow }}</small>
         </div>
       </mat-card-content>
     </mat-card>

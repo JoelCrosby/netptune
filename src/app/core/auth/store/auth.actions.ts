@@ -37,10 +37,7 @@ export const loginSuccess = createAction(
   props<{ token: UserToken }>()
 );
 
-export const loginFail = createAction(
-  '[Auth] Login Failed',
-  props<{ error: HttpErrorResponse }>()
-);
+export const loginFail = createAction('[Auth] Login Failed');
 
 // Logout
 

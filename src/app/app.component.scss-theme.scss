@@ -23,6 +23,10 @@
     }
   }
 
+  .app-shell-sidenav.transparent {
+    background-color: mat-color($background, background) !important;
+  }
+
   .workspace-nav-list {
     .app-workspace-link {
       color: mat-color($background, card, .8);
