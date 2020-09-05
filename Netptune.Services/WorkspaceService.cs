@@ -110,8 +110,7 @@ namespace Netptune.Services
 
             if (workspace.IsDeleted)
             {
-                result.IsDeleted = true;
-                result.DeletedByUserId = user.Id;
+                result.Delete(user.Id);
             }
 
             result.UpdatedAt = DateTime.UtcNow;
