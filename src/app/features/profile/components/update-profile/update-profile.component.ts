@@ -2,19 +2,15 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
-import { Observable } from 'rxjs';
-import { filter, first, shareReplay, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-update-profile',
@@ -22,14 +18,10 @@ import { filter, first, shareReplay, tap } from 'rxjs/operators';
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UpdateProfileComponent implements OnInit, AfterViewInit {
-  formGroup = new FormGroup({
-    firstname: new FormControl(),
-    lastname: new FormControl(),
-    email: new FormControl(),
-    pictureUrl: new FormControl(),
-  });
-
+export class UpdateProfileComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  formGroup: FormGroup;
+  onDestroy$ = new Subject();
   loadingUpdate$: Observable<boolean>;
 
   get firstname() {
@@ -49,6 +41,7 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(
+      takeUntil(this.onDestroy$),
       select(ProfileSelectors.selectUpdateProfileLoading),
       tap((loading) =>
         loading ? this.formGroup.disable() : this.formGroup.enable()
@@ -57,22 +50,10 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
     );
 
     this.formGroup = this.fb.group({
-      firstname: {
-        updateOn: 'blur',
-        validators: [Validators.required],
-      },
-      lastname: {
-        updateOn: 'blur',
-        validators: [Validators.required],
-      },
-      email: {
-        updateOn: 'blur',
-        validators: [Validators.required],
-      },
-      pictureUrl: {
-        updateOn: 'blur',
-        validators: [Validators.maxLength(1024)],
-      },
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', Validators.required],
+      pictureUrl: ['', Validators.maxLength(1024)],
     });
 
     this.store
@@ -92,6 +73,11 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.store.dispatch(loadProfile());
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   updateClicked() {

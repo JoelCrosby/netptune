@@ -35,6 +35,21 @@ const reducer = createReducer(
     ...state,
     updateProfileLoading: false,
     profile,
+  })),
+
+  // Change Password
+
+  on(actions.changePassword, (state) => ({
+    ...state,
+    changePasswordLoading: true,
+  })),
+  on(actions.changePasswordFail, (state) => ({
+    ...state,
+    changePasswordLoading: false,
+  })),
+  on(actions.changePasswordSuccess, (state) => ({
+    ...state,
+    changePasswordLoading: false,
   }))
 );
 

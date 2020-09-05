@@ -11,4 +11,5 @@ export class PageContainerComponent {
   @Input() showProgress = false;
   @Input() marginBottom = false;
   @Input() fullHeight = true;
+  @Input() centerPage = false;
 }
