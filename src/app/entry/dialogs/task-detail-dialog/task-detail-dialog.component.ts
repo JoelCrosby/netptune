@@ -258,4 +258,9 @@ export class TaskDetailDialogComponent
       )
       .subscribe();
   }
+
+  onDeleteCommentClicked(comment: CommentViewModel) {
+    const commentId = comment.id;
+    this.store.dispatch(TaskActions.deleteComment({ commentId }));
+  }
 }

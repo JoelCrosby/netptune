@@ -110,6 +110,13 @@ const reducer = createReducer(
     comments,
   })),
 
+  // Delete Comment
+
+  on(actions.deleteCommentSuccess, (state, { commentId }) => ({
+    ...state,
+    comment: state.comments.filter((c) => c.id !== commentId),
+  })),
+
   // Add Comment
 
   on(actions.addCommentSuccess, (state, { comment }) => ({
