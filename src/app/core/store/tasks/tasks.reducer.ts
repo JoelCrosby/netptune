@@ -69,11 +69,13 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteProjectTasksSuccess, (state, { task }) =>
-    adapter.removeOne(task.id, {
-      ...state,
-      deleteState: { loading: false },
-    })
+  on(actions.deleteProjectTasksSuccess, (state, { response, taskId }) =>
+    response.isSuccess
+      ? adapter.removeOne(taskId, {
+          ...state,
+          deleteState: { loading: false },
+        })
+      : state
   ),
 
   // Select Task

@@ -71,7 +71,12 @@ export class ProjectsEffects {
 
             return this.projectsService.delete(project).pipe(
               tap(() => this.snackbar.open('Project Deleted')),
-              map(() => actions.deleteProjectSuccess({ project })),
+              map((response) =>
+                actions.deleteProjectSuccess({
+                  response,
+                  projectId: project.id,
+                })
+              ),
               catchError((error) => of(actions.deleteProjectFail({ error })))
             );
           })

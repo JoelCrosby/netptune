@@ -57,7 +57,12 @@ export class BoardsEffects {
 
             return this.boardsService.delete(action.boardId).pipe(
               tap(() => this.snackbar.open('Board Deleted')),
-              map((response) => actions.deleteBoardSuccess({ response })),
+              map((response) =>
+                actions.deleteBoardSuccess({
+                  response,
+                  boardId: action.boardId,
+                })
+              ),
               catchError((error) => of(actions.deleteBoardFail({ error })))
             );
           })

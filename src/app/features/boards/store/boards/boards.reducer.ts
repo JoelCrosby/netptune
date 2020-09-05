@@ -43,9 +43,9 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteBoardSuccess, (state, { response }) =>
+  on(actions.deleteBoardSuccess, (state, { response, boardId }) =>
     response.isSuccess
-      ? adapter.removeOne(response.payload.id, {
+      ? adapter.removeOne(boardId, {
           ...state,
           deleteState: { loading: false },
         })

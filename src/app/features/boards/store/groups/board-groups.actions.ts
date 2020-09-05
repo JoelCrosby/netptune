@@ -57,7 +57,7 @@ export const deleteBoardGroup = createAction(
 
 export const deleteBoardGroupSuccess = createAction(
   '[BoardGroups] Delete Board Group Success',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroupId: number }>()
 );
 
 export const deleteBoardGroupFail = createAction(

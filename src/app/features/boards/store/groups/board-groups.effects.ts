@@ -126,8 +126,10 @@ export class BoardGroupsEffects {
 
             return this.boardGroupsService.delete(action.boardGroup).pipe(
               tap(() => this.snackbar.open('Board Group Deleted')),
-              map((boardGroup) =>
-                actions.deleteBoardGroupSuccess({ boardGroup })
+              map(() =>
+                actions.deleteBoardGroupSuccess({
+                  boardGroupId: action.boardGroup.id,
+                })
               ),
               catchError((error) => of(actions.deleteBoardGroupFail({ error })))
             );

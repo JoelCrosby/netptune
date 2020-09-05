@@ -69,11 +69,42 @@ export class ProjectTasksEffects {
 
             return this.projectTasksService.delete(action.task).pipe(
               tap(() => this.snackbar.open('Task deleted')),
-              map((task) => actions.deleteProjectTasksSuccess({ task })),
+              map((response) =>
+                actions.deleteProjectTasksSuccess({
+                  response,
+                  taskId: action.task.id,
+                })
+              ),
               catchError((error) =>
                 of(actions.deleteProjectTasksFail({ error }))
               )
             );
+          })
+        )
+      )
+    )
+  );
+
+  deleteComment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteComment),
+      switchMap((action) =>
+        this.confirmation.open(DELETE_COMMENT_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.projectTasksService
+              .deleteComment(action.commentId)
+              .pipe(
+                tap(() => this.snackbar.open('Comment deleted')),
+                map((response) =>
+                  actions.deleteCommentSuccess({
+                    response,
+                    commentId: action.commentId,
+                  })
+                ),
+                catchError((error) => of(actions.deleteCommentFail({ error })))
+              );
           })
         )
       )
@@ -177,4 +208,11 @@ const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this task?',
   title: 'Delete Task',
+};
+
+const DELETE_COMMENT_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to delete this comment?',
+  title: 'Delete Comment',
 };

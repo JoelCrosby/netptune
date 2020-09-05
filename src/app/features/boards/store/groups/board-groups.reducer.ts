@@ -74,8 +74,8 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteBoardGroupSuccess, (state, { boardGroup }) =>
-    adapter.removeOne(boardGroup.id, {
+  on(actions.deleteBoardGroupSuccess, (state, { boardGroupId }) =>
+    adapter.removeOne(boardGroupId, {
       ...state,
       deleteState: { loading: false },
     })

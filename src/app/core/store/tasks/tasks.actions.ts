@@ -68,7 +68,7 @@ export const deleteProjectTask = createAction(
 
 export const deleteProjectTasksSuccess = createAction(
   '[ProjectTasks] Delete Project Task Success',
-  props<{ task: TaskViewModel }>()
+  props<{ response: ClientResponse; taskId: number }>()
 );
 
 export const deleteProjectTasksFail = createAction(
@@ -132,6 +132,8 @@ export const loadCommentsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Add Comment
+
 export const addComment = createAction(
   '[ProjectTasks] Add Comment',
   props<{ request: AddCommentRequest }>()
@@ -144,6 +146,23 @@ export const addCommentSuccess = createAction(
 
 export const addCommentFail = createAction(
   '[ProjectTasks] Add Comment Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Delete Comment
+
+export const deleteComment = createAction(
+  '[ProjectTasks] Delete Comment',
+  props<{ commentId: number }>()
+);
+
+export const deleteCommentSuccess = createAction(
+  '[ProjectTasks] Delete Comment Success',
+  props<{ response: ClientResponse; commentId: number }>()
+);
+
+export const deleteCommentFail = createAction(
+  '[ProjectTasks] Delete Comment Fail',
   props<{ error: HttpErrorResponse }>()
 );
 

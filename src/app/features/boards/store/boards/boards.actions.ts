@@ -1,7 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponsePayload } from '@app/core/models/client-response';
-import { AddBoardRequest } from '@app/core/models/requests/add-board-request';
-import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
+import {
+  ClientResponse,
+  ClientResponsePayload,
+} from '@core/models/client-response';
+import { AddBoardRequest } from '@core/models/requests/add-board-request';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Boards] Clear State');
@@ -46,7 +49,7 @@ export const deleteBoard = createAction(
 
 export const deleteBoardSuccess = createAction(
   '[Boards] Delete Board Success',
-  props<{ response: ClientResponsePayload<BoardViewModel> }>()
+  props<{ response: ClientResponse; boardId: number }>()
 );
 
 export const deleteBoardFail = createAction(
