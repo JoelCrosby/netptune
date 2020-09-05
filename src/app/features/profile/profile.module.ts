@@ -9,9 +9,14 @@ import { ProfileEffects } from './store/profile.effects';
 import { profileReducer } from './store/profile.reducer';
 import { StaticModule } from '@app/static/static.module';
 import { ProfileViewComponent } from './views/profile-view/profile-view.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
-  declarations: [UpdateProfileComponent, ProfileViewComponent],
+  declarations: [
+    UpdateProfileComponent,
+    ProfileViewComponent,
+    ChangePasswordComponent,
+  ],
   imports: [
     SharedModule,
     StaticModule,

@@ -167,6 +167,21 @@ namespace Netptune.Services.Authentication
             return LoginResult.Success(GenerateToken(user));
         }
 
+        public async Task<ClientResponse> ChangePassword(ChangePasswordRequest request)
+        {
+            var user = await UserManager.FindByIdAsync(request.UserId);
+
+            if (user is null) return ClientResponse.Failed();
+
+            var result = await UserManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+
+            if (!result.Succeeded) return ClientResponse.Failed();
+
+            await LogUserIn(user);
+
+            return ClientResponse.Success("Password Changed");
+        }
+
         public async Task<CurrentUserResponse> CurrentUser()
         {
             var principle = ContextAccessor.HttpContext.User;

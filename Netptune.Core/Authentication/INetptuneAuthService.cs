@@ -22,6 +22,8 @@ namespace Netptune.Core.Authentication
 
         Task<LoginResult> ResetPassword(ResetPasswordRequest request);
 
+        Task<ClientResponse> ChangePassword(ChangePasswordRequest request);
+
         Task<CurrentUserResponse> CurrentUser();
     }
 }

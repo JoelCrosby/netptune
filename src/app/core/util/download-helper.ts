@@ -3,8 +3,6 @@ export const downloadFile = async (
   filename: string
 ): Promise<boolean> => {
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    console.log('window.navigator.msSaveOrOpenBlob');
-
     return window.navigator.msSaveOrOpenBlob(file);
   }
 

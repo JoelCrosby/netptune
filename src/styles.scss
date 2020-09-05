@@ -5,11 +5,11 @@
 @import './styles/utility';
 @import './styles/components';
 @import './styles/lists';
+@import './styles/forms';
 @import './styles/spinners';
 @import './styles/typography';
-@import './styles/containers.scss';
-@import './styles/modals.scss';
-@import './styles/forms.scss';
+@import './styles/containers';
+@import './styles/modals';
 
 // Angular Material Theming core
 @import '~@angular/material/theming';
