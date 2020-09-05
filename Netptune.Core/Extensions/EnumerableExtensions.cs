@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using CsvHelper;
@@ -21,6 +22,13 @@ namespace Netptune.Core.Extensions
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             return memoryStream;
+        }
+
+        public static List<string> ToLowercase(this IEnumerable<string> enumerable, CultureInfo cultureInfo = null)
+        {
+            var culture = cultureInfo ?? CultureInfo.InvariantCulture;
+
+            return enumerable.Select(item => item.ToLower(culture)).ToList();
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Netptune.Entities.Contexts
         {
             foreach (var entity in entities)
             {
-                if (entity.State == EntityState.Added)
+                if (entity.State == EntityState.Added && entity.Entity.CreatedAt != default)
                 {
                     entity.Entity.CreatedAt = DateTime.UtcNow;
                 }
