@@ -39,8 +39,8 @@ export class BoardsEffects {
     this.actions$.pipe(
       ofType(actions.createBoard),
       switchMap((action) =>
-        this.boardsService.post(action.board).pipe(
-          map((board) => actions.createBoardSuccess({ board })),
+        this.boardsService.post(action.request).pipe(
+          map((response) => actions.createBoardSuccess({ response })),
           catchError((error) => of(actions.createBoardFail({ error })))
         )
       )
@@ -57,7 +57,7 @@ export class BoardsEffects {
 
             return this.boardsService.delete(action.boardId).pipe(
               tap(() => this.snackbar.open('Board Deleted')),
-              map((board) => actions.deleteBoardSuccess({ board })),
+              map((response) => actions.deleteBoardSuccess({ response })),
               catchError((error) => of(actions.deleteBoardFail({ error })))
             );
           })

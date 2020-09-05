@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Entities
@@ -16,6 +17,8 @@ namespace Netptune.Core.Entities
         public int ProjectId { get; set; }
 
         public BoardType BoardType { get; set; }
+
+        public BoardMeta MetaInfo { get; set; }
 
         #region NavigationProperties
 

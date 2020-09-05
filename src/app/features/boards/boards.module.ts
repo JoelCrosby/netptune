@@ -18,6 +18,7 @@ import { CreateBoardGroupComponent } from './components/create-board-group/creat
 import { BoardsViewComponent } from './views/boards-view/boards-view.component';
 import { BoardsGridComponent } from './components/boards-grid/boards-grid.component';
 import { BoardGroupUsersComponent } from './components/board-group-users/board-group-users.component';
+import { CreateBoardComponent } from './components/create-board/create-board.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { BoardGroupUsersComponent } from './components/board-group-users/board-g
     BoardsViewComponent,
     BoardsGridComponent,
     BoardGroupUsersComponent,
+    CreateBoardComponent,
   ],
   imports: [
     SharedModule,

@@ -88,5 +88,10 @@ namespace Netptune.Repositories
 
             return result?.ToViewModel();
         }
+
+        public Task<bool> Exists(string identifier)
+        {
+            return Entities.AnyAsync(board => board.Identifier == identifier);
+        }
     }
 }

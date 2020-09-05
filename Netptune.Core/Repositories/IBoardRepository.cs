@@ -20,5 +20,7 @@ namespace Netptune.Core.Repositories
         Task<int?> GetIdByIdentifier(string identifier);
 
         Task<BoardViewModel> GetViewModel(int id, bool isReadonly = false);
+
+        Task<bool> Exists(string identifier);
     }
 }

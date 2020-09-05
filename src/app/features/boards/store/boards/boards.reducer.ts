@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { adapter, initialState, BoardsState } from './boards.model';
 import * as actions from './boards.actions';
+import { adapter, BoardsState, initialState } from './boards.model';
 
 const reducer = createReducer(
   initialState,
@@ -24,11 +24,13 @@ const reducer = createReducer(
     ...state,
     loadingError: error,
   })),
-  on(actions.createBoardSuccess, (state, { board }) =>
-    adapter.addOne(board, {
-      ...state,
-      loadingCreate: false,
-    })
+  on(actions.createBoardSuccess, (state, { response }) =>
+    response.isSuccess
+      ? adapter.addOne(response.payload, {
+          ...state,
+          loadingCreate: false,
+        })
+      : state
   ),
 
   // Delete Board
@@ -41,11 +43,13 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteBoardSuccess, (state, { board }) =>
-    adapter.removeOne(board.id, {
-      ...state,
-      deleteState: { loading: false },
-    })
+  on(actions.deleteBoardSuccess, (state, { response }) =>
+    response.isSuccess
+      ? adapter.removeOne(response.payload.id, {
+          ...state,
+          deleteState: { loading: false },
+        })
+      : state
   )
 );
 
