@@ -12,6 +12,7 @@ import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { selectSideBarTransparent } from '@core/core.route.selectors';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
 
   workspaces$ = this.store.select(selectAllWorkspaces);
   isMobileView$ = this.store.select(LayoutSelectors.selectIsMobileView);
+  transparentSideNav$ = this.store.select(selectSideBarTransparent);
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
   constructor(private store: Store) {}

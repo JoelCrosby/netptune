@@ -34,10 +34,10 @@ const reducer = createReducer(
     loginLoading: false,
     token,
   })),
-  on(actions.loginFail, (state, { error }) => ({
+  on(actions.loginFail, (state) => ({
     ...state,
     isAuthenticated: false,
-    loginError: error,
+    loginError: true,
     loginLoading: false,
   })),
 

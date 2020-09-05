@@ -100,7 +100,7 @@ export class AuthEffects implements OnInitEffects {
           map((token) => actions.loginSuccess({ token })),
           tap(() => this.router.navigate(['/workspaces'])),
           tap(() => this.store.dispatch(openSideNav())),
-          catchError((error) => of(actions.loginFail({ error })))
+          catchError(() => of(actions.loginFail()))
         )
       )
     )

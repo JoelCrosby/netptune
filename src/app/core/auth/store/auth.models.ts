@@ -8,7 +8,7 @@ export interface AuthState {
   currentUserLoading: boolean;
   currentUserError?: HttpErrorResponse | Error;
   loginLoading: boolean;
-  loginError?: HttpErrorResponse | Error;
+  loginError?: boolean;
   registerLoading: boolean;
   registerError?: HttpErrorResponse | Error;
   confirmEmailLoading: boolean;

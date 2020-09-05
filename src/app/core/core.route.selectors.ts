@@ -32,3 +32,8 @@ export const isBoardGroupsRoute = createSelector(
   selectPageTitle,
   (state: string) => state === 'Boards'
 );
+
+export const selectSideBarTransparent = createSelector(
+  selectRouterReducerState,
+  (state: RouterStateUrl) => state?.transparentSidebar
+);

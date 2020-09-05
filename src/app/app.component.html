@@ -8,6 +8,7 @@
       class="app-shell-sidenav"
       [opened]="sideNavOpen$ | async"
       [fixedInViewport]="sideNavOpen$ | async"
+      [class.transparent]="transparentSideNav$ | async"
     >
       <mat-nav-list>
         <a
