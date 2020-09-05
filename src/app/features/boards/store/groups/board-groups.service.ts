@@ -6,6 +6,7 @@ import { BoardGroupsViewModel } from '@app/core/models/view-models/board-groups-
 import { environment } from '@env/environment';
 import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
 import { Params } from '@angular/router';
+import { ClientResponse } from '@app/core/models/client-response';
 
 @Injectable()
 export class BoardGroupsService {
@@ -35,7 +36,7 @@ export class BoardGroupsService {
   }
 
   delete(boardGorup: BoardGroup) {
-    return this.http.delete<BoardGroup>(
+    return this.http.delete<ClientResponse>(
       environment.apiEndpoint + `api/boardgroups/${boardGorup.id}`
     );
   }

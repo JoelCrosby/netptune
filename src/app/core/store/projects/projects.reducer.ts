@@ -54,11 +54,13 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteProjectSuccess, (state, { project }) =>
-    adapter.removeOne(project.id, {
-      ...state,
-      deleteState: { loading: false },
-    })
+  on(actions.deleteProjectSuccess, (state, { response, projectId }) =>
+    response.isSuccess
+      ? adapter.removeOne(projectId, {
+          ...state,
+          deleteState: { loading: false },
+        })
+      : state
   )
 );
 

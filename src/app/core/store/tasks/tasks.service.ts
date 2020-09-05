@@ -38,7 +38,7 @@ export class ProjectTasksService {
   }
 
   delete(task: ProjectTask) {
-    return this.http.delete<TaskViewModel>(
+    return this.http.delete<ClientResponse>(
       environment.apiEndpoint + `api/tasks/${task.id}`
     );
   }
@@ -70,6 +70,12 @@ export class ProjectTasksService {
           workspace: workspaceSlug,
         },
       }
+    );
+  }
+
+  deleteComment(commentId: number) {
+    return this.http.delete<ClientResponse>(
+      environment.apiEndpoint + `api/comments/${commentId}`
     );
   }
 

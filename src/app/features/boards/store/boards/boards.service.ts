@@ -1,7 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AddBoardRequest } from '@app/core/models/requests/add-board-request';
-import { ClientResponsePayload } from '@core/models/client-response';
+import {
+  ClientResponse,
+  ClientResponsePayload,
+} from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { environment } from '@env/environment';
@@ -33,7 +36,7 @@ export class BoardsService {
   }
 
   delete(boardId: number) {
-    return this.http.delete<ClientResponsePayload<BoardViewModel>>(
+    return this.http.delete<ClientResponse>(
       environment.apiEndpoint + `api/boards/${boardId}`
     );
   }
