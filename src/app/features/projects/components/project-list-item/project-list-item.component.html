@@ -1,0 +1,23 @@
+<mat-card class="project-card">
+  <mat-card-header>
+    <mat-card-title>{{ project.name }}</mat-card-title>
+    <mat-card-subtitle>
+      <a
+        [href]="project.repositoryUrl"
+        target="_blank"
+      >
+        {{ project.repositoryUrl }}
+      </a>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ project.description }}</p>
+
+    <div class="card-chips">
+      <small class="text-muted">Owner {{ project.ownerDisplayName }}</small>
+      <small class="text-muted">
+        Last updated {{ project.updatedAt | fromNow }}
+      </small>
+    </div>
+  </mat-card-content>
+</mat-card>
