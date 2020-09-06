@@ -14,14 +14,14 @@
     .task-scope-id {
       background-color: mat-color($foreground, text, .1);
     }
+
+    .drag {
+      color: rgba(mat-color($foreground, icon), .3);
+    }
   }
 
   .task-card:hover {
     background-color: darken(mat-color($background, card), 2);
-  }
-
-  .task-header-title .drag {
-    color: rgba(mat-color($foreground, icon), .3);
   }
 
   .mat-checkbox-frame {
@@ -30,5 +30,10 @@
 
   .task-item-selected {
     background-color: mat-color($primary, 400, .1);
+  }
+
+  .project-chip {
+    color: mat-color($foreground, text, .7);
+    background-color: mat-color($foreground, text, .06);
   }
 }

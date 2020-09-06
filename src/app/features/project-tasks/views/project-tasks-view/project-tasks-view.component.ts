@@ -23,12 +23,9 @@ export class ProjectTasksViewComponent {
   constructor(public dialog: MatDialog, private store: Store) {}
 
   showAddModal() {
-    this.dialog
-      .open(TaskDialogComponent, {
-        width: '600px',
-      })
-      .afterClosed()
-      .subscribe(() => {});
+    this.dialog.open(TaskDialogComponent, {
+      width: '600px',
+    });
   }
 
   onExportTasksClicked() {

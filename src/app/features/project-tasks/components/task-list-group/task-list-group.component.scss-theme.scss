@@ -25,9 +25,9 @@
   .empty-list-img,
   .list-empty-mark {
     color: mat-color($foreground, empty-list);
+  }
 
-    .empty-text {
-      color: mat-color($foreground, disabled-button);
-    }
+  .empty-text {
+    color: mat-color($foreground, disabled-button);
   }
 }

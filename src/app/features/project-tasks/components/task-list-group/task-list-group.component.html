@@ -4,7 +4,7 @@
 
   <div class="task-list">
 
-    <ng-container *ngIf="(loaded | async) && tasks.length; else elseTemplate">
+    <ng-container *ngIf="loaded | async; else elseTemplate">
       <div
         cdkDropList
         class="task-list-group"
@@ -28,41 +28,11 @@
             [matMenuTriggerData]="{ task: taskItem }"
             [matMenuTriggerFor]="menu"
           >
-            <mat-icon class="drag">drag_indicator</mat-icon>
+            <mat-icon class="drag">
+              drag_indicator
+            </mat-icon>
           </button>
 
-
-          <mat-menu #menu="matMenu">
-            <ng-template
-              matMenuContent
-              let-task="task"
-            >
-              <button
-                mat-menu-item
-                (click)="markCompleteClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">done</mat-icon>
-                <span>Mark Complete</span>
-              </button>
-
-              <button
-                mat-menu-item
-                (click)="moveToBacklogClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">assignment_returned_outline</mat-icon>
-                <span>Move to Backlog</span>
-              </button>
-
-              <button
-                mat-menu-item
-                (click)="deleteClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">delete</mat-icon>
-                <span>Delete</span>
-              </button>
-
-            </ng-template>
-          </mat-menu>
         </app-task-list-item>
 
 
@@ -76,7 +46,7 @@
     </ng-container>
 
     <ng-template #elseTemplate>
-      <ng-container *ngIf="(loaded | async); else loadedElseTemplate">
+      <ng-container *ngIf="loaded | async; else loadedElseTemplate">
 
         <app-task-inline [status]="status"></app-task-inline>
 
@@ -99,3 +69,41 @@
 
   </div>
 </div>
+
+<mat-menu #menu="matMenu">
+  <ng-template
+    matMenuContent
+    let-task="task"
+  >
+    <button
+      mat-menu-item
+      (click)="markCompleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        done
+      </mat-icon>
+      <span>Mark Complete</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="moveToBacklogClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        assignment_returned_outline
+      </mat-icon>
+      <span>Move to Backlog</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="deleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        delete
+      </mat-icon>
+      <span>Delete</span>
+    </button>
+
+  </ng-template>
+</mat-menu>
