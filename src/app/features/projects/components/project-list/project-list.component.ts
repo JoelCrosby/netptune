@@ -12,12 +12,12 @@ import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-projects-list',
-  templateUrl: './projects-list.component.html',
-  styleUrls: ['./projects-list.component.scss'],
+  selector: 'app-project-list',
+  templateUrl: './project-list.component.html',
+  styleUrls: ['./project-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectsListComponent implements OnInit, AfterViewInit {
+export class ProjectListComponent implements OnInit, AfterViewInit {
   projects$: Observable<ProjectViewModel[]>;
   loading$: Observable<boolean>;
 

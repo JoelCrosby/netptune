@@ -1,0 +1,15 @@
+<ng-container *ngIf="loading$ | async; else elseTemplate">
+  <div class="projects-loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+</ng-container>
+
+<ng-template #elseTemplate>
+  <div class="card-group">
+    <app-project-list-item
+      *ngFor="let project of projects$ | async; trackBy: trackById"
+      [project]="project"
+    >
+    </app-project-list-item>
+  </div>
+</ng-template>
