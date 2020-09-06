@@ -1,12 +1,12 @@
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BoardGroup } from '@app/core/models/board-group';
-import { BoardGroupsViewModel } from '@app/core/models/view-models/board-groups-view-model';
+import { BoardGroup } from '@core/models/board-group';
+import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
 import { environment } from '@env/environment';
-import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { Params } from '@angular/router';
-import { ClientResponse } from '@app/core/models/client-response';
+import { ClientResponse } from '@core/models/client-response';
 
 @Injectable()
 export class BoardGroupsService {

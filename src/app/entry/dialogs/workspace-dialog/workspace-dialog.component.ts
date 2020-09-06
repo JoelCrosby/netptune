@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { WorkspacesService } from '@app/core/store/workspaces/workspaces.service';
+import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { colorDictionary } from '@core/util/colors/colors';

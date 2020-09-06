@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { selectSettingsFeature } from '@app/core/core.state';
+import { selectSettingsFeature } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';

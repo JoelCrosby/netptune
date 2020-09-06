@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ClientResponsePayload } from '@app/core/models/client-response';
+import { ClientResponsePayload } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { Workspace } from '@core/models/workspace';
 import { environment } from '@env/environment';

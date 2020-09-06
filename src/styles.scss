@@ -33,8 +33,8 @@
 @import './app/static/components/page-header/page-header.component.scss-theme.scss';
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
 @import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
-@import './app/features/workspaces/shell/shell.component.scss-theme';
-@import './app/features/workspaces/index/workspaces.index.component.scss-theme.scss';
+@import './app/features/workspaces/components/shell/shell.component.scss-theme';
+@import './app/features/workspaces/components/workspace-list/workspace-list.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
 @import './app/features/project-tasks/components/task-list/task-list.component.scss-theme.scss';
@@ -61,7 +61,7 @@
   @include spinner-theme($theme);
   @include avatar-theme($theme);
   @include page-header-theme($theme);
-  @include workspaces-index-theme($theme);
+  @include workspace-list-theme($theme);
   @include task-list-group-theme($theme);
   @include task-list-item-theme($theme);
   @include project-tasks-list-theme($theme);

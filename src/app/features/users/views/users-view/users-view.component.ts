@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { InviteDialogComponent } from '@app/entry/dialogs/invite-dialog/invite-dialog.component';
+import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
 import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';

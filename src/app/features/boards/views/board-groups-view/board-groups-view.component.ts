@@ -7,10 +7,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Board } from '@app/core/models/board';
-import { BoardGroup } from '@app/core/models/board-group';
-import { HeaderAction } from '@app/core/types/header-action';
-import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import { Board } from '@core/models/board';
+import { BoardGroup } from '@core/models/board-group';
+import { HeaderAction } from '@core/types/header-action';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';

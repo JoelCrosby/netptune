@@ -9,7 +9,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { TaskStatus } from '@app/core/enums/project-task-status';
+import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as actions from '@core/store/tasks/tasks.actions';
 import { getNewSortOrder } from '@core/util/sort-order-helper';

@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponsePayload } from '@app/core/models/client-response';
+import { ClientResponsePayload } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 
 // Load Workspaces

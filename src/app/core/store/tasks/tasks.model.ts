@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { CommentViewModel } from '@core/models/comment';
 import { ProjectTask as TaskModel } from '@core/models/project-task';
 import { ActionState, DefaultActionState } from '@core/types/action-state';

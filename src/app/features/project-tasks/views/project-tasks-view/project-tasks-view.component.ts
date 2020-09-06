@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
-import { HeaderAction } from '@app/core/types/header-action';
+import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
-import { exportTasks } from '@app/core/store/tasks/tasks.actions';
+import { exportTasks } from '@core/store/tasks/tasks.actions';
 
 @Component({
   templateUrl: './project-tasks-view.component.html',

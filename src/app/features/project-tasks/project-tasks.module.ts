@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@app/shared/shared.module';
-import { StaticModule } from '@app/static/static.module';
+import { SharedModule } from '@shared/shared.module';
+import { StaticModule } from '@static/static.module';
 import { TaskInlineComponent } from './components/task-inline/task-inline.component';
 import { TaskListGroupComponent } from './components/task-list-group/task-list-group.component';
 import { TaskListItemComponent } from './components/task-list-item/task-list-item.component';

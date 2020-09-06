@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { WorkspacesComponent } from './index/workspaces.index.component';
+import { WorkspaceListComponent } from './components/workspace-list/workspace-list.component';
 
-const routes: Routes = [
-  { path: '**', component: WorkspacesComponent },
-];
+const routes: Routes = [{ path: '**', component: WorkspaceListComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class WorkspacesRoutingModule { }
+export class WorkspacesRoutingModule {}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
+import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as TaskActions from '@core/store/tasks/tasks.actions';

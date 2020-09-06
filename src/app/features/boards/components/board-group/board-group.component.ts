@@ -10,7 +10,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { BoardGroup } from '@app/core/models/board-group';
+import { BoardGroup } from '@core/models/board-group';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';

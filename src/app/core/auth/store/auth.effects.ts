@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { openSideNav } from '@app/core/store/layout/layout.actions';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { openSideNav } from '@core/store/layout/layout.actions';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';

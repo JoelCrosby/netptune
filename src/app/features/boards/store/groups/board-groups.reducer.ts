@@ -3,7 +3,7 @@ import * as actions from './board-groups.actions';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
-import { BoardGroup } from '@app/core/models/board-group';
+import { BoardGroup } from '@core/models/board-group';
 import { Update } from '@ngrx/entity';
 
 const reducer = createReducer(

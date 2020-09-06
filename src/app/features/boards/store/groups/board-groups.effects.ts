@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BoardGroupType } from '@app/core/models/board-group';
-import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
+import { BoardGroupType } from '@core/models/board-group';
+import { ProjectTasksService } from '@core/store/tasks/tasks.service';
 import {
   isBoardGroupsRoute,
   selectRouterParam,
