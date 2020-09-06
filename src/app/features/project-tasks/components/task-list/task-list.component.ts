@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TaskStatus } from '@app/core/enums/project-task-status';
-import { TaskDialogComponent } from '@app/entry/dialogs/task-dialog/task-dialog.component';
+import { TaskStatus } from '@core/enums/project-task-status';
+import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import { select, Store } from '@ngrx/store';

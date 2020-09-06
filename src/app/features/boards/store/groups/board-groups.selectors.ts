@@ -1,9 +1,9 @@
-import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { AppState } from '@core/core.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
-import { AppUser } from '@app/core/models/appuser';
-import { Selected } from '@app/core/models/selected';
+import { AppUser } from '@core/models/appuser';
+import { Selected } from '@core/models/selected';
 
 export interface State extends AppState {
   boardgroups: BoardGroupsState;

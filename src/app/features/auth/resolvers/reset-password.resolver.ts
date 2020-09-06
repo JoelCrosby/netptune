@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { clearUserInfo } from '@app/core/auth/store/auth.actions';
+import { clearUserInfo } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
 import { Store } from '@ngrx/store';
 

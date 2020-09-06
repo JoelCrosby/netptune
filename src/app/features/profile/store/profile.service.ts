@@ -2,8 +2,8 @@ import { AppUser } from '@core/models/appuser';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { ChangePasswordRequest } from '@app/core/models/requests/change-password-request';
-import { ClientResponse } from '@app/core/models/client-response';
+import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
+import { ClientResponse } from '@core/models/client-response';
 
 @Injectable()
 export class ProfileService {

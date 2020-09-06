@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectsActions from '@core/store/projects/projects.actions';
 import * as ProjectsSelectors from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';

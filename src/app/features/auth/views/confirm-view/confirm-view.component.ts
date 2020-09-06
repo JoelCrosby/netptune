@@ -5,9 +5,9 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { confirmEmail } from '@app/core/auth/store/auth.actions';
-import { AuthCodeRequest } from '@app/core/auth/store/auth.models';
-import { selectIsConfirmEmailLoading } from '@app/core/auth/store/auth.selectors';
+import { confirmEmail } from '@core/auth/store/auth.actions';
+import { AuthCodeRequest } from '@core/auth/store/auth.models';
+import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';

@@ -2,7 +2,7 @@ import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@app/core/models/client-response';
+import { ClientResponse } from '@core/models/client-response';
 
 export const clearState = createAction('[Projects] Clear State');
 

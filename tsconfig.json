@@ -24,8 +24,10 @@
       "dom"
     ],
     "paths": {
-      "@app/*": ["src/app/*"],
       "@core/*": ["src/app/core/*"],
+      "@env/*": ["src/environments/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@static/*": ["src/app/static/*"],
       "@entry/*": ["src/app/entry/*"],
       "@auth/*": ["src/app/features/auth/*"],
       "@boards/*": ["src/app/features/boards/*"],
@@ -34,9 +36,7 @@
       "@projects/*": ["src/app/features/projects/*"],
       "@settings/*": ["src/app/features/settings/*"],
       "@users/*": ["src/app/features/users/*"],
-      "@workspaces/*": ["src/app/features/workspaces/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@env/*": ["src/environments/*"]
+      "@workspaces/*": ["src/app/features/workspaces/*"]
     }
   },
   "angularCompilerOptions": {

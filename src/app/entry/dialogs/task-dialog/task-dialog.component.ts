@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
-import { Workspace } from '@app/core/models/workspace';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { Workspace } from '@core/models/workspace';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';

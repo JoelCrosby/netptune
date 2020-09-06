@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { resetPassword } from '@app/core/auth/store/auth.actions';
-import { ResetPasswordRequest } from '@app/core/auth/store/auth.models';
-import { selectResetPasswordLoading } from '@app/core/auth/store/auth.selectors';
+import { resetPassword } from '@core/auth/store/auth.actions';
+import { ResetPasswordRequest } from '@core/auth/store/auth.models';
+import { selectResetPasswordLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';

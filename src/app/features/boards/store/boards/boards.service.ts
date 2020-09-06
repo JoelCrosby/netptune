@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddBoardRequest } from '@app/core/models/requests/add-board-request';
+import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import {
   ClientResponse,
   ClientResponsePayload,

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { ShellComponent } from '@app/features/workspaces/shell/shell.component';
+import { ShellComponent } from '@workspaces/components/shell/shell.component';
 import { WorkspaceResolver } from '@core/resolvers/workspace-resolver';
-import { AuthGuardService } from './core/auth/auth-guard.service';
+import { AuthGuardService } from '@core/auth/auth-guard.service';
 
 // prettier-ignore
 

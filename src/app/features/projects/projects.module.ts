@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@app/shared/shared.module';
-import { StaticModule } from '@app/static/static.module';
+import { SharedModule } from '@shared/shared.module';
+import { StaticModule } from '@static/static.module';
 import { ProjectsViewComponent } from './views/projects-view/projects-view.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectListComponent } from './components/project-list/project-list.component';

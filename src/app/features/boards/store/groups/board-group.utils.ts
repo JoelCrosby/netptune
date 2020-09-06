@@ -1,8 +1,8 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BoardGroup } from '@app/core/models/board-group';
-import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
-import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import { BoardGroup } from '@core/models/board-group';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { Update } from '@ngrx/entity';
 import { adapter, BoardGroupsState } from './board-groups.model';

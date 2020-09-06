@@ -2,10 +2,10 @@ import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
-import { FileResponse } from '@app/core/types/file-response';
-import { ClientResponse } from '@app/core/models/client-response';
+import { FileResponse } from '@core/types/file-response';
+import { ClientResponse } from '@core/models/client-response';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 

@@ -8,7 +8,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import {
   selectSideMenuMode,
   selectSideMenuOpen,
-} from '@app/core/store/layout/layout.selectors';
+} from '@core/store/layout/layout.selectors';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';

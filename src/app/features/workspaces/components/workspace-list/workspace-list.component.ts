@@ -7,12 +7,12 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-workspaces',
-  templateUrl: './workspaces.index.component.html',
-  styleUrls: ['./workspaces.index.component.scss'],
+  selector: 'app-workspace-list',
+  templateUrl: './workspace-list.component.html',
+  styleUrls: ['./workspace-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkspacesComponent implements OnInit {
+export class WorkspaceListComponent implements OnInit {
   workspaces$ = this.store.select(selectAllWorkspaces);
 
   constructor(private store: Store, private dialog: MatDialog) {}
