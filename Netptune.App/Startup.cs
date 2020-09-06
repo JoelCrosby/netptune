@@ -55,7 +55,7 @@ namespace Netptune.App
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
             });
 
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "../dist");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join("..", "dist"));
 
             ConfigureDatabase(services);
         }
