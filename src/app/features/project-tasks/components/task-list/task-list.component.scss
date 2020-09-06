@@ -1,17 +1,9 @@
-.task-detail-aside {
-  position: fixed;
-  width: 640px;
-  right: 50px;
-  top: 72px;
-
-  .task-list-main {
-    width: 100%;
-  }
-
-  .task-list-view {
-    padding-bottom: 24rem;
-    display: flex;
-    flex-direction: column;
-  }
+.task-list-main {
+  width: 100%;
 }
 
+.task-list-view {
+  padding-bottom: 24rem;
+  display: flex;
+  flex-direction: column;
+}
