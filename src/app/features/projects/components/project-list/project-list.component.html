@@ -5,11 +5,11 @@
 </ng-container>
 
 <ng-template #elseTemplate>
-  <div class="card-group">
+  <app-card-list>
     <app-project-list-item
       *ngFor="let project of projects$ | async; trackBy: trackById"
       [project]="project"
     >
     </app-project-list-item>
-  </div>
+  </app-card-list>
 </ng-template>

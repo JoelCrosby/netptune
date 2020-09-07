@@ -59,11 +59,6 @@ ul {
   display: flex;
 }
 
-.card-group {
-  display: flex;
-  flex-direction: column;
-}
-
 .mat-card:not([class*='mat-elevation-z']) {
   border-radius: .2rem !important;
   margin-bottom: 1rem;
@@ -84,7 +79,7 @@ ul {
   }
 }
 
-// Angular MAterial Modal Class
+// Angular Material Modal Class
 
 .mat-dialog-content {
   @extend .custom-scroll

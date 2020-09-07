@@ -1,51 +1,7 @@
-<mat-card>
-  <mat-card-title>
-    {{ workspace.name }}
-    <button
-      mat-button
-      color="primary"
-      type="button"
-      (click)="deleteClicked(workspace)"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-card-title>
-  <mat-card-content>
-    <p>{{ workspace.description }}</p>
-    <small class="text-muted">
-      Last updated {{ workspace.updatedAt | fromNow }}
-    </small>
-  </mat-card-content>
-
-
-  <mat-card-actions>
-    <a
-      mat-flat-button
-      color="primary"
-      class="action-button"
-      type="button"
-      [routerLink]="['/', workspace.slug]"
-    >
-      <mat-icon class="action-mat-icon">assessment</mat-icon>
-      Go To Projects
-    </a>
-    <a
-      mat-button
-      color="primary"
-      class="action-button"
-      type="button"
-      [routerLink]="['/', workspace.slug, 'users']"
-    >
-      Manage Users
-    </a>
-    <a
-      mat-button
-      color="primary"
-      class="action-button"
-      type="button"
-      (click)="onEditClicked(workspace)"
-    >
-      Edit Workspace
-    </a>
-  </mat-card-actions>
-</mat-card>
+<app-card-list-item
+  [title]="workspace.name"
+  [description]="workspace.description"
+  [subText]="'Last updated ' + (workspace.updatedAt | fromNow)"
+  [actions]="actions"
+>
+</app-card-list-item>
