@@ -4,7 +4,7 @@
 
   <div class="task-list">
 
-    <ng-container *ngIf="loaded | async; else elseTemplate">
+    <ng-container *ngIf="tasks.length; else elseTemplate">
       <div
         cdkDropList
         class="task-list-group"
@@ -46,25 +46,16 @@
     </ng-container>
 
     <ng-template #elseTemplate>
-      <ng-container *ngIf="loaded | async; else loadedElseTemplate">
 
-        <app-task-inline [status]="status"></app-task-inline>
+      <app-task-inline [status]="status"></app-task-inline>
 
-        <div class="list-empty">
-          <div class="list-empty-mark">
-            <i class="far fa-compass"></i>
-            <h4 class="empty-text">{{ emptyMessage }}</h4>
-          </div>
+      <div class="list-empty">
+        <div class="list-empty-mark">
+          <i class="far fa-compass"></i>
+          <h4 class="empty-text">{{ emptyMessage }}</h4>
         </div>
+      </div>
 
-      </ng-container>
-      <ng-template #loadedElseTemplate>
-
-        <div class="spinner-container">
-          <div class="typing-loader"></div>
-        </div>
-
-      </ng-template>
     </ng-template>
 
   </div>
