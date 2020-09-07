@@ -7,6 +7,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
+import { HeaderAction } from '@core/types/header-action';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 
@@ -19,13 +20,33 @@ import { Store } from '@ngrx/store';
 export class WorkspaceListItemComponent implements OnInit {
   @Input() workspace: Workspace;
 
+  actions: HeaderAction[];
+
   constructor(private store: Store, private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.actions = [
+      {
+        label: 'Go To Projects',
+        isLink: true,
+        routerLink: ['/', this.workspace.slug],
+        icon: 'assessment',
+      },
+      {
+        label: 'Manage Users',
+        isLink: true,
+        routerLink: ['/', this.workspace.slug, 'users'],
+      },
+      {
+        label: 'Edit Workspace',
+        click: () => this.onEditClicked(),
+      },
+    ];
+  }
 
-  onEditClicked(workspace: Workspace) {
+  onEditClicked() {
     this.dialog.open(WorkspaceDialogComponent, {
-      data: workspace,
+      data: this.workspace,
       width: '720px',
     });
   }
