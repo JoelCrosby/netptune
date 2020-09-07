@@ -3,18 +3,12 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as actions from '@core/store/tasks/tasks.actions';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-task-list-group',
@@ -22,17 +16,14 @@ import { Observable } from 'rxjs';
   styleUrls: ['./task-list-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListGroupComponent implements OnInit {
+export class TaskListGroupComponent {
   @Input() groupName: string;
-  @Input() tasks: TaskViewModel[] | undefined;
+  @Input() tasks: TaskViewModel[];
   @Input() header: string;
   @Input() emptyMessage: string;
-  @Input() loaded: Observable<boolean>;
   @Input() status: TaskStatus;
 
   constructor(private store: Store) {}
-
-  ngOnInit() {}
 
   drop(event: CdkDragDrop<{ tasks: TaskViewModel[]; status: TaskStatus }>) {
     if (event.previousContainer === event.container) {
