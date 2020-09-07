@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -39,6 +40,13 @@ export class ProfileEffects {
           catchError((error) => of(actions.updateProfileFail({ error })))
         )
       )
+    )
+  );
+
+  updateProfileSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateProfileSuccess),
+      map(() => currentUser())
     )
   );
 
