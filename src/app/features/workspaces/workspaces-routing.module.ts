@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { WorkspaceListComponent } from './components/workspace-list/workspace-list.component';
+import { RouterModule, Routes } from '@angular/router';
+import { WorkspacesViewComponent } from '@workspaces/views/workspaces-view/workspaces-view.component';
 
-const routes: Routes = [{ path: '**', component: WorkspaceListComponent }];
+const routes: Routes = [{ path: '**', component: WorkspacesViewComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
