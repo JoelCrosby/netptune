@@ -14,7 +14,7 @@
 // Angular Material Theming core
 @import '~@angular/material/theming';
 
-@include mat-core;
+@include mat-core($netptune-typography);
 
 // Themes
 @import './themes/default-theme';
