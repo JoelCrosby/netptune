@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { TasksState, adapter } from './tasks.model';
+import { TasksState, adapter, TaskListGroup } from './tasks.model';
 import { selectTasksFeature } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 
@@ -30,6 +30,35 @@ export const selectTasksBacklog = createSelector(selectTasks, (tasks) =>
         task.status === TaskStatus.UnAssigned
     )
     .sort((a, b) => a.sortOrder - b.sortOrder)
+);
+
+export const selectTaskGroups = createSelector(
+  selectTasksCompleted,
+  selectTasksOwner,
+  selectTasksBacklog,
+  (completed, owner, backlog): TaskListGroup[] => [
+    {
+      groupName: 'my-tasks',
+      tasks: owner,
+      header: 'My Tasks',
+      status: TaskStatus.New,
+      emptyMessage: 'You have no tasks assigned to you',
+    },
+    {
+      groupName: 'completed-tasks',
+      tasks: completed,
+      header: 'Completed Tasks',
+      status: TaskStatus.Complete,
+      emptyMessage: 'You currently have no completed tasks.',
+    },
+    {
+      groupName: 'backlog-tasks',
+      tasks: backlog,
+      header: 'Backlog',
+      status: TaskStatus.InActive,
+      emptyMessage: 'Your backlog is currently empty hurray!',
+    },
+  ]
 );
 
 export const selectTasksLoading = createSelector(
