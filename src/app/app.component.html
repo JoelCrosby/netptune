@@ -1,71 +1,69 @@
-<main>
-  <mat-sidenav-container
-    class="app-shell"
-    [class.app-is-mobile]="isMobileView$ | async"
+<mat-sidenav-container
+  class="app-shell"
+  [class.app-is-mobile]="isMobileView$ | async"
+>
+  <mat-sidenav
+    mode="side"
+    class="app-shell-sidenav"
+    [opened]="sideNavOpen$ | async"
+    [fixedInViewport]="sideNavOpen$ | async"
+    [class.transparent]="transparentSideNav$ | async"
   >
-    <mat-sidenav
-      mode="side"
-      class="app-shell-sidenav"
-      [opened]="sideNavOpen$ | async"
-      [fixedInViewport]="sideNavOpen$ | async"
-      [class.transparent]="transparentSideNav$ | async"
-    >
-      <mat-nav-list>
-        <a
-          class="main-logo"
-          [routerLink]="['/workspaces']"
-          matTooltip="Go to Workspaces"
-          matTooltipPosition="right"
+    <mat-nav-list>
+      <a
+        class="main-logo"
+        [routerLink]="['/workspaces']"
+        matTooltip="Go to Workspaces"
+        matTooltipPosition="right"
+      >
+        <img
+          src="assets/apple-touch-icon.png"
+          alt="Netptune logo"
+          width="48"
+          height="48"
         >
-          <img
-            src="assets/apple-touch-icon.png"
-            alt="Netptune logo"
-            width="48"
-            height="48"
-          >
-        </a>
-      </mat-nav-list>
+      </a>
+    </mat-nav-list>
 
 
-      <div class="workspace-nav-list">
-        <a
-          class="app-workspace-link"
-          routerLinkActive="router-link-active"
-          *ngFor="let workspace of workspaces$ | async"
-          [routerLink]="['/', workspace.slug]"
-          [matTooltip]="workspace?.name"
-          matTooltipPosition="right"
+    <div class="workspace-nav-list">
+      <a
+        class="app-workspace-link"
+        routerLinkActive="router-link-active"
+        *ngFor="let workspace of workspaces$ | async"
+        [routerLink]="['/', workspace.slug]"
+        [matTooltip]="workspace?.name"
+        matTooltipPosition="right"
+      >
+        <div
+          class="app-workspace-link-inner"
+          [style.backgroundColor]="workspace?.metaInfo.color"
         >
-          <div
-            class="app-workspace-link-inner"
-            [style.backgroundColor]="workspace?.metaInfo.color"
-          >
-            {{ workspace.name[0] }}
-          </div>
-        </a>
-      </div>
+          {{ workspace.name[0] }}
+        </div>
+      </a>
+    </div>
 
-      <div class="bottom-nav-list">
-        <a
-          class="profile-nav-btn"
-          *ngIf="user$ | async as user"
-          [routerLink]="['./profile']"
-          matTooltip="Profile"
-          matTooltipPosition="right"
-        >
-          <app-avatar
-            [name]="user.displayName"
-            [imageUrl]="user.pictureUrl"
-            [size]="40"
-            [border]="true"
-            [tooltip]="false"
-          ></app-avatar>
-        </a>
-      </div>
+    <div class="bottom-nav-list">
+      <a
+        class="profile-nav-btn"
+        *ngIf="user$ | async as user"
+        [routerLink]="['./profile']"
+        matTooltip="Profile"
+        matTooltipPosition="right"
+      >
+        <app-avatar
+          [name]="user.displayName"
+          [imageUrl]="user.pictureUrl"
+          [size]="40"
+          [border]="true"
+          [tooltip]="false"
+        ></app-avatar>
+      </a>
+    </div>
 
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</main>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
