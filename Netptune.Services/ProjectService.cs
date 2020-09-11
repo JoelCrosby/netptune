@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
@@ -78,6 +79,7 @@ namespace Netptune.Services
                 Identifier = GenerateDefaultBoardId(project.Key),
                 Name = project.Name,
                 OwnerId = project.OwnerId,
+                MetaInfo = new BoardMeta(),
                 BoardType = BoardType.Default,
                 BoardGroups = new[]
                 {
