@@ -231,14 +231,18 @@ namespace Netptune.Services.Authentication
         {
             await SignInManager.SignInAsync(appUser, false);
             appUser.RegistrationDate = DateTime.UtcNow;
+
             appUser.LastLoginTime = DateTime.UtcNow;
+
             await UserManager.UpdateAsync(appUser);
         }
 
         private async Task LogUserIn(AppUser appUser)
         {
             await SignInManager.SignInAsync(appUser, false);
+
             appUser.LastLoginTime = DateTime.UtcNow;
+
             await UserManager.UpdateAsync(appUser);
         }
 
@@ -268,7 +272,8 @@ namespace Netptune.Services.Authentication
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
