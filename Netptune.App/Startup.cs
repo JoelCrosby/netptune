@@ -10,13 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
+using Netptune.App.Hubs;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
-using Netptune.Services.Hubs;
 
 namespace Netptune.App
 {
@@ -24,6 +24,8 @@ namespace Netptune.App
     {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
+
+        public string[] CorsOrigins => GetCorsOrigins();
 
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
@@ -39,7 +41,10 @@ namespace Netptune.App
             services.AddCors();
             services.AddControllers();
 
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = WebHostEnvironment.IsDevelopment();
+            });
 
             services.AddNeptuneAuthentication(Configuration);
 
@@ -98,14 +103,8 @@ namespace Netptune.App
 
             app.UseRouting();
 
-            var cors = Configuration.GetSection("CorsOrigins")
-                .AsEnumerable()
-                .Where(pair => pair.Value is {})
-                .Select(pair => pair.Value)
-                .ToArray();
-
             app.UseCors(builder => builder
-                .WithOrigins(cors)
+                .WithOrigins(CorsOrigins)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
@@ -118,7 +117,7 @@ namespace Netptune.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<BoardHub>("/board-hub");
+                endpoints.MapHub<BoardHub>("/hubs/board-hub");
             });
 
             app.UseSpa(spa =>
@@ -130,6 +129,15 @@ namespace Netptune.App
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:6400");
                 }
             });
+        }
+
+        private string[] GetCorsOrigins()
+        {
+            return Configuration.GetSection("CorsOrigins")
+                .AsEnumerable()
+                .Where(pair => pair.Value is { })
+                .Select(pair => pair.Value)
+                .ToArray();
         }
 
         private static FileExtensionContentTypeProvider GetFileExtensionContentTypeProvider()
