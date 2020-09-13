@@ -1,19 +1,23 @@
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
-namespace Netptune.Services.Hubs
+namespace Netptune.App.Hubs
 {
+    [Authorize]
     public class BoardHub : Hub
     {
         private readonly ITaskService TaskService;
+        private readonly IIdentityService IdentityService;
 
-        public BoardHub(ITaskService taskService)
+        public BoardHub(ITaskService taskService, IIdentityService identityService)
         {
             TaskService = taskService;
+            IdentityService = identityService;
         }
 
         public async Task MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
@@ -25,6 +29,8 @@ namespace Netptune.Services.Hubs
 
         public async Task Create(AddProjectTaskRequest request)
         {
+            IdentityService.BindHubUser(Context.User);
+
             var result = await TaskService.Create(request);
 
             await Clients.Others.SendAsync("createReceived", result);

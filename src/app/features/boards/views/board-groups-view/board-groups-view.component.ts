@@ -7,14 +7,16 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Board } from '@core/models/board';
-import { BoardGroup } from '@core/models/board-group';
-import { HeaderAction } from '@core/types/header-action';
-import { getNewSortOrder } from '@core/util/sort-order-helper';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
+import { BoardGroupHubService } from '@boards/store/groups/board-groups.hub.service';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { Board } from '@core/models/board';
+import { BoardGroup } from '@core/models/board-group';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { HeaderAction } from '@core/types/header-action';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -49,9 +51,16 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private hubService: BoardGroupHubService,
+    private projectTasksHubService: ProjectTasksHubService
+  ) {}
 
   ngOnInit() {
+    this.hubService.connect();
+    this.projectTasksHubService.connect();
+
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
     this.loading$ = this.store
       .select(GroupSelectors.selectBoardGroupsLoading)

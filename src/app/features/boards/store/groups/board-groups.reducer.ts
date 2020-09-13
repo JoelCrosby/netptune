@@ -1,10 +1,11 @@
-import { Action, createReducer, on } from '@ngrx/store';
-import * as actions from './board-groups.actions';
-import * as TaskActions from '@core/store/tasks/tasks.actions';
-import { adapter, BoardGroupsState, initialState } from './board-groups.model';
-import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
+import { hubAction } from '@core/hubs/hub.utils';
 import { BoardGroup } from '@core/models/board-group';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Update } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
+import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
+import * as actions from './board-groups.actions';
+import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 
 const reducer = createReducer(
   initialState,
@@ -83,8 +84,10 @@ const reducer = createReducer(
 
   // Move Board Group
 
-  on(actions.moveTaskInBoardGroup, (state, { request }) =>
-    moveTaskInBoardGroup(state, request)
+  on(
+    actions.moveTaskInBoardGroup,
+    hubAction(actions.moveTaskInBoardGroup),
+    (state, { request }) => moveTaskInBoardGroup(state, request)
   ),
   on(actions.setIsDragging, (state, { isDragging }) => ({
     ...state,

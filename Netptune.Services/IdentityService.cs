@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,15 +14,22 @@ namespace Netptune.Services
         private readonly UserManager<AppUser> UserManager;
         private readonly IHttpContextAccessor ContextAccessor;
 
+        private ClaimsPrincipal HubClaimsPrincipal;
+
         public IdentityService(UserManager<AppUser> userManager, IHttpContextAccessor contextAccessor)
         {
             UserManager = userManager;
             ContextAccessor = contextAccessor;
         }
 
+        public void BindHubUser(ClaimsPrincipal user)
+        {
+            HubClaimsPrincipal = user;
+        }
+
         public Task<AppUser> GetCurrentUser()
         {
-            var user = ContextAccessor.HttpContext.User;
+            var user = ContextAccessor.HttpContext.User ?? HubClaimsPrincipal;
 
             return UserManager.GetUserAsync(user);
         }

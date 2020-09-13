@@ -29,7 +29,7 @@ export class BoardGroupsService {
   }
 
   moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
-    return this.http.post<BoardGroup>(
+    return this.http.post<ClientResponse>(
       environment.apiEndpoint + 'api/tasks/movetaskingrouprequest',
       request
     );

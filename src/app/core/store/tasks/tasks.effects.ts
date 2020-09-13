@@ -17,6 +17,7 @@ import {
 import * as actions from './tasks.actions';
 import { ProjectTasksService } from './tasks.service';
 import { downloadFile } from '@core/util/download-helper';
+import { ProjectTasksHubService } from './tasks.hub.service';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -37,7 +38,7 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.createProjectTask),
       switchMap((action) =>
-        this.projectTasksService.post(action.task).pipe(
+        this.projectTasksHubService.post(action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -50,7 +51,7 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.editProjectTask),
       switchMap((action) =>
-        this.projectTasksService.put(action.task).pipe(
+        this.projectTasksHubService.put(action.task).pipe(
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
           map((task) => actions.editProjectTasksSuccess({ task })),
           catchError((error) => of(actions.editProjectTasksFail({ error })))
@@ -67,7 +68,7 @@ export class ProjectTasksEffects {
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.projectTasksService.delete(action.task).pipe(
+            return this.projectTasksHubService.delete(action.task).pipe(
               tap(() => this.snackbar.open('Task deleted')),
               map((response) =>
                 actions.deleteProjectTasksSuccess({
@@ -197,6 +198,7 @@ export class ProjectTasksEffects {
   constructor(
     private actions$: Actions<Action>,
     private projectTasksService: ProjectTasksService,
+    private projectTasksHubService: ProjectTasksHubService,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private store: Store

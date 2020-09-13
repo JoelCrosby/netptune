@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BoardGroupType } from '@core/models/board-group';
-import { ProjectTasksService } from '@core/store/tasks/tasks.service';
 import {
   isBoardGroupsRoute,
   selectRouterParam,
 } from '@core/core.route.selectors';
+import { BoardGroupType } from '@core/models/board-group';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -23,6 +22,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
+import { BoardGroupHubService } from './board-groups.hub.service';
 import { selectBoardGroupsSelectedUserIds } from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
 
@@ -82,7 +82,7 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.createProjectTask),
       switchMap((action) =>
-        this.projectTasksService.post(action.task).pipe(
+        this.boardGroupHubService.post(action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -155,7 +155,7 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
       switchMap((action) =>
-        this.boardGroupsService.moveTaskInBoardGroup(action.request).pipe(
+        this.boardGroupHubService.moveTaskInBoardGroup(action.request).pipe(
           map(actions.moveTaskInBoardGroupSuccess),
           catchError((error) => of(actions.moveTaskInBoardGroupFail({ error })))
         )
@@ -185,7 +185,7 @@ export class BoardGroupsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
-    private projectTasksService: ProjectTasksService,
+    private boardGroupHubService: BoardGroupHubService,
     private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
