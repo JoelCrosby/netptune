@@ -263,7 +263,7 @@ namespace Netptune.Services
             });
         }
 
-        public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
+        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
@@ -273,7 +273,7 @@ namespace Netptune.Services
             return TransferTaskInGroups(request);
         }
 
-        private async Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request)
+        private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)
         {
             await UnitOfWork.Transaction(async () =>
             {
@@ -328,10 +328,10 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return taskInBoardGroup;
+            return ClientResponse.Success();
         }
 
-        private async Task<ProjectTaskInBoardGroup> MoveTaskInGroup(MoveTaskInGroupRequest request)
+        private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request)
         {
             var item = await UnitOfWork
                 .ProjectTasksInGroups
@@ -347,7 +347,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return item;
+            return ClientResponse.Success();
         }
 
         private async Task<double> GetTaskInGroupSortOrder
