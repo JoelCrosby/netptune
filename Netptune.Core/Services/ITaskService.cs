@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Models.Files;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -25,7 +24,7 @@ namespace Netptune.Core.Services
 
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
 
-        Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
+        Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
         Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug);
     }

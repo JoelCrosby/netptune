@@ -16,6 +16,7 @@ using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
+using Netptune.Services.Hubs;
 
 namespace Netptune.App
 {
@@ -37,6 +38,8 @@ namespace Netptune.App
 
             services.AddCors();
             services.AddControllers();
+
+            services.AddSignalR();
 
             services.AddNeptuneAuthentication(Configuration);
 
@@ -86,6 +89,8 @@ namespace Netptune.App
                 });
             }
 
+            app.UseDefaultFiles();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 ContentTypeProvider = GetFileExtensionContentTypeProvider()
@@ -93,10 +98,17 @@ namespace Netptune.App
 
             app.UseRouting();
 
+            var cors = Configuration.GetSection("CorsOrigins")
+                .AsEnumerable()
+                .Where(pair => pair.Value is {})
+                .Select(pair => pair.Value)
+                .ToArray();
+
             app.UseCors(builder => builder
+                .WithOrigins(cors)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowAnyOrigin()
+                .AllowCredentials()
                 .WithExposedHeaders("Content-Disposition")
             );
 
@@ -104,8 +116,10 @@ namespace Netptune.App
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-                endpoints.MapControllers()
-            );
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<BoardHub>("/board-hub");
+            });
 
             app.UseSpa(spa =>
             {
