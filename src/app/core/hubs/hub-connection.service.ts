@@ -9,9 +9,10 @@ import {
 } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
+import { HubMethodHandler } from './hub.service';
 
 interface ConnectionMap {
-  [path: string]: HubConnection;
+  [baseUrl: string]: HubConnection;
 }
 
 @Injectable({
@@ -22,9 +23,12 @@ export class HubConnectionService {
 
   constructor(private store: Store) {}
 
-  async connect(path: string): Promise<HubConnection> {
+  async connect(
+    path: string,
+    handlers: HubMethodHandler[]
+  ): Promise<HubConnection> {
     if (this.connections[path]) {
-      return new Promise((res) => res(this.connections[path]));
+      return this.connections[path];
     }
 
     const token = await this.store
@@ -32,39 +36,64 @@ export class HubConnectionService {
       .pipe(first())
       .toPromise();
 
+    const baseUrl = `${environment.apiEndpoint}${path}`;
     const connection = new HubConnectionBuilder()
-      .withUrl(`${environment.apiEndpoint}${path}`, {
+      .withUrl(baseUrl, {
         accessTokenFactory: () => token,
       } as IHttpConnectionOptions)
       .build();
 
+    if (!handlers.length) {
+      console.warn(
+        '[SIGNAL-R ]connect was called before registering any handlers'
+      );
+    }
+
+    handlers.forEach(({ method, callback }) => connection.on(method, callback));
+
     this.connections = {
       ...this.connections,
-      [path]: connection,
+      [baseUrl]: connection,
     };
+
+    await this.start(connection);
 
     return connection;
   }
 
-  start(path: string): void {
-    const connection = this.connections[path];
-
-    if (!connection) {
-      throw new Error(
-        `[SIGNAL-R] connection with path: ${path} does not exist.`
-      );
-    }
-
+  async start(connection: HubConnection): Promise<void> {
     if (connection.state === HubConnectionState.Disconnected) {
-      connection
-        .start()
-        .then(() => {
-          console.log(
-            `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
-            'color: lime'
-          );
-        })
-        .catch((err) => console.error(`[SIGNAL-R][ERROR] ${err}`));
+      try {
+        await connection.start();
+
+        console.log(
+          `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
+          'color: lime'
+        );
+      } catch (err) {
+        return console.error(`[SIGNAL-R][ERROR] ${err}`);
+      }
     }
+
+    return null;
+  }
+
+  async stop(connection: HubConnection) {
+    if (!connection) {
+      console.warn('[SIGNAL-R] attmpted to close a null connection.');
+
+      return;
+    }
+
+    const connectionId = connection.connectionId;
+
+    delete this.connections[connection.baseUrl];
+
+    await connection.stop();
+
+    console.log(
+      `%c[SIGNAL-R][Disconnected] id: ${connectionId}`,
+      'color: orange'
+    );
   }
 }

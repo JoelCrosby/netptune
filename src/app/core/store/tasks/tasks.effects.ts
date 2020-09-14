@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { downloadFile } from '@core/util/download-helper';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -15,9 +16,8 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './tasks.actions';
-import { ProjectTasksService } from './tasks.service';
-import { downloadFile } from '@core/util/download-helper';
 import { ProjectTasksHubService } from './tasks.hub.service';
+import { ProjectTasksService } from './tasks.service';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -38,7 +38,7 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.createProjectTask),
       switchMap((action) =>
-        this.projectTasksHubService.post(action.task).pipe(
+        this.projectTasksHubService.post(action.identifier, action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -51,7 +51,7 @@ export class ProjectTasksEffects {
     this.actions$.pipe(
       ofType(actions.editProjectTask),
       switchMap((action) =>
-        this.projectTasksHubService.put(action.task).pipe(
+        this.projectTasksHubService.put(action.identifier, action.task).pipe(
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
           map((task) => actions.editProjectTasksSuccess({ task })),
           catchError((error) => of(actions.editProjectTasksFail({ error })))
@@ -68,18 +68,20 @@ export class ProjectTasksEffects {
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.projectTasksHubService.delete(action.task).pipe(
-              tap(() => this.snackbar.open('Task deleted')),
-              map((response) =>
-                actions.deleteProjectTasksSuccess({
-                  response,
-                  taskId: action.task.id,
-                })
-              ),
-              catchError((error) =>
-                of(actions.deleteProjectTasksFail({ error }))
-              )
-            );
+            return this.projectTasksHubService
+              .delete(action.identifier, action.task)
+              .pipe(
+                tap(() => this.snackbar.open('Task deleted')),
+                map((response) =>
+                  actions.deleteProjectTasksSuccess({
+                    response,
+                    taskId: action.task.id,
+                  })
+                ),
+                catchError((error) =>
+                  of(actions.deleteProjectTasksFail({ error }))
+                )
+              );
           })
         )
       )

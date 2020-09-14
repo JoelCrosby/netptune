@@ -23,7 +23,10 @@ import {
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
 import { BoardGroupHubService } from './board-groups.hub.service';
-import { selectBoardGroupsSelectedUserIds } from './board-groups.selectors';
+import {
+  selectBoardGroupsSelectedUserIds,
+  selectBoardIdentifier,
+} from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
@@ -81,8 +84,9 @@ export class BoardGroupsEffects {
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProjectTask),
-      switchMap((action) =>
-        this.boardGroupHubService.post(action.task).pipe(
+      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      switchMap(([action, identifier]) =>
+        this.boardGroupHubService.post(identifier, action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -154,11 +158,16 @@ export class BoardGroupsEffects {
   moveTaskInBoardGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
-      switchMap((action) =>
-        this.boardGroupHubService.moveTaskInBoardGroup(action.request).pipe(
-          map(actions.moveTaskInBoardGroupSuccess),
-          catchError((error) => of(actions.moveTaskInBoardGroupFail({ error })))
-        )
+      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      switchMap(([action, identifier]) =>
+        this.boardGroupHubService
+          .moveTaskInBoardGroup(identifier, action.request)
+          .pipe(
+            map(actions.moveTaskInBoardGroupSuccess),
+            catchError((error) =>
+              of(actions.moveTaskInBoardGroupFail({ error }))
+            )
+          )
       )
     )
   );

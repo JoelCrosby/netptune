@@ -53,7 +53,12 @@ export const selectIsInlineActive = createSelector(
 
 export const selectBoard = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.board
+  (state: BoardGroupsState) => state?.board
+);
+
+export const selectBoardIdentifier = createSelector(
+  selectBoard,
+  (state: BoardViewModel) => state?.identifier
 );
 
 export const selectBoardId = createSelector(

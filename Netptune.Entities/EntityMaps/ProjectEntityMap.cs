@@ -33,7 +33,7 @@ namespace Netptune.Entities.EntityMaps
             builder
                 .HasOne(project => project.Workspace)
                 .WithMany(workspace => workspace.Projects)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasIndex(project => new { project.WorkspaceId, project.Key })
