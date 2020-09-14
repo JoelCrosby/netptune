@@ -150,7 +150,9 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       assigneeId: user.userId,
     };
 
-    this.store.dispatch(TaskActions.createProjectTask({ task }));
+    this.store.dispatch(
+      TaskActions.createProjectTask({ identifier: '[none]', task })
+    );
 
     this.taskGroup.reset();
   }

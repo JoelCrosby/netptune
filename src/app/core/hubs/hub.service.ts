@@ -51,7 +51,7 @@ export class HubService {
     );
   }
 
-  dispatch(action: Action, redirect: boolean = true) {
+  dispatch(action: Action, redirect: boolean = false) {
     return redirect
       ? this.store.dispatch(redirectAction(action))
       : this.store.dispatch(action);

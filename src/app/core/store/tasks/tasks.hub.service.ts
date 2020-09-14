@@ -5,8 +5,8 @@ import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { tap } from 'rxjs/operators';
 import * as actions from './tasks.actions';
-import * as groupActions from '@boards/store/groups/board-groups.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -18,28 +18,30 @@ export class ProjectTasksHubService {
     await this.hub.connect('board-hub', [
       {
         method: 'MoveTaskInBoardGroup',
-        callback: (request: MoveTaskInGroupRequest) =>
-          this.hub.dispatch(groupActions.moveTaskInBoardGroup({ request })),
+        callback: () => {
+          this.hub.dispatch(actions.loadProjectTasks());
+          this.hub.dispatch(groupsActions.loadBoardGroups());
+        },
       },
       {
         method: 'Create',
         callback: () => {
-          this.hub.dispatch(actions.loadProjectTasks(), false);
-          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
+          this.hub.dispatch(actions.loadProjectTasks());
+          this.hub.dispatch(groupsActions.loadBoardGroups());
         },
       },
       {
         method: 'Delete',
         callback: () => {
-          this.hub.dispatch(actions.loadProjectTasks(), false);
-          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
+          this.hub.dispatch(actions.loadProjectTasks());
+          this.hub.dispatch(groupsActions.loadBoardGroups());
         },
       },
       {
         method: 'Update',
         callback: () => {
-          this.hub.dispatch(actions.loadProjectTasks(), false);
-          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
+          this.hub.dispatch(actions.loadProjectTasks());
+          this.hub.dispatch(groupsActions.loadBoardGroups());
         },
       },
     ]);
@@ -79,6 +81,8 @@ export class ProjectTasksHubService {
   }
 
   delete(boardIdentifier: string, task: ProjectTask) {
-    return this.hub.invoke<ClientResponse>('Delete', boardIdentifier, task.id);
+    return this.hub
+      .invoke<ClientResponse>('Delete', boardIdentifier, task.id)
+      .pipe(tap((res) => console.log({ res })));
   }
 }

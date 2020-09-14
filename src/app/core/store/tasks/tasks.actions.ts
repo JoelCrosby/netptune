@@ -29,7 +29,7 @@ export const loadProjectTasksFail = createAction(
 
 export const createProjectTask = createAction(
   '[ProjectTasks] Create Project Task',
-  props<{ identifier?: string; task: AddProjectTaskRequest }>()
+  props<{ identifier: string; task: AddProjectTaskRequest }>()
 );
 
 export const createProjectTasksSuccess = createAction(
@@ -46,7 +46,7 @@ export const createProjectTasksFail = createAction(
 
 export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
-  props<{ identifier?: string; task: TaskViewModel; silent?: boolean }>()
+  props<{ identifier: string; task: TaskViewModel; silent?: boolean }>()
 );
 
 export const editProjectTasksSuccess = createAction(
@@ -63,7 +63,7 @@ export const editProjectTasksFail = createAction(
 
 export const deleteProjectTask = createAction(
   '[ProjectTasks] Delete Project Task',
-  props<{ identifier?: string; task: TaskViewModel }>()
+  props<{ identifier: string; task: TaskViewModel }>()
 );
 
 export const deleteProjectTasksSuccess = createAction(

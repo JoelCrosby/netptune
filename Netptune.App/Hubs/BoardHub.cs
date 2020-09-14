@@ -17,12 +17,10 @@ namespace Netptune.App.Hubs
         public const string Path = "/hubs/board-hub";
 
         private readonly ITaskService TaskService;
-        private readonly IIdentityService IdentityService;
 
-        public BoardHub(ITaskService taskService, IIdentityService identityService)
+        public BoardHub(ITaskService taskService)
         {
             TaskService = taskService;
-            IdentityService = identityService;
         }
 
         public async Task AddToBoard(string boardIdentifier)
@@ -56,8 +54,6 @@ namespace Netptune.App.Hubs
 
         public async Task<TaskViewModel> Create(string boardIdentifier, AddProjectTaskRequest request)
         {
-            IdentityService.BindHubUser(Context.User);
-
             var result = await TaskService.Create(request);
 
             await Clients

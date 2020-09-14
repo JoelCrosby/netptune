@@ -114,7 +114,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
         sortOrder: 0,
       };
 
-      this.store.dispatch(createProjectTask({ task }));
+      this.store.dispatch(createProjectTask({ identifier: '[none]', task }));
 
       this.dialogRef.close();
     });
