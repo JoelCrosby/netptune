@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as groupsActions from '@boards/store/groups/board-groups.actions';
 import { HubService } from '@core/hubs/hub.service';
 import { ClientResponse } from '@core/models/client-response';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
@@ -11,40 +12,55 @@ import * as actions from './tasks.actions';
 export class ProjectTasksHubService {
   constructor(private hub: HubService) {}
 
-  connect() {
-    this.hub.connect([
+  async connect(boardIdentifier: string) {
+    await this.hub.connect('board-hub', [
       {
-        method: 'createReceived',
-        callback: (task: TaskViewModel) => {
-          this.hub.dispatch(actions.createProjectTasksSuccess({ task }));
+        method: 'Create',
+        callback: () => {
+          this.hub.dispatch(actions.loadProjectTasks(), false);
+          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
         },
       },
       {
-        method: 'deleteReceived',
-        callback: (response: ClientResponse, taskId: number) => {
-          this.hub.dispatch(
-            actions.deleteProjectTasksSuccess({ response, taskId })
-          );
+        method: 'Delete',
+        callback: () => {
+          this.hub.dispatch(actions.loadProjectTasks(), false);
+          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
         },
       },
       {
-        method: 'updateReceived',
-        callback: (task: TaskViewModel) => {
-          this.hub.dispatch(actions.editProjectTasksSuccess({ task }));
+        method: 'Update',
+        callback: () => {
+          this.hub.dispatch(actions.loadProjectTasks(), false);
+          this.hub.dispatch(groupsActions.loadBoardGroups(), false);
         },
       },
     ]);
+
+    this.addToBoard(boardIdentifier);
   }
 
-  post(task: AddProjectTaskRequest) {
-    return this.hub.invoke<TaskViewModel>('Create', task);
+  disconnect() {
+    this.hub.disconnect();
   }
 
-  put(task: ProjectTask) {
-    return this.hub.invoke<TaskViewModel>('update', task);
+  addToBoard(boardIdentifier: string) {
+    return this.hub.invoke<string>('AddToBoard', boardIdentifier);
   }
 
-  delete(task: ProjectTask) {
-    return this.hub.invoke<ClientResponse>('Delete', task);
+  removeFromBoard(boardIdentifier: string) {
+    return this.hub.invoke<string>('RemoveFromBoard', boardIdentifier);
+  }
+
+  post(boardIdentifier: string, task: AddProjectTaskRequest) {
+    return this.hub.invoke<TaskViewModel>('Create', boardIdentifier, task);
+  }
+
+  put(boardIdentifier: string, task: ProjectTask) {
+    return this.hub.invoke<TaskViewModel>('update', boardIdentifier, task);
+  }
+
+  delete(boardIdentifier: string, task: ProjectTask) {
+    return this.hub.invoke<ClientResponse>('Delete', boardIdentifier, task.id);
   }
 }

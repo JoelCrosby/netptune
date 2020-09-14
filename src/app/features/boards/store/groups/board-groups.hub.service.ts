@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HubService } from '@core/hubs/hub.service';
-import { hubAction } from '@core/hubs/hub.utils';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -12,26 +11,44 @@ import * as actions from './board-groups.actions';
 export class BoardGroupHubService {
   constructor(private hub: HubService) {}
 
-  connect() {
-    this.hub.connect([
+  async connect(boardIdentifier: string) {
+    await this.hub.connect('board-hub', [
       {
-        method: 'moveTaskInBoardGroupReceived',
-        callback: (request: MoveTaskInGroupRequest) => {
-          console.log({ action: hubAction(actions.moveTaskInBoardGroup) });
-
-          this.hub.dispatch(actions.moveTaskInBoardGroup({ request }));
-        },
+        method: 'MoveTaskInBoardGroup',
+        callback: (request: MoveTaskInGroupRequest) =>
+          this.hub.dispatch(actions.moveTaskInBoardGroup({ request })),
       },
     ]);
+
+    this.addToBoard(boardIdentifier);
   }
 
-  moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
-    return this.hub.invoke<ClientResponse>('MoveTaskInBoardGroup', request);
+  disconnect() {
+    this.hub.disconnect();
   }
 
-  post(task: AddProjectTaskRequest) {
+  removeFromBoard(boardIdentifier: string) {
+    return this.hub.invoke<string>('RemoveFromBoard', boardIdentifier);
+  }
+
+  addToBoard(boardIdentifier: string) {
+    return this.hub.invoke<string>('AddToBoard', boardIdentifier);
+  }
+
+  moveTaskInBoardGroup(
+    boardIdentifier: string,
+    request: MoveTaskInGroupRequest
+  ) {
+    return this.hub.invoke<ClientResponse>(
+      'MoveTaskInBoardGroup',
+      boardIdentifier,
+      request
+    );
+  }
+
+  post(boardIdentifier: string, task: AddProjectTaskRequest) {
     return this.hub
-      .invoke<TaskViewModel>('Create', task)
+      .invoke<TaskViewModel>('Create', boardIdentifier, task)
       .pipe(tap((response) => console.log({ response })));
   }
 }

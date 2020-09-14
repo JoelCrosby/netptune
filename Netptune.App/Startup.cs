@@ -117,7 +117,7 @@ namespace Netptune.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<BoardHub>("/hubs/board-hub");
+                endpoints.MapHub<BoardHub>(BoardHub.Path);
             });
 
             app.UseSpa(spa =>

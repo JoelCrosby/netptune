@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -19,14 +20,16 @@ import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { filter, first, map, startWith, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
   styleUrls: ['./board-groups-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [],
 })
-export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
+export class BoardGroupsViewComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('importTasksInput') importTasksInput: ElementRef;
 
   groups$: Observable<BoardGroup[]>;
@@ -58,9 +61,6 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.hubService.connect();
-    this.projectTasksHubService.connect();
-
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
     this.loading$ = this.store
       .select(GroupSelectors.selectBoardGroupsLoading)
@@ -68,13 +68,33 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
 
     this.selectedBoardName$ = this.store.pipe(
       select(GroupSelectors.selectBoard),
-      tap((board) => (this.board = board)),
+      filter((board) => !!board),
+      tap((board) => {
+        this.board = board;
+      }),
       map((board) => board && board.name)
     );
+
+    this.store
+      .select(GroupSelectors.selectBoardIdentifier)
+      .pipe(
+        filter((val) => !!val),
+        first(),
+        tap((identifier) => {
+          this.hubService.connect(identifier);
+          this.projectTasksHubService.connect(identifier);
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit() {
     this.store.dispatch(GroupActions.loadBoardGroups());
+  }
+
+  ngOnDestroy() {
+    this.hubService.disconnect();
+    this.projectTasksHubService.disconnect();
   }
 
   getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {

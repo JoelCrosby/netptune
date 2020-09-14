@@ -57,8 +57,10 @@ namespace Netptune.Services.Authentication
                         {
                             var accessToken = context.Request.Query["access_token"];
                             var path = context.HttpContext.Request.Path;
+                            var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
+                            var isHubPath = path.StartsWithSegments("/hubs");
 
-                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            if (accessTokenNotEmpty && isHubPath)
                             {
                                 context.Token = accessToken;
                             }

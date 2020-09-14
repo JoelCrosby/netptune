@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
-import { from, Observable, throwError } from 'rxjs';
+import { from, Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HubConnectionService } from './hub-connection.service';
 import { redirectAction } from './hub.utils';
@@ -21,20 +21,28 @@ export interface HubMethodHandler {
 })
 export class HubService {
   private connection: HubConnection;
-  private handlers: HubMethodHandler[] = [];
 
   constructor(
     private connetionService: HubConnectionService,
     private store: Store
   ) {}
 
-  connect(handlers: HubMethodHandler[]): Promise<void> {
-    this.handlers = [...this.handlers, ...handlers];
-    return this.openConnection();
+  connect(path: string, handlers: HubMethodHandler[]): Promise<void> {
+    return this.openConnection(path, handlers);
   }
 
-  invoke<TResult>(method: string, ...args: unknown[]): Observable<TResult> {
-    return from(this.connection.invoke<TResult>(method, ...args)).pipe(
+  disconnect(): Promise<void> {
+    return this.connetionService.stop(this.connection);
+  }
+
+  invoke<TResult>(
+    method: string,
+    group: string,
+    ...args: unknown[]
+  ): Observable<TResult> {
+    if (!group) return of(null);
+
+    return from(this.connection.invoke<TResult>(method, group, ...args)).pipe(
       catchError((err: HubError) => {
         console.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
 
@@ -43,23 +51,19 @@ export class HubService {
     );
   }
 
-  dispatch(action: Action) {
-    return this.store.dispatch(redirectAction(action));
+  dispatch(action: Action, redirect: boolean = true) {
+    return redirect
+      ? this.store.dispatch(redirectAction(action))
+      : this.store.dispatch(action);
   }
 
-  private async openConnection(): Promise<void> {
-    this.connection = await this.connetionService.connect('hubs/board-hub');
-
-    if (!this.handlers.length) {
-      console.warn(
-        '[SIGNAL-R ]connect was called before registering any handlers'
-      );
-    }
-
-    this.handlers.forEach(({ method, callback }) =>
-      this.connection.on(method, callback)
+  private async openConnection(
+    path: string,
+    handlers: HubMethodHandler[]
+  ): Promise<void> {
+    this.connection = await this.connetionService.connect(
+      `hubs/${path}`,
+      handlers
     );
-
-    this.connetionService.start('hubs/board-hub');
   }
 }
