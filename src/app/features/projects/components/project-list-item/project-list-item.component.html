@@ -2,7 +2,7 @@
   [title]="project.name"
   [description]="project.description"
   [subText]="project.repositoryUrl"
-  [actions]="actions"
+  [actions]="actions$ | async"
   (delete)="onDeleteClicked()"
 >
 </app-card-list-item>
