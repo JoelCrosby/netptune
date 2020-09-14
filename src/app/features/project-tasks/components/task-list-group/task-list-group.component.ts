@@ -64,6 +64,7 @@ export class TaskListGroupComponent {
   moveTask(task: TaskViewModel, status: TaskStatus, sortOrder: number) {
     this.store.dispatch(
       actions.editProjectTask({
+        identifier: '[none]',
         task: {
           ...task,
           status,
@@ -74,12 +75,15 @@ export class TaskListGroupComponent {
   }
 
   deleteClicked(task: TaskViewModel) {
-    this.store.dispatch(actions.deleteProjectTask({ task }));
+    this.store.dispatch(
+      actions.deleteProjectTask({ identifier: '[none]', task })
+    );
   }
 
   markCompleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
+        identifier: '[none]',
         task: {
           ...task,
           status: TaskStatus.Complete,
@@ -91,6 +95,7 @@ export class TaskListGroupComponent {
   moveToBacklogClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
+        identifier: '[none]',
         task: {
           ...task,
           status: TaskStatus.InActive,
