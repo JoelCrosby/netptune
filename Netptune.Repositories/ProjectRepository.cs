@@ -63,7 +63,7 @@ namespace Netptune.Repositories
 
         private static ProjectViewModel GetViewModel(Project project)
         {
-            var defaultBoard = project.ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
+            var defaultBoard = project.ProjectBoards?.FirstOrDefault(board => board.BoardType == BoardType.Default);
             var identifier = defaultBoard?.Identifier;
 
             return new ProjectViewModel
