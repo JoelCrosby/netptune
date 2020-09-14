@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
-import { BoardGroupHubService } from '@boards/store/groups/board-groups.hub.service';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
 import { BoardGroup } from '@core/models/board-group';
@@ -56,8 +55,7 @@ export class BoardGroupsViewComponent
 
   constructor(
     private store: Store,
-    private hubService: BoardGroupHubService,
-    private projectTasksHubService: ProjectTasksHubService
+    private hubService: ProjectTasksHubService
   ) {}
 
   ngOnInit() {
@@ -82,7 +80,6 @@ export class BoardGroupsViewComponent
         first(),
         tap((identifier) => {
           this.hubService.connect(identifier);
-          this.projectTasksHubService.connect(identifier);
         })
       )
       .subscribe();
@@ -94,7 +91,6 @@ export class BoardGroupsViewComponent
 
   ngOnDestroy() {
     this.hubService.disconnect();
-    this.projectTasksHubService.disconnect();
   }
 
   getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {

@@ -19,7 +19,6 @@ import { BoardsViewComponent } from './views/boards-view/boards-view.component';
 import { BoardsGridComponent } from './components/boards-grid/boards-grid.component';
 import { BoardGroupUsersComponent } from './components/board-group-users/board-group-users.component';
 import { CreateBoardComponent } from './components/create-board/create-board.component';
-import { BoardGroupHubService } from './store/groups/board-groups.hub.service';
 
 @NgModule({
   declarations: [
@@ -41,6 +40,6 @@ import { BoardGroupHubService } from './store/groups/board-groups.hub.service';
     EffectsModule.forFeature([BoardsEffects, BoardGroupsEffects]),
     BoardsRoutingModule,
   ],
-  providers: [BoardsService, BoardGroupsService, BoardGroupHubService],
+  providers: [BoardsService, BoardGroupsService],
 })
 export class BoardsModule {}
