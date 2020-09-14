@@ -8,6 +8,7 @@ import {
 import { BoardGroupType } from '@core/models/board-group';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -22,7 +23,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import { BoardGroupHubService } from './board-groups.hub.service';
 import {
   selectBoardGroupsSelectedUserIds,
   selectBoardIdentifier,
@@ -86,7 +86,7 @@ export class BoardGroupsEffects {
       ofType(actions.createProjectTask),
       withLatestFrom(this.store.select(selectBoardIdentifier)),
       switchMap(([action, identifier]) =>
-        this.boardGroupHubService.post(identifier, action.task).pipe(
+        this.tasksHubService.post(identifier, action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -160,7 +160,7 @@ export class BoardGroupsEffects {
       ofType(actions.moveTaskInBoardGroup),
       withLatestFrom(this.store.select(selectBoardIdentifier)),
       switchMap(([action, identifier]) =>
-        this.boardGroupHubService
+        this.tasksHubService
           .moveTaskInBoardGroup(identifier, action.request)
           .pipe(
             map(actions.moveTaskInBoardGroupSuccess),
@@ -194,7 +194,7 @@ export class BoardGroupsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
-    private boardGroupHubService: BoardGroupHubService,
+    private tasksHubService: ProjectTasksHubService,
     private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,

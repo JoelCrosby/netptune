@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import * as groupsActions from '@boards/store/groups/board-groups.actions';
 import { HubService } from '@core/hubs/hub.service';
 import { ClientResponse } from '@core/models/client-response';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as actions from './tasks.actions';
+import * as groupActions from '@boards/store/groups/board-groups.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,11 @@ export class ProjectTasksHubService {
 
   async connect(boardIdentifier: string) {
     await this.hub.connect('board-hub', [
+      {
+        method: 'MoveTaskInBoardGroup',
+        callback: (request: MoveTaskInGroupRequest) =>
+          this.hub.dispatch(groupActions.moveTaskInBoardGroup({ request })),
+      },
       {
         method: 'Create',
         callback: () => {
@@ -50,6 +57,17 @@ export class ProjectTasksHubService {
 
   removeFromBoard(boardIdentifier: string) {
     return this.hub.invoke<string>('RemoveFromBoard', boardIdentifier);
+  }
+
+  moveTaskInBoardGroup(
+    boardIdentifier: string,
+    request: MoveTaskInGroupRequest
+  ) {
+    return this.hub.invoke<ClientResponse>(
+      'MoveTaskInBoardGroup',
+      boardIdentifier,
+      request
+    );
   }
 
   post(boardIdentifier: string, task: AddProjectTaskRequest) {
