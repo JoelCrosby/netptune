@@ -6,5 +6,5 @@ export interface HeaderAction {
   icon?: string;
   iconClass?: IconClass;
   isLink?: boolean;
-  routerLink?: string | any[];
+  routerLink?: string | unknown[];
 }
