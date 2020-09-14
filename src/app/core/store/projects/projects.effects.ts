@@ -100,6 +100,7 @@ export class ProjectsEffects {
 
 const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: 'Delete Project',
+  cancelLabel: 'Cancel',
   color: 'warn',
   title: 'Delete Project',
   message: 'Are you sure you wish to delete this project',
