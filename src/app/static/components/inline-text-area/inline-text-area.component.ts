@@ -19,7 +19,7 @@ import {
   FormControlDirective,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { DocumentService } from '@app/static/services/document.service';
+import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, takeUntil, tap } from 'rxjs/operators';
 

@@ -51,7 +51,7 @@ namespace Netptune.Repositories
 
         public Task<bool> Exists(string slug)
         {
-            return Entities.AnyAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+            return Entities.AnyAsync(workspace => workspace.Slug == slug);
         }
     }
 }

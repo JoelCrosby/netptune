@@ -7,6 +7,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
@@ -35,7 +37,7 @@ namespace Netptune.Services
                 Description = request.Description,
                 CreatedByUserId = user.Id,
                 OwnerId = user.Id,
-                Slug = request.Name.ToUrlSlug(true),
+                Slug = request.Slug.ToUrlSlug(),
                 MetaInfo = request.MetaInfo
             };
 
@@ -52,17 +54,18 @@ namespace Netptune.Services
             return result;
         }
 
-        public async Task<Workspace> DeleteWorkspace(int id)
+        public async Task<ClientResponse> Delete(int id)
         {
             var workspace = await WorkspaceRepository.GetAsync(id);
+            var userId = await IdentityService.GetCurrentUserId();
 
-            if (workspace is null) return null;
+            if (workspace is null || userId is null) return null;
 
-            workspace.IsDeleted = true;
+            workspace.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
 
-            return workspace;
+            return ClientResponse.Success();
         }
 
         public Task<Workspace> GetWorkspace(int id)
@@ -78,6 +81,8 @@ namespace Netptune.Services
         public async Task<List<Workspace>> GetWorkspaces()
         {
             var user = await IdentityService.GetCurrentUser();
+
+            if (user is null) return null;
 
             return await WorkspaceRepository.GetWorkspaces(user);
         }
@@ -105,8 +110,7 @@ namespace Netptune.Services
 
             if (workspace.IsDeleted)
             {
-                result.IsDeleted = true;
-                result.DeletedByUserId = user.Id;
+                result.Delete(user.Id);
             }
 
             result.UpdatedAt = DateTime.UtcNow;
@@ -114,6 +118,19 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return result;
+        }
+
+        public async Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug)
+        {
+            var slugLower = slug.ToUrlSlug();
+            var exists = await WorkspaceRepository.Exists(slugLower);
+
+            return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+            {
+                Request = slug,
+                Slug = slugLower,
+                IsUnique = !exists
+            });
         }
     }
 }

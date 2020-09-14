@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddProjectRequest, Project } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class ProjectDialogComponent implements OnInit, OnDestroy {
   project: Project;
-  currentWorkspace$ = this.store.select(SelectCurrentWorkspace);
+  currentWorkspace$ = this.store.select(selectCurrentWorkspace);
   subs = new Subscription();
 
   projectFromGroup = new FormGroup({

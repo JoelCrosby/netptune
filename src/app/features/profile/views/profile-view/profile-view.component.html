@@ -1,4 +1,4 @@
-<app-page-container [showProgress]="loadingUpdate$ | async">
+<app-page-container [showProgress]="loadingUpdate$ | async" [centerPage]="true" [marginBottom]="true">
 
   <app-page-header
     title="Profile"
@@ -8,5 +8,9 @@
   </app-page-header>
 
   <app-update-profile></app-update-profile>
+
+  <div class="form-seperator"></div>
+
+  <app-change-password></app-change-password>
 
 </app-page-container>

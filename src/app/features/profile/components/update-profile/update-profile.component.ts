@@ -2,14 +2,15 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
-import { Observable } from 'rxjs';
-import { filter, first, shareReplay, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-update-profile',
@@ -17,39 +18,43 @@ import { filter, first, shareReplay, tap } from 'rxjs/operators';
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UpdateProfileComponent implements OnInit, AfterViewInit {
-  profileGroup = new FormGroup({
-    firstname: new FormControl(),
-    lastname: new FormControl(),
-    email: new FormControl(),
-    pictureUrl: new FormControl(),
-  });
-
+export class UpdateProfileComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  formGroup: FormGroup;
+  onDestroy$ = new Subject();
   loadingUpdate$: Observable<boolean>;
 
   get firstname() {
-    return this.profileGroup.get('firstname');
+    return this.formGroup.get('firstname');
   }
   get lastname() {
-    return this.profileGroup.get('lastname');
+    return this.formGroup.get('lastname');
   }
   get email() {
-    return this.profileGroup.get('email');
+    return this.formGroup.get('email');
   }
   get pictureUrl() {
-    return this.profileGroup.get('pictureUrl');
+    return this.formGroup.get('pictureUrl');
   }
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(
+      takeUntil(this.onDestroy$),
       select(ProfileSelectors.selectUpdateProfileLoading),
       tap((loading) =>
-        loading ? this.profileGroup.disable() : this.profileGroup.enable()
+        loading ? this.formGroup.disable() : this.formGroup.enable()
       ),
       shareReplay()
     );
+
+    this.formGroup = this.fb.group({
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', Validators.required],
+      pictureUrl: ['', Validators.maxLength(1024)],
+    });
 
     this.store
       .select(ProfileSelectors.selectProfile)
@@ -57,10 +62,10 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
         filter((profile) => !!profile),
         first(),
         tap((profile) => {
-          this.firstname.setValue(profile.firstname);
-          this.lastname.setValue(profile.lastname);
-          this.email.setValue(profile.email);
-          this.pictureUrl.setValue(profile.pictureUrl);
+          this.firstname.setValue(profile.firstname, { emitEvent: false });
+          this.lastname.setValue(profile.lastname, { emitEvent: false });
+          this.email.setValue(profile.email, { emitEvent: false });
+          this.pictureUrl.setValue(profile.pictureUrl, { emitEvent: false });
         })
       )
       .subscribe();
@@ -68,6 +73,11 @@ export class UpdateProfileComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.store.dispatch(loadProfile());
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   updateClicked() {

@@ -1,131 +1,66 @@
 .task-card {
+  cursor: pointer;
   transition: background-color .2s ease-in-out;
+  display: flex;
+  align-items: center;
 
-  .task-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    .card-chips {
-      justify-content: flex-end;
-    }
-
-    .title {
-      margin-left: 1.2rem;
-      font-size: 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
-    }
-
-    .input-group-prepend {
-      span,
-      label {
-        width: 10rem;
-      }
-    }
-
-    .flag {
-      font-size: 1.2rem;
-      margin: auto 1rem;
-    }
-
-    .fas {
-      margin-right: 1.4rem;
-    }
-
-    mat-divider {
-      margin-top: 2em;
-      margin-bottom: 2em;
-    }
-
-    .task-header-title {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      margin-top: auto;
-      margin-bottom: auto;
-      align-items: center;
-      flex: 1;
-      overflow: hidden;
-
-      .task-action {
-        flex: 0 0 40px;
-      }
-
-      .task-scope-id {
-        flex: 0 0 40px;
-      }
-
-      .task-checkbox {
-        flex: 0 0 16px;
-      }
-
-      .flag {
-        flex: 0;
-      }
-
-      .mat-checkbox {
-        margin: auto;
-      }
-    }
-
-    .task-footer {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-end;
-      flex: 0 0 160px;
-
-      .task-complete {
-        margin: 0 .8rem;
-      }
-    }
-
-    .chip-list {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      margin-right: .4rem;
-    }
-
-    .chip-spacer {
-      width: .4rem;
-    }
-
-    .mat-standard-chip {
-      min-height: 24px !important;
-    }
-
-    .expand-icon {
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      margin-left: .4rem;
-      visibility: hidden;
-    }
-
-    .task-card-user-chip {
-      margin-right: .6rem;
-      font-size: 12px / 24px 'Roboto', sans-serif !important;
-    }
-
-    .task-scope-id {
-      margin-left: 1.2rem;
-      border-radius: 4px;
-      padding: .2rem .4rem;
-      height: 1rem;
-      font-size: 14px;
-    }
+  .card-chips {
+    justify-content: flex-end;
   }
 
-  .task-header:hover {
-    .expand-icon {
-      visibility: visible;
-    }
+  .title {
+    margin-left: 1.2rem;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  .flag {
+    flex: 0;
+    font-size: 1.2rem;
+    margin: auto 1rem;
+  }
+
+  .task-action {
+    flex: 0 0 40px;
+  }
+
+  .task-checkbox {
+    flex: 0 0 16px;
+  }
+
+  .mat-checkbox {
+    margin: auto;
+  }
+
+  .task-complete {
+    margin: 0 .8rem;
+  }
+
+  .project-chip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-right: .4rem;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 3px 12px;
+    border-radius: 12rem;
+  }
+
+  app-avatar {
+    margin-right: .4rem;
+  }
+
+  .task-scope-id {
+    margin-left: 1.2rem;
+    border-radius: 4px;
+    padding: .2rem .4rem;
+    height: 1rem;
+    font-size: 14px;
   }
 }

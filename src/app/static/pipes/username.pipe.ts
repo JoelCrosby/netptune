@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { toDisplay } from '@core/models/converters/username.converter';
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 
 @Pipe({
   name: 'username',

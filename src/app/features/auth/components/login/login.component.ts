@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { AuthState } from '@core/auth/store/auth.models';
 import {
-  selectAuthLoading,
+  selectLoginLoading,
   selectShowLoginError,
 } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
@@ -38,7 +38,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(private store: Store<AuthState>) {
     this.showLoginError$ = this.store.select(selectShowLoginError);
-    this.authLoading$ = this.store.select(selectAuthLoading).pipe(
+    this.authLoading$ = this.store.select(selectLoginLoading).pipe(
       tap((loading) => {
         if (loading) return this.loginGroup.disable();
         return this.loginGroup.enable();

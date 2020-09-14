@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Projects;
@@ -34,6 +35,7 @@ namespace Netptune.Repositories
                 .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
+                .Include(project => project.ProjectBoards)
                 .Select(project => GetViewModel(project))
                 .ApplyReadonly(isReadonly);
         }
@@ -61,6 +63,9 @@ namespace Netptune.Repositories
 
         private static ProjectViewModel GetViewModel(Project project)
         {
+            var defaultBoard = project.ProjectBoards?.FirstOrDefault(board => board.BoardType == BoardType.Default);
+            var identifier = defaultBoard?.Identifier;
+
             return new ProjectViewModel
             {
                 Id = project.Id,
@@ -70,7 +75,8 @@ namespace Netptune.Repositories
                 WorkspaceId = project.WorkspaceId,
                 OwnerDisplayName = project.Owner.DisplayName,
                 UpdatedAt = project.UpdatedAt,
-                CreatedAt = project.CreatedAt
+                CreatedAt = project.CreatedAt,
+                DefaultBoardIdentifier = identifier,
             };
         }
     }

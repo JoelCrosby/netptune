@@ -3,29 +3,60 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
-import { Board } from '@app/core/models/board';
-import { BoardGroup } from '@app/core/models/board-group';
-import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { Board } from '@core/models/board';
+import { BoardGroup } from '@core/models/board-group';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { HeaderAction } from '@core/types/header-action';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { filter, first, map, startWith, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
   styleUrls: ['./board-groups-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [],
 })
-export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
+export class BoardGroupsViewComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('importTasksInput') importTasksInput: ElementRef;
+
   groups$: Observable<BoardGroup[]>;
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
 
-  constructor(private store: Store) {}
+  private board: Board;
+
+  secondaryActions: HeaderAction[] = [
+    {
+      label: 'Import Tasks',
+      click: () => this.onImportTasksClicked(),
+      icon: 'publish',
+      iconClass: 'material-icons-outlined',
+    },
+    {
+      label: 'Delete Board',
+      click: () => this.onDeleteBoardClicked(),
+      icon: 'delete',
+      iconClass: 'material-icons-outlined',
+    },
+  ];
+
+  constructor(
+    private store: Store,
+    private hubService: ProjectTasksHubService
+  ) {}
 
   ngOnInit() {
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
@@ -35,12 +66,31 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
 
     this.selectedBoardName$ = this.store.pipe(
       select(GroupSelectors.selectBoard),
+      filter((board) => !!board),
+      tap((board) => {
+        this.board = board;
+      }),
       map((board) => board && board.name)
     );
+
+    this.store
+      .select(GroupSelectors.selectBoardIdentifier)
+      .pipe(
+        filter((val) => !!val),
+        first(),
+        tap((identifier) => {
+          this.hubService.connect(identifier);
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit() {
     this.store.dispatch(GroupActions.loadBoardGroups());
+  }
+
+  ngOnDestroy() {
+    this.hubService.disconnect();
   }
 
   getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {
@@ -103,5 +153,29 @@ export class BoardGroupsViewComponent implements OnInit, AfterViewInit {
     };
 
     this.store.dispatch(GroupActions.editBoardGroup({ boardGroup }));
+  }
+
+  onImportTasksClicked() {
+    this.importTasksInput?.nativeElement.click();
+  }
+
+  onDeleteBoardClicked() {
+    const boardId = this.board.id;
+
+    if (boardId === undefined || boardId === null) return;
+
+    this.store.dispatch(BoardActions.deleteBoard({ boardId }));
+  }
+
+  handleFileInput(event: Event) {
+    const files = (event?.target as EventTarget & { files: File[] })?.files;
+
+    if (!files || !files.length) return;
+
+    const file = files[0];
+
+    const boardIdentifier = this.board.identifier;
+
+    this.store.dispatch(TaskActions.importTasks({ boardIdentifier, file }));
   }
 }

@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { DocumentService } from '@app/static/services/document.service';
+import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
 

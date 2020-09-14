@@ -109,6 +109,28 @@
                   <small>
                     {{ comment.createdAt | fromNow }}
                   </small>
+
+                  <div class="comment-actions">
+                    <button
+                      class="comment-button"
+                      mat-icon-button
+                      aria-label="Comment Actions"
+                      [matMenuTriggerFor]="commentMenu"
+                      [matMenuTriggerData]="{comment: comment}"
+                    >
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+
+                    <mat-menu #commentMenu="matMenu">
+                      <ng-template matMenuContent let-comment="comment">
+                        <button mat-menu-item (click)="onDeleteCommentClicked(comment)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Delete Comment</span>
+                        </button>
+                      </ng-template>
+                    </mat-menu>
+                  </div>
+
                 </span>
                 <span class="comment-body-text">
                   {{ comment.body }}
@@ -232,6 +254,16 @@
   </mat-dialog-content>
 
   <div mat-dialog-actions align="end">
+    <div class="task-dates">
+      <div class="created-at" [matTooltip]="task.createdAt | date: 'full'">
+        <label>Created</label>
+        <span>{{ task.createdAt | fromNow }}</span>
+      </div>
+      <div class="updated-at" [matTooltip]="task.updatedAt | date: 'full'">
+        <label>Updated</label>
+        <span>{{ task.updatedAt | fromNow }}</span>
+      </div>
+    </div>
     <button mat-stroked-button (click)="close()">Close</button>
   </div>
 

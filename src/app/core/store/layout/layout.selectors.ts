@@ -1,23 +1,23 @@
 import { createSelector } from '@ngrx/store';
-import { selectLayoutState } from '@core/core.state';
+import { selectLayoutFeature } from '@core/core.state';
 import { LayoutState } from './layout.reducer';
 
 export const selectSideNavOpen = createSelector(
-  selectLayoutState,
+  selectLayoutFeature,
   (state: LayoutState) => state.sideMenuOpen
 );
 
 export const selectSideMenuOpen = createSelector(
-  selectLayoutState,
+  selectLayoutFeature,
   (state: LayoutState) => state.sideMenuOpen
 );
 
 export const selectIsMobileView = createSelector(
-  selectLayoutState,
+  selectLayoutFeature,
   (state: LayoutState) => state.isMobileView
 );
 
 export const selectSideMenuMode = createSelector(
-  selectLayoutState,
+  selectLayoutFeature,
   (state: LayoutState) => state.sideNavMode
 );

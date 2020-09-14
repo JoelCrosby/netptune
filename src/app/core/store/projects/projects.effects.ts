@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of, asyncScheduler } from 'rxjs';
@@ -16,8 +16,8 @@ import {
 import { selectWorkspace } from '../workspaces/workspaces.actions';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '@core/services/confirmation.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -26,7 +26,7 @@ export class ProjectsEffects {
       this.actions$.pipe(
         ofType(actions.loadProjects, selectWorkspace),
         debounceTime(debounce, scheduler),
-        withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+        withLatestFrom(this.store.select(selectCurrentWorkspace)),
         switchMap(([_, workspace]) =>
           this.projectsService.get(workspace.slug).pipe(
             map((projects) => actions.loadProjectsSuccess({ projects })),
@@ -64,14 +64,19 @@ export class ProjectsEffects {
   deleteProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteProject),
-      switchMap((action) =>
+      switchMap(({ project }) =>
         this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.projectsService.delete(action.project).pipe(
+            return this.projectsService.delete(project).pipe(
               tap(() => this.snackbar.open('Project Deleted')),
-              map((project) => actions.deleteProjectSuccess({ project })),
+              map((response) =>
+                actions.deleteProjectSuccess({
+                  response,
+                  projectId: project.id,
+                })
+              ),
               catchError((error) => of(actions.deleteProjectFail({ error })))
             );
           })
@@ -95,6 +100,7 @@ export class ProjectsEffects {
 
 const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: 'Delete Project',
+  cancelLabel: 'Cancel',
   color: 'warn',
   title: 'Delete Project',
   message: 'Are you sure you wish to delete this project',

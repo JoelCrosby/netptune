@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
+import { HeaderAction } from '@core/types/header-action';
+import { Store } from '@ngrx/store';
+import { exportTasks } from '@core/store/tasks/tasks.actions';
 
 @Component({
   templateUrl: './project-tasks-view.component.html',
@@ -8,14 +11,24 @@ import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTasksViewComponent {
-  constructor(public dialog: MatDialog) {}
+  secondaryActions: HeaderAction[] = [
+    {
+      label: 'Export Tasks',
+      click: () => this.onExportTasksClicked(),
+      icon: 'get_app',
+      iconClass: 'material-icons-round',
+    },
+  ];
+
+  constructor(public dialog: MatDialog, private store: Store) {}
 
   showAddModal() {
-    this.dialog
-      .open(TaskDialogComponent, {
-        width: '600px',
-      })
-      .afterClosed()
-      .subscribe(() => {});
+    this.dialog.open(TaskDialogComponent, {
+      width: '600px',
+    });
+  }
+
+  onExportTasksClicked() {
+    this.store.dispatch(exportTasks());
   }
 }

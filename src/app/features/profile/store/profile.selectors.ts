@@ -24,3 +24,8 @@ export const selectUpdateProfileLoading = createSelector(
   selectProfileFeature,
   (state: ProfileState) => state.updateProfileLoading
 );
+
+export const selectChangePasswordLoading = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => state.changePasswordLoading
+);

@@ -8,12 +8,12 @@ const reducer = createReducer(
     ...state,
     theme,
   })),
-  on(actions.clearSttings, state => ({ ...state, theme: 'DEFAULT-THEME' }))
+  on(actions.clearSttings, (state) => ({ ...state, theme: 'DEFAULT-THEME' }))
 );
 
 export function settingsReducer(
   state: SettingsState | undefined,
   action: Action
-) {
+): SettingsState {
   return reducer(state, action);
 }

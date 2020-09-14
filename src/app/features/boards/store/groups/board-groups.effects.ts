@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BoardGroupType } from '@app/core/models/board-group';
-import { ProjectTasksService } from '@app/core/store/tasks/tasks.service';
 import {
   isBoardGroupsRoute,
   selectRouterParam,
 } from '@core/core.route.selectors';
+import { BoardGroupType } from '@core/models/board-group';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import * as ProjectTaskActions from '@core/store/tasks/tasks.actions';
+import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -23,14 +23,17 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import { selectBoardGroupsSelectedUserIds } from './board-groups.selectors';
+import {
+  selectBoardGroupsSelectedUserIds,
+  selectBoardIdentifier,
+} from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
 export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(actions.loadBoardGroups),
+      ofType(actions.loadBoardGroups, TaskActions.importTasksSuccess),
       withLatestFrom(
         this.store.select(selectRouterParam, 'id'),
         this.route.queryParamMap,
@@ -81,8 +84,9 @@ export class BoardGroupsEffects {
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProjectTask),
-      switchMap((action) =>
-        this.projectTasksService.post(action.task).pipe(
+      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      switchMap(([action, identifier]) =>
+        this.tasksHubService.post(identifier, action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -100,7 +104,7 @@ export class BoardGroupsEffects {
 
   taskDeleted$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProjectTaskActions.deleteProjectTasksSuccess),
+      ofType(TaskActions.deleteProjectTasksSuccess),
       withLatestFrom(this.store.select(isBoardGroupsRoute)),
       filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups())
@@ -126,8 +130,10 @@ export class BoardGroupsEffects {
 
             return this.boardGroupsService.delete(action.boardGroup).pipe(
               tap(() => this.snackbar.open('Board Group Deleted')),
-              map((boardGroup) =>
-                actions.deleteBoardGroupSuccess({ boardGroup })
+              map(() =>
+                actions.deleteBoardGroupSuccess({
+                  boardGroupId: action.boardGroup.id,
+                })
               ),
               catchError((error) => of(actions.deleteBoardGroupFail({ error })))
             );
@@ -152,11 +158,16 @@ export class BoardGroupsEffects {
   moveTaskInBoardGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
-      switchMap((action) =>
-        this.boardGroupsService.moveTaskInBoardGroup(action.request).pipe(
-          map(actions.moveTaskInBoardGroupSuccess),
-          catchError((error) => of(actions.moveTaskInBoardGroupFail({ error })))
-        )
+      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      switchMap(([action, identifier]) =>
+        this.tasksHubService
+          .moveTaskInBoardGroup(identifier, action.request)
+          .pipe(
+            map(actions.moveTaskInBoardGroupSuccess),
+            catchError((error) =>
+              of(actions.moveTaskInBoardGroupFail({ error }))
+            )
+          )
       )
     )
   );
@@ -183,7 +194,7 @@ export class BoardGroupsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
-    private projectTasksService: ProjectTasksService,
+    private tasksHubService: ProjectTasksHubService,
     private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,

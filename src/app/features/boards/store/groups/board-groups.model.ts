@@ -1,8 +1,8 @@
 import { BoardGroup } from '@core/models/board-group';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
-import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
-import { AppUser } from '@app/core/models/appuser';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { AppUser } from '@core/models/appuser';
 
 export function sortBySortOrder(a: BoardGroup, b: BoardGroup): number {
   return a.sortOrder - b.sortOrder;

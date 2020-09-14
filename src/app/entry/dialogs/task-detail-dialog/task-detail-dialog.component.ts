@@ -9,23 +9,31 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from '@app/core/auth/store/auth.models';
-import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
-import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import { selectBoardIdentifier } from '@boards/store/groups/board-groups.selectors';
+import { UserResponse } from '@core/auth/store/auth.models';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import * as UsersSelectors from '@core/store/users/users.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
+import * as UsersSelectors from '@core/store/users/users.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter, first, takeUntil, tap } from 'rxjs/operators';
-import { AppUser } from '@app/core/models/appuser';
+import {
+  debounceTime,
+  filter,
+  first,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -39,7 +47,7 @@ export class TaskDetailDialogComponent
   projects$: Observable<ProjectViewModel[]>;
   users$: Observable<AppUser[]>;
   comments$: Observable<CommentViewModel[]>;
-  user$: Observable<User>;
+  user$: Observable<UserResponse>;
 
   selectedTypeValue: number;
 
@@ -172,11 +180,20 @@ export class TaskDetailDialogComponent
   }
 
   updateTask(task: TaskViewModel) {
-    this.store.dispatch(
-      TaskActions.editProjectTask({
-        task,
-      })
-    );
+    this.store
+      .select(selectBoardIdentifier)
+      .pipe(
+        first(),
+        tap((identifier) => {
+          this.store.dispatch(
+            TaskActions.editProjectTask({
+              identifier,
+              task,
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 
   close() {
@@ -252,10 +269,18 @@ export class TaskDetailDialogComponent
     this.task$
       .pipe(
         first(),
-        tap((task) => {
-          this.store.dispatch(TaskActions.deleteProjectTask({ task }));
+        withLatestFrom(this.store.select(selectBoardIdentifier)),
+        tap(([task, identifier]) => {
+          this.store.dispatch(
+            TaskActions.deleteProjectTask({ identifier, task })
+          );
         })
       )
       .subscribe();
+  }
+
+  onDeleteCommentClicked(comment: CommentViewModel) {
+    const commentId = comment.id;
+    this.store.dispatch(TaskActions.deleteComment({ commentId }));
   }
 }

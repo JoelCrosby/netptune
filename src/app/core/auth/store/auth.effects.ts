@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { openSideNav } from '@core/store/layout/layout.actions';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
+  filter,
   map,
   switchMap,
   tap,
@@ -17,14 +19,13 @@ import {
 } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
-import { User } from './auth.models';
-import { selectAuthState } from './auth.selectors';
-import { openSideNav } from '@app/core/store/layout/layout.actions';
+import { UserResponse } from './auth.models';
+import { selectAuthState, selectIsAuthenticated } from './auth.selectors';
 
 export const AUTH_KEY = 'AUTH';
 
 @Injectable()
-export class AuthEffects {
+export class AuthEffects implements OnInitEffects {
   constructor(
     private actions$: Actions<Action>,
     private localStorageService: LocalStorageService,
@@ -34,6 +35,13 @@ export class AuthEffects {
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar
   ) {}
+
+  init$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[Auth]: Init'),
+      map(() => actions.currentUser())
+    )
+  );
 
   persistSettings = createEffect(
     () =>
@@ -46,15 +54,41 @@ export class AuthEffects {
           actions.registerSuccess,
           actions.registerFail,
           actions.confirmEmailSuccess,
-          actions.confirmEmailFail
+          actions.confirmEmailFail,
+          actions.currentUserSuccess
         ),
-        withLatestFrom(this.store.pipe(select(selectAuthState))),
+        withLatestFrom(this.store.select(selectAuthState)),
         tap(([_, settings]) => {
-          const { currentUser } = settings;
-          this.localStorageService.setItem(AUTH_KEY, { currentUser });
+          const { token, currentUser } = settings;
+          this.localStorageService.setItem(AUTH_KEY, { token, currentUser });
         })
       ),
     { dispatch: false }
+  );
+
+  fetchCurrentUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        actions.loginSuccess,
+        actions.registerSuccess,
+        actions.confirmEmailSuccess
+      ),
+      map(() => actions.currentUser())
+    )
+  );
+
+  currentUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.currentUser),
+      withLatestFrom(this.store.select(selectIsAuthenticated)),
+      filter(([_, auth]) => auth),
+      switchMap(() =>
+        this.authService.currentUser().pipe(
+          map((user: UserResponse) => actions.currentUserSuccess({ user })),
+          catchError((error) => of(actions.currentUserFail({ error })))
+        )
+      )
+    )
   );
 
   login$ = createEffect(({ debounce = 500, scheduler = asyncScheduler } = {}) =>
@@ -63,10 +97,10 @@ export class AuthEffects {
       debounceTime(debounce, scheduler),
       switchMap((action) =>
         this.authService.login(action.request).pipe(
-          map((userInfo: User) => actions.loginSuccess({ userInfo })),
+          map((token) => actions.loginSuccess({ token })),
           tap(() => this.router.navigate(['/workspaces'])),
           tap(() => this.store.dispatch(openSideNav())),
-          catchError((error) => of(actions.loginFail({ error })))
+          catchError(() => of(actions.loginFail()))
         )
       )
     )
@@ -79,7 +113,7 @@ export class AuthEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.register(action.request).pipe(
-            map((userInfo: User) => actions.registerSuccess({ userInfo })),
+            map((token) => actions.registerSuccess({ token })),
             tap(() => this.router.navigate(['/workspaces'])),
             catchError((error) => of(actions.registerFail({ error })))
           )
@@ -94,7 +128,7 @@ export class AuthEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.confirmEmail(action.request).pipe(
-            map((userInfo: User) => actions.confirmEmailSuccess({ userInfo })),
+            map((token) => actions.confirmEmailSuccess({ token })),
             tap(() => this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Email confirmed successfully')),
             catchError((error) => of(actions.confirmEmailFail({ error })))
@@ -143,7 +177,7 @@ export class AuthEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.resetPassword(action.request).pipe(
-            map((userInfo: User) => actions.resetPasswordSuccess({ userInfo })),
+            map((token) => actions.resetPasswordSuccess({ token })),
             tap(() => this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Password has been reset')),
             catchError((error) => of(actions.resetPasswordFail({ error })))
@@ -189,6 +223,10 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
+
+  ngrxOnInitEffects(): Action {
+    return { type: '[Auth]: Init' };
+  }
 }
 
 const LOGOUT_CONFIRMATION: ConfirmDialogOptions = {

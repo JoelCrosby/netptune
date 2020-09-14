@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { User } from '@core/auth/store/auth.models';
+import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -19,7 +19,7 @@ import { Workspace } from '@core/models/workspace';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { select, Store } from '@ngrx/store';
 import {
   combineLatest,
@@ -55,7 +55,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   currentWorkspace$: Observable<Workspace>;
   currentProject$: Observable<ProjectViewModel>;
   inlineEditActive$: Observable<boolean>;
-  currentUser$: Observable<User>;
+  currentUser$: Observable<UserResponse>;
 
   taskGroup = new FormGroup({
     taskName: new FormControl(),
@@ -74,7 +74,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   constructor(private store: Store, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
+    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
     this.currentProject$ = this.store.pipe(select(selectCurrentProject));
     this.currentUser$ = this.store.pipe(select(selectCurrentUser));
 
@@ -131,7 +131,11 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       });
   }
 
-  createTask(workspace: Workspace, project: ProjectViewModel, user: User) {
+  createTask(
+    workspace: Workspace,
+    project: ProjectViewModel,
+    user: UserResponse
+  ) {
     const lastSibling =
       this.siblings && this.siblings[this.siblings.length - 1];
 
@@ -146,7 +150,9 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       assigneeId: user.userId,
     };
 
-    this.store.dispatch(TaskActions.createProjectTask({ task }));
+    this.store.dispatch(
+      TaskActions.createProjectTask({ identifier: '[none]', task })
+    );
 
     this.taskGroup.reset();
   }

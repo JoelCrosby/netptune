@@ -5,16 +5,16 @@
 @import './styles/utility';
 @import './styles/components';
 @import './styles/lists';
+@import './styles/forms';
 @import './styles/spinners';
 @import './styles/typography';
-@import './styles/containers.scss';
-@import './styles/modals.scss';
-@import './styles/forms.scss';
+@import './styles/containers';
+@import './styles/modals';
 
 // Angular Material Theming core
 @import '~@angular/material/theming';
 
-@include mat-core;
+@include mat-core($netptune-typography);
 
 // Themes
 @import './themes/default-theme';
@@ -32,12 +32,12 @@
 @import './app/static/components/avatar/avatar.component.scss-theme.scss';
 @import './app/static/components/page-header/page-header.component.scss-theme.scss';
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
-@import './app/features/workspaces/shell/shell.component.scss-theme';
-@import './app/features/workspaces/index/workspaces.index.component.scss-theme.scss';
+@import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
+@import './app/features/workspaces/components/shell/shell.component.scss-theme';
+@import './app/features/workspaces/components/create-workspace-list-item/create-workspace-list-item.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
 @import './app/features/project-tasks/components/task-list/task-list.component.scss-theme.scss';
-@import './app/features/projects/components/projects-list/projects-list.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-inline/task-inline.component.scss-theme.scss';
 @import './app/features/boards/views/board-groups-view/board-groups-view.component.scss-theme.scss';
 @import './app/features/boards/components/board-group/board-group.component.scss-theme.scss';
@@ -59,11 +59,10 @@
   @include spinner-theme($theme);
   @include avatar-theme($theme);
   @include page-header-theme($theme);
-  @include workspaces-index-theme($theme);
+  @include create-workspace-list-item-theme($theme);
   @include task-list-group-theme($theme);
   @include task-list-item-theme($theme);
   @include project-tasks-list-theme($theme);
-  @include projects-list-theme($theme);
   @include task-inline-theme($theme);
   @include board-groups-view-theme($theme);
   @include board-group-theme($theme);
@@ -73,6 +72,7 @@
   @include board-group-card-theme($theme);
   @include task-detail-dialog-theme($theme);
   @include board-group-users-theme($theme);
+  @include workspace-dialog-theme($theme);
 }
 
 .default-theme {

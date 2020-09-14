@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 
 @Component({
   selector: 'app-user-list-item',

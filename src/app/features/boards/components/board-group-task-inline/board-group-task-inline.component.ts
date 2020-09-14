@@ -12,13 +12,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { User } from '@app/core/auth/store/auth.models';
-import { selectCurrentUser } from '@app/core/auth/store/auth.selectors';
-import { AddProjectTaskRequest } from '@app/core/models/project-task';
-import { Workspace } from '@app/core/models/workspace';
+import { UserResponse } from '@core/auth/store/auth.models';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AddProjectTaskRequest } from '@core/models/project-task';
+import { Workspace } from '@core/models/workspace';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import {
@@ -55,7 +55,7 @@ export class BoardGroupTaskInlineComponent
 
   currentWorkspace$: Observable<Workspace>;
   currentProjectId$: Observable<number>;
-  currentUser$: Observable<User>;
+  currentUser$: Observable<UserResponse>;
 
   createInProgress$ = new BehaviorSubject<boolean>(false);
 
@@ -93,7 +93,7 @@ export class BoardGroupTaskInlineComponent
   ngAfterViewInit() {
     this.inputElementRef.nativeElement.focus();
 
-    this.currentWorkspace$ = this.store.pipe(select(SelectCurrentWorkspace));
+    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
     this.currentProjectId$ = this.store.pipe(
       select(BoardGroupSelectors.selectBoardProjectId)
     );
@@ -127,7 +127,7 @@ export class BoardGroupTaskInlineComponent
       });
   }
 
-  createTask(workspace: Workspace, projectId: number, user: User) {
+  createTask(workspace: Workspace, projectId: number, user: UserResponse) {
     const task: AddProjectTaskRequest = {
       name: (this.taskInputControl.value as string).trim(),
       projectId,

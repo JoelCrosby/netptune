@@ -4,7 +4,7 @@
 
   <div class="task-list">
 
-    <ng-container *ngIf="(loaded | async) && tasks.length; else elseTemplate">
+    <ng-container *ngIf="tasks.length; else elseTemplate">
       <div
         cdkDropList
         class="task-list-group"
@@ -28,41 +28,11 @@
             [matMenuTriggerData]="{ task: taskItem }"
             [matMenuTriggerFor]="menu"
           >
-            <mat-icon class="drag">drag_indicator</mat-icon>
+            <mat-icon class="drag">
+              drag_indicator
+            </mat-icon>
           </button>
 
-
-          <mat-menu #menu="matMenu">
-            <ng-template
-              matMenuContent
-              let-task="task"
-            >
-              <button
-                mat-menu-item
-                (click)="markCompleteClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">done</mat-icon>
-                <span>Mark Complete</span>
-              </button>
-
-              <button
-                mat-menu-item
-                (click)="moveToBacklogClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">assignment_returned_outline</mat-icon>
-                <span>Move to Backlog</span>
-              </button>
-
-              <button
-                mat-menu-item
-                (click)="deleteClicked(task)"
-              >
-                <mat-icon class="material-icons-outlined">delete</mat-icon>
-                <span>Delete</span>
-              </button>
-
-            </ng-template>
-          </mat-menu>
         </app-task-list-item>
 
 
@@ -76,26 +46,55 @@
     </ng-container>
 
     <ng-template #elseTemplate>
-      <ng-container *ngIf="(loaded | async); else loadedElseTemplate">
 
-        <app-task-inline [status]="status"></app-task-inline>
+      <app-task-inline [status]="status"></app-task-inline>
 
-        <div class="list-empty">
-          <div class="list-empty-mark">
-            <i class="far fa-compass"></i>
-            <h4 class="empty-text">{{ emptyMessage }}</h4>
-          </div>
+      <div class="list-empty">
+        <div class="list-empty-mark">
+          <i class="far fa-compass"></i>
+          <h4 class="empty-text">{{ emptyMessage }}</h4>
         </div>
+      </div>
 
-      </ng-container>
-      <ng-template #loadedElseTemplate>
-
-        <div class="spinner-container">
-          <div class="typing-loader"></div>
-        </div>
-
-      </ng-template>
     </ng-template>
 
   </div>
 </div>
+
+<mat-menu #menu="matMenu">
+  <ng-template
+    matMenuContent
+    let-task="task"
+  >
+    <button
+      mat-menu-item
+      (click)="markCompleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        done
+      </mat-icon>
+      <span>Mark Complete</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="moveToBacklogClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        assignment_returned_outline
+      </mat-icon>
+      <span>Move to Backlog</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="deleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        delete
+      </mat-icon>
+      <span>Delete</span>
+    </button>
+
+  </ng-template>
+</mat-menu>

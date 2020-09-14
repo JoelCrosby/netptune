@@ -1,16 +1,19 @@
-import { BoardGroupsState } from './board-groups.model';
-import { MoveTaskInGroupRequest } from '@app/core/models/move-task-in-group-request';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { getNewSortOrder } from '@app/core/util/sort-order-helper';
+import { BoardGroup } from '@core/models/board-group';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
-import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { BoardGroup } from '@app/core/models/board-group';
+import { Update } from '@ngrx/entity';
+import { adapter, BoardGroupsState } from './board-groups.model';
+import { cloneDeep } from 'lodash-es';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
   request: MoveTaskInGroupRequest
 ): BoardGroupsState => {
-  const newGroup = state.entities[request.newGroupId];
+  const stateClone = cloneDeep(state);
+  const newGroup = stateClone.entities[request.newGroupId];
 
   if (request.oldGroupId === request.newGroupId) {
     moveItemInArray(
@@ -20,7 +23,7 @@ export const moveTaskInBoardGroup = (
     );
   } else {
     transferArrayItem(
-      state.entities[request.oldGroupId].tasks,
+      stateClone.entities[request.oldGroupId].tasks,
       newGroup.tasks,
       request.previousIndex,
       request.currentIndex
@@ -37,7 +40,7 @@ export const moveTaskInBoardGroup = (
 
   const sortOrder = getNewSortOrder(preOrder, nextOrder);
 
-  state.entities[request.newGroupId].tasks = state.entities[
+  stateClone.entities[request.newGroupId].tasks = stateClone.entities[
     request.newGroupId
   ].tasks.map((task) => {
     if (task.id !== request.taskId) {
@@ -51,11 +54,11 @@ export const moveTaskInBoardGroup = (
     };
   });
 
-  return state;
+  return stateClone;
 };
 
 export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
-  const getGroupWithTask = () => {
+  const getGroupWithTask = (): BoardGroup | undefined => {
     for (const g of Object.values(state.entities)) {
       if (g?.tasks.findIndex((x) => x.id === task.id) !== -1) {
         return g;
@@ -65,11 +68,11 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
     return undefined;
   };
 
-  const group: BoardGroup = getGroupWithTask();
+  const group = getGroupWithTask();
 
   if (!group) return state;
 
-  group.tasks = group.tasks.map((item) => {
+  const tasks = group.tasks.map((item) => {
     if (item.id !== task.id) {
       return item;
     }
@@ -79,5 +82,13 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
     };
   });
 
-  return state;
+  const update: Update<BoardGroup> = {
+    id: group.id,
+    changes: {
+      ...group,
+      tasks,
+    },
+  };
+
+  return adapter.updateOne(update, state);
 };

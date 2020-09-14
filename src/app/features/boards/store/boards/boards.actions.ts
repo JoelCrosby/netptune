@@ -1,9 +1,15 @@
-import { createAction, props } from '@ngrx/store';
-import { Board } from '@app/core/models/board';
-import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
 import { HttpErrorResponse } from '@angular/common/http';
+import {
+  ClientResponse,
+  ClientResponsePayload,
+} from '@core/models/client-response';
+import { AddBoardRequest } from '@core/models/requests/add-board-request';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Boards] Clear State');
+
+// Load Boards
 
 export const loadBoards = createAction('[Boards] Load Boards');
 
@@ -17,14 +23,16 @@ export const loadBoardsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Create Board
+
 export const createBoard = createAction(
   '[Boards] Create Board',
-  props<{ board: Board }>()
+  props<{ request: AddBoardRequest }>()
 );
 
 export const createBoardSuccess = createAction(
   '[Boards] Create Board Success',
-  props<{ board: BoardViewModel }>()
+  props<{ response: ClientResponsePayload<BoardViewModel> }>()
 );
 
 export const createBoardFail = createAction(
@@ -32,14 +40,16 @@ export const createBoardFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Delete Board
+
 export const deleteBoard = createAction(
   '[Boards] Delete Board',
-  props<{ board: BoardViewModel }>()
+  props<{ boardId: number }>()
 );
 
 export const deleteBoardSuccess = createAction(
   '[Boards] Delete Board Success',
-  props<{ board: BoardViewModel }>()
+  props<{ response: ClientResponse; boardId: number }>()
 );
 
 export const deleteBoardFail = createAction(

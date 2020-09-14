@@ -1,14 +1,47 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@core/*": ["src/app/core/*"],
+      "@env/*": ["src/environments/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@static/*": ["src/app/static/*"],
+      "@entry/*": ["src/app/entry/*"],
+      "@auth/*": ["src/app/features/auth/*"],
+      "@boards/*": ["src/app/features/boards/*"],
+      "@profile/*": ["src/app/features/profile/*"],
+      "@project-tasks/*": ["src/app/features/project-tasks/*"],
+      "@projects/*": ["src/app/features/projects/*"],
+      "@settings/*": ["src/app/features/settings/*"],
+      "@users/*": ["src/app/features/users/*"],
+      "@workspaces/*": ["src/app/features/workspaces/*"]
     }
-  ]
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }

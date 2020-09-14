@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AppUser } from '@app/core/models/appuser';
+import { AppUser } from '@core/models/appuser';
 import { toggleUserSelection } from '@boards/store/groups/board-groups.actions';
 import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
 import { Selected } from '@core/models/selected';

@@ -79,7 +79,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
         {
-            var result = await WorkspaceService.DeleteWorkspace(id);
+            var result = await WorkspaceService.Delete(id);
 
             if (result is null) return NotFound();
 
@@ -93,6 +93,17 @@ namespace Netptune.Api.Controllers
         public async Task<IActionResult> GetAllWorkspaces()
         {
             var result = await WorkspaceService.GetAll();
+
+            return Ok(result);
+        }
+
+        // GET: api/Workspaces/is-unique
+        [HttpGet("is-unique/{slug}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<Workspace>))]
+        public async Task<IActionResult> IsSlugUnique([FromRoute] string slug)
+        {
+            var result = await WorkspaceService.IsSlugUnique(slug);
 
             return Ok(result);
         }

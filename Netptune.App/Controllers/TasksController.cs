@@ -70,7 +70,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PutTask([FromBody] UpdateProjectTaskRequest request)
         {
-            var result = await TaskService.UpdateTask(request);
+            var result = await TaskService.Update(request);
 
             if (result is null) return NotFound();
 
@@ -84,7 +84,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> PostTask([FromBody] AddProjectTaskRequest request)
         {
-            var result = await TaskService.AddTask(request);
+            var result = await TaskService.Create(request);
 
             return Ok(result);
         }
@@ -96,7 +96,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var result = await TaskService.DeleteTask(id);
+            var result = await TaskService.Delete(id);
 
             if (result is null) return NotFound();
 
@@ -128,6 +128,19 @@ namespace Netptune.Api.Controllers
             if (result is null) return NotFound();
 
             return Ok(result);
+        }
+
+        // GET: api/tasks/export-workspace
+        [HttpGet]
+        [Route("export-workspace/{workspace}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(TaskViewModel))]
+        public async Task<IActionResult> ExportWorkspaceTasks([FromRoute] string workspace)
+        {
+            var result = await TaskService.ExportWorkspaceTasks(workspace);
+
+            return File(result.Stream, result.ContentType, result.Filename);
         }
     }
 }

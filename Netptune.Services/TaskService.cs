@@ -1,20 +1,23 @@
-using Microsoft.EntityFrameworkCore;
-
-using Netptune.Core.Entities;
-using Netptune.Core.Enums;
-using Netptune.Core.Ordering;
-using Netptune.Core.Relationships;
-using Netptune.Core.Repositories;
-using Netptune.Core.Requests;
-using Netptune.Core.Services;
-using Netptune.Core.UnitOfWork;
-using Netptune.Core.ViewModels.ProjectTasks;
-
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Extensions;
+using Netptune.Core.Models.Files;
+using Netptune.Core.Ordering;
+using Netptune.Core.Relationships;
+using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
+using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Services
 {
@@ -31,7 +34,7 @@ namespace Netptune.Services
             IdentityService = identityService;
         }
 
-        public async Task<TaskViewModel> AddTask(AddProjectTaskRequest request)
+        public async Task<TaskViewModel> Create(AddProjectTaskRequest request)
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(request.Workspace, true);
 
@@ -75,7 +78,7 @@ namespace Netptune.Services
             {
                 if (saveCounter > 4) throw new Exception($"Save Task failed after {saveCounter + 1} attempts.");
 
-                var scopeId = await GetNextProjectScopeId(project.Id, increment);
+                var scopeId = await TaskRepository.GetNextScopeId(project.Id, increment);
 
                 if (!scopeId.HasValue) throw new Exception($"Unable to get scope id for project with id {project.Id}.");
 
@@ -98,21 +101,18 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
-        public async Task<TaskViewModel> DeleteTask(int id)
+        public async Task<ClientResponse> Delete(int id)
         {
             var task = await TaskRepository.GetAsync(id);
-            var user = await IdentityService.GetCurrentUser();
+            var userId = await IdentityService.GetCurrentUserId();
 
-            if (task is null) return null;
+            if (task is null || userId is null) return null;
 
-            task.IsDeleted = true;
-            task.DeletedByUserId = user.Id;
-
-            await RemoveTaskFromGroups(id);
+            task.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
 
-            return await TaskRepository.GetTaskViewModel(task.Id);
+            return ClientResponse.Success();
         }
 
         public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
@@ -135,7 +135,7 @@ namespace Netptune.Services
             return TaskRepository.GetTasksAsync(workspaceSlug);
         }
 
-        public async Task<TaskViewModel> UpdateTask(UpdateProjectTaskRequest request)
+        public async Task<TaskViewModel> Update(UpdateProjectTaskRequest request)
         {
             if (request?.Id is null) throw new ArgumentNullException(nameof(request));
 
@@ -164,6 +164,19 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
+        public async Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug)
+        {
+            var tasks = await TaskRepository.GetExportTasksAsync(workspaceSlug);
+            var stream = await tasks.ToCsvStream();
+
+            return new FileResponse
+            {
+                Stream = stream,
+                ContentType = "application/octet-stream",
+                Filename = $"Netptune-Task-Export_{workspaceSlug}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
+            };
+        }
+
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
         {
             await RemoveTaskFromGroups(result.Id);
@@ -175,7 +188,7 @@ namespace Netptune.Services
                 return;
             }
 
-            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, true);
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, false, true);
 
             if (defaultBoard is null)
             {
@@ -231,7 +244,7 @@ namespace Netptune.Services
 
         private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
         {
-            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, true);
+            var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true);
 
             if (defaultBoard is null)
             {
@@ -250,7 +263,7 @@ namespace Netptune.Services
             });
         }
 
-        public Task<ProjectTaskInBoardGroup> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
+        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
@@ -260,7 +273,7 @@ namespace Netptune.Services
             return TransferTaskInGroups(request);
         }
 
-        private async Task<ProjectTaskInBoardGroup> TransferTaskInGroups(MoveTaskInGroupRequest request)
+        private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)
         {
             await UnitOfWork.Transaction(async () =>
             {
@@ -315,10 +328,10 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return taskInBoardGroup;
+            return ClientResponse.Success();
         }
 
-        private async Task<ProjectTaskInBoardGroup> MoveTaskInGroup(MoveTaskInGroupRequest request)
+        private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request)
         {
             var item = await UnitOfWork
                 .ProjectTasksInGroups
@@ -334,7 +347,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return item;
+            return ClientResponse.Success();
         }
 
         private async Task<double> GetTaskInGroupSortOrder
@@ -371,11 +384,6 @@ namespace Netptune.Services
             await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
 
             await UnitOfWork.CompleteAsync();
-        }
-
-        private Task<int?> GetNextProjectScopeId(int projectId, int increment = 0)
-        {
-            return TaskRepository.GetNextScopeId(projectId, increment);
         }
     }
 }

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
@@ -77,6 +79,7 @@ namespace Netptune.Services
                 Identifier = GenerateDefaultBoardId(project.Key),
                 Name = project.Name,
                 OwnerId = project.OwnerId,
+                MetaInfo = new BoardMeta(),
                 BoardType = BoardType.Default,
                 BoardGroups = new[]
                 {
@@ -107,19 +110,18 @@ namespace Netptune.Services
             return $"{projectKey.ToLowerInvariant().ToUrlSlug(true)}-default-board";
         }
 
-        public async Task<Project> DeleteProject(int id)
+        public async Task<ClientResponse> Delete(int id)
         {
             var project = await ProjectRepository.GetAsync(id);
-            var user = await IdentityService.GetCurrentUser();
+            var userId = await IdentityService.GetCurrentUserId();
 
-            if (project is null) return null;
+            if (project is null || userId is null) return null;
 
-            project.IsDeleted = true;
-            project.DeletedByUserId = user.Id;
+            project.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
 
-            return project;
+            return ClientResponse.Success();
         }
 
         public Task<ProjectViewModel> GetProject(int id)
