@@ -29,8 +29,9 @@ namespace Netptune.Services
         {
             var userId = await Identity.GetCurrentUserId();
             var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.WorkspaceSlug);
 
-            if (taskId is null) return null;
+            if (taskId is null || !workspaceId.HasValue) return null;
 
             var comment = new Comment
             {
@@ -38,6 +39,7 @@ namespace Netptune.Services
                 EntityType = EntityType.Task,
                 OwnerId = userId,
                 EntityId = taskId.Value,
+                WorkspaceId = workspaceId.Value,
             };
 
             await Comments.AddAsync(comment);

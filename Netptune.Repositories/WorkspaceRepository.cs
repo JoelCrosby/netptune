@@ -19,6 +19,15 @@ namespace Netptune.Repositories
         {
         }
 
+        public async Task<int?> GetIdBySlug(string slug)
+        {
+            var result = await Entities
+                .IsReadonly(true)
+                .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+
+            return result?.Id;
+        }
+
         public Task<Workspace> GetBySlug(string slug, bool isReadonly = false)
         {
             return Entities

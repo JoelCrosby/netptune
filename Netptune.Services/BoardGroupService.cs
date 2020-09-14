@@ -121,6 +121,7 @@ namespace Netptune.Services
                 Name = request.Name,
                 Type = request.Type ?? BoardGroupType.Basic,
                 SortOrder = sortOrder,
+                WorkspaceId = board.WorkspaceId,
             };
 
             board.BoardGroups.Add(boardGroup);
