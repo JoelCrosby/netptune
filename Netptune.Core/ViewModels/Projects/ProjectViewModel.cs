@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Netptune.Core.ViewModels.Projects
 {
@@ -19,5 +19,7 @@ namespace Netptune.Core.ViewModels.Projects
         public DateTime? UpdatedAt { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public string DefaultBoardIdentifier { get; set; }
     }
 }

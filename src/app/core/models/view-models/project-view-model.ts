@@ -7,4 +7,5 @@ export interface ProjectViewModel {
   ownerDisplayName: string;
   updatedAt: Date;
   createdAt: Date;
+  defaultBoardIdentifier: string;
 }

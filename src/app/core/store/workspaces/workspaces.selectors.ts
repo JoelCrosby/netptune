@@ -1,4 +1,5 @@
 import { selectWorkspacesFeature } from '@core/core.state';
+import { Workspace } from '@core/models/workspace';
 import { createSelector } from '@ngrx/store';
 import { adapter, WorkspacesState } from './workspaces.model';
 
@@ -27,6 +28,11 @@ export const selectWorkspacesLoaded = createSelector(
 export const selectCurrentWorkspace = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.currentWorkspace
+);
+
+export const selectCurrentWorkspaceIdentifier = createSelector(
+  selectCurrentWorkspace,
+  (state: Workspace) => state?.slug
 );
 
 export const selectIsSlugUnique = createSelector(
