@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { SelectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -14,15 +14,15 @@ import {
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Injectable()
 export class UsersEffects {
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadUsers),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([_, workspace]) =>
         this.usersService.getUsersInWorkspace(workspace.slug).pipe(
           map((users) => actions.loadUsersSuccess({ users })),
@@ -39,7 +39,7 @@ export class UsersEffects {
   inviteUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.inviteUsersToWorkspace),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([{ emailAddresses }, workspace]) =>
         this.usersService
           .inviteUsersToWorkspace(emailAddresses, workspace.slug)
@@ -59,7 +59,7 @@ export class UsersEffects {
   removeUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.removeUsersFromWorkspace),
-      withLatestFrom(this.store.select(SelectCurrentWorkspace)),
+      withLatestFrom(this.store.select(selectCurrentWorkspace)),
       switchMap(([{ emailAddresses }, workspace]) =>
         this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
           switchMap((result) => {

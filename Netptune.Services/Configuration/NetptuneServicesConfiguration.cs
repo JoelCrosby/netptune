@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.MappingProfiles;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Import;
+using Netptune.Services.Import;
 
 namespace Netptune.Services.Configuration
 {
@@ -27,6 +29,8 @@ namespace Netptune.Services.Configuration
             services.AddTransient<IBoardService, BoardService>();
             services.AddTransient<IBoardGroupService, BoardGroupService>();
             services.AddTransient<ICommentService, CommentService>();
+
+            services.AddTransient<ITaskImportService, TaskImportService>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<IIdentityService, IdentityService>();

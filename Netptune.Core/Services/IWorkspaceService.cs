@@ -3,12 +3,16 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 
 namespace Netptune.Core.Services
 {
     public interface IWorkspaceService
     {
         Task<Workspace> GetWorkspace(string slug);
+
+        Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug);
 
         Task<Workspace> GetWorkspace(int id);
 
@@ -20,6 +24,6 @@ namespace Netptune.Core.Services
 
         Task<Workspace> AddWorkspace(AddWorkspaceRequest request);
 
-        Task<Workspace> DeleteWorkspace(int id);
+        Task<ClientResponse> Delete(int id);
     }
 }

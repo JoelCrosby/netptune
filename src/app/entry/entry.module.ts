@@ -6,9 +6,9 @@ import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.comp
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
-import { SharedModule } from '@app/shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-group-dialog.component';
-import { StaticModule } from '@app/static/static.module';
+import { StaticModule } from '@static/static.module';
 
 @NgModule({
   declarations: [

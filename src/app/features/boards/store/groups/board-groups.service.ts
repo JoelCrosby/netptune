@@ -1,11 +1,12 @@
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BoardGroup } from '@app/core/models/board-group';
-import { BoardGroupsViewModel } from '@app/core/models/view-models/board-groups-view-model';
+import { BoardGroup } from '@core/models/board-group';
+import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
 import { environment } from '@env/environment';
-import { AddBoardGroupRequest } from '@app/core/models/add-board-group-request';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { Params } from '@angular/router';
+import { ClientResponse } from '@core/models/client-response';
 
 @Injectable()
 export class BoardGroupsService {
@@ -28,14 +29,14 @@ export class BoardGroupsService {
   }
 
   moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
-    return this.http.post<BoardGroup>(
+    return this.http.post<ClientResponse>(
       environment.apiEndpoint + 'api/tasks/movetaskingrouprequest',
       request
     );
   }
 
   delete(boardGorup: BoardGroup) {
-    return this.http.delete<BoardGroup>(
+    return this.http.delete<ClientResponse>(
       environment.apiEndpoint + `api/boardgroups/${boardGorup.id}`
     );
   }

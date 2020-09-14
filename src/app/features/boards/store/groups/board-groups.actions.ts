@@ -4,9 +4,9 @@ import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request'
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
-import { AddProjectTaskRequest } from '@app/core/models/project-task';
-import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { AppUser } from '@app/core/models/appuser';
+import { AddProjectTaskRequest } from '@core/models/project-task';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { AppUser } from '@core/models/appuser';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -57,7 +57,7 @@ export const deleteBoardGroup = createAction(
 
 export const deleteBoardGroupSuccess = createAction(
   '[BoardGroups] Delete Board Group Success',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroupId: number }>()
 );
 
 export const deleteBoardGroupFail = createAction(

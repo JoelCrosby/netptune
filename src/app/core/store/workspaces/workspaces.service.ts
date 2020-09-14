@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ClientResponsePayload } from '@core/models/client-response';
+import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { Workspace } from '@core/models/workspace';
 import { environment } from '@env/environment';
 
@@ -30,6 +32,12 @@ export class WorkspacesService {
   delete(workspace: Workspace) {
     return this.http.delete<Workspace>(
       environment.apiEndpoint + 'api/workspaces/' + workspace.id
+    );
+  }
+
+  isSlugUnique(slug: string) {
+    return this.http.get<ClientResponsePayload<IsSlugUniqueResponse>>(
+      environment.apiEndpoint + `api/workspaces/is-unique/${slug}`
     );
   }
 }

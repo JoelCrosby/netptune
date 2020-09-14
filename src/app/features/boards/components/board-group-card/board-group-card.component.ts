@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { MatDialog } from '@angular/material/dialog';
-import { TaskDetailDialogComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-dialog.component';
+import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-board-group-card',

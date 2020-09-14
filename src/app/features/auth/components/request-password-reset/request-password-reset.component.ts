@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { requestPasswordReset } from '@app/core/auth/store/auth.actions';
+import { requestPasswordReset } from '@core/auth/store/auth.actions';
 import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';

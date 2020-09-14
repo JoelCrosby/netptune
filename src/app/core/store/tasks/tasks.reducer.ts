@@ -69,11 +69,13 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteProjectTasksSuccess, (state, { task }) =>
-    adapter.removeOne(task.id, {
-      ...state,
-      deleteState: { loading: false },
-    })
+  on(actions.deleteProjectTasksSuccess, (state, { response, taskId }) =>
+    response.isSuccess
+      ? adapter.removeOne(taskId, {
+          ...state,
+          deleteState: { loading: false },
+        })
+      : state
   ),
 
   // Select Task
@@ -108,6 +110,13 @@ const reducer = createReducer(
     comments,
   })),
 
+  // Delete Comment
+
+  on(actions.deleteCommentSuccess, (state, { commentId }) => ({
+    ...state,
+    comment: state.comments.filter((c) => c.id !== commentId),
+  })),
+
   // Add Comment
 
   on(actions.addCommentSuccess, (state, { comment }) => ({
@@ -130,6 +139,6 @@ const reducer = createReducer(
 export function projectTasksReducer(
   state: TasksState | undefined,
   action: Action
-) {
+): TasksState {
   return reducer(state, action);
 }

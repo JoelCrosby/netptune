@@ -2,8 +2,10 @@ import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AddCommentRequest } from '@app/core/models/requests/add-comment-request';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
+import { FileResponse } from '@core/types/file-response';
+import { ClientResponse } from '@core/models/client-response';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -27,7 +29,7 @@ export const loadProjectTasksFail = createAction(
 
 export const createProjectTask = createAction(
   '[ProjectTasks] Create Project Task',
-  props<{ task: AddProjectTaskRequest }>()
+  props<{ identifier: string; task: AddProjectTaskRequest }>()
 );
 
 export const createProjectTasksSuccess = createAction(
@@ -44,7 +46,7 @@ export const createProjectTasksFail = createAction(
 
 export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
-  props<{ task: TaskViewModel; silent?: boolean }>()
+  props<{ identifier: string; task: TaskViewModel; silent?: boolean }>()
 );
 
 export const editProjectTasksSuccess = createAction(
@@ -61,12 +63,12 @@ export const editProjectTasksFail = createAction(
 
 export const deleteProjectTask = createAction(
   '[ProjectTasks] Delete Project Task',
-  props<{ task: TaskViewModel }>()
+  props<{ identifier: string; task: TaskViewModel }>()
 );
 
 export const deleteProjectTasksSuccess = createAction(
   '[ProjectTasks] Delete Project Task Success',
-  props<{ task: TaskViewModel }>()
+  props<{ response: ClientResponse; taskId: number }>()
 );
 
 export const deleteProjectTasksFail = createAction(
@@ -130,6 +132,8 @@ export const loadCommentsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Add Comment
+
 export const addComment = createAction(
   '[ProjectTasks] Add Comment',
   props<{ request: AddCommentRequest }>()
@@ -142,5 +146,53 @@ export const addCommentSuccess = createAction(
 
 export const addCommentFail = createAction(
   '[ProjectTasks] Add Comment Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Delete Comment
+
+export const deleteComment = createAction(
+  '[ProjectTasks] Delete Comment',
+  props<{ commentId: number }>()
+);
+
+export const deleteCommentSuccess = createAction(
+  '[ProjectTasks] Delete Comment Success',
+  props<{ response: ClientResponse; commentId: number }>()
+);
+
+export const deleteCommentFail = createAction(
+  '[ProjectTasks] Delete Comment Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Export Tasks
+
+export const exportTasks = createAction('[ProjectTasks] Export Tasks');
+
+export const exportTasksSuccess = createAction(
+  '[ProjectTasks] Export Tasks Success',
+  props<{ reponse: FileResponse }>()
+);
+
+export const exportTasksFail = createAction(
+  '[ProjectTasks] Export Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Import Tasks
+
+export const importTasks = createAction(
+  '[ProjectTasks] Import Tasks',
+  props<{ boardIdentifier: string; file: File }>()
+);
+
+export const importTasksSuccess = createAction(
+  '[ProjectTasks] Import Tasks Success',
+  props<{ reponse: ClientResponse }>()
+);
+
+export const importTasksFail = createAction(
+  '[ProjectTasks] Import Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );

@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ClientResponsePayload } from '@core/models/client-response';
+import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 
 // Load Workspaces
 
@@ -63,7 +65,7 @@ export const deleteWorkspaceSuccess = createAction(
 );
 
 export const deleteWorkspaceFail = createAction(
-  '[Workspaces] Load Workspaces Fail',
+  '[Workspaces] Delete Workspace Fail',
   props<{ error: HttpErrorResponse }>()
 );
 
@@ -72,4 +74,21 @@ export const deleteWorkspaceFail = createAction(
 export const selectWorkspace = createAction(
   '[Core] Select Workspace',
   props<{ workspace: Workspace }>()
+);
+
+// Select Workspace
+
+export const isSlugUniue = createAction(
+  '[Workspaces] Is Slug Unique',
+  props<{ slug: string }>()
+);
+
+export const isSlugUniueSuccess = createAction(
+  '[Workspaces] Is Slug Unique Success ',
+  props<{ response: ClientResponsePayload<IsSlugUniqueResponse> }>()
+);
+
+export const isSlugUniueFail = createAction(
+  '[Workspaces] Is Slug Unique Fail',
+  props<{ error: HttpErrorResponse }>()
 );

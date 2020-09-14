@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { BoardViewModel } from '@app/core/models/view-models/board-view-model';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import * as BoardActions from '@boards/store/boards/boards.actions';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';

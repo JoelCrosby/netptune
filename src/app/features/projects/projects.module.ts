@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@app/shared/shared.module';
-import { StaticModule } from '@app/static/static.module';
+import { SharedModule } from '@shared/shared.module';
+import { StaticModule } from '@static/static.module';
 import { ProjectsViewComponent } from './views/projects-view/projects-view.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
-import { ProjectsListComponent } from './components/projects-list/projects-list.component';
+import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectDetailViewComponent } from './views/project-detail-view/project-detail-view.component';
+import { ProjectListItemComponent } from './components/project-list-item/project-list-item.component';
 
 @NgModule({
-  declarations: [ProjectsViewComponent, ProjectsListComponent, ProjectDetailViewComponent],
+  declarations: [
+    ProjectsViewComponent,
+    ProjectListComponent,
+    ProjectDetailViewComponent,
+    ProjectListItemComponent,
+  ],
   imports: [SharedModule, StaticModule, ProjectsRoutingModule],
   providers: [],
 })

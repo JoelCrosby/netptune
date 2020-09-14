@@ -5,6 +5,9 @@ import * as actions from './projects.actions';
 const reducer = createReducer(
   initialState,
   on(actions.clearState, () => initialState),
+
+  // Load Projects
+
   on(actions.loadProjects, (state) => ({ ...state, loading: true })),
   on(actions.loadProjectsFail, (state, { error }) => ({
     ...state,
@@ -18,6 +21,9 @@ const reducer = createReducer(
       currentProject: projects && projects[0],
     })
   ),
+
+  // Create Project
+
   on(actions.createProject, (state) => ({ ...state, loading: true })),
   on(actions.createProjectFail, (state, { error }) => ({
     ...state,
@@ -30,10 +36,16 @@ const reducer = createReducer(
       currentProject: state.currentProject ?? project,
     })
   ),
+
+  // Select Project
+
   on(actions.selectProject, (state, { project }) => ({
     ...state,
     currentProject: project,
   })),
+
+  // Delete Project
+
   on(actions.deleteProject, (state) => ({
     ...state,
     deleteState: { loading: true },
@@ -42,17 +54,19 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteProjectSuccess, (state, { project }) =>
-    adapter.removeOne(project.id, {
-      ...state,
-      deleteState: { loading: false },
-    })
+  on(actions.deleteProjectSuccess, (state, { response, projectId }) =>
+    response.isSuccess
+      ? adapter.removeOne(projectId, {
+          ...state,
+          deleteState: { loading: false },
+        })
+      : state
   )
 );
 
 export function projectsReducer(
   state: ProjectsState | undefined,
   action: Action
-) {
+): ProjectsState {
   return reducer(state, action);
 }

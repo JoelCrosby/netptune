@@ -9,30 +9,47 @@ const reducer = createReducer(
 
   on(actions.clearUserInfo, () => initialState),
 
+  // Current User
+
+  on(actions.currentUser, (state) => ({ ...state, currentUserLoading: true })),
+  on(actions.currentUserSuccess, (state, { user }) => ({
+    ...state,
+    isAuthenticated: true,
+    currentUserLoading: false,
+    currentUser: user,
+  })),
+  on(actions.currentUserFail, (state, { error }) => ({
+    ...state,
+    isAuthenticated: false,
+    currentUserError: error,
+    currentUserLoading: false,
+  })),
+
   // Login
 
   on(actions.login, (state) => ({ ...state, loginLoading: true })),
-  on(actions.loginSuccess, (state, { userInfo }) => ({
+  on(actions.loginSuccess, (state, { token }) => ({
     ...state,
     isAuthenticated: true,
     loginLoading: false,
-    currentUser: userInfo,
+    token,
   })),
-  on(actions.loginFail, (state, { error }) => ({
+  on(actions.loginFail, (state) => ({
     ...state,
     isAuthenticated: false,
-    loginError: error,
+    loginError: true,
     loginLoading: false,
   })),
 
   // Register
 
   on(actions.register, (state) => ({ ...state, registerLoading: true })),
-  on(actions.registerSuccess, (state, { userInfo }) => ({
+  on(actions.registerSuccess, (state, { token }) => ({
     ...state,
     isAuthenticated: true,
     registerLoading: false,
-    currentUser: userInfo,
+    currentUser: token,
+    token,
   })),
   on(actions.registerFail, (state, { error }) => ({
     ...state,
@@ -47,11 +64,12 @@ const reducer = createReducer(
     ...state,
     confirmEmailLoading: true,
   })),
-  on(actions.confirmEmailSuccess, (state, { userInfo }) => ({
+  on(actions.confirmEmailSuccess, (state, { token }) => ({
     ...state,
     isAuthenticated: true,
     confirmEmailLoading: false,
-    currentUser: userInfo,
+    currentUser: token,
+    token,
   })),
   on(actions.confirmEmailFail, (state, { error }) => ({
     ...state,
@@ -84,11 +102,12 @@ const reducer = createReducer(
     ...state,
     resetPasswordLoading: true,
   })),
-  on(actions.resetPasswordSuccess, (state, { userInfo }) => ({
+  on(actions.resetPasswordSuccess, (state, { token }) => ({
     ...state,
     isAuthenticated: true,
     resetPasswordLoading: false,
-    currentUser: userInfo,
+    currentUser: token,
+    token,
   })),
   on(actions.resetPasswordFail, (state, { error }) => ({
     ...state,
@@ -98,6 +117,9 @@ const reducer = createReducer(
   }))
 );
 
-export function authReducer(state: AuthState | undefined, action: Action) {
+export function authReducer(
+  state: AuthState | undefined,
+  action: Action
+): AuthState {
   return reducer(state, action);
 }

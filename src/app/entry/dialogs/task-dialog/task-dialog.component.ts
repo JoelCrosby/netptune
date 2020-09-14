@@ -8,12 +8,11 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
-import { Workspace } from '@app/core/models/workspace';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { Workspace } from '@core/models/workspace';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { Project } from '@core/models/project';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
-import { selectProject } from '@core/store/core/core.actions';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
@@ -69,7 +68,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentWorkspace$ = this.store.select(
-      WorkspaceSelectors.SelectCurrentWorkspace
+      WorkspaceSelectors.selectCurrentWorkspace
     );
     this.currentProject$ = this.store.select(
       ProjectSelectors.selectCurrentProject
@@ -102,11 +101,6 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  selectProject() {
-    const project = this.project.value;
-    this.store.dispatch(selectProject({ project }));
-  }
-
   saveClicked() {
     this.currentWorkspace$.pipe(first()).subscribe((workspace) => {
       const task: AddProjectTaskRequest = {
@@ -120,7 +114,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
         sortOrder: 0,
       };
 
-      this.store.dispatch(createProjectTask({ task }));
+      this.store.dispatch(createProjectTask({ identifier: '[none]', task }));
 
       this.dialogRef.close();
     });

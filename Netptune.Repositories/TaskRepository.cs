@@ -89,7 +89,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
                 .Include(x => x.Workspace);
-                
+
             return isReadonly ? queryable.AsNoTracking() : queryable;
         }
 
@@ -104,6 +104,67 @@ namespace Netptune.Repositories
                 .Include(x => x.Workspace)
                 .Select(task => task.ToViewModel())
                 .ApplyReadonly(isReadonly);
+        }
+
+        public Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug)
+        {
+            return (from t in Entities
+                join tg in Context.ProjectTaskInBoardGroups on t.Id equals tg.ProjectTaskId
+                join g in Context.BoardGroups on tg.BoardGroupId equals g.Id
+                join project in Context.Projects on t.ProjectId equals project.Id
+                join assignee in Context.AppUsers on t.AssigneeId equals assignee.Id
+                join owner in Context.AppUsers on t.OwnerId equals owner.Id
+                join workspace in Context.Workspaces on t.WorkspaceId equals workspace.Id
+                where !workspace.IsDeleted && !t.IsDeleted && workspace.Slug == workspaceSlug
+                orderby t.SortOrder
+                select new
+                {
+                    t.Id,
+                    AssigneeId = assignee.Id,
+                    OwnerId = owner.Id,
+                    t.ProjectScopeId,
+                    t.Name,
+                    project.Key,
+                    t.Description,
+                    t.Status,
+                    t.IsFlagged,
+                    t.SortOrder,
+                    t.ProjectId,
+                    t.WorkspaceId,
+                    WorkspaceSlug = workspace.Slug,
+                    t.CreatedAt,
+                    t.UpdatedAt,
+                    AssigneeUsername = assignee.UserName,
+                    AssigneePictureUrl = assignee.PictureUrl,
+                    OwnerUsername = owner.UserName,
+                    OwnerPictureUrl = owner.PictureUrl,
+                    ProjectName = project.Name,
+                    Group = g.Name,
+                }).Select(x => new ExportTaskViewModel
+            {
+                Id = x.Id,
+                AssigneeId = x.AssigneeId,
+                OwnerId = x.OwnerId,
+                ProjectScopeId = x.ProjectScopeId,
+                Name = x.Name,
+                Description = x.Description,
+                SystemId = $"{x.Key}-{x.ProjectScopeId}",
+                Status = x.Status.ToString(),
+                IsFlagged = x.IsFlagged,
+                SortOrder = x.SortOrder,
+                ProjectId = x.ProjectId,
+                WorkspaceId = x.WorkspaceId,
+                WorkspaceSlug = x.WorkspaceSlug,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                AssigneeUsername = x.AssigneeUsername,
+                AssigneePictureUrl = x.AssigneePictureUrl,
+                OwnerUsername = x.OwnerUsername,
+                OwnerPictureUrl = x.OwnerPictureUrl,
+                ProjectName = x.ProjectName,
+                Group = x.Group,
+            })
+                .ToListAsync();
         }
 
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
@@ -125,7 +186,7 @@ namespace Netptune.Repositories
         public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
         {
             var taskCount = await Entities.CountAsync(x => x.ProjectId == projectId);
-            
+
             return taskCount + 1 + increment;
         }
     }

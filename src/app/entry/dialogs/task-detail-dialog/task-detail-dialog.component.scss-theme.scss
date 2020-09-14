@@ -30,5 +30,11 @@
     .material-icons-outlined {
       color: mat-color($foreground, icon, .4);
     }
+
+    .comment-button .material-icons {
+      font-size: 20px;
+      line-height: 20px;
+      height: 20px;
+    }
   }
 }

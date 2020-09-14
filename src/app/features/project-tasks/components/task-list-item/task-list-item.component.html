@@ -2,65 +2,50 @@
   class="task-card"
   [class.flagged]="task.isFlagged"
 >
-  <div class="task-header">
 
-    <div class="task-header-title">
+  <ng-content></ng-content>
 
-      <ng-content></ng-content>
+  <mat-checkbox
+    class="task-checkbox"
+    color="primary"
+  >
+  </mat-checkbox>
 
-      <mat-checkbox
-        class="task-checkbox"
-        color="primary"
-      >
-      </mat-checkbox>
-
-      <div class="task-scope-id">
-        {{ task.systemId }}
-      </div>
-
-      <div class="title" (click)="titleClicked()">
-        {{ task.name }}
-      </div>
-
-      <mat-icon
-        *ngIf="task.isFlagged"
-        color="warn"
-        class="flag"
-      >
-        flag
-      </mat-icon>
-    </div>
-
-    <div class="task-footer">
-
-      <mat-icon
-        class="task-complete"
-        *ngIf="task.status === 1"
-      >
-        done
-      </mat-icon>
-
-      <div class="chip-list">
-        <mat-chip-list ariaOrientation="horizontal">
-            <mat-chip color="primary">
-              {{ task.projectName }}
-            </mat-chip>
-            <div class="chip-spacer"></div>
-          </mat-chip-list>
-      </div>
-
-      <app-avatar
-        size="24"
-        class="task-card-user-chip"
-        [name]="task.assigneeUsername"
-        [imageUrl]="task.assigneePictureUrl"
-      >
-      </app-avatar>
-
-
-
-    </div>
-
+  <div class="task-scope-id">
+    {{ task.systemId }}
   </div>
+
+  <div class="title" (click)="titleClicked()">
+    {{ task.name }}
+  </div>
+
+  <mat-icon
+    *ngIf="task.isFlagged"
+    color="warn"
+    class="flag"
+  >
+    flag
+  </mat-icon>
+
+
+  <mat-icon
+    class="task-complete"
+    *ngIf="task.status === 1"
+  >
+    done
+  </mat-icon>
+
+  <div class="project-chip">
+    {{ task.projectName }}
+  </div>
+
+  <app-avatar
+    size="24"
+    class="task-card-user-chip"
+    [name]="task.assigneeUsername"
+    [imageUrl]="task.assigneePictureUrl"
+  >
+  </app-avatar>
+
 </div>
 

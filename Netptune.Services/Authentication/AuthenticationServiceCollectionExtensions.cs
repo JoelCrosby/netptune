@@ -1,7 +1,6 @@
 using System.Text;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +16,7 @@ namespace Netptune.Services.Authentication
     {
         public static IServiceCollection AddNeptuneAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<DbContext>()
@@ -51,6 +50,23 @@ namespace Netptune.Services.Authentication
                         ValidIssuer = configuration["Tokens:Issuer"],
                         ValidAudience = configuration["Tokens:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:SecurityKey"]))
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
+                            var isHubPath = path.StartsWithSegments("/hubs");
+
+                            if (accessTokenNotEmpty && isHubPath)
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

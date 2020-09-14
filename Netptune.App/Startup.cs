@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
+using Netptune.App.Hubs;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Messaging;
@@ -24,6 +25,8 @@ namespace Netptune.App
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
+        public string[] CorsOrigins => GetCorsOrigins();
+
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             WebHostEnvironment = webHostEnvironment;
@@ -37,6 +40,11 @@ namespace Netptune.App
 
             services.AddCors();
             services.AddControllers();
+
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = WebHostEnvironment.IsDevelopment();
+            });
 
             services.AddNeptuneAuthentication(Configuration);
 
@@ -55,7 +63,7 @@ namespace Netptune.App
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
             });
 
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = "../dist");
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join("..", "dist"));
 
             ConfigureDatabase(services);
         }
@@ -86,6 +94,8 @@ namespace Netptune.App
                 });
             }
 
+            app.UseDefaultFiles();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 ContentTypeProvider = GetFileExtensionContentTypeProvider()
@@ -94,17 +104,21 @@ namespace Netptune.App
             app.UseRouting();
 
             app.UseCors(builder => builder
+                .WithOrigins(CorsOrigins)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowAnyOrigin()
+                .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition")
             );
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-                endpoints.MapControllers()
-            );
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<BoardHub>(BoardHub.Path);
+            });
 
             app.UseSpa(spa =>
             {
@@ -115,6 +129,15 @@ namespace Netptune.App
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:6400");
                 }
             });
+        }
+
+        private string[] GetCorsOrigins()
+        {
+            return Configuration.GetSection("CorsOrigins")
+                .AsEnumerable()
+                .Where(pair => pair.Value is { })
+                .Select(pair => pair.Value)
+                .ToArray();
         }
 
         private static FileExtensionContentTypeProvider GetFileExtensionContentTypeProvider()

@@ -4,7 +4,10 @@ import { initialState, ProfileState } from './profile.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.loadProfile, state => ({ ...state, loadProfileloading: true })),
+
+  // Load Profile
+
+  on(actions.loadProfile, (state) => ({ ...state, loadProfileloading: true })),
   on(actions.loadProfileFail, (state, { error }) => ({
     ...state,
     loadProfileloading: false,
@@ -16,7 +19,10 @@ const reducer = createReducer(
     profileloaded: true,
     profile,
   })),
-  on(actions.updateProfile, state => ({
+
+  // Update Profile
+
+  on(actions.updateProfile, (state) => ({
     ...state,
     updateProfileLoading: true,
   })),
@@ -29,12 +35,27 @@ const reducer = createReducer(
     ...state,
     updateProfileLoading: false,
     profile,
+  })),
+
+  // Change Password
+
+  on(actions.changePassword, (state) => ({
+    ...state,
+    changePasswordLoading: true,
+  })),
+  on(actions.changePasswordFail, (state) => ({
+    ...state,
+    changePasswordLoading: false,
+  })),
+  on(actions.changePasswordSuccess, (state) => ({
+    ...state,
+    changePasswordLoading: false,
   }))
 );
 
 export function profileReducer(
   state: ProfileState | undefined,
   action: Action
-) {
+): ProfileState {
   return reducer(state, action);
 }

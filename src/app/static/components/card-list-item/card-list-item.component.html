@@ -1,0 +1,102 @@
+<mat-card>
+  <mat-card-title>
+    {{ title }}
+    <button
+      mat-button
+      color="primary"
+      type="button"
+      (click)="delete.emit()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-title>
+  <mat-card-content>
+    <p>{{ description }}</p>
+    <small class="text-muted">{{ subText }}</small>
+
+    <ng-content></ng-content>
+
+  </mat-card-content>
+
+  <mat-card-actions>
+
+    <ng-container *ngFor="let action of actions; first as isFirst">
+      <ng-container *ngIf="action.isLink; else elseTemplate">
+
+        <ng-container *ngIf="isFirst; else elseTemplate">
+          <a
+            mat-flat-button
+            color="primary"
+            class="action-button"
+            type="button"
+            [routerLink]="action.routerLink"
+          >
+            <mat-icon
+              *ngIf="action.icon"
+              class="action-mat-icon"
+            >
+              {{ action.icon }}
+            </mat-icon>
+            {{ action.label }}
+          </a>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <a
+            mat-button
+            color="primary"
+            class="action-button"
+            type="button"
+            [routerLink]="action.routerLink"
+          >
+            <mat-icon
+              *ngIf="action.icon"
+              class="action-mat-icon"
+            >
+              {{ action.icon }}
+            </mat-icon>
+            {{ action.label }}
+          </a>
+        </ng-template>
+
+      </ng-container>
+      <ng-template #elseTemplate>
+
+        <ng-container *ngIf="isFirst; else elseTemplate">
+          <button
+            mat-flat-button
+            color="primary"
+            class="action-button"
+            (click)="action.click()"
+          >
+            <mat-icon
+              *ngIf="action.icon"
+              class="action-mat-icon"
+            >
+              {{ action.icon }}
+            </mat-icon>
+            {{ action.label }}
+          </button>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <button
+            mat-button
+            color="primary"
+            class="action-button"
+            (click)="action.click()"
+          >
+            <mat-icon
+              *ngIf="action.icon"
+              class="action-mat-icon"
+            >
+              {{ action.icon }}
+            </mat-icon>
+            {{ action.label }}
+          </button>
+        </ng-template>
+
+      </ng-template>
+
+    </ng-container>
+
+  </mat-card-actions>
+</mat-card>

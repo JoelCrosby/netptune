@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { ConfirmDialogOptions } from '@app/entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { of, asyncScheduler } from 'rxjs';
@@ -40,14 +40,14 @@ export class WorkspacesEffects {
   deleteWorkspace$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteWorkspace),
-      switchMap((action) =>
+      switchMap(({ workspace }) =>
         this.confirmation.open(DELETE_WORKSPACE_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.workspacesService.delete(action.workspace).pipe(
+            return this.workspacesService.delete(workspace).pipe(
               tap(() => this.snackbar.open('Workspace deleted')),
-              map((workspace) => actions.deleteWorkspaceSuccess({ workspace })),
+              map(() => actions.deleteWorkspaceSuccess({ workspace })),
               catchError((error) => of(actions.deleteWorkspaceFail({ error })))
             );
           })
@@ -63,6 +63,18 @@ export class WorkspacesEffects {
         this.workspacesService.put(action.workspace).pipe(
           map((workspace) => actions.editWorkspaceSuccess({ workspace })),
           catchError((error) => of(actions.editWorkspaceFail({ error })))
+        )
+      )
+    )
+  );
+
+  isSlugUnique$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.isSlugUniue),
+      switchMap((action) =>
+        this.workspacesService.isSlugUnique(action.slug).pipe(
+          map((response) => actions.isSlugUniueSuccess({ response })),
+          catchError((error) => of(actions.isSlugUniueFail({ error })))
         )
       )
     )

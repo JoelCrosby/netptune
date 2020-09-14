@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Api.Controllers
 {
@@ -64,7 +68,7 @@ namespace Netptune.Api.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(Board))]
+        [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
         public async Task<IActionResult> PutBoard([FromBody] Board board)
         {
             var result = await BoardService.UpdateBoard(board);
@@ -76,24 +80,35 @@ namespace Netptune.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(Board))]
-        public async Task<IActionResult> PostBoard([FromBody] Board board)
+        [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
+        public async Task<IActionResult> PostBoard([FromBody] AddBoardRequest board)
         {
             var result = await BoardService.AddBoard(board);
 
             return Ok(result);
         }
 
-        // DELETE: api/ProjectBoards/5
+        // DELETE: api/boards/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(Board))]
+        [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
         public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
-            var result = await BoardService.DeleteBoard(id);
+            var result = await BoardService.Delete(id);
 
             if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // GET: api/boards/is-unique
+        [HttpGet("is-unique/{identifier}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(ClientResponse<IsSlugUniqueResponse>))]
+        public async Task<IActionResult> IsSlugUnique([FromRoute] string identifier)
+        {
+            var result = await BoardService.IsIdentifierUnique(identifier);
 
             return Ok(result);
         }

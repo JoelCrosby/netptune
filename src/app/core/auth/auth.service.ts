@@ -7,7 +7,8 @@ import {
   AuthCodeRequest,
   LoginRequest,
   ResetPasswordRequest,
-  User,
+  UserToken,
+  UserResponse,
 } from './store/auth.models';
 
 @Injectable({
@@ -16,22 +17,28 @@ import {
 export class AuthService {
   constructor(private http: HttpClient) {}
 
+  currentUser() {
+    return this.http.get<UserResponse>(
+      environment.apiEndpoint + 'api/auth/current-user'
+    );
+  }
+
   login(request: LoginRequest) {
-    return this.http.post<User>(
+    return this.http.post<UserToken>(
       environment.apiEndpoint + 'api/auth/login',
       request
     );
   }
 
   register(request: RegisterRequest) {
-    return this.http.post<User>(
+    return this.http.post<UserToken>(
       environment.apiEndpoint + 'api/auth/register',
       request
     );
   }
 
   confirmEmail(request: AuthCodeRequest) {
-    return this.http.get<User>(
+    return this.http.get<UserToken>(
       environment.apiEndpoint + 'api/auth/confirm-email',
       {
         params: { ...request },
@@ -49,7 +56,7 @@ export class AuthService {
   }
 
   resetPassword(request: ResetPasswordRequest) {
-    return this.http.get<User>(
+    return this.http.get<UserToken>(
       environment.apiEndpoint + 'api/auth/reset-password',
       {
         params: { ...request },

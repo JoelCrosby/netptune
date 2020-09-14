@@ -5,8 +5,9 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { openSideMenu } from '@app/core/store/layout/layout.actions';
-import { selectIsMobileView } from '@app/core/store/layout/layout.selectors';
+import { openSideMenu } from '@core/store/layout/layout.actions';
+import { selectIsMobileView } from '@core/store/layout/layout.selectors';
+import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -18,6 +19,9 @@ import { Store } from '@ngrx/store';
 export class PageHeaderComponent {
   @Input() title?: string;
   @Input() actionTitle?: string;
+  @Input() secondaryActions: HeaderAction[] = [];
+  @Input() overflowActions: HeaderAction[] = [];
+
   @Output() actionClick = new EventEmitter();
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);

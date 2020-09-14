@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Flurl;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ namespace Netptune.Services.Authentication
         private readonly SignInManager<AppUser> SignInManager;
         private readonly UserManager<AppUser> UserManager;
         private readonly IEmailService Email;
+        private readonly IHttpContextAccessor ContextAccessor;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -37,12 +39,14 @@ namespace Netptune.Services.Authentication
             IConfiguration configuration,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IEmailService email
+            IEmailService email,
+            IHttpContextAccessor contextAccessor
             )
         {
             SignInManager = signInManager;
             UserManager = userManager;
             Email = email;
+            ContextAccessor = contextAccessor;
 
             Issuer = configuration["Tokens:Issuer"];
             SecurityKey = configuration["Tokens:SecurityKey"];
@@ -163,6 +167,37 @@ namespace Netptune.Services.Authentication
             return LoginResult.Success(GenerateToken(user));
         }
 
+        public async Task<ClientResponse> ChangePassword(ChangePasswordRequest request)
+        {
+            var user = await UserManager.FindByIdAsync(request.UserId);
+
+            if (user is null) return ClientResponse.Failed();
+
+            var result = await UserManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+
+            if (!result.Succeeded) return ClientResponse.Failed();
+
+            await LogUserIn(user);
+
+            return ClientResponse.Success("Password Changed");
+        }
+
+        public async Task<CurrentUserResponse> CurrentUser()
+        {
+            var principle = ContextAccessor.HttpContext.User;
+            var user = await UserManager.GetUserAsync(principle);
+
+            if (user is null) return null;
+
+            return new CurrentUserResponse
+            {
+                DisplayName = user.DisplayName,
+                EmailAddress = user.Email,
+                PictureUrl = user.PictureUrl,
+                UserId = user.Id,
+            };
+        }
+
         private async Task SendWelcomeEmail(AppUser appUser)
         {
             var confirmEmailCode = await UserManager.GenerateEmailConfirmationTokenAsync(appUser);
@@ -196,14 +231,18 @@ namespace Netptune.Services.Authentication
         {
             await SignInManager.SignInAsync(appUser, false);
             appUser.RegistrationDate = DateTime.UtcNow;
+
             appUser.LastLoginTime = DateTime.UtcNow;
+
             await UserManager.UpdateAsync(appUser);
         }
 
         private async Task LogUserIn(AppUser appUser)
         {
             await SignInManager.SignInAsync(appUser, false);
+
             appUser.LastLoginTime = DateTime.UtcNow;
+
             await UserManager.UpdateAsync(appUser);
         }
 
@@ -233,7 +272,8 @@ namespace Netptune.Services.Authentication
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
