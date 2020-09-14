@@ -62,12 +62,16 @@ namespace Netptune.Services
                 throw new Exception("ProjectId is required");
             }
 
+            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value);
+            var workspaceId = project.WorkspaceId;
+
             var board = new Board
             {
                 Name = request.Name,
                 Identifier = request.Identifier.ToUrlSlug(),
                 ProjectId = request.ProjectId.Value,
                 MetaInfo = request.Meta,
+                WorkspaceId = workspaceId,
             };
 
 
@@ -75,21 +79,24 @@ namespace Netptune.Services
             {
                 Name = "Backlog",
                 Type = BoardGroupType.Backlog,
-                SortOrder = 1D
+                SortOrder = 1D,
+                WorkspaceId = workspaceId,
             });
 
             board.BoardGroups.Add(new BoardGroup
             {
                 Name = "Todo",
                 Type = BoardGroupType.Todo,
-                SortOrder = 1.1D
+                SortOrder = 1.1D,
+                WorkspaceId = workspaceId,
             });
 
             board.BoardGroups.Add(new BoardGroup
             {
                 Name = "Done",
                 Type = BoardGroupType.Done,
-                SortOrder = 1.2D
+                SortOrder = 1.2D,
+                WorkspaceId = workspaceId,
             });
 
             var result = await Boards.AddAsync(board);

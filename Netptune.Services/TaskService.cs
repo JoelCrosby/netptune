@@ -53,7 +53,6 @@ namespace Netptune.Services
                 ProjectId = request.ProjectId,
                 AssigneeId = request.AssigneeId,
                 OwnerId = user.Id,
-                Workspace = workspace,
                 WorkspaceId = workspace.Id,
             };
 

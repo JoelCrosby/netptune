@@ -62,7 +62,7 @@ namespace Netptune.Services
                 }
 
                 project.Key = projectKey;
-                project.ProjectBoards.Add(GenerateDefaultBoard(project));
+                project.ProjectBoards.Add(GenerateDefaultBoard(project, workspace.Id));
 
                 workspace.Projects.Add(project);
 
@@ -72,7 +72,7 @@ namespace Netptune.Services
             });
         }
 
-        private static Board GenerateDefaultBoard(Project project)
+        private static Board GenerateDefaultBoard(Project project, int workspaceId)
         {
             return new Board
             {
@@ -81,25 +81,29 @@ namespace Netptune.Services
                 OwnerId = project.OwnerId,
                 MetaInfo = new BoardMeta(),
                 BoardType = BoardType.Default,
+                WorkspaceId = workspaceId,
                 BoardGroups = new[]
                 {
                     new BoardGroup
                     {
                         Name = "Backlog",
                         Type = BoardGroupType.Backlog,
-                        SortOrder = 1D
+                        SortOrder = 1D,
+                        WorkspaceId = workspaceId,
                     },
                     new BoardGroup
                     {
                         Name = "Todo",
                         Type = BoardGroupType.Todo,
-                        SortOrder = 1.1D
+                        SortOrder = 1.1D,
+                        WorkspaceId = workspaceId,
                     },
                     new BoardGroup
                     {
                         Name = "Done",
                         Type = BoardGroupType.Done,
-                        SortOrder = 1.3D
+                        SortOrder = 1.3D,
+                        WorkspaceId = workspaceId,
                     }
                 }
             };
@@ -107,7 +111,7 @@ namespace Netptune.Services
 
         private static string GenerateDefaultBoardId(string projectKey)
         {
-            return $"{projectKey.ToLowerInvariant().ToUrlSlug(true)}-default-board";
+            return $"{projectKey.ToLowerInvariant().ToUrlSlug()}-default-board";
         }
 
         public async Task<ClientResponse> Delete(int id)
