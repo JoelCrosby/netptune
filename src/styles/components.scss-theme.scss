@@ -117,6 +117,34 @@
     z-index: 32;
   }
 
+  .scroll-shadow-top {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    left: 9px;
+    width: 87%;
+    height: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, -.02);
+    top: 41px;
+    box-shadow: 0 7px 4px -1px rgba(0, 0, 0, .1) !important;
+    animation: fadein .8s;
+    z-index: 32;
+  }
+
+  .scroll-shadow-bottom {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    right: 18px;
+    width: 90%;
+    height: 0;
+    bottom: 0;
+    box-shadow: 0 0 6px 6px rgba(0, 0, 0, .1) !important;
+    animation: fadein .8s;
+    border-radius: 4px;
+    z-index: 32;
+  }
+
   // Form Seperator
 
   .form-seperator {

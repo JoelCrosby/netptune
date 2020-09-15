@@ -9,6 +9,7 @@ import { InlineTextAreaComponent } from './components/inline-text-area/inline-te
 import { PageContainerComponent } from './components/page-container/page-container.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ScrollShadowVericalDirective } from './directives/scroll-shadow-vertical.directive';
 import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
 import { AvatarPipe } from './pipes/avatar.pipe';
 import { FromNowPipe } from './pipes/from-now.pipe';
@@ -27,6 +28,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     FromNowPipe,
     TaskStatusPipe,
     ScrollShadowDirective,
+    ScrollShadowVericalDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
@@ -43,6 +45,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     FromNowPipe,
     TaskStatusPipe,
     ScrollShadowDirective,
+    ScrollShadowVericalDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,

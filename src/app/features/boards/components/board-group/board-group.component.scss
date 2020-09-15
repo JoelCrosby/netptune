@@ -2,6 +2,7 @@
   flex: 1;
   padding: .6rem;
   overflow-y: auto;
+  height: 100%;
 }
 
 .board-group-card {
@@ -12,6 +13,7 @@
   padding: 0;
   border-radius: .3rem;
   height: 100%;
+  position: relative;
 }
 
 .create-task {
