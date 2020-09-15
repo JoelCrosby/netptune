@@ -79,7 +79,9 @@ export class BoardGroupsViewComponent
         filter((val) => !!val),
         first(),
         tap((identifier) => {
-          this.hubService.connect(identifier);
+          this.hubService
+            .connect()
+            .then(() => this.hubService.addToGroup(identifier));
         })
       )
       .subscribe();

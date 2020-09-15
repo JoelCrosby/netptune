@@ -22,7 +22,7 @@ export class BoardsService {
     );
   }
 
-  getByWorksapce(slug: string) {
+  getByWorkspace(slug: string) {
     return this.http.get<BoardViewModel[]>(
       environment.apiEndpoint + `api/boards/workspace/${slug}`
     );

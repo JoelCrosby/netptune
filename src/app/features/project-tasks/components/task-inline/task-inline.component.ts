@@ -151,7 +151,10 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     };
 
     this.store.dispatch(
-      TaskActions.createProjectTask({ identifier: '[none]', task })
+      TaskActions.createProjectTask({
+        identifier: `[workspace] ${workspace.slug}`,
+        task,
+      })
     );
 
     this.taskGroup.reset();

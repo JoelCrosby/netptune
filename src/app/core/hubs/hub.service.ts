@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
 import { from, Observable, of, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { HubConnectionService } from './hub-connection.service';
 import { redirectAction } from './hub.utils';
 
@@ -43,6 +43,7 @@ export class HubService {
     if (!group) return of(null);
 
     return from(this.connection.invoke<TResult>(method, group, ...args)).pipe(
+      tap((res) => console.log(`[SIGNAL-R][RESPONSE] `, { res })),
       catchError((err: HubError) => {
         console.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
 

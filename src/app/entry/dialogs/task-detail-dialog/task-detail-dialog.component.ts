@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { selectBoardIdentifier } from '@boards/store/groups/board-groups.selectors';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
@@ -17,6 +16,7 @@ import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
@@ -181,7 +181,7 @@ export class TaskDetailDialogComponent
 
   updateTask(task: TaskViewModel) {
     this.store
-      .select(selectBoardIdentifier)
+      .select(selectCurrentHubGroupId)
       .pipe(
         first(),
         tap((identifier) => {
@@ -269,7 +269,7 @@ export class TaskDetailDialogComponent
     this.task$
       .pipe(
         first(),
-        withLatestFrom(this.store.select(selectBoardIdentifier)),
+        withLatestFrom(this.store.select(selectCurrentHubGroupId)),
         tap(([task, identifier]) => {
           this.store.dispatch(
             TaskActions.deleteProjectTask({ identifier, task })

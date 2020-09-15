@@ -27,7 +27,7 @@ export class BoardsEffects {
       withLatestFrom(this.store.select(selectCurrentWorkspace)),
       filter(([_, workspace]) => !!workspace),
       switchMap(([_, workspace]) =>
-        this.boardsService.getByWorksapce(workspace.slug).pipe(
+        this.boardsService.getByWorkspace(workspace.slug).pipe(
           map((boards) => actions.loadBoardsSuccess({ boards })),
           catchError((error) => of(actions.loadBoardsFail({ error })))
         )
