@@ -12,7 +12,7 @@
   >
     <app-task-list-group
       class="mb-5"
-      *ngFor="let group of taskGroups$ | async"
+      *ngFor="let group of taskGroups$ | async; trackBy: trackByGroup"
       [tasks]="group.tasks"
       [header]="group.header"
       [groupName]="group.groupName"

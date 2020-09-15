@@ -14,7 +14,7 @@
         <app-task-list-item
           cdkDrag
           class="task-drag"
-          *ngFor="let taskItem of tasks"
+          *ngFor="let taskItem of tasks; trackBy: trackByTask"
           [task]="taskItem"
           [cdkDragData]="taskItem"
         >

@@ -25,6 +25,10 @@ export class TaskListGroupComponent {
 
   constructor(private store: Store) {}
 
+  trackByTask(_: number, task: TaskViewModel) {
+    return task.id;
+  }
+
   drop(event: CdkDragDrop<{ tasks: TaskViewModel[]; status: TaskStatus }>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
