@@ -34,8 +34,8 @@ import { UsersEffects } from './store/users/users.effects';
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true,
-        strictStateSerializability: true,
-        strictActionSerializability: true,
+        strictStateSerializability: false,
+        strictActionSerializability: false,
         strictActionWithinNgZone: true,
         strictActionTypeUniqueness: true,
       },
