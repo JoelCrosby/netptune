@@ -74,33 +74,8 @@ namespace Netptune.Services.Import
                 return Failed($"board with identifier '{boardId}' does not exist.");
             }
 
-            var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
-            var workspaceId = project.WorkspaceId;
 
-            var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
-            var existingGroupNames = existingGroups.Select(group => group.Name.Trim().ToLowerInvariant()).ToList();
-            var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder).Select(group => group.SortOrder).FirstOrDefault() + 1;
-
-            var newGroups = groups.Where(group => !existingGroupNames.Contains(group));
-            var emailAddresses = rows
-                .Select(row => new { row.AssigneeEmail, row.OwnerEmail })
-                .Aggregate(new List<string>(), (result, current) =>
-                {
-                    if (!string.IsNullOrEmpty(current.OwnerEmail))
-                    {
-                        result.Add(current.OwnerEmail);
-                    }
-
-                    if (!string.IsNullOrEmpty(current.AssigneeEmail))
-                    {
-                        result.Add(current.AssigneeEmail);
-                    }
-
-                    return result;
-                })
-                .Distinct()
-                .ToList();
-
+            var emailAddresses = GetEmailAddresses(rows);
             var users = await UnitOfWork.Users.GetByEmailRange(emailAddresses, true);
 
             if (users.Count != emailAddresses.Count)
@@ -113,6 +88,15 @@ namespace Netptune.Services.Import
                     MissingEmails = missingUserEmails,
                 });
             }
+
+            var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
+            var workspaceId = project.WorkspaceId;
+
+            var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
+            var existingGroupNames = existingGroups.Select(group => group.Name.Trim().ToLowerInvariant()).ToList();
+            var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder).Select(group => group.SortOrder).FirstOrDefault() + 1;
+
+            var newGroups = groups.Where(group => !existingGroupNames.Contains(group));
 
             var initialScopeId = await UnitOfWork.Tasks.GetNextScopeId(project.Id);
 
@@ -130,6 +114,7 @@ namespace Netptune.Services.Import
                 BoardId = board.Id,
                 Name = group,
                 Type = BoardGroupType.Basic,
+                WorkspaceId = workspaceId,
             }).ToList();
 
             await UnitOfWork.Transaction(async () =>
@@ -159,7 +144,7 @@ namespace Netptune.Services.Import
                     {
                         ProjectTaskId = task.Id,
                         BoardGroupId = boardGroup.Id,
-                        SortOrder = task.SortOrder
+                        SortOrder = task.SortOrder,
                     };
                 });
 
@@ -226,6 +211,28 @@ namespace Netptune.Services.Import
                 OwnerId = FindUserId(row.OwnerEmail),
                 ProjectScopeId = initialScopeId + i
             };
+        }
+
+        private static List<string> GetEmailAddresses(IEnumerable<TaskImportRow> rows)
+        {
+            return rows
+                .Select(row => new { row.AssigneeEmail, row.OwnerEmail })
+                .Aggregate(new List<string>(), (result, current) =>
+                {
+                    if (!string.IsNullOrEmpty(current.OwnerEmail))
+                    {
+                        result.Add(current.OwnerEmail);
+                    }
+
+                    if (!string.IsNullOrEmpty(current.AssigneeEmail))
+                    {
+                        result.Add(current.AssigneeEmail);
+                    }
+
+                    return result;
+                })
+                .Distinct()
+                .ToList();
         }
     }
 }
