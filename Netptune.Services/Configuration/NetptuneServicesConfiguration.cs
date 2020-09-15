@@ -32,6 +32,9 @@ namespace Netptune.Services.Configuration
 
             services.AddTransient<ITaskImportService, TaskImportService>();
 
+            services.AddMemoryCache();
+            services.AddTransient<IUserConnectionService, UserConnectionService>();
+
             services.AddHttpContextAccessor();
             services.AddScoped<IIdentityService, IdentityService>();
         }

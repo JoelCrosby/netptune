@@ -33,7 +33,7 @@ export const inviteUsersToWorkspaceFail = createAction(
   props<{ error: HttpErrorResponse | Error }>()
 );
 
-// Remove users from worksapce
+// Remove users from workspace
 
 export const removeUsersFromWorkspace = createAction(
   '[Users] Remove users from workspace',

@@ -9,9 +9,9 @@ namespace Netptune.Core.Hubs
     public interface IBoardHub
     {
 
-        Task JoinBoard(string message);
+        Task JoinBoard(UserConnection connection);
 
-        Task LeaveBoard(string message);
+        Task LeaveBoard(UserConnection connection);
 
         Task MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 

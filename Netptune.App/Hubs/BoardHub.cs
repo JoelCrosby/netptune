@@ -1,3 +1,5 @@
+using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -16,70 +18,88 @@ namespace Netptune.App.Hubs
     {
         public const string Path = "/hubs/board-hub";
 
+        private readonly IUserConnectionService UserConnection;
         private readonly ITaskService TaskService;
 
-        public BoardHub(ITaskService taskService)
+        public BoardHub(IUserConnectionService userConnection, ITaskService taskService)
         {
+            UserConnection = userConnection;
             TaskService = taskService;
         }
 
-        public async Task AddToBoard(string boardIdentifier)
+        public override async Task OnConnectedAsync()
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, boardIdentifier);
-
-            await Clients
-                .OthersInGroup(boardIdentifier)
-                .JoinBoard($"{Context.ConnectionId} has joined the board {boardIdentifier}.");
+            await UserConnection.Add(Context.ConnectionId);
+            await base.OnConnectedAsync();
         }
 
-        public async Task RemoveFromBoard(string boardIdentifier)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, boardIdentifier);
-
-            await Clients
-                .OthersInGroup(boardIdentifier)
-                .LeaveBoard($"{Context.ConnectionId} has left the board {boardIdentifier}.");
+            await UserConnection.Remove(Context.ConnectionId);
+            await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task<ClientResponse> MoveTaskInBoardGroup(string boardIdentifier, MoveTaskInGroupRequest request)
+        public async Task AddToGroup(string group)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+
+            var userConnection = await UserConnection.Get(Context.ConnectionId);
+
+            await Clients
+                .OthersInGroup(group)
+                .JoinBoard(userConnection);
+        }
+
+        public async Task RemoveFromGroup(string group)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+
+            var userConnection = await UserConnection.Get(Context.ConnectionId);
+
+            await Clients
+                .OthersInGroup(group)
+                .LeaveBoard(userConnection);
+        }
+
+        public async Task<ClientResponse> MoveTaskInBoardGroup(string group, MoveTaskInGroupRequest request)
         {
             var result = await TaskService.MoveTaskInBoardGroup(request);
 
             await Clients
-                .OthersInGroup(boardIdentifier)
+                .OthersInGroup(group)
                 .MoveTaskInBoardGroup(request);
 
             return result;
         }
 
-        public async Task<TaskViewModel> Create(string boardIdentifier, AddProjectTaskRequest request)
+        public async Task<TaskViewModel> Create(string group, AddProjectTaskRequest request)
         {
             var result = await TaskService.Create(request);
 
             await Clients
-                .OthersInGroup(boardIdentifier)
+                .OthersInGroup(group)
                 .Create(result);
 
             return result;
         }
 
-        public async Task<ClientResponse> Delete(string boardIdentifier, int id)
+        public async Task<ClientResponse> Delete(string group, int id)
         {
             var response = await TaskService.Delete(id);
 
             await Clients
-                .OthersInGroup(boardIdentifier)
+                .OthersInGroup(group)
                 .Delete(response, id);
 
             return response;
         }
 
-        public async Task<TaskViewModel> Update(string boardIdentifier, UpdateProjectTaskRequest request)
+        public async Task<TaskViewModel> Update(string group, UpdateProjectTaskRequest request)
         {
             var result = await TaskService.Update(request);
 
             await Clients
-                .OthersInGroup(boardIdentifier)
+                .OthersInGroup(group)
                 .Update(result);
 
             return result;

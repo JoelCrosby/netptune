@@ -3,12 +3,19 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import * as actions from '@core/store/tasks/tasks.actions';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Store } from '@ngrx/store';
+import { first, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-list-group',
@@ -16,14 +23,28 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./task-list-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListGroupComponent {
+export class TaskListGroupComponent implements OnInit {
   @Input() groupName: string;
   @Input() tasks: TaskViewModel[];
   @Input() header: string;
   @Input() emptyMessage: string;
   @Input() status: TaskStatus;
 
+  workspaceIdentifier: string;
+
   constructor(private store: Store) {}
+
+  ngOnInit() {
+    this.store
+      .select(selectCurrentWorkspaceIdentifier)
+      .pipe(
+        first(),
+        tap((identifier) => {
+          this.workspaceIdentifier = identifier;
+        })
+      )
+      .subscribe();
+  }
 
   trackByTask(_: number, task: TaskViewModel) {
     return task.id;
@@ -68,7 +89,7 @@ export class TaskListGroupComponent {
   moveTask(task: TaskViewModel, status: TaskStatus, sortOrder: number) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: '[none]',
+        identifier: `[workspace] ${this.workspaceIdentifier}`,
         task: {
           ...task,
           status,
@@ -80,14 +101,17 @@ export class TaskListGroupComponent {
 
   deleteClicked(task: TaskViewModel) {
     this.store.dispatch(
-      actions.deleteProjectTask({ identifier: '[none]', task })
+      actions.deleteProjectTask({
+        identifier: `[workspace] ${this.workspaceIdentifier}`,
+        task,
+      })
     );
   }
 
   markCompleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: '[none]',
+        identifier: `[workspace] ${this.workspaceIdentifier}`,
         task: {
           ...task,
           status: TaskStatus.Complete,
@@ -99,7 +123,7 @@ export class TaskListGroupComponent {
   moveToBacklogClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: '[none]',
+        identifier: `[workspace] ${this.workspaceIdentifier}`,
         task: {
           ...task,
           status: TaskStatus.InActive,
