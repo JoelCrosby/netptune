@@ -22,5 +22,7 @@ namespace Netptune.Core.UnitOfWork
         ICommentRepository Comments { get; }
 
         IReactionRepository Reactions { get; }
+
+        ITagRepository Tags { get; }
     }
 }

@@ -27,6 +27,11 @@ namespace Netptune.Services.Import
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
 
+        private readonly HashSet<string> OptionalHeaders = new HashSet<string>
+        {
+            "Tags"
+        };
+
         public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
@@ -46,12 +51,14 @@ namespace Netptune.Services.Import
 
             csv.Configuration.MissingFieldFound = (headerNames, index, context) =>
             {
+                if (OptionalHeaders.Contains(headerNames[index])) return;
+
                 headerValidator.AddMissingField(headerNames[index]);
             };
 
             csv.Configuration.HeaderValidated = (isValid, headerNames, index, context) =>
             {
-                headerValidator.ValidateHeaderRow(isValid, headerNames, index);
+                headerValidator.ValidateHeaderRow(isValid, headerNames, index, OptionalHeaders);
             };
 
             var rows = await csv.GetRecordsAsync<TaskImportRow>().ToListAsync();

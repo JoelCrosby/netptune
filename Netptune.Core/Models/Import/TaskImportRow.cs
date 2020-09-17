@@ -21,5 +21,7 @@ namespace Netptune.Core.Models.Import
         public string OwnerEmail { get; set; }
 
         public string Group { get; set; }
+
+        public string Tags { get; set; }
     }
 }

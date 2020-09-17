@@ -28,12 +28,14 @@ namespace Netptune.Entities.Contexts
         public DbSet<BoardGroup> BoardGroups { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
         public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; }
+        public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; }
 
         public DataContext() { }
 
@@ -45,7 +47,9 @@ namespace Netptune.Entities.Contexts
         {
             if (optionsBuilder.IsConfigured) return;
 
-            optionsBuilder.UseNpgsql("Host=localhost;Database=neptune;Username=postgres;Password=admin;");
+            optionsBuilder
+                .UseNpgsql("Host=localhost;Database=netptune;Username=postgres;")
+                .UseSnakeCaseNamingConvention();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -59,13 +63,13 @@ namespace Netptune.Entities.Contexts
 
         private static void MapIdentityTableNames(ModelBuilder builder)
         {
-            builder.Entity<AppUser>().ToTable("Users");
-            builder.Entity<IdentityRole>().ToTable("Roles");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("Claims");
-            builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-            builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            builder.Entity<AppUser>().ToTable("users");
+            builder.Entity<IdentityRole>().ToTable("roles");
+            builder.Entity<IdentityUserClaim<string>>().ToTable("claims");
+            builder.Entity<IdentityUserRole<string>>().ToTable("user_roles");
+            builder.Entity<IdentityUserLogin<string>>().ToTable("user_logins");
+            builder.Entity<IdentityRoleClaim<string>>().ToTable("role_claims");
+            builder.Entity<IdentityUserToken<string>>().ToTable("user_tokens");
         }
 
         public override int SaveChanges()

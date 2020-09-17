@@ -29,20 +29,25 @@ namespace Netptune.Repositories
                 .OrderBy(boardGroup => boardGroup.SortOrder)
 
                 .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Owner)
+                .ThenInclude(relational => relational.ProjectTask)
+                .ThenInclude(task => task.Owner)
 
                 .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Assignee)
+                .ThenInclude(relational => relational.ProjectTask)
+                .ThenInclude(task => task.Assignee)
 
                 .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Project)
+                .ThenInclude(relational => relational.ProjectTask)
+                .ThenInclude(task => task.Project)
 
                 .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask)
-                        .ThenInclude(task => task.Workspace);
+                .ThenInclude(relational => relational.ProjectTask)
+                .ThenInclude(task => task.Workspace)
+
+                .Include(group => group.TasksInGroups)
+                .ThenInclude(relational => relational.ProjectTask)
+                .ThenInclude(task => task.ProjectTaskTags)
+                .ThenInclude(taskTag => taskTag.Tag);
 
             return query.ApplyReadonly(isReadonly);
         }

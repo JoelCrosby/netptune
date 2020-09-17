@@ -7,6 +7,12 @@
     {{ task.name }}
   </div>
 
+  <div class="card-tags">
+    <div class="card-tag" *ngFor="let tag of task.tags; trackBy: trackByTag">
+      {{ tag }}
+    </div>
+  </div>
+
   <div class="card-footer">
     <div class="bottom-right">
       <mat-icon

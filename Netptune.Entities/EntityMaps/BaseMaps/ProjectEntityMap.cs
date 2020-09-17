@@ -5,8 +5,8 @@ using Netptune.Core.BaseEntities;
 
 namespace Netptune.Entities.EntityMaps.BaseMaps
 {
-    public class WorkspaceEntityMap<TEntity, TId> : AuditableEntityMap<TEntity, TId>
-        where TEntity : class, IWorkspaceEntity<TId>
+    public class ProjectEntityMap<TEntity, TId> : WorkspaceEntityMap<TEntity, TId>
+        where TEntity : class, IProjectEntity<TId>
         where TId : struct
     {
         public override void Configure(EntityTypeBuilder<TEntity> builder)
@@ -14,13 +14,13 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
             base.Configure(builder);
 
             builder
-                .Property(entity => entity.WorkspaceId)
+                .Property(entity => entity.ProjectId)
                 .IsRequired();
 
             builder
-                .HasOne(entity => entity.Workspace)
+                .HasOne(entity => entity.Project)
                 .WithMany()
-                .HasForeignKey(entity => entity.WorkspaceId)
+                .HasForeignKey(entity => entity.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

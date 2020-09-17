@@ -22,7 +22,9 @@ namespace Netptune.Entities.Configuration
             services.AddScoped<DbContext, DataContext>();
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseNpgsql(netptuneEntitiesOptions.ConnectionString);
+                options
+                    .UseNpgsql(netptuneEntitiesOptions.ConnectionString)
+                    .UseSnakeCaseNamingConvention();
             });
 
             return services;

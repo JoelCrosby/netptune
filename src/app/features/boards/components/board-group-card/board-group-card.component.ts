@@ -21,4 +21,8 @@ export class BoardGroupCardComponent {
       panelClass: 'app-modal-class',
     });
   }
+
+  trackByTag(_: number, tag: string) {
+    return tag;
+  }
 }

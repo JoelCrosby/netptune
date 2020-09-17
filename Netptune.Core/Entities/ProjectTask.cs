@@ -42,6 +42,9 @@ namespace Netptune.Core.Entities
         [JsonIgnore]
         public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
 
+        [JsonIgnore]
+        public ICollection<ProjectTaskTag> ProjectTaskTags { get; set; } = new HashSet<ProjectTaskTag>();
+
         #endregion
 
         #region Methods
@@ -69,7 +72,8 @@ namespace Netptune.Core.Entities
                 AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
                 OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
                 OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
-                ProjectName = Project == null ? string.Empty : Project.Name
+                ProjectName = Project == null ? string.Empty : Project.Name,
+                Tags = ProjectTaskTags.Select(x => x.Tag).Select(x => x.Name).ToList(),
             };
         }
 
