@@ -8,4 +8,5 @@ export interface TaskViewModel extends ProjectTask {
   projectName: string;
   systemId: string;
   workspaceSlug: string;
+  tags: string[];
 }

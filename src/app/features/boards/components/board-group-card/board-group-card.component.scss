@@ -17,6 +17,18 @@
   word-break: break-word;
 }
 
+.card-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .card-tag {
+    margin: .2rem .2rem .2rem 0;
+    border-radius: 4px;
+    padding: .2rem .4rem;
+  }
+}
+
 .card-footer {
   display: flex;
   flex-direction: row-reverse;

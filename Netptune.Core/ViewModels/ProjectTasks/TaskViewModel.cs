@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Netptune.Core.Enums;
 
@@ -21,6 +22,8 @@ namespace Netptune.Core.ViewModels.ProjectTasks
         public string SystemId { get; set; }
 
         public ProjectTaskStatus Status { get; set; }
+
+        public List<string> Tags { get; set; }
 
         public bool IsFlagged { get; set; }
 

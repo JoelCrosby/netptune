@@ -88,7 +88,9 @@ namespace Netptune.Repositories
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
-                .Include(x => x.Workspace);
+                .Include(x => x.Workspace)
+                .Include(x => x.ProjectTaskTags)
+                    .ThenInclude(x => x.Tag);
 
             return isReadonly ? queryable.AsNoTracking() : queryable;
         }

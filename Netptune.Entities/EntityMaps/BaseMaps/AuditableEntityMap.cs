@@ -6,7 +6,7 @@ using Netptune.Core.BaseEntities;
 namespace Netptune.Entities.EntityMaps.BaseMaps
 {
     public class AuditableEntityMap<TEntity, TId> : KeyedEntityMap<TEntity, TId>
-        where TEntity : AuditableEntity<TId>
+        where TEntity : class, IAuditableEntity<TId>
         where TId : struct
     {
         public override void Configure(EntityTypeBuilder<TEntity> builder)
@@ -20,17 +20,14 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
 
             builder
                 .Property(entity => entity.CreatedAt)
-                .HasColumnName("CreatedAt")
                 .HasDefaultValueSql("NOW()");
 
             builder
                 .Property(entity => entity.UpdatedAt)
-                .HasColumnName("UpdatedAt")
                 .IsRequired(false);
 
             builder
                 .Property(entity => entity.IsDeleted)
-                .HasColumnName("IsDeleted")
                 .HasDefaultValue(false);
 
             // Entity > AppUser

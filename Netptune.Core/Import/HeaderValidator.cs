@@ -10,9 +10,9 @@ namespace Netptune.Core.Import
         private readonly List<string> InValidHeaders = new List<string>();
         private readonly List<string> MissingHeaders = new List<string>();
 
-        public void ValidateHeaderRow(bool isValid, IList<string> headerNames, int index)
+        public void ValidateHeaderRow(bool isValid, IList<string> headerNames, int index, ICollection<string> optionalHeaders)
         {
-            if (isValid) return;
+            if (isValid || optionalHeaders.Contains(headerNames[index])) return;
 
             InValidHeaders.Add(headerNames[index]);
         }
