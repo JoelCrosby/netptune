@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
+import * as TagsActions from '@core/store/tags/tags.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
 import { BoardGroup } from '@core/models/board-group';
@@ -89,6 +90,7 @@ export class BoardGroupsViewComponent
 
   ngAfterViewInit() {
     this.store.dispatch(GroupActions.loadBoardGroups());
+    this.store.dispatch(TagsActions.loadTags());
   }
 
   ngOnDestroy() {
