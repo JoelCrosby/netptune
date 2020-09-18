@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Tags;
 
@@ -43,11 +45,37 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<TagViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId, [FromQuery] string workspace)
+        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId, [FromQuery][Required] string workspace)
         {
             var result = await TagService.GetTagsForTask(systemId, workspace);
 
             if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // GET: api/tags/workspace/identifier
+        [Route("workspace/{identifier}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(List<TagViewModel>))]
+        public async Task<IActionResult> GetCommentsForTask([FromRoute] string identifier)
+        {
+            var result = await TagService.GetTagsForWorkspace(identifier);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // DELETE: api/tags/
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> DeleteTask([FromBody] DeleteTagsRequest request)
+        {
+            var result = await TagService.Delete(request);
 
             return Ok(result);
         }

@@ -232,7 +232,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<TEntity> DeletePermanent(TId id)
+        public virtual async Task<TEntity> DeletePermanent(TId id)
         {
             var entity = await GetAsync(id);
 
@@ -248,7 +248,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="idList"></param>
         /// <returns></returns>
-        public async Task DeletePermanent(IEnumerable<TId> idList)
+        public virtual async Task DeletePermanent(IEnumerable<TId> idList)
         {
             var entities = await GetAllByIdAsync(idList);
 
@@ -260,7 +260,7 @@ namespace Netptune.Repositories.Common
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public Task DeletePermanent(IEnumerable<TEntity> entities)
+        public virtual Task DeletePermanent(IEnumerable<TEntity> entities)
         {
             Entities.RemoveRange(entities);
 

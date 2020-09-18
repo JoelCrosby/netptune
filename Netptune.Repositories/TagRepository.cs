@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,8 +34,23 @@ namespace Netptune.Repositories
             return (from tag in Entities
                 join ptt in Context.ProjectTaskTags on tag.Id equals ptt.TagId
                 join task in Context.ProjectTasks on ptt.ProjectTaskId equals task.Id
+                join owner in Context.Users on tag.OwnerId equals owner.Id
                 where !task.IsDeleted && !tag.IsDeleted && task.Id == taskId
-                select tag.ToViewModel()).ToListAsync();
+                select new 
+                {
+                    tag.Id,
+                    tag.Name,
+                    OwnerId = owner.Id,
+                    OwnerFirstname = owner.Firstname,
+                    OwnerLastname = owner.Lastname
+                })
+                .Select(t => new TagViewModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    OwnerId = t.OwnerId,
+                    OwnerName = $"{t.OwnerFirstname} {t.OwnerLastname}"
+                }).ToListAsync();
         }
 
         public async Task<TagViewModel> GetViewModel(int id)
@@ -55,15 +70,45 @@ namespace Netptune.Repositories
             };
         }
 
-        public Task<Tag> GetByValue(string value, int workspaceId)
+        public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId)
         {
             return Entities
-                .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == value);
+                .Include(tag => tag.Owner)
+                .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
+                .Select(tag => tag.ToViewModel())
+                .ToListAsync();
+        }
+
+        public Task<Tag> GetByValue(string value, int workspaceId)
+        {
+            var trimmed = value.Trim();
+
+            return Entities
+                .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
+        }
+
+        public Task<List<Tag>> GetTagsInWorkspace(int workspaceId, IEnumerable<string> tags)
+        {
+            var tagsList = tags.ToList();
+
+            return Entities
+                .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId && tagsList.Contains(x.Name))
+                .ToListAsync();
         }
 
         public Task<bool> ExistsForTask(int tagId, int taskId)
         {
             return Context.ProjectTaskTags.AnyAsync(x => x.TagId == tagId && x.ProjectTaskId == taskId);
+        }
+
+        public override async Task DeletePermanent(IEnumerable<Tag> entities)
+        {
+            var entityList = entities.ToList();
+            var entityIds = entityList.Select(x => x.Id);
+            var taskTags = await Context.ProjectTaskTags.Where(x => entityIds.Contains(x.TagId)).ToListAsync();
+
+            Context.ProjectTaskTags.RemoveRange(taskTags);
+            Entities.RemoveRange(entityList);
         }
     }
 }
