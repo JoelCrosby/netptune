@@ -2,6 +2,9 @@ import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+const LEFT_CLASS = 'scroll-shadow-left';
+const RIGHT_CLASS = 'scroll-shadow-right';
+
 @Directive({
   selector: '[appScrollShadow]',
 })
@@ -18,18 +21,20 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
   constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
-    if (!this.element) return;
+    setTimeout(() => {
+      if (!this.element) return;
 
-    fromEvent(this.element, 'scroll', {
-      passive: true,
-    })
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe({ next: () => this._checkScroll() });
+      fromEvent(this.element, 'scroll', {
+        passive: true,
+      })
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe({ next: () => this._checkScroll() });
 
-    this.leftShadowEl = this.setScrollShadowLeft();
-    this.rightShadowEl = this.setScrollShadowRight();
+      this.leftShadowEl = this._setScrollShadowLeft();
+      this.rightShadowEl = this._setScrollShadowRight();
 
-    this._checkScroll();
+      this._checkScroll();
+    }, 1000);
   }
 
   ngOnDestroy() {
@@ -43,22 +48,22 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
     }
 
     if (this.element.scrollLeft > 8) {
-      this.toggleShadowElClass('left', true);
+      this._toggleShadowElClass('left', true);
     } else {
-      this.toggleShadowElClass('left', false);
+      this._toggleShadowElClass('left', false);
     }
 
     if (
       this.element.scrollLeft + this.element.clientWidth <
       this.element.scrollWidth
     ) {
-      this.toggleShadowElClass('right', true);
+      this._toggleShadowElClass('right', true);
     } else {
-      this.toggleShadowElClass('right', false);
+      this._toggleShadowElClass('right', false);
     }
   }
 
-  getShadowDiv(className: string) {
+  private _getShadowDiv(className: string) {
     const shadowDiv = document.createElement('div');
 
     shadowDiv.setAttribute(`data-scroll-shadow`, className);
@@ -66,33 +71,33 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
     return shadowDiv;
   }
 
-  setScrollShadowLeft() {
-    const div = this.getShadowDiv('scroll-shadow-left');
+  private _setScrollShadowLeft() {
+    const div = this._getShadowDiv(LEFT_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  setScrollShadowRight() {
-    const div = this.getShadowDiv('scroll-shadow-right');
+  private _setScrollShadowRight() {
+    const div = this._getShadowDiv(RIGHT_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  toggleShadowElClass(el: 'left' | 'right', value: boolean) {
-    const toggleEl = (target: Element) => {
+  private _toggleShadowElClass(el: 'left' | 'right', value: boolean) {
+    const toggleEl = (target: Element, cls: string) => {
       if (value) {
-        target.setAttribute('class', `scroll-shadow-${el}`);
+        target.setAttribute('class', cls);
       } else {
         target.setAttribute('class', '');
       }
     };
 
     if (el === 'left') {
-      toggleEl(this.leftShadowEl);
+      toggleEl(this.leftShadowEl, LEFT_CLASS);
     } else {
-      toggleEl(this.rightShadowEl);
+      toggleEl(this.rightShadowEl, RIGHT_CLASS);
     }
   }
 }
