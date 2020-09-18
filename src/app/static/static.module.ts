@@ -13,6 +13,7 @@ import { ScrollShadowVericalDirective } from './directives/scroll-shadow-vertica
 import { ScrollShadowDirective } from './directives/scroll-shadow.directive';
 import { AvatarPipe } from './pipes/avatar.pipe';
 import { FromNowPipe } from './pipes/from-now.pipe';
+import { PrettyDatePipe } from './pipes/pretty-date.pipe';
 import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
 
@@ -26,6 +27,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    PrettyDatePipe,
     TaskStatusPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
@@ -43,6 +45,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     PageHeaderComponent,
     InlineEditInputComponent,
     FromNowPipe,
+    PrettyDatePipe,
     TaskStatusPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,

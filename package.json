@@ -28,8 +28,8 @@
     "@ngrx/router-store": "10.0.0",
     "@ngrx/store": "10.0.0",
     "@ngrx/store-devtools": "10.0.0",
+    "dayjs": "^1.8.36",
     "lodash-es": "^4.17.15",
-    "moment": "^2.27.0",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.1",
     "zone.js": "~0.10.3"
@@ -40,7 +40,6 @@
     "@angular/compiler-cli": "^10.1.1",
     "@angular/language-service": "^10.1.1",
     "@types/lodash-es": "^4.17.3",
-    "@types/moment": "^2.13.0",
     "@types/node": "^13.13.4",
     "codelyzer": "^6.0.0-next.1",
     "sass-lint": "^1.13.1",
