@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
@@ -6,6 +6,7 @@ using Netptune.Core.Extensions;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
@@ -82,6 +83,28 @@ namespace Netptune.Services
             if (taskId is null) return null;
 
             return await Tags.GetViewModelsForTask(taskId.Value, true);
+        }
+
+        public async Task<List<TagViewModel>> GetTagsForWorkspace(string workspaceSlug)
+        {
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceSlug);
+
+            if (workspaceId is null) return null;
+
+            return await Tags.GetViewModelsForWorkspace(workspaceId.Value);
+        }
+
+        public async Task<ClientResponse> Delete(DeleteTagsRequest request)
+        {
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+
+            if (workspaceId is null) return ClientResponse.Failed();
+
+            var tags = await Tags.GetTagsInWorkspace(workspaceId.Value, request.Tags);
+
+            await Tags.DeletePermanent(tags);
+
+            return ClientResponse.Success();
         }
     }
 }
