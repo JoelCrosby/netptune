@@ -11,12 +11,17 @@ import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { hubContextReducer, HubContextState } from './store/hub-context/hub-context.reducer';
+import {
+  hubContextReducer,
+  HubContextState,
+} from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
 import { SettingsState } from './store/settings/settings.model';
 import { settingsReducer } from './store/settings/settings.reducer';
+import { TagsState } from './store/tags/tags.model';
+import { tagsReducer } from './store/tags/tags.reducer';
 import { TasksState } from './store/tasks/tasks.model';
 import { projectTasksReducer } from './store/tasks/tasks.reducer';
 import { UsersState } from './store/users/users.model';
@@ -33,6 +38,7 @@ export const reducers: ActionReducerMap<AppState> = {
   projects: projectsReducer,
   tasks: projectTasksReducer,
   users: usersReducer,
+  tags: tagsReducer,
   hub: hubContextReducer,
 };
 
@@ -56,6 +62,7 @@ export const selectWorkspacesFeature = feature<WorkspacesState>('workspaces');
 export const selectProjectsFeature = feature<ProjectsState>('projects');
 export const selectTasksFeature = feature<TasksState>('tasks');
 export const selectUsersFeature = feature<UsersState>('users');
+export const selectTagsFeature = feature<TagsState>('tags');
 export const selectHubContextFeature = feature<HubContextState>('hub');
 
 export interface AppState {
@@ -67,5 +74,6 @@ export interface AppState {
   projects: ProjectsState;
   tasks: TasksState;
   users: UsersState;
+  tags: TagsState;
   hub: HubContextState;
 }

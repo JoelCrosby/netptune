@@ -21,6 +21,7 @@ import { LayoutEffects } from './store/layout/layout.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
+import { TagsEffects } from './store/tags/tags.effects';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { UsersEffects } from './store/users/users.effects';
       ProjectsEffects,
       ProjectTasksEffects,
       UsersEffects,
+      TagsEffects,
     ]),
     environment.production
       ? []
