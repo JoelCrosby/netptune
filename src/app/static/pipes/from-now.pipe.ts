@@ -7,7 +7,7 @@ import * as UTC from 'dayjs/plugin/utc';
   name: 'fromNow',
 })
 export class FromNowPipe implements PipeTransform {
-  transform(value: string): string {
+  transform(value: string | Date): string {
     if (!value) {
       return '';
     }
