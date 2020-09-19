@@ -18,6 +18,9 @@
 
     .header-tool-bar {
       margin-left: 1.4rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 

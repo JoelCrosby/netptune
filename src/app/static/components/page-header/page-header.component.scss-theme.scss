@@ -43,5 +43,11 @@
       background-color: mat-color($foreground, text, .2);
     }
   }
+
+  .header-tool-bar {
+    & > * {
+      margin-right: 1.4rem;
+    }
+  }
 }
 
