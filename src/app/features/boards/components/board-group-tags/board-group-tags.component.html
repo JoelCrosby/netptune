@@ -1,0 +1,23 @@
+<button mat-button [matMenuTriggerFor]="tagMenu" (click)="onClicked()">
+  <span>Tag Filters</span>
+  <mat-icon
+    aria-hidden="false"
+    aria-label="Expand Tags Dropdown"
+    class="material-icons-round"
+  >
+    expand_more
+  </mat-icon>
+</button>
+
+<mat-menu #tagMenu="matMenu">
+  <ng-template matMenuContent>
+    <button
+      mat-menu-item
+      *ngFor="let tag of tags$ | async; trackBy: trackByTag"
+    >
+      <mat-checkbox>
+        {{ tag.name }}
+      </mat-checkbox>
+    </button>
+  </ng-template>
+</mat-menu>
