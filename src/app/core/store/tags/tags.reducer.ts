@@ -8,10 +8,11 @@ const reducer = createReducer(
 
   // Load Tags
 
-  on(actions.loadTags, (state) => ({ ...state, loading: true })),
+  on(actions.loadTags, (state) => ({ ...state, loaded: false, loading: true })),
   on(actions.loadTagsFail, (state, { error }) => ({
     ...state,
     loading: false,
+    loaded: false,
     loadProjectsError: error,
   })),
   on(actions.loadTagsSuccess, (state, { tags }) =>
@@ -20,7 +21,14 @@ const reducer = createReducer(
       loading: false,
       loaded: true,
     })
-  )
+  ),
+
+  on(actions.toggleSelectedTag, (state, { tag }) => ({
+    ...state,
+    selectedTags: state.selectedTags.includes(tag)
+      ? state.selectedTags.filter((t) => t !== tag)
+      : Array.from(new Set([...state.selectedTags, tag])),
+  }))
 );
 
 export function tagsReducer(

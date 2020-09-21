@@ -18,20 +18,24 @@ const reducer = createReducer(
     ...state,
     loadingError: error,
   })),
-  on(actions.loadBoardGroupsSuccess, (state, { boardGroups, selectedIds }) => {
-    const selectedIdMap = new Set(selectedIds);
+  on(
+    actions.loadBoardGroupsSuccess,
+    (state, { boardGroups, selectedIds, onlyFlagged }) => {
+      const selectedIdMap = new Set(selectedIds);
 
-    return adapter.setAll(boardGroups.groups, {
-      ...state,
-      loading: false,
-      loaded: true,
-      board: boardGroups.board,
-      users: boardGroups.users,
-      selectedUsers: boardGroups.users.filter((user) =>
-        selectedIdMap.has(user.id)
-      ),
-    });
-  }),
+      return adapter.setAll(boardGroups.groups, {
+        ...state,
+        loading: false,
+        loaded: true,
+        board: boardGroups.board,
+        users: boardGroups.users,
+        onlyFlagged,
+        selectedUsers: boardGroups.users.filter((user) =>
+          selectedIdMap.has(user.id)
+        ),
+      });
+    }
+  ),
 
   // Create Board Group
 
@@ -119,6 +123,13 @@ const reducer = createReducer(
       selectedUsers,
     };
   }),
+
+  // Toggle Only Flagged
+
+  on(actions.toggleOnlyFlagged, (state) => ({
+    ...state,
+    onlyFlagged: !state.onlyFlagged,
+  })),
 
   // ProjectTaskActions
 

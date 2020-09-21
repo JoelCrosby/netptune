@@ -49,19 +49,22 @@ namespace Netptune.Services
         {
             var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
 
+            var includeUserFilter = filter?.Users?.Any() ?? false;
+            var includeTagFilter = filter?.Tags?.Any() ?? false;
+            var includeFlaggedFilter = filter?.Flagged ?? false;
+
             foreach (var group in groups)
             {
                 var tasksInGroups = group
                     .TasksInGroups
-                    .OrderBy(item => item.SortOrder)
-                    .ToList();
-
-                var includeUserFilter = filter?.Users?.Any() ?? false;
+                    .OrderBy(item => item.SortOrder);
 
                 var tasks = tasksInGroups.Select(item => item.ProjectTask)
                     .Where(task => !task.IsDeleted)
                     .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
-                    .Select(task => task.ToViewModel());
+                    .Where(task => !includeFlaggedFilter || task.IsFlagged)
+                    .Select(task => task.ToViewModel())
+                    .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true));
 
                 group.Tasks.AddRange(tasks);
             }
@@ -73,10 +76,9 @@ namespace Netptune.Services
                 .Select(task => task.ProjectTask)
                 .Where(task => !task.IsDeleted)
                 .Select(task => task.Assignee)
-                .DistinctBy(user => user.UserName)
-                .ToList();
+                .DistinctBy(user => user.UserName);
 
-            var users = Mapper.Map<List<AppUser>, List<UserViewModel>>(userEntities);
+            var users = Mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(userEntities);
 
             return new BoardGroupsViewModel
             {

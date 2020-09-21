@@ -1,23 +1,41 @@
-<button mat-button [matMenuTriggerFor]="tagMenu" (click)="onClicked()">
-  <span>Tag Filters</span>
+<button
+  *ngrxLet="selectedCount$ as count"
+  mat-button
+  class="board-filter-button"
+  [matMenuTriggerFor]="tagMenu"
+  (click)="onClicked()"
+  [matBadge]="!!count ? count : undefined"
+  [color]="!!count ? 'primary' : ''"
+>
   <mat-icon
     aria-hidden="false"
     aria-label="Expand Tags Dropdown"
-    class="material-icons-round"
+    class="material-icons-outlined"
   >
-    expand_more
+    local_offer
   </mat-icon>
 </button>
 
-<mat-menu #tagMenu="matMenu">
+<mat-menu #tagMenu="matMenu" class="tags-menu">
   <ng-template matMenuContent>
-    <button
-      mat-menu-item
-      *ngFor="let tag of tags$ | async; trackBy: trackByTag"
-    >
-      <mat-checkbox>
+    <ng-container *ngIf="loaded$ | async; else elseTemplate">
+      <mat-checkbox
+        class="tag-checkbox mat-menu-item"
+        role="menuitemcheckbox"
+        (click)="$event.stopPropagation()"
+        (change)="onOptionClicked(tag)"
+        [checked]="tag.selected"
+        *ngFor="let tag of tags$ | async; trackBy: trackByTag"
+      >
         {{ tag.name }}
       </mat-checkbox>
-    </button>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div class="loading">
+        <mat-spinner diameter="24"></mat-spinner>
+      </div>
+    </ng-template>
+
   </ng-template>
 </mat-menu>

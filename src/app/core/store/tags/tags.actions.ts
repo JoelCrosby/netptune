@@ -17,3 +17,8 @@ export const loadTagsFail = createAction(
   '[Tags] Load Tags Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+export const toggleSelectedTag = createAction(
+  '[Tags] Toggle Selected Tag',
+  props<{ tag: string }>()
+);

@@ -1,4 +1,5 @@
-export interface Selected<T> {
-  item: T;
+export type Selected<T> = {
+  [K in keyof T]: T[K];
+} & {
   selected: boolean;
-}
+};

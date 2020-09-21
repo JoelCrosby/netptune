@@ -20,6 +20,8 @@ import { BoardsGridComponent } from './components/boards-grid/boards-grid.compon
 import { BoardGroupUsersComponent } from './components/board-group-users/board-group-users.component';
 import { CreateBoardComponent } from './components/create-board/create-board.component';
 import { BoardGroupTagsComponent } from './components/board-group-tags/board-group-tags.component';
+import { BoardGroupsFlaggedComponent } from './components/board-groups-flagged/board-groups-flagged.component';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -33,10 +35,12 @@ import { BoardGroupTagsComponent } from './components/board-group-tags/board-gro
     BoardGroupUsersComponent,
     CreateBoardComponent,
     BoardGroupTagsComponent,
+    BoardGroupsFlaggedComponent,
   ],
   imports: [
     SharedModule,
     StaticModule,
+    ReactiveComponentModule,
     StoreModule.forFeature('boards', boardsReducer),
     StoreModule.forFeature('boardgroups', boardGroupsReducer),
     EffectsModule.forFeature([BoardsEffects, BoardGroupsEffects]),

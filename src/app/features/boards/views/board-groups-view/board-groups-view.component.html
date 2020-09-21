@@ -13,11 +13,16 @@
 >
 
   <app-page-header
+    *ngIf="boardGroupsLoaded$ | async"
     [title]="selectedBoardName$ | async"
     [overflowActions]="secondaryActions"
   >
     <app-board-group-users></app-board-group-users>
+
+    <div class="board-filter-seperator"></div>
+
     <app-board-group-tags></app-board-group-tags>
+    <app-board-groups-flagged></app-board-groups-flagged>
   </app-page-header>
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">

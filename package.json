@@ -21,6 +21,7 @@
     "@angular/router": "^10.1.2",
     "@mdi/font": "^5.5.55",
     "@microsoft/signalr": "^3.1.8",
+    "@ngrx/component": "^10.0.0",
     "@ngrx/effects": "10.0.0",
     "@ngrx/entity": "10.0.0",
     "@ngrx/router-store": "10.0.0",

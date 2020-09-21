@@ -12,6 +12,7 @@ export const initialState: TagsState = adapter.getInitialState({
   loadingNewTag: false,
   deleteState: DefaultActionState,
   editState: DefaultActionState,
+  selectedTags: [],
 });
 
 export interface TagsState extends AsyncEntityState<Tag> {
@@ -23,4 +24,5 @@ export interface TagsState extends AsyncEntityState<Tag> {
   editState: ActionState;
   selectedTag?: Tag;
   createdTag?: Tag;
+  selectedTags: string[];
 }
