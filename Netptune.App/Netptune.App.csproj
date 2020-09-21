@@ -38,6 +38,7 @@
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
+    <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
   </ItemGroup>
 
   <Target Name="PublishRunWebpack" Condition="'$(Configuration)' == 'Release'" AfterTargets="ComputeFilesToPublish">

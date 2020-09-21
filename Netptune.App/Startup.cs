@@ -17,6 +17,7 @@ using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
+using Netptune.Storage;
 
 namespace Netptune.App
 {
@@ -61,6 +62,13 @@ namespace Netptune.App
             {
                 options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
+            });
+
+            services.AddS3StorageService(options =>
+            {
+                options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
+                options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
+                options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
 
             services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join("..", "dist"));
