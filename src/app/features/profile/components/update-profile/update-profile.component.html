@@ -55,6 +55,16 @@
     >
   </mat-form-field>
 
+  <div>
+    <input
+    #upload
+    class="hidden"
+    type="file"
+    id="upload-file"
+    name="upload-file"
+    (change)="uploadClicked($event)"
+  >
+  </div>
 
   <button
     class="form-submit-btn"

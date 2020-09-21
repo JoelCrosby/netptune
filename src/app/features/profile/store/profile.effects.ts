@@ -63,6 +63,19 @@ export class ProfileEffects {
     )
   );
 
+  uploadProfilePicture$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.uploadProfilePicture),
+      switchMap((action) =>
+        this.profileService.uloadProfilePicture(action.data).pipe(
+          tap(() => this.snackbar.open('Profile Updated')),
+          map((response) => actions.uploadProfilePictureSuccess({ response })),
+          catchError((error) => of(actions.uploadProfilePictureFail({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions<Action>,
     private profileService: ProfileService,
