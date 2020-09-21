@@ -50,3 +50,20 @@ export const changePasswordSuccess = createAction(
 export const changePasswordFail = createAction(
   '[Profile] Change Password Fail'
 );
+
+// Upload Profile Image
+
+export const uploadProfilePicture = createAction(
+  '[Profile] Upload Profile Picture',
+  props<{ data: FormData }>()
+);
+
+export const uploadProfilePictureSuccess = createAction(
+  '[Profile] Upload Profile Picture Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const uploadProfilePictureFail = createAction(
+  '[Profile] Upload Profile Picture Fail',
+  props<{ error: HttpErrorResponse | Error }>()
+);

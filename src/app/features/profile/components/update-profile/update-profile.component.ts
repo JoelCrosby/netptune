@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { loadProfile, updateProfile } from '@profile/store/profile.actions';
+import {
+  loadProfile,
+  updateProfile,
+  uploadProfilePicture,
+} from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
@@ -78,6 +82,19 @@ export class UpdateProfileComponent
   ngOnDestroy() {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+  }
+
+  uploadClicked(fileInput: { target: { files: FileList } }) {
+    const files = fileInput.target.files;
+    const data = new FormData();
+
+    if (!files.length) return;
+
+    data.append('file', files[0], files[0].name);
+
+    this.store.dispatch(uploadProfilePicture({ data }));
+
+    fileInput.target.files = new FileList();
   }
 
   updateClicked() {

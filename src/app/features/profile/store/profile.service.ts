@@ -35,4 +35,11 @@ export class ProfileService {
       request
     );
   }
+
+  uloadProfilePicture(data: FormData) {
+    return this.http.post<ClientResponse>(
+      environment.apiEndpoint + 'api/storage',
+      data
+    );
+  }
 }
