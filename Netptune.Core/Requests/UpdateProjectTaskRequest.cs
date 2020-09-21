@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using Netptune.Core.Enums;
@@ -22,5 +23,7 @@ namespace Netptune.Core.Requests
         public string OwnerId { get; set; }
 
         public string AssigneeId { get; set; }
+
+        public List<string> Tags { get; set; }
     }
 }

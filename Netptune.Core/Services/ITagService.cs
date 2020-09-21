@@ -16,5 +16,7 @@ namespace Netptune.Core.Services
         Task<List<TagViewModel>> GetTagsForWorkspace(string workspaceSlug);
 
         Task<ClientResponse> Delete(DeleteTagsRequest request);
+
+        Task<ClientResponse> DeleteFromTask(DeleteTagFromTaskRequest request);
     }
 }

@@ -104,6 +104,28 @@ namespace Netptune.Services
 
             await Tags.DeletePermanent(tags);
 
+            await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
+        }
+
+        public async Task<ClientResponse> DeleteFromTask(DeleteTagFromTaskRequest request)
+        {
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.Workspace);
+
+            if (!taskId.HasValue) return null;
+
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+
+            if (!workspaceId.HasValue)
+            {
+                return ClientResponse.Failed($"workspace with identifier {request.Workspace} does not exist");
+            }
+
+            await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Tag);
+
+            await UnitOfWork.CompleteAsync();
+
             return ClientResponse.Success();
         }
     }

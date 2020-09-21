@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Core.Hubs
 {
@@ -20,5 +22,9 @@ namespace Netptune.Core.Hubs
         Task Delete(ClientResponse response, int id);
 
         Task Update(TaskViewModel request);
+
+        Task AddTagToTask(TagViewModel response);
+
+        Task DeleteTagFromTask(ClientResponse response);
     }
 }

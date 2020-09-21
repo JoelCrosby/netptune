@@ -9,6 +9,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.App.Hubs
 {
@@ -19,11 +20,13 @@ namespace Netptune.App.Hubs
 
         private readonly IUserConnectionService UserConnection;
         private readonly ITaskService TaskService;
+        private readonly ITagService TagService;
 
-        public BoardHub(IUserConnectionService userConnection, ITaskService taskService)
+        public BoardHub(IUserConnectionService userConnection, ITaskService taskService, ITagService tagsService)
         {
             UserConnection = userConnection;
             TaskService = taskService;
+            TagService = tagsService;
         }
 
         public override async Task OnConnectedAsync()
@@ -102,6 +105,28 @@ namespace Netptune.App.Hubs
                 .Update(result);
 
             return result;
+        }
+
+        public async Task<TagViewModel> AddTagToTask(string group, AddTagRequest request)
+        {
+            var response = await TagService.AddTagToTask(request);
+
+            await Clients
+                .OthersInGroup(group)
+                .AddTagToTask(response);
+
+            return response;
+        }
+
+        public async Task<ClientResponse> DeleteTagFromTask(string group, DeleteTagFromTaskRequest request)
+        {
+            var response = await TagService.DeleteFromTask(request);
+
+            await Clients
+                .OthersInGroup(group)
+                .DeleteTagFromTask(response);
+
+            return response;
         }
     }
 }

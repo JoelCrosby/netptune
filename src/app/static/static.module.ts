@@ -16,6 +16,7 @@ import { FromNowPipe } from './pipes/from-now.pipe';
 import { PrettyDatePipe } from './pipes/pretty-date.pipe';
 import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
+import { AutocompleteChipsComponent } from './components/autocomplete-chips/autocomplete-chips.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
+    AutocompleteChipsComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -52,6 +54,7 @@ import { UsernamePipe } from './pipes/username.pipe';
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
+    AutocompleteChipsComponent,
   ],
 })
 export class StaticModule {}

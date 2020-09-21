@@ -6,6 +6,8 @@ import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
 import { FileResponse } from '@core/types/file-response';
 import { ClientResponse } from '@core/models/client-response';
+import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { Tag } from '@core/models/tag';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -194,5 +196,39 @@ export const importTasksSuccess = createAction(
 
 export const importTasksFail = createAction(
   '[ProjectTasks] Import Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Delete Tag From Task
+
+export const deleteTagFromTask = createAction(
+  '[ProjectTasks] Delete Tag From Task',
+  props<{ identifier: string; systemId: string; tag: string }>()
+);
+
+export const deleteTagFromTaskSuccess = createAction(
+  '[ProjectTasks] Delete Tag From Task Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const deleteTagFromTaskFail = createAction(
+  '[ProjectTasks] Delete Tag From Task Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Add Tag To Task
+
+export const addTagToTask = createAction(
+  '[ProjectTasks] Add Tag To Task',
+  props<{ identifier: string; request: AddTagRequest }>()
+);
+
+export const addTagToTaskSuccess = createAction(
+  '[ProjectTasks] Add Tag To Task Success',
+  props<{ tag: Tag }>()
+);
+
+export const addTagToTaskFail = createAction(
+  '[ProjectTasks] Add Tag To Task Fail',
   props<{ error: HttpErrorResponse }>()
 );

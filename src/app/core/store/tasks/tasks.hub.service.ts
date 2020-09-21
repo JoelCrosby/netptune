@@ -11,6 +11,9 @@ import { first, tap } from 'rxjs/operators';
 import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import * as actions from './tasks.actions';
 import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
+import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
+import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { Tag } from '@core/models/tag';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +39,20 @@ export class ProjectTasksHubService {
         method: 'Update',
         callback: () => this.reloadRequiredViews(),
       },
+      {
+        method: 'AddTagToTask',
+        callback: () => this.reloadRequiredViews(),
+      },
+      {
+        method: 'DeleteTagFromTask',
+        callback: () => this.reloadRequiredViews(),
+      },
     ]);
   }
 
   reloadRequiredViews() {
+    console.log('REQUEST TO RELOAD RECIEVED');
+
     this.store
       .select(selectIsWorkspaceGroup)
       .pipe(
@@ -88,5 +101,17 @@ export class ProjectTasksHubService {
 
   delete(groupId: string, task: ProjectTask) {
     return this.hub.invoke<ClientResponse>('Delete', groupId, task.id);
+  }
+
+  addTagToTask(groupId: string, request: AddTagRequest) {
+    return this.hub.invoke<Tag>('AddTagToTask', groupId, request);
+  }
+
+  deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {
+    return this.hub.invoke<ClientResponse>(
+      'DeleteTagFromTask',
+      groupId,
+      request
+    );
   }
 }

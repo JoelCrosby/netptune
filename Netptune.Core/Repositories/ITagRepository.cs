@@ -22,5 +22,7 @@ namespace Netptune.Core.Repositories
         Task<List<Tag>> GetTagsInWorkspace(int workspaceId, IEnumerable<string> tags);
 
         Task<bool> ExistsForTask(int tagId, int taskId);
+
+        Task DeleteTagFromTask(int workspaceId, int taskId, string tag);
     }
 }
