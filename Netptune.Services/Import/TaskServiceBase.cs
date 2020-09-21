@@ -16,13 +16,13 @@ using Netptune.Core.Models.Import;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Common;
 using Netptune.Core.Services.Import;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Import.Common;
 
 namespace Netptune.Services.Import
 {
-    public class TaskImportService : ImportService<TaskImportResult>, ITaskImportService
+    public class TaskServiceBase : ServiceBase<TaskImportResult>, ITaskImportService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
@@ -32,7 +32,7 @@ namespace Netptune.Services.Import
             "Tags"
         };
 
-        public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+        public TaskServiceBase(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
             IdentityService = identityService;

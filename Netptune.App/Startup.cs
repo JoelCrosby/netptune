@@ -67,6 +67,7 @@ namespace Netptune.App
             services.AddS3StorageService(options =>
             {
                 options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
+                options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION");
                 options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });

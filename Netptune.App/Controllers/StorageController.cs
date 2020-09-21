@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Netptune.Core.Encoding;
 using Netptune.Core.Services;
+using Netptune.Core.Storage;
 
 namespace Netptune.App.Controllers
 {
@@ -15,25 +16,31 @@ namespace Netptune.App.Controllers
     public class StorageController : ControllerBase
     {
         private readonly IStorageService StorageService;
+        private readonly IIdentityService Identity;
 
-        public StorageController(IStorageService storageService)
+        public StorageController(IStorageService storageService, IIdentityService identity)
         {
             StorageService = storageService;
+            Identity = identity;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload()
+        [Route("profile-picture")]
+        public async Task<IActionResult> UploadProfilePicture()
         {
             var file = Request.Form.Files.FirstOrDefault();
 
             if (file is null) return BadRequest();
 
-            var key = file.FileName.ToUrlSlug();
+            var userId = await Identity.GetCurrentUserId();
+            var extension = Path.GetExtension(file.FileName);
+            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}{extension}");
+
             var fileStream = file.OpenReadStream();
 
-            await StorageService.UploadFileAsync(fileStream, key);
+            var result = await StorageService.UploadFileAsync(fileStream, key);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

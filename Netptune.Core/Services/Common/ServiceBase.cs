@@ -1,8 +1,8 @@
 using Netptune.Core.Responses.Common;
 
-namespace Netptune.Services.Import.Common
+namespace Netptune.Core.Services.Common
 {
-    public abstract class ImportService<TResult>
+    public abstract class ServiceBase<TResult>
     {
         protected virtual ClientResponse<TResult> Success(TResult payload, string message = null)
         {

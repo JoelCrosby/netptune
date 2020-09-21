@@ -31,7 +31,7 @@ namespace Netptune.Services.Configuration
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<ITagService, TagService>();
 
-            services.AddTransient<ITaskImportService, TaskImportService>();
+            services.AddTransient<ITaskImportService, TaskServiceBase>();
 
             services.AddMemoryCache();
             services.AddTransient<IUserConnectionService, UserConnectionService>();
