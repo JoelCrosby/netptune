@@ -35,6 +35,7 @@ export class BoardGroupsViewComponent
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
+  boardGroupsLoaded$: Observable<boolean>;
 
   private board: Board;
 
@@ -60,8 +61,13 @@ export class BoardGroupsViewComponent
 
   ngOnInit() {
     this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
+
     this.loading$ = this.store
       .select(GroupSelectors.selectBoardGroupsLoading)
+      .pipe(startWith(true));
+
+    this.boardGroupsLoaded$ = this.store
+      .select(GroupSelectors.selectBoardGroupsLoaded)
       .pipe(startWith(true));
 
     this.selectedBoardName$ = this.store.pipe(

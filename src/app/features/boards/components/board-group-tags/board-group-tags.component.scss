@@ -1,5 +1,8 @@
-button {
-  span {
-    margin-right: .4rem;
+.loading {
+  display: grid;
+  place-items: center;
+
+  mat-spinner {
+    margin: 1.4rem;
   }
 }

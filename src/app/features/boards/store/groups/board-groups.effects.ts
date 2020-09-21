@@ -7,6 +7,8 @@ import {
 } from '@core/core.route.selectors';
 import { BoardGroupType } from '@core/models/board-group';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { toggleSelectedTag } from '@core/store/tags/tags.actions';
+import { selectSelectedTags } from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -26,6 +28,7 @@ import * as actions from './board-groups.actions';
 import {
   selectBoardGroupsSelectedUserIds,
   selectBoardIdentifier,
+  selectOnlyFlagged,
 } from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
 
@@ -45,6 +48,7 @@ export class BoardGroupsEffects {
             actions.loadBoardGroupsSuccess({
               boardGroups,
               selectedIds: paramMap.getAll('users'),
+              onlyFlagged: paramMap.get('flagged') === 'true',
             })
           ),
           catchError((error) => of(actions.loadBoardGroupsFail({ error })))
@@ -176,14 +180,29 @@ export class BoardGroupsEffects {
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
 
-  toggleUserSelection$ = createEffect(
+  updateFilters$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(actions.toggleUserSelection),
-        withLatestFrom(this.store.select(selectBoardGroupsSelectedUserIds)),
-        tap(async ([_, users]) => {
+        ofType(
+          actions.toggleUserSelection,
+          toggleSelectedTag,
+          actions.toggleOnlyFlagged
+        ),
+        withLatestFrom(
+          this.store.select(selectBoardGroupsSelectedUserIds),
+          this.store.select(selectSelectedTags),
+          this.store.select(selectOnlyFlagged)
+        ),
+        map(([_, users, tags, flagged]) => {
+          const usersParam = users?.length ? users : undefined;
+          const tagsParam = tags?.length ? tags : undefined;
+          const flaggedParam = flagged == true || undefined;
+
+          return [_, usersParam, tagsParam, flaggedParam];
+        }),
+        tap(async ([_, users, tags, flagged]) => {
           await this.router.navigate([], {
-            queryParams: { users },
+            queryParams: { users, tags, flagged },
           });
           this.store.dispatch(actions.loadBoardGroups());
         })

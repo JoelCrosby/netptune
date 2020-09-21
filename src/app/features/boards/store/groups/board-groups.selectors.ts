@@ -93,7 +93,7 @@ export const selectBoardGroupsUsersModel = createSelector(
     const selectedUserIds = new Set(selectedUsers.map((user) => user.id));
 
     return users.map((user) => ({
-      item: user,
+      ...user,
       selected: selectedUserIds.has(user.id),
     }));
   }
@@ -102,4 +102,9 @@ export const selectBoardGroupsUsersModel = createSelector(
 export const selectBoardProjectId = createSelector(
   selectBoard,
   (state: BoardViewModel) => state.projectId
+);
+
+export const selectOnlyFlagged = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.onlyFlagged
 );

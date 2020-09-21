@@ -29,4 +29,5 @@ export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
   currentBoardGroup?: BoardGroup;
   isDragging: boolean;
   inlineActive?: number;
+  onlyFlagged?: boolean;
 }

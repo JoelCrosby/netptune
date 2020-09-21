@@ -6,9 +6,9 @@
     [class.selected]="user.selected"
   >
     <app-avatar
-      [name]="user.item.displayName"
-      [imageUrl]="user.item.pictureUrl"
-      [borderRadius]="user.item.pictureUrl ? 0 : '50%'"
+      [name]="user.displayName"
+      [imageUrl]="user.pictureUrl"
+      [borderRadius]="user.pictureUrl ? 0 : '50%'"
       (click)="onUserClicked(user)"
     >
     </app-avatar>

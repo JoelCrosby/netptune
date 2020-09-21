@@ -9,8 +9,8 @@ namespace Netptune.Core.ViewModels.Boards
     {
         public BoardViewModel Board { get; set; }
 
-        public List<BoardGroup> Groups { get; set; }
+        public IEnumerable<BoardGroup> Groups { get; set; }
 
-        public List<UserViewModel> Users { get; set; }
+        public IEnumerable<UserViewModel> Users { get; set; }
     }
 }

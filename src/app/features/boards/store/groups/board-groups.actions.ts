@@ -16,7 +16,11 @@ export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 
 export const loadBoardGroupsSuccess = createAction(
   '[BoardGroups] Load Board Groups Success ',
-  props<{ boardGroups: BoardGroupsViewModel; selectedIds: string[] }>()
+  props<{
+    boardGroups: BoardGroupsViewModel;
+    selectedIds: string[];
+    onlyFlagged?: boolean;
+  }>()
 );
 
 export const loadBoardGroupsFail = createAction(
@@ -134,4 +138,10 @@ export const createProjectTasksFail = createAction(
 export const toggleUserSelection = createAction(
   '[BoardGroups] Toggle Users Selection',
   props<{ user: AppUser }>()
+);
+
+// Selected Users
+
+export const toggleOnlyFlagged = createAction(
+  '[BoardGroups] Toggle Only Flagged'
 );

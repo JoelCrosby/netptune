@@ -22,10 +22,10 @@ export class BoardGroupUsersComponent implements OnInit {
   }
 
   onUserClicked(user: Selected<AppUser>) {
-    this.store.dispatch(toggleUserSelection({ user: user.item }));
+    this.store.dispatch(toggleUserSelection({ user }));
   }
 
   trackByUsers(_: number, user: Selected<AppUser>) {
-    return user.item.id;
+    return user.id;
   }
 }
