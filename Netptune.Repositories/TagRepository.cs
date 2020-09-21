@@ -36,7 +36,7 @@ namespace Netptune.Repositories
                 join task in Context.ProjectTasks on ptt.ProjectTaskId equals task.Id
                 join owner in Context.Users on tag.OwnerId equals owner.Id
                 where !task.IsDeleted && !tag.IsDeleted && task.Id == taskId
-                select new 
+                select new
                 {
                     tag.Id,
                     tag.Name,
@@ -109,6 +109,21 @@ namespace Netptune.Repositories
 
             Context.ProjectTaskTags.RemoveRange(taskTags);
             Entities.RemoveRange(entityList);
+        }
+
+        public async Task DeleteTagFromTask(int workspaceId, int taskId, string tag)
+        {
+            var tagTrimmed = tag.Trim();
+            var tagIds = await Entities
+                .Where(x => x.Name == tagTrimmed && x.WorkspaceId == workspaceId)
+                .Select(x => x.Id)
+                .ToListAsync();
+
+            var taskTags = await Context.ProjectTaskTags
+                .Where(x => x.ProjectTaskId == taskId && tagIds.Contains(x.TagId))
+                .ToListAsync();
+
+            Context.ProjectTaskTags.RemoveRange(taskTags);
         }
     }
 }

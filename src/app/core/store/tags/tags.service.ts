@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ClientResponse } from '@core/models/client-response';
 import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { Tag } from '@core/models/tag';
 import { environment } from '@env/environment';
 
@@ -34,6 +36,16 @@ export class TagsService {
 
   delete(request: AddTagRequest) {
     return this.http.request<Tag>(
+      'DELETE',
+      environment.apiEndpoint + `api/tags/task`,
+      {
+        body: request,
+      }
+    );
+  }
+
+  deleteFromTask(request: DeleteTagFromTaskRequest) {
+    return this.http.request<ClientResponse>(
       'DELETE',
       environment.apiEndpoint + `api/tags/task`,
       {

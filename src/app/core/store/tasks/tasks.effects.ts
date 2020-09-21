@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import {
+  selectCurrentWorkspace,
+  selectCurrentWorkspaceIdentifier,
+} from '@core/store/workspaces/workspaces.selectors';
 import { downloadFile } from '@core/util/download-helper';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -188,6 +191,33 @@ export class ProjectTasksEffects {
               this.snackbar.open('Import Failed');
               return of(actions.importTasksFail({ error }));
             })
+          )
+      )
+    )
+  );
+
+  addTagToTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.addTagToTask),
+      switchMap(({ identifier, request }) =>
+        this.projectTasksHubService.addTagToTask(identifier, request).pipe(
+          map((tag) => actions.addTagToTaskSuccess({ tag })),
+          catchError((error) => of(actions.addTagToTaskFail(error)))
+        )
+      )
+    )
+  );
+
+  deleteTagFromTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteTagFromTask),
+      withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+      switchMap(([{ identifier, systemId, tag }, workspace]) =>
+        this.projectTasksHubService
+          .deleteTagFromTask(identifier, { workspace, systemId, tag })
+          .pipe(
+            map((response) => actions.deleteTagFromTaskSuccess({ response })),
+            catchError((error) => of(actions.deleteTagFromTaskFail(error)))
           )
       )
     )

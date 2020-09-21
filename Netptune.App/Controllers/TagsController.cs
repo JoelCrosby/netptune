@@ -71,11 +71,23 @@ namespace Netptune.App.Controllers
         // DELETE: api/tags/
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(ClientResponse))]
-        public async Task<IActionResult> DeleteTask([FromBody] DeleteTagsRequest request)
+        public async Task<IActionResult> Delete([FromBody] DeleteTagsRequest request)
         {
             var result = await TagService.Delete(request);
+
+            return Ok(result);
+        }
+
+        // DELETE: api/tags/task
+        [HttpDelete]
+        [Route("task")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> DeleteFromTask([FromBody] DeleteTagFromTaskRequest request)
+        {
+            var result = await TagService.DeleteFromTask(request);
 
             return Ok(result);
         }

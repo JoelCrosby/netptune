@@ -36,7 +36,12 @@ import { BoardGroupsService } from './board-groups.service';
 export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(actions.loadBoardGroups, TaskActions.importTasksSuccess),
+      ofType(
+        actions.loadBoardGroups,
+        TaskActions.importTasksSuccess,
+        TaskActions.deleteTagFromTaskSuccess,
+        TaskActions.addTagToTaskSuccess
+      ),
       withLatestFrom(
         this.store.select(selectRouterParam, 'id'),
         this.route.queryParamMap,

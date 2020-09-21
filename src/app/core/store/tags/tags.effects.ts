@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import {
+  selectCurrentWorkspace,
+  selectCurrentWorkspaceIdentifier,
+} from '@core/store/workspaces/workspaces.selectors';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -22,6 +25,31 @@ export class TagsEffects {
         this.tagsService.get(workspace.slug).pipe(
           map((tags) => actions.loadTagsSuccess({ tags })),
           catchError((error) => of(actions.loadTagsFail(error)))
+        )
+      )
+    )
+  );
+
+  addTagToTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.addTagToTask),
+      switchMap((action) =>
+        this.tagsService.post(action.request).pipe(
+          map((tag) => actions.addTagToTaskSuccess({ tag })),
+          catchError((error) => of(actions.addTagToTaskFail(error)))
+        )
+      )
+    )
+  );
+
+  deleteTagFromTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteTagFromTask),
+      withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+      switchMap(([{ systemId, tag }, workspace]) =>
+        this.tagsService.deleteFromTask({ workspace, systemId, tag }).pipe(
+          map((response) => actions.deleteTagFromTaskSuccess({ response })),
+          catchError((error) => of(actions.deleteTagFromTaskFail(error)))
         )
       )
     )

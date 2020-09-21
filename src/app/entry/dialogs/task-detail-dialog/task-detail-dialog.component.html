@@ -58,6 +58,15 @@
             ></textarea>
           </mat-form-field>
 
+          <app-autocomplete-chips
+            [options]="tags$ | async"
+            [selected]="task.tags"
+            (selectionChanged)="onTagsSelectionChanged($event)"
+            placeholder="Add Tags"
+            label="Tags"
+          >
+          </app-autocomplete-chips>
+
         </form>
 
         <div class="comments-container" *ngIf="user$ | async as user">

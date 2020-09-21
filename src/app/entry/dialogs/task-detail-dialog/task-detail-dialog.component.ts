@@ -19,6 +19,8 @@ import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
+import * as TagsSelectors from '@core/store/tags/tags.selectors';
+import * as TagsActions from '@core/store/tags/tags.actions';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
@@ -34,6 +36,9 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
+import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -48,6 +53,7 @@ export class TaskDetailDialogComponent
   users$: Observable<AppUser[]>;
   comments$: Observable<CommentViewModel[]>;
   user$: Observable<UserResponse>;
+  tags$: Observable<string[]>;
 
   selectedTypeValue: number;
 
@@ -88,6 +94,7 @@ export class TaskDetailDialogComponent
     this.comments$ = this.store.select(TaskSelectors.selectComments);
     this.user$ = this.store.select(selectCurrentUser);
     this.users$ = this.store.select(UsersSelectors.selectAllUsers);
+    this.tags$ = this.store.select(TagsSelectors.selectTagNames);
   }
 
   ngAfterViewInit() {
@@ -97,6 +104,7 @@ export class TaskDetailDialogComponent
 
     this.store.dispatch(ProjectActions.loadProjects());
     this.store.dispatch(UsersActions.loadUsers());
+    this.store.dispatch(TagsActions.loadTags());
   }
 
   buildForm(task: TaskViewModel) {
@@ -282,5 +290,37 @@ export class TaskDetailDialogComponent
   onDeleteCommentClicked(comment: CommentViewModel) {
     const commentId = comment.id;
     this.store.dispatch(TaskActions.deleteComment({ commentId }));
+  }
+
+  onTagsSelectionChanged(event: AutocompleteChipsSelectionChanged) {
+    this.task$
+      .pipe(
+        first(),
+        withLatestFrom(
+          this.store.select(selectCurrentHubGroupId),
+          this.store.select(selectCurrentWorkspaceIdentifier)
+        ),
+        tap(([task, identifier, workspaceSlug]) => {
+          if (event.type === 'Removed') {
+            const systemId = task.systemId;
+            const tag = event.option;
+
+            this.store.dispatch(
+              TaskActions.deleteTagFromTask({ identifier, systemId, tag })
+            );
+          } else {
+            const request: AddTagRequest = {
+              systemId: task.systemId,
+              tag: event.option,
+              workspaceSlug,
+            };
+
+            this.store.dispatch(
+              TaskActions.addTagToTask({ identifier, request })
+            );
+          }
+        })
+      )
+      .subscribe();
   }
 }
