@@ -38,7 +38,7 @@ export class ProfileService {
 
   uloadProfilePicture(data: FormData) {
     return this.http.post<ClientResponse>(
-      environment.apiEndpoint + 'api/storage',
+      environment.apiEndpoint + 'api/storage/profile-picture',
       data
     );
   }
