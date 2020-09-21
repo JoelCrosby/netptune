@@ -84,7 +84,7 @@ export class UpdateProfileComponent
     this.onDestroy$.complete();
   }
 
-  uploadClicked(fileInput: { target: { files: FileList } }) {
+  uploadClicked(fileInput: { target: { files: FileList; value: unknown } }) {
     const files = fileInput.target.files;
     const data = new FormData();
 
@@ -94,7 +94,7 @@ export class UpdateProfileComponent
 
     this.store.dispatch(uploadProfilePicture({ data }));
 
-    fileInput.target.files = new FileList();
+    fileInput.target.value = null;
   }
 
   updateClicked() {
