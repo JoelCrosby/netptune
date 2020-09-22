@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
 
-const STYLES = (_theme: ThemeVariables) => {
+const STYLES = (_: ThemeVariables) => {
   return {
     cropperUpload: lyl`{
       display: flex
@@ -70,10 +70,10 @@ export class ImageCropperComponent implements AfterViewInit {
     round: true,
   };
 
-  constructor(readonly sRenderer: StyleRenderer, private _platform: Platform) {}
+  constructor(readonly sRenderer: StyleRenderer, private platform: Platform) {}
 
   ngAfterViewInit() {
-    if (!this._platform.isBrowser) {
+    if (!this.platform.isBrowser) {
       return;
     }
 
