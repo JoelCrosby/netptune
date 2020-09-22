@@ -64,6 +64,7 @@
         <app-image-cropper
           [src]="pictureUrl.value"
           (cropped)="onCropped($event)"
+          (canceled)="onCropperCanceled()"
         ></app-image-cropper>
       </ng-container>
       <ng-template #elseTemplate>

@@ -135,4 +135,8 @@ export class UpdateProfileComponent
       )
       .subscribe();
   }
+
+  onCropperCanceled() {
+    this.editProfilePicture$.next(false);
+  }
 }

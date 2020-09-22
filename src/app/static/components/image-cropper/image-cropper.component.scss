@@ -1,5 +1,13 @@
 .crop-image-btn {
-  margin: .6rem auto;
+  margin: .6rem 0 .6rem .8rem;
+
+  .mat-icon {
+    margin-right: .4rem;
+  }
+}
+
+.select-file {
+  justify-self: end;
 }
 
 .empty-image {

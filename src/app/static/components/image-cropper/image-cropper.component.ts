@@ -54,6 +54,7 @@ const STYLES = (_: ThemeVariables) => {
 export class ImageCropperComponent implements AfterViewInit {
   @Input() src: string;
   @Output() cropped = new EventEmitter<{ blob: Blob; src: string }>();
+  @Output() canceled = new EventEmitter();
 
   @ViewChild(LyImageCropper, { static: true }) readonly cropper: LyImageCropper;
 
@@ -91,5 +92,9 @@ export class ImageCropperComponent implements AfterViewInit {
     const blob = dataURItoBlob(src);
 
     this.cropped.emit({ blob, src });
+  }
+
+  onCanceleClicked() {
+    this.canceled.emit();
   }
 }
