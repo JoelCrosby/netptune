@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
+using Netptune.Core.Utilities;
 
 namespace Netptune.App.Controllers
 {
@@ -36,7 +37,7 @@ namespace Netptune.App.Controllers
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}{extension}");
+            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}{extension}-{UniqueId.Generate(userId)}");
 
             var fileStream = file.OpenReadStream();
 
