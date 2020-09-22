@@ -8,21 +8,12 @@
     (cleaned)="ready = false"
     (cropped)="onCropped($event)"
   >
-    <span class="empty-image">
+    <span class="empty-image" *ngIf="ready">
       Drag and drop image
     </span>
   </ly-img-cropper>
 
   <div [ngClass]="[classes.cropperUpload]">
-
-    <button
-      mat-stroked-button
-      class="crop-image-btn"
-      (click)="_fileInput.click()"
-    >
-      <mat-icon>image</mat-icon>
-      <span>Select File</span>
-    </button>
 
     <input #_fileInput type="file" (change)="cropper.selectInputEvent($event)" accept="image/*" hidden>
 
@@ -59,12 +50,29 @@
   </div>
 
   <button
+    mat-stroked-button
+    class="crop-image-btn"
+    (click)="onCanceleClicked()"
+  >
+    Cancel
+  </button>
+
+  <button
     *ngIf="ready"
     mat-stroked-button
     class="crop-image-btn"
     (click)="onCropClicked()"
   >
-    <mat-icon>crop</mat-icon>Crop Image
+    <mat-icon>crop</mat-icon>Set Profile Picture
+  </button>
+
+  <button
+    mat-stroked-button
+    class="crop-image-btn select-file"
+    (click)="_fileInput.click()"
+  >
+    <mat-icon>image</mat-icon>
+    <span>Select File</span>
   </button>
 
 </div>
