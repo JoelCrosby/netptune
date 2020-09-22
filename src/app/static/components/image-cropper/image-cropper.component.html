@@ -1,65 +1,70 @@
-<ly-img-cropper [ngClass]="[classes.cropper]"
-  [config]="myConfig"
-  [(scale)]="scale"
-  (minScale)="minScale = $event"
-  (ready)="ready = true"
-  (cleaned)="ready = false"
-  (cropped)="onCropped($event)"
->
-  <span class="empty-image">
-    Drag and drop image
-  </span>
-</ly-img-cropper>
+<div class="image-cropper">
 
-<div [ngClass]="[classes.cropperUpload]" [lyDisplay]="'flex'">
+  <ly-img-cropper [ngClass]="[classes.cropper]"
+    [config]="myConfig"
+    [(scale)]="scale"
+    (minScale)="minScale = $event"
+    (ready)="ready = true"
+    (cleaned)="ready = false"
+    (cropped)="onCropped($event)"
+  >
+    <span class="empty-image">
+      Drag and drop image
+    </span>
+  </ly-img-cropper>
+
+  <div [ngClass]="[classes.cropperUpload]">
+
+    <button
+      mat-stroked-button
+      class="crop-image-btn"
+      (click)="_fileInput.click()"
+    >
+      <mat-icon>image</mat-icon>
+      <span>Select File</span>
+    </button>
+
+    <input #_fileInput type="file" (change)="cropper.selectInputEvent($event)" accept="image/*" hidden>
+
+  </div>
+
+  <div [ngClass]="[classes.cropperToolBar]" *ngIf="ready">
+
+    <button class="icon-button" (click)="cropper.zoomIn()" mat-button matTooltip="Zoom In">
+      <mat-icon>zoom_in</mat-icon>
+    </button>
+    <button class="icon-button" (click)="cropper.zoomOut()" mat-button matTooltip="Zoom Out">
+      <mat-icon>zoom_out</mat-icon>
+    </button>
+    <button class="icon-button" (click)="cropper.center()" mat-button matTooltip="Center Focus">
+      <mat-icon>filter_center_focus</mat-icon>
+    </button>
+    <button class="icon-button" (click)="cropper.rotate(-90)" mat-button matTooltip="Rotate">
+      <mat-icon>rotate_90_degrees_ccw</mat-icon>
+    </button>
+
+    <button (click)="cropper.fit()" mat-button>
+      Fit
+    </button>
+    <button (click)="cropper.fitToScreen()" mat-button>
+      Fit to screen
+    </button>
+    <button (click)="cropper.setScale(1)" mat-button>
+      1:1
+    </button>
+    <button (click)="cropper.clean()" mat-button>
+      Clean
+    </button>
+
+  </div>
 
   <button
+    *ngIf="ready"
     mat-stroked-button
     class="crop-image-btn"
-    (click)="_fileInput.click()"
+    (click)="onCropClicked()"
   >
-    <ly-icon>image</ly-icon>
-    <span>Select File</span>
+    <mat-icon>crop</mat-icon>Crop Image
   </button>
-
-  <span [lyFlex]="1"></span>
-
-  <input #_fileInput type="file" (change)="cropper.selectInputEvent($event)" accept="image/*" hidden>
 
 </div>
-
-<div [ngClass]="[classes.cropperToolBar]" *ngIf="ready">
-  <button (click)="cropper.zoomIn()" ly-button appearance="icon">
-    <ly-icon>zoom_in</ly-icon>
-  </button>
-  <button (click)="cropper.zoomOut()" ly-button appearance="icon">
-    <ly-icon>zoom_out</ly-icon>
-  </button>
-  <button (click)="cropper.center()" ly-button appearance="icon">
-    <ly-icon>filter_center_focus</ly-icon>
-  </button>
-  <button (click)="cropper.rotate(-90)" ly-button appearance="icon">
-    <ly-icon>rotate_90_degrees_ccw</ly-icon>
-  </button>
-  <button (click)="cropper.fit()" ly-button>
-    Fit
-  </button>
-  <button (click)="cropper.fitToScreen()" ly-button>
-    Fit to screen
-  </button>
-  <button (click)="cropper.setScale(1)" ly-button>
-    1:1
-  </button>
-  <button (click)="cropper.clean()" ly-button>
-    Clean
-  </button>
-</div>
-
-<button
-  *ngIf="ready"
-  mat-stroked-button
-  class="crop-image-btn"
-  (click)="onCropClicked()"
->
-  <ly-icon>crop</ly-icon>Crop Image
-</button>

@@ -41,8 +41,6 @@ import {
 import { LY_THEME, LY_THEME_NAME, StyleRenderer, LyTheme2 } from '@alyle/ui';
 import { MinimaLight, MinimaDeepDark } from '@alyle/ui/themes/minima';
 import { LyImageCropperModule } from '@alyle/ui/image-cropper';
-import { LyIconModule } from '@alyle/ui/icon';
-import { LyButtonModule } from '@alyle/ui/button';
 
 @NgModule({
   exports: [
@@ -77,8 +75,6 @@ import { LyButtonModule } from '@alyle/ui/button';
     MatTooltipModule,
 
     LyImageCropperModule,
-    LyIconModule,
-    LyButtonModule,
   ],
   providers: [
     {
