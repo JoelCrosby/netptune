@@ -7,6 +7,7 @@ import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
   catchError,
+  filter,
   map,
   switchMap,
   tap,
@@ -36,6 +37,11 @@ export class ProfileEffects {
       switchMap((action) =>
         this.profileService.put(action.profile).pipe(
           tap(() => this.snackbar.open('Profile Updated')),
+          tap(() =>
+            this.store.dispatch(
+              actions.uploadProfilePicture({ data: action.data })
+            )
+          ),
           map((profile) => actions.updateProfileSuccess({ profile })),
           catchError((error) => of(actions.updateProfileFail({ error })))
         )
@@ -66,9 +72,9 @@ export class ProfileEffects {
   uploadProfilePicture$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.uploadProfilePicture),
+      filter((action) => !!action.data),
       switchMap((action) =>
         this.profileService.uloadProfilePicture(action.data).pipe(
-          tap(() => this.snackbar.open('Profile Updated')),
           map((response) => actions.uploadProfilePictureSuccess({ response })),
           catchError((error) => of(actions.uploadProfilePictureFail({ error })))
         )

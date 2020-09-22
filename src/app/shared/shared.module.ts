@@ -36,6 +36,14 @@ import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
 } from '@angular/material/form-field';
 
+// Alyle UI
+
+import { LY_THEME, LY_THEME_NAME, StyleRenderer, LyTheme2 } from '@alyle/ui';
+import { MinimaLight, MinimaDeepDark } from '@alyle/ui/themes/minima';
+import { LyImageCropperModule } from '@alyle/ui/image-cropper';
+import { LyIconModule } from '@alyle/ui/icon';
+import { LyButtonModule } from '@alyle/ui/button';
+
 @NgModule({
   exports: [
     CommonModule,
@@ -67,6 +75,10 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatTooltipModule,
+
+    LyImageCropperModule,
+    LyIconModule,
+    LyButtonModule,
   ],
   providers: [
     {
@@ -84,6 +96,11 @@ import {
         hideRequiredMarker: true,
       },
     },
+    StyleRenderer,
+    LyTheme2,
+    { provide: LY_THEME_NAME, useValue: 'minima-light' },
+    { provide: LY_THEME, useClass: MinimaLight, multi: true },
+    { provide: LY_THEME, useClass: MinimaDeepDark, multi: true },
   ],
 })
 export class SharedModule {}

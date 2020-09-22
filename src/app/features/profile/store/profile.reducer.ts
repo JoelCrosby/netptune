@@ -50,6 +50,16 @@ const reducer = createReducer(
   on(actions.changePasswordSuccess, (state) => ({
     ...state,
     changePasswordLoading: false,
+  })),
+
+  // Upload Profile Picture
+
+  on(actions.uploadProfilePictureSuccess, (state, { response }) => ({
+    ...state,
+    profile: {
+      ...state.profile,
+      pictureUrl: response.payload?.uri,
+    },
   }))
 );
 

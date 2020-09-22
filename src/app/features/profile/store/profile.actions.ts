@@ -1,8 +1,12 @@
 import { AppUser } from '@core/models/appuser';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
+import {
+  ClientResponse,
+  ClientResponsePayload,
+} from '@core/models/client-response';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
+import { UploadResponse } from '@core/models/upload-result';
 
 // Load Profile
 
@@ -22,7 +26,7 @@ export const loadProfileFail = createAction(
 
 export const updateProfile = createAction(
   '[Profile] Update Profile',
-  props<{ profile: Partial<AppUser> }>()
+  props<{ profile?: Partial<AppUser>; data?: FormData }>()
 );
 
 export const updateProfileSuccess = createAction(
@@ -60,7 +64,7 @@ export const uploadProfilePicture = createAction(
 
 export const uploadProfilePictureSuccess = createAction(
   '[Profile] Upload Profile Picture Success',
-  props<{ response: ClientResponse }>()
+  props<{ response: ClientResponsePayload<UploadResponse> }>()
 );
 
 export const uploadProfilePictureFail = createAction(

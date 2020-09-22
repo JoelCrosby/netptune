@@ -17,11 +17,13 @@ namespace Netptune.App.Controllers
     {
         private readonly IStorageService StorageService;
         private readonly IIdentityService Identity;
+        private readonly IUserService UserService;
 
-        public StorageController(IStorageService storageService, IIdentityService identity)
+        public StorageController(IStorageService storageService, IIdentityService identity, IUserService userService)
         {
             StorageService = storageService;
             Identity = identity;
+            UserService = userService;
         }
 
         [HttpPost]
@@ -39,6 +41,12 @@ namespace Netptune.App.Controllers
             var fileStream = file.OpenReadStream();
 
             var result = await StorageService.UploadFileAsync(fileStream, key);
+
+            var user = await Identity.GetCurrentUser();
+
+            user.PictureUrl = result.Payload?.Uri;
+
+            await UserService.Update(user);
 
             return Ok(result);
         }

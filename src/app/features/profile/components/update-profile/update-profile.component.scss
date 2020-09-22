@@ -11,3 +11,31 @@ mat-form-field {
     width: 100%;
   }
 }
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  .column {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+.profile-picture {
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.profile-image {
+  margin-top: 1.4rem;
+  margin-left: 1.4rem;
+  display: grid;
+  place-content: center;
+  justify-content: stretch;
+}
+
+.profile-picture-btn {
+  margin: 1.4rem auto;
+}
