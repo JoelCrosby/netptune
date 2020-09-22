@@ -1,17 +1,14 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import {
-  loadProfile,
-  updateProfile,
-  uploadProfilePicture,
-} from '@profile/store/profile.actions';
+import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
@@ -27,6 +24,9 @@ export class UpdateProfileComponent
   formGroup: FormGroup;
   onDestroy$ = new Subject();
   loadingUpdate$: Observable<boolean>;
+  editProfilePicture$ = new Subject<boolean>();
+
+  data?: FormData;
 
   get firstname() {
     return this.formGroup.get('firstname');
@@ -41,7 +41,11 @@ export class UpdateProfileComponent
     return this.formGroup.get('pictureUrl');
   }
 
-  constructor(private store: Store, private fb: FormBuilder) {}
+  constructor(
+    private store: Store,
+    private fb: FormBuilder,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(
@@ -57,7 +61,7 @@ export class UpdateProfileComponent
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
       email: ['', Validators.required],
-      pictureUrl: ['', Validators.maxLength(1024)],
+      pictureUrl: [''],
     });
 
     this.store
@@ -70,6 +74,8 @@ export class UpdateProfileComponent
           this.lastname.setValue(profile.lastname, { emitEvent: false });
           this.email.setValue(profile.email, { emitEvent: false });
           this.pictureUrl.setValue(profile.pictureUrl, { emitEvent: false });
+
+          this.cd.markForCheck();
         })
       )
       .subscribe();
@@ -84,19 +90,6 @@ export class UpdateProfileComponent
     this.onDestroy$.complete();
   }
 
-  uploadClicked(fileInput: { target: { files: FileList; value: unknown } }) {
-    const files = fileInput.target.files;
-    const data = new FormData();
-
-    if (!files.length) return;
-
-    data.append('file', files[0], files[0].name);
-
-    this.store.dispatch(uploadProfilePicture({ data }));
-
-    fileInput.target.value = null;
-  }
-
   updateClicked() {
     this.store
       .select(ProfileSelectors.selectProfile)
@@ -109,12 +102,28 @@ export class UpdateProfileComponent
             firstname: this.firstname.value,
             lastname: this.lastname.value,
             email: this.email.value,
-            pictureUrl: this.pictureUrl.value,
           };
 
-          this.store.dispatch(updateProfile({ profile }));
+          const data = this.data;
+
+          this.store.dispatch(updateProfile({ profile, data }));
         })
       )
       .subscribe();
+  }
+
+  onChangePictureClicked() {
+    this.editProfilePicture$.next(true);
+  }
+
+  onCropped({ blob, src }: { blob: Blob; src: string }) {
+    if (!blob) return;
+
+    const data = new FormData();
+    data.append('file', blob, 'profile-picture');
+
+    this.editProfilePicture$.next(false);
+    this.pictureUrl.setValue(src);
+    this.data = data;
   }
 }

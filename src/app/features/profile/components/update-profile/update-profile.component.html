@@ -3,78 +3,91 @@
   class="px-0"
 >
 
-
-  <mat-form-field
-    class="profile-input mb-3"
-    appearance="fill"
-  >
-    <mat-label>Firstname</mat-label>
-    <input
-      matInput
-      placeholder="Edit Firstname"
-      formControlName="firstname"
+  <div class="column">
+    <mat-form-field
+      class="profile-input mb-3"
+      appearance="fill"
     >
-  </mat-form-field>
+      <mat-label>Firstname</mat-label>
+      <input
+        matInput
+        placeholder="Edit Firstname"
+        formControlName="firstname"
+      >
+    </mat-form-field>
 
 
-  <mat-form-field
-    class="profile-input mb-3"
-    appearance="fill"
-  >
-    <mat-label>Lastname</mat-label>
-    <input
-      matInput
-      placeholder="Edit Lastname"
-      formControlName="lastname"
+    <mat-form-field
+      class="profile-input mb-3"
+      appearance="fill"
     >
-  </mat-form-field>
+      <mat-label>Lastname</mat-label>
+      <input
+        matInput
+        placeholder="Edit Lastname"
+        formControlName="lastname"
+      >
+    </mat-form-field>
 
 
-  <mat-form-field
-    class="profile-input mb-3"
-    appearance="fill"
-  >
-    <mat-label>Email Address</mat-label>
-    <input
-      matInput
-      placeholder="Change Email Address"
-      formControlName="email"
+    <mat-form-field
+      class="profile-input mb-3"
+      appearance="fill"
     >
-  </mat-form-field>
+      <mat-label>Email Address</mat-label>
+      <input
+        matInput
+        placeholder="Change Email Address"
+        formControlName="email"
+      >
+    </mat-form-field>
 
-
-  <mat-form-field
-    class="profile-input mb-3"
-    appearance="fill"
-  >
-    <mat-label>Image Url</mat-label>
     <input
-      matInput
-      placeholder="Change Profile Image Url"
+      type="hidden"
       formControlName="pictureUrl"
     >
-  </mat-form-field>
 
-  <div>
-    <input
-    #upload
-    class="hidden"
-    type="file"
-    id="upload-file"
-    name="upload-file"
-    accept=".png,.jpg,.webp"
-    (change)="uploadClicked($event)"
-  >
+    <button
+      class="form-submit-btn"
+      mat-stroked-button
+      (click)="updateClicked()"
+      [disabled]="formGroup.invalid || (loadingUpdate$ | async)"
+    >
+      Update Profile
+    </button>
   </div>
 
-  <button
-    class="form-submit-btn"
-    mat-stroked-button
-    (click)="updateClicked()"
-    [disabled]="formGroup.invalid || (loadingUpdate$ | async)"
-  >
-    Update Profile
-  </button>
+  <div class="column">
+    <div class="profile-image">
 
+      <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
+        <app-image-cropper
+          [src]="pictureUrl.value"
+          (cropped)="onCropped($event)"
+        ></app-image-cropper>
+      </ng-container>
+      <ng-template #elseTemplate>
+
+        <ng-container *ngIf="pictureUrl.value; else elseTemplate">
+          <img class="profile-picture" [src]="pictureUrl.value" alt="Profile Image">
+
+          <button
+            class="profile-picture-btn"
+            mat-stroked-button
+            (click)="onChangePictureClicked()"
+          >
+            Change Picture
+          </button>
+
+        </ng-container>
+
+        <ng-template #elseTemplate>
+          button
+        </ng-template>
+      </ng-template>
+
+
+    </div>
+  </div>
 
 </form>

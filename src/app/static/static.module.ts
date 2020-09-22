@@ -17,6 +17,7 @@ import { PrettyDatePipe } from './pipes/pretty-date.pipe';
 import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
 import { AutocompleteChipsComponent } from './components/autocomplete-chips/autocomplete-chips.component';
+import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AutocompleteChipsComponent } from './components/autocomplete-chips/auto
     CardListComponent,
     CardListItemComponent,
     AutocompleteChipsComponent,
+    ImageCropperComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -55,6 +57,7 @@ import { AutocompleteChipsComponent } from './components/autocomplete-chips/auto
     CardListComponent,
     CardListItemComponent,
     AutocompleteChipsComponent,
+    ImageCropperComponent,
   ],
 })
 export class StaticModule {}

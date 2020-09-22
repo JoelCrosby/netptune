@@ -22,7 +22,6 @@ import { StaticModule } from '@static/static.module';
     // app
     AppRoutingModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
