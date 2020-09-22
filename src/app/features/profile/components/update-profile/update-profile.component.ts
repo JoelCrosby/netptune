@@ -104,9 +104,7 @@ export class UpdateProfileComponent
             email: this.email.value,
           };
 
-          const data = this.data;
-
-          this.store.dispatch(updateProfile({ profile, data }));
+          this.store.dispatch(updateProfile({ profile }));
         })
       )
       .subscribe();
@@ -120,10 +118,21 @@ export class UpdateProfileComponent
     if (!blob) return;
 
     const data = new FormData();
+
     data.append('file', blob, 'profile-picture');
 
     this.editProfilePicture$.next(false);
     this.pictureUrl.setValue(src);
-    this.data = data;
+
+    this.store
+      .select(ProfileSelectors.selectProfile)
+      .pipe(
+        filter((profile) => !!profile),
+        first(),
+        tap((profile) => {
+          this.store.dispatch(updateProfile({ profile, data }));
+        })
+      )
+      .subscribe();
   }
 }
