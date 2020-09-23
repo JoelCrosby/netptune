@@ -74,5 +74,20 @@
   .page-header-title {
     font-weight: 400;
     font-size: 1.4rem !important;
+    margin: 0;
+  }
+
+  .page-header {
+    flex-direction: row;
+    align-items: center;
+
+    .header-top-row {
+      flex: 1;
+    }
+
+    .header-top-row-left {
+      flex: 1;
+      margin-top: .4rem;
+    }
   }
 }

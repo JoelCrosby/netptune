@@ -1,13 +1,16 @@
 <header class="page-header">
 
-  <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
-    <button mat-icon-button color="accent" aria-label="Open Menu" (click)="onOpenMenu()">
-      <mat-icon>menu</mat-icon>
-    </button>
-  </div>
+
 
   <div class="header-top-row">
+    <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
+      <button mat-icon-button color="accent" aria-label="Open Menu" (click)="onOpenMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
     <div class="header-top-row-left">
+
       <h1 class="page-header-title">
         {{ title }}
       </h1>
