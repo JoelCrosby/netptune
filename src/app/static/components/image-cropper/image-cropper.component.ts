@@ -26,17 +26,13 @@ const STYLES = (_: ThemeVariables) => {
     cropperToolBar: lyl`{
       display: flex
       align-items: center
+      padding-top: .2rem
     }`,
     cropper: lyl`{
-      max-width: 400px
-      height: 300px
+      max-width: 260px
+      height: 260px
       border-radius: 4px
-      margin: 1.4rem
-    }`,
-    sliderContainer: lyl`{
-      text-align: center
-      max-width: 400px
-      margin: 14px
+      margin: auto
     }`,
     cropResult: lyl`{
       border-radius: 50%
@@ -55,6 +51,7 @@ export class ImageCropperComponent implements AfterViewInit {
   @Input() src: string;
   @Output() cropped = new EventEmitter<{ blob: Blob; src: string }>();
   @Output() canceled = new EventEmitter();
+  @Output() cleared = new EventEmitter();
 
   @ViewChild(LyImageCropper, { static: true }) readonly cropper: LyImageCropper;
 
@@ -78,7 +75,14 @@ export class ImageCropperComponent implements AfterViewInit {
       return;
     }
 
+    if (!this.src) {
+      this.ready = true;
+      return;
+    }
+
     this.cropper.setImageUrl(this.src);
+
+    this.ready = true;
   }
 
   onCropped(e: ImgCropperEvent) {
@@ -94,7 +98,11 @@ export class ImageCropperComponent implements AfterViewInit {
     this.cropped.emit({ blob, src });
   }
 
-  onCanceleClicked() {
+  onCancelClicked() {
     this.canceled.emit();
+  }
+
+  onClearClicked() {
+    this.cleared.emit();
   }
 }

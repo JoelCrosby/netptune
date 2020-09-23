@@ -7,6 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import { loadProfile, updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
@@ -137,6 +138,26 @@ export class UpdateProfileComponent
   }
 
   onCropperCanceled() {
+    this.editProfilePicture$.next(false);
+  }
+
+  onCropperCleared() {
+    this.store
+      .select(ProfileSelectors.selectProfile)
+      .pipe(
+        filter((profile) => !!profile),
+        first(),
+        tap((current) => {
+          const profile: AppUser = {
+            ...current,
+            pictureUrl: null,
+          };
+          this.store.dispatch(updateProfile({ profile }));
+        })
+      )
+      .subscribe();
+
+    this.pictureUrl.reset();
     this.editProfilePicture$.next(false);
   }
 }

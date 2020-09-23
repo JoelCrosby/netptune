@@ -7,6 +7,7 @@ import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
   catchError,
+  debounceTime,
   filter,
   map,
   switchMap,
@@ -51,7 +52,8 @@ export class ProfileEffects {
 
   updateProfileSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(actions.updateProfileSuccess),
+      ofType(actions.updateProfileSuccess, actions.uploadProfilePictureSuccess),
+      debounceTime(280),
       map(() => currentUser())
     )
   );
