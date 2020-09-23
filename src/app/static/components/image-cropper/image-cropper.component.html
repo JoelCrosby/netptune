@@ -1,4 +1,4 @@
-<div class="image-cropper">
+<div class="image-cropper" [style.visibility]="ready ? 'visible' : 'hidden'">
 
   <ly-img-cropper [ngClass]="[classes.cropper]"
     [config]="myConfig"
@@ -52,18 +52,18 @@
   <button
     mat-stroked-button
     class="crop-image-btn"
-    (click)="onCanceleClicked()"
+    (click)="onCancelClicked()"
   >
     Cancel
   </button>
 
   <button
-    *ngIf="ready"
+    *ngIf="src"
     mat-stroked-button
     class="crop-image-btn"
-    (click)="onCropClicked()"
+    (click)="onClearClicked()"
   >
-    <mat-icon>crop</mat-icon>Set Profile Picture
+    Remove
   </button>
 
   <button
@@ -72,7 +72,17 @@
     (click)="_fileInput.click()"
   >
     <mat-icon>image</mat-icon>
-    <span>Select File</span>
+    <span>Upload</span>
+  </button>
+
+  <button
+    *ngIf="ready"
+    mat-flat-button
+    color="primary"
+    class="crop-image-btn"
+    (click)="onCropClicked()"
+  >
+    <mat-icon>crop</mat-icon>Save
   </button>
 
 </div>

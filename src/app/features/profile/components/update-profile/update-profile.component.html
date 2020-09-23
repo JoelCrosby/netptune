@@ -57,7 +57,7 @@
     </button>
   </div>
 
-  <div class="column">
+  <div class="column-fill">
     <div class="profile-image">
 
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
@@ -65,12 +65,19 @@
           [src]="pictureUrl.value"
           (cropped)="onCropped($event)"
           (canceled)="onCropperCanceled()"
+          (cleared)="onCropperCleared()"
         ></app-image-cropper>
       </ng-container>
       <ng-template #elseTemplate>
 
         <ng-container *ngIf="pictureUrl.value; else elseTemplate">
-          <img class="profile-picture" [src]="pictureUrl.value" alt="Profile Image">
+          <img
+            class="profile-picture"
+            [src]="pictureUrl.value"
+            alt="Profile Image"
+            height="260"
+            width="260"
+          >
 
           <button
             class="profile-picture-btn"
@@ -83,7 +90,22 @@
         </ng-container>
 
         <ng-template #elseTemplate>
-          button
+
+          <img
+            class="profile-picture"
+            src="https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png"
+            alt="Placeholder Profile Image"
+            height="260"
+            width="260"
+          >
+
+          <button
+            class="profile-picture-btn"
+            mat-stroked-button
+            (click)="onChangePictureClicked()"
+          >
+            Change Picture
+          </button>
         </ng-template>
       </ng-template>
 
