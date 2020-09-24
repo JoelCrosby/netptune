@@ -3,6 +3,7 @@
     [opened]="sideMenuOpen$ | async"
     [mode]="sideMenuMode$ | async"
     [fixedInViewport]="false"
+    (closedStart)="onSidenavClosedStart()"
     class="app-sidenav"
   >
     <mat-nav-list>

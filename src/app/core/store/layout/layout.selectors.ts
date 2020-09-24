@@ -4,7 +4,7 @@ import { LayoutState } from './layout.reducer';
 
 export const selectSideNavOpen = createSelector(
   selectLayoutFeature,
-  (state: LayoutState) => state.sideMenuOpen
+  (state: LayoutState) => state.sideNavOpen
 );
 
 export const selectSideMenuOpen = createSelector(

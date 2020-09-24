@@ -6,6 +6,10 @@
   width: 72px;
   border: 0 !important;
   transition: background-color .14s ease-in-out;
+
+  &.zero-width {
+    width: 0;
+  }
 }
 
 .main-logo {

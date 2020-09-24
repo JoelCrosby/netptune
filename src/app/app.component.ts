@@ -28,17 +28,18 @@ export class AppComponent implements OnInit {
   workspaces$ = this.store.select(selectAllWorkspaces);
   isMobileView$ = this.store.select(LayoutSelectors.selectIsMobileView);
   transparentSideNav$ = this.store.select(selectSideBarTransparent);
+  sideMenuOpen$ = this.store.select(LayoutSelectors.selectSideMenuOpen);
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
   constructor(private store: Store) {}
 
   ngOnInit() {
     this.sideNavOpen$ = this.store
-      .select(AuthSelectors.selectIsAuthenticated)
+      .select(LayoutSelectors.selectSideNavOpen)
       .pipe(
-        withLatestFrom(this.store.select(LayoutSelectors.selectSideNavOpen)),
-        tap(([isAuth]) => isAuth && this.store.dispatch(loadWorkspaces())),
-        map(([isAuth, isNavOpen]) => isAuth && isNavOpen)
+        withLatestFrom(this.store.select(AuthSelectors.selectIsAuthenticated)),
+        tap(([_, isAuth]) => isAuth && this.store.dispatch(loadWorkspaces())),
+        map(([isNavOpen, isAuth]) => isAuth && isNavOpen)
       );
   }
 }
