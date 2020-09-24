@@ -20,6 +20,7 @@ export const initialState: BoardGroupsState = adapter.getInitialState({
   isInlineActive: false,
   users: [],
   selectedUsers: [],
+  selectedTasks: [],
 });
 
 export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
@@ -30,4 +31,5 @@ export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
   isDragging: boolean;
   inlineActive?: number;
   onlyFlagged?: boolean;
+  selectedTasks: number[];
 }

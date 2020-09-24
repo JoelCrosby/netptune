@@ -48,7 +48,11 @@ export const createProjectTasksFail = createAction(
 
 export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
-  props<{ identifier: string; task: TaskViewModel; silent?: boolean }>()
+  props<{
+    identifier: string;
+    task: TaskViewModel;
+    silent?: boolean;
+  }>()
 );
 
 export const editProjectTasksSuccess = createAction(

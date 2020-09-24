@@ -145,3 +145,17 @@ export const toggleUserSelection = createAction(
 export const toggleOnlyFlagged = createAction(
   '[BoardGroups] Toggle Only Flagged'
 );
+
+// Select Task
+
+export const selectTask = createAction(
+  '[BoardGroups] Select Task',
+  props<{ id: number }>()
+);
+
+// Deselect Task
+
+export const deSelectTask = createAction(
+  '[BoardGroups] Deselect Task',
+  props<{ id: number }>()
+);

@@ -17,6 +17,10 @@
     background-color: mix(mat-color($warn), mat-color($background, board-group), 15%) !important;
   }
 
+  .group-task-card.selected {
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 15%) !important;
+  }
+
   .card-tags {
     .card-tag {
       background-color: mat-color($foreground, text, .06);

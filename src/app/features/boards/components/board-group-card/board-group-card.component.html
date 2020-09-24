@@ -1,7 +1,8 @@
 <mat-card
   class="group-task-card"
   [class.flagged]="task.isFlagged"
-  (click)="onTaskClicked()"
+  [class.selected]="task.selected"
+  (click)="onTaskClicked($event)"
 >
   <div class="task-name-text">
     {{ task.name }}
