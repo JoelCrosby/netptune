@@ -8,6 +8,7 @@ import { Platform } from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -68,7 +69,11 @@ export class ImageCropperComponent implements AfterViewInit {
     round: true,
   };
 
-  constructor(readonly sRenderer: StyleRenderer, private platform: Platform) {}
+  constructor(
+    readonly sRenderer: StyleRenderer,
+    private platform: Platform,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit() {
     if (!this.platform.isBrowser) {
@@ -77,6 +82,7 @@ export class ImageCropperComponent implements AfterViewInit {
 
     if (!this.src) {
       this.ready = true;
+      this.cd.detectChanges();
       return;
     }
 
