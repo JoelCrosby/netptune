@@ -23,14 +23,17 @@ const reducer = createReducer(
   on(actions.toggleSideMenu, (state) => ({
     ...state,
     sideMenuOpen: !state.sideMenuOpen,
+    sideNavOpen: !state.sideMenuOpen,
   })),
   on(actions.openSideMenu, (state) => ({
     ...state,
     sideMenuOpen: true,
+    sideNavOpen: true,
   })),
   on(actions.closeSideMenu, (state) => ({
     ...state,
     sideMenuOpen: false,
+    sideNavOpen: false,
   })),
 
   on(actions.toggleSideNav, (state) => ({

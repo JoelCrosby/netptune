@@ -12,6 +12,7 @@ import {
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
+import { toggleSideMenu } from '@core/store/layout/layout.actions';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -44,5 +45,9 @@ export class ShellComponent implements OnInit {
     this.authenticated$ = this.store.select(
       AuthSelectors.selectIsAuthenticated
     );
+  }
+
+  onSidenavClosedStart() {
+    this.store.dispatch(toggleSideMenu());
   }
 }
