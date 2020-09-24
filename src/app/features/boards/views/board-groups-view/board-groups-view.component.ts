@@ -60,7 +60,9 @@ export class BoardGroupsViewComponent
   ) {}
 
   ngOnInit() {
-    this.groups$ = this.store.select(GroupSelectors.selectAllBoardGroups);
+    this.groups$ = this.store.select(
+      GroupSelectors.selectAllBoardGroupsWithSelection
+    );
 
     this.loading$ = this.store
       .select(GroupSelectors.selectBoardGroupsLoading)

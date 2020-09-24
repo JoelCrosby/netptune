@@ -4,6 +4,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
+import { BoardGroup } from '@core/models/board-group';
 
 export interface State extends AppState {
   boardgroups: BoardGroupsState;
@@ -18,6 +19,21 @@ const { selectEntities, selectAll } = adapter.getSelectors();
 export const selectAllBoardGroups = createSelector(
   selectBoardGroupsFeature,
   selectAll
+);
+
+export const selectSelectedTasks = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.selectedTasks
+);
+
+export const selectAllBoardGroupsWithSelection = createSelector(
+  selectAllBoardGroups,
+  selectSelectedTasks,
+  (state: BoardGroup[], selected: number[]) =>
+    state.map((g) => ({
+      ...g,
+      tasks: g.tasks.map((t) => ({ ...t, selected: selected.includes(t.id) })),
+    }))
 );
 
 export const selectBoardGroupEntities = createSelector(

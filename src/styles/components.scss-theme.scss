@@ -15,7 +15,7 @@
     transition: background-color .2s ease-in;
   }
 
-  .mat-card:not([class*='mat-elevation-z']):hover {
+  .mat-card:not([class*='selected']):hover {
     background-color: mat-color($background, hover) !important;
   }
 

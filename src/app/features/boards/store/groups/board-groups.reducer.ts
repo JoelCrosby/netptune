@@ -131,6 +131,25 @@ const reducer = createReducer(
     onlyFlagged: !state.onlyFlagged,
   })),
 
+  // Select Task
+
+  on(actions.selectTask, (state, { id }) => ({
+    ...state,
+    selectedTasks: (() => {
+      const set = new Set(state.selectedTasks);
+      const mod = set.add(id);
+
+      return Array.from(mod);
+    })(),
+  })),
+
+  // Deselect Task
+
+  on(actions.deSelectTask, (state, { id }) => ({
+    ...state,
+    selectedTasks: state.selectedTasks.filter((t) => t !== id),
+  })),
+
   // ProjectTaskActions
 
   on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
