@@ -37,4 +37,8 @@
       height: 20px;
     }
   }
+
+  .clickable:hover {
+    background-color: mat-color($foreground, text, .06);
+  }
 }
