@@ -18,11 +18,17 @@
 
 .create-task {
   padding: .3rem;
+  height: 46px;
 
   button {
     display: block;
     width: 100%;
   }
+}
+
+.create-task-spacer {
+  padding: .3rem;
+  height: 46px;
 }
 
 .board-task-list {
