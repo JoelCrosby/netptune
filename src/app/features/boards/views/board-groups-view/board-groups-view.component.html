@@ -56,6 +56,15 @@
           cdkDragHandle
         >
           <div class="title">
+
+            <mat-icon
+              *ngIf="group.type === 2"
+              class="task-complete done-group"
+              matTooltip="Tasks moved into this group will be marked as Done"
+            >
+              done
+            </mat-icon>
+
             <app-inline-edit-input
               class="title-input"
               [value]="group.name"
