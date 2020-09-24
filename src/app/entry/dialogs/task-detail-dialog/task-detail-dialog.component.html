@@ -158,14 +158,19 @@
           <div class="detail-list-item">
             <h4>Assignee</h4>
 
-            <app-avatar
-              size="24"
-              class="task-card-user-chip"
-              [name]="task.assigneeUsername"
-              [imageUrl]="task.assigneePictureUrl"
-              [matMenuTriggerFor]="assigneeMenu"
-            >
-            </app-avatar>
+            <div class="user-item clickable" matRipple [matMenuTriggerFor]="assigneeMenu">
+              <app-avatar
+                size="24"
+                class="task-card-user-chip"
+                [name]="task.assigneeUsername"
+                [imageUrl]="task.assigneePictureUrl"
+              >
+              </app-avatar>
+
+              <small>
+                {{ task.assigneeUsername }}
+              </small>
+            </div>
 
             <mat-menu #assigneeMenu="matMenu">
               <small>Change Assignee</small>
@@ -191,13 +196,20 @@
           <div class="detail-list-item">
             <h4>Reporter</h4>
 
-            <app-avatar
-              size="24"
-              class="task-card-user-chip"
-              [name]="task.ownerUsername"
-              [imageUrl]="task.ownerPictureUrl"
-            >
-            </app-avatar>
+            <div class="user-item">
+              <app-avatar
+                size="24"
+                class="task-card-user-chip"
+                [name]="task.ownerUsername"
+                [imageUrl]="task.ownerPictureUrl"
+              >
+              </app-avatar>
+
+              <small>
+                {{ task.assigneeUsername }}
+              </small>
+            </div>
+
           </div>
           <div class="detail-list-item">
             <h4>Status</h4>

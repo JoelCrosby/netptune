@@ -39,43 +39,63 @@
   .detail-column {
     margin-left: 1.6rem;
     flex: 0 0 200px;
+  }
+}
 
-    .detail-list {
-      display: flex;
-      flex-direction: column;
+.detail-list {
+  display: flex;
+  flex-direction: column;
 
-      .detail-list-item {
-        h4 {
-          font-weight: 500;
-          font-size: 14px;
-          letter-spacing: .125px;
-          margin: 1rem 0 .4rem;
-        }
-
-        mat-chip {
-          margin: .2rem 0 1rem;
-          min-height: 24px !important;
-        }
-      }
+  .detail-list-item {
+    h4 {
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: .125px;
+      margin: 1rem 0 .4rem;
     }
 
-    .bottom-row {
-      h4 {
+    .user-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      border-radius: .2rem;
+      transition: background-color .14s ease-in-out;
+      padding: .4rem .8rem;
+
+      small {
         font-weight: 500;
         font-size: 14px;
         letter-spacing: .125px;
-        margin: 1rem 0 .4rem;
+        margin-left: .4rem;
       }
 
-      .actions-row {
-        display: flex;
-        flex-direction: row;
-        margin: .6rem 0;
-
-        button {
-          margin-right: .6rem;
-        }
+      &.clickable {
+        cursor: pointer;
       }
+    }
+
+    mat-chip {
+      margin: .2rem 0 1rem;
+      min-height: 24px !important;
+    }
+  }
+}
+
+.bottom-row {
+  h4 {
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: .125px;
+    margin: 1rem 0 .4rem;
+  }
+
+  .actions-row {
+    display: flex;
+    flex-direction: row;
+    margin: .6rem 0;
+
+    button {
+      margin-right: .6rem;
     }
   }
 }
@@ -189,5 +209,27 @@
       font-weight: 500;
       margin-right: .8rem;
     }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .detail-container {
+    display: flex;
+    flex-direction: column;
+
+    .detail-form  {
+      flex: 0;
+      line-height: 1.5;
+    }
+
+    .detail-column {
+      flex: 0;
+      margin-bottom: 2rem;
+      margin-left: .4rem;
+    }
+  }
+
+  .task-dates {
+    margin: 1rem 0;
   }
 }

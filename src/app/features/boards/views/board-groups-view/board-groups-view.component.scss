@@ -108,3 +108,10 @@
   height: 0;
   width: 0;
 }
+
+@media only screen and (max-width: 600px) {
+
+  .board-groups {
+    max-height: calc(100vh - 154px);
+  }
+}
