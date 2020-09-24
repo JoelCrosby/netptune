@@ -27,14 +27,6 @@
     >
     </app-board-group-card>
 
-    <div class="create-task" *ngIf="showAddButton$ | async">
-      <button
-        mat-button color="primary"
-        (click)="onAddTaskClicked()"
-      >
-        ADD TASK
-      </button>
-    </div>
 
     <app-board-group-task-inline
       *ngIf="isInlineActive$ | async"
@@ -42,8 +34,23 @@
       [boardGroupId]="group.id"
     >
     </app-board-group-task-inline>
-  </div>
 
+    <ng-container *ngIf="showAddButton$ | async; else elseTemplate">
+      <div class="create-task">
+        <button
+          mat-button color="primary"
+          (click)="onAddTaskClicked()"
+        >
+          ADD TASK
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div class="create-task-spacer">
+      </div>
+    </ng-template>
+  </div>
 
   </div>
 </div>
