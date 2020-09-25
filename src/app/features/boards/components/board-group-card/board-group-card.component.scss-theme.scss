@@ -18,7 +18,8 @@
   }
 
   .group-task-card.selected {
-    background-color: mix(mat-color($primary), mat-color($background, board-group), 15%) !important;
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 10%) !important;
+    color: mix(mat-color($primary), mat-color($foreground, text), 20%) !important;
   }
 
   .card-tags {

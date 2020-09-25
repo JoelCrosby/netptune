@@ -1,0 +1,22 @@
+@import '~@angular/material/theming';
+
+@mixin board-groups-selection-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .board-groups-selection {
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 15%) !important;
+
+    .mat-icon {
+      opacity: .3;
+    }
+
+    span,
+    .mat-icon {
+      color: darken(mat-color($primary, A700), 16);
+    }
+  }
+}

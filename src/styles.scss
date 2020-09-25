@@ -28,14 +28,18 @@
 @import './styles/lists.scss-theme';
 @import './styles/colors.scss-theme';
 @import './styles/boards.scss-theme';
+
 @import './app/app.component.scss-theme';
+
 @import './app/static/components/spinner/spinner.component.scss-theme.scss';
 @import './app/static/components/avatar/avatar.component.scss-theme.scss';
 @import './app/static/components/page-header/page-header.component.scss-theme.scss';
 @import './app/static/components/autocomplete-chips/autocomplete-chips.component.scss-theme.scss';
 @import './app/static/components/image-cropper/image-cropper.component.scss-theme.scss';
+
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
 @import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
+
 @import './app/features/workspaces/components/shell/shell.component.scss-theme';
 @import './app/features/workspaces/components/create-workspace-list-item/create-workspace-list-item.component.scss-theme.scss';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
@@ -46,6 +50,7 @@
 @import './app/features/boards/components/board-group/board-group.component.scss-theme.scss';
 @import './app/features/boards/components/boards-grid/boards-grid.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-card/board-group-card.component.scss-theme.scss';
+@import './app/features/boards/components/board-groups-selection/board-groups-selection.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-tags/board-group-tags.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-task-inline/board-group-task-inline.component.scss-theme.scss';
 @import './app/features/boards/components/create-board-group/create-board-group.component.scss-theme.scss';
@@ -81,6 +86,7 @@
   @include board-group-users-theme($theme);
   @include workspace-dialog-theme($theme);
   @include board-group-tags-theme($theme);
+  @include board-groups-selection-theme($theme);
 }
 
 .default-theme {
