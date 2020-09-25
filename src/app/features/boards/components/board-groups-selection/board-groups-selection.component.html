@@ -1,0 +1,11 @@
+<div class="row" *ngIf="count$ | async as count">
+  <div class="board-filter-seperator"></div>
+
+  <div class="board-groups-selection">
+    <mat-icon class="material-icons-outlined">
+      check_box
+    </mat-icon>
+    <span><b>{{ count + ' '}}</b> tasks selected</span>
+  </div>
+
+</div>

@@ -26,6 +26,11 @@ export const selectSelectedTasks = createSelector(
   (state: BoardGroupsState) => state.selectedTasks
 );
 
+export const selectSelectedTasksCount = createSelector(
+  selectSelectedTasks,
+  (state: number[]) => state.length
+);
+
 export const selectAllBoardGroupsWithSelection = createSelector(
   selectAllBoardGroups,
   selectSelectedTasks,

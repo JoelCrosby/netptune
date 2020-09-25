@@ -22,6 +22,7 @@ import { CreateBoardComponent } from './components/create-board/create-board.com
 import { BoardGroupTagsComponent } from './components/board-group-tags/board-group-tags.component';
 import { BoardGroupsFlaggedComponent } from './components/board-groups-flagged/board-groups-flagged.component';
 import { ReactiveComponentModule } from '@ngrx/component';
+import { BoardGroupsSelectionComponent } from './components/board-groups-selection/board-groups-selection.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ReactiveComponentModule } from '@ngrx/component';
     CreateBoardComponent,
     BoardGroupTagsComponent,
     BoardGroupsFlaggedComponent,
+    BoardGroupsSelectionComponent,
   ],
   imports: [
     SharedModule,
