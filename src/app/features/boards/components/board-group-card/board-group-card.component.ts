@@ -24,7 +24,7 @@ export class BoardGroupCardComponent {
     const id = this.task.id;
     const selected = this.task.selected;
 
-    if (event.shiftKey) {
+    if (event.ctrlKey) {
       this.store.dispatch(selected ? deSelectTask({ id }) : selectTask({ id }));
     } else {
       this.dialog.open(TaskDetailDialogComponent, {
