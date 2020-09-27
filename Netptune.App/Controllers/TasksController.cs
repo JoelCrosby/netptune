@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.ProjectTasks;
 
@@ -89,11 +90,25 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // DELETE: api/Tasks
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> DeleteTask([FromBody] IEnumerable<int> ids)
+        {
+            var result = await TaskService.Delete(ids);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
         // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(TaskViewModel))]
+        [Produces("application/json", Type = typeof(ClientResponse))]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
             var result = await TaskService.Delete(id);

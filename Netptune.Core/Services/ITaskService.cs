@@ -22,6 +22,8 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse> Delete(int id);
 
+        Task<ClientResponse> Delete(IEnumerable<int> ids);
+
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
 
         Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);

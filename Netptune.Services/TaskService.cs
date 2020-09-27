@@ -114,6 +114,23 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
+        public async Task<ClientResponse> Delete(IEnumerable<int> ids)
+        {
+            if (ids is null) throw new ArgumentNullException(nameof(ids));
+
+            var userId = await IdentityService.GetCurrentUserId();
+            var tasks = await TaskRepository.GetAllByIdAsync(ids);
+
+            foreach (var task in tasks)
+            {
+                task.Delete(userId);
+            }
+
+            await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
+        }
+
         public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
         {
             return TaskRepository.GetProjectTaskCount(projectId);

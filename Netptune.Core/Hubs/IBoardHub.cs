@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Requests;
@@ -19,6 +20,8 @@ namespace Netptune.Core.Hubs
         Task Create(TaskViewModel request);
 
         Task Delete(ClientResponse response, int id);
+
+        Task DeleteMultiple(ClientResponse response, IEnumerable<int> ids);
 
         Task Update(TaskViewModel request);
 
