@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -92,6 +93,17 @@ namespace Netptune.App.Hubs
             await Clients
                 .OthersInGroup(group)
                 .Delete(response, id);
+
+            return response;
+        }
+
+        public async Task<ClientResponse> DeleteMultiple(string group, List<int> ids)
+        {
+            var response = await TaskService.Delete(ids);
+
+            await Clients
+                .OthersInGroup(group)
+                .DeleteMultiple(response, ids);
 
             return response;
         }
