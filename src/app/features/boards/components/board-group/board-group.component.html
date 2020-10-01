@@ -4,13 +4,13 @@
 
   <div
     #container
-    appScrollShadowVertical
-    class="task-container custom-scroll"
+    class="task-container"
   >
 
   <div
     cdkDropList
-    class="board-task-list"
+    appScrollShadowVertical
+    class="board-task-list custom-scroll"
     [id]="dragListId"
     [cdkDropListConnectedTo]="siblingIds"
     (cdkDropListDropped)="drop($event)"
