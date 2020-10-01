@@ -8,7 +8,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .task-card {
+  .task-item {
     background-color: mat-color($background, card);
 
     .task-scope-id {
@@ -20,7 +20,7 @@
     }
   }
 
-  .task-card:hover {
+  .task-item:hover {
     background-color: darken(mat-color($background, card), 2);
   }
 

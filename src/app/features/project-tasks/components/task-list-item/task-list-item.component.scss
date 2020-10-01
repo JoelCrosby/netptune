@@ -1,16 +1,31 @@
-.task-card {
+.task-item {
   cursor: pointer;
   transition: background-color .2s ease-in-out;
   display: flex;
   align-items: center;
   height: 40px;
+  overflow: hidden;
 
-  .card-chips {
-    justify-content: flex-end;
+  .task-action {
+    flex: 0 0 40px;
+  }
+
+  .task-checkbox {
+    flex: 0 0 32px;
+  }
+
+  .task-scope-id-col {
+    flex: 0 0 100px;
+  }
+
+  .task-scope-id {
+    border-radius: 4px;
+    padding: .2rem .4rem;
+    font-size: 14px;
+    display: inline;
   }
 
   .title {
-    margin-left: 1.2rem;
     font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
@@ -18,42 +33,13 @@
     flex: 1;
   }
 
-  .flag {
-    flex: 0;
-    font-size: 1.2rem;
-    margin: 0 1rem;
-  }
-
-  .task-action {
-    flex: 0 0 40px;
-  }
-
-  .task-checkbox {
-    flex: 0 0 16px;
-  }
-
+  .flag,
   .task-complete {
-    margin: 0 .8rem;
-  }
-
-  .project-chip {
-    height: 18px;
-    margin-right: .4rem;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 3px 12px;
-    border-radius: 12rem;
+    flex: 0 0 32px;
+    font-size: 1.2rem;
   }
 
   app-avatar {
-    margin-right: .4rem;
-  }
-
-  .task-scope-id {
-    margin-left: 1.2rem;
-    border-radius: 4px;
-    padding: .2rem .4rem;
-    height: 1rem;
-    font-size: 14px;
+    flex: 0 0 38px;
   }
 }
