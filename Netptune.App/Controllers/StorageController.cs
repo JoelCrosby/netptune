@@ -37,7 +37,7 @@ namespace Netptune.App.Controllers
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}{extension}-{UniqueId.Generate(userId)}");
+            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueId.Generate(userId)}{extension}");
 
             var fileStream = file.OpenReadStream();
 

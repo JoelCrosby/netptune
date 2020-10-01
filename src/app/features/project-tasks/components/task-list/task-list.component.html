@@ -12,12 +12,10 @@
   >
     <app-task-list-group
       class="mb-5"
-      *ngFor="let group of taskGroups$ | async; trackBy: trackByGroup"
-      [tasks]="group.tasks"
-      [header]="group.header"
-      [groupName]="group.groupName"
-      [status]="group.status"
-      [emptyMessage]="group.emptyMessage"
+      [tasks]="tasks$ | async"
+      header="Tasks"
+      groupName="tasks"
+      emptyMessage="There are currently no tasks. Use the Create Task button above to create a task"
     >
     </app-task-list-group>
   </div>

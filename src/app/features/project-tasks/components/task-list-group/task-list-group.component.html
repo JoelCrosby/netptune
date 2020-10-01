@@ -5,49 +5,29 @@
   <div class="task-list">
 
     <ng-container *ngIf="tasks.length; else elseTemplate">
-      <div
-        cdkDropList
-        class="task-list-group"
-        [cdkDropListData]="{ tasks: tasks, status: status }"
-        (cdkDropListDropped)="drop($event)"
+      <cdk-virtual-scroll-viewport
+        class="task-list-group custom-scroll"
+        itemSize="44"
+        minBufferPx="600"
+        maxBufferPx="2000"
       >
         <app-task-list-item
-          cdkDrag
           class="task-drag"
-          *ngFor="let taskItem of tasks; trackBy: trackByTask"
+          *cdkVirtualFor="let taskItem of tasks; trackBy: trackByTask; templateCacheSize: 0"
           [task]="taskItem"
-          [cdkDragData]="taskItem"
         >
-          <button
-            class="task-action"
-            cdkDragHandle
-            mat-icon-button
-            aria-label="more"
-            matTooltip="click for more options. click and hold to drag task"
-            [matTooltipShowDelay]="1200"
-            [matMenuTriggerData]="{ task: taskItem }"
-            [matMenuTriggerFor]="menu"
-          >
-            <mat-icon class="drag">
-              drag_indicator
-            </mat-icon>
-          </button>
-
         </app-task-list-item>
 
-
         <app-task-inline
-          [status]="status"
           [siblings]="tasks"
         ></app-task-inline>
 
-
-      </div>
+      </cdk-virtual-scroll-viewport>
     </ng-container>
 
     <ng-template #elseTemplate>
 
-      <app-task-inline [status]="status"></app-task-inline>
+      <app-task-inline></app-task-inline>
 
       <div class="list-empty">
         <div class="list-empty-mark">
@@ -60,41 +40,3 @@
 
   </div>
 </div>
-
-<mat-menu #menu="matMenu">
-  <ng-template
-    matMenuContent
-    let-task="task"
-  >
-    <button
-      mat-menu-item
-      (click)="markCompleteClicked(task)"
-    >
-      <mat-icon class="material-icons-outlined">
-        done
-      </mat-icon>
-      <span>Mark Complete</span>
-    </button>
-
-    <button
-      mat-menu-item
-      (click)="moveToBacklogClicked(task)"
-    >
-      <mat-icon class="material-icons-outlined">
-        assignment_returned_outline
-      </mat-icon>
-      <span>Move to Backlog</span>
-    </button>
-
-    <button
-      mat-menu-item
-      (click)="deleteClicked(task)"
-    >
-      <mat-icon class="material-icons-outlined">
-        delete
-      </mat-icon>
-      <span>Delete</span>
-    </button>
-
-  </ng-template>
-</mat-menu>

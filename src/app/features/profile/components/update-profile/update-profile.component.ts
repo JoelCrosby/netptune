@@ -120,7 +120,7 @@ export class UpdateProfileComponent
 
     const data = new FormData();
 
-    data.append('file', blob, 'profile-picture');
+    data.append('file', blob, 'profile-picture.png');
 
     this.editProfilePicture$.next(false);
     this.pictureUrl.setValue(src);

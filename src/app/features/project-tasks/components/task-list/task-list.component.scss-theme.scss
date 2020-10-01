@@ -7,11 +7,6 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .task-drag {
-    background-color: mat-color($background);
-    border-bottom: 1px solid mat-color($background, disabled-button);
-  }
-
   .empty-list-img,
   .list-empty-mark {
     color: mat-color($foreground, empty-list);

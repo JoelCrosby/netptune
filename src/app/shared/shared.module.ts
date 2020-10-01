@@ -27,6 +27,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   MatSnackBarModule,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
@@ -73,6 +74,8 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
     MatSidenavModule,
     MatSnackBarModule,
     MatTooltipModule,
+
+    ScrollingModule,
 
     LyImageCropperModule,
   ],
