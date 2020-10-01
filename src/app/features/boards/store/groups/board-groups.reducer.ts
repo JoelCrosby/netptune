@@ -30,6 +30,7 @@ const reducer = createReducer(
         board: boardGroups.board,
         users: boardGroups.users,
         onlyFlagged,
+        selectedTasks: [],
         selectedUsers: boardGroups.users.filter((user) =>
           selectedIdMap.has(user.id)
         ),
@@ -148,6 +149,13 @@ const reducer = createReducer(
   on(actions.deSelectTask, (state, { id }) => ({
     ...state,
     selectedTasks: state.selectedTasks.filter((t) => t !== id),
+  })),
+
+  // Clear Task Selection
+
+  on(actions.clearTaskSelection, (state) => ({
+    ...state,
+    selectedTasks: [],
   })),
 
   // ProjectTaskActions

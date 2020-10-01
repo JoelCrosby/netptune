@@ -41,5 +41,18 @@ namespace Netptune.Repositories
                 .OrderBy(entity => entity.SortOrder)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds)
+        {
+            var taskIdList = taskIds.ToList();
+            var ids = await Entities
+                .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
+                .Select(entity => entity.Id)
+                .ToListAsync();
+
+            await DeletePermanent(ids);
+
+            return ids;
+        }
     }
 }

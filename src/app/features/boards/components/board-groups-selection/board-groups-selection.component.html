@@ -2,10 +2,28 @@
   <div class="board-filter-seperator"></div>
 
   <div class="board-groups-selection">
-    <mat-icon class="material-icons-outlined">
-      check_box
-    </mat-icon>
     <span><b>{{ count + ' '}}</b> tasks selected</span>
+    <button>
+      <mat-icon
+        class="material-icons-outlined close-btn"
+        (click)="onClearClicked()"
+        matTooltip="Clear Task Selection"
+      >
+        clear_all
+      </mat-icon>
+    </button>
   </div>
+
+  <button
+    class="board-groups-selection-btn"
+   (click)="onDeleteClicked()"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      matTooltip="Delete Selected Tasks"
+    >
+      delete
+    </mat-icon>
+  </button>
 
 </div>

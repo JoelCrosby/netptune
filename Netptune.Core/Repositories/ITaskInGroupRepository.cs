@@ -13,5 +13,7 @@ namespace Netptune.Core.Repositories
         Task<List<ProjectTaskInBoardGroup>> GetProjectTasksInGroup(int groupId);
 
         Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId);
+
+        Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds);
     }
 }

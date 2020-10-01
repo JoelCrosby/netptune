@@ -11,8 +11,6 @@ namespace Netptune.Core.Services
     {
         Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null);
 
-        Task<BoardGroupsViewModel> GetBoardGroups(int boardId, BoardGroupsFilter filter = null);
-
         Task<BoardGroup> GetBoardGroup(int id);
 
         Task<BoardGroup> UpdateBoardGroup(BoardGroup boardGroup);

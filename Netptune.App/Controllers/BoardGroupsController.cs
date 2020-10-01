@@ -23,17 +23,6 @@ namespace Netptune.Api.Controllers
             BoardGroupService = boardGroupService;
         }
 
-        // GET: api/boardgroups
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<BoardGroup>))]
-        public async Task<IActionResult> GetBoardGroups(int boardId)
-        {
-            var result = await BoardGroupService.GetBoardGroups(boardId);
-
-            return Ok(result);
-        }
-
         // GET: api/boardgroups/board/identifier
         [HttpGet("board/{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

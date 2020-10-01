@@ -107,8 +107,7 @@ namespace Netptune.Services
 
             if (task is null || userId is null) return null;
 
-            task.Delete(userId);
-
+            await TaskRepository.DeletePermanent(task.Id);
             await UnitOfWork.CompleteAsync();
 
             return ClientResponse.Success();
@@ -118,14 +117,11 @@ namespace Netptune.Services
         {
             if (ids is null) throw new ArgumentNullException(nameof(ids));
 
-            var userId = await IdentityService.GetCurrentUserId();
             var tasks = await TaskRepository.GetAllByIdAsync(ids);
+            var taskIds = tasks.Select(task => task.Id).ToList();
 
-            foreach (var task in tasks)
-            {
-                task.Delete(userId);
-            }
-
+            await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
+            await TaskRepository.DeletePermanent(taskIds);
             await UnitOfWork.CompleteAsync();
 
             return ClientResponse.Success();

@@ -38,15 +38,11 @@ namespace Netptune.Services
 
         public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null)
         {
-            var boardId = await Boards.GetIdByIdentifier(boardIdentifier);
+            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier);
 
-            if (!boardId.HasValue) return null;
+            if (!nullableBoardId.HasValue) return null;
 
-            return await GetBoardGroups(boardId.Value, filter);
-        }
-
-        public async Task<BoardGroupsViewModel> GetBoardGroups(int boardId, BoardGroupsFilter filter = null)
-        {
+            var boardId = nullableBoardId.Value;
             var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
 
             var includeUserFilter = filter?.Users?.Any() ?? false;
