@@ -6,6 +6,7 @@ import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
 @Pipe({
   name: 'prettyDate',
+  pure: true,
 })
 export class PrettyDatePipe implements PipeTransform {
   transform(value: Date): string {

@@ -18,13 +18,17 @@ import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
 import { AutocompleteChipsComponent } from './components/autocomplete-chips/autocomplete-chips.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
+import { AvatarFontSizePipe } from './pipes/avatar-font-size.pipe';
+import { PxPipe } from './pipes/px.pipe';
 
 @NgModule({
   declarations: [
     PageContainerComponent,
     UsernamePipe,
     AvatarComponent,
+    PxPipe,
     AvatarPipe,
+    AvatarFontSizePipe,
     SpinnerComponent,
     PageHeaderComponent,
     InlineEditInputComponent,
@@ -43,6 +47,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
   exports: [
     PageContainerComponent,
     UsernamePipe,
+    PxPipe,
     AvatarComponent,
     AvatarPipe,
     SpinnerComponent,

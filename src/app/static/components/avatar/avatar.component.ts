@@ -1,10 +1,5 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-} from '@angular/core';
-import { getColourForKey } from '@core/util/colors/color-util';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { avatarColors } from '@core/util/colors/colors';
 
 @Component({
   selector: 'app-avatar',
@@ -12,7 +7,7 @@ import { getColourForKey } from '@core/util/colors/color-util';
   styleUrls: ['./avatar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent {
   @Input() name: string;
   @Input() size: string | number = '32';
   @Input() imageUrl: string;
@@ -20,22 +15,6 @@ export class AvatarComponent implements OnInit {
   @Input() tooltip = true;
   @Input() borderRadius: string | number = '50%';
 
-  backgroundColor: string;
+  backgroundColor = avatarColors[0];
   color = '#fff';
-
-  get sizePx() {
-    return this.size + 'px';
-  }
-
-  get fontSize() {
-    if (typeof this.size === 'number') return this.size / 2;
-
-    return Number.parseInt(this.size, 2) / 2;
-  }
-
-  constructor() {}
-
-  ngOnInit() {
-    this.backgroundColor = getColourForKey(this.name);
-  }
 }
