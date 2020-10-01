@@ -1,5 +1,5 @@
 <div
-  class="task-card"
+  class="task-item"
   [class.flagged]="task.isFlagged"
 >
   <button
@@ -20,9 +20,12 @@
   >
   </mat-checkbox>
 
-  <div class="task-scope-id">
-    {{ task.systemId }}
+  <div class="task-scope-id-col">
+    <div class="task-scope-id">
+      {{ task.systemId }}
+    </div>
   </div>
+
 
   <div class="title" (click)="titleClicked()">
     {{ task.name }}
@@ -43,10 +46,6 @@
   >
     done
   </mat-icon>
-
-  <div class="project-chip">
-    {{ task.projectName }}
-  </div>
 
   <app-avatar
     size="24"
