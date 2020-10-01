@@ -2,8 +2,17 @@
   class="task-card"
   [class.flagged]="task.isFlagged"
 >
-
-  <ng-content></ng-content>
+  <button
+    class="task-action"
+    mat-icon-button
+    aria-label="more"
+    [matMenuTriggerData]="{ task: task }"
+    [matMenuTriggerFor]="menu"
+  >
+    <mat-icon class="drag">
+      drag_indicator
+    </mat-icon>
+  </button>
 
   <mat-checkbox
     class="task-checkbox"
@@ -49,3 +58,40 @@
 
 </div>
 
+<mat-menu #menu="matMenu">
+  <ng-template
+    matMenuContent
+    let-task="task"
+  >
+    <button
+      mat-menu-item
+      (click)="markCompleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        done
+      </mat-icon>
+      <span>Mark Complete</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="moveToBacklogClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        assignment_returned_outline
+      </mat-icon>
+      <span>Move to Backlog</span>
+    </button>
+
+    <button
+      mat-menu-item
+      (click)="deleteClicked(task)"
+    >
+      <mat-icon class="material-icons-outlined">
+        delete
+      </mat-icon>
+      <span>Delete</span>
+    </button>
+
+  </ng-template>
+</mat-menu>
