@@ -120,6 +120,7 @@
     }
   },
   "cli": {
+    "packageManager": "yarn",
     "analytics": false
   }
 }
