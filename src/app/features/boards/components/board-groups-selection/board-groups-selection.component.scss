@@ -4,6 +4,27 @@
   display: flex;
   align-items: center;
   margin-left: .4rem;
+  height: 36px;
+
+  button {
+    outline: none;
+    appearance: none;
+    border: 0;
+  }
+}
+
+.board-groups-selection-btn {
+  outline: none;
+  appearance: none;
+  border: 0;
+  padding: 0 .8rem;
+  border-radius: .3rem;
+  display: flex;
+  align-items: center;
+  margin-left: .4rem;
+  height: 36px;
+  cursor: pointer;
+  transition: background-color .14s ease-in-out, color .14s ease-in-out;
 }
 
 span {
@@ -22,4 +43,9 @@ span {
 .row {
   display: flex;
   align-items: center;
+}
+
+.close-btn {
+  margin-left: .4rem;
+  cursor: pointer;
 }

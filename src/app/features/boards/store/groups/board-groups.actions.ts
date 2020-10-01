@@ -7,6 +7,7 @@ import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { AppUser } from '@core/models/appuser';
+import { ClientResponse } from '@core/models/client-response';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -158,4 +159,33 @@ export const selectTask = createAction(
 export const deSelectTask = createAction(
   '[BoardGroups] Deselect Task',
   props<{ id: number }>()
+);
+
+// Clear Task Selection
+
+export const clearTaskSelection = createAction(
+  '[BoardGroups] Clear Task Selection'
+);
+
+// Delete Selected Tasks
+
+export const deleteSelectedTasks = createAction(
+  '[BoardGroups] Delete Selected Tasks'
+);
+
+// Delete Task Multiple
+
+export const deleteTaskMultiple = createAction(
+  '[BoardGroups] Delete Task Multiple',
+  props<{ ids: number[] }>()
+);
+
+export const deleteTasksMultipleSuccess = createAction(
+  '[BoardGroups] Delete Task Multiple Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const deleteTasksMultipleFail = createAction(
+  '[BoardGroups] Delete Task Multiple Fail',
+  props<{ error: HttpErrorResponse }>()
 );

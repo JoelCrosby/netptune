@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  isBoardGroupsRoute,
-  selectRouterParam,
-} from '@core/core.route.selectors';
+import * as RouteSelectors from '@core/core.route.selectors';
 import { BoardGroupType } from '@core/models/board-group';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
@@ -19,17 +16,14 @@ import { of } from 'rxjs';
 import {
   catchError,
   filter,
+  first,
   map,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './board-groups.actions';
-import {
-  selectBoardGroupsSelectedUserIds,
-  selectBoardIdentifier,
-  selectOnlyFlagged,
-} from './board-groups.selectors';
+import * as selectors from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
@@ -43,7 +37,7 @@ export class BoardGroupsEffects {
         TaskActions.addTagToTaskSuccess
       ),
       withLatestFrom(
-        this.store.select(selectRouterParam, 'id'),
+        this.store.select(RouteSelectors.selectRouterParam, 'id'),
         this.route.queryParamMap,
         this.route.queryParams
       ),
@@ -93,7 +87,7 @@ export class BoardGroupsEffects {
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProjectTask),
-      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) =>
         this.tasksHubService.post(identifier, action.task).pipe(
           tap(() => this.snackbar.open('Task created')),
@@ -114,7 +108,7 @@ export class BoardGroupsEffects {
   taskDeleted$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TaskActions.deleteProjectTasksSuccess),
-      withLatestFrom(this.store.select(isBoardGroupsRoute)),
+      withLatestFrom(this.store.select(RouteSelectors.isBoardGroupsRoute)),
       filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups())
     )
@@ -167,7 +161,7 @@ export class BoardGroupsEffects {
   moveTaskInBoardGroup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
-      withLatestFrom(this.store.select(selectBoardIdentifier)),
+      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) =>
         this.tasksHubService
           .moveTaskInBoardGroup(identifier, action.request)
@@ -178,6 +172,45 @@ export class BoardGroupsEffects {
             )
           )
       )
+    )
+  );
+
+  deleteSelectedTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteSelectedTasks),
+      switchMap(() =>
+        this.confirmation.open(DELETE_SELECTED_TASKS_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.store.select(selectors.selectSelectedTasks).pipe(
+              first(),
+              map((ids) => actions.deleteTaskMultiple({ ids }))
+            );
+          })
+        )
+      )
+    )
+  );
+
+  deleteTaskMultiple$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteTaskMultiple),
+      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      switchMap(([action, identifier]) =>
+        this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
+          tap(() => this.snackbar.open('Tasks Deleted')),
+          map((response) => actions.deleteTasksMultipleSuccess({ response })),
+          catchError((error) => of(actions.deleteTasksMultipleFail({ error })))
+        )
+      )
+    )
+  );
+
+  deleteTaskMultipleSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.deleteTasksMultipleSuccess),
+      map(() => actions.loadBoardGroups())
     )
   );
 
@@ -194,14 +227,14 @@ export class BoardGroupsEffects {
           actions.toggleOnlyFlagged
         ),
         withLatestFrom(
-          this.store.select(selectBoardGroupsSelectedUserIds),
+          this.store.select(selectors.selectBoardGroupsSelectedUserIds),
           this.store.select(selectSelectedTags),
-          this.store.select(selectOnlyFlagged)
+          this.store.select(selectors.selectOnlyFlagged)
         ),
         map(([_, users, tags, flagged]) => {
           const usersParam = users?.length ? users : undefined;
           const tagsParam = tags?.length ? tags : undefined;
-          const flaggedParam = flagged == true || undefined;
+          const flaggedParam = flagged === true || undefined;
 
           return [_, usersParam, tagsParam, flaggedParam];
         }),
@@ -232,4 +265,11 @@ const DELETE_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this group?',
   title: 'Delete Group',
+};
+
+const DELETE_SELECTED_TASKS_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Delete Selcted Tasks',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to delete the selected tasks?',
+  title: 'Delete Selected Tasks',
 };

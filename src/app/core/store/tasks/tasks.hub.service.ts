@@ -36,6 +36,10 @@ export class ProjectTasksHubService {
         callback: () => this.reloadRequiredViews(),
       },
       {
+        method: 'DeleteMultiple',
+        callback: () => this.reloadRequiredViews(),
+      },
+      {
         method: 'Update',
         callback: () => this.reloadRequiredViews(),
       },
@@ -101,6 +105,10 @@ export class ProjectTasksHubService {
 
   delete(groupId: string, task: ProjectTask) {
     return this.hub.invoke<ClientResponse>('Delete', groupId, task.id);
+  }
+
+  deleteMultiple(groupId: string, ids: number[]) {
+    return this.hub.invoke<ClientResponse>('DeleteMultiple', groupId, ids);
   }
 
   addTagToTask(groupId: string, request: AddTagRequest) {
