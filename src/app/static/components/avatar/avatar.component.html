@@ -1,13 +1,13 @@
 <div
   class="avatar-container"
-  [style.height]="sizePx"
-  [style.width]="sizePx"
+  [style.height]="size | px"
+  [style.width]="size | px"
   [style.background-color]="imageUrl ? null : backgroundColor"
   [style.color]="color"
   [style.border-radius]="borderRadius"
   [class.avatar-border]="border"
   [matTooltip]="tooltip ? name : undefined"
-  [style.font-size]="fontSize"
+  [style.font-size]="size | avatarFontSize"
 >
   <ng-container *ngIf="imageUrl; else elseTemplate">
     <img
@@ -18,6 +18,9 @@
       [alt]="name"
     >
   </ng-container>
-  <ng-template #elseTemplate>{{ name | avatar }}</ng-template>
+
+  <ng-template #elseTemplate>
+    {{ name | avatar }}
+  </ng-template>
 
 </div>
