@@ -154,11 +154,25 @@ export const selectTask = createAction(
   props<{ id: number }>()
 );
 
+// Select Task Bulk
+
+export const selectTaskBulk = createAction(
+  '[BoardGroups] Select Task Bulk',
+  props<{ id: number; groupId: number }>()
+);
+
 // Deselect Task
 
 export const deSelectTask = createAction(
   '[BoardGroups] Deselect Task',
   props<{ id: number }>()
+);
+
+// Deselect Task Bulk
+
+export const deSelectTaskBulk = createAction(
+  '[BoardGroups] Deselect Task Bulk',
+  props<{ id: number; groupId: number }>()
 );
 
 // Clear Task Selection
