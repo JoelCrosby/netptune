@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  deSelectTask,
-  selectTask,
-} from '@boards/store/groups/board-groups.actions';
+import * as actions from '@boards/store/groups/board-groups.actions';
 import { Selected } from '@core/models/selected';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -17,6 +14,7 @@ import { Store } from '@ngrx/store';
 })
 export class BoardGroupCardComponent {
   @Input() task: Selected<TaskViewModel>;
+  @Input() groupId: number;
 
   constructor(private dialog: MatDialog, private store: Store) {}
 
@@ -24,8 +22,18 @@ export class BoardGroupCardComponent {
     const id = this.task.id;
     const selected = this.task.selected;
 
-    if (event.ctrlKey) {
-      this.store.dispatch(selected ? deSelectTask({ id }) : selectTask({ id }));
+    if (event.shiftKey) {
+      const groupId = this.groupId;
+
+      this.store.dispatch(
+        selected
+          ? actions.deSelectTaskBulk({ id, groupId })
+          : actions.selectTaskBulk({ id, groupId })
+      );
+    } else if (event.ctrlKey) {
+      this.store.dispatch(
+        selected ? actions.deSelectTask({ id }) : actions.selectTask({ id })
+      );
     } else {
       this.dialog.open(TaskDetailDialogComponent, {
         width: '800px',

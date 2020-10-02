@@ -92,3 +92,67 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
 
   return adapter.updateOne(update, state);
 };
+
+export const getBulkTaskSelection = (
+  state: BoardGroupsState,
+  id: number,
+  groupId: number
+) => {
+  const set = new Set(state.selectedTasks);
+
+  const sourceGroup = state.entities[groupId];
+  const siblingTasks = sourceGroup.tasks;
+  const siblingIds = siblingTasks.map((task) => task.id);
+  const selectedSiblingIds = siblingIds.filter((id) => set.has(id));
+
+  // If there are no other siblings selected just add source task to selected
+  if (!selectedSiblingIds.length) {
+    const mod = set.add(id);
+    return Array.from(mod);
+  }
+
+  // get the last selected task that is a sibling
+  const getLastSelectedId = (iter = 0): number | null => {
+    const target = Array.from(set)[set.size - 1 - iter];
+
+    if (!target) return null;
+
+    if (!selectedSiblingIds.includes(target)) {
+      return getLastSelectedId(iter + 1);
+    }
+
+    return target;
+  };
+
+  const lastSelectedId = getLastSelectedId();
+
+  if (!lastSelectedId) {
+    const mod = set.add(id);
+    return Array.from(mod);
+  }
+
+  const walkSiblings = (): number[] => {
+    let startIndex: number = null;
+    let endIndex: number = null;
+
+    for (let i = 0; i < siblingIds.length; i++) {
+      const curr = siblingIds[i];
+
+      if (id === curr || curr === lastSelectedId) {
+        if (startIndex === null) {
+          startIndex = i;
+          continue;
+        }
+
+        endIndex = i;
+        break;
+      }
+    }
+
+    const selection = siblingIds.slice(startIndex, endIndex);
+
+    return [...selection, id];
+  };
+
+  return walkSiblings();
+};

@@ -3,7 +3,11 @@ import { BoardGroup } from '@core/models/board-group';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Update } from '@ngrx/entity';
 import { Action, createReducer, on } from '@ngrx/store';
-import { moveTaskInBoardGroup, updateTask } from './board-group.utils';
+import {
+  getBulkTaskSelection,
+  moveTaskInBoardGroup,
+  updateTask,
+} from './board-group.utils';
 import * as actions from './board-groups.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 
@@ -144,11 +148,32 @@ const reducer = createReducer(
     })(),
   })),
 
+  // Select Task Bulk
+
+  on(actions.selectTaskBulk, (state, { id, groupId }) => ({
+    ...state,
+    selectedTasks: (() => {
+      const selections = getBulkTaskSelection(state, id, groupId);
+      return Array.from(new Set([...state.selectedTasks, ...selections]));
+    })(),
+  })),
+
   // Deselect Task
 
   on(actions.deSelectTask, (state, { id }) => ({
     ...state,
     selectedTasks: state.selectedTasks.filter((t) => t !== id),
+  })),
+
+  // Deselect Task Bulk
+
+  on(actions.deSelectTaskBulk, (state, { id, groupId }) => ({
+    ...state,
+    selectedTasks: (() => {
+      const selections = getBulkTaskSelection(state, id, groupId);
+      const selectionSet = new Set(selections);
+      return state.selectedTasks.filter((task) => !selectionSet.has(task));
+    })(),
   })),
 
   // Clear Task Selection
