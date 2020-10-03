@@ -103,7 +103,7 @@ export const getBulkTaskSelection = (
   const sourceGroup = state.entities[groupId];
   const siblingTasks = sourceGroup.tasks;
   const siblingIds = siblingTasks.map((task) => task.id);
-  const selectedSiblingIds = siblingIds.filter((id) => set.has(id));
+  const selectedSiblingIds = siblingIds.filter((sibling) => set.has(sibling));
 
   // If there are no other siblings selected just add source task to selected
   if (!selectedSiblingIds.length) {
