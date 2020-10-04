@@ -1,0 +1,33 @@
+@import '~@angular/material/theming';
+
+@mixin task-list-group-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .tasks-container {
+    h4 {
+      color: mat-color($foreground, text, .6);
+    }
+
+    .task-list {
+      background-color: darken(mat-color($background, board-group), 1);
+    }
+
+
+    .task-drag {
+      background-color: mat-color($background);
+    }
+  }
+
+  .empty-list-img,
+  .list-empty-mark {
+    color: mat-color($foreground, empty-list);
+  }
+
+  .empty-text {
+    color: mat-color($foreground, disabled-button);
+  }
+}

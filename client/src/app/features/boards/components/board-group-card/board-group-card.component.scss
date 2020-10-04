@@ -1,0 +1,70 @@
+.group-task-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px;
+  font-size: 14px;
+  letter-spacing: .1px;
+  cursor: pointer;
+  margin-bottom: .3rem;
+  border: 0 !important;
+  overflow: hidden;
+}
+
+.task-name-text {
+  margin-bottom: 0;
+  line-height: 1.4rem;
+  word-break: break-word;
+}
+
+.card-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .card-tag {
+    margin: .2rem .2rem .2rem 0;
+    border-radius: 4px;
+    padding: .2rem .4rem;
+  }
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-self: flex-end;
+  width: 100%;
+  margin-top: .2rem;
+  align-items: center;
+
+  .bottom-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    mat-icon {
+      margin-right: .6rem;
+    }
+  }
+
+  .bottom-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .task-scope-id {
+      border-radius: 4px;
+      padding: .2rem .4rem;
+      height: 1rem;
+      font-size: 14px;
+      margin-right: .6rem;
+    }
+  }
+
+
+
+  .task-card-user-chip {
+    justify-self: flex-end;
+  }
+}

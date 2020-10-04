@@ -1,0 +1,19 @@
+<div class="inline-edit">
+  <ng-container *ngIf="isEditActive$ | async; else elseTemplate">
+    <input
+      #input
+      type="text"
+      class="inline-edit-input"
+      [formControl]="control"
+      (keydown.enter)="onSubmit(input.value)"
+    >
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div
+      class="inline-edit-label"
+    >
+      {{ value }}
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,46 @@
+@import '~@angular/material/theming';
+
+@mixin board-groups-selection-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .board-groups-selection {
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 5%) !important;
+
+    .mat-icon {
+      opacity: .3;
+    }
+
+    span,
+    .mat-icon {
+      opacity: .6;
+      color: mat-color($primary);
+    }
+
+    .close-btn:hover {
+      color: mat-color($primary);
+    }
+
+  }
+
+  .board-groups-selection-btn {
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 5%) !important;
+
+    .mat-icon {
+      opacity: .6;
+    }
+
+    &:hover {
+      background-color: mix(mat-color($primary), mat-color($background, board-group), 25%) !important;
+      color: mix(mat-color($primary), mat-color($background, board-group), 95%) !important;
+
+      .mat-icon {
+        opacity: .9;
+        fill: mix(mat-color($primary, A700), mat-color($background, board-group), 95%) !important;
+      }
+    }
+  }
+}

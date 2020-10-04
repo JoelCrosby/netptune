@@ -18,6 +18,10 @@ using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
+using Polly;
+using Serilog;
+
+using Serilog;
 
 namespace Netptune.App
 {
@@ -38,6 +42,8 @@ namespace Netptune.App
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = GetConnectionString();
+
+            Console.WriteLine($"GetConnectionString: {connectionString}");
 
             services.AddCors();
             services.AddControllers();
@@ -107,6 +113,8 @@ namespace Netptune.App
                 ContentTypeProvider = GetFileExtensionContentTypeProvider()
             });
 
+            app.UseSerilogRequestLogging();
+
             app.UseRouting();
 
             app.UseCors(builder => builder
@@ -161,7 +169,10 @@ namespace Netptune.App
 
             var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
 
-            context.Database.EnsureCreated();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(4, retryAttempt => TimeSpan.FromSeconds(4))
+                .Execute(() => context.Database.EnsureCreated());
         }
 
         private string GetConnectionString()
@@ -180,6 +191,8 @@ namespace Netptune.App
 
         private static string ParseConnectionString(string value)
         {
+            Console.WriteLine($"envConString: {value}");
+
             var conn = value
                 .Replace("//", "")
                 .Split('/', ':', '@', '?')
@@ -192,7 +205,7 @@ namespace Netptune.App
             var database = conn[5];
             var port = conn[4];
 
-            return $"host={server};port={port};database={database};uid={user};pwd={pass};sslmode=Require;Trust Server Certificate=true;Timeout=1000";
+            return $"host={server};port={port};database={database};uid={user};pwd={pass};Timeout=1000";
         }
     }
 }

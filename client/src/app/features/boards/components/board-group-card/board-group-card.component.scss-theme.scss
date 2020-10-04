@@ -1,0 +1,31 @@
+@import '~@angular/material/theming';
+
+@mixin board-group-card-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .card-footer {
+    .task-scope-id {
+      background-color: mat-color($primary, .2);
+    }
+  }
+
+  .group-task-card.flagged {
+    background-color: mix(mat-color($warn), mat-color($background, board-group), 15%) !important;
+  }
+
+  .group-task-card.selected {
+    background-color: mix(mat-color($primary), mat-color($background, board-group), 10%) !important;
+    color: mix(mat-color($primary), mat-color($foreground, text), 20%) !important;
+  }
+
+  .card-tags {
+    .card-tag {
+      background-color: mat-color($foreground, text, .06);
+    }
+  }
+
+}

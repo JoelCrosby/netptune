@@ -1,0 +1,21 @@
+.inline-edit {
+  width: 100%;
+
+  .inline-edit-label {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+  }
+
+  .inline-edit-input {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    width: 100%;
+    font: inherit;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+  }
+}

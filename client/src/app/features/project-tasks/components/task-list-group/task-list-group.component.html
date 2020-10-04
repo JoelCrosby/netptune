@@ -1,0 +1,42 @@
+<div class="tasks-container">
+
+  <h4>{{ header }}</h4>
+
+  <div class="task-list">
+
+    <ng-container *ngIf="tasks.length; else elseTemplate">
+      <cdk-virtual-scroll-viewport
+        class="task-list-group custom-scroll"
+        itemSize="44"
+        minBufferPx="512"
+        maxBufferPx="1024"
+      >
+        <app-task-list-item
+          class="task-drag"
+          *cdkVirtualFor="let taskItem of tasks; trackBy: trackByTask; templateCacheSize: 0"
+          [task]="taskItem"
+        >
+        </app-task-list-item>
+
+        <app-task-inline
+          [siblings]="tasks"
+        ></app-task-inline>
+
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+
+      <app-task-inline></app-task-inline>
+
+      <div class="list-empty">
+        <div class="list-empty-mark">
+          <i class="far fa-compass"></i>
+          <h4 class="empty-text">{{ emptyMessage }}</h4>
+        </div>
+      </div>
+
+    </ng-template>
+
+  </div>
+</div>

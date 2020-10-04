@@ -1,0 +1,18 @@
+@import '~@angular/material/theming';
+
+@mixin board-group-users-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .board-group-user.selected {
+    border: 2px solid mat-color($primary, 400);
+  }
+
+  .board-group-user {
+    border: 2px solid mat-color($background, background);
+  }
+
+}

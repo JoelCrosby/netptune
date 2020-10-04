@@ -1,0 +1,35 @@
+@import '~@angular/material/theming';
+
+@mixin board-groups-view-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .board-group-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+
+    span {
+      color: mat-color($foreground, text, .3);
+    }
+
+    .title {
+      color: mat-color($foreground, text, .6);
+
+      .title-input:hover,
+      .title-input.edit-active {
+        background-color: mat-color($primary, .06);
+      }
+    }
+
+    .delete-board-group-btn
+    .mat-icon {
+      color: mat-color($foreground, icon, .4);
+    }
+  }
+}

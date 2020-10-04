@@ -1,0 +1,14 @@
+<button
+  mat-button
+  class="board-filter-button"
+  (click)="onClicked()"
+  [color]="(onyFlagged$ | async) ? 'warn' : ''"
+>
+  <mat-icon
+    aria-hidden="false"
+    aria-label="Expand Tags Dropdown"
+    class="material-icons-outlined"
+  >
+    flag
+  </mat-icon>
+</button>

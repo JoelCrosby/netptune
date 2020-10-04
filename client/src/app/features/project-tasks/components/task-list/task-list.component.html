@@ -1,0 +1,23 @@
+<ng-container *ngIf="loading$ | async; else elseTemplate">
+  <div class="loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+</ng-container>
+
+
+<ng-template #elseTemplate>
+  <div
+    class="task-list-main drag-group"
+    cdkDropListGroup
+  >
+    <app-task-list-group
+      class="mb-5"
+      [tasks]="tasks$ | async"
+      header="Tasks"
+      groupName="tasks"
+      emptyMessage="There are currently no tasks. Use the Create Task button above to create a task"
+    >
+    </app-task-list-group>
+  </div>
+</ng-template>
+

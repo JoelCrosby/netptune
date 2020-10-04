@@ -1,0 +1,46 @@
+@import '~@angular/material/theming';
+
+@mixin baords-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .board-filter-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 32px !important;
+
+    &.mat-warn .mat-icon {
+      color: inherit !important;
+    }
+
+    &.mat-primary .mat-icon {
+      color: inherit !important;
+    }
+
+    .mat-icon {
+      color: mat-color($foreground, text, .4);
+    }
+  }
+
+  .board-filter-button:not(.mat-warn) {
+    background-color: darken(mat-color($background, board-group), 1);
+  }
+
+  .board-filter-button.mat-warn {
+    background-color: mat-color($warn, .08);
+  }
+
+  .board-filter-button.mat-primary {
+    background-color: mat-color($primary, .08);
+  }
+
+  .board-filter-seperator {
+    height: 1.4rem;
+    margin: 0 .4rem;
+    border-right: 1px solid mat-color($foreground, text, .1);
+  }
+}

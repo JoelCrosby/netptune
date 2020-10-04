@@ -1,0 +1,16 @@
+<ng-container *ngIf="settings$ | async as settings">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Theme</mat-label>
+    <mat-select
+      placeholder="Select Theme"
+      (selectionChange)="onThemeSelect($event.value)"
+      [ngModel]="settings.theme"
+    >
+      <mat-option *ngFor="let theme of themes" [value]="theme.value">
+        {{ theme.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</ng-container>

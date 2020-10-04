@@ -1,0 +1,122 @@
+<h1 mat-dialog-title>
+  {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}
+</h1>
+
+<form
+  class="form-auth"
+  [formGroup]="formGroup"
+>
+
+  <div class="name-color-row">
+
+    <mat-form-field
+      class="w-100"
+      appearance="fill"
+    >
+      <mat-label>Enter Workspace Name</mat-label>
+      <input
+        matInput
+        id="name"
+        class="form-control"
+        placeholder="Workspace Name"
+        name="name"
+        formControlName="name"
+      >
+    </mat-form-field>
+
+    <mat-form-field
+      class="w-100 color-field color-select"
+      appearance="fill"
+    >
+      <mat-label>Choose Color</mat-label>
+      <mat-select
+        placeholder="Color"
+        formControlName="color"
+      >
+
+
+        <mat-select-trigger>
+          <div class="color-option">
+            <div
+              class="color-pallete"
+              [style.background-color]="selectedColor"
+            ></div>
+            <div class="label">{{ getColorLabel(selectedColor) }}</div>
+          </div>
+        </mat-select-trigger>
+
+
+        <mat-option
+          *ngFor="let item of colors"
+          [value]="item.color"
+        >
+          <div class="color-option">
+            <div
+              class="color-pallete"
+              [style.background-color]="item.color"
+            ></div>
+            <div class="label">{{ item.name }}</div>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field
+    class="w-100 identifier"
+    appearance="fill"
+  >
+    <mat-label>Enter Workspace Identifier</mat-label>
+    <input
+      matInput
+      id="identifier"
+      class="form-control"
+      placeholder="Workspace Identifier"
+      name="identifier"
+      formControlName="identifier"
+    >
+    <mat-error *ngIf="identifier.hasError('already-taken')">
+      Identifier is already taken
+    </mat-error>
+    <mat-icon matSuffix *ngIf="isUniqueLoading$ | async">
+      <mat-spinner diameter="24"></mat-spinner>
+    </mat-icon>
+  </mat-form-field>
+
+  <mat-form-field
+    class="w-100"
+    appearance="fill"
+  >
+    <mat-label>Enter Workspace Summary</mat-label>
+    <textarea
+      matInput
+      id="description"
+      class="form-control"
+      placeholder="Description"
+      name="description"
+      aria-label="With textarea"
+      formControlName="description"
+    >
+    </textarea>
+  </mat-form-field>
+
+</form>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    mat-dialog-close
+  >
+    Close
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
+    {{ isEditMode ? 'Save Changes' : 'Save Workspace'}}
+  </button>
+</div>
