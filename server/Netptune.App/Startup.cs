@@ -60,6 +60,7 @@ namespace Netptune.App
 
             services.AddSendGridEmailService(options =>
             {
+                options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
                 options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
             });
@@ -90,11 +91,7 @@ namespace Netptune.App
                 app.UseHsts();
                 app.UseHttpsRedirection();
 
-                var parentDir = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
-
-                if (string.IsNullOrEmpty(parentDir)) throw new Exception("Unable to get parent Directory");
-
-                var spaPath = Path.Combine(parentDir, "dist");
+                var spaPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
 
                 app.UseSpaStaticFiles(new StaticFileOptions
                 {
