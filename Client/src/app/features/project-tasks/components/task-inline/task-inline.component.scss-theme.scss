@@ -1,0 +1,38 @@
+@import '~@angular/material/theming';
+
+@mixin task-inline-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .inline-task-input {
+    color: mat-color($foreground, text);
+  }
+
+  .inline-task-input:-webkit-autofill,
+  .inline-task-input:-webkit-autofill:hover,
+  .inline-task-input:-webkit-autofill:focus,
+  .inline-task-input:-webkit-autofill:active {
+    -webkit-transition-delay: 99999s;
+  }
+
+  .new-task-button span,
+  .new-task-button .mat-icon {
+    color: mat-color($primary, 400);
+  }
+
+  .new-task-button:hover {
+    background-color: mat-color($primary, 400, .1);
+  }
+
+  .task-card {
+    background-color: mat-color($background, card);
+  }
+
+  .inline-task-form .mat-icon {
+    color: rgba(mat-color($foreground, icon), .1);
+  }
+}

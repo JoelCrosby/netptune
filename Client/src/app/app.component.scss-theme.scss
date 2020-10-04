@@ -1,0 +1,53 @@
+@import '~@angular/material/theming';
+
+@mixin component-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  main {
+    background-color: mat-color($background, background);
+  }
+
+  .app-shell-sidenav {
+    background-color: mat-color($background, side-bar);
+
+    .mat-drawer-inner-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .app-shell-sidenav.transparent {
+    background-color: mat-color($background, background) !important;
+  }
+
+  .workspace-nav-list {
+    .app-workspace-link {
+      color: mat-color($background, card, .8);
+    }
+
+    .app-workspace-link:hover {
+      color: rgba(255, 255, 255, 1) !important;
+
+      .app-workspace-link-inner {
+        opacity: 1 !important;
+      }
+    }
+
+    .app-workspace-link.router-link-active {
+      color: rgba(255, 255, 255, 1) !important;
+      border: 2px solid  rgba(255, 255, 255, .8) !important;
+      padding: 3px;
+
+      .app-workspace-link-inner {
+        opacity: 1 !important;
+      }
+    }
+  }
+}
