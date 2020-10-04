@@ -1,0 +1,163 @@
+@import '~@angular/material/theming';
+
+@mixin components-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  // Material Cards
+
+  .mat-card:not([class*='mat-elevation-z']) {
+    background-color: mat-color($background, card) !important;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
+    transition: background-color .2s ease-in, color .2s ease-in;
+  }
+
+  .mat-card:not([class*='selected']):hover {
+    background-color: mat-color($background, hover) !important;
+  }
+
+  .mat-card.flagged:not([class*='mat-elevation-z']):hover {
+    background-color: mix(mat-color($warn), mat-color($background, board-group), 24%) !important;
+  }
+
+  // Custom Scrollbars
+
+  .custom-scroll::-webkit-scrollbar {
+    width: 18px;
+    height: 18px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background: mat-color($foreground, text, .2);
+    border-radius: 10px;
+    background-clip: padding-box;
+  }
+
+  // Modal Backdrops
+
+  .cdk-overlay-dark-backdrop {
+    background-color: darken(mat-color($primary, .5), 42);
+  }
+
+  // Form Fileds
+
+  .mat-form-field-underline {
+    display: none;
+  }
+
+  .mat-form-field-appearance-fill {
+    .mat-form-field-flex {
+      border-radius: 4px !important;
+    }
+
+
+    .mat-form-field-infix {
+      padding: .75em 0 !important;
+    }
+  }
+
+  .mat-form-field-appearance-fill.no-floating-label {
+    .mat-form-field-infix {
+      border-top: 0 !important;
+    }
+  }
+
+
+  // Mat Menus
+
+  .mat-menu-content {
+    small {
+      font-weight: 500;
+      letter-spacing: .125px;
+      font-size: 12px;
+      opacity: .6;
+      padding: 0 16px;
+      line-height: 24px;
+      height: 24px;
+    }
+  }
+
+  // Scroll Shadows
+
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .scroll-shadow-left {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    width: 12px;
+    height: calc(100% - 198px);
+    box-shadow: inset 6px 0 6px 0 rgba(0, 0, 0, .06) !important;
+    animation: fadein .4s;
+    border-radius: 4px;
+    z-index: 32;
+  }
+
+  .scroll-shadow-right {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    right: 32px;
+    width: 12px;
+    height: calc(100% - 198px);
+    box-shadow: inset -6px 0 6px 0 rgba(0, 0, 0, .06) !important;
+    animation: fadein .4s;
+    border-radius: 4px;
+    z-index: 32;
+  }
+
+  .scroll-shadow-top {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    left: 9px;
+    width: 87%;
+    height: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, -.02);
+    top: 41px;
+    box-shadow: 0 7px 4px -1px rgba(0, 0, 0, .1) !important;
+    animation: fadein .8s;
+    z-index: 32;
+  }
+
+  .scroll-shadow-bottom {
+    transition: opacity 1s ease-in-out;
+    display: block;
+    position: absolute;
+    right: 18px;
+    width: 90%;
+    height: 0;
+    bottom: 0;
+    box-shadow: 0 0 6px 6px rgba(0, 0, 0, .1) !important;
+    animation: fadein .8s;
+    border-radius: 4px;
+    z-index: 32;
+  }
+
+  // Form Seperator
+
+  .form-seperator {
+    border-bottom: 2px solid mat-color($background, border);
+    margin: 2rem 0;
+  }
+
+  // Error Message
+
+  .error-message {
+    margin: .4rem 0 .8rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: mat-color($warn);
+  }
+}

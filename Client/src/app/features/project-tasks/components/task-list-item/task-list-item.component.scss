@@ -1,0 +1,45 @@
+.task-item {
+  cursor: pointer;
+  transition: background-color .2s ease-in-out;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  overflow: hidden;
+
+  .task-action {
+    flex: 0 0 40px;
+  }
+
+  .task-checkbox {
+    flex: 0 0 32px;
+  }
+
+  .task-scope-id-col {
+    flex: 0 0 100px;
+  }
+
+  .task-scope-id {
+    border-radius: 4px;
+    padding: .2rem .4rem;
+    font-size: 14px;
+    display: inline;
+  }
+
+  .title {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  .flag,
+  .task-complete {
+    flex: 0 0 32px;
+    font-size: 1.2rem;
+  }
+
+  app-avatar {
+    flex: 0 0 38px;
+  }
+}

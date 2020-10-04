@@ -1,0 +1,37 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .page-progress {
+    flex: 0 0 .8rem;
+  }
+
+  .full-height {
+    height: calc(100vh - 56px);
+  }
+
+  .page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .page-vertical-padding {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .page-margin-bottom {
+    margin-bottom: 20vh;
+  }
+}
+
+.page-container.center-page {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1200px;
+}
