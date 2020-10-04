@@ -1,0 +1,28 @@
+{
+  "files.exclude": {
+    "**/*.csproj.user": true,
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.idea": true,
+    "**/.sonarlint": true,
+    "**/.vs": true,
+    "**/StyleCop.Cache": true,
+    "**/bin": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/pgdata": true,
+    "**/obj": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/bazel-out/**": true,
+    "**/dist/**": true,
+    "**/node_modules/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true
+  },
+}
