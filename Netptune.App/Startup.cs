@@ -72,7 +72,7 @@ namespace Netptune.App
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
 
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join("..", "dist"));
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "dist");
 
             ConfigureDatabase(services);
         }
