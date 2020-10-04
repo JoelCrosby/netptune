@@ -176,6 +176,13 @@ namespace Netptune.Services
             return await TaskRepository.GetTaskViewModel(result.Id);
         }
 
+        public async Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request)
+        {
+            var taskIds = await TaskRepository.GetTaskIdsInBoard(request.BoardId);
+
+            return ClientResponse.Success();
+        }
+
         public async Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug)
         {
             var tasks = await TaskRepository.GetExportTasksAsync(workspaceSlug);

@@ -28,6 +28,8 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
+        Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request);
+
         Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug);
     }
 }

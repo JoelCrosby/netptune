@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Requests
+namespace Netptune.Core.Requests
 {
     public class MoveTaskInGroupRequest
     {
