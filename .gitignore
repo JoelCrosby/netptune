@@ -239,3 +239,6 @@ _Pvt_Extensions
 
 # Intelij
 .idea/
+
+# PostgreSQL Data
+pgdata/
