@@ -1,0 +1,17 @@
+<div class="board-group-users">
+
+  <div
+    class="board-group-user"
+    *ngFor="let user of users$ | async; trackBy: trackByUsers"
+    [class.selected]="user.selected"
+  >
+    <app-avatar
+      [name]="user.displayName"
+      [imageUrl]="user.pictureUrl"
+      [borderRadius]="user.pictureUrl ? 0 : '50%'"
+      (click)="onUserClicked(user)"
+    >
+    </app-avatar>
+  </div>
+
+</div>

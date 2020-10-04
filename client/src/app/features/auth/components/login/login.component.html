@@ -1,0 +1,100 @@
+<div class="auth-page-container">
+
+  <form
+    [formGroup]="loginGroup"
+    (ngSubmit)="login()"
+  >
+
+    <div class="auth-progress-bar">
+      <mat-progress-bar
+        mode="indeterminate"
+        *ngIf="authLoading$ | async"
+      ></mat-progress-bar>
+    </div>
+
+    <img
+      src="assets/apple-touch-icon.png"
+      alt="Netptune Logo"
+      width="72"
+      height="72"
+    >
+
+    <h3 class="auth-title">
+      Sign in to continue
+    </h3>
+
+    <div class="auth-error">
+      <div class="auth-error-text" *ngIf="showLoginError$ | async">
+        Username or Password was incorrect
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        id="email"
+        placeholder="Enter Email Address"
+        name="email"
+        formControlName="email"
+        autocomplete="username"
+      >
+      <mat-error *ngIf="!email.hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        id="password"
+        placeholder="Enter Password"
+        [type]="hidePassword ? 'password' : 'text'"
+        name="current-password"
+        formControlName="password"
+        autocomplete="current-password"
+      >
+      <mat-icon
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        class="cursor-pointer"
+      >
+        {{ hidePassword ? 'visibility_off' : 'visibility' }}
+      </mat-icon>
+    </mat-form-field>
+
+
+    <div class="button-container">
+      <a
+        mat-button
+        color="primary"
+        type="button"
+        [routerLink]="['/auth/register']"
+      >
+        Create Account
+      </a>
+
+      <button
+        mat-stroked-button
+        color="primary"
+        type="submit"
+      >
+        Sign in
+      </button>
+
+    </div>
+
+    <div class="button-container auth-footer">
+      <a
+        mat-button
+        color="primary"
+        [routerLink]="['/auth/request-password-reset']"
+      >
+        Forgot Password?
+      </a>
+    </div>
+
+  </form>
+</div>

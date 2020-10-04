@@ -1,0 +1,36 @@
+.inline-edit {
+  width: 100%;
+  padding-bottom: 1.34375em;
+  display: flex;
+
+  .inline-edit-label {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    padding: 12px;
+    border-radius: 4px;
+    transition: background-color .2s ease-in-out;
+  }
+
+  .inline-edit-label:hover {
+    background-color: rgba(0, 0, 0, .04);
+  }
+
+  .inline-edit-input {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    padding: 12px;
+    color: inherit;
+    line-height: 1.5;
+    width: 100%;
+    font: inherit;
+    border: 0;
+    background-color: transparent;
+    border-radius: 4px;
+    flex: 1;
+  }
+}

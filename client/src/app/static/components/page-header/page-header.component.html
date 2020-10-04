@@ -1,0 +1,70 @@
+<header class="page-header">
+
+
+
+  <div class="header-top-row">
+    <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
+      <button mat-icon-button color="accent" aria-label="Open Menu" (click)="onOpenMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
+    <div class="header-top-row-left">
+
+      <h1 class="page-header-title">
+        {{ title }}
+      </h1>
+
+      <div class="header-tool-bar">
+        <ng-content></ng-content>
+      </div>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        *ngFor="let action of secondaryActions"
+        matRipple
+        class="header-secondary-action"
+        (click)="action.click()"
+      >
+        {{ action.label }}
+      </button>
+
+      <button
+        *ngIf="overflowActions.length"
+        matRipple
+        class="header-menu-action"
+        [matMenuTriggerFor]="overflowMenu"
+      >
+        <mat-icon>
+          more_horiz
+        </mat-icon>
+      </button>
+
+      <mat-menu #overflowMenu="matMenu" xPosition="before">
+        <ng-template matMenuContent>
+          <button
+            mat-menu-item
+            *ngFor="let action of overflowActions"
+            (click)="action.click()"
+          >
+          <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
+            {{ action.icon || 'more_horiz'  }}
+          </mat-icon>
+          <span>{{ action.label }}</span>
+          </button>
+        </ng-template>
+      </mat-menu>
+
+      <button
+        matRipple
+        class="header-primary-action"
+        (click)="actionClick.emit()"
+        *ngIf="actionTitle"
+      >
+        {{ actionTitle }}
+      </button>
+    </div>
+  </div>
+</header>

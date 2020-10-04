@@ -1,0 +1,22 @@
+.indented {
+  margin-top: 2rem;
+  margin-left: 2rem;
+  display: block;
+}
+
+.message-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  mat-icon {
+    margin: .4rem auto;
+    font-size: 4rem;
+    height: 4rem;
+    width: 4rem;
+  }
+}
+
+.no-margin {
+  margin: 0;
+}

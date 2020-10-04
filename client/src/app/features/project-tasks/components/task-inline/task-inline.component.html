@@ -1,0 +1,32 @@
+<div
+  class="task-inline-container"
+  [class.edit-mode]="editActive"
+  #taskInlineContainer
+>
+
+  <ng-container *ngIf="!editActive; else elseTemplate">
+    <button mat-button disableRipple="true" class="new-task-button" (click)="addTaskClicked()">
+      <mat-icon>add</mat-icon>
+      <span>
+        Add Task
+      </span>
+    </button>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div class="inline-task-form" #taskInlineForm>
+      <mat-icon>drag_indicator</mat-icon>
+      <mat-checkbox color="primary" disabled></mat-checkbox>
+      <form [formGroup]="taskGroup" class="task-form" (ngSubmit)="onSubmit()">
+        <input
+          #taskInput
+          matInput
+          formControlName="taskName"
+          class="inline-task-input"
+          placeholder="What do you need to get done?"
+        >
+      </form>
+    </div>
+  </ng-template>
+
+</div>

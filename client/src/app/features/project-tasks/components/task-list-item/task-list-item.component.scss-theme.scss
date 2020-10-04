@@ -1,0 +1,39 @@
+@import '~@angular/material/theming';
+
+@mixin task-list-item-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .task-item {
+    background-color: mat-color($background, card);
+
+    .task-scope-id {
+      background-color: mat-color($foreground, text, .1);
+    }
+
+    .drag {
+      color: rgba(mat-color($foreground, icon), .3);
+    }
+  }
+
+  .task-item:hover {
+    background-color: darken(mat-color($background, card), 2);
+  }
+
+  .mat-checkbox-frame {
+    border-color: rgba(mat-color($foreground, icon), .3);
+  }
+
+  .task-item-selected {
+    background-color: mat-color($primary, 400, .1);
+  }
+
+  .project-chip {
+    color: mat-color($foreground, text, .7);
+    background-color: mat-color($foreground, text, .06);
+  }
+}

@@ -1,0 +1,79 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.app-toolbar {
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.app-logo {
+  color: rgba(255, 255, 255, .6) !important;
+  height: 63px !important;
+  text-transform: uppercase;
+  letter-spacing: .4rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-top-left-radius: 12rem;
+  border-bottom-left-radius: 12rem;
+  overflow: hidden;
+}
+
+.app-sub-header {
+  color: rgba(255, 255, 255, .4) !important;
+}
+
+h1 .app-name {
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: .4rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, .6) !important;
+}
+
+.nav-title {
+  color: rgba(255, 255, 255, .6) !important;
+  font-weight: 400 !important;
+  font-size: 1.3rem !important;
+  margin: 0;
+}
+
+.app-sidenav-container {
+  flex: 1 0 auto;
+}
+
+.mat-subheader {
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+}
+
+.app-menu-link {
+  color: rgba(255, 255, 255, .6) !important;
+  height: 2.6rem !important;
+  border-top-left-radius: 12rem;
+  border-bottom-left-radius: 12rem;
+  overflow: hidden;
+  margin-bottom: .8rem;
+  transition: all .2s ease-in-out;
+}
+
+.app-sidenav {
+  width: 200px;
+  border: 0 !important;
+}
+
+main {
+  height: 100vh;
+}

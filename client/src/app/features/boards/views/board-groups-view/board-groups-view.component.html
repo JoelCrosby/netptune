@@ -1,0 +1,96 @@
+<input
+  #importTasksInput
+  name="file"
+  type="file"
+  class="import-tasks-input"
+  (change)="handleFileInput($event)"
+>
+
+<app-page-container
+  [marginBottom]="false"
+  [verticalPadding]="false"
+  [fullHeight]="true"
+>
+
+  <app-page-header
+    *ngIf="boardGroupsLoaded$ | async"
+    [title]="selectedBoardName$ | async"
+    [overflowActions]="secondaryActions"
+  >
+    <app-board-group-users></app-board-group-users>
+
+    <div class="board-filter-seperator"></div>
+
+    <app-board-group-tags></app-board-group-tags>
+    <app-board-groups-flagged></app-board-groups-flagged>
+
+    <app-board-groups-selection></app-board-groups-selection>
+
+
+  </app-page-header>
+
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="board-groups-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <div
+      cdkDropList
+      appScrollShadow
+      class="board-groups custom-scroll"
+      *ngIf="groups$ | async as groups"
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListData]="groups"
+    >
+
+      <app-board-group
+        cdkDrag
+        class="board-group"
+        *ngFor="let group of groups; trackBy:trackBoardGroup"
+        [cdkDragData]="group"
+        [group]="group"
+        [siblingIds]="getsiblingIds(group, groups)"
+        [dragListId]="group.id.toString()"
+      >
+        <span
+          class="board-group-header"
+          cdkDragHandle
+        >
+          <div class="title">
+
+            <mat-icon
+              *ngIf="group.type === 2"
+              class="task-complete done-group"
+              matTooltip="Tasks moved into this group will be marked as Done"
+            >
+              done
+            </mat-icon>
+
+            <app-inline-edit-input
+              class="title-input"
+              [value]="group.name"
+              (submitted)="onGroupNameSubmitted($event, group)"
+            >
+            </app-inline-edit-input>
+
+            <span>{{ group.tasks.length }}</span>
+          </div>
+          <button
+            mat-icon-button
+            class="delete-board-group-btn"
+            (click)="onDeleteGroupClicked(group)"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </span>
+      </app-board-group>
+
+      <app-create-board-group class="board-group"></app-create-board-group>
+
+    </div>
+  </ng-template>
+
+</app-page-container>

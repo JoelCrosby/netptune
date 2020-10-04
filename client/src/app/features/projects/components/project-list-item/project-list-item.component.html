@@ -1,0 +1,8 @@
+<app-card-list-item
+  [title]="project.name"
+  [description]="project.description"
+  [subText]="project.repositoryUrl"
+  [actions]="actions$ | async"
+  (delete)="onDeleteClicked()"
+>
+</app-card-list-item>

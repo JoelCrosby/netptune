@@ -1,0 +1,11 @@
+<app-card-list>
+
+  <app-workspace-list-item
+    *ngFor="let workspace of workspaces$ | async; let i = index; trackBy: trackById"
+    [workspace]="workspace"
+  >
+  </app-workspace-list-item>
+
+  <app-create-workspace-list-item></app-create-workspace-list-item>
+
+</app-card-list>

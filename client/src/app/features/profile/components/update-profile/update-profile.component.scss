@@ -1,0 +1,64 @@
+mat-form-field {
+  max-width: 480px;
+  width: 100%;
+  display: block;
+  margin-bottom: .8rem;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  .column {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .column-fill {
+    width: 100%;
+  }
+}
+
+.profile-picture {
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.profile-image {
+  display: flex;
+  flex-direction: column;
+  height: 260px;
+  width: 260px;
+  align-items: center;
+  margin: 1.4rem auto;
+
+  img {
+    height: 260px;
+    width: 260px;
+  }
+}
+
+.profile-picture-btn {
+  margin: 1.4rem auto;
+}
+
+@media only screen and (max-width: 600px) {
+  mat-form-field {
+    max-width: initial;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1036px) {
+  form {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+  }
+
+  .column-fill {
+    max-width: 480px;
+    margin-bottom: 4rem;
+  }
+}
