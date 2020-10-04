@@ -14,11 +14,6 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
             base.Configure(builder);
 
             builder
-                .Property(entity => entity.Version)
-                .IsConcurrencyToken()
-                .ValueGeneratedOnAddOrUpdate();
-
-            builder
                 .Property(entity => entity.CreatedAt)
                 .HasDefaultValueSql("NOW()");
 

@@ -9,8 +9,6 @@ namespace Netptune.Core.BaseEntities
     {
         public bool IsDeleted { get; set; }
 
-        public byte[] Version { get; set; }
-
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
