@@ -32,6 +32,12 @@ namespace Netptune.Entities.EntityMaps
                 .IsRequired();
 
             builder
+                .HasMany(board => board.BoardGroups)
+                .WithOne(group => group.Board)
+                .HasForeignKey(group => group.BoardId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasOne(board => board.Project)
                 .WithMany(project => project.ProjectBoards)
                 .HasForeignKey(board => board.ProjectId)
