@@ -169,6 +169,16 @@ namespace Netptune.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)
+        {
+            var board = await Context.Boards
+                .Include(entity => entity.BoardGroups)
+                .ThenInclude(entity => entity.Tasks)
+                .FirstOrDefaultAsync(entity => !entity.IsDeleted && entity.Identifier == boardIdentifier);
+
+            return board?.BoardGroups.SelectMany(entity => entity.Tasks).Select(entity => entity.Id).ToList();
+        }
+
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
         {
             var tasks = await Entities

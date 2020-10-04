@@ -24,5 +24,7 @@ namespace Netptune.Core.Repositories
         Task<int?> GetNextScopeId(int projectId, int increment = 0);
 
         Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug);
+
+        Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
     }
 }

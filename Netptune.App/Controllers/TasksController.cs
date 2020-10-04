@@ -130,18 +130,30 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Tasks/MoveTaskInGroup
         // POST: api/Tasks/move-task-in-group
         [HttpPost]
-        [Route("MoveTaskInGroupRequest")]
         [Route("move-task-in-group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> PostTask([FromBody] MoveTaskInGroupRequest request)
         public async Task<IActionResult> MoveTaskInGroup([FromBody] MoveTaskInGroupRequest request)
         {
             var result = await TaskService.MoveTaskInBoardGroup(request);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // POST: api/Tasks/move-tasks-to-group
+        [HttpPost]
+        [Route("move-tasks-to-group")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> MoveTasksToGroup([FromBody] MoveTasksToGroupRequest request)
+        {
+            var result = await TaskService.MoveTasksToGroup(request);
 
             if (result is null) return NotFound();
 
