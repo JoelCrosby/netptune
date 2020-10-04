@@ -3,7 +3,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Messaging;
-using Netptune.Core.Models.Messaging;
 
 using RazorLight;
 
@@ -11,11 +10,11 @@ namespace Netptune.Messaging
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddSendGridEmailService(this IServiceCollection services, Action<EmailOptions> action)
+        public static void AddSendGridEmailService(this IServiceCollection services, Action<SendGridEmailOptions> action)
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
 
-            var options = new EmailOptions();
+            var options = new SendGridEmailOptions();
             action(options);
 
             services.Configure(action);

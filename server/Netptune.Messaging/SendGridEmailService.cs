@@ -16,25 +16,17 @@ namespace Netptune.Messaging
     public class SendGridEmailService : IEmailService
     {
         private readonly IEmailRenderService EmailRenderer;
-        private readonly EmailOptions Options;
-        private readonly string SendGridAPIKey;
+        private readonly SendGridEmailOptions Options;
 
-        public SendGridEmailService(IOptionsMonitor<EmailOptions> options, IEmailRenderService emailRenderer)
+        public SendGridEmailService(IOptionsMonitor<SendGridEmailOptions> options, IEmailRenderService emailRenderer)
         {
             EmailRenderer = emailRenderer;
             Options = options.CurrentValue;
-
-            SendGridAPIKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
-
-            if (string.IsNullOrEmpty(SendGridAPIKey))
-            {
-                throw new Exception("Unable to get API key for SendGrid. Environment variable SEND_GRID_API_KEY does not exist.");
-            }
         }
 
         public async Task Send(SendEmailModel model)
         {
-            var client = new SendGridClient(SendGridAPIKey);
+            var client = new SendGridClient(Options.SendGridApiKey);
 
             var subject = model.Subject;
 
@@ -56,7 +48,7 @@ namespace Netptune.Messaging
 
         public async Task Send(IEnumerable<SendEmailModel> models)
         {
-            var client = new SendGridClient(SendGridAPIKey);
+            var client = new SendGridClient(Options.SendGridApiKey);
 
             var modelList = models.ToList();
 
