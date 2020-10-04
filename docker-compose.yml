@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  netptune_db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: netptune
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  netptune:
+    image: joelcrosby/netptune:0.0.1
+    environment:
+      ASPNETCORE_ENVIRONMENT: 'docker'
+    ports:
+      - '8000:80'
+    depends_on:
+      - netptune_db
