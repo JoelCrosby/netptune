@@ -20,4 +20,4 @@ jobs:
 
     - name: Build Client App Project
       run: |
-        dotnet publish Netptune.App/Netptune.App.csproj -c Release
+        dotnet publish server/Netptune.App/Netptune.App.csproj -c Release
