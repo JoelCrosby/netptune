@@ -39,6 +39,46 @@ namespace Netptune.Services
             return Boards.GetAsync(id, true);
         }
 
+        public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
+        {
+            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier);
+
+            if (!nullableBoardId.HasValue) return null;
+
+            var boardId = nullableBoardId.Value;
+
+            var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId);
+            var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
+
+            var includeUserFilter = filter?.Users?.Any() ?? false;
+            var includeTagFilter = filter?.Tags?.Any() ?? false;
+            var includeFlaggedFilter = filter?.Flagged ?? false;
+
+            foreach (var group in groups)
+            {
+                group.Tasks = group.Tasks
+                    .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
+                    .Where(task => !includeFlaggedFilter || task.IsFlagged)
+                    .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
+                    .ToList();
+            }
+
+            var userIds = groups
+                .SelectMany(group => group.Tasks)
+                .Select(task => task.AssigneeId)
+                .Distinct();
+
+            var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
+            var users = userEntities.Select(user => user.ToViewModel());
+
+            return new BoardView
+            {
+                Groups = groups,
+                Board = board,
+                Users = users,
+            };
+        }
+
         public async Task<ClientResponse<BoardViewModel>> UpdateBoard(Board board)
         {
             var result = await Boards.GetAsync(board.Id);

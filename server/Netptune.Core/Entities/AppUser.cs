@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Entities
 {
@@ -25,6 +26,22 @@ namespace Netptune.Core.Entities
                 return UserName;
 
             return $"{Firstname} {Lastname}";
+        }
+
+        public UserViewModel ToViewModel()
+        {
+            return new UserViewModel
+            {
+                Id = Id,
+                Firstname = Firstname,
+                Lastname = Lastname,
+                PictureUrl = PictureUrl,
+                DisplayName = DisplayName,
+                Email = Email,
+                UserName = UserName,
+                LastLoginTime = LastLoginTime,
+                RegistrationDate = RegistrationDate,
+            };
         }
 
         #region NavigationProperties

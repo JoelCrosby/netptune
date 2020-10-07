@@ -3,12 +3,13 @@ import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { AppUser } from '@core/models/appuser';
+import { BoardViewGroup } from '@core/models/view-models/board-view';
 
-export function sortBySortOrder(a: BoardGroup, b: BoardGroup): number {
+export function sortBySortOrder(a: BoardViewGroup, b: BoardViewGroup): number {
   return a.sortOrder - b.sortOrder;
 }
 
-export const adapter = createEntityAdapter<BoardGroup>({
+export const adapter = createEntityAdapter<BoardViewGroup>({
   sortComparer: sortBySortOrder,
 });
 
@@ -23,7 +24,7 @@ export const initialState: BoardGroupsState = adapter.getInitialState({
   selectedTasks: [],
 });
 
-export interface BoardGroupsState extends AsyncEntityState<BoardGroup> {
+export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   board?: BoardViewModel;
   users: AppUser[];
   selectedUsers: AppUser[];

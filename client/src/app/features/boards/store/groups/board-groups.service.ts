@@ -7,6 +7,7 @@ import { environment } from '@env/environment';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { Params } from '@angular/router';
 import { ClientResponse } from '@core/models/client-response';
+import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 
 @Injectable()
 export class BoardGroupsService {
@@ -15,6 +16,15 @@ export class BoardGroupsService {
   get(boardId: string, params: Params) {
     return this.http.get<BoardGroupsViewModel>(
       environment.apiEndpoint + `api/boardgroups/board/${boardId}`,
+      {
+        params,
+      }
+    );
+  }
+
+  getOptimsed(boardId: string, params: Params) {
+    return this.http.get<BoardView>(
+      environment.apiEndpoint + `api/boards/view/${boardId}`,
       {
         params,
       }
@@ -35,13 +45,13 @@ export class BoardGroupsService {
     );
   }
 
-  delete(boardGorup: BoardGroup) {
+  delete(boardGorupId: number) {
     return this.http.delete<ClientResponse>(
-      environment.apiEndpoint + `api/boardgroups/${boardGorup.id}`
+      environment.apiEndpoint + `api/boardgroups/${boardGorupId}`
     );
   }
 
-  put(boardGorup: BoardGroup) {
+  put(boardGorup: BoardGroup | BoardViewGroup) {
     return this.http.put<BoardGroup>(
       environment.apiEndpoint + 'api/boardgroups',
       boardGorup

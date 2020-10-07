@@ -178,7 +178,7 @@ namespace Netptune.Services
 
         public async Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request)
         {
-            var taskIds = await TaskRepository.GetTaskIdsInBoard(request.BoardId);
+            await TaskRepository.GetTaskIdsInBoard(request.BoardId);
 
             return ClientResponse.Success();
         }

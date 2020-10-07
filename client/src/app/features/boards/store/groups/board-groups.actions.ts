@@ -1,13 +1,13 @@
-import { BoardGroup } from '@core/models/board-group';
-import { createAction, props } from '@ngrx/store';
-import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
-import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
-import { AddProjectTaskRequest } from '@core/models/project-task';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { AppUser } from '@core/models/appuser';
+import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { AddProjectTaskRequest } from '@core/models/project-task';
+import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -18,7 +18,7 @@ export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
 export const loadBoardGroupsSuccess = createAction(
   '[BoardGroups] Load Board Groups Success ',
   props<{
-    boardGroups: BoardGroupsViewModel;
+    boardGroups: BoardView;
     selectedIds: string[];
     onlyFlagged?: boolean;
   }>()
@@ -57,7 +57,7 @@ export const selectBoardGroup = createAction(
 
 export const deleteBoardGroup = createAction(
   '[BoardGroups] Delete Board Group',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroup: BoardViewGroup }>()
 );
 
 export const deleteBoardGroupSuccess = createAction(
@@ -74,7 +74,7 @@ export const deleteBoardGroupFail = createAction(
 
 export const editBoardGroup = createAction(
   '[BoardGroups] Edit Board Group',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroup: BoardViewGroup }>()
 );
 
 export const editBoardGroupSuccess = createAction(

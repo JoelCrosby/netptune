@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Netptune.Core.ViewModels.Users
 {
@@ -18,8 +18,8 @@ namespace Netptune.Core.ViewModels.Users
 
         public string UserName { get; set; }
 
-        public DateTimeOffset LastLoginTime { get; set; }
+        public DateTime? LastLoginTime { get; set; }
 
-        public DateTimeOffset RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
     }
 }

@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using AutoMapper;
 
 using MoreLinq;
 
@@ -15,7 +12,6 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Services
 {
@@ -23,15 +19,13 @@ namespace Netptune.Services
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
-        private readonly IMapper Mapper;
         private readonly IBoardGroupRepository BoardGroups;
         private readonly IBoardRepository Boards;
 
-        public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IMapper mapper)
+        public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
             IdentityService = identityService;
-            Mapper = mapper;
             Boards = unitOfWork.Boards;
             BoardGroups = unitOfWork.BoardGroups;
         }
@@ -67,14 +61,13 @@ namespace Netptune.Services
 
             var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
 
-            var userEntities = groups
+            var users = groups
                 .SelectMany(group => group.TasksInGroups)
                 .Select(task => task.ProjectTask)
                 .Where(task => !task.IsDeleted)
                 .Select(task => task.Assignee)
-                .DistinctBy(user => user.UserName);
-
-            var users = Mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(userEntities);
+                .DistinctBy(user => user.UserName)
+                .Select(user => user.ToViewModel());
 
             return new BoardGroupsViewModel
             {

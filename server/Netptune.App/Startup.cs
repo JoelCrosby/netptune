@@ -18,8 +18,8 @@ using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
+
 using Polly;
-using Serilog;
 
 using Serilog;
 

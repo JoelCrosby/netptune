@@ -42,7 +42,7 @@ export class BoardGroupsEffects {
         this.route.queryParams
       ),
       switchMap(([_, id, paramMap, params]) =>
-        this.boardGroupsService.get(id, params).pipe(
+        this.boardGroupsService.getOptimsed(id, params).pipe(
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,
@@ -131,7 +131,7 @@ export class BoardGroupsEffects {
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.boardGroupsService.delete(action.boardGroup).pipe(
+            return this.boardGroupsService.delete(action.boardGroup.id).pipe(
               tap(() => this.snackbar.open('Board Group Deleted')),
               map(() =>
                 actions.deleteBoardGroupSuccess({

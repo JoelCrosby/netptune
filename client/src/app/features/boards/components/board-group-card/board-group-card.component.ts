@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { Selected } from '@core/models/selected';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
 
@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupCardComponent {
-  @Input() task: Selected<TaskViewModel>;
+  @Input() task: Selected<BoardViewTask>;
   @Input() groupId: number;
 
   constructor(private dialog: MatDialog, private store: Store) {}
