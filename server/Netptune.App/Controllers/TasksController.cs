@@ -57,7 +57,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(TaskViewModel))]
         public async Task<IActionResult> GetTask([FromQuery] string systemId, [FromQuery] string workspace)
         {
-            var result = await TaskService.GetTask(systemId, workspace);
+            var result = await TaskService.GetTaskDetail(systemId, workspace);
 
             if (result is null) return NotFound();
 

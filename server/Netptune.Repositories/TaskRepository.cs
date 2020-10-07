@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Internal;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
@@ -72,20 +72,30 @@ namespace Netptune.Repositories
 
             var projectKey = parts.First();
 
-            var workspace = await Context.Workspaces
+            var workspaceIds = await Context.Workspaces
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Slug == workspaceSlug);
+                .Where(x => x.Slug == workspaceSlug)
+                .Select(x => x.Id)
+                .Take(1)
+                .ToListAsync();
 
-            if (workspace is null) return null;
+            if (!workspaceIds.Any()) return null;
 
-            var project = await Context.Projects
+            var workspaceId = workspaceIds.FirstOrDefault();
+
+            var projectIds = await Context.Projects
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Key == projectKey && x.WorkspaceId == workspace.Id);
+                .Where(x => x.Key == projectKey && x.WorkspaceId == workspaceId)
+                .Select(x => x.Id)
+                .Take(1)
+                .ToListAsync();
 
-            if (project is null) return null;
+            if (!projectIds.Any()) return null;
+
+            var projectId = projectIds.FirstOrDefault();
 
             var queryable = Entities
-                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspace.Id && x.ProjectId == project.Id)
+                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
                 .OrderBy(x => x.SortOrder)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
