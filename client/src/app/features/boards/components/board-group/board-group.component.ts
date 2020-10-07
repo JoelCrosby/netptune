@@ -8,19 +8,18 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { BoardGroup } from '@core/models/board-group';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { BoardViewGroup, BoardViewTask } from '@core/models/view-models/board-view';
 import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
   combineLatest,
   fromEvent,
   Observable,
-  Subject,
+  Subject
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -32,7 +31,7 @@ import { map, takeUntil } from 'rxjs/operators';
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId: string;
-  @Input() group: BoardGroup;
+  @Input() group: BoardViewGroup;
   @Input() siblingIds: string[];
 
   @ViewChild('container') container: ElementRef;
@@ -100,7 +99,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(BoardGroupActions.clearInlineActive());
   }
 
-  drop(event: CdkDragDrop<TaskViewModel[]>) {
+  drop(event: CdkDragDrop<BoardViewTask[]>) {
     const { data: task } = event.item;
 
     this.store.dispatch(
@@ -132,7 +131,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  trackGroupTask(_: number, task: TaskViewModel) {
+  trackGroupTask(_: number, task: BoardViewTask) {
     return task?.id;
   }
 }

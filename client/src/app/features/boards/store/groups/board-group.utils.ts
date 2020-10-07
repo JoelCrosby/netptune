@@ -1,12 +1,12 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BoardGroup } from '@core/models/board-group';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { BoardViewGroup, BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
+import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Update } from '@ngrx/entity';
-import { adapter, BoardGroupsState } from './board-groups.model';
 import { cloneDeep } from 'lodash-es';
+import { adapter, BoardGroupsState } from './board-groups.model';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
@@ -57,8 +57,8 @@ export const moveTaskInBoardGroup = (
   return stateClone;
 };
 
-export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
-  const getGroupWithTask = (): BoardGroup | undefined => {
+export const updateTask = (state: BoardGroupsState, task: BoardViewTask | TaskViewModel) => {
+  const getGroupWithTask = (): BoardViewGroup | undefined => {
     for (const g of Object.values(state.entities)) {
       if (g?.tasks.findIndex((x) => x.id === task.id) !== -1) {
         return g;
@@ -78,11 +78,11 @@ export const updateTask = (state: BoardGroupsState, task: TaskViewModel) => {
     }
 
     return {
-      ...task,
+      ...task as BoardViewTask,
     };
   });
 
-  const update: Update<BoardGroup> = {
+  const update: Update<BoardViewGroup> = {
     id: group.id,
     changes: {
       ...group,

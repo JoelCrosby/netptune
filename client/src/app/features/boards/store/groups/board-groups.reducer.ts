@@ -1,12 +1,10 @@
 import { hubAction } from '@core/hubs/hub.utils';
-import { BoardGroup } from '@core/models/board-group';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
-import { Update } from '@ngrx/entity';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
   getBulkTaskSelection,
   moveTaskInBoardGroup,
-  updateTask,
+  updateTask
 } from './board-group.utils';
 import * as actions from './board-groups.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
@@ -49,12 +47,6 @@ const reducer = createReducer(
     ...state,
     loadingError: error,
   })),
-  on(actions.createBoardGroupSuccess, (state, { boardGroup }) =>
-    adapter.addOne(boardGroup, {
-      ...state,
-      loadingCreate: false,
-    })
-  ),
 
   // Select Board Group
 
@@ -62,17 +54,6 @@ const reducer = createReducer(
     ...state,
     currentBoardGroup: boardGroup,
   })),
-
-  // Edit Board Group
-
-  on(actions.editBoardGroup, (state, { boardGroup }) => {
-    const update: Update<BoardGroup> = {
-      id: boardGroup.id,
-      changes: boardGroup,
-    };
-
-    return adapter.updateOne(update, state);
-  }),
 
   // Delete Board Group
 

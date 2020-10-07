@@ -1,10 +1,10 @@
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { AppState } from '@core/core.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { adapter, BoardGroupsState } from './board-groups.model';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
-import { BoardGroup } from '@core/models/board-group';
+import { BoardViewGroup } from '@core/models/view-models/board-view';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { adapter, BoardGroupsState } from './board-groups.model';
 
 export interface State extends AppState {
   boardgroups: BoardGroupsState;
@@ -34,7 +34,7 @@ export const selectSelectedTasksCount = createSelector(
 export const selectAllBoardGroupsWithSelection = createSelector(
   selectAllBoardGroups,
   selectSelectedTasks,
-  (state: BoardGroup[], selected: number[]) =>
+  (state: BoardViewGroup[], selected: number[]) =>
     state.map((g) => ({
       ...g,
       tasks: g.tasks.map((t) => ({ ...t, selected: selected.includes(t.id) })),

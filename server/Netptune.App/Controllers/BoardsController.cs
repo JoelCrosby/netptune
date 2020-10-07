@@ -50,6 +50,19 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/boards/view/identifier
+        [HttpGet("view/{identifier}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(BoardView))]
+        public async Task<IActionResult> GetBoardView(string identifier, [FromQuery] BoardGroupsFilter filter)
+        {
+            var result = await BoardService.GetBoardView(identifier, filter);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
         // GET: api/boards/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

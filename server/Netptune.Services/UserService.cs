@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using AutoMapper;
-
 using Flurl;
 
 using Netptune.Core.Entities;
@@ -21,7 +19,6 @@ namespace Netptune.Services
     public class UserService : IUserService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
-        private readonly IMapper Mapper;
         private readonly IEmailService Email;
         private readonly IHostingService Hosting;
         private readonly IUserRepository UserRepository;
@@ -29,12 +26,10 @@ namespace Netptune.Services
 
         public UserService(
             INetptuneUnitOfWork unitOfWork,
-            IMapper mapper,
             IEmailService email,
             IHostingService hosting)
         {
             UnitOfWork = unitOfWork;
-            Mapper = mapper;
             Email = email;
             Hosting = hosting;
             UserRepository = unitOfWork.Users;
@@ -45,18 +40,14 @@ namespace Netptune.Services
         {
             var user = await UserRepository.GetAsync(userId, true);
 
-            if (user is null) return null;
-
-            return MapUser(user);
+            return user?.ToViewModel();
         }
 
         public async Task<UserViewModel> GetByEmail(string email)
         {
             var user = await UserRepository.GetByEmail(email, true);
 
-            if (user is null) return null;
-
-            return MapUser(user);
+            return user?.ToViewModel();
         }
 
         public async Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug)
@@ -157,7 +148,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return MapUser(updatedUser);
+            return updatedUser.ToViewModel();
         }
 
         private Task SendUserInviteEmails(IEnumerable<AppUser> users, Workspace workspace)
@@ -190,14 +181,9 @@ namespace Netptune.Services
             return Email.Send(emailModels);
         }
 
-        private UserViewModel MapUser(AppUser user)
+        private static List<UserViewModel> MapUsers(IEnumerable<AppUser> users)
         {
-            return Mapper.Map<AppUser, UserViewModel>(user);
-        }
-
-        private List<UserViewModel> MapUsers(List<AppUser> users)
-        {
-            return Mapper.Map<List<AppUser>, List<UserViewModel>>(users);
+            return users.Select(user => user.ToViewModel()).ToList();
         }
     }
 }

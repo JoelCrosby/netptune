@@ -6,13 +6,13 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
-import { BoardGroup } from '@core/models/board-group';
+import { BoardViewGroup } from '@core/models/view-models/board-view';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
@@ -31,7 +31,7 @@ export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('importTasksInput') importTasksInput: ElementRef;
 
-  groups$: Observable<BoardGroup[]>;
+  groups$: Observable<BoardViewGroup[]>;
   selectedBoard$: Observable<Board>;
   selectedBoardName$: Observable<string>;
   loading$: Observable<boolean>;
@@ -104,13 +104,13 @@ export class BoardGroupsViewComponent
     this.hubService.disconnect();
   }
 
-  getsiblingIds(group: BoardGroup, groups: BoardGroup[]): string[] {
+  getsiblingIds(group: BoardViewGroup, groups: BoardViewGroup[]): string[] {
     return groups
       .filter((item) => item.id !== group.id)
       .map((item) => item.id.toString());
   }
 
-  drop(event: CdkDragDrop<BoardGroup[]>) {
+  drop(event: CdkDragDrop<BoardViewGroup[]>) {
     moveItemInArray(
       event.container.data,
       event.previousIndex,
@@ -136,7 +136,7 @@ export class BoardGroupsViewComponent
     this.moveBoardGroup(data, order);
   }
 
-  moveBoardGroup(boardGroup: BoardGroup, sortOrder: number) {
+  moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
     this.store.dispatch(
       GroupActions.editBoardGroup({
         boardGroup: {
@@ -147,18 +147,18 @@ export class BoardGroupsViewComponent
     );
   }
 
-  trackBoardGroup(_: number, group: BoardGroup) {
+  trackBoardGroup(_: number, group: BoardViewGroup) {
     return group?.id;
   }
 
-  onDeleteGroupClicked(boardGroup: BoardGroup) {
+  onDeleteGroupClicked(boardGroup: BoardViewGroup) {
     this.store.dispatch(GroupActions.deleteBoardGroup({ boardGroup }));
   }
 
-  onGroupNameSubmitted(value: Event | string, group: BoardGroup) {
+  onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {
     if (value instanceof Event) return;
 
-    const boardGroup: BoardGroup = {
+    const boardGroup: BoardViewGroup = {
       ...group,
       name: value,
     };

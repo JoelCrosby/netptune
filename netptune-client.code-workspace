@@ -1,7 +1,8 @@
 {
 	"folders": [
 		{
-			"path": "."
+      "name": "Netptune Client",
+			"path": "./client"
 		}
 	],
 	"settings": {

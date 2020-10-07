@@ -14,6 +14,7 @@ import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { AddTagRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
+import { BoardViewTask } from '@core/models/view-models/board-view';
 
 @Injectable({
   providedIn: 'root',
@@ -99,7 +100,7 @@ export class ProjectTasksHubService {
     return this.hub.invoke<TaskViewModel>('Create', groupId, task);
   }
 
-  put(groupId: string, task: ProjectTask) {
+  put(groupId: string, task: ProjectTask | BoardViewTask) {
     return this.hub.invoke<TaskViewModel>('update', groupId, task);
   }
 

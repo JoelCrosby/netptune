@@ -39,6 +39,8 @@ namespace Netptune.Repositories
         {
             var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
 
+            if (entity is null) return null;
+
             var task = await entity.FirstOrDefaultAsync();
 
             return task?.Id;

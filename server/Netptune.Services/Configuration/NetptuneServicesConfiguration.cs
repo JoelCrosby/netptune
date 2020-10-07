@@ -1,10 +1,7 @@
 using System;
 
-using AutoMapper;
-
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Core.MappingProfiles;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Import;
@@ -17,8 +14,6 @@ namespace Netptune.Services.Configuration
         public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
         {
             ConfigureServices(services, action);
-
-            services.AddAutoMapper(typeof(UserMaps));
 
             services.AddTransient<IHostingService, HostingService>();
 

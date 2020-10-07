@@ -1,8 +1,8 @@
-﻿using System.Data;
-
-using Microsoft.Data.SqlClient;
+using System.Data;
 
 using Netptune.Core.Repositories.Common;
+
+using Npgsql;
 
 namespace Netptune.Repositories.Common
 {
@@ -21,7 +21,7 @@ namespace Netptune.Repositories.Common
         /// <returns>Database connection to use with dapper</returns>
         public IDbConnection StartConnection()
         {
-            var connection = new SqlConnection(ConnectionString);
+            var connection = new NpgsqlConnection(ConnectionString);
 
             connection.Open();
 
