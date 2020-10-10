@@ -22,7 +22,7 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Import
 {
-    public class TaskServiceBase : ServiceBase<TaskImportResult>, ITaskImportService
+    public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
@@ -32,7 +32,7 @@ namespace Netptune.Services.Import
             "Tags"
         };
 
-        public TaskServiceBase(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+        public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
             IdentityService = identityService;
