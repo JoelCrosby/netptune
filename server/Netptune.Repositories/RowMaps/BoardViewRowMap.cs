@@ -30,6 +30,8 @@ namespace Netptune.Repositories.RowMaps
 
         public BoardGroupType Board_Group_Type { get; set; }
 
+        public double Board_Group_Sort_Order { get; set; }
+
         public string Firstname { get; set; }
 
         public string Lastname { get; set; }
