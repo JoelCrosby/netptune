@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
+using Netptune.Services.Export;
 using Netptune.Services.Import;
 
 namespace Netptune.Services.Configuration
@@ -27,6 +29,7 @@ namespace Netptune.Services.Configuration
             services.AddTransient<ITagService, TagService>();
 
             services.AddTransient<ITaskImportService, TaskImportService>();
+            services.AddTransient<ITaskExportService, TaskExportService>();
 
             services.AddMemoryCache();
             services.AddTransient<IUserConnectionService, UserConnectionService>();

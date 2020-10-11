@@ -214,8 +214,8 @@ namespace Netptune.Services.Import
                 UpdatedAt = ParseDateTime(row.UpdatedAt),
                 SortOrder = double.Parse(row.SortOrder),
                 Status = ParseStatus(row.Status),
-                AssigneeId = FindUserId(row.AssigneeEmail),
-                OwnerId = FindUserId(row.OwnerEmail),
+                AssigneeId = FindUserId(row.Assignee),
+                OwnerId = FindUserId(row.Owner),
                 ProjectScopeId = initialScopeId + i
             };
         }
@@ -223,7 +223,7 @@ namespace Netptune.Services.Import
         private static List<string> GetEmailAddresses(IEnumerable<TaskImportRow> rows)
         {
             return rows
-                .Select(row => new { row.AssigneeEmail, row.OwnerEmail })
+                .Select(row => new { AssigneeEmail = row.Assignee, OwnerEmail = row.Owner })
                 .Aggregate(new List<string>(), (result, current) =>
                 {
                     if (!string.IsNullOrEmpty(current.OwnerEmail))

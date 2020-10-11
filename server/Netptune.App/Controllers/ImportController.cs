@@ -23,7 +23,7 @@ namespace Netptune.App.Controllers
             TaskImportService = taskImportService;
         }
 
-        // POST: api/tasks/export-workspace
+        // POST: api/import/tasks/export-workspace
         [HttpPost]
         [Route("tasks/{boardId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

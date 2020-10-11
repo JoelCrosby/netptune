@@ -148,35 +148,26 @@ namespace Netptune.Repositories
                     t.CreatedAt,
                     t.UpdatedAt,
                     AssigneeUsername = assignee.UserName,
-                    AssigneePictureUrl = assignee.PictureUrl,
                     OwnerUsername = owner.UserName,
-                    OwnerPictureUrl = owner.PictureUrl,
                     ProjectName = project.Name,
                     Group = g.Name,
-                }).Select(x => new ExportTaskViewModel
-            {
-                Id = x.Id,
-                AssigneeId = x.AssigneeId,
-                OwnerId = x.OwnerId,
-                ProjectScopeId = x.ProjectScopeId,
-                Name = x.Name,
-                Description = x.Description,
-                SystemId = $"{x.Key}-{x.ProjectScopeId}",
-                Status = x.Status.ToString(),
-                IsFlagged = x.IsFlagged,
-                SortOrder = x.SortOrder,
-                ProjectId = x.ProjectId,
-                WorkspaceId = x.WorkspaceId,
-                WorkspaceSlug = x.WorkspaceSlug,
-                CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt,
-                AssigneeUsername = x.AssigneeUsername,
-                AssigneePictureUrl = x.AssigneePictureUrl,
-                OwnerUsername = x.OwnerUsername,
-                OwnerPictureUrl = x.OwnerPictureUrl,
-                ProjectName = x.ProjectName,
-                Group = x.Group,
-            })
+                })
+                .Select(x => new ExportTaskViewModel
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    SystemId = $"{x.Key}-{x.ProjectScopeId}",
+                    Status = x.Status.ToString(),
+                    IsFlagged = x.IsFlagged,
+                    SortOrder = x.SortOrder,
+                    Workspace = x.WorkspaceSlug,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
+                    Assignee = x.AssigneeUsername,
+                    Owner = x.OwnerUsername,
+                    Project = x.ProjectName,
+                    Group = x.Group,
+                })
                 .ToListAsync();
         }
 

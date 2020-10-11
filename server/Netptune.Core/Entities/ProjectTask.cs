@@ -81,26 +81,18 @@ namespace Netptune.Core.Entities
         {
             return new ExportTaskViewModel
             {
-                Id = Id,
-                AssigneeId = Assignee == null ? string.Empty : Assignee.Id,
-                OwnerId = OwnerId,
                 Name = Name,
                 Description = Description,
                 Status = Status.ToString(),
-                ProjectScopeId = ProjectScopeId,
                 SystemId = $"{Project.Key}-{ProjectScopeId}",
                 IsFlagged = IsFlagged,
                 SortOrder = SortOrder,
-                ProjectId = ProjectId,
-                WorkspaceId = WorkspaceId,
-                WorkspaceSlug = Workspace.Slug,
+                Workspace = Workspace.Slug,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
-                AssigneeUsername = Assignee == null ? string.Empty : Assignee.DisplayName,
-                AssigneePictureUrl = Assignee == null ? string.Empty : Assignee.PictureUrl,
-                OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
-                OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
-                ProjectName = Project == null ? string.Empty : Project.Name,
+                Assignee = Assignee == null ? string.Empty : Assignee.Email,
+                Owner = Owner == null ? string.Empty : Owner.Email,
+                Project = Project == null ? string.Empty : Project.Name,
                 Group = ProjectTaskInBoardGroups.FirstOrDefault()?.BoardGroup?.Name,
             };
         }

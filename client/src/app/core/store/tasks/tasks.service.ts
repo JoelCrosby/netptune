@@ -82,7 +82,7 @@ export class ProjectTasksService {
   export(workspaceSlug: string): Observable<FileResponse> {
     return this.http
       .get(
-        environment.apiEndpoint + `api/tasks/export-workspace/${workspaceSlug}`,
+        environment.apiEndpoint + `api/export/tasks/export-workspace/${workspaceSlug}`,
         {
           observe: 'response',
           responseType: 'blob',
