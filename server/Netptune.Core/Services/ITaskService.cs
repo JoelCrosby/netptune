@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Models.Files;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -29,7 +28,5 @@ namespace Netptune.Core.Services
         Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
         Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request);
-
-        Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug);
     }
 }

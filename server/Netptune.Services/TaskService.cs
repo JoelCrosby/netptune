@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Extensions;
-using Netptune.Core.Models.Files;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -181,19 +179,6 @@ namespace Netptune.Services
             await TaskRepository.GetTaskIdsInBoard(request.BoardId);
 
             return ClientResponse.Success();
-        }
-
-        public async Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug)
-        {
-            var tasks = await TaskRepository.GetExportTasksAsync(workspaceSlug);
-            var stream = await tasks.ToCsvStream();
-
-            return new FileResponse
-            {
-                Stream = stream,
-                ContentType = "application/octet-stream",
-                Filename = $"Netptune-Task-Export_{workspaceSlug}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
-            };
         }
 
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)

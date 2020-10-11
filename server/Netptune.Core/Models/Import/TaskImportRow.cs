@@ -16,9 +16,9 @@ namespace Netptune.Core.Models.Import
 
         public string UpdatedAt { get; set; }
 
-        public string AssigneeEmail { get; set; }
+        public string Assignee { get; set; }
 
-        public string OwnerEmail { get; set; }
+        public string Owner { get; set; }
 
         public string Group { get; set; }
 
