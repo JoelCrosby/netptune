@@ -73,6 +73,7 @@ namespace Netptune.Repositories
                      , bg.id               AS board_group_id
                      , bg.name             AS board_group_name
                      , bg.type             AS board_group_type
+                     , bg.sort_order       AS board_group_sort_order
                      , u.id                AS assignee_id
                      , u.firstname
                      , u.lastname
@@ -145,7 +146,7 @@ namespace Netptune.Repositories
                 {
                     Id = row.Board_Group_Id,
                     Name = row.Board_Group_Name,
-                    SortOrder = result.Count,
+                    SortOrder = row.Board_Group_Sort_Order,
                     Type = row.Board_Group_Type,
                     Tasks = row.Task_Name is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
                     {
