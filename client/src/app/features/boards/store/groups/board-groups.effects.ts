@@ -42,7 +42,7 @@ export class BoardGroupsEffects {
         this.route.queryParams
       ),
       switchMap(([_, id, paramMap, params]) =>
-        this.boardGroupsService.getOptimsed(id, params).pipe(
+        this.boardGroupsService.get(id, params).pipe(
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,

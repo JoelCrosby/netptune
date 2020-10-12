@@ -1,8 +1,5 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-
-using MoreLinq;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -11,7 +8,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services
 {
@@ -28,53 +24,6 @@ namespace Netptune.Services
             IdentityService = identityService;
             Boards = unitOfWork.Boards;
             BoardGroups = unitOfWork.BoardGroups;
-        }
-
-        public async Task<BoardGroupsViewModel> GetBoardGroups(string boardIdentifier, BoardGroupsFilter filter = null)
-        {
-            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier);
-
-            if (!nullableBoardId.HasValue) return null;
-
-            var boardId = nullableBoardId.Value;
-            var groups = await BoardGroups.GetBoardGroupsInBoard(boardId, true);
-
-            var includeUserFilter = filter?.Users?.Any() ?? false;
-            var includeTagFilter = filter?.Tags?.Any() ?? false;
-            var includeFlaggedFilter = filter?.Flagged ?? false;
-
-            foreach (var group in groups)
-            {
-                var tasksInGroups = group
-                    .TasksInGroups
-                    .OrderBy(item => item.SortOrder);
-
-                var tasks = tasksInGroups.Select(item => item.ProjectTask)
-                    .Where(task => !task.IsDeleted)
-                    .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
-                    .Where(task => !includeFlaggedFilter || task.IsFlagged)
-                    .Select(task => task.ToViewModel())
-                    .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true));
-
-                group.Tasks.AddRange(tasks);
-            }
-
-            var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
-
-            var users = groups
-                .SelectMany(group => group.TasksInGroups)
-                .Select(task => task.ProjectTask)
-                .Where(task => !task.IsDeleted)
-                .Select(task => task.Assignee)
-                .DistinctBy(user => user.UserName)
-                .Select(user => user.ToViewModel());
-
-            return new BoardGroupsViewModel
-            {
-                Groups = groups,
-                Board = board,
-                Users = users,
-            };
         }
 
         public Task<BoardGroup> GetBoardGroup(int id)
