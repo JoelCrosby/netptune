@@ -1,28 +1,18 @@
-import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BoardGroup } from '@core/models/board-group';
-import { BoardGroupsViewModel } from '@core/models/view-models/board-groups-view-model';
-import { environment } from '@env/environment';
-import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { Params } from '@angular/router';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
+import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
+import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
+import { environment } from '@env/environment';
 
 @Injectable()
 export class BoardGroupsService {
   constructor(private http: HttpClient) {}
 
   get(boardId: string, params: Params) {
-    return this.http.get<BoardGroupsViewModel>(
-      environment.apiEndpoint + `api/boardgroups/board/${boardId}`,
-      {
-        params,
-      }
-    );
-  }
-
-  getOptimsed(boardId: string, params: Params) {
     return this.http.get<BoardView>(
       environment.apiEndpoint + `api/boards/view/${boardId}`,
       {

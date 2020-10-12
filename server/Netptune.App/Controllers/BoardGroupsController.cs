@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -21,19 +20,6 @@ namespace Netptune.Api.Controllers
         public BoardGroupsController(IBoardGroupService boardGroupService)
         {
             BoardGroupService = boardGroupService;
-        }
-
-        // GET: api/boardgroups/board/identifier
-        [HttpGet("board/{identifier}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<BoardGroup>))]
-        public async Task<IActionResult> GetBoardGroups(string identifier, [FromQuery] BoardGroupsFilter filter)
-        {
-            var result = await BoardGroupService.GetBoardGroups(identifier, filter);
-
-            if (result is null) return NotFound();
-
-            return Ok(result);
         }
 
         // GET: api/boardgroups/5

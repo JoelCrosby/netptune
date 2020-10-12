@@ -150,7 +150,7 @@ namespace Netptune.Repositories
                     AssigneeUsername = assignee.UserName,
                     OwnerUsername = owner.UserName,
                     ProjectName = project.Name,
-                    Group = g.Name,
+                    Group = g.Name
                 })
                 .Select(x => new ExportTaskViewModel
                 {

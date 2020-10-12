@@ -25,35 +25,11 @@ namespace Netptune.Repositories
 
         public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
         {
-            var query = Entities
-
+            return Entities
                 .Where(boardGroup => boardGroup.BoardId == boardId)
                 .Where(boardGroup => !boardGroup.IsDeleted)
-
                 .OrderBy(boardGroup => boardGroup.SortOrder)
-
-                .Include(group => group.TasksInGroups)
-                .ThenInclude(relational => relational.ProjectTask)
-                .ThenInclude(task => task.Owner)
-
-                .Include(group => group.TasksInGroups)
-                .ThenInclude(relational => relational.ProjectTask)
-                .ThenInclude(task => task.Assignee)
-
-                .Include(group => group.TasksInGroups)
-                .ThenInclude(relational => relational.ProjectTask)
-                .ThenInclude(task => task.Project)
-
-                .Include(group => group.TasksInGroups)
-                .ThenInclude(relational => relational.ProjectTask)
-                .ThenInclude(task => task.Workspace)
-
-                .Include(group => group.TasksInGroups)
-                .ThenInclude(relational => relational.ProjectTask)
-                .ThenInclude(task => task.ProjectTaskTags)
-                .ThenInclude(taskTag => taskTag.Tag);
-
-            return query.ApplyReadonly(isReadonly);
+                .ApplyReadonly(isReadonly);
         }
 
         public async Task<List<BoardViewGroup>> GetBoardView(int boardId)

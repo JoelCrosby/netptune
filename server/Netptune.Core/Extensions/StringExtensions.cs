@@ -25,8 +25,10 @@ namespace Netptune.Core.Extensions
                 return new List<string>();
             }
 
-            return str.Split(new[] { "\r\n", "\r", "\n" },
-                removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+            var separators = new[] {"\r\n", "\r", "\n"};
+            var options = removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None;
+
+            return str.Split(separators, options);
         }
 
         public static string Capitalize(this string input)
