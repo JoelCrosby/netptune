@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "./server"
 		}
 	],
 	"settings": {
@@ -12,29 +12,14 @@
 			"**/CVS": true,
 			"**/.DS_Store": true,
 			"**/src": true,
-			"**/assets": true,
-			"**/bazel-out/**": true,
 			"**/dist/**": true,
 			"**/node_modules/**": true,
-      ".prettierrc": true,
-      ".prettierignore": true,
-      ".sass-lint.yml": true,
-      "package.json": true,
-      "package-lock.json": true,
-      "tsconfig.json": true,
-      "tsconfig.app.json": true,
-      "tsconfig.base.json": true,
-      "tslint.json": true,
-      "angular.json": true,
-      ".browserslistrc": true,
       "netptune-client.code-workspace": true,
 		},
 		"search.exclude": {
 			"**/node_modules": true,
 			"**/bower_components": true,
-			"**/src": true,
-			"**/assets": true,
-			"**/bazel-out/**": true,
+			"**/client": true,
 			"**/dist/**": true,
 			"**/node_modules/**": true
 		},
@@ -43,8 +28,6 @@
 			"**/.git/subtree-cache/**": true,
 			"**/node_modules/*/**": true,
 			"**/src": true,
-			"**/assets": true,
-			"**/bazel-out/**": true,
 			"**/dist/**": true,
 			"**/node_modules/**": true,
 		},
