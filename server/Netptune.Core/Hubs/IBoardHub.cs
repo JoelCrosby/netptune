@@ -10,7 +10,6 @@ namespace Netptune.Core.Hubs
 {
     public interface IBoardHub
     {
-
         Task JoinBoard(UserConnection connection);
 
         Task LeaveBoard(UserConnection connection);

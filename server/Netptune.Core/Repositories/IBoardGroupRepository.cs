@@ -9,6 +9,8 @@ namespace Netptune.Core.Repositories
 {
     public interface IBoardGroupRepository : IRepository<BoardGroup, int>
     {
+        Task<BoardGroup> GetWithTasksInGroups(int id);
+
         Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false);
 
         Task<List<BoardViewGroup>> GetBoardView(int boardId);

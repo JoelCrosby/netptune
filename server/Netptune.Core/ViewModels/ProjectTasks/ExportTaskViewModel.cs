@@ -26,6 +26,8 @@ namespace Netptune.Core.ViewModels.ProjectTasks
 
         public string Group { get; set; }
 
+        public string Tags { get; set; }
+
         public string Project { get; set; }
 
         public string Workspace { get; set; }

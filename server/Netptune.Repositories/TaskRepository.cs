@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Dapper;
+
 using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -10,6 +12,7 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.RowMaps;
 
 namespace Netptune.Repositories
 {
@@ -24,7 +27,7 @@ namespace Netptune.Repositories
         {
             return Entities
                 .Where(x => x.Id == taskId)
-                .OrderBy(x => x.SortOrder)
+                .OrderByDescending(x => x.UpdatedAt)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
@@ -95,7 +98,7 @@ namespace Netptune.Repositories
 
             var queryable = Entities
                 .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
-                .OrderBy(x => x.SortOrder)
+                .OrderByDescending(x => x.UpdatedAt)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
@@ -110,7 +113,7 @@ namespace Netptune.Repositories
         {
             return Entities
                 .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
-                .OrderBy(x => x.SortOrder)
+                .OrderByDescending(x => x.UpdatedAt)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
@@ -119,56 +122,83 @@ namespace Netptune.Repositories
                 .ApplyReadonly(isReadonly);
         }
 
-        public Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug)
+        public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug)
         {
-            return (from t in Entities
-                join tg in Context.ProjectTaskInBoardGroups on t.Id equals tg.ProjectTaskId
-                join g in Context.BoardGroups on tg.BoardGroupId equals g.Id
-                join project in Context.Projects on t.ProjectId equals project.Id
-                join assignee in Context.AppUsers on t.AssigneeId equals assignee.Id
-                join owner in Context.AppUsers on t.OwnerId equals owner.Id
-                join workspace in Context.Workspaces on t.WorkspaceId equals workspace.Id
-                where !workspace.IsDeleted && !t.IsDeleted && workspace.Slug == workspaceSlug
-                orderby t.SortOrder
-                select new
+            using var connection = ConnectionFactory.StartConnection();
+
+            var rows = await connection.QueryAsync<TasksViewRowMap>(@"
+                SELECT w.slug              AS worksapce_name
+                     , p.name              AS project_name
+                     , p.key               AS project_key
+                     , b.name              AS board_name
+                     , b.identifier        AS board_identifier
+                     , pt.id               AS task_id
+                     , pt.name             AS task_name
+                     , pt.description      AS task_description
+                     , pt.is_flagged       AS task_is_flagged
+                     , pt.project_scope_id AS project_scope_id
+                     , pt.status           AS task_status
+                     , pt.created_at       AS task_created_at
+                     , pt.updated_at       AS task_updated_at
+                     , ptibg.sort_order    AS task_sort_order
+                     , bg.name             AS board_group_name
+                     , bg.type             AS board_group_type
+                     , bg.sort_order       AS board_group_sort_order
+                     , a.firstname         AS assignee_firstname
+                     , a.lastname          AS assignee_lastname
+                     , a.email             AS assignee_email
+                     , o.firstname         AS owner_firstname
+                     , o.lastname          AS owner_lastname
+                     , o.email          AS owner_email
+                     , t.name              AS tag
+
+                FROM workspaces w
+                         LEFT JOIN projects p on p.workspace_id = w.id
+                         LEFT JOIN boards b on b.project_id = p.id
+                         LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
+                         LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
+                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                         INNER JOIN users a on pt.assignee_id = a.id
+                         INNER JOIN users o on pt.owner_id = o.id
+                         LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
+                         LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+
+                WHERE w.slug = @workspaceSlug
+
+                ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
+            ", new { workspaceSlug });
+
+            return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
+            {
+                var lastTask = result.LastOrDefault();
+                var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
+
+                if (lastTask?.SystemId is { } && systemId == lastTask.SystemId)
                 {
-                    t.Id,
-                    AssigneeId = assignee.Id,
-                    OwnerId = owner.Id,
-                    t.ProjectScopeId,
-                    t.Name,
-                    project.Key,
-                    t.Description,
-                    t.Status,
-                    t.IsFlagged,
-                    t.SortOrder,
-                    t.ProjectId,
-                    t.WorkspaceId,
-                    WorkspaceSlug = workspace.Slug,
-                    t.CreatedAt,
-                    t.UpdatedAt,
-                    AssigneeUsername = assignee.UserName,
-                    OwnerUsername = owner.UserName,
-                    ProjectName = project.Name,
-                    Group = g.Name
-                })
-                .Select(x => new ExportTaskViewModel
+                    lastTask.Tags = $"{lastTask.Tags} | {row.Tag}";
+                    return result;
+                }
+
+                result.Add(new ExportTaskViewModel
                 {
-                    Name = x.Name,
-                    Description = x.Description,
-                    SystemId = $"{x.Key}-{x.ProjectScopeId}",
-                    Status = x.Status.ToString(),
-                    IsFlagged = x.IsFlagged,
-                    SortOrder = x.SortOrder,
-                    Workspace = x.WorkspaceSlug,
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt,
-                    Assignee = x.AssigneeUsername,
-                    Owner = x.OwnerUsername,
-                    Project = x.ProjectName,
-                    Group = x.Group,
-                })
-                .ToListAsync();
+                    Name = row.Task_Name,
+                    Description = row.Task_Description,
+                    SystemId = systemId,
+                    Status = row.Task_Status.ToString(),
+                    IsFlagged = row.Task_Is_Flagged,
+                    SortOrder = row.Task_Sort_Order,
+                    Workspace = row.Board_Identifier,
+                    CreatedAt = row.Task_Created_At,
+                    UpdatedAt = row.Task_Updated_At,
+                    Assignee = row.Assignee_Email,
+                    Owner = row.Owner_Email,
+                    Project = row.Project_Name,
+                    Group = row.Board_Group_Name,
+                    Tags = row.Tag,
+                });
+
+                return result;
+            });
         }
 
         public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)

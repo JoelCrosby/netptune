@@ -10,8 +10,6 @@ namespace Netptune.Core.Models.Import
 
         public string IsFlagged { get; set; }
 
-        public string SortOrder { get; set; }
-
         public string CreatedAt { get; set; }
 
         public string UpdatedAt { get; set; }

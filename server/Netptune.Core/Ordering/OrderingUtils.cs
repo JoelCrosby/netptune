@@ -1,6 +1,6 @@
 ﻿namespace Netptune.Core.Ordering
 {
-    public class OrderingUtils
+    public static class OrderingUtils
     {
         public static double GetNewSortOrder(double? preOrder, double? nextOrder)
         {

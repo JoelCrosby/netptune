@@ -1,12 +1,15 @@
+using System;
 using Netptune.Core.Enums;
 
 namespace Netptune.Repositories.RowMaps
 {
-    public class BoardViewRowMap
+    public class TasksViewRowMap
     {
         public string Board_Name { get; set; }
 
         public string Board_Identifier { get; set; }
+
+        public string Task_Description { get; set; }
 
         public int Task_Id { get; set; }
 
@@ -18,13 +21,7 @@ namespace Netptune.Repositories.RowMaps
 
         public double Task_Sort_Order { get; set; }
 
-        public int Project_Id { get; set; }
-
         public string Project_Scope_Id { get; set; }
-
-        public int Workspace_Id { get; set; }
-
-        public int Board_Group_Id { get; set; }
 
         public string Board_Group_Name { get; set; }
 
@@ -36,17 +33,26 @@ namespace Netptune.Repositories.RowMaps
 
         public string Assignee_Lastname { get; set; }
 
-        public string Assignee_Picture_Url { get; set; }
+        public string Assignee_Email { get; set; }
 
-        public string Assignee_Id { get; set; }
+        public string Owner_Firstname { get; set; }
+
+        public string Owner_Lastname { get; set; }
+
+        public string Owner_Email { get; set; }
 
         public string Tag { get; set; }
-    }
 
-    public class BoardViewMetaRowMap
-    {
+        public DateTime Task_Created_At { get; set; }
+
+        public DateTime? Task_Updated_At { get; set; }
+
+        public string Workspace_Name { get; set; }
+
         public string Workspace_Identifier { get; set; }
 
         public string Project_Key { get; set; }
-    }
+
+        public string Project_Name { get; set; }
+}
 }
