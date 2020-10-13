@@ -40,16 +40,13 @@ namespace Netptune.Services
 
             var user = await IdentityService.GetCurrentUser();
 
-            var sortOrder = request.SortOrder ?? GetSortOrder(workspace.ProjectTasks);
-
             var task = new ProjectTask
             {
                 Name = request.Name,
                 Description = request.Description,
                 Status = request.Status ?? ProjectTaskStatus.New,
-                SortOrder = sortOrder,
                 ProjectId = request.ProjectId,
-                AssigneeId = request.AssigneeId,
+                AssigneeId = request.AssigneeId ?? user.Id,
                 OwnerId = user.Id,
                 WorkspaceId = workspace.Id,
             };
@@ -60,11 +57,11 @@ namespace Netptune.Services
 
             if (request.BoardGroupId.HasValue)
             {
-                await AddTaskToBoardGroup(request.BoardGroupId.Value, task, sortOrder);
+                await AddTaskToBoardGroup(request.BoardGroupId.Value, task);
             }
             else
             {
-                await AddTaskToBoardGroup(project, task, sortOrder);
+                await AddTaskToBoardGroup(project, task);
             }
 
             var result = await TaskRepository.AddAsync(task);
@@ -164,7 +161,6 @@ namespace Netptune.Services
                 result.Description = request.Description;
                 result.Status = request.Status ?? result.Status;
                 result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
-                result.SortOrder = request.SortOrder ?? result.SortOrder;
                 result.OwnerId = request.OwnerId;
                 result.AssigneeId = request.AssigneeId;
 
@@ -221,22 +217,15 @@ namespace Netptune.Services
             });
         }
 
-        private static double GetSortOrder(IEnumerable<ProjectTask> projectTasks)
+        private async Task AddTaskToBoardGroup(int groupId, ProjectTask task)
         {
-            var largest = projectTasks.OrderByDescending(item => item.SortOrder).FirstOrDefault();
+            var boardGroup = await UnitOfWork.BoardGroups.GetWithTasksInGroups(groupId);
 
-            if (largest is null) return 0;
-
-            return largest.SortOrder + 1;
-        }
-
-        private async Task AddTaskToBoardGroup(int boardId, ProjectTask task, double sortOrder)
-        {
-            var boardGroup = await UnitOfWork.BoardGroups.GetAsync(boardId);
-
-            if (boardGroup is null) throw new Exception($"BoardGroup with id of {boardId} does not exist.");
+            if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
             task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
+
+            var sortOrder = GetNextTaskInGroupSortOrder(boardGroup);
 
             boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {
@@ -246,7 +235,15 @@ namespace Netptune.Services
             });
         }
 
-        private async Task AddTaskToBoardGroup(Project project, ProjectTask task, double sortOrder)
+        private static double GetNextTaskInGroupSortOrder(BoardGroup boardGroup)
+        {
+            return boardGroup.TasksInGroups
+                            .OrderByDescending(taskInGroup => taskInGroup.SortOrder)
+                            .Select(taskInGroup => taskInGroup.SortOrder)
+                            .FirstOrDefault();
+        }
+
+        private async Task AddTaskToBoardGroup(Project project, ProjectTask task)
         {
             var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true);
 
@@ -256,8 +253,8 @@ namespace Netptune.Services
             }
 
             var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
-
             var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
+            var sortOrder = GetNextTaskInGroupSortOrder(boardGroup);
 
             boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
             {

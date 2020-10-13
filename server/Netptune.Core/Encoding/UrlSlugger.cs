@@ -9,13 +9,13 @@ namespace Netptune.Core.Encoding
     public static class UrlSlugger
     {
         // white space, em-dash, en-dash, underscore
-        static readonly Regex WordDelimiters = new Regex(@"[\s—–_]", RegexOptions.Compiled);
+        private static readonly Regex WordDelimiters = new Regex(@"[\s—–_]", RegexOptions.Compiled);
 
         // characters that are not valid
-        static readonly Regex InvalidChars = new Regex(@"[^a-z0-9\-]", RegexOptions.Compiled);
+        private static readonly Regex InvalidChars = new Regex(@"[^a-z0-9\-]", RegexOptions.Compiled);
 
         // multiple hyphens
-        static readonly Regex MultipleHyphens = new Regex(@"-{2,}", RegexOptions.Compiled);
+        private static readonly Regex MultipleHyphens = new Regex(@"-{2,}", RegexOptions.Compiled);
 
         public static string ToUrlSlug(this string value, bool appendUniqueId = false)
         {

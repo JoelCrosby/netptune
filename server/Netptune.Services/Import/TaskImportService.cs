@@ -112,7 +112,9 @@ namespace Netptune.Services.Import
                 return Failed("Failed to generate next project scope Id");
             }
 
-            var tasks = rows.Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value)).ToList();
+            var tasks = rows
+                .Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value))
+                .ToList();
 
             var boardGroups = newGroups.Select((group, index) => new BoardGroup
             {
@@ -131,7 +133,15 @@ namespace Netptune.Services.Import
 
                 await UnitOfWork.CompleteAsync();
 
-                var allBoardGroups = boardGroups.Concat(existingGroups);
+                var orderDict = existingGroups.Select(group => new
+                {
+                    GroupId = group.Id,
+                    BaseOrder = group.TasksInGroups.OrderByDescending(task => task.SortOrder).FirstOrDefault()?.SortOrder
+                })
+                    .ToDictionary(group => group.GroupId, group => group.BaseOrder);
+
+                var allBoardGroups = boardGroups.Concat(existingGroups).ToList();
+                var groupTaskCounter = allBoardGroups.ToDictionary(group => group.Id, _ => 0);
 
                 var tasksInGroups = tasks.Select((task, i) =>
                 {
@@ -147,11 +157,16 @@ namespace Netptune.Services.Import
                         throw new Exception($"Could not find existing group with name {rows[i].Group}");
                     }
 
+                    var hasBaseOrder = orderDict.TryGetValue(boardGroup.Id, out var order);
+                    var baseOrder = hasBaseOrder  && order.HasValue ? order.Value : 0;
+
+                    groupTaskCounter[boardGroup.Id] += 1;
+
                     return new ProjectTaskInBoardGroup
                     {
                         ProjectTaskId = task.Id,
                         BoardGroupId = boardGroup.Id,
-                        SortOrder = task.SortOrder,
+                        SortOrder = baseOrder + groupTaskCounter[boardGroup.Id],
                     };
                 });
 
@@ -212,7 +227,6 @@ namespace Netptune.Services.Import
                 IsFlagged = ParseBool(row.IsFlagged),
                 CreatedAt = ParseDateTime(row.CreatedAt) ?? DateTime.UtcNow,
                 UpdatedAt = ParseDateTime(row.UpdatedAt),
-                SortOrder = double.Parse(row.SortOrder),
                 Status = ParseStatus(row.Status),
                 AssigneeId = FindUserId(row.Assignee),
                 OwnerId = FindUserId(row.Owner),

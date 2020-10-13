@@ -23,11 +23,19 @@ namespace Netptune.Repositories
         {
         }
 
+        public Task<BoardGroup> GetWithTasksInGroups(int id)
+        {
+            return Entities
+                .Include(group => group.TasksInGroups)
+                .FirstOrDefaultAsync(group => group.Id == id);
+        }
+
         public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
         {
             return Entities
                 .Where(boardGroup => boardGroup.BoardId == boardId)
                 .Where(boardGroup => !boardGroup.IsDeleted)
+                .Include(boardGroup => boardGroup.TasksInGroups)
                 .OrderBy(boardGroup => boardGroup.SortOrder)
                 .ApplyReadonly(isReadonly);
         }
@@ -38,22 +46,22 @@ namespace Netptune.Repositories
 
             var results = await connection.QueryMultipleAsync(@"
                 SELECT b.id
-                     , b.name
-                     , b.identifier
+                     , b.name              AS board_name
+                     , b.identifier        AS board_identifier
                      , pt.id               AS task_id
                      , pt.name             AS task_name
-                     , pt.is_flagged
+                     , pt.is_flagged       as task_is_flagged
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
-                     , ptibg.sort_order    AS sort_order
+                     , ptibg.sort_order    AS task_sort_order
                      , bg.id               AS board_group_id
                      , bg.name             AS board_group_name
                      , bg.type             AS board_group_type
                      , bg.sort_order       AS board_group_sort_order
                      , u.id                AS assignee_id
-                     , u.firstname
-                     , u.lastname
-                     , u.picture_url
+                     , u.firstname         AS assignee_firstname
+                     , u.lastname          AS assignee_lastname
+                     , u.picture_url       as assignee_picture_url
                      , t.name              AS tag
                      , pt.workspace_id     AS workspace_id
                      , pt.project_id       AS project_id
@@ -104,12 +112,12 @@ namespace Netptune.Repositories
                         Name = row.Task_Name,
                         Status = row.Task_Status,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                        AssigneeUsername = $"{row.Firstname} {row.Lastname}",
-                        AssigneePictureUrl = row.Picture_Url,
+                        AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                        AssigneePictureUrl = row.Assignee_Picture_Url,
                         AssigneeId = row.Assignee_Id,
                         Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
-                        IsFlagged = row.Is_Flagged,
-                        SortOrder = row.Sort_Order,
+                        IsFlagged = row.Task_Is_Flagged,
+                        SortOrder = row.Task_Sort_Order,
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
                         WorkspaceSlug = meta.Workspace_Identifier
@@ -132,12 +140,12 @@ namespace Netptune.Repositories
                             Name = row.Task_Name,
                             Status = row.Task_Status,
                             SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                            AssigneeUsername = $"{row.Firstname} {row.Lastname}",
-                            AssigneePictureUrl = row.Picture_Url,
+                            AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                            AssigneePictureUrl = row.Assignee_Picture_Url,
                             AssigneeId = row.Assignee_Id,
                             Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
-                            IsFlagged = row.Is_Flagged,
-                            SortOrder = row.Sort_Order,
+                            IsFlagged = row.Task_Is_Flagged,
+                            SortOrder = row.Task_Sort_Order,
                             ProjectId = row.Project_Id,
                             WorkspaceId = row.Workspace_Id,
                             WorkspaceSlug = meta.Workspace_Identifier

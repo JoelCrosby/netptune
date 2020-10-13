@@ -17,8 +17,6 @@ namespace Netptune.Core.Entities
 
         public ProjectTaskStatus Status { get; set; }
 
-        public double SortOrder { get; set; }
-
         public int ProjectScopeId { get; set; }
 
         public bool IsFlagged { get; set; }
@@ -62,7 +60,6 @@ namespace Netptune.Core.Entities
                 ProjectScopeId = ProjectScopeId,
                 SystemId = $"{Project.Key}-{ProjectScopeId}",
                 IsFlagged = IsFlagged,
-                SortOrder = SortOrder,
                 ProjectId = ProjectId,
                 WorkspaceId = WorkspaceId,
                 WorkspaceSlug = Workspace.Slug,
@@ -86,7 +83,6 @@ namespace Netptune.Core.Entities
                 Status = Status.ToString(),
                 SystemId = $"{Project.Key}-{ProjectScopeId}",
                 IsFlagged = IsFlagged,
-                SortOrder = SortOrder,
                 Workspace = Workspace.Slug,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,
