@@ -55,6 +55,7 @@
 @import './app/features/boards/components/board-group-task-inline/board-group-task-inline.component.scss-theme.scss';
 @import './app/features/boards/components/create-board-group/create-board-group.component.scss-theme.scss';
 @import './app/features/boards/components/board-group-users/board-group-users.component.scss-theme.scss';
+@import './app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
@@ -87,6 +88,7 @@
   @include workspace-dialog-theme($theme);
   @include board-group-tags-theme($theme);
   @include board-groups-selection-theme($theme);
+  @include move-tasks-dialog-theme($theme);
 }
 
 .default-theme {

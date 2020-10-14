@@ -188,6 +188,17 @@ namespace Netptune.App.Hubs
             return response;
         }
 
+        public async Task<ClientResponse> MoveTasksToGroup(string group, MoveTasksToGroupRequest request)
+        {
+            var response = await TaskService.MoveTasksToGroup(request);
+
+            await Clients
+                .OthersInGroup(group)
+                .MoveTasksToGroup(response);
+
+            return response;
+        }
+
         private static bool IsInValidRequest(object target)
         {
             var context = new ValidationContext(target, null, null);

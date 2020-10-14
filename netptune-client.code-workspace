@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-      "name": "Netptune Client",
+      		"name": "Netptune Client",
 			"path": "./client"
 		}
 	],
@@ -19,7 +19,6 @@
 			"**/*.sln": true,
 			"**/*.sln.DotSettings": true,
 			"**/*.cs": true,
-      "netptune-server.code-workspace": true,
 		},
 		"search.exclude": {
 			"**/node_modules": true,

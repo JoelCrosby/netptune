@@ -33,9 +33,10 @@ export class BoardGroupsEffects {
       ofType(
         actions.loadBoardGroups,
         actions.createBoardGroupSuccess,
+        actions.moveSelectedTasksSuccess,
         TaskActions.importTasksSuccess,
         TaskActions.deleteTagFromTaskSuccess,
-        TaskActions.addTagToTaskSuccess,
+        TaskActions.addTagToTaskSuccess
       ),
       withLatestFrom(
         this.store.select(RouteSelectors.selectRouterParam, 'id'),
@@ -77,10 +78,12 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.createBoardGroup),
       switchMap((action) =>
-        this.tasksHubService.addBoardGroup(action.identifier, action.request).pipe(
-          map((response) => actions.createBoardGroupSuccess({ response })),
-          catchError((error) => of(actions.createBoardGroupFail({ error })))
-        )
+        this.tasksHubService
+          .addBoardGroup(action.identifier, action.request)
+          .pipe(
+            map((response) => actions.createBoardGroupSuccess({ response })),
+            catchError((error) => of(actions.createBoardGroupFail({ error })))
+          )
       )
     )
   );
@@ -133,15 +136,19 @@ export class BoardGroupsEffects {
           switchMap(([result, identifier]) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.tasksHubService.deleteBoardGroup(identifier, action.boardGroup.id).pipe(
-              tap(() => this.snackbar.open('Board Group Deleted')),
-              map(() =>
-                actions.deleteBoardGroupSuccess({
-                  boardGroupId: action.boardGroup.id,
-                })
-              ),
-              catchError((error) => of(actions.deleteBoardGroupFail({ error })))
-            );
+            return this.tasksHubService
+              .deleteBoardGroup(identifier, action.boardGroup.id)
+              .pipe(
+                tap(() => this.snackbar.open('Board Group Deleted')),
+                map(() =>
+                  actions.deleteBoardGroupSuccess({
+                    boardGroupId: action.boardGroup.id,
+                  })
+                ),
+                catchError((error) =>
+                  of(actions.deleteBoardGroupFail({ error }))
+                )
+              );
           })
         );
       })
@@ -213,6 +220,29 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.deleteTasksMultipleSuccess),
       map(() => actions.loadBoardGroups())
+    )
+  );
+
+  moveSelectedTasksToGroup$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.moveSelectedTasks),
+      withLatestFrom(
+        this.store.select(selectors.selectBoardIdentifier),
+        this.store.select(selectors.selectSelectedTasks)
+      ),
+      switchMap(([action, identifier, taskIds]) =>
+        this.tasksHubService
+          .moveTasksToGroup(identifier, {
+            boardId: identifier,
+            newGroupId: action.newGroupId,
+            taskIds,
+          })
+          .pipe(
+            tap(() => this.snackbar.open('Tasks Moved')),
+            map((response) => actions.moveSelectedTasksSuccess({ response })),
+            catchError((error) => of(actions.moveSelectedTasksFail({ error })))
+          )
+      )
     )
   );
 

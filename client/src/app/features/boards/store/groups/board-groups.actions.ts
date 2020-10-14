@@ -203,3 +203,20 @@ export const deleteTasksMultipleFail = createAction(
   '[BoardGroups] Delete Task Multiple Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Move Selected Tasks
+
+export const moveSelectedTasks = createAction(
+  '[BoardGroups] Move Selected Tasks',
+  props<{ newGroupId: number }>()
+);
+
+export const moveSelectedTasksSuccess = createAction(
+  '[BoardGroups] Move Selected Tasks Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const moveSelectedTasksFail = createAction(
+  '[BoardGroups] Move Selected Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);

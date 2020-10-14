@@ -3,6 +3,8 @@ import * as selectors from '@boards/store/groups/board-groups.selectors';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 
 @Component({
   selector: 'app-board-groups-selection',
@@ -14,7 +16,7 @@ export class BoardGroupsSelectionComponent implements OnInit {
   selected$: Observable<number[]>;
   count$: Observable<number>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.selected$ = this.store.select(selectors.selectSelectedTasks);
@@ -27,5 +29,12 @@ export class BoardGroupsSelectionComponent implements OnInit {
 
   onDeleteClicked() {
     this.store.dispatch(actions.deleteSelectedTasks());
+  }
+
+  onMoveTasksClicked() {
+    this.dialog.open(MoveTasksDialogComponent, {
+      width: '600px',
+      panelClass: 'app-modal-class',
+    });
   }
 }
