@@ -50,7 +50,6 @@ namespace Netptune.Repositories
                 ? await query.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id)
                 : await query.FirstOrDefaultAsync(x => x.Id == id);
 
-
             return comment.ToViewModel();
         }
     }

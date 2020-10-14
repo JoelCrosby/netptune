@@ -171,7 +171,7 @@ namespace Netptune.App
 
             Policy
                 .Handle<Exception>()
-                .WaitAndRetry(4, retryAttempt => TimeSpan.FromSeconds(4))
+                .WaitAndRetry(4, _ => TimeSpan.FromSeconds(4))
                 .Execute(() => context.Database.EnsureCreated());
         }
 

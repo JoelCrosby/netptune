@@ -172,7 +172,7 @@ namespace Netptune.Services
 
                     currentKey = nextKey;
 
-                    currentKeyLength += 1;
+                    currentKeyLength++;
                 }
             }
 

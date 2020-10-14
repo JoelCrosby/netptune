@@ -89,7 +89,6 @@ namespace Netptune.Repositories
                 .IsReadonly(isReadonly)
                 .ToListAsync();
         }
-    
 
         public Task<string> GetUserIdByEmail(string email, bool isReadonly = false)
         {

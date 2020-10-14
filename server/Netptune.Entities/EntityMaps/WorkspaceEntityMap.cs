@@ -34,7 +34,6 @@ namespace Netptune.Entities.EntityMaps
                 .HasColumnType("jsonb")
                 .IsRequired();
 
-
             // (One-to-One) Workspace > Task
 
             builder

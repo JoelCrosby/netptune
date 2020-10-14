@@ -4,7 +4,7 @@ namespace Netptune.Core.Models.Authentication
 {
     public class LoginResult
     {
-        public bool IsSuccess { get; private set; }
+        public bool IsSuccess { get; }
 
         public AuthenticationTicket Ticket { get; }
 

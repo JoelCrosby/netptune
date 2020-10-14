@@ -15,7 +15,7 @@ namespace Netptune.Core.Encoding
         private static readonly Regex InvalidChars = new Regex(@"[^a-z0-9\-]", RegexOptions.Compiled);
 
         // multiple hyphens
-        private static readonly Regex MultipleHyphens = new Regex(@"-{2,}", RegexOptions.Compiled);
+        private static readonly Regex MultipleHyphens = new Regex("-{2,}", RegexOptions.Compiled);
 
         public static string ToUrlSlug(this string value, bool appendUniqueId = false)
         {

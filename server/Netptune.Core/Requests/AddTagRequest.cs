@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests
@@ -15,6 +16,7 @@ namespace Netptune.Core.Requests
         public string WorkspaceSlug { get; set; }
     }
 
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class DenyPipesAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
