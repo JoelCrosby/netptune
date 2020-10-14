@@ -16,13 +16,14 @@ export class CreateBoardGroupComponent {
 
   onClick() {
     this.store
-      .select(GroupSelectors.selectBoardId)
+      .select(GroupSelectors.selectBoardIdAndIdentifier)
       .pipe(
         first(),
-        tap((boardId) =>
+        tap(([boardId, identifier]) =>
           this.dialog.open(BoardGroupDialogComponent, {
             width: '600px',
             data: {
+              identifier,
               boardId,
             },
           })

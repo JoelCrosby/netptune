@@ -33,12 +33,12 @@ export const loadBoardGroupsFail = createAction(
 
 export const createBoardGroup = createAction(
   '[BoardGroups] Create Board Group',
-  props<{ request: AddBoardGroupRequest }>()
+  props<{ identifier: string, request: AddBoardGroupRequest }>()
 );
 
 export const createBoardGroupSuccess = createAction(
   '[BoardGroups] Create Board Group Success',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ response: ClientResponse<BoardGroup> }>()
 );
 
 export const createBoardGroupFail = createAction(

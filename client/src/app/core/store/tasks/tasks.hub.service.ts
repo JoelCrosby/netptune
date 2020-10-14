@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as groupsActions from '@boards/store/groups/board-groups.actions';
 import { HubService } from '@core/hubs/hub.service';
+import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
+import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
+import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
+import { Tag } from '@core/models/tag';
 import { UserConnection } from '@core/models/user-connection';
+import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import { Store } from '@ngrx/store';
 import { first, tap } from 'rxjs/operators';
-import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
-import * as actions from './tasks.actions';
 import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
-import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
-import { Tag } from '@core/models/tag';
-import { BoardViewTask } from '@core/models/view-models/board-view';
+import * as actions from './tasks.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -52,12 +54,18 @@ export class ProjectTasksHubService {
         method: 'DeleteTagFromTask',
         callback: () => this.reloadRequiredViews(),
       },
+      {
+        method: 'AddBoardGroup',
+        callback: () => this.reloadRequiredViews(),
+      },
+      {
+        method: 'DeleteBoardGroup',
+        callback: () => this.reloadRequiredViews(),
+      },
     ]);
   }
 
   reloadRequiredViews() {
-    console.log('REQUEST TO RELOAD RECIEVED');
-
     this.store
       .select(selectIsWorkspaceGroup)
       .pipe(
@@ -121,6 +129,22 @@ export class ProjectTasksHubService {
       'DeleteTagFromTask',
       groupId,
       request
+    );
+  }
+
+  addBoardGroup(groupId: string, request: AddBoardGroupRequest) {
+    return this.hub.invoke<ClientResponse<BoardGroup>>(
+      'AddBoardGroup',
+      groupId,
+      request
+    );
+  }
+
+  deleteBoardGroup(groupId: string, boardGroupId: number) {
+    return this.hub.invoke<ClientResponse>(
+      'DeleteBoardGroup',
+      groupId,
+      boardGroupId
     );
   }
 }

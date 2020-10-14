@@ -27,5 +27,9 @@ namespace Netptune.Core.Hubs
         Task AddTagToTask(TagViewModel response);
 
         Task DeleteTagFromTask(ClientResponse response);
+
+        Task AddBoardGroup(ClientResponse response);
+
+        Task DeleteBoardGroup(ClientResponse response);
     }
 }

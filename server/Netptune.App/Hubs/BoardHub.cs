@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-
+using Netptune.Core.Entities;
 using Netptune.Core.Hubs;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -22,12 +22,18 @@ namespace Netptune.App.Hubs
 
         private readonly IUserConnectionService UserConnection;
         private readonly ITaskService TaskService;
+        private readonly IBoardGroupService BoardGroupService;
         private readonly ITagService TagService;
 
-        public BoardHub(IUserConnectionService userConnection, ITaskService taskService, ITagService tagsService)
+        public BoardHub(
+            IUserConnectionService userConnection,
+            ITaskService taskService,
+            IBoardGroupService boardGroupService,
+            ITagService tagsService)
         {
             UserConnection = userConnection;
             TaskService = taskService;
+            BoardGroupService = boardGroupService;
             TagService = tagsService;
         }
 
@@ -154,6 +160,30 @@ namespace Netptune.App.Hubs
             await Clients
                 .OthersInGroup(group)
                 .DeleteTagFromTask(response);
+
+            return response;
+        }
+
+        public async Task<ClientResponse<BoardGroup>> AddBoardGroup(string group, AddBoardGroupRequest request)
+        {
+            if (IsInValidRequest(request)) return ClientResponse<BoardGroup>.Failed();
+
+            var response = await BoardGroupService.AddBoardGroup(request);
+
+            await Clients
+                .OthersInGroup(group)
+                .AddBoardGroup(response);
+
+            return response;
+        }
+
+        public async Task<ClientResponse> DeleteBoardGroup(string group, int boardGroupId)
+        {
+            var response = await BoardGroupService.Delete(boardGroupId);
+
+            await Clients
+                .OthersInGroup(group)
+                .DeleteBoardGroup(response);
 
             return response;
         }

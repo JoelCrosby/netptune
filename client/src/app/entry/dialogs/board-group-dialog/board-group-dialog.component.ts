@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store';
 
 export interface BoardGroupDialogData {
   boardId: number;
+  identifier: string;
 }
 
 @Component({
@@ -32,9 +33,11 @@ export class BoardGroupDialogComponent implements OnInit {
 
   onSubmit() {
     const name = this.groupFormControl.value;
+    const identifier = this.data.identifier;
 
     this.store.dispatch(
       BoardGroupActions.createBoardGroup({
+        identifier,
         request: {
           name,
           boardId: this.data.boardId,
