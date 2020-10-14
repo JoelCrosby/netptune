@@ -4,6 +4,7 @@ import {
   selectCurrentWorkspace,
   selectCurrentWorkspaceIdentifier,
 } from '@core/store/workspaces/workspaces.selectors';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -35,6 +36,7 @@ export class TagsEffects {
       ofType(actions.addTagToTask),
       switchMap((action) =>
         this.tagsService.post(action.request).pipe(
+          unwrapClientReposne(),
           map((tag) => actions.addTagToTaskSuccess({ tag })),
           catchError((error) => of(actions.addTagToTaskFail(error)))
         )

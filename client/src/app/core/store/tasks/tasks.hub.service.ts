@@ -113,7 +113,7 @@ export class ProjectTasksHubService {
   }
 
   addTagToTask(groupId: string, request: AddTagRequest) {
-    return this.hub.invoke<Tag>('AddTagToTask', groupId, request);
+    return this.hub.invoke<ClientResponse<Tag>>('AddTagToTask', groupId, request);
   }
 
   deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {

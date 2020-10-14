@@ -24,14 +24,14 @@ export class ProjectTasksService {
   }
 
   post(task: AddProjectTaskRequest) {
-    return this.http.post<TaskViewModel>(
+    return this.http.post<ClientResponse<TaskViewModel>>(
       environment.apiEndpoint + `api/tasks`,
       task
     );
   }
 
   put(task: ProjectTask) {
-    return this.http.put<TaskViewModel>(
+    return this.http.put<ClientResponse<TaskViewModel>>(
       environment.apiEndpoint + `api/tasks`,
       task
     );

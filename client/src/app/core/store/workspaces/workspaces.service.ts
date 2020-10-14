@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ClientResponsePayload } from '@core/models/client-response';
+import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { Workspace } from '@core/models/workspace';
 import { environment } from '@env/environment';
@@ -36,7 +36,7 @@ export class WorkspacesService {
   }
 
   isSlugUnique(slug: string) {
-    return this.http.get<ClientResponsePayload<IsSlugUniqueResponse>>(
+    return this.http.get<ClientResponse<IsSlugUniqueResponse>>(
       environment.apiEndpoint + `api/workspaces/is-unique/${slug}`
     );
   }

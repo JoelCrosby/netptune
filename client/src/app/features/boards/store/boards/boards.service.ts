@@ -1,11 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import {
-  ClientResponse,
-  ClientResponsePayload,
+  ClientResponse
 } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
+import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { environment } from '@env/environment';
 
@@ -29,7 +28,7 @@ export class BoardsService {
   }
 
   post(request: AddBoardRequest) {
-    return this.http.post<ClientResponsePayload<BoardViewModel>>(
+    return this.http.post<ClientResponse<BoardViewModel>>(
       environment.apiEndpoint + 'api/boards',
       request
     );
@@ -42,7 +41,7 @@ export class BoardsService {
   }
 
   isIdentifierUnique(identifier: string) {
-    return this.http.get<ClientResponsePayload<IsSlugUniqueResponse>>(
+    return this.http.get<ClientResponse<IsSlugUniqueResponse>>(
       environment.apiEndpoint + `api/boards/is-unique/${identifier}`
     );
   }
