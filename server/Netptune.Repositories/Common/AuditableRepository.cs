@@ -64,4 +64,3 @@ namespace Netptune.Repositories.Common
         }
     }
 }
-

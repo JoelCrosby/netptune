@@ -69,6 +69,5 @@ namespace Netptune.Models
         }
 
         #endregion
-
     }
 }
