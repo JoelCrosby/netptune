@@ -32,9 +32,10 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(
         actions.loadBoardGroups,
+        actions.createBoardGroupSuccess,
         TaskActions.importTasksSuccess,
         TaskActions.deleteTagFromTaskSuccess,
-        TaskActions.addTagToTaskSuccess
+        TaskActions.addTagToTaskSuccess,
       ),
       withLatestFrom(
         this.store.select(RouteSelectors.selectRouterParam, 'id'),
@@ -76,8 +77,8 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.createBoardGroup),
       switchMap((action) =>
-        this.boardGroupsService.post(action.request).pipe(
-          map((boardGroup) => actions.createBoardGroupSuccess({ boardGroup })),
+        this.tasksHubService.addBoardGroup(action.identifier, action.request).pipe(
+          map((response) => actions.createBoardGroupSuccess({ response })),
           catchError((error) => of(actions.createBoardGroupFail({ error })))
         )
       )
@@ -128,10 +129,11 @@ export class BoardGroupsEffects {
         }
 
         return this.confirmation.open(DELETE_CONFIRMATION).pipe(
-          switchMap((result) => {
+          withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+          switchMap(([result, identifier]) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.boardGroupsService.delete(action.boardGroup.id).pipe(
+            return this.tasksHubService.deleteBoardGroup(identifier, action.boardGroup.id).pipe(
               tap(() => this.snackbar.open('Board Group Deleted')),
               map(() =>
                 actions.deleteBoardGroupSuccess({
