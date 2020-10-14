@@ -14,12 +14,13 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Services
 {
-    public class TaskService : ITaskService
+    public class TaskService : ServiceBase<TaskViewModel>, ITaskService
     {
         private readonly ITaskRepository TaskRepository;
         private readonly INetptuneUnitOfWork UnitOfWork;
@@ -32,7 +33,7 @@ namespace Netptune.Services
             IdentityService = identityService;
         }
 
-        public async Task<TaskViewModel> Create(AddProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Create(AddProjectTaskRequest request)
         {
             var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(request.Workspace, true);
 
@@ -92,7 +93,9 @@ namespace Netptune.Services
 
             await SaveTask(saveCounter);
 
-            return await TaskRepository.GetTaskViewModel(result.Id);
+            var response = await TaskRepository.GetTaskViewModel(result.Id);
+
+            return Success(response);
         }
 
         public async Task<ClientResponse> Delete(int id)
@@ -142,7 +145,7 @@ namespace Netptune.Services
             return TaskRepository.GetTasksAsync(workspaceSlug);
         }
 
-        public async Task<TaskViewModel> Update(UpdateProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request)
         {
             if (request?.Id is null) throw new ArgumentNullException(nameof(request));
 
@@ -167,7 +170,9 @@ namespace Netptune.Services
                 await UnitOfWork.CompleteAsync();
             });
 
-            return await TaskRepository.GetTaskViewModel(result.Id);
+            var response = await TaskRepository.GetTaskViewModel(result.Id);
+
+            return Success(response);
         }
 
         public async Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request)
@@ -237,10 +242,12 @@ namespace Netptune.Services
 
         private static double GetNextTaskInGroupSortOrder(BoardGroup boardGroup)
         {
-            return boardGroup.TasksInGroups
+            var max = boardGroup.TasksInGroups
                             .OrderByDescending(taskInGroup => taskInGroup.SortOrder)
                             .Select(taskInGroup => taskInGroup.SortOrder)
                             .FirstOrDefault();
+
+            return max + 1;
         }
 
         private async Task AddTaskToBoardGroup(Project project, ProjectTask task)

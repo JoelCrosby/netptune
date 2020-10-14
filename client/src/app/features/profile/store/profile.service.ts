@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { ClientResponse } from '@core/models/client-response';
+import { UploadResponse } from '@core/models/upload-result';
 
 @Injectable()
 export class ProfileService {
@@ -37,7 +38,7 @@ export class ProfileService {
   }
 
   uloadProfilePicture(data: FormData) {
-    return this.http.post<ClientResponse>(
+    return this.http.post<ClientResponse<UploadResponse>>(
       environment.apiEndpoint + 'api/storage/profile-picture',
       data
     );

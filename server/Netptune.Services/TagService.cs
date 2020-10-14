@@ -8,12 +8,13 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Services
 {
-    public class TagService : ITagService
+    public class TagService : ServiceBase<TagViewModel>, ITagService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService Identity;
@@ -26,7 +27,7 @@ namespace Netptune.Services
             Tags = unitOfWork.Tags;
         }
 
-        public async Task<TagViewModel> AddTagToTask(AddTagRequest request)
+        public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagRequest request)
         {
             var userId = await Identity.GetCurrentUserId();
             var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
@@ -72,7 +73,9 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                return await Tags.GetViewModel(tag.Id);
+                var response = await Tags.GetViewModel(tag.Id);
+
+                return Success(response);
             });
         }
 

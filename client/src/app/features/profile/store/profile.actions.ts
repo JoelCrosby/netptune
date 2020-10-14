@@ -3,7 +3,6 @@ import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ClientResponse,
-  ClientResponsePayload,
 } from '@core/models/client-response';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { UploadResponse } from '@core/models/upload-result';
@@ -64,7 +63,7 @@ export const uploadProfilePicture = createAction(
 
 export const uploadProfilePictureSuccess = createAction(
   '[Profile] Upload Profile Picture Success',
-  props<{ response: ClientResponsePayload<UploadResponse> }>()
+  props<{ response: ClientResponse<UploadResponse> }>()
 );
 
 export const uploadProfilePictureFail = createAction(

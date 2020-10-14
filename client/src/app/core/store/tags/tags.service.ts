@@ -28,14 +28,14 @@ export class TagsService {
   }
 
   post(request: AddTagRequest) {
-    return this.http.post<Tag>(
+    return this.http.post<ClientResponse<Tag>>(
       environment.apiEndpoint + `api/tags/task`,
       request
     );
   }
 
   delete(request: AddTagRequest) {
-    return this.http.request<Tag>(
+    return this.http.request<ClientResponse>(
       'DELETE',
       environment.apiEndpoint + `api/tags/task`,
       {

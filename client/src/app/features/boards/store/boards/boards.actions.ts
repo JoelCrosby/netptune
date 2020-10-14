@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ClientResponse,
-  ClientResponsePayload,
 } from '@core/models/client-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
@@ -32,7 +31,7 @@ export const createBoard = createAction(
 
 export const createBoardSuccess = createAction(
   '[Boards] Create Board Success',
-  props<{ response: ClientResponsePayload<BoardViewModel> }>()
+  props<{ response: ClientResponse<BoardViewModel> }>()
 );
 
 export const createBoardFail = createAction(

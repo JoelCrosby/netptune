@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -66,6 +67,8 @@ namespace Netptune.App.Hubs
 
         public async Task<ClientResponse> MoveTaskInBoardGroup(string group, MoveTaskInGroupRequest request)
         {
+            if (IsInValidRequest(request)) return ClientResponse.Failed();
+
             var result = await TaskService.MoveTaskInBoardGroup(request);
 
             await Clients
@@ -75,13 +78,17 @@ namespace Netptune.App.Hubs
             return result;
         }
 
-        public async Task<TaskViewModel> Create(string group, AddProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Create(string group, AddProjectTaskRequest request)
         {
+            if (IsInValidRequest(request)) return ClientResponse<TaskViewModel>.Failed();
+
             var result = await TaskService.Create(request);
+
+            if (!result.IsSuccess) return result;
 
             await Clients
                 .OthersInGroup(group)
-                .Create(result);
+                .Create(result.Payload);
 
             return result;
         }
@@ -108,30 +115,40 @@ namespace Netptune.App.Hubs
             return response;
         }
 
-        public async Task<TaskViewModel> Update(string group, UpdateProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Update(string group, UpdateProjectTaskRequest request)
         {
+            if (IsInValidRequest(request)) return ClientResponse<TaskViewModel>.Failed();
+
             var result = await TaskService.Update(request);
+
+            if (!result.IsSuccess) return result;
 
             await Clients
                 .OthersInGroup(group)
-                .Update(result);
+                .Update(result.Payload);
 
             return result;
         }
 
-        public async Task<TagViewModel> AddTagToTask(string group, AddTagRequest request)
+        public async Task<ClientResponse<TagViewModel>> AddTagToTask(string group, AddTagRequest request)
         {
-            var response = await TagService.AddTagToTask(request);
+            if (IsInValidRequest(request)) return ClientResponse<TagViewModel>.Failed();
+
+            var result = await TagService.AddTagToTask(request);
+
+            if (!result.IsSuccess) return result;
 
             await Clients
                 .OthersInGroup(group)
-                .AddTagToTask(response);
+                .AddTagToTask(result.Payload);
 
-            return response;
+            return result;
         }
 
         public async Task<ClientResponse> DeleteTagFromTask(string group, DeleteTagFromTaskRequest request)
         {
+            if (IsInValidRequest(request)) return ClientResponse.Failed();
+
             var response = await TagService.DeleteFromTask(request);
 
             await Clients
@@ -139,6 +156,14 @@ namespace Netptune.App.Hubs
                 .DeleteTagFromTask(response);
 
             return response;
+        }
+
+        private static bool IsInValidRequest(object target)
+        {
+            var context = new ValidationContext(target, null, null);
+            var validationResults = new List<ValidationResult>();
+
+            return !Validator.TryValidateObject(target, context, validationResults, true);
         }
     }
 }

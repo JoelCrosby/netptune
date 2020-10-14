@@ -7,6 +7,7 @@ import {
   selectCurrentWorkspaceIdentifier,
 } from '@core/store/workspaces/workspaces.selectors';
 import { downloadFile } from '@core/util/download-helper';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -201,6 +202,7 @@ export class ProjectTasksEffects {
       ofType(actions.addTagToTask),
       switchMap(({ identifier, request }) =>
         this.projectTasksHubService.addTagToTask(identifier, request).pipe(
+          unwrapClientReposne(),
           map((tag) => actions.addTagToTaskSuccess({ tag })),
           catchError((error) => of(actions.addTagToTaskFail(error)))
         )
