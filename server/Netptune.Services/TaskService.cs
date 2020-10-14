@@ -177,7 +177,29 @@ namespace Netptune.Services
 
         public async Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request)
         {
-            await TaskRepository.GetTaskIdsInBoard(request.BoardId);
+            var boardGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
+
+            if (boardGroup is null) return ClientResponse.Failed();
+
+            var taskIdsInBoard = await TaskRepository.GetTaskIdsInBoard(request.BoardId);
+            var taskIds = request.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
+
+            await RemoveTaskFromGroups(taskIds);
+
+            var baseSortOrder = boardGroup.TasksInGroups
+                .OrderByDescending(task => task.SortOrder)
+                .Select(task => task.SortOrder)
+                .FirstOrDefault() + 1;
+
+            var taskInGroups = taskIds.Select((id, index) => new ProjectTaskInBoardGroup
+            {
+                BoardGroupId = boardGroup.Id,
+                ProjectTaskId = id,
+                SortOrder = baseSortOrder + index
+            });
+
+            await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
+            await UnitOfWork.CompleteAsync();
 
             return ClientResponse.Success();
         }
@@ -391,6 +413,14 @@ namespace Netptune.Services
 
             await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
 
+            await UnitOfWork.CompleteAsync();
+        }
+
+        private async Task RemoveTaskFromGroups(IEnumerable<int> taskIds)
+        {
+            var taskInGroupsToDelete = await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
+
+            await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
             await UnitOfWork.CompleteAsync();
         }
     }
