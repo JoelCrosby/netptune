@@ -20,9 +20,21 @@
   >
     <mat-icon
       class="material-icons-outlined"
-      matTooltip="Delete Selected Tasks"
+      matTooltip="Delete selected tasks"
     >
       delete
+    </mat-icon>
+  </button>
+
+  <button
+    class="board-groups-selection-btn"
+   (click)="onMoveTasksClicked()"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      matTooltip="Move selected tasks to another group"
+    >
+      low_priority
     </mat-icon>
   </button>
 

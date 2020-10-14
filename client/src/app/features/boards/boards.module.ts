@@ -23,6 +23,7 @@ import { BoardGroupTagsComponent } from './components/board-group-tags/board-gro
 import { BoardGroupsFlaggedComponent } from './components/board-groups-flagged/board-groups-flagged.component';
 import { ReactiveComponentModule } from '@ngrx/component';
 import { BoardGroupsSelectionComponent } from './components/board-groups-selection/board-groups-selection.component';
+import { MoveTasksDialogComponent } from './components/move-tasks-dialog/move-tasks-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { BoardGroupsSelectionComponent } from './components/board-groups-selecti
     BoardGroupTagsComponent,
     BoardGroupsFlaggedComponent,
     BoardGroupsSelectionComponent,
+    MoveTasksDialogComponent,
   ],
   imports: [
     SharedModule,

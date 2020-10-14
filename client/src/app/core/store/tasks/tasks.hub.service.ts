@@ -8,6 +8,7 @@ import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request'
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddTagRequest } from '@core/models/requests/add-tag-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
+import { MoveTasksToGroupRequest } from '@core/models/requests/move-tasks-to-group-request';
 import { Tag } from '@core/models/tag';
 import { UserConnection } from '@core/models/user-connection';
 import { BoardViewTask } from '@core/models/view-models/board-view';
@@ -60,6 +61,10 @@ export class ProjectTasksHubService {
       },
       {
         method: 'DeleteBoardGroup',
+        callback: () => this.reloadRequiredViews(),
+      },
+      {
+        method: 'MoveTasksToGroup',
         callback: () => this.reloadRequiredViews(),
       },
     ]);
@@ -121,7 +126,11 @@ export class ProjectTasksHubService {
   }
 
   addTagToTask(groupId: string, request: AddTagRequest) {
-    return this.hub.invoke<ClientResponse<Tag>>('AddTagToTask', groupId, request);
+    return this.hub.invoke<ClientResponse<Tag>>(
+      'AddTagToTask',
+      groupId,
+      request
+    );
   }
 
   deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {
@@ -145,6 +154,14 @@ export class ProjectTasksHubService {
       'DeleteBoardGroup',
       groupId,
       boardGroupId
+    );
+  }
+
+  moveTasksToGroup(groupId: string, request: MoveTasksToGroupRequest) {
+    return this.hub.invoke<ClientResponse>(
+      'MoveTasksToGroup',
+      groupId,
+      request
     );
   }
 }
