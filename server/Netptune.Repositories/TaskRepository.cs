@@ -203,12 +203,20 @@ namespace Netptune.Repositories
 
         public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)
         {
-            var board = await Context.Boards
-                .Include(entity => entity.BoardGroups)
-                .ThenInclude(entity => entity.Tasks)
-                .FirstOrDefaultAsync(entity => !entity.IsDeleted && entity.Identifier == boardIdentifier);
+            using var connection = ConnectionFactory.StartConnection();
 
-            return board?.BoardGroups.SelectMany(entity => entity.Tasks).Select(entity => entity.Id).ToList();
+            var results = await connection.QueryAsync<int>(@"
+                SELECT pt.id
+                FROM boards b
+
+                INNER JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
+                INNER JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
+                INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+
+                WHERE b.identifier = @boardIdentifier
+            ", new { boardIdentifier });
+
+            return results.ToList();
         }
 
         public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)

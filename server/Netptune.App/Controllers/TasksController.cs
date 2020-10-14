@@ -24,7 +24,7 @@ namespace Netptune.Api.Controllers
             TaskService = taskService;
         }
 
-        // GET: api/Tasks?workspaceSlug=workspace
+        // GET: api/tasks?workspaceSlug=workspace
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
@@ -35,7 +35,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Tasks/5
+        // GET: api/tasks/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,7 +49,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Tasks/detail?systemId=proj-5&workspace=workspace
+        // GET: api/tasks/detail?systemId=proj-5&workspace=workspace
         [HttpGet]
         [Route("detail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,7 +64,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // PUT: api/Tasks
+        // PUT: api/tasks
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,7 +78,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Tasks
+        // POST: api/tasks
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,7 +90,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/Tasks
+        // DELETE: api/tasks
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -104,7 +104,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/Tasks/5
+        // DELETE: api/tasks/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,7 +118,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/Tasks/count/5
+        // GET: api/tasks/count/5
         [HttpGet]
         [Route("count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -130,7 +130,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Tasks/move-task-in-group
+        // POST: api/tasks/move-task-in-group
         [HttpPost]
         [Route("move-task-in-group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -145,7 +145,7 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // POST: api/Tasks/move-tasks-to-group
+        // POST: api/tasks/move-tasks-to-group
         [HttpPost]
         [Route("move-tasks-to-group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
