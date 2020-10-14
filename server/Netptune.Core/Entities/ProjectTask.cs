@@ -94,6 +94,5 @@ namespace Netptune.Core.Entities
         }
 
         #endregion
-
     }
 }

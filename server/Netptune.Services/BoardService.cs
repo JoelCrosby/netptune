@@ -114,7 +114,6 @@ namespace Netptune.Services
                 WorkspaceId = workspaceId,
             };
 
-
             board.BoardGroups.Add(new BoardGroup
             {
                 Name = "Backlog",

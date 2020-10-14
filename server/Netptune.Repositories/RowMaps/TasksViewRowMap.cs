@@ -54,5 +54,5 @@ namespace Netptune.Repositories.RowMaps
         public string Project_Key { get; set; }
 
         public string Project_Name { get; set; }
-}
+    }
 }
