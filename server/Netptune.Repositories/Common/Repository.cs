@@ -58,7 +58,6 @@ namespace Netptune.Repositories.Common
             return Entities.IsReadonly(isReadonly).FirstOrDefault(EqualsPredicate(id));
         }
 
-
         /// <summary>
         /// Basic get query using entity id async
         /// </summary>
@@ -266,7 +265,6 @@ namespace Netptune.Repositories.Common
 
             return Task.CompletedTask;
         }
-    
 
         private static IPagedResult<TEntity> GetPagedResult(IQueryable<TEntity> entities, IPageQuery pageQuery)
         {

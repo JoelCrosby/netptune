@@ -45,7 +45,6 @@ namespace Netptune.Services
             return result;
         }
 
-
         public async Task<BoardGroup> AddBoardGroup(AddBoardGroupRequest request)
         {
             var boardId = request.BoardId ?? throw new ArgumentNullException(nameof(request.BoardId));

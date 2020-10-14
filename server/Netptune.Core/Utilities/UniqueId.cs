@@ -4,7 +4,7 @@ using HashidsNet;
 
 namespace Netptune.Core.Utilities
 {
-    public class UniqueId
+    public static class UniqueId
     {
         public static string Generate(string seed)
         {

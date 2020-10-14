@@ -34,7 +34,7 @@ namespace Netptune.Services
 
             if (user is null) return null;
 
-            return Cache.GetOrCreate(connectionId, entry => new UserConnection
+            return Cache.GetOrCreate(connectionId, _ => new UserConnection
             {
                 ConnectId = connectionId,
                 User = user,

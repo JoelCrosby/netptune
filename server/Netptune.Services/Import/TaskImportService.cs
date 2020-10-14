@@ -81,7 +81,6 @@ namespace Netptune.Services.Import
                 return Failed($"board with identifier '{boardId}' does not exist.");
             }
 
-
             var emailAddresses = GetEmailAddresses(rows);
             var users = await UnitOfWork.Users.GetByEmailRange(emailAddresses, true);
 
@@ -160,7 +159,7 @@ namespace Netptune.Services.Import
                     var hasBaseOrder = orderDict.TryGetValue(boardGroup.Id, out var order);
                     var baseOrder = hasBaseOrder  && order.HasValue ? order.Value : 0;
 
-                    groupTaskCounter[boardGroup.Id] += 1;
+                    groupTaskCounter[boardGroup.Id]++;
 
                     return new ProjectTaskInBoardGroup
                     {

@@ -36,7 +36,7 @@ namespace Netptune.App.Controllers
                 return BadRequest("Import File must be provided. Only one file can be uploaded at a time.");
             }
 
-            var stream = files.First().OpenReadStream();
+            var stream = files[0].OpenReadStream();
 
             var result = await TaskImportService.ImportWorkspaceTasks(boardId, stream);
 

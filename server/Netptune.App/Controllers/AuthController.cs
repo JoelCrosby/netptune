@@ -133,7 +133,7 @@ namespace Netptune.Api.Controllers
                 Password = password,
             });
 
-            if (result is null || !result.IsSuccess) return Unauthorized();
+            if (result?.IsSuccess != true) return Unauthorized();
 
             return Ok(result.Ticket);
         }
@@ -149,7 +149,7 @@ namespace Netptune.Api.Controllers
         {
             var result = await AuthenticationService.ChangePassword(request);
 
-            if (result is null || !result.IsSuccess) return Unauthorized();
+            if (result?.IsSuccess != true) return Unauthorized();
 
             return Ok(result);
         }

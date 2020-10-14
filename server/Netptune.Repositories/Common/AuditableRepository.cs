@@ -21,7 +21,6 @@ namespace Netptune.Repositories.Common
         where TContext : DbContext
         where TEntity : AuditableEntity<TId>
     {
-
         protected AuditableRepository(TContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
         {
         }
