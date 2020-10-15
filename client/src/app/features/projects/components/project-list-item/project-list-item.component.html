@@ -1,8 +1,12 @@
 <app-card-list-item
   [title]="project.name"
   [description]="project.description"
-  [subText]="project.repositoryUrl"
   [actions]="actions$ | async"
   (delete)="onDeleteClicked()"
 >
+
+  <a [href]="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
+    {{ project.repositoryUrl }}
+  </a>
+
 </app-card-list-item>
