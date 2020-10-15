@@ -42,16 +42,10 @@ export class ProjectListItemComponent implements OnInit {
               this.project.defaultBoardIdentifier,
             ],
           },
-          {
-            label: 'Edit Project',
-            click: () => this.onEditClicked(),
-          },
         ];
       })
     );
   }
-
-  onEditClicked() {}
 
   onDeleteClicked() {
     this.store.dispatch(deleteProject({ project: this.project }));
