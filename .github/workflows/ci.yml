@@ -23,19 +23,14 @@ jobs:
         run: |
           docker build -t dokku/netptune:prod .
       -
-        name: Create SSH key
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ../private.key
-          sudo chmod 600 ../private.key
-          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
-          DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
+        name: Add SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       -
         name: Push
+        env:
+          DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
-          docker save dokku/netptune:prod | ssh -i $SSH_KEY_PATH $DOKKU_HOST "docker load | dokku tags:deploy netptune prod"
+          docker save dokku/netptune:prod | ssh $DOKKU_HOST "docker load | dokku tags:deploy netptune prod"
