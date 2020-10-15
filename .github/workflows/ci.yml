@@ -33,4 +33,4 @@ jobs:
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
-          docker save dokku/netptune:prod | ssh $DOKKU_HOST "docker load | dokku tags:deploy netptune prod"
+          docker save dokku/netptune:prod | ssh dokku@$DOKKU_HOST "docker load | dokku tags:deploy netptune prod"
