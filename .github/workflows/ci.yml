@@ -34,7 +34,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
-          DOKKU_HOST: ${{ DOKKU_HOST }}
+          DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
       -
         name: Push
         run: |
