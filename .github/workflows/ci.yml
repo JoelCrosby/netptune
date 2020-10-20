@@ -21,7 +21,7 @@ jobs:
       -
         name: Build
         run: |
-          docker build -t dokku/netptune:prod .
+          docker build -t dokku/netptune:ci .
       -
         name: Add SSH key
         uses: shimataro/ssh-key-action@v2
@@ -33,4 +33,4 @@ jobs:
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
-          docker save dokku/netptune:prod | ssh dokku@$DOKKU_HOST "docker load | dokku tags:deploy netptune prod"
+          docker save dokku/netptune:ci | ssh $DOKKU_HOST "docker load; dokku tags:create netptune previous; dokku tags:deploy netptune ci && dokku tags:create netptune latest"
