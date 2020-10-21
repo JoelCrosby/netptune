@@ -2,4 +2,5 @@
 
 A Simple project task tracking application
 
-![.NET Core](https://github.com/JoelCrosby/Netptune/workflows/.NET%20Core/badge.svg)
+![ci](https://github.com/JoelCrosby/Netptune/workflows/ci/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/joelcrosby/netptune/badge)](https://www.codefactor.io/repository/github/joelcrosby/netptune)
