@@ -3,5 +3,6 @@
   [description]="workspace.description"
   [subText]="'Last updated ' + (workspace.updatedAt | fromNow)"
   [actions]="actions"
+  (delete)="deleteClicked(workspace)"
 >
 </app-card-list-item>

@@ -5,15 +5,19 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { filterStringArray } from '@core/util/arrays';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 export interface AutocompleteChipsSelectionChanged {
   type: 'Added' | 'Removed';
@@ -26,11 +30,12 @@ export interface AutocompleteChipsSelectionChanged {
   styleUrls: ['./autocomplete-chips.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AutocompleteChipsComponent {
+export class AutocompleteChipsComponent implements OnInit {
   @Input() placeholder: string;
   @Input() label: string;
   @Input() options: string[];
   @Input() selected: string[] = [];
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   @Output() selectionChanged = new EventEmitter<
     AutocompleteChipsSelectionChanged
@@ -49,15 +54,15 @@ export class AutocompleteChipsComponent {
 
   @ViewChild('input') input: ElementRef;
 
-  constructor() {
+  ngOnInit() {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
-      map((option: string | null) =>
-        option ? this.filter(option) : this.options.slice()
-      )
+      startWith(''),
+      map((option: string | null) => this.filter(option)),
+      map((values) => values.filter((value) => !this.selected.includes(value)))
     );
   }
 
-  add(event: MatChipInputEvent): void {
+  add(event: MatChipInputEvent) {
     const input = event.input;
     const value = event.value;
 
@@ -87,7 +92,7 @@ export class AutocompleteChipsComponent {
     this.formCtrl.setValue(null);
   }
 
-  remove(option: string): void {
+  remove(option: string) {
     const index = this.selected.indexOf(option);
 
     if (index >= 0) {

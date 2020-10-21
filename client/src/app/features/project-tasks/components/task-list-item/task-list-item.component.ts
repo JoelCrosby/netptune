@@ -15,7 +15,7 @@ import * as actions from '@core/store/tasks/tasks.actions';
 export class TaskListItemComponent {
   @Input() task: TaskViewModel;
 
-  constructor(private store: Store, public dialog: MatDialog) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {

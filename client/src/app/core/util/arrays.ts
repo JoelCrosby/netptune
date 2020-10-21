@@ -3,6 +3,10 @@ export function filterStringArray(array: string[], term: string): string[] {
     return array;
   }
 
+  if (!array) {
+    return array;
+  }
+
   const filterValue = term.toLowerCase();
 
   return array.filter((item) => fuzzysearch(filterValue, item));
