@@ -1,49 +1,51 @@
 {
-	"folders": [
-		{
-      		"name": "Netptune Client",
-			"path": "./client"
-		}
-	],
-	"settings": {
-		"files.exclude": {
-			"**/.git": true,
-			"**/.svn": true,
-			"**/.hg": true,
-			"**/CVS": true,
-			"**/.DS_Store": true,
-			"**/server": true,
-			"**/bazel-out/**": true,
-			"**/dist/**": true,
-			"**/node_modules/**": true,
-			"**/*.sln": true,
-			"**/*.sln.DotSettings": true,
-			"**/*.cs": true,
-		},
-		"search.exclude": {
-			"**/node_modules": true,
-			"**/bower_components": true,
-			"**/server/**": true,
-			"**/bazel-out/**": true,
-			"**/dist/**": true,
-			"**/node_modules/**": true,
-		},
-		"files.watcherExclude": {
-			"**/.git/objects/**": true,
-			"**/.git/subtree-cache/**": true,
-			"**/node_modules/*/**": true,
-			"**/server*": true,
-			"**/bazel-out/**": true,
-			"**/dist/**": true,
-			"**/node_modules/**": true,
-			"**/*.sln": true,
-			"**/*.sln.DotSettings": true,
-			"**/*.cs": true,
-		},
-		"angular-template-formatter.indentWidth": 2,
-		"[html]": {
-			"editor.defaultFormatter": "stringham.angular-template-formatter"
-		},
-		"typescript.tsdk": "node_modules\\typescript\\lib",
-	},
+  "folders": [
+    {
+      "name": "Netptune Client",
+      "path": "./client"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/server": true,
+      "**/bazel-out/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+      "**/*.sln": true,
+      "**/*.sln.DotSettings": true,
+      "**/*.cs": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/server/**": true,
+      "**/bazel-out/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true
+    },
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/*/**": true,
+      "**/server*": true,
+      "**/bazel-out/**": true,
+      "**/dist/**": true,
+      "**/node_modules/**": true,
+      "**/*.sln": true,
+      "**/*.sln.DotSettings": true,
+      "**/*.cs": true
+    },
+    "angular-template-formatter.indentWidth": 2,
+    "[html]": {
+      "editor.defaultFormatter": "stringham.angular-template-formatter"
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

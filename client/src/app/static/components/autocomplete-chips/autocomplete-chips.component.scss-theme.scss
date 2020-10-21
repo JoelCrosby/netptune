@@ -15,4 +15,16 @@
       min-height: 24px;
     }
   }
+
+  .auto-complete-option {
+    .mat-option-text {
+      margin: .2rem .2rem .2rem 0;
+      border-radius: 4px;
+      padding: .2rem .4rem;
+      min-height: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .125px;
+    }
+  }
 }

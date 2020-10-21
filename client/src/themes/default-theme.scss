@@ -21,7 +21,7 @@ $mat-light-theme-foreground: (
 
 // Background palette for light themes.
 $mat-light-theme-background: (
-  side-bar: #3d375c,
+  side-bar: #181818,
   board-group: #f8f8f8,
   status-bar: #fff,
   app-bar:    #fff,
@@ -56,5 +56,10 @@ $mat-light-theme-background: (
 $light-app-primary: mat-palette($mat-deep-purple);
 $light-app-accent:  mat-palette($mat-deep-purple, 900);
 $light-app-warn:    mat-palette($mat-red, A200, A100, A400);
+
+::selection {
+  background: mat-color($light-app-primary);
+}
+
 
 $default-theme: netptune-mat-light-theme($light-app-primary, $light-app-accent, $light-app-warn);

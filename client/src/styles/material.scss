@@ -45,3 +45,11 @@ textarea.mat-input-element {
 .mat-card-title {
   font-family: 'Overpass', sans-serif;
 }
+
+// Material Auto Complete
+
+.mat-autocomplete-panel {
+  @extend .custom-scroll;
+
+  border-radius: 4px;
+}

@@ -39,6 +39,7 @@
     <mat-option
       *ngFor="let option of filteredOptions | async"
       [value]="option"
+      class="auto-complete-option"
     >
       {{ option }}
     </mat-option>

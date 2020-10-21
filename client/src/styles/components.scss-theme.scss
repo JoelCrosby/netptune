@@ -41,6 +41,10 @@
     background-clip: padding-box;
   }
 
+  .custom-scroll {
+    scrollbar-color: mat-color($foreground, text, .4) transparent;
+  }
+
   // Modal Backdrops
 
   .cdk-overlay-dark-backdrop {

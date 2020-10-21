@@ -21,7 +21,7 @@ import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { colorDictionary } from '@core/util/colors/colors';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -76,6 +76,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       {
         name: new FormControl('', {
           validators: [Validators.required],
+          updateOn: 'change',
         }),
         identifier: new FormControl('', {
           validators: [Validators.required],
@@ -97,6 +98,19 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       this.color.setValue(workspace.metaInfo.color, { emitEvent: false });
 
       this.identifier.disable({ emitEvent: false });
+    } else {
+      this.name.valueChanges
+        .pipe(
+          takeUntil(this.onDestroy$),
+          tap((value: string | undefined) => {
+            if (!value || typeof value !== 'string') return;
+
+            this.identifier.setValue(
+              value.trim().toLocaleLowerCase().replace(' ', '-')
+            );
+          })
+        )
+        .subscribe();
     }
   }
 
