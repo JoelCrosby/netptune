@@ -58,6 +58,8 @@
             ></textarea>
           </mat-form-field>
 
+          <app-editor></app-editor>
+
           <app-autocomplete-chips
             [options]="tags$ | async"
             [selected]="task.tags"
