@@ -20,6 +20,7 @@ import { AutocompleteChipsComponent } from './components/autocomplete-chips/auto
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { AvatarFontSizePipe } from './pipes/avatar-font-size.pipe';
 import { PxPipe } from './pipes/px.pipe';
+import { EditorComponent } from './components/editor/editor.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { PxPipe } from './pipes/px.pipe';
     CardListItemComponent,
     AutocompleteChipsComponent,
     ImageCropperComponent,
+    EditorComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -63,6 +65,7 @@ import { PxPipe } from './pipes/px.pipe';
     CardListItemComponent,
     AutocompleteChipsComponent,
     ImageCropperComponent,
+    EditorComponent,
   ],
 })
 export class StaticModule {}

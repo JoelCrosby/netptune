@@ -14,19 +14,22 @@ import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
+import { AddTagRequest } from '@core/models/requests/add-tag-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
-import * as TagsSelectors from '@core/store/tags/tags.selectors';
 import * as TagsActions from '@core/store/tags/tags.actions';
+import * as TagsSelectors from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
+import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -36,9 +39,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
 @Component({
   selector: 'app-task-detail-dialog',
