@@ -40,12 +40,5 @@
       "**/*.sln.DotSettings": true,
       "**/*.cs": true
     },
-    "angular-template-formatter.indentWidth": 2,
-    "[html]": {
-      "editor.defaultFormatter": "stringham.angular-template-formatter"
-    },
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
