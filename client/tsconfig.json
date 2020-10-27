@@ -19,6 +19,10 @@
     "noUnusedParameters": true,
     "target": "es2015",
     "module": "es2020",
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
     "lib": [
       "es2018",
       "dom"
@@ -43,5 +47,9 @@
     "strictTemplates": true,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "types"
+  ],
 }

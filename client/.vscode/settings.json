@@ -39,7 +39,7 @@
     "**/dist/**": true
   },
   "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.importModuleSpecifier": "auto",
+  "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "files.insertFinalNewline": true,
 }

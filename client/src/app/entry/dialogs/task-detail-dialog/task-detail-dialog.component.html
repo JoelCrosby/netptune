@@ -41,7 +41,7 @@
             ></textarea>
           </mat-form-field>
 
-          <mat-form-field class="w-100" appearance="fill">
+          <!-- <mat-form-field class="w-100" appearance="fill">
             <mat-label>Description</mat-label>
             <textarea
               matInput
@@ -56,9 +56,13 @@
               cdkAutosizeMinRows="3"
               cdkAutosizeMaxRows="9"
             ></textarea>
-          </mat-form-field>
+          </mat-form-field> -->
 
-          <app-editor></app-editor>
+          <app-editor
+            formControlName="description"
+          >
+
+          </app-editor>
 
           <app-autocomplete-chips
             [options]="tags$ | async"
