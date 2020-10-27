@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,6 +49,25 @@ namespace Netptune.App.Controllers
             user.PictureUrl = result.Payload?.Uri;
 
             await UserService.Update(user);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("media/{workspace}")]
+        public async Task<IActionResult> UploadMedia([Required] string workspace)
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+
+            if (file is null) return BadRequest();
+
+            var userId = await Identity.GetCurrentUserId();
+            var extension = Path.GetExtension(file.FileName);
+            var key = Path.Join(PathConstants.MediaPath(workspace), $"{UniqueId.Generate(userId)}{extension}");
+
+            var fileStream = file.OpenReadStream();
+
+            var result = await StorageService.UploadFileAsync(fileStream, key);
 
             return Ok(result);
         }

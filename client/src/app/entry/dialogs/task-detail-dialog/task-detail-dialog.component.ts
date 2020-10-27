@@ -114,7 +114,7 @@ export class TaskDetailDialogComponent
         validators: [Validators.required, Validators.minLength(4)],
       }),
       description: new FormControl(task?.description, {
-        updateOn: 'blur',
+        updateOn: 'change',
         validators: [],
       }),
     });
