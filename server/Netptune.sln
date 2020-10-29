@@ -20,17 +20,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Core", "Netptune.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CEEB490-0B9D-41CE-869D-762B85998B8A}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = ..\.editorconfig
-		.gitignore = ..\.gitignore
-		global.json = global.json
-		README.md = ..\README.md
-		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		..\.dockerignore = ..\.dockerignore
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		..\docker-compose.yml = ..\docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
+		global.json = global.json
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\netptune-client.code-workspace = ..\netptune-client.code-workspace
+		..\netptune-server.code-workspace = ..\netptune-server.code-workspace
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netptune.Messaging", "Netptune.Messaging\Netptune.Messaging.csproj", "{C1A80FA9-1194-4A5B-9591-AF186A55C2F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Messaging", "Netptune.Messaging\Netptune.Messaging.csproj", "{C1A80FA9-1194-4A5B-9591-AF186A55C2F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netptune.Storage", "Netptune.Storage\Netptune.Storage.csproj", "{E9186985-AFCA-42CF-89BB-21D726871082}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Storage", "Netptune.Storage\Netptune.Storage.csproj", "{E9186985-AFCA-42CF-89BB-21D726871082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
