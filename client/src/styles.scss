@@ -37,6 +37,7 @@
 @import './app/static/components/page-header/page-header.component.scss-theme.scss';
 @import './app/static/components/autocomplete-chips/autocomplete-chips.component.scss-theme.scss';
 @import './app/static/components/image-cropper/image-cropper.component.scss-theme.scss';
+@import './app/static/components/editor/editor.component.scss-theme.scss';
 
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
 @import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
@@ -70,6 +71,7 @@
   @include baords-theme($theme);
   @include spinner-theme($theme);
   @include avatar-theme($theme);
+  @include editor-theme($theme);
   @include page-header-theme($theme);
   @include autocomplete-chips-theme($theme);
   @include image-cropper-theme($theme);

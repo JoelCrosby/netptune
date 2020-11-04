@@ -1,8 +1,4 @@
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
-import { StorageService } from '@core/services/storage.service';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -11,10 +7,20 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { StorageService } from '@core/services/storage.service';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
-import List from '@editorjs/list';
 import ImageTool from '@editorjs/image';
+import List from '@editorjs/list';
+import Link from '@editorjs/link';
+import InlineCode from '@editorjs/inline-code';
+import Code from '@editorjs/code';
+import Checklist from '@editorjs/checklist';
+import Embed from '@editorjs/embed';
+import Marker from '@editorjs/marker';
+import Underline from '@editorjs/underline';
+import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -31,7 +37,7 @@ import { first } from 'rxjs/operators';
     },
   ],
 })
-export class EditorComponent implements AfterViewInit, ControlValueAccessor {
+export class EditorComponent implements ControlValueAccessor {
   @ViewChild('editorJs', { static: true }) el: ElementRef;
 
   editor: EditorJS;
@@ -40,10 +46,6 @@ export class EditorComponent implements AfterViewInit, ControlValueAccessor {
   onTouch: () => void;
 
   constructor(private storage: StorageService, private store: Store) {}
-
-  ngAfterViewInit() {
-    // this.createEditor();
-  }
 
   writeValue(obj: string) {
     const intialValue = obj && JSON.parse(obj);
@@ -70,6 +72,7 @@ export class EditorComponent implements AfterViewInit, ControlValueAccessor {
       tools: {
         header: Header,
         list: List,
+        code: Code,
         image: {
           class: ImageTool,
           config: {
@@ -79,35 +82,54 @@ export class EditorComponent implements AfterViewInit, ControlValueAccessor {
             },
           },
         },
+        checklist: {
+          class: Checklist,
+          inlineToolbar: true,
+        },
+        inlineCode: {
+          class: InlineCode,
+          shortcut: 'CMD+SHIFT+C',
+        },
+        Marker: {
+          class: Marker,
+          shortcut: 'CMD+SHIFT+M',
+        },
+        embed: {
+          class: Embed,
+          config: {
+            services: {
+              youtube: true,
+              coub: true,
+            },
+          },
+        },
+        underline: Underline,
+        link: Link,
       },
       data: initialValue,
-      onChange: (args) => {
-        console.log(' OnChange', args);
-
+      onChange: () => {
         this.editor.save().then((value) => {
           console.log('saved', value);
           this.onChange(JSON.stringify(value));
         });
       },
     });
-
-    console.log({ editor: this.editor });
   }
 
-  uploadFile(data: File) {
-    return this.store
+  async uploadFile(data: File) {
+    const workspace = await this.store
       .select(selectCurrentWorkspaceIdentifier)
       .pipe(first())
-      .toPromise()
-      .then((workspace) =>
-        this.storage.uploadMedia(workspace, data).toPromise()
-      )
-      .then((response) => ({
-        success: 1,
-        file: {
-          url: response.payload.uri,
-        },
-      }));
+      .toPromise();
+    const response = await this.storage
+      .uploadMedia(workspace, data)
+      .toPromise();
+    return {
+      success: 1,
+      file: {
+        url: response.payload.uri,
+      },
+    };
   }
 
   async uploadByUrl(url: string) {
