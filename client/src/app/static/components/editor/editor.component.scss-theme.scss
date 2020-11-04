@@ -1,0 +1,107 @@
+@use 'sass:color';
+@use '~@angular/material/theming';
+
+@mixin editor-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  $is-dark-theme: map-get($theme, is-dark);
+  $fill-background: mat-color($foreground, base, if($is-dark-theme, .1, .04));
+
+  $background-color: mat-color($background, background);
+  $tooltip-background-color: color.scale($background-color, $lightness: 10%);
+
+  .editor {
+    background-color: $fill-background;
+    color: mat-color($foreground, text);
+
+    .inline-code,
+    .ce-code__textarea.cdx-input {
+      color: mat-color($foreground, text, .6);
+      background-color: color.scale($fill-background, $lightness: 10%);
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      white-space: pre-wrap;
+    }
+
+
+    .ce-code__textarea.cdx-input {
+      @extend .custom-scroll;
+
+      border-radius: 3px;
+      font-size: 14px;
+      resize: none;
+    }
+  }
+
+  .ce-inline-tool,
+  .ce-inline-toolbar__dropdown,
+  .cdx-settings-button,
+  .ce-settings__button,
+  .ce-conversion-tool {
+    color: mat-color($foreground, text);
+
+    &:hover {
+      background-color: color.scale($fill-background, $lightness: 10%);
+    }
+  }
+
+  .ce-paragraph[data-placeholder]:empty::before {
+    color: mat-color($foreground, text, .6);
+  }
+
+  .ce-inline-toolbar,
+  .ce-settings,
+  .ce-conversion-tool,
+  .ce-conversion-toolbar {
+    border: 0;
+    border-color: $tooltip-background-color;
+  }
+
+  .ce-inline-toolbar__dropdown {
+    border-color:  color.scale($tooltip-background-color, $lightness: 10%);
+  }
+
+  .ce-conversion-tool--focused {
+    box-shadow: none;
+    background-color: mat-color($primary, .1) !important;
+  }
+
+  .ce-toolbar__settings-btn,
+  .ce-settings,
+  .ce-inline-toolbar,
+  .ce-conversion-toolbar,
+  .ce-conversion-tool__icon {
+    border-radius: 3px;
+    background-color: $tooltip-background-color;
+    color: mat-color($foreground, text, .6);
+  }
+
+  .ce-toolbar__plus {
+    color: mat-color($primary, .8);
+  }
+
+  .ce-block--selected
+  .ce-block__content {
+    background-color: mat-color($primary, .08);
+  }
+
+  .ce-inline-tool-input {
+    color: mat-color($foreground, text, .6);
+    background-color: color.scale($fill-background, $lightness: 20%);
+  }
+
+  .cdx-input {
+    padding: 4px 8px;
+    box-shadow: none;
+    border-color: color.scale($fill-background, $lightness: 10%);
+  }
+
+  .embed-tool__caption[contentEditable=true][data-placeholder]::before,
+  .image-tool__caption[contentEditable=true][data-placeholder]::before {
+    color: mat-color($foreground, text, .6);
+  }
+}

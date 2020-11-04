@@ -24,7 +24,7 @@ namespace Netptune.Entities.EntityMaps
 
             builder
                 .Property(task => task.Description)
-                .HasMaxLength(4096);
+                .HasMaxLength(32768);
 
             builder
                 .Property(task => task.Status)
