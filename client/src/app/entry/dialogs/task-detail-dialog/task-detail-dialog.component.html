@@ -29,7 +29,6 @@
             <textarea
               matInput
               class="form-control"
-              placeholder="Enter Task Summary"
               formControlName="name"
               name="name"
               required
@@ -47,7 +46,6 @@
               matInput
               class="form-control"
               formControlName="description"
-              placeholder="Enter Task Description"
               name="description"
               aria-label="With textarea"
               rows="3"
@@ -68,7 +66,6 @@
             [options]="tags$ | async"
             [selected]="task.tags"
             (selectionChanged)="onTagsSelectionChanged($event)"
-            placeholder="Add Tags"
             label="Tags"
           >
           </app-autocomplete-chips>
