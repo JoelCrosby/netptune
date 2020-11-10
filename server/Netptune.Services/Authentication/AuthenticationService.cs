@@ -184,7 +184,7 @@ namespace Netptune.Services.Authentication
 
         public async Task<CurrentUserResponse> CurrentUser()
         {
-            var principle = ContextAccessor.HttpContext.User;
+            var principle = ContextAccessor.HttpContext?.User;
             var user = await UserManager.GetUserAsync(principle);
 
             if (user is null) return null;

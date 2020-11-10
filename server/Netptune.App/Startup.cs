@@ -43,8 +43,6 @@ namespace Netptune.App
         {
             var connectionString = GetConnectionString();
 
-            Console.WriteLine($"GetConnectionString: {connectionString}");
-
             services.AddCors();
             services.AddControllers();
 
@@ -191,8 +189,6 @@ namespace Netptune.App
 
         private static string ParseConnectionString(string value)
         {
-            Console.WriteLine($"envConString: {value}");
-
             var conn = value
                 .Replace("//", "")
                 .Split('/', ':', '@', '?')
