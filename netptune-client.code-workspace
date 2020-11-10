@@ -39,6 +39,6 @@
       "**/*.sln": true,
       "**/*.sln.DotSettings": true,
       "**/*.cs": true
-    },
+    }
   }
 }

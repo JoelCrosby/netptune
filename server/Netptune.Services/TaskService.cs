@@ -73,6 +73,8 @@ namespace Netptune.Services
             {
                 if (saveCounter > 4) throw new Exception($"Save Task failed after {saveCounter + 1} attempts.");
 
+                if (project is null) throw new Exception("ProjectId cannot be null.");
+
                 var scopeId = await TaskRepository.GetNextScopeId(project.Id, increment);
 
                 if (!scopeId.HasValue) throw new Exception($"Unable to get scope id for project with id {project.Id}.");

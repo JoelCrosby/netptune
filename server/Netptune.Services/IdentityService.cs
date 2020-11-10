@@ -21,7 +21,7 @@ namespace Netptune.Services
 
         public Task<AppUser> GetCurrentUser()
         {
-            var user = ContextAccessor.HttpContext.User;
+            var user = ContextAccessor.HttpContext?.User;
 
             return UserManager.GetUserAsync(user);
         }
