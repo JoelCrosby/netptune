@@ -55,7 +55,7 @@ namespace Netptune.Services
 
             if (taskId is null) return null;
 
-            return await Comments.GetCommentViewModelsForTask(taskId.Value, true);
+            return await Comments.GetCommentViewModelsForTask(taskId.Value);
         }
 
         public async Task<ClientResponse> Delete(int id)
