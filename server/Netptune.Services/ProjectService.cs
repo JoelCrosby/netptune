@@ -68,7 +68,7 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                return await ProjectRepository.GetProjectViewModel(project.Id, true);
+                return await ProjectRepository.GetProjectViewModel(project.Id);
             });
         }
 
@@ -130,12 +130,12 @@ namespace Netptune.Services
 
         public Task<ProjectViewModel> GetProject(int id)
         {
-            return ProjectRepository.GetProjectViewModel(id, true);
+            return ProjectRepository.GetProjectViewModel(id);
         }
 
         public Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
         {
-            return ProjectRepository.GetProjects(workspaceSlug, true);
+            return ProjectRepository.GetProjects(workspaceSlug);
         }
 
         public async Task<ProjectViewModel> UpdateProject(Project project)
@@ -151,7 +151,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return await ProjectRepository.GetProjectViewModel(result.Id, true);
+            return await ProjectRepository.GetProjectViewModel(result.Id);
         }
 
         private Task<string> GetProjectKey(Project project, int workspaceId)

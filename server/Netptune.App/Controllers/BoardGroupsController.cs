@@ -45,6 +45,8 @@ namespace Netptune.Api.Controllers
         {
             var result = await BoardGroupService.UpdateBoardGroup(boardGroup);
 
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
 

@@ -21,7 +21,7 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug, bool isReadonly = false)
+        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
         {
             var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceSlug);
 
@@ -36,11 +36,12 @@ namespace Netptune.Repositories
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
                 .Include(project => project.ProjectBoards)
+                .AsNoTracking()
                 .Select(project => GetViewModel(project))
-                .ApplyReadonly(isReadonly);
+                .ToListAsync();
         }
 
-        public Task<ProjectViewModel> GetProjectViewModel(int id, bool isReadonly = false)
+        public Task<ProjectViewModel> GetProjectViewModel(int id)
         {
             Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
@@ -48,8 +49,8 @@ namespace Netptune.Repositories
                 .Where(project => project.Id == id && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
+                .AsNoTracking()
                 .Select(project => GetViewModel(project))
-                .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync();
         }
 

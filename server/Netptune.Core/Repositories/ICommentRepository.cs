@@ -11,8 +11,8 @@ namespace Netptune.Core.Repositories
     {
         Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false);
 
-        Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, bool isReadonly = false);
+        Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId);
 
-        Task<CommentViewModel> GetCommentViewModel(int id, bool isReadonly = false);
+        Task<CommentViewModel> GetCommentViewModel(int id);
     }
 }

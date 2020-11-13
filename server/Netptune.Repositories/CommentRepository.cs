@@ -32,23 +32,21 @@ namespace Netptune.Repositories
                 .ApplyReadonly(isReadonly);
         }
 
-        public async Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, bool isReadonly = false)
+        public async Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId)
         {
-            var comments = await GetCommentsForTask(taskId, isReadonly);
+            var comments = await GetCommentsForTask(taskId, true);
 
             return comments.Select(comment => comment.ToViewModel()).ToList();
         }
 
-        public async Task<CommentViewModel> GetCommentViewModel(int id, bool isReadonly = false)
+        public async Task<CommentViewModel> GetCommentViewModel(int id)
         {
-            var query = Entities
+            var comment = await Entities
                 .Include(x => x.CreatedByUser)
                 .Include(x => x.Owner)
-                .Include(x => x.Reactions);
-
-            var comment = isReadonly
-                ? await query.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id)
-                : await query.FirstOrDefaultAsync(x => x.Id == id);
+                .Include(x => x.Reactions)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return comment.ToViewModel();
         }
