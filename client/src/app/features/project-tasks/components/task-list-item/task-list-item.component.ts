@@ -19,7 +19,7 @@ export class TaskListItemComponent {
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {
-      width: '800px',
+      width: TaskDetailDialogComponent.width,
       data: this.task,
     });
   }
