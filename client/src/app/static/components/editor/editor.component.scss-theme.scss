@@ -104,4 +104,8 @@
   .image-tool__caption[contentEditable=true][data-placeholder]::before {
     color: mat-color($foreground, text, .6);
   }
+
+  .codex-editor__loader {
+    height: 137.78px;
+  }
 }
