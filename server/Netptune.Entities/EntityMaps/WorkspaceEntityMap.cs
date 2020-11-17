@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
@@ -37,11 +38,19 @@ namespace Netptune.Entities.EntityMaps
             // (One-to-One) Workspace > Task
 
             builder
-                .HasMany(workspace => workspace.ProjectTasks)
+                .HasMany(workspace => workspace.Tasks)
                 .WithOne(task => task.Workspace)
                 .HasForeignKey(task => task.WorkspaceId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+
+
+            builder
+                .HasMany(workspace => workspace.Users)
+                .WithMany(user => user.Workspaces)
+                .UsingEntity<WorkspaceAppUser>(
+                    b => b.HasOne(m => m.User).WithMany(tag => tag.WorkspaceUsers),
+                    b => b.HasOne(m => m.Workspace).WithMany(task => task.WorkspaceUsers));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -29,7 +29,10 @@ namespace Netptune.Core.Entities
         public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
 
         [JsonIgnore]
-        public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
+        public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
+
+        [JsonIgnore]
+        public ICollection<AppUser> Users { get; set; } = new HashSet<AppUser>();
 
         #endregion
     }

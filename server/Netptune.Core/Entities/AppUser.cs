@@ -64,6 +64,9 @@ namespace Netptune.Core.Entities
         [JsonIgnore]
         public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
 
+        [JsonIgnore]
+        public ICollection<Workspace> Workspaces { get; } = new HashSet<Workspace>();
+
         #endregion
     }
 }
