@@ -9,17 +9,18 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
+import Checklist from '@editorjs/checklist';
+import Code from '@editorjs/code';
+import EditorJS, { LogLevels, OutputData } from '@editorjs/editorjs';
+import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
-import List from '@editorjs/list';
-import Link from '@editorjs/link';
 import InlineCode from '@editorjs/inline-code';
-import Code from '@editorjs/code';
-import Checklist from '@editorjs/checklist';
-import Embed from '@editorjs/embed';
+import Link from '@editorjs/link';
+import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
+import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 
@@ -66,6 +67,9 @@ export class EditorComponent implements ControlValueAccessor {
 
   createEditor(initialValue: OutputData = null) {
     this.editor = new EditorJS({
+      logLevel: environment.production
+        ? ('ERROR' as LogLevels)
+        : ('INFO' as LogLevels),
       placeholder: 'Description',
       holder: this.el.nativeElement,
       minHeight: 100,
@@ -109,7 +113,6 @@ export class EditorComponent implements ControlValueAccessor {
       data: initialValue,
       onChange: () => {
         this.editor.save().then((value) => {
-          console.log('saved', value);
           this.onChange(JSON.stringify(value));
         });
       },
