@@ -57,7 +57,7 @@ export class ProjectTasksEffects {
       switchMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
-          map((task) => actions.editProjectTasksSuccess({ task })),
+          map((res) => actions.editProjectTasksSuccess({ task: res.payload })),
           catchError((error) => of(actions.editProjectTasksFail({ error })))
         )
       )
