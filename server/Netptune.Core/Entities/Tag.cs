@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -15,6 +15,9 @@ namespace Netptune.Core.Entities
 
         [JsonIgnore]
         public ICollection<ProjectTaskTag> ProjectTaskTags { get; set; } = new HashSet<ProjectTaskTag>();
+
+        [JsonIgnore]
+        public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
 
         #endregion
 
