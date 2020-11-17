@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
@@ -42,6 +43,13 @@ namespace Netptune.Entities.EntityMaps
                 .HasForeignKey(task => task.AssigneeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder
+                .HasMany(task => task.Tags)
+                .WithMany(tag => tag.Tasks)
+                .UsingEntity<ProjectTaskTag>(
+                    b => b.HasOne(m => m.Tag).WithMany(tag => tag.ProjectTaskTags),
+                    b => b.HasOne(m => m.ProjectTask).WithMany(task => task.ProjectTaskTags));
 
             builder
                 .HasIndex(task => new { task.ProjectId, task.ProjectScopeId })

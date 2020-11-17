@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dapper;
 
 using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
@@ -32,6 +33,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
                 .Include(x => x.Workspace)
+                .Include(x => x.Tags)
                 .AsNoTracking()
                 .Select(task => task.ToViewModel())
                 .FirstOrDefaultAsync();
@@ -103,8 +105,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Project)
                 .Include(x => x.Owner)
                 .Include(x => x.Workspace)
-                .Include(x => x.ProjectTaskTags)
-                    .ThenInclude(x => x.Tag);
+                .Include(x => x.Tags);
 
             return isReadonly ? queryable.AsNoTracking() : queryable;
         }
