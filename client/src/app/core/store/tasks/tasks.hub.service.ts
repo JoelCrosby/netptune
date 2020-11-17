@@ -114,7 +114,11 @@ export class ProjectTasksHubService {
   }
 
   put(groupId: string, task: ProjectTask | BoardViewTask) {
-    return this.hub.invoke<TaskViewModel>('update', groupId, task);
+    return this.hub.invoke<ClientResponse<TaskViewModel>>(
+      'update',
+      groupId,
+      task
+    );
   }
 
   delete(groupId: string, task: ProjectTask) {
