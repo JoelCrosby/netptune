@@ -66,6 +66,10 @@ export class EditorComponent implements ControlValueAccessor {
   }
 
   createEditor(initialValue: OutputData = null) {
+    if (this.editor) {
+      return;
+    }
+
     this.editor = new EditorJS({
       logLevel: environment.production
         ? ('ERROR' as LogLevels)
