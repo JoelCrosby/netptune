@@ -1,13 +1,13 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+ARG COMMIT
+ARG GITHUB_REF
+ARG BUILD_NUMBER
+
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /
 EXPOSE 80
 EXPOSE 443
-
-ARG COMMIT
-ARG GITHUB_REF
-ARG BUILD_NUMBER
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /
@@ -32,6 +32,9 @@ RUN npm run build
 
 
 FROM build AS publish
+ARG COMMIT
+ARG GITHUB_REF
+ARG BUILD_NUMBER
 RUN dotnet publish "Netptune.App.csproj" -c Release -o /app/publish /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}"
 
 FROM base AS final
