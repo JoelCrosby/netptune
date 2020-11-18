@@ -21,7 +21,7 @@ COPY ["server/Netptune.Storage/Netptune.Storage.csproj", "Netptune.Storage/"]
 RUN dotnet restore "Netptune.App/Netptune.App.csproj"
 COPY /server .
 WORKDIR "/Netptune.App"
-RUN dotnet build "Netptune.App.csproj" -c Release -o /app/build
+RUN dotnet build "Netptune.App.csproj" -c Release -o /app/build /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}"
 
 FROM node:14 AS client-build
 WORKDIR /client
@@ -32,7 +32,7 @@ RUN npm run build
 
 
 FROM build AS publish
-RUN dotnet publish "Netptune.App.csproj" -c Release -o /app/publish /p:SourceRevisionId=${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}
+RUN dotnet publish "Netptune.App.csproj" -c Release -o /app/publish /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}"
 
 FROM base AS final
 WORKDIR /app
