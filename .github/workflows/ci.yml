@@ -24,7 +24,12 @@ jobs:
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
-          docker build -t dokku/netptune:$GITHUB_SHA .
+          BUILD_NUMBER=$(date '+%Y%m%d')
+          docker build \
+          --build-arg "COMMIT=${GITHUB_SHA}" \
+          --build-arg "REF=${GITHUB_REF}" \
+          --build-arg "BUILD_NUMBER=${BUILD_NUMBER}${GITHUB_RUN_NUMBER}" \
+          -t dokku/netptune:$GITHUB_SHA .
           docker save dokku/netptune:$GITHUB_SHA | bzip2 | ssh $DOKKU_HOST "bunzip2 | docker load"
       -
         name: Deploy
