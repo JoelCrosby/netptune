@@ -11,6 +11,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Hubs;
+using Netptune.App.Utility;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 using Netptune.Messaging;
@@ -45,6 +46,8 @@ namespace Netptune.App
 
             services.AddCors();
             services.AddControllers();
+
+            services.AddSingleton<BuildInfo>();
 
             services.AddSignalR(options =>
             {
