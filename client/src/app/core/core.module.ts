@@ -22,6 +22,7 @@ import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
 import { TagsEffects } from './store/tags/tags.effects';
+import { MetaEffects } from './store/meta/meta.effects';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { TagsEffects } from './store/tags/tags.effects';
     StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([
       AuthEffects,
+      MetaEffects,
       LayoutEffects,
       SettingsEffects,
       WorkspacesEffects,

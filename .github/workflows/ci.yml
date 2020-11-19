@@ -29,6 +29,7 @@ jobs:
           --build-arg "COMMIT=${GITHUB_SHA}" \
           --build-arg "GITHUB_REF=${GITHUB_REF}" \
           --build-arg "BUILD_NUMBER=${BUILD_NUMBER}.${GITHUB_RUN_NUMBER}" \
+          --build-arg "RUN_ID=${GITHUB_RUN_ID}" \
           -t dokku/netptune:$GITHUB_SHA .
           docker save dokku/netptune:$GITHUB_SHA | bzip2 | ssh $DOKKU_HOST "bunzip2 | docker load"
       -
