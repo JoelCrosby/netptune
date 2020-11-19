@@ -10,7 +10,7 @@
   $background: map-get($theme, background);
 
   $is-dark-theme: map-get($theme, is-dark);
-  $fill-background: mat-color($foreground, base, if($is-dark-theme, .1, .04));
+  $fill-background: transparent;
 
   $background-color: mat-color($background, background);
   $tooltip-background-color: color.scale($background-color, $lightness: 10%);
@@ -27,10 +27,15 @@
       white-space: pre-wrap;
     }
 
+    .cdx-input.image-tool__caption {
+      display: none;
+    }
 
     .ce-code__textarea.cdx-input {
       @extend .custom-scroll;
 
+      background-color: if($is-dark-theme, #1E1E1E, #FFFFFF);
+      color: if($is-dark-theme, #F4F4F4, #1E1E1E);
       border-radius: 3px;
       font-size: 14px;
       resize: none;
@@ -78,6 +83,11 @@
     border-radius: 3px;
     background-color: $tooltip-background-color;
     color: mat-color($foreground, text, .6);
+    box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .13);
+  }
+
+  .ce-toolbox {
+    box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .13);
   }
 
   .ce-toolbar__plus {
@@ -86,7 +96,7 @@
 
   .ce-block--selected
   .ce-block__content {
-    background-color: mat-color($primary, .08);
+    background-color: color.scale(mat-color($primary), $lightness: 88%);
   }
 
   .ce-inline-tool-input {
@@ -108,4 +118,11 @@
   .codex-editor__loader {
     height: 137.78px;
   }
+
+  .codex-editor--narrow {
+    .link-tool__image {
+      display: block !important;
+    }
+  }
+
 }
