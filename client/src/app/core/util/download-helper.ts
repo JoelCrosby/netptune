@@ -14,6 +14,7 @@ export const downloadFile = async (
     setTimeout(() => {
       const url = URL.createObjectURL(file);
       a.href = url;
+      a.rel = 'noopener noreferrer';
       a.download = filename;
       a.dispatchEvent(
         new MouseEvent('click', {

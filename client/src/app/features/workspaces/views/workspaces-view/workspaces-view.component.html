@@ -14,7 +14,12 @@
     <span> | </span>
     <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
     <span> | </span>
-    <a class="runId" [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId">
+    <a
+      class="runId"
+      [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       Github Action
     </a>
   </div>
