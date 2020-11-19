@@ -1,47 +1,30 @@
 <ng-container *ngIf="task$ | async as task; else loading">
 
-  <div class="detail-title">
-
-    <h1 mat-dialog-title>{{ task.name }}</h1>
-
-    <mat-icon
-      class="task-complete"
-      *ngIf="task.status === 1"
-    >
-      done
-    </mat-icon>
-
-    <div class="task-scope-id">
-      {{ task.systemId }}
-    </div>
-  </div>
-
   <mat-dialog-content class="task-detail-dialog">
-
-
     <div class="detail-container">
 
       <div class="detail-form">
         <form [formGroup]="projectFromGroup">
 
-          <mat-form-field class="w-100" appearance="fill">
-            <mat-label>Task Summary</mat-label>
-            <textarea
-              matInput
-              class="form-control"
-              formControlName="name"
-              name="name"
-              required
-              rows="1"
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="5"
-            ></textarea>
-          </mat-form-field>
+          <app-inline-text-area class="w-100"
+            class="form-control task-detail-title"
+            formControlName="name"
+            name="name"
+            required
+            [minRows]="1"
+            [maxRows]="5"
+            activeBorder="true"
+          ></app-inline-text-area>
+
+          <label class="detail-label" for="description">
+            Description
+          </label>
 
           <app-editor
+            id="description"
+            aria-labelledby="description"
             formControlName="description"
+            placeholder="Add a Description..."
           >
           </app-editor>
 
@@ -139,6 +122,20 @@
       </div>
 
       <div class="detail-column">
+
+        <div class="detail-title">
+
+          <mat-icon
+            class="task-complete"
+            *ngIf="task.status === 1"
+          >
+            done
+          </mat-icon>
+
+          <div class="task-scope-id">
+            {{ task.systemId }}
+          </div>
+        </div>
 
         <div class="detail-list">
           <div class="detail-list-item">

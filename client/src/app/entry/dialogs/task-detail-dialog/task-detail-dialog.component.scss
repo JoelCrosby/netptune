@@ -100,6 +100,10 @@
   }
 }
 
+.task-detail-title {
+  font-size: 1.3rem;
+}
+
 .task-detail-loading {
   height: 516px;
   display: flex;
@@ -232,4 +236,12 @@
   .task-dates {
     margin: 1rem 0;
   }
+}
+
+.detail-label {
+  border-radius: 4px;
+  padding: 0 1em;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .125px;
 }
