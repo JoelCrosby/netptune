@@ -16,6 +16,8 @@ import {
   HubContextState,
 } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
+import { MetaState } from './store/meta/meta.model';
+import { metaReducer } from './store/meta/meta.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
 import { SettingsState } from './store/settings/settings.model';
@@ -31,6 +33,7 @@ import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
+  meta: metaReducer,
   router: routerReducer,
   layout: layoutReducer,
   settings: settingsReducer,
@@ -56,6 +59,7 @@ function feature<TState>(name: keyof AppState) {
 }
 
 export const selectAuthFeature = feature<AuthState>('auth');
+export const selectMetaFeature = feature<MetaState>('meta');
 export const selectLayoutFeature = feature<LayoutState>('layout');
 export const selectSettingsFeature = feature<SettingsState>('settings');
 export const selectWorkspacesFeature = feature<WorkspacesState>('workspaces');
@@ -67,6 +71,7 @@ export const selectHubContextFeature = feature<HubContextState>('hub');
 
 export interface AppState {
   auth: AuthState;
+  meta: MetaState;
   router: RouterReducerState<RouterStateUrl>;
   layout: LayoutState;
   settings: SettingsState;

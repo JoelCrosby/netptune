@@ -10,6 +10,7 @@ namespace Netptune.App.Utility
         private string GitHashShort;
         private string GitHubRef;
         private string BuildNumber;
+        private string RunId;
 
         private BuildInfoViewModel BuildInfoViewModel;
 
@@ -29,6 +30,7 @@ namespace Netptune.App.Utility
                 GitHashShort = GitHashShort,
                 GitHubRef = GitHubRef,
                 BuildNumber = BuildNumber,
+                RunId = RunId,
             };
 
             BuildInfoViewModel = info;
@@ -43,7 +45,7 @@ namespace Netptune.App.Utility
                 return GitHash;
             }
 
-            var version = $"1.0.0+LOCAL+REF+{DateTime.UtcNow:yyyyMMdd}.0";
+            var version = $"1.0.0+LOCAL+REF+{DateTime.UtcNow:yyyyMMdd}.0+LOCAL_BUILD";
             var infoVerAttr = GetInfoVerAttr();
 
             if (infoVerAttr is { } && infoVerAttr.InformationalVersion.Length > 6)
@@ -59,6 +61,7 @@ namespace Netptune.App.Utility
             GitHash = values.ElementAtOrDefault(1);
             GitHubRef = values.ElementAtOrDefault(2);
             BuildNumber = values.ElementAtOrDefault(3);
+            RunId = values.ElementAtOrDefault(4);
 
             return GitHash;
         }
@@ -94,5 +97,7 @@ namespace Netptune.App.Utility
         public string GitHubRef { get; set; }
 
         public string BuildNumber { get; set; }
+
+        public string RunId { get; set; }
     }
 }

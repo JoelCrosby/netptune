@@ -1,14 +1,23 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { loadBuildInfo } from '@core/store/meta/meta.actions';
+import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
+import { Store } from '@ngrx/store';
 
 @Component({
   templateUrl: './workspaces-view.component.html',
   styleUrls: ['./workspaces-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkspacesViewComponent {
-  constructor(private dialog: MatDialog) {}
+export class WorkspacesViewComponent implements OnInit {
+  buildInfo$ = this.store.select(selectBuildInfo);
+
+  constructor(private dialog: MatDialog, private store: Store) {}
+
+  ngOnInit() {
+    this.store.dispatch(loadBuildInfo());
+  }
 
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {

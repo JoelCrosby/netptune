@@ -9,4 +9,14 @@
 
   <app-workspace-list></app-workspace-list>
 
+  <div class="build-info" *ngIf="buildInfo$ | async as buildInfo">
+    <span class="gitHashShort"> {{ buildInfo.gitHashShort }} </span>
+    <span> | </span>
+    <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
+    <span> | </span>
+    <a class="runId" [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId">
+      Github Action
+    </a>
+  </div>
+
 </app-page-container>

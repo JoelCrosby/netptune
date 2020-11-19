@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Utility;
 
 namespace Netptune.App.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MetaController : ControllerBase
