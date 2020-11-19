@@ -4,7 +4,9 @@
       #textarea
       #autosize="cdkTextareaAutosize"
       class="inline-edit-input custom-scroll"
+      [class.active-border]="activeBorder"
       cdkTextareaAutosize
+      rows="1"
       [cdkAutosizeMinRows]="minRows"
       [cdkAutosizeMaxRows]="maxRows"
       [formControl]="control"

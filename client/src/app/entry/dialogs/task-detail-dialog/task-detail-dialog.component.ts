@@ -48,7 +48,7 @@ import {
 })
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  static width = '820px';
+  static width = '972px';
 
   task$: Observable<TaskViewModel>;
   projects$: Observable<ProjectViewModel[]>;

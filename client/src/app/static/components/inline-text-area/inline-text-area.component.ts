@@ -1,3 +1,4 @@
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,10 +42,12 @@ export class InlineTextAreaComponent
   @Input() value: string;
   @Input() formControlName: string;
   @Input() formControl: FormControl;
+  @Input() activeBorder: boolean | string;
 
   @Input() minRows = 1;
   @Input() maxRows = 3;
 
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild(FormControlDirective, { static: false })
   controlDirective: FormControlDirective;
@@ -113,6 +116,7 @@ export class InlineTextAreaComponent
 
   focusInput() {
     this.cd.detectChanges();
+    this.autosize.resizeToFitContent(true);
 
     if (this.textarea) {
       this.textarea?.nativeElement.focus();
