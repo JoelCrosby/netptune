@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   forwardRef,
+  Input,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -41,6 +42,8 @@ import { first } from 'rxjs/operators';
 export class EditorComponent implements ControlValueAccessor {
   @ViewChild('editorJs', { static: true }) el: ElementRef;
 
+  @Input() placeholder = '';
+
   editor: EditorJS;
 
   onChange: (value: string) => void;
@@ -74,7 +77,7 @@ export class EditorComponent implements ControlValueAccessor {
       logLevel: environment.production
         ? ('ERROR' as LogLevels)
         : ('INFO' as LogLevels),
-      placeholder: 'Description',
+      placeholder: this.placeholder,
       holder: this.el.nativeElement,
       minHeight: 100,
       tools: {
@@ -112,7 +115,12 @@ export class EditorComponent implements ControlValueAccessor {
           },
         },
         underline: Underline,
-        link: Link,
+        link: {
+          class: Link,
+          config: {
+            endpoint: '/api/meta/uri-meta-info',
+          },
+        },
       },
       data: initialValue,
       onChange: () => {
