@@ -21,6 +21,8 @@ export class TaskListItemComponent {
     this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
       data: this.task,
+      autoFocus: false,
+      panelClass: 'app-modal-class',
     });
   }
 

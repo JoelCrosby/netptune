@@ -41,4 +41,20 @@
   .clickable:hover {
     background-color: mat-color($foreground, text, .06);
   }
+
+  .detail-list-item {
+    .autocomplete-chips {
+      .mat-form-field-infix {
+        border-top: 0;
+      }
+
+      .mat-chip {
+        margin: .2rem;
+        min-height: 24px;
+        font-weight: 500;
+        font-size: 12px;
+        padding: .1rem .4rem;
+      }
+    }
+  }
 }

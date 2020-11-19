@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -43,6 +45,7 @@ export class EditorComponent implements ControlValueAccessor {
   @ViewChild('editorJs', { static: true }) el: ElementRef;
 
   @Input() placeholder = '';
+  @Output() loaded = new EventEmitter();
 
   editor: EditorJS;
 
@@ -123,6 +126,7 @@ export class EditorComponent implements ControlValueAccessor {
         },
       },
       data: initialValue,
+      onReady: () => this.loaded.emit(),
       onChange: () => {
         this.editor.save().then((value) => {
           this.onChange(JSON.stringify(value));

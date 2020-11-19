@@ -13,8 +13,10 @@ import { FormControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { filterStringArray } from '@core/util/arrays';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -35,7 +37,9 @@ export class AutocompleteChipsComponent implements OnInit {
   @Input() label: string;
   @Input() options: string[];
   @Input() selected: string[] = [];
+  @Input() appearance: MatFormFieldAppearance = 'fill';
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
   @Output() selectionChanged = new EventEmitter<
     AutocompleteChipsSelectionChanged
@@ -101,6 +105,7 @@ export class AutocompleteChipsComponent implements OnInit {
         option,
       });
 
+      this.formCtrl.setValue('');
       this.selected = this.selected.filter((opt) => opt !== option);
     }
   }
@@ -129,5 +134,6 @@ export class AutocompleteChipsComponent implements OnInit {
 
     this.input.nativeElement.value = '';
     this.formCtrl.setValue(null);
+    requestAnimationFrame(() => this.autoTrigger.openPanel());
   }
 }
