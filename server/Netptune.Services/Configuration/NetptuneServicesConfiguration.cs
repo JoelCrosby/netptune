@@ -30,6 +30,7 @@ namespace Netptune.Services.Configuration
 
             services.AddTransient<ITaskImportService, TaskImportService>();
             services.AddTransient<ITaskExportService, TaskExportService>();
+            services.AddTransient<IWebService, WebService>();
 
             services.AddMemoryCache();
             services.AddTransient<IUserConnectionService, UserConnectionService>();

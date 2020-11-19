@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Utility;
+using Netptune.Core.Services;
 
 namespace Netptune.App.Controllers
 {
@@ -10,10 +13,12 @@ namespace Netptune.App.Controllers
     [Route("api/[controller]")]
     public class MetaController : ControllerBase
     {
+        private readonly IWebService WebService;
         private readonly BuildInfo BuildInfo;
 
-        public MetaController(BuildInfo buildInfo)
+        public MetaController(IWebService webService ,BuildInfo buildInfo)
         {
+            WebService = webService;
             BuildInfo = buildInfo;
         }
 
@@ -23,6 +28,19 @@ namespace Netptune.App.Controllers
             var gitHash = BuildInfo.GetBuildInfo();
 
             return Ok(gitHash);
+        }
+
+        [AllowAnonymous]
+        [Route("uri-meta-info")]
+        public async Task<IActionResult> GetUriMetaInfo([Required] string url)
+        {
+            var meta = await WebService.GetMetaDataFromUrl(url);
+
+            return Ok(new
+            {
+                Success = 1,
+                Meta = meta,
+            });
         }
     }
 }
