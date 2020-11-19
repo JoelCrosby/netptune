@@ -56,11 +56,16 @@ namespace Netptune.Services.Authentication
 
         public async Task<LoginResult> LogIn(TokenRequest model)
         {
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+            var appUser = await UserManager.FindByEmailAsync(model.Email);
+
+            if (appUser is null)
+            {
+                return LoginResult.Failed("Username or password is incorrect");
+            }
+
+            var result = await SignInManager.CheckPasswordSignInAsync(appUser, model.Password, false);
 
             if (!result.Succeeded) return LoginResult.Failed("Username or password is incorrect");
-
-            var appUser = await UserManager.FindByEmailAsync(model.Email);
 
             appUser.LastLoginTime = DateTime.UtcNow;
 
