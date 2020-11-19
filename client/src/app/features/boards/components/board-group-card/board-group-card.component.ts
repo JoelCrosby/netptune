@@ -39,6 +39,7 @@ export class BoardGroupCardComponent {
         width: TaskDetailDialogComponent.width,
         data: this.task,
         panelClass: 'app-modal-class',
+        autoFocus: false,
       });
     }
   }

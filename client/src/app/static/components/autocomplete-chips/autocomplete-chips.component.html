@@ -1,5 +1,5 @@
-<mat-form-field class="autocomplete-chips w-100" appearance="fill">
-  <mat-label *ngIf="label">
+<mat-form-field class="autocomplete-chips w-100" [appearance]="appearance" *ngIf="filteredOptions | async as filtered">
+  <mat-label>
     {{ label }}
   </mat-label>
 
@@ -37,9 +37,10 @@
     (optionSelected)="onSelected($event)"
   >
     <mat-option
-      *ngFor="let option of filteredOptions | async"
+      *ngFor="let option of filtered"
       [value]="option"
       class="auto-complete-option"
+      (click)="$event.stopPropagation();"
     >
       {{ option }}
     </mat-option>

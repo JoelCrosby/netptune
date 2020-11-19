@@ -60,6 +60,8 @@ export class TaskDetailDialogComponent
   selectedTypeValue: number;
 
   onDestroy$ = new Subject();
+  onEditorLoadedSubject = new Subject<boolean>();
+  onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
@@ -324,5 +326,9 @@ export class TaskDetailDialogComponent
         })
       )
       .subscribe();
+  }
+
+  onEditorLoaded() {
+    this.onEditorLoadedSubject.next(true);
   }
 }

@@ -34,8 +34,9 @@
     .ce-code__textarea.cdx-input {
       @extend .custom-scroll;
 
-      background-color: if($is-dark-theme, #1E1E1E, #FFFFFF);
-      color: if($is-dark-theme, #F4F4F4, #1E1E1E);
+      background-color: if($is-dark-theme, #1e1e1e, #fbfbfb);
+      color: if($is-dark-theme, #F4F4F4, #1e1e1e);
+      border: 1px solid mat-color($foreground, text, .12);
       border-radius: 3px;
       font-size: 14px;
       resize: none;

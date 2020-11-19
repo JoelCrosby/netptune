@@ -25,99 +25,97 @@
             aria-labelledby="description"
             formControlName="description"
             placeholder="Add a Description..."
+            (loaded)="onEditorLoaded()"
           >
           </app-editor>
 
-          <app-autocomplete-chips
-            [options]="tags$ | async"
-            [selected]="task.tags"
-            (selectionChanged)="onTagsSelectionChanged($event)"
-            label="Tags"
-          >
-          </app-autocomplete-chips>
-
         </form>
 
-        <div class="comments-container" *ngIf="user$ | async as user">
+        <ng-container *ngIf="onEditorLoaded$ | async">
 
-          <div class="comments-input">
-            <app-avatar
-              size="24"
-              class="task-card-user-chip"
-              [name]="user.displayName"
-              [imageUrl]="user.pictureUrl"
-            >
-            </app-avatar>
+          <div class="comments-container" *ngIf="user$ | async as user">
 
-            <form [formGroup]="commentsFromGroup" (ngSubmit)="onCommentSubmit()">
-              <mat-form-field class="w-100 no-floating-label" appearance="fill">
-                <input
-                  matInput
-                  formControlName="comment"
-                  class="form-control"
-                  placeholder="Add Comment"
-                  name="description"
-                >
-                <mat-icon
-                  matSuffix
-                  class="material-icons-outlined"
-                >
-                  chat_bubble_outline
-                </mat-icon>
-              </mat-form-field>
-            </form>
-          </div>
-
-          <div class="comments-list">
-            <div
-              class="comments-list-item"
-              *ngFor="let comment of comments$ | async"
-            >
+            <div class="comments-input">
               <app-avatar
                 size="24"
                 class="task-card-user-chip"
-                [name]="comment.userDisplayName"
-                [imageUrl]="comment.userDisplayImage"
+                [name]="user.displayName"
+                [imageUrl]="user.pictureUrl"
               >
               </app-avatar>
-              <div class="comment-body">
-                <span class="comment-user-display-name">
-                  {{ comment.userDisplayName }}
 
-                  <small>
-                    {{ comment.createdAt | fromNow }}
-                  </small>
+              <form [formGroup]="commentsFromGroup" (ngSubmit)="onCommentSubmit()">
+                <mat-form-field class="w-100 no-floating-label" appearance="outline">
+                  <input
+                    matInput
+                    formControlName="comment"
+                    class="form-control"
+                    placeholder="Add Comment"
+                    name="comment"
+                  >
+                  <mat-icon
+                    matSuffix
+                    class="material-icons-outlined"
+                  >
+                    chat_bubble_outline
+                  </mat-icon>
+                </mat-form-field>
+              </form>
+            </div>
 
-                  <div class="comment-actions">
-                    <button
-                      class="comment-button"
-                      mat-icon-button
-                      aria-label="Comment Actions"
-                      [matMenuTriggerFor]="commentMenu"
-                      [matMenuTriggerData]="{comment: comment}"
-                    >
-                      <mat-icon>more_horiz</mat-icon>
-                    </button>
+            <div class="comments-list">
+              <div
+                class="comments-list-item"
+                *ngFor="let comment of comments$ | async"
+              >
+                <app-avatar
+                  size="24"
+                  class="task-card-user-chip"
+                  [name]="comment.userDisplayName"
+                  [imageUrl]="comment.userDisplayImage"
+                >
+                </app-avatar>
+                <div class="comment-body">
+                  <span class="comment-user-display-name">
+                    {{ comment.userDisplayName }}
 
-                    <mat-menu #commentMenu="matMenu">
-                      <ng-template matMenuContent let-comment="comment">
-                        <button mat-menu-item (click)="onDeleteCommentClicked(comment)">
-                          <mat-icon>delete</mat-icon>
-                          <span>Delete Comment</span>
-                        </button>
-                      </ng-template>
-                    </mat-menu>
-                  </div>
+                    <small>
+                      {{ comment.createdAt | fromNow }}
+                    </small>
 
-                </span>
-                <span class="comment-body-text">
-                  {{ comment.body }}
-                </span>
+                    <div class="comment-actions">
+                      <button
+                        class="comment-button"
+                        mat-icon-button
+                        aria-label="Comment Actions"
+                        [matMenuTriggerFor]="commentMenu"
+                        [matMenuTriggerData]="{comment: comment}"
+                      >
+                        <mat-icon>more_horiz</mat-icon>
+                      </button>
+
+                      <mat-menu #commentMenu="matMenu">
+                        <ng-template matMenuContent let-comment="comment">
+                          <button mat-menu-item (click)="onDeleteCommentClicked(comment)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Delete Comment</span>
+                          </button>
+                        </ng-template>
+                      </mat-menu>
+                    </div>
+
+                  </span>
+                  <span class="comment-body-text">
+                    {{ comment.body }}
+                  </span>
+                </div>
               </div>
             </div>
+
           </div>
 
-        </div>
+        </ng-container>
+
 
       </div>
 
@@ -252,8 +250,23 @@
           </div>
         </div>
 
-      </div>
+        <div class="detail-list">
+          <div class="detail-list-item">
+            <h4>Tags</h4>
 
+            <app-autocomplete-chips
+              class="tags-autocomplete"
+              placeholder="Add a Tag..."
+              [options]="tags$ | async"
+              [selected]="task.tags"
+              [appearance]="'outline'"
+              (selectionChanged)="onTagsSelectionChanged($event)"
+            >
+            </app-autocomplete-chips>
+          </div>
+        </div>
+
+      </div>
     </div>
   </mat-dialog-content>
 
