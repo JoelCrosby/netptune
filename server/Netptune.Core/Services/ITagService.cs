@@ -18,5 +18,7 @@ namespace Netptune.Core.Services
         Task<ClientResponse> Delete(DeleteTagsRequest request);
 
         Task<ClientResponse> DeleteFromTask(DeleteTagFromTaskRequest request);
+
+        Task<ClientResponse<TagViewModel>> Update(UpdateTagRequest request);
     }
 }

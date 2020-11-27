@@ -89,6 +89,22 @@ namespace Netptune.App.Controllers
         {
             var result = await TagService.DeleteFromTask(request);
 
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // PATCH: api/tags
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> UpdateTag([FromBody] UpdateTagRequest request)
+        {
+            var result = await TagService.Update(request);
+
+            if (result is null) return NotFound();
+
             return Ok(result);
         }
     }
