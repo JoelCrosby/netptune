@@ -87,12 +87,21 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
         }
 
-        public Task<List<Tag>> GetTagsInWorkspace(int workspaceId, IEnumerable<string> tags)
+        public Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false)
+        {
+            return Entities
+                .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId)
+                .IsReadonly(isReadonly)
+                .ToListAsync();
+        }
+
+        public Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false)
         {
             var tagsList = tags.ToList();
 
             return Entities
                 .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId && tagsList.Contains(x.Name))
+                .IsReadonly(isReadonly)
                 .ToListAsync();
         }
 

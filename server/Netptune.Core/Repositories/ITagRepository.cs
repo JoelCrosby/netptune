@@ -19,7 +19,9 @@ namespace Netptune.Core.Repositories
 
         Task<Tag> GetByValue(string value, int workspaceId);
 
-        Task<List<Tag>> GetTagsInWorkspace(int workspaceId, IEnumerable<string> tags);
+        Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false);
+
+        Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false);
 
         Task<bool> ExistsForTask(int tagId, int taskId);
 
