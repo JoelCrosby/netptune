@@ -47,10 +47,7 @@ namespace Netptune.Services
 
                     var entity = new Tag
                     {
-                        Name = request.Tag,
-                        OwnerId = userId,
-                        WorkspaceId = workspaceId.Value,
-                        IsDeleted = false,
+                        Name = request.Tag, OwnerId = userId, WorkspaceId = workspaceId.Value, IsDeleted = false,
                     };
 
                     return await Tags.AddAsync(entity);
@@ -58,11 +55,7 @@ namespace Netptune.Services
 
                 var tag = await GetOrCreateTag();
 
-                var taskTag = new ProjectTaskTag
-                {
-                    TagId = tag.Id,
-                    ProjectTaskId = taskId.Value,
-                };
+                var taskTag = new ProjectTaskTag {TagId = tag.Id, ProjectTaskId = taskId.Value,};
 
                 var tagForTaskExists = await Tags.ExistsForTask(tag.Id, taskId.Value);
 
@@ -103,7 +96,7 @@ namespace Netptune.Services
 
             if (workspaceId is null) return ClientResponse.Failed();
 
-            var tags = await Tags.GetTagsInWorkspace(workspaceId.Value, request.Tags);
+            var tags = await Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Tags);
 
             await Tags.DeletePermanent(tags);
 
@@ -130,6 +123,26 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return ClientResponse.Success();
+        }
+
+        public async Task<ClientResponse<TagViewModel>> Update(UpdateTagRequest request)
+        {
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+
+            if (!workspaceId.HasValue)
+            {
+                return Failed($"workspace with identifier {request.Workspace} does not exist");
+            }
+
+            var tag = await UnitOfWork.Tags.GetByValue(request.CurrentValue, workspaceId.Value);
+
+            if (tag is null) return null;
+
+            tag.Name = request.NewValue.Trim();
+
+            await UnitOfWork.CompleteAsync();
+
+            return Success(tag.ToViewModel());
         }
     }
 }

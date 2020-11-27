@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 
@@ -16,7 +16,8 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
                 .IsRequired();
 
             builder
-                .HasAlternateKey(tag => new { tag.Name, tag.WorkspaceId });
+                .HasIndex(tag => new { tag.Name, tag.WorkspaceId })
+                .IsUnique();
         }
     }
 }

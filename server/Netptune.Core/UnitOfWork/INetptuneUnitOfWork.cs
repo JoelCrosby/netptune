@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Repositories;
+using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Core.UnitOfWork
@@ -18,6 +18,8 @@ namespace Netptune.Core.UnitOfWork
         IBoardGroupRepository BoardGroups { get; }
 
         ITaskInGroupRepository ProjectTasksInGroups { get; }
+
+        IProjectTaskTagRepository ProjectTaskTags { get; }
 
         ICommentRepository Comments { get; }
 

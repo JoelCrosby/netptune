@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Repositories;
+using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
@@ -15,6 +15,7 @@ namespace Netptune.Repositories.UnitOfWork
         public IBoardRepository Boards { get; }
         public IBoardGroupRepository BoardGroups { get; }
         public ITaskInGroupRepository ProjectTasksInGroups { get; }
+        public IProjectTaskTagRepository ProjectTaskTags { get; }
         public ICommentRepository Comments { get; }
         public IReactionRepository Reactions { get; }
         public ITagRepository Tags { get; }
@@ -28,6 +29,7 @@ namespace Netptune.Repositories.UnitOfWork
             Boards = new BoardRepository(context, connectionFactory);
             BoardGroups = new BoardGroupRepository(context, connectionFactory);
             ProjectTasksInGroups = new TaskInGroupRepository(context, connectionFactory);
+            ProjectTaskTags = new ProjectTaskTagRepository(context, connectionFactory);
             Comments = new CommentRepository(context, connectionFactory);
             Reactions = new ReactionRepository(context, connectionFactory);
             Tags = new TagRepository(context, connectionFactory);
