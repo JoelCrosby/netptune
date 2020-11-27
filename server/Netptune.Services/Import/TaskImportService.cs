@@ -111,6 +111,18 @@ namespace Netptune.Services.Import
                 return Failed("Failed to generate next project scope Id");
             }
 
+            var tags = ParseUniqueTags(rows);
+            var existingTags = await UnitOfWork.Tags.GetTagsInWorkspace(workspaceId, true);
+            var existingTagValues = existingTags.Select(tag => tag.Name);
+            var newTags = tags.Where(tag => !existingTagValues.Contains(tag)).Select(tag => new Tag
+            {
+                Name = tag,
+                WorkspaceId = workspaceId,
+                OwnerId = userId,
+            }).ToList();
+
+            var allTags = newTags.Concat(existingTags).ToDictionary(tag => tag.Name, tag => tag);
+
             var tasks = rows
                 .Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value))
                 .ToList();
@@ -129,6 +141,7 @@ namespace Netptune.Services.Import
             {
                 await UnitOfWork.Tasks.AddRangeAsync(tasks);
                 await UnitOfWork.BoardGroups.AddRangeAsync(boardGroups);
+                await UnitOfWork.Tags.AddRangeAsync(newTags);
 
                 await UnitOfWork.CompleteAsync();
 
@@ -157,7 +170,7 @@ namespace Netptune.Services.Import
                     }
 
                     var hasBaseOrder = orderDict.TryGetValue(boardGroup.Id, out var order);
-                    var baseOrder = hasBaseOrder  && order.HasValue ? order.Value : 0;
+                    var baseOrder = hasBaseOrder && order.HasValue ? order.Value : 0;
 
                     groupTaskCounter[boardGroup.Id]++;
 
@@ -169,7 +182,36 @@ namespace Netptune.Services.Import
                     };
                 });
 
+                ICollection<Tag> ParseTags(string tagRow)
+                {
+                    var names = ParseTagString(tagRow);
+                    return names.Select(name => allTags[name]).ToList();
+                }
+
+                var taskTagIndex = -1;
+                var taskTags = tasks.Aggregate(new List<ProjectTaskTag>(), (acc, task) =>
+                {
+                    taskTagIndex ++;
+
+                    var tagString = rows.ElementAtOrDefault(taskTagIndex)?.Tags;
+
+                    if (tagString is null || string.IsNullOrWhiteSpace(tagString))
+                    {
+                        return acc;
+                    }
+
+                    var aggregateTags = ParseTags(rows[taskTagIndex].Tags);
+                    var newTaskTags = aggregateTags.Select(tag => new ProjectTaskTag
+                    {
+                        ProjectTaskId = task.Id,
+                        TagId = tag.Id,
+                    });
+
+                    return acc.Concat(newTaskTags).ToList();
+                });
+
                 await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(tasksInGroups);
+                await UnitOfWork.ProjectTaskTags.AddRangeAsync(taskTags);
 
                 await UnitOfWork.CompleteAsync();
             }, true);
@@ -253,6 +295,34 @@ namespace Netptune.Services.Import
                 })
                 .Distinct()
                 .ToList();
+        }
+
+        private static List<string> ParseUniqueTags(IEnumerable<TaskImportRow> rows)
+        {
+            return rows.Select(row => row.Tags).Select(ParseTagString).Aggregate(new HashSet<string>(), (prev, tags) =>
+            {
+                foreach (var tag in tags)
+                {
+                    prev.Add(tag);
+                }
+
+                return prev;
+            }).ToList();
+        }
+
+        private static IEnumerable<string> ParseTagString(string tagString)
+        {
+            if (string.IsNullOrWhiteSpace(tagString))
+            {
+                return Array.Empty<string>();
+            }
+
+            if (!tagString.Contains("|"))
+            {
+                return new[] { tagString.Trim() };
+            }
+
+            return tagString.Split("|", StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim());
         }
     }
 }
