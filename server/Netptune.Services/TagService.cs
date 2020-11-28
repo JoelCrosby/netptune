@@ -27,7 +27,33 @@ namespace Netptune.Services
             Tags = unitOfWork.Tags;
         }
 
-        public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagRequest request)
+        public async Task<ClientResponse<TagViewModel>> AddTag(AddTagRequest request)
+        {
+            var userId = await Identity.GetCurrentUserId();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.WorkspaceSlug);
+
+            if (!workspaceId.HasValue) return null;
+
+            var trimmedTag = request.Tag.Trim().Capitalize();
+            var existingTag = await Tags.GetByValue(trimmedTag, workspaceId.Value);
+
+            if (existingTag is { }) return Failed("Tag Name should be unique");
+
+            var tag = new Tag
+            {
+                Name = request.Tag,
+                OwnerId = userId,
+                WorkspaceId = workspaceId.Value,
+                IsDeleted = false,
+            };
+
+            await Tags.AddAsync(tag);
+            await UnitOfWork.CompleteAsync();
+
+            return Success(tag.ToViewModel());
+        }
+
+        public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request)
         {
             var userId = await Identity.GetCurrentUserId();
             var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
@@ -47,7 +73,10 @@ namespace Netptune.Services
 
                     var entity = new Tag
                     {
-                        Name = request.Tag, OwnerId = userId, WorkspaceId = workspaceId.Value, IsDeleted = false,
+                        Name = request.Tag,
+                        OwnerId = userId,
+                        WorkspaceId = workspaceId.Value,
+                        IsDeleted = false,
                     };
 
                     return await Tags.AddAsync(entity);

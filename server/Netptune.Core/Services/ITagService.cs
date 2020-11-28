@@ -9,7 +9,9 @@ namespace Netptune.Core.Services
 {
     public interface ITagService
     {
-        Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagRequest request);
+        Task<ClientResponse<TagViewModel>> AddTag(AddTagRequest request);
+
+        Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request);
 
         Task<List<TagViewModel>> GetTagsForTask(string systemId, string workspaceSlug);
 

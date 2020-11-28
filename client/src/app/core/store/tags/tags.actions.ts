@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClientResponse } from '@core/models/client-response';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { createAction, props } from '@ngrx/store';
 
@@ -25,11 +25,25 @@ export const toggleSelectedTag = createAction(
   props<{ tag: string }>()
 );
 
+// Add Tag
+
+export const addTag = createAction('[Tags] Add Tag', props<{ name: string }>());
+
+export const addTagSuccess = createAction(
+  '[Tags] Add Tag Success',
+  props<{ tag: Tag }>()
+);
+
+export const addTagFail = createAction(
+  '[Tags] Add Tag Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
 // Add Tag To Task
 
 export const addTagToTask = createAction(
   '[Tags] Add Tag To Task',
-  props<{ request: AddTagRequest }>()
+  props<{ request: AddTagToTaskRequest }>()
 );
 
 export const addTagToTaskSuccess = createAction(
@@ -39,6 +53,23 @@ export const addTagToTaskSuccess = createAction(
 
 export const addTagToTaskFail = createAction(
   '[Tags] Add Tag To Task Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Delete Tag
+
+export const deleteTags = createAction(
+  '[Tags] Delete Tags',
+  props<{ tags: string[] }>()
+);
+
+export const deleteTagsSuccess = createAction(
+  '[Tags] Delete Tags Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const deleteTagsFail = createAction(
+  '[Tags] Delete Tags Fail',
   props<{ error: HttpErrorResponse }>()
 );
 
@@ -56,5 +87,22 @@ export const deleteTagFromTaskSuccess = createAction(
 
 export const deleteTagFromTaskFail = createAction(
   '[Tags] Delete Tag From Task Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Edit Tag
+
+export const editTag = createAction(
+  '[Tags] Edit Tag',
+  props<{ currentValue: string; newValue: string }>()
+);
+
+export const editTagSuccess = createAction(
+  '[Tags] Edit Tag Success',
+  props<{ tag: Tag }>()
+);
+
+export const editTagFail = createAction(
+  '[Tags] Edit Tag Fail',
   props<{ error: HttpErrorResponse }>()
 );

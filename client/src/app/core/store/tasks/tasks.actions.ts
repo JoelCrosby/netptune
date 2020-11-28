@@ -6,7 +6,7 @@ import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
 import { FileResponse } from '@core/types/file-response';
 import { ClientResponse } from '@core/models/client-response';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 
@@ -225,7 +225,7 @@ export const deleteTagFromTaskFail = createAction(
 
 export const addTagToTask = createAction(
   '[ProjectTasks] Add Tag To Task',
-  props<{ identifier: string; request: AddTagRequest }>()
+  props<{ identifier: string; request: AddTagToTaskRequest }>()
 );
 
 export const addTagToTaskSuccess = createAction(

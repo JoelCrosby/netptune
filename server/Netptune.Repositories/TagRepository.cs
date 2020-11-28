@@ -75,6 +75,7 @@ namespace Netptune.Repositories
             return Entities
                 .Include(tag => tag.Owner)
                 .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
+                .OrderBy(x => x.CreatedAt)
                 .Select(tag => tag.ToViewModel())
                 .ToListAsync();
         }
@@ -91,6 +92,7 @@ namespace Netptune.Repositories
         {
             return Entities
                 .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId)
+                .OrderBy(x => x.CreatedAt)
                 .IsReadonly(isReadonly)
                 .ToListAsync();
         }
