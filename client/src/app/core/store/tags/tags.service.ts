@@ -1,10 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import {
+  AddTagRequest,
+  AddTagToTaskRequest,
+} from '@core/models/requests/add-tag-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
+import { UpdateTagRequest } from '@core/models/requests/update-tag-request';
 import { Tag } from '@core/models/tag';
 import { environment } from '@env/environment';
+import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
 
 @Injectable({
   providedIn: 'root',
@@ -29,15 +34,22 @@ export class TagsService {
 
   post(request: AddTagRequest) {
     return this.http.post<ClientResponse<Tag>>(
+      environment.apiEndpoint + `api/tags`,
+      request
+    );
+  }
+
+  postToTask(request: AddTagToTaskRequest) {
+    return this.http.post<ClientResponse<Tag>>(
       environment.apiEndpoint + `api/tags/task`,
       request
     );
   }
 
-  delete(request: AddTagRequest) {
+  delete(request: DeleteTagsRequest) {
     return this.http.request<ClientResponse>(
       'DELETE',
-      environment.apiEndpoint + `api/tags/task`,
+      environment.apiEndpoint + `api/tags`,
       {
         body: request,
       }
@@ -51,6 +63,13 @@ export class TagsService {
       {
         body: request,
       }
+    );
+  }
+
+  patch(request: UpdateTagRequest) {
+    return this.http.patch<ClientResponse<Tag>>(
+      environment.apiEndpoint + `api/tags`,
+      request
     );
   }
 }

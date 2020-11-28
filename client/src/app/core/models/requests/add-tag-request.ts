@@ -1,5 +1,8 @@
 export interface AddTagRequest {
   tag: string;
-  systemId: string;
   workspaceSlug: string;
+}
+
+export interface AddTagToTaskRequest extends AddTagRequest {
+  systemId: string;
 }

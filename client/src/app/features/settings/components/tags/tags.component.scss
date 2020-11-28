@@ -1,0 +1,37 @@
+.tag-item-list {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  letter-spacing: .1px;
+  line-height: 20px;
+
+  .tag-item {
+    cursor: pointer;
+    width: 100%;
+    max-width: calc(300px - .4rem);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: .3rem 0;
+    border-radius: 4px;
+    padding: calc(.4rem + 2px) calc(.6rem + 2px);
+    transition: background-color .24s ease-in-out;
+
+    .tag-item-label {
+      width: 100%;
+    }
+  }
+
+  .add-tag-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .add-tag-item-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}

@@ -136,7 +136,7 @@ namespace Netptune.App.Hubs
             return result;
         }
 
-        public async Task<ClientResponse<TagViewModel>> AddTagToTask(string group, AddTagRequest request)
+        public async Task<ClientResponse<TagViewModel>> AddTagToTask(string group, AddTagToTaskRequest request)
         {
             if (IsInValidRequest(request)) return ClientResponse<TagViewModel>.Failed();
 

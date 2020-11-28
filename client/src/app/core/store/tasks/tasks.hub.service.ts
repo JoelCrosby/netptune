@@ -6,7 +6,7 @@ import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { MoveTasksToGroupRequest } from '@core/models/requests/move-tasks-to-group-request';
 import { Tag } from '@core/models/tag';
@@ -129,7 +129,7 @@ export class ProjectTasksHubService {
     return this.hub.invoke<ClientResponse>('DeleteMultiple', groupId, ids);
   }
 
-  addTagToTask(groupId: string, request: AddTagRequest) {
+  addTagToTask(groupId: string, request: AddTagToTaskRequest) {
     return this.hub.invoke<ClientResponse<Tag>>(
       'AddTagToTask',
       groupId,

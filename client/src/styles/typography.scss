@@ -5,3 +5,9 @@ $netptune-typography: mat-typography-config(
   $headline: mat-typography-level(24px, 1.4, 500),
   $body-1: mat-typography-level(14px, 1.2, 400)
 );
+
+.section-heading {
+  font-weight: 400;
+  font-size: 1.4rem;
+  font-family: 'Overpass', sans-serif;
+}

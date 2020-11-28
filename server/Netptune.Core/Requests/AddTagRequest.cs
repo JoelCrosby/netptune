@@ -10,13 +10,16 @@ namespace Netptune.Core.Requests
         public string Tag { get; set; }
 
         [Required]
-        public string SystemId { get; set; }
-
-        [Required]
         public string WorkspaceSlug { get; set; }
     }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class AddTagToTaskRequest : AddTagRequest
+    {
+        [Required]
+        public string SystemId { get; set; }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
     public class DenyPipesAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)

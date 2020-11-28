@@ -1,0 +1,50 @@
+<h3 class="section-heading">
+  Tags
+</h3>
+
+<div class="tag-item-list">
+
+  <ng-container *ngFor="let tag of tag$ | async; index as i">
+    <ng-container *ngIf="editTagIndex === i; else elseTemplate">
+      <app-tags-input
+        [value]="tag.name"
+        (submitted)="onEditTagSubmit($event, tag)"
+        (canceled)="onEditCanceled()"
+      >
+      </app-tags-input>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div class="tag-item" (click)="onItemClicked(i)">
+        <span class="tag-item-label">
+          {{ tag.name }}
+        </span>
+        <div
+          class="tag-item-delete"
+          matTooltip="Delete Tag"
+          (click)="$event.stopPropagation(); onDeleteClicked(tag)"
+        >
+          <mat-icon>
+            close
+          </mat-icon>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container *ngIf="addTagActive; else addElseTemplate">
+    <app-tags-input
+      (submitted)="onAddTagSubmit($event)"
+      (canceled)="onAddCanceled()"
+    >
+    </app-tags-input>
+  </ng-container>
+
+  <ng-template #addElseTemplate>
+    <div class="tag-item add-tag-item" (click)="onAddTagClicked()">
+      <span class="add-tag-item-label">
+        Add Tag...
+      </span>
+    </div>
+  </ng-template>
+</div>

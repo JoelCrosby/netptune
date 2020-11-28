@@ -25,13 +25,27 @@ namespace Netptune.App.Controllers
             TagService = tagService;
         }
 
+        // POST: api/tags
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(TagViewModel))]
+        public async Task<IActionResult> PostTag([FromBody] AddTagRequest request)
+        {
+            var result = await TagService.AddTag(request);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
         // POST: api/tags/task
         [HttpPost]
         [Route("task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TagViewModel))]
-        public async Task<IActionResult> PostTaskTag([FromBody] AddTagRequest request)
+        public async Task<IActionResult> PostTaskTag([FromBody] AddTagToTaskRequest request)
         {
             var result = await TagService.AddTagToTask(request);
 
@@ -69,7 +83,7 @@ namespace Netptune.App.Controllers
         }
 
         // DELETE: api/tags/
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Produces("application/json", Type = typeof(ClientResponse))]
         public async Task<IActionResult> Delete([FromBody] DeleteTagsRequest request)

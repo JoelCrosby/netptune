@@ -14,7 +14,7 @@ import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
-import { AddTagRequest } from '@core/models/requests/add-tag-request';
+import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
@@ -313,7 +313,7 @@ export class TaskDetailDialogComponent
               TaskActions.deleteTagFromTask({ identifier, systemId, tag })
             );
           } else {
-            const request: AddTagRequest = {
+            const request: AddTagToTaskRequest = {
               systemId: task.systemId,
               tag: event.option,
               workspaceSlug,
