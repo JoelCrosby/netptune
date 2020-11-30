@@ -15,14 +15,14 @@ namespace Netptune.Core.Services
 
         Task<UserViewModel> GetByEmail(string email);
 
-        Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug);
+        Task<List<UserViewModel>> GetWorkspaceUsers();
 
         Task<UserViewModel> Update(AppUser user);
 
-        Task<ClientResponse> InviteUserToWorkspace(string userId, string workspaceSlug);
+        Task<ClientResponse> InviteUserToWorkspace(string userId);
 
-        Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug, bool onlyNewUsers = false);
+        Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emailAddresses, bool onlyNewUsers = false);
 
-        Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug);
+        Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses);
     }
 }

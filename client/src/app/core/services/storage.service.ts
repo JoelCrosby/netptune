@@ -9,15 +9,12 @@ import { Observable } from 'rxjs';
 export class StorageService {
   constructor(private http: HttpClient) {}
 
-  uploadMedia(
-    workspaceSlug: string,
-    file: File
-  ): Observable<ClientResponse<UploadResponse>> {
+  uploadMedia(file: File): Observable<ClientResponse<UploadResponse>> {
     const formData = new FormData();
     formData.append('files', file);
 
     return this.http.post<ClientResponse<UploadResponse>>(
-      environment.apiEndpoint + `api/storage/media/${workspaceSlug}`,
+      environment.apiEndpoint + `api/storage/media/`,
       formData
     );
   }

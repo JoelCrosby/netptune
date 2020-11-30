@@ -6,6 +6,6 @@ namespace Netptune.Core.Services.Export
 {
     public interface ITaskExportService
     {
-        Task<FileResponse> ExportWorkspaceTasks(string workspaceSlug);
+        Task<FileResponse> ExportWorkspaceTasks();
     }
 }

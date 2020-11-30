@@ -27,9 +27,10 @@ namespace Netptune.Services
 
         public async Task<CommentViewModel> AddCommentToTask(AddCommentRequest request)
         {
+            var workspaceKey = Identity.GetWorkspaceKey();
             var userId = await Identity.GetCurrentUserId();
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.WorkspaceSlug);
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (taskId is null || !workspaceId.HasValue) return null;
 
@@ -49,9 +50,10 @@ namespace Netptune.Services
             return await Comments.GetCommentViewModel(comment.Id);
         }
 
-        public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId, string workspaceSlug)
+        public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId)
         {
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceSlug);
+            var workspaceId = Identity.GetWorkspaceKey();
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceId);
 
             if (taskId is null) return null;
 

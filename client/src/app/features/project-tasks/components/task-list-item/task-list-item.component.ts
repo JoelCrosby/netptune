@@ -29,7 +29,7 @@ export class TaskListItemComponent {
   moveTask(task: TaskViewModel, sortOrder: number) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceSlug}`,
+        identifier: `[workspace] ${this.task.workspaceKey}`,
         task: {
           ...task,
           sortOrder,
@@ -41,7 +41,7 @@ export class TaskListItemComponent {
   deleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.deleteProjectTask({
-        identifier: `[workspace] ${this.task.workspaceSlug}`,
+        identifier: `[workspace] ${this.task.workspaceKey}`,
         task,
       })
     );
@@ -50,7 +50,7 @@ export class TaskListItemComponent {
   markCompleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceSlug}`,
+        identifier: `[workspace] ${this.task.workspaceKey}`,
         task: {
           ...task,
           status: TaskStatus.Complete,
@@ -62,7 +62,7 @@ export class TaskListItemComponent {
   moveToBacklogClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceSlug}`,
+        identifier: `[workspace] ${this.task.workspaceKey}`,
         task: {
           ...task,
           status: TaskStatus.InActive,

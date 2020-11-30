@@ -7,8 +7,5 @@ namespace Netptune.Core.Requests
     {
         [Required]
         public List<string> EmailAddresses { get; set; }
-
-        [Required]
-        public string WorkspaceSlug { get; set; }
     }
 }

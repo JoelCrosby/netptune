@@ -30,7 +30,8 @@ namespace Netptune.Services
         public async Task<ClientResponse<TagViewModel>> AddTag(AddTagRequest request)
         {
             var userId = await Identity.GetCurrentUserId();
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.WorkspaceSlug);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (!workspaceId.HasValue) return null;
 
@@ -56,8 +57,10 @@ namespace Netptune.Services
         public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request)
         {
             var userId = await Identity.GetCurrentUserId();
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.WorkspaceSlug);
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.WorkspaceSlug);
+            var workspaceKey = Identity.GetWorkspaceKey();
+
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (taskId is null || !workspaceId.HasValue) return null;
 
@@ -101,18 +104,20 @@ namespace Netptune.Services
             });
         }
 
-        public async Task<List<TagViewModel>> GetTagsForTask(string systemId, string workspaceSlug)
+        public async Task<List<TagViewModel>> GetTagsForTask(string systemId)
         {
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceSlug);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceKey);
 
             if (taskId is null) return null;
 
             return await Tags.GetViewModelsForTask(taskId.Value, true);
         }
 
-        public async Task<List<TagViewModel>> GetTagsForWorkspace(string workspaceSlug)
+        public async Task<List<TagViewModel>> GetTagsForWorkspace()
         {
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceSlug);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (workspaceId is null) return null;
 
@@ -121,7 +126,8 @@ namespace Netptune.Services
 
         public async Task<ClientResponse> Delete(DeleteTagsRequest request)
         {
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (workspaceId is null) return ClientResponse.Failed();
 
@@ -136,15 +142,16 @@ namespace Netptune.Services
 
         public async Task<ClientResponse> DeleteFromTask(DeleteTagFromTaskRequest request)
         {
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, request.Workspace);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
 
             if (!taskId.HasValue) return null;
 
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (!workspaceId.HasValue)
             {
-                return ClientResponse.Failed($"workspace with identifier {request.Workspace} does not exist");
+                return ClientResponse.Failed($"workspace with key {workspaceKey} does not exist");
             }
 
             await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Tag);
@@ -156,11 +163,12 @@ namespace Netptune.Services
 
         public async Task<ClientResponse<TagViewModel>> Update(UpdateTagRequest request)
         {
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(request.Workspace);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
             if (!workspaceId.HasValue)
             {
-                return Failed($"workspace with identifier {request.Workspace} does not exist");
+                return Failed($"workspace with key {workspaceKey} does not exist");
             }
 
             var tag = await UnitOfWork.Tags.GetByValue(request.CurrentValue, workspaceId.Value);

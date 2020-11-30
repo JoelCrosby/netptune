@@ -161,13 +161,14 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public async Task<List<BoardViewModel>> GetBoardsInWorkspace(string slug)
+        public async Task<List<BoardViewModel>> GetBoardsInWorkspace()
         {
-            var workspaceExists = await UnitOfWork.Workspaces.Exists(slug);
+            var workspaceId = IdentityService.GetWorkspaceKey();
+            var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceId);
 
             if (!workspaceExists) return null;
 
-            var results = await Boards.GetBoards(slug, true);
+            var results = await Boards.GetBoards(workspaceId, true);
 
             return results.Select(result => result.ToViewModel()).ToList();
         }

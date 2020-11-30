@@ -24,13 +24,13 @@ namespace Netptune.Api.Controllers
             TaskService = taskService;
         }
 
-        // GET: api/tasks?workspaceSlug=workspace
+        // GET: api/tasks
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<TaskViewModel>))]
-        public async Task<IActionResult> GetTasks([FromQuery] string workspaceSlug)
+        public async Task<IActionResult> GetTasks()
         {
-            var result = await TaskService.GetTasks(workspaceSlug);
+            var result = await TaskService.GetTasks();
 
             return Ok(result);
         }
@@ -49,15 +49,15 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/tasks/detail?systemId=proj-5&workspace=workspace
+        // GET: api/tasks/detail?systemId=proj-5
         [HttpGet]
         [Route("detail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> GetTask([FromQuery] string systemId, [FromQuery] string workspace)
+        public async Task<IActionResult> GetTask([FromQuery] string systemId)
         {
-            var result = await TaskService.GetTaskDetail(systemId, workspace);
+            var result = await TaskService.GetTaskDetail(systemId);
 
             if (result is null) return NotFound();
 

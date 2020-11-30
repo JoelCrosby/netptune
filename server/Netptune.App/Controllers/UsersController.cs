@@ -29,9 +29,9 @@ namespace Netptune.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<UserViewModel>))]
-        public async Task<IActionResult> GetWorkspaceUsersAsync(string workspaceSlug)
+        public async Task<IActionResult> GetWorkspaceUsersAsync()
         {
-            var result = await UserService.GetWorkspaceUsers(workspaceSlug);
+            var result = await UserService.GetWorkspaceUsers();
 
             return Ok(result);
         }
@@ -72,7 +72,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(ClientResponse))]
         public async Task<IActionResult> Invite(InviteUsersRequest request)
         {
-            var result = await UserService.InviteUsersToWorkspace(request.EmailAddresses, request.WorkspaceSlug);
+            var result = await UserService.InviteUsersToWorkspace(request.EmailAddresses);
 
             return Ok(result);
         }
@@ -86,7 +86,7 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(ClientResponse))]
         public async Task<IActionResult> RemoveUserFromWorkspace(InviteUsersRequest request)
         {
-            var result = await UserService.RemoveUsersFromWorkspace(request.EmailAddresses, request.WorkspaceSlug);
+            var result = await UserService.RemoveUsersFromWorkspace(request.EmailAddresses);
 
             return Ok(result);
         }

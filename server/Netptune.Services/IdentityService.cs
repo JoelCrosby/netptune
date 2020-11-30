@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,23 @@ namespace Netptune.Services
             var user = await GetCurrentUser();
 
             return await UserManager.GetUserIdAsync(user);
+        }
+
+        public string GetWorkspaceKey()
+        {
+            var context = ContextAccessor.HttpContext;
+
+            if (context is null)
+            {
+                throw new Exception("HttpContext was null");
+            }
+
+            if (context.Request.Headers.TryGetValue("workspace", out var workspace))
+            {
+                return workspace;
+            }
+
+            throw new Exception("Client request did not contain a 'workspace' header.");
         }
     }
 }

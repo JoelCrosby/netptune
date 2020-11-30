@@ -33,7 +33,8 @@ namespace Netptune.Services
         {
             return UnitOfWork.Transaction(async () =>
             {
-                var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Workspace);
+                var workspaceId = IdentityService.GetWorkspaceKey();
+                var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceId);
 
                 if (workspace is null) return null;
 
@@ -133,9 +134,10 @@ namespace Netptune.Services
             return ProjectRepository.GetProjectViewModel(id);
         }
 
-        public Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
+        public Task<List<ProjectViewModel>> GetProjects()
         {
-            return ProjectRepository.GetProjects(workspaceSlug);
+            var workspaceId = IdentityService.GetWorkspaceKey();
+            return ProjectRepository.GetProjects(workspaceId);
         }
 
         public async Task<ProjectViewModel> UpdateProject(Project project)

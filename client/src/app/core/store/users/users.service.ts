@@ -9,27 +9,23 @@ import { environment } from '@env/environment';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  getUsersInWorkspace(workspaceSlug: string) {
-    return this.http.get<AppUser[]>(
-      environment.apiEndpoint + `api/users?workspaceSlug=${workspaceSlug}`
-    );
+  getUsersInWorkspace() {
+    return this.http.get<AppUser[]>(environment.apiEndpoint + `api/users`);
   }
 
-  inviteUsersToWorkspace(emailAddresses: string[], workspaceSlug: string) {
+  inviteUsersToWorkspace(emailAddresses: string[]) {
     return this.http.post<AppUser[]>(
       environment.apiEndpoint + `api/users/invite`,
       {
-        workspaceSlug,
         emailAddresses,
       }
     );
   }
 
-  removeUsersFromWorkspace(emailAddresses: string[], workspaceSlug: string) {
+  removeUsersFromWorkspace(emailAddresses: string[]) {
     return this.http.post<AppUser[]>(
       environment.apiEndpoint + `api/users/remove`,
       {
-        workspaceSlug,
         emailAddresses,
       }
     );

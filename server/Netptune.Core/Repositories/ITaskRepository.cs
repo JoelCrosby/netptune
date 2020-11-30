@@ -11,19 +11,19 @@ namespace Netptune.Core.Repositories
     {
         Task<TaskViewModel> GetTaskViewModel(int id);
 
-        Task<ProjectTask> GetTask(string systemId, string workspaceSlug);
+        Task<ProjectTask> GetTask(string systemId, string workspaceKey);
 
-        Task<int?> GetTaskInternalId(string systemId, string workspaceSlug);
+        Task<int?> GetTaskInternalId(string systemId, string workspaceKey);
 
-        Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug);
+        Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceKey);
 
-        Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false);
+        Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false);
 
         Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
 
         Task<int?> GetNextScopeId(int projectId, int increment = 0);
 
-        Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug);
+        Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey);
 
         Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
     }

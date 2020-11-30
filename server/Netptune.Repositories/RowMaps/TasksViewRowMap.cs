@@ -47,7 +47,7 @@ namespace Netptune.Repositories.RowMaps
 
         public DateTime? Task_Updated_At { get; set; }
 
-        public string Workspace_Name { get; set; }
+        public string Workspace_Key { get; set; }
 
         public string Workspace_Identifier { get; set; }
 

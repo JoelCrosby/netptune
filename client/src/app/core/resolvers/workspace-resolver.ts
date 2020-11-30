@@ -16,10 +16,10 @@ export class WorkspaceResolver implements Resolve<Workspace> {
     return this.get(route.paramMap.get('workspace'));
   }
 
-  get(workspaceSlug: string): Observable<Workspace> {
+  get(workspaceKey: string): Observable<Workspace> {
     return this.http
       .get<Workspace>(
-        environment.apiEndpoint + `api/workspaces/${workspaceSlug}`
+        environment.apiEndpoint + `api/workspaces/${workspaceKey}`
       )
       .pipe(
         tap((workspace) => {

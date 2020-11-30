@@ -1,30 +1,22 @@
 import { Injectable } from '@angular/core';
-import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
-import { of } from 'rxjs';
-import {
-  catchError,
-  map,
-  switchMap,
-  withLatestFrom,
-  tap,
-} from 'rxjs/operators';
-import * as actions from './users.actions';
-import { UsersService } from './users.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Action } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import * as actions from './users.actions';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersEffects {
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadUsers),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([_, workspace]) =>
-        this.usersService.getUsersInWorkspace(workspace.slug).pipe(
+      switchMap(() =>
+        this.usersService.getUsersInWorkspace().pipe(
           map((users) => actions.loadUsersSuccess({ users })),
           catchError((error) => of(actions.loadUsersFail({ error })))
         )
@@ -39,19 +31,14 @@ export class UsersEffects {
   inviteUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.inviteUsersToWorkspace),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([{ emailAddresses }, workspace]) =>
-        this.usersService
-          .inviteUsersToWorkspace(emailAddresses, workspace.slug)
-          .pipe(
-            tap(() => this.snackbar.open('Invite(s) Sent')),
-            map(() =>
-              actions.inviteUsersToWorkspaceSuccess({ emailAddresses })
-            ),
-            catchError((error) =>
-              of(actions.inviteUsersToWorkspaceFail({ error }))
-            )
+      switchMap(({ emailAddresses }) =>
+        this.usersService.inviteUsersToWorkspace(emailAddresses).pipe(
+          tap(() => this.snackbar.open('Invite(s) Sent')),
+          map(() => actions.inviteUsersToWorkspaceSuccess({ emailAddresses })),
+          catchError((error) =>
+            of(actions.inviteUsersToWorkspaceFail({ error }))
           )
+        )
       )
     )
   );
@@ -59,13 +46,12 @@ export class UsersEffects {
   removeUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.removeUsersFromWorkspace),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([{ emailAddresses }, workspace]) =>
+      switchMap(({ emailAddresses }) =>
         this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
           switchMap((result) => {
             if (!result) return of({ type: 'NO_ACTION' });
             return this.usersService
-              .removeUsersFromWorkspace(emailAddresses, workspace.slug)
+              .removeUsersFromWorkspace(emailAddresses)
               .pipe(
                 tap(() => this.snackbar.open('User(s) removed')),
                 map(() =>
@@ -85,8 +71,7 @@ export class UsersEffects {
     private actions$: Actions<Action>,
     private usersService: UsersService,
     private snackbar: MatSnackBar,
-    private confirmation: ConfirmationService,
-    private store: Store
+    private confirmation: ConfirmationService
   ) {}
 }
 

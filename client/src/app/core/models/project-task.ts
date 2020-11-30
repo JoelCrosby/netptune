@@ -37,8 +37,6 @@ export interface AddProjectTaskRequest {
 
   sortOrder?: number;
 
-  workspace: string;
-
   assignee?: AppUser;
   assigneeId?: string;
 }

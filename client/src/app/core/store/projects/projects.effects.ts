@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { of, asyncScheduler } from 'rxjs';
+import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
+  debounceTime,
   map,
   switchMap,
   tap,
   withLatestFrom,
-  debounceTime,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
-import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { ConfirmationService } from '@core/services/confirmation.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -26,9 +25,8 @@ export class ProjectsEffects {
       this.actions$.pipe(
         ofType(actions.loadProjects, selectWorkspace),
         debounceTime(debounce, scheduler),
-        withLatestFrom(this.store.select(selectCurrentWorkspace)),
-        switchMap(([_, workspace]) =>
-          this.projectsService.get(workspace.slug).pipe(
+        switchMap(() =>
+          this.projectsService.get().pipe(
             map((projects) => actions.loadProjectsSuccess({ projects })),
             catchError((error) => of(actions.loadProjectsFail({ error })))
           )

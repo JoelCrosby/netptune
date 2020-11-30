@@ -11,7 +11,8 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 import { HeaderAction } from '@core/types/header-action';
 import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
 import { Store } from '@ngrx/store';
-import { first, tap } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { first, switchMap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './project-tasks-view.component.html',
@@ -39,15 +40,11 @@ export class ProjectTasksViewComponent implements OnInit, OnDestroy {
       .select(selectCurrentWorkspaceIdentifier)
       .pipe(
         first(),
-        tap((identifier) => {
-          this.hubService
-            .connect()
-            .then(() =>
-              this.hubService
-                .addToGroup(`[workspace] ${identifier}`)
-                .subscribe()
-            );
-        })
+        switchMap((identifier) =>
+          from(this.hubService.connect()).pipe(
+            switchMap(() => this.hubService.addToGroup(identifier))
+          )
+        )
       )
       .subscribe();
   }

@@ -8,9 +8,6 @@ namespace Netptune.Core.Requests
         [Required]
         [DenyPipes(ErrorMessage = "Characters are not allowed.")]
         public string Tag { get; set; }
-
-        [Required]
-        public string WorkspaceSlug { get; set; }
     }
 
     public class AddTagToTaskRequest : AddTagRequest

@@ -25,8 +25,6 @@ namespace Netptune.Core.Requests
 
         public double? SortOrder { get; set; }
 
-        public string Workspace { get; set; }
-
         public AppUser Assignee { get; set; }
 
         public string AssigneeId { get; set; }

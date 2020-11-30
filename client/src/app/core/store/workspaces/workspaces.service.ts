@@ -35,9 +35,9 @@ export class WorkspacesService {
     );
   }
 
-  isSlugUnique(slug: string) {
+  isSlugUnique(key: string) {
     return this.http.get<ClientResponse<IsSlugUniqueResponse>>(
-      environment.apiEndpoint + `api/workspaces/is-unique/${slug}`
+      environment.apiEndpoint + `api/workspaces/is-unique/${key}`
     );
   }
 }

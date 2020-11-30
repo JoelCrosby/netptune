@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests
 {
@@ -9,8 +9,5 @@ namespace Netptune.Core.Requests
 
         [Required]
         public string SystemId { get; set; }
-
-        [Required]
-        public string WorkspaceSlug { get; set; }
     }
 }

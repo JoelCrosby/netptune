@@ -36,16 +36,18 @@ export class HubConnectionService {
       .pipe(first())
       .toPromise();
 
+    const httpOptions: IHttpConnectionOptions = {
+      accessTokenFactory: () => token,
+    };
+
     const baseUrl = `${environment.apiEndpoint}${path}`;
     const connection = new HubConnectionBuilder()
-      .withUrl(baseUrl, {
-        accessTokenFactory: () => token,
-      } as IHttpConnectionOptions)
+      .withUrl(baseUrl, httpOptions)
       .build();
 
     if (!handlers.length) {
       console.warn(
-        '[SIGNAL-R ]connect was called before registering any handlers'
+        '[SIGNAL-R] connect was called before registering any handlers'
       );
     }
 
@@ -62,31 +64,28 @@ export class HubConnectionService {
   }
 
   async start(connection: HubConnection): Promise<void> {
-    if (connection.state === HubConnectionState.Disconnected) {
-      try {
-        await connection.start();
-
-        console.log(
-          `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
-          'color: lime'
-        );
-      } catch (err) {
-        return console.error(`[SIGNAL-R][ERROR] ${err}`);
-      }
+    if (connection.state !== HubConnectionState.Disconnected) {
+      return null;
     }
 
-    return null;
+    try {
+      await connection.start();
+
+      console.log(
+        `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
+        'color: lime'
+      );
+    } catch (err) {
+      return console.error(`[SIGNAL-R][ERROR] ${err}`);
+    }
   }
 
   async stop(connection: HubConnection) {
     if (!connection) {
-      console.warn('[SIGNAL-R] attmpted to close a null connection.');
-
-      return;
+      return console.warn('[SIGNAL-R] attmpted to close a null connection.');
     }
 
     const connectionId = connection.connectionId;
-
     delete this.connections[connection.baseUrl];
 
     await connection.stop();

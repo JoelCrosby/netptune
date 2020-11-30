@@ -29,7 +29,7 @@ export interface BoardViewTask {
   status: TaskStatus;
   projectId: number;
   workspaceId: number;
-  workspaceSlug: string;
+  workspaceKey: string;
   assigneeUsername: string;
   assigneePictureUrl: string;
 }

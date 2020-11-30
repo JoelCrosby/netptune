@@ -10,7 +10,7 @@ namespace Netptune.Core.Services
 {
     public interface IProjectService
     {
-        Task<List<ProjectViewModel>> GetProjects(string workspaceSlug);
+        Task<List<ProjectViewModel>> GetProjects();
 
         Task<ProjectViewModel> GetProject(int id);
 

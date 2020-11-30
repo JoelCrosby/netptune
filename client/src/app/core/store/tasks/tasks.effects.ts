@@ -2,23 +2,13 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import {
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceIdentifier,
-} from '@core/store/workspaces/workspaces.selectors';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import { of } from 'rxjs';
-import {
-  catchError,
-  map,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './tasks.actions';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import { ProjectTasksService } from './tasks.service';
@@ -28,9 +18,8 @@ export class ProjectTasksEffects {
   loadProjectTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadProjectTasks),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([_, workspace]) =>
-        this.projectTasksService.get(workspace.slug).pipe(
+      switchMap(() =>
+        this.projectTasksService.get().pipe(
           map((tasks) => actions.loadProjectTasksSuccess({ tasks })),
           catchError((error) => of(actions.loadProjectTasksFail(error)))
         )
@@ -121,9 +110,8 @@ export class ProjectTasksEffects {
   loadTaskDetail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadTaskDetails),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
-        this.projectTasksService.detail(action.systemId, workspace.slug).pipe(
+      switchMap((action) =>
+        this.projectTasksService.detail(action.systemId).pipe(
           map((task) => actions.loadTaskDetailsSuccess({ task })),
           catchError((error) => of(actions.loadTaskDetailsFail({ error })))
         )
@@ -134,14 +122,11 @@ export class ProjectTasksEffects {
   loadComments$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadComments),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([action, workspace]) =>
-        this.projectTasksService
-          .getComments(action.systemId, workspace.slug)
-          .pipe(
-            map((comments) => actions.loadCommentsSuccess({ comments })),
-            catchError((error) => of(actions.loadCommentsFail({ error })))
-          )
+      switchMap((action) =>
+        this.projectTasksService.getComments(action.systemId).pipe(
+          map((comments) => actions.loadCommentsSuccess({ comments })),
+          catchError((error) => of(actions.loadCommentsFail({ error })))
+        )
       )
     )
   );
@@ -161,9 +146,8 @@ export class ProjectTasksEffects {
   exportTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.exportTasks),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([_, workspace]) =>
-        this.projectTasksService.export(workspace.slug).pipe(
+      switchMap(() =>
+        this.projectTasksService.export().pipe(
           tap(async (res) => await downloadFile(res.file, res.filename)),
           map((reponse) => actions.exportTasksSuccess({ reponse })),
           catchError((error) => of(actions.exportTasksFail({ error })))
@@ -175,8 +159,7 @@ export class ProjectTasksEffects {
   importTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.importTasks),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      switchMap(([action]) =>
+      switchMap((action) =>
         this.projectTasksService
           .import(action.boardIdentifier, action.file)
           .pipe(
@@ -213,10 +196,9 @@ export class ProjectTasksEffects {
   deleteTagFromTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteTagFromTask),
-      withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
-      switchMap(([{ identifier, systemId, tag }, workspace]) =>
+      switchMap(({ identifier, systemId, tag }) =>
         this.projectTasksHubService
-          .deleteTagFromTask(identifier, { workspace, systemId, tag })
+          .deleteTagFromTask(identifier, { systemId, tag })
           .pipe(
             map((response) => actions.deleteTagFromTaskSuccess({ response })),
             catchError((error) => of(actions.deleteTagFromTaskFail(error)))
@@ -234,8 +216,7 @@ export class ProjectTasksEffects {
     private projectTasksService: ProjectTasksService,
     private projectTasksHubService: ProjectTasksHubService,
     private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar,
-    private store: Store
+    private snackbar: MatSnackBar
   ) {}
 }
 

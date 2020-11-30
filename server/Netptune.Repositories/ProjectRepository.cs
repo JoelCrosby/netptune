@@ -21,9 +21,9 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<List<ProjectViewModel>> GetProjects(string workspaceSlug)
+        public async Task<List<ProjectViewModel>> GetProjects(string workspaceKey)
         {
-            var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceSlug);
+            var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceKey);
 
             if (workspace is null) return new List<ProjectViewModel>();
 

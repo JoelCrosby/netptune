@@ -11,7 +11,7 @@ namespace Netptune.Core.Services
     {
         Task<CommentViewModel> AddCommentToTask(AddCommentRequest request);
 
-        Task<List<CommentViewModel>> GetCommentsForTask(string systemId, string workspaceSlug);
+        Task<List<CommentViewModel>> GetCommentsForTask(string systemId);
 
         Task<ClientResponse> Delete(int id);
     }

@@ -17,18 +17,15 @@ import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
 export class TagsService {
   constructor(private http: HttpClient) {}
 
-  get(workspaceSlug: string) {
+  get() {
     return this.http.get<Tag[]>(
-      environment.apiEndpoint + `api/tags/workspace/${workspaceSlug}`
+      environment.apiEndpoint + 'api/tags/workspace/'
     );
   }
 
-  getForTask(systemId: string, workspaceSlug: string) {
+  getForTask(systemId: string) {
     return this.http.get<Tag[]>(
-      environment.apiEndpoint + `api/tags/task/${systemId}`,
-      {
-        params: { workspaceSlug },
-      }
+      environment.apiEndpoint + `api/tags/task/${systemId}`
     );
   }
 
