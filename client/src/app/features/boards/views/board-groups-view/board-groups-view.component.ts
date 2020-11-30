@@ -6,7 +6,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
@@ -18,8 +18,8 @@ import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { filter, first, map, startWith, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
@@ -86,11 +86,11 @@ export class BoardGroupsViewComponent
       .pipe(
         filter((val) => !!val),
         first(),
-        tap((identifier) => {
-          this.hubService
-            .connect()
-            .then(() => this.hubService.addToGroup(identifier));
-        })
+        switchMap((identifier) =>
+          from(this.hubService.connect()).pipe(
+            switchMap(() => this.hubService.addToGroup(identifier))
+          )
+        )
       )
       .subscribe();
   }

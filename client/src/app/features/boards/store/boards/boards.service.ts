@@ -1,8 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  ClientResponse
-} from '@core/models/client-response';
+import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
@@ -21,9 +19,9 @@ export class BoardsService {
     );
   }
 
-  getByWorkspace(slug: string) {
+  getByWorkspace() {
     return this.http.get<BoardViewModel[]>(
-      environment.apiEndpoint + `api/boards/workspace/${slug}`
+      environment.apiEndpoint + `api/boards/workspace`
     );
   }
 

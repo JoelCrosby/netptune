@@ -30,6 +30,6 @@ namespace Netptune.Core.ViewModels.ProjectTasks
 
         public string Project { get; set; }
 
-        public string Workspace { get; set; }
+        public string Board { get; set; }
     }
 }

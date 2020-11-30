@@ -115,23 +115,17 @@ export class BoardGroupTaskInlineComponent
   onSubmit(event?: Event) {
     event?.preventDefault();
 
-    combineLatest([
-      this.currentWorkspace$,
-      this.currentProjectId$,
-      this.currentUser$,
-    ])
+    combineLatest([this.currentProjectId$, this.currentUser$])
       .pipe(first())
       .subscribe({
-        next: ([workspace, projectId, user]) =>
-          this.createTask(workspace, projectId, user),
+        next: ([projectId, user]) => this.createTask(projectId, user),
       });
   }
 
-  createTask(workspace: Workspace, projectId: number, user: UserResponse) {
+  createTask(projectId: number, user: UserResponse) {
     const task: AddProjectTaskRequest = {
       name: (this.taskInputControl.value as string).trim(),
       projectId,
-      workspace: workspace.slug,
       assigneeId: user.userId,
       boardGroupId: this.boardGroupId,
     };

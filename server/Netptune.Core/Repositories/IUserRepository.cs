@@ -15,7 +15,7 @@ namespace Netptune.Core.Repositories
 
         Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false);
 
-        Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug, bool isReadonly = false);
+        Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false);
 
         Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
 

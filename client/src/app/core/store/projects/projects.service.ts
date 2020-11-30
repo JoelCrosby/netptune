@@ -4,18 +4,14 @@ import { ClientResponse } from '@core/models/client-response';
 import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { environment } from '@env/environment';
-import { throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
   constructor(private http: HttpClient) {}
 
-  get(workspaceSlug: string) {
-    if (!workspaceSlug) {
-      return throwError('no current workspace');
-    }
+  get() {
     return this.http.get<ProjectViewModel[]>(
-      environment.apiEndpoint + `api/projects?workspaceSlug=${workspaceSlug}`
+      environment.apiEndpoint + `api/projects`
     );
   }
 

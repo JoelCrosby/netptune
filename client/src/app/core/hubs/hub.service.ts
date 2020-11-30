@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
-import { from, Observable, of, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
+import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 import { HubConnectionService } from './hub-connection.service';
 import { redirectAction } from './hub.utils';
 
@@ -38,17 +39,29 @@ export class HubService {
   invoke<TResult>(
     method: string,
     group: string,
-    ...args: unknown[]
+    payload: unknown = {}
   ): Observable<TResult> {
-    if (!group) return of(null);
+    if (!group) {
+      return throwError('group argument must be provided');
+    }
 
-    return from(this.connection.invoke<TResult>(method, group, ...args)).pipe(
-      tap((res) => console.log(`[SIGNAL-R][RESPONSE] `, { res })),
-      catchError((err: HubError) => {
-        console.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
+    return this.store.select(selectCurrentWorkspaceIdentifier).pipe(
+      switchMap((workspaceKey) =>
+        from(
+          this.connection.invoke<TResult>(method, {
+            group,
+            workspaceKey,
+            payload,
+          })
+        ).pipe(
+          tap((res) => console.log(`[SIGNAL-R][RESPONSE] `, { res })),
+          catchError((err: HubError) => {
+            console.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
 
-        return throwError(err.message);
-      })
+            return throwError(err.message);
+          })
+        )
+      )
     );
   }
 

@@ -13,9 +13,9 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request);
 
-        Task<List<TagViewModel>> GetTagsForTask(string systemId, string workspaceSlug);
+        Task<List<TagViewModel>> GetTagsForTask(string systemId);
 
-        Task<List<TagViewModel>> GetTagsForWorkspace(string workspaceSlug);
+        Task<List<TagViewModel>> GetTagsForWorkspace();
 
         Task<ClientResponse> Delete(DeleteTagsRequest request);
 

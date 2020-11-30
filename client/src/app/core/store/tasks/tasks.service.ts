@@ -17,9 +17,9 @@ import { map } from 'rxjs/operators';
 export class ProjectTasksService {
   constructor(private http: HttpClient) {}
 
-  get(workspaceSlug: string) {
+  get() {
     return this.http.get<TaskViewModel[]>(
-      environment.apiEndpoint + `api/tasks?workspaceSlug=${workspaceSlug}`
+      environment.apiEndpoint + 'api/tasks'
     );
   }
 
@@ -43,12 +43,11 @@ export class ProjectTasksService {
     );
   }
 
-  detail(systemId: string, workspaceSlug: string) {
+  detail(systemId: string) {
     return this.http.get<TaskViewModel>(
       environment.apiEndpoint + 'api/tasks/detail',
       {
         params: {
-          workspace: workspaceSlug,
           systemId,
         },
       }
@@ -62,14 +61,9 @@ export class ProjectTasksService {
     );
   }
 
-  getComments(systemId: string, workspaceSlug: string) {
+  getComments(systemId: string) {
     return this.http.get<CommentViewModel[]>(
-      environment.apiEndpoint + `api/comments/task/${systemId}`,
-      {
-        params: {
-          workspace: workspaceSlug,
-        },
-      }
+      environment.apiEndpoint + `api/comments/task/${systemId}`
     );
   }
 
@@ -79,15 +73,12 @@ export class ProjectTasksService {
     );
   }
 
-  export(workspaceSlug: string): Observable<FileResponse> {
+  export(): Observable<FileResponse> {
     return this.http
-      .get(
-        environment.apiEndpoint + `api/export/tasks/export-workspace/${workspaceSlug}`,
-        {
-          observe: 'response',
-          responseType: 'blob',
-        }
-      )
+      .get(environment.apiEndpoint + `api/export/tasks/export-workspace`, {
+        observe: 'response',
+        responseType: 'blob',
+      })
       .pipe(
         map((response) => ({
           file: response.body,

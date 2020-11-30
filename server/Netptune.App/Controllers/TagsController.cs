@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -54,28 +53,28 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // GET: api/tags/taskId?workspace=workspaceSlug
+        // GET: api/tags/taskId
         [Route("task/{systemId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<TagViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId, [FromQuery][Required] string workspace)
+        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId)
         {
-            var result = await TagService.GetTagsForTask(systemId, workspace);
+            var result = await TagService.GetTagsForTask(systemId);
 
             if (result is null) return NotFound();
 
             return Ok(result);
         }
 
-        // GET: api/tags/workspace/identifier
-        [Route("workspace/{identifier}")]
+        // GET: api/tags/workspace
+        [Route("workspace")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<TagViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask([FromRoute] string identifier)
+        public async Task<IActionResult> GetCommentsForTask()
         {
-            var result = await TagService.GetTagsForWorkspace(identifier);
+            var result = await TagService.GetTagsForWorkspace();
 
             if (result is null) return NotFound();
 

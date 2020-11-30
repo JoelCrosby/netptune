@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Hubs;
 using Netptune.Core.Requests;
@@ -21,17 +23,20 @@ namespace Netptune.App.Hubs
         public const string Path = "/hubs/board-hub";
 
         private readonly IUserConnectionService UserConnection;
+        private readonly IHttpContextAccessor ContextAccessor;
         private readonly ITaskService TaskService;
         private readonly IBoardGroupService BoardGroupService;
         private readonly ITagService TagService;
 
         public BoardHub(
             IUserConnectionService userConnection,
+            IHttpContextAccessor contextAccessor,
             ITaskService taskService,
             IBoardGroupService boardGroupService,
             ITagService tagsService)
         {
             UserConnection = userConnection;
+            ContextAccessor = contextAccessor;
             TaskService = taskService;
             BoardGroupService = boardGroupService;
             TagService = tagsService;
@@ -49,151 +54,171 @@ namespace Netptune.App.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task AddToGroup(string group)
+        public async Task AddToGroup(HubRequest request)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            await Groups.AddToGroupAsync(Context.ConnectionId, request.Group);
 
             var userConnection = await UserConnection.Get(Context.ConnectionId);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .JoinBoard(userConnection);
         }
 
-        public async Task RemoveFromGroup(string group)
+        public async Task RemoveFromGroup(HubRequest request)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.Group);
 
             var userConnection = await UserConnection.Get(Context.ConnectionId);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .LeaveBoard(userConnection);
         }
 
-        public async Task<ClientResponse> MoveTaskInBoardGroup(string group, MoveTaskInGroupRequest request)
+        public async Task<ClientResponse> MoveTaskInBoardGroup(HubRequest<MoveTaskInGroupRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse.Failed();
+            SetupHttpContext(request);
 
-            var result = await TaskService.MoveTaskInBoardGroup(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+
+            var result = await TaskService.MoveTaskInBoardGroup(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
-                .MoveTaskInBoardGroup(request);
+                .OthersInGroup(request.Group)
+                .MoveTaskInBoardGroup(request.Payload);
 
             return result;
         }
 
-        public async Task<ClientResponse<TaskViewModel>> Create(string group, AddProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Create(HubRequest<AddProjectTaskRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse<TaskViewModel>.Failed();
+            SetupHttpContext(request);
 
-            var result = await TaskService.Create(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+
+            var result = await TaskService.Create(request.Payload);
 
             if (!result.IsSuccess) return result;
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .Create(result.Payload);
 
             return result;
         }
 
-        public async Task<ClientResponse> Delete(string group, int id)
+        public async Task<ClientResponse> Delete(HubRequest<int> request)
         {
-            var response = await TaskService.Delete(id);
+            SetupHttpContext(request);
+
+            var response = await TaskService.Delete(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
-                .Delete(response, id);
+                .OthersInGroup(request.Group)
+                .Delete(response, request.Payload);
 
             return response;
         }
 
-        public async Task<ClientResponse> DeleteMultiple(string group, List<int> ids)
+        public async Task<ClientResponse> DeleteMultiple(HubRequest<List<int>> request)
         {
-            var response = await TaskService.Delete(ids);
+            SetupHttpContext(request);
+
+            var response = await TaskService.Delete(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
-                .DeleteMultiple(response, ids);
+                .OthersInGroup(request.Group)
+                .DeleteMultiple(response, request.Payload);
 
             return response;
         }
 
-        public async Task<ClientResponse<TaskViewModel>> Update(string group, UpdateProjectTaskRequest request)
+        public async Task<ClientResponse<TaskViewModel>> Update(HubRequest<UpdateProjectTaskRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse<TaskViewModel>.Failed();
+            SetupHttpContext(request);
 
-            var result = await TaskService.Update(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+
+            var result = await TaskService.Update(request.Payload);
 
             if (!result.IsSuccess) return result;
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .Update(result.Payload);
 
             return result;
         }
 
-        public async Task<ClientResponse<TagViewModel>> AddTagToTask(string group, AddTagToTaskRequest request)
+        public async Task<ClientResponse<TagViewModel>> AddTagToTask(HubRequest<AddTagToTaskRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse<TagViewModel>.Failed();
+            SetupHttpContext(request);
 
-            var result = await TagService.AddTagToTask(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse<TagViewModel>.Failed();
+
+            var result = await TagService.AddTagToTask(request.Payload);
 
             if (!result.IsSuccess) return result;
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .AddTagToTask(result.Payload);
 
             return result;
         }
 
-        public async Task<ClientResponse> DeleteTagFromTask(string group, DeleteTagFromTaskRequest request)
+        public async Task<ClientResponse> DeleteTagFromTask(HubRequest<DeleteTagFromTaskRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse.Failed();
+            SetupHttpContext(request);
 
-            var response = await TagService.DeleteFromTask(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+
+            var response = await TagService.DeleteFromTask(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .DeleteTagFromTask(response);
 
             return response;
         }
 
-        public async Task<ClientResponse<BoardGroup>> AddBoardGroup(string group, AddBoardGroupRequest request)
+        public async Task<ClientResponse<BoardGroup>> AddBoardGroup(HubRequest<AddBoardGroupRequest> request)
         {
-            if (IsInValidRequest(request)) return ClientResponse<BoardGroup>.Failed();
+            SetupHttpContext(request);
 
-            var response = await BoardGroupService.AddBoardGroup(request);
+            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroup>.Failed();
+
+            var response = await BoardGroupService.AddBoardGroup(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .AddBoardGroup(response);
 
             return response;
         }
 
-        public async Task<ClientResponse> DeleteBoardGroup(string group, int boardGroupId)
+        public async Task<ClientResponse> DeleteBoardGroup(HubRequest<int> request)
         {
-            var response = await BoardGroupService.Delete(boardGroupId);
+            SetupHttpContext(request);
+
+            var response = await BoardGroupService.Delete(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .DeleteBoardGroup(response);
 
             return response;
         }
 
-        public async Task<ClientResponse> MoveTasksToGroup(string group, MoveTasksToGroupRequest request)
+        public async Task<ClientResponse> MoveTasksToGroup(HubRequest<MoveTasksToGroupRequest> request)
         {
-            var response = await TaskService.MoveTasksToGroup(request);
+            SetupHttpContext(request);
+
+            var response = await TaskService.MoveTasksToGroup(request.Payload);
 
             await Clients
-                .OthersInGroup(group)
+                .OthersInGroup(request.Group)
                 .MoveTasksToGroup(response);
 
             return response;
@@ -205,6 +230,11 @@ namespace Netptune.App.Hubs
             var validationResults = new List<ValidationResult>();
 
             return !Validator.TryValidateObject(target, context, validationResults, true);
+        }
+
+        private void SetupHttpContext<T>(HubRequest<T> request)
+        {
+            ContextAccessor.HttpContext?.Request.Headers.TryAdd("workspace", request.WorkspaceKey);
         }
     }
 }

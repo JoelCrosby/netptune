@@ -26,7 +26,6 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
@@ -180,7 +179,6 @@ export class TaskDetailDialogComponent
           const request: AddCommentRequest = {
             comment: value.trim(),
             systemId: viewModel.systemId,
-            workspaceSlug: viewModel.workspaceSlug,
           };
 
           this.store.dispatch(TaskActions.addComment({ request }));
@@ -300,11 +298,8 @@ export class TaskDetailDialogComponent
     this.task$
       .pipe(
         first(),
-        withLatestFrom(
-          this.store.select(selectCurrentHubGroupId),
-          this.store.select(selectCurrentWorkspaceIdentifier)
-        ),
-        tap(([task, identifier, workspaceSlug]) => {
+        withLatestFrom(this.store.select(selectCurrentHubGroupId)),
+        tap(([task, identifier]) => {
           if (event.type === 'Removed') {
             const systemId = task.systemId;
             const tag = event.option;
@@ -316,7 +311,6 @@ export class TaskDetailDialogComponent
             const request: AddTagToTaskRequest = {
               systemId: task.systemId,
               tag: event.option,
-              workspaceSlug,
             };
 
             this.store.dispatch(

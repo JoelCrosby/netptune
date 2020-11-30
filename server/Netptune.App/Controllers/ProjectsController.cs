@@ -27,9 +27,9 @@ namespace Netptune.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<Project>))]
-        public async Task<IActionResult> GetProjects(string workspaceSlug)
+        public async Task<IActionResult> GetProjects()
         {
-            var result = await ProjectService.GetProjects(workspaceSlug);
+            var result = await ProjectService.GetProjects();
 
             return Ok(result);
         }

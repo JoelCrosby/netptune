@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
   catchError,
-  filter,
   map,
   switchMap,
   tap,
@@ -24,10 +23,8 @@ export class BoardsEffects {
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoards),
-      withLatestFrom(this.store.select(selectCurrentWorkspace)),
-      filter(([_, workspace]) => !!workspace),
-      switchMap(([_, workspace]) =>
-        this.boardsService.getByWorkspace(workspace.slug).pipe(
+      switchMap(() =>
+        this.boardsService.getByWorkspace().pipe(
           map((boards) => actions.loadBoardsSuccess({ boards })),
           catchError((error) => of(actions.loadBoardsFail({ error })))
         )

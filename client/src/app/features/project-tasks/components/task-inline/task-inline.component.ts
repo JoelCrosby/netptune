@@ -143,7 +143,6 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
 
     const task: AddProjectTaskRequest = {
       name: (this.taskName.value as string).trim(),
-      workspace: workspace.slug,
       projectId: project.id,
       status: this.status,
       sortOrder: order || 1,

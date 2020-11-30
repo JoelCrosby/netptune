@@ -106,7 +106,6 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
       const task: AddProjectTaskRequest = {
         name: (this.name.value as string).trim(),
         description: (this.description.value as string)?.trim(),
-        workspace: workspace.slug,
         projectId: (this.project.value as Project).id,
         assigneeId: undefined,
         assignee: undefined,

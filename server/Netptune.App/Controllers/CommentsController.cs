@@ -38,14 +38,14 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // GET: api/comments/taskId?workspace=workspaceSlug
+        // GET: api/comments/taskId
         [Route("task/{systemId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<CommentViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId, [FromQuery] string workspace)
+        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId)
         {
-            var result = await CommentService.GetCommentsForTask(systemId, workspace);
+            var result = await CommentService.GetCommentsForTask(systemId);
 
             if (result is null) return NotFound();
 

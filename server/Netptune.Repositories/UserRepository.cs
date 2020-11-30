@@ -21,12 +21,12 @@ namespace Netptune.Repositories
         {
         }
 
-        public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceSlug, bool isReadonly = false)
+        public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false)
         {
             var result = await Context.Workspaces
                 .Include(workspace => workspace.Users)
                 .IsReadonly(isReadonly)
-                .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceSlug);
+                .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceKey);
 
             return result.Users.ToList();
         }

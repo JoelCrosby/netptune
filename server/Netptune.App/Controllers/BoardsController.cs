@@ -37,13 +37,13 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/boards/workspace/workspaceSlug
-        [HttpGet("workspace/{workspaceSlug}")]
+        // GET: api/boards/workspace
+        [HttpGet("workspace")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<Board>))]
-        public async Task<IActionResult> GetBoardsInWorkspace(string workspaceSlug)
+        public async Task<IActionResult> GetBoardsInWorkspace()
         {
-            var result = await BoardService.GetBoardsInWorkspace(workspaceSlug);
+            var result = await BoardService.GetBoardsInWorkspace();
 
             if (result is null) return NotFound();
 

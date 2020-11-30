@@ -9,11 +9,11 @@ namespace Netptune.Core.Services
 {
     public interface ITaskService
     {
-        Task<List<TaskViewModel>> GetTasks(string workspaceSlug);
+        Task<List<TaskViewModel>> GetTasks();
 
         Task<TaskViewModel> GetTask(int id);
 
-        Task<TaskViewModel> GetTaskDetail(string systemId, string workspaceSlug);
+        Task<TaskViewModel> GetTaskDetail(string systemId);
 
         Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request);
 

@@ -51,7 +51,7 @@ namespace Netptune.Core.ViewModels.Boards
 
         public int WorkspaceId { get; set; }
 
-        public string WorkspaceSlug { get; set; }
+        public string WorkspaceKey { get; set; }
 
         public string AssigneeUsername { get; set; }
 

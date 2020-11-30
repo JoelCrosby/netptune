@@ -35,7 +35,8 @@ namespace Netptune.Services
 
         public async Task<ClientResponse<TaskViewModel>> Create(AddProjectTaskRequest request)
         {
-            var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(request.Workspace, true);
+            var workspaceKey = IdentityService.GetWorkspaceKey();
+            var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true);
 
             if (workspace is null) return null;
 
@@ -137,14 +138,16 @@ namespace Netptune.Services
             return TaskRepository.GetTaskViewModel(id);
         }
 
-        public Task<TaskViewModel> GetTaskDetail(string systemId, string workspaceSlug)
+        public Task<TaskViewModel> GetTaskDetail(string systemId)
         {
-            return TaskRepository.GetTaskViewModel(systemId, workspaceSlug);
+            var workspaceKey = IdentityService.GetWorkspaceKey();
+            return TaskRepository.GetTaskViewModel(systemId, workspaceKey);
         }
 
-        public Task<List<TaskViewModel>> GetTasks(string workspaceSlug)
+        public Task<List<TaskViewModel>> GetTasks()
         {
-            return TaskRepository.GetTasksAsync(workspaceSlug);
+            var workspaceKey = IdentityService.GetWorkspaceKey();
+            return TaskRepository.GetTasksAsync(workspaceKey);
         }
 
         public async Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request)

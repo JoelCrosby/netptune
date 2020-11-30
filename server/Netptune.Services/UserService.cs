@@ -19,6 +19,7 @@ namespace Netptune.Services
     public class UserService : IUserService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IIdentityService Identity;
         private readonly IEmailService Email;
         private readonly IHostingService Hosting;
         private readonly IUserRepository UserRepository;
@@ -26,10 +27,12 @@ namespace Netptune.Services
 
         public UserService(
             INetptuneUnitOfWork unitOfWork,
+            IIdentityService identity,
             IEmailService email,
             IHostingService hosting)
         {
             UnitOfWork = unitOfWork;
+            Identity = identity;
             Email = email;
             Hosting = hosting;
             UserRepository = unitOfWork.Users;
@@ -50,9 +53,10 @@ namespace Netptune.Services
             return user?.ToViewModel();
         }
 
-        public async Task<List<UserViewModel>> GetWorkspaceUsers(string workspaceSlug)
+        public async Task<List<UserViewModel>> GetWorkspaceUsers()
         {
-            var users = await UserRepository.GetWorkspaceUsers(workspaceSlug, true);
+            var workspaceKey = Identity.GetWorkspaceKey();
+            var users = await UserRepository.GetWorkspaceUsers(workspaceKey, true);
 
             return MapUsers(users);
         }
@@ -64,16 +68,18 @@ namespace Netptune.Services
             return MapUsers(users);
         }
 
-        public Task<ClientResponse> InviteUserToWorkspace(string userId, string workspaceSlug)
+        public Task<ClientResponse> InviteUserToWorkspace(string userId)
         {
-            return InviteUsersToWorkspace(new[] { userId }, workspaceSlug);
+            return InviteUsersToWorkspace(new[] { userId });
         }
 
         public async Task<ClientResponse> InviteUsersToWorkspace(
-            IEnumerable<string> emailAddresses, string workspaceSlug, bool onlyNewUsers = false)
+            IEnumerable<string> emailAddresses, bool onlyNewUsers = false)
         {
+            var workspaceKey = Identity.GetWorkspaceKey();
+
             var emailList = emailAddresses.ToList();
-            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug, true);
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
             if (workspace is null)
             {
@@ -110,10 +116,12 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses, string workspaceSlug)
+        public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses)
         {
+            var workspaceKey = Identity.GetWorkspaceKey();
+
             var emailList = emailAddresses.ToList();
-            var workspace = await WorkspaceRepository.GetBySlug(workspaceSlug, true);
+            var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
             if (workspace is null)
             {

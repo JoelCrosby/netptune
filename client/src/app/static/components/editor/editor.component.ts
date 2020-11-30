@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import EditorJS, { LogLevels, OutputData } from '@editorjs/editorjs';
@@ -24,8 +23,6 @@ import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
 import { environment } from '@env/environment';
-import { Store } from '@ngrx/store';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-editor',
@@ -52,7 +49,7 @@ export class EditorComponent implements ControlValueAccessor {
   onChange: (value: string) => void;
   onTouch: () => void;
 
-  constructor(private storage: StorageService, private store: Store) {}
+  constructor(private storage: StorageService) {}
 
   writeValue(obj: string) {
     const intialValue = obj && JSON.parse(obj);
@@ -136,13 +133,7 @@ export class EditorComponent implements ControlValueAccessor {
   }
 
   async uploadFile(data: File) {
-    const workspace = await this.store
-      .select(selectCurrentWorkspaceIdentifier)
-      .pipe(first())
-      .toPromise();
-    const response = await this.storage
-      .uploadMedia(workspace, data)
-      .toPromise();
+    const response = await this.storage.uploadMedia(data).toPromise();
     return {
       success: 1,
       file: {

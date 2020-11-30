@@ -39,9 +39,9 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int?> GetTaskInternalId(string systemId, string workspaceSlug)
+        public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey)
         {
-            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
             if (entity is null) return null;
 
@@ -50,23 +50,23 @@ namespace Netptune.Repositories
             return task?.Id;
         }
 
-        public async Task<ProjectTask> GetTask(string systemId, string workspaceSlug)
+        public async Task<ProjectTask> GetTask(string systemId, string workspaceKey)
         {
-            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
             return await entity.FirstOrDefaultAsync();
         }
 
-        public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceSlug)
+        public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceKey)
         {
-            var entity = await GetTaskFromSystemId(systemId, workspaceSlug, true);
+            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
             return await entity
                 .Select(task => task.ToViewModel())
                 .FirstOrDefaultAsync();
         }
 
-        private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceSlug, bool isReadonly = false)
+        private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
         {
             var parts = systemId.Split("-");
 
@@ -78,7 +78,7 @@ namespace Netptune.Repositories
 
             var workspaceIds = await Context.Workspaces
                 .AsNoTracking()
-                .Where(x => x.Slug == workspaceSlug)
+                .Where(x => x.Slug == workspaceKey)
                 .Select(x => x.Id)
                 .Take(1)
                 .ToListAsync();
@@ -110,10 +110,10 @@ namespace Netptune.Repositories
             return isReadonly ? queryable.AsNoTracking() : queryable;
         }
 
-        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceSlug, bool isReadonly = false)
+        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false)
         {
             return Entities
-                .Where(x => x.Workspace.Slug == workspaceSlug && !x.IsDeleted)
+                .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
                 .OrderByDescending(x => x.UpdatedAt)
                 .Include(x => x.Assignee)
                 .Include(x => x.Project)
@@ -123,12 +123,12 @@ namespace Netptune.Repositories
                 .ApplyReadonly(isReadonly);
         }
 
-        public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceSlug)
+        public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)
         {
             using var connection = ConnectionFactory.StartConnection();
 
             var rows = await connection.QueryAsync<TasksViewRowMap>(@"
-                SELECT w.slug              AS worksapce_name
+                SELECT w.slug              AS workspace_key
                      , p.name              AS project_name
                      , p.key               AS project_key
                      , b.name              AS board_name
@@ -150,7 +150,7 @@ namespace Netptune.Repositories
                      , a.email             AS assignee_email
                      , o.firstname         AS owner_firstname
                      , o.lastname          AS owner_lastname
-                     , o.email          AS owner_email
+                     , o.email             AS owner_email
                      , t.name              AS tag
 
                 FROM workspaces w
@@ -164,10 +164,13 @@ namespace Netptune.Repositories
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
 
-                WHERE w.slug = @workspaceSlug
+                WHERE w.slug = @workspaceKey
 
                 ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
-            ", new { workspaceSlug });
+            ", new
+            {
+                workspaceKey
+            });
 
             return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
             {
@@ -188,7 +191,7 @@ namespace Netptune.Repositories
                     Status = row.Task_Status.ToString(),
                     IsFlagged = row.Task_Is_Flagged,
                     SortOrder = row.Task_Sort_Order,
-                    Workspace = row.Board_Identifier,
+                    Board = row.Board_Identifier,
                     CreatedAt = row.Task_Created_At,
                     UpdatedAt = row.Task_Updated_At,
                     Assignee = row.Assignee_Email,

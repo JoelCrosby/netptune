@@ -23,13 +23,13 @@ namespace Netptune.Api.Controllers
 
         // GET: api/export/tasks/export-workspace
         [HttpGet]
-        [Route("tasks/export-workspace/{workspace}")]
+        [Route("tasks/export-workspace")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(TaskViewModel))]
-        public async Task<IActionResult> ExportWorkspaceTasks([FromRoute] string workspace)
+        public async Task<IActionResult> ExportWorkspaceTasks()
         {
-            var result = await TaskExportService.ExportWorkspaceTasks(workspace);
+            var result = await TaskExportService.ExportWorkspaceTasks();
 
             return File(result.Stream, result.ContentType, result.Filename);
         }
