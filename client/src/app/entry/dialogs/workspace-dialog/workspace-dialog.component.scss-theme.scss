@@ -13,4 +13,13 @@
       max-height: 18px;
     }
   }
+
+  .identifier-check {
+    cursor: default;
+    color: mat-color($foreground, success);
+  }
+
+  .is-unique-loading {
+    height: 18px;
+  }
 }
