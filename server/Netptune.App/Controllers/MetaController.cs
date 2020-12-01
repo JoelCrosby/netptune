@@ -16,7 +16,7 @@ namespace Netptune.App.Controllers
         private readonly IWebService WebService;
         private readonly BuildInfo BuildInfo;
 
-        public MetaController(IWebService webService ,BuildInfo buildInfo)
+        public MetaController(IWebService webService, BuildInfo buildInfo)
         {
             WebService = webService;
             BuildInfo = buildInfo;

@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Authentication.Models
+namespace Netptune.Core.Authentication.Models
 {
     public class TokenRequest
     {
