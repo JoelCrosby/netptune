@@ -21,7 +21,13 @@ import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { colorDictionary } from '@core/util/colors/colors';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  map,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -30,7 +36,16 @@ import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
-  isUniqueLoading$ = new Subject<boolean>();
+  isUniqueLoadingSubject$ = new Subject<boolean>();
+  showIdentifierCheckSubject$ = new Subject<boolean>();
+
+  showIdentifierCheck$ = this.showIdentifierCheckSubject$.pipe(
+    withLatestFrom(this.isUniqueLoadingSubject$),
+    map(([check, loading]) => !loading && check),
+    debounceTime(640)
+  );
+
+  isUniqueLoading$ = this.isUniqueLoadingSubject$.pipe(debounceTime(640));
 
   onDestroy$ = new Subject();
 
@@ -84,7 +99,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
           updateOn: 'change',
         }),
         description: new FormControl(''),
-        color: new FormControl(''),
+        color: new FormControl('#673AB7'),
       },
       { updateOn: 'blur' }
     );
@@ -103,7 +118,15 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.onDestroy$),
           tap((value: string | undefined) => {
-            if (!value || typeof value !== 'string') return;
+            if (!value) {
+              this.identifier.setValue('');
+              this.showIdentifierCheckSubject$.next(false);
+              return;
+            }
+
+            console.log({ color: this.selectedColor });
+
+            if (typeof value !== 'string') return;
 
             this.identifier.setValue(
               value.trim().toLocaleLowerCase().replace(' ', '-')
@@ -120,14 +143,16 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   }
 
   validate(control: AbstractControl) {
-    this.isUniqueLoading$.next(true);
+    this.isUniqueLoadingSubject$.next(true);
     return this.workspaceServcie.isSlugUnique(control.value).pipe(
-      debounceTime(140),
+      debounceTime(640),
       map((val) => {
-        this.isUniqueLoading$.next(false);
+        this.isUniqueLoadingSubject$.next(false);
         if (val?.payload?.isUnique) {
+          this.showIdentifierCheckSubject$.next(true);
           return null;
         } else {
+          this.showIdentifierCheckSubject$.next(false);
           return { 'already-taken': true };
         }
       }),
