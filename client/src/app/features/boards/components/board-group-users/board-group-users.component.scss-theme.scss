@@ -9,10 +9,16 @@
 
   .board-group-user.selected {
     border: 2px solid mat-color($primary, 400);
+    z-index: 99;
   }
 
   .board-group-user {
-    border: 2px solid mat-color($background, background);
+    background-color: mat-color($background, background);
+    border: 2px solid transparent;
+
+    &:hover {
+      z-index: 100;
+    }
   }
 
 }
