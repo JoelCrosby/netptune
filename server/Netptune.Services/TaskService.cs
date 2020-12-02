@@ -209,6 +209,24 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
+        public async Task<ClientResponse> ReassignTasks(ReassignTasksRequest request)
+        {
+            var taskIdsInBoard = await TaskRepository.GetTaskIdsInBoard(request.BoardId);
+            var taskIds = request.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
+
+            var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds);
+
+            foreach (var task in tasks)
+            {
+                task.AssigneeId = request.AssigneeId;
+                task.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
+        }
+
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
         {
             await RemoveTaskFromGroups(result.Id);

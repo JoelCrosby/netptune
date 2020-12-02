@@ -159,5 +159,18 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // POST: api/tasks/reassign-tasks
+        [HttpPost]
+        [Route("reassign-tasks")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json", Type = typeof(ClientResponse))]
+        public async Task<IActionResult> MoveTasksToGroup([FromBody] ReassignTasksRequest request)
+        {
+            var result = await TaskService.ReassignTasks(request);
+
+            return Ok(result);
+        }
     }
 }

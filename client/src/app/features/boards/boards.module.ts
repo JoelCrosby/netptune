@@ -24,6 +24,7 @@ import { BoardGroupsFlaggedComponent } from './components/board-groups-flagged/b
 import { ReactiveComponentModule } from '@ngrx/component';
 import { BoardGroupsSelectionComponent } from './components/board-groups-selection/board-groups-selection.component';
 import { MoveTasksDialogComponent } from './components/move-tasks-dialog/move-tasks-dialog.component';
+import { ReassignTasksDialogComponent } from './components/reassign-tasks-dialog/reassign-tasks-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MoveTasksDialogComponent } from './components/move-tasks-dialog/move-ta
     BoardGroupsFlaggedComponent,
     BoardGroupsSelectionComponent,
     MoveTasksDialogComponent,
+    ReassignTasksDialogComponent,
   ],
   imports: [
     SharedModule,

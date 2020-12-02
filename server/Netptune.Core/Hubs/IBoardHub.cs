@@ -33,5 +33,7 @@ namespace Netptune.Core.Hubs
         Task DeleteBoardGroup(ClientResponse response);
 
         Task MoveTasksToGroup(ClientResponse response);
+
+        Task ReassignTasks(ClientResponse response);
     }
 }
