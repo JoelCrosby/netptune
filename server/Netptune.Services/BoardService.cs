@@ -54,6 +54,12 @@ namespace Netptune.Services
             var includeTagFilter = filter?.Tags?.Any() ?? false;
             var includeFlaggedFilter = filter?.Flagged ?? false;
 
+            var userIds = groups
+                .SelectMany(group => group.Tasks)
+                .Select(task => task.AssigneeId)
+                .Distinct()
+                .ToList();
+
             foreach (var group in groups)
             {
                 group.Tasks = group.Tasks
@@ -62,11 +68,6 @@ namespace Netptune.Services
                     .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
                     .ToList();
             }
-
-            var userIds = groups
-                .SelectMany(group => group.Tasks)
-                .Select(task => task.AssigneeId)
-                .Distinct();
 
             var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
             var users = userEntities.Select(user => user.ToViewModel());
