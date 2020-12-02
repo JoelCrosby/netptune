@@ -224,6 +224,19 @@ namespace Netptune.App.Hubs
             return response;
         }
 
+        public async Task<ClientResponse> ReassignTasks(HubRequest<ReassignTasksRequest> request)
+        {
+            SetupHttpContext(request);
+
+            var response = await TaskService.ReassignTasks(request.Payload);
+
+            await Clients
+                .OthersInGroup(request.Group)
+                .ReassignTasks(response);
+
+            return response;
+        }
+
         private static bool IsInValidRequest(object target)
         {
             var context = new ValidationContext(target, null, null);

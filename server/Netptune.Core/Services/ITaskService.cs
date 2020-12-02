@@ -28,5 +28,7 @@ namespace Netptune.Core.Services
         Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
         Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request);
+
+        Task<ClientResponse> ReassignTasks(ReassignTasksRequest request);
     }
 }

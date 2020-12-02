@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
+import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
 @Component({
   selector: 'app-board-groups-selection',
@@ -34,6 +35,13 @@ export class BoardGroupsSelectionComponent implements OnInit {
   onMoveTasksClicked() {
     this.dialog.open(MoveTasksDialogComponent, {
       width: '600px',
+      panelClass: 'app-modal-class',
+    });
+  }
+
+  onReassignTasksClicked() {
+    this.dialog.open(ReassignTasksDialogComponent, {
+      width: '400px',
       panelClass: 'app-modal-class',
     });
   }

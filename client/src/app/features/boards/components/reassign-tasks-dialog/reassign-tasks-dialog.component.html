@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Re-assign Tasks</h1>
+
+<p>Select the user you wish to assign the selected tasks to</p>
+
+<div mat-dialog-content>
+
+
+  <div class="user-selection">
+    <button
+      [class.selected]="selected === user.id"
+      mat-stroked-button
+      [color]="selected === user.id ? 'primary' : ''"
+      *ngFor="let user of users$ | async"
+      (click)="onUserClicked(user.id)"
+    >
+      <app-avatar
+        size="24"
+        [name]="user.userName"
+        [imageUrl]="user.pictureUrl"
+      >
+      </app-avatar>
+
+      <label>
+        {{ user.displayName }}
+      </label>
+
+    </button>
+  </div>
+
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>
+    Cancel
+  </button>
+  <div class="mr-2"></div>
+  <button mat-flat-button color="primary" (click)="onReassignTasksClicked()" type="button">
+    Re-assign Tasks
+  </button>
+</div>

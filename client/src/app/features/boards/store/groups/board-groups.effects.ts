@@ -34,6 +34,7 @@ export class BoardGroupsEffects {
         actions.loadBoardGroups,
         actions.createBoardGroupSuccess,
         actions.moveSelectedTasksSuccess,
+        actions.reassignTasksSuccess,
         TaskActions.importTasksSuccess,
         TaskActions.deleteTagFromTaskSuccess,
         TaskActions.addTagToTaskSuccess
@@ -278,6 +279,29 @@ export class BoardGroupsEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  reassignTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.reassignTasks),
+      withLatestFrom(
+        this.store.select(selectors.selectBoardIdentifier),
+        this.store.select(selectors.selectSelectedTasks)
+      ),
+      switchMap(([action, identifier, taskIds]) =>
+        this.tasksHubService
+          .reassignTasks(identifier, {
+            boardId: identifier,
+            assigneeId: action.assigneeId,
+            taskIds,
+          })
+          .pipe(
+            tap(() => this.snackbar.open('Tasks Re-assigned')),
+            map((response) => actions.reassignTasksSuccess({ response })),
+            catchError((error) => of(actions.reassignTasksFail({ error })))
+          )
+      )
+    )
   );
 
   constructor(

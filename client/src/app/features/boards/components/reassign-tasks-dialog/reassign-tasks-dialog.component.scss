@@ -1,0 +1,21 @@
+.user-selection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 2rem;
+  justify-content: center;
+
+  button {
+    margin: .4rem 1rem;
+    width: 100%;
+    max-width: 200px;
+
+    app-avatar {
+      flex: 0 0 24px;
+    }
+
+    label {
+      flex: 1;
+    }
+  }
+}

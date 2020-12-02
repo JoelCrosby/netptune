@@ -16,6 +16,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import { Store } from '@ngrx/store';
 import { first, tap } from 'rxjs/operators';
+import { ReassignTasksRequest } from '@core/models/requests/re-assign-tasks-request';
 import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
 import * as actions from './tasks.actions';
 
@@ -66,6 +67,13 @@ export class ProjectTasksHubService {
       {
         method: 'MoveTasksToGroup',
         callback: () => this.reloadRequiredViews(),
+      },
+      {
+        method: 'ReassignTasks',
+        callback: () => {
+          console.log('Reassing Tasks');
+          this.reloadRequiredViews();
+        },
       },
     ]);
   }
@@ -167,5 +175,9 @@ export class ProjectTasksHubService {
       groupId,
       request
     );
+  }
+
+  reassignTasks(groupId: string, request: ReassignTasksRequest) {
+    return this.hub.invoke<ClientResponse>('ReassignTasks', groupId, request);
   }
 }

@@ -33,7 +33,7 @@ export const loadBoardGroupsFail = createAction(
 
 export const createBoardGroup = createAction(
   '[BoardGroups] Create Board Group',
-  props<{ identifier: string, request: AddBoardGroupRequest }>()
+  props<{ identifier: string; request: AddBoardGroupRequest }>()
 );
 
 export const createBoardGroupSuccess = createAction(
@@ -218,5 +218,22 @@ export const moveSelectedTasksSuccess = createAction(
 
 export const moveSelectedTasksFail = createAction(
   '[BoardGroups] Move Selected Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Re-assign Tasks
+
+export const reassignTasks = createAction(
+  '[BoardGroups] Re-assigned Tasks',
+  props<{ assigneeId: string }>()
+);
+
+export const reassignTasksSuccess = createAction(
+  '[BoardGroups] Re-assigned Tasks Success',
+  props<{ response: ClientResponse }>()
+);
+
+export const reassignTasksFail = createAction(
+  '[BoardGroups] Re-assigned Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );
