@@ -108,6 +108,12 @@ namespace Netptune.Repositories
                 .AnyAsync(x => x.UserId == userId && x.WorkspaceId == workspaceId);
         }
 
+        public Task<bool> IsUserInWorkspace(string userId, string workspaceKey)
+        {
+            return Context.WorkspaceAppUsers
+                .AnyAsync(x => x.UserId == userId && x.Workspace.Slug == workspaceKey);
+        }
+
         public Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId)
         {
             return Context.WorkspaceAppUsers

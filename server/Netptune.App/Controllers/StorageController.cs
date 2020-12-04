@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.Utilities;
 
 namespace Netptune.App.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class StorageController : ControllerBase
     {
         private readonly IStorageService StorageService;

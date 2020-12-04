@@ -17,6 +17,7 @@ using Netptune.Entities.Contexts;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
+using Netptune.Services.Authorization;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
@@ -55,6 +56,7 @@ namespace Netptune.App
             });
 
             services.AddNeptuneAuthentication(Configuration);
+            services.AddNeptuneAuthorization();
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);

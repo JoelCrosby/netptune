@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,6 @@ using Netptune.Core.Services;
 
 namespace Netptune.App.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MetaController : ControllerBase

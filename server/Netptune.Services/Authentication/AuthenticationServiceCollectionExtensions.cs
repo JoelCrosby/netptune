@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 
 namespace Netptune.Services.Authentication
@@ -53,6 +56,20 @@ namespace Netptune.Services.Authentication
                     };
                     options.Events = new JwtBearerEvents
                     {
+                        OnTokenValidated = context =>
+                        {
+                            if (!context.Request.Headers.TryGetValue(NetptuneClaims.Workspace, out var workspace))
+                            {
+                                return Task.CompletedTask;
+                            }
+
+                            var claims = new [] { new Claim(NetptuneClaims.Workspace, workspace) };
+                            var identity = new ClaimsIdentity(claims);
+
+                            context.Principal?.AddIdentity(identity);
+
+                            return Task.CompletedTask;
+                        },
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];

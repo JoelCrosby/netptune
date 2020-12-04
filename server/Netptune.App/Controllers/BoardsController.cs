@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
@@ -14,9 +15,9 @@ using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class BoardsController : ControllerBase
     {
         private readonly IBoardService BoardService;

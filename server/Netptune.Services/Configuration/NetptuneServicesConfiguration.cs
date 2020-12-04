@@ -1,11 +1,12 @@
 using System;
 
 using Microsoft.Extensions.DependencyInjection;
-
+using Netptune.Core.Cache;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
+using Netptune.Services.Cache;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
 
@@ -16,6 +17,9 @@ namespace Netptune.Services.Configuration
         public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
         {
             ConfigureServices(services, action);
+
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
 
             services.AddTransient<IHostingService, HostingService>();
 
@@ -32,11 +36,12 @@ namespace Netptune.Services.Configuration
             services.AddTransient<ITaskExportService, TaskExportService>();
             services.AddTransient<IWebService, WebService>();
 
-            services.AddMemoryCache();
+
             services.AddTransient<IUserConnectionService, UserConnectionService>();
 
-            services.AddHttpContextAccessor();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IUserCache, UserCache>();
+            services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
         }
 
         private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)

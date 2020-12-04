@@ -9,6 +9,8 @@ namespace Netptune.Core.UnitOfWork
 
         IWorkspaceRepository Workspaces { get; }
 
+        IWorkspaceUserRepository WorkspaceUsers { get; }
+
         ITaskRepository Tasks { get; }
 
         IUserRepository Users { get; }

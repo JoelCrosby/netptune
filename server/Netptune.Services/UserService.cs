@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Flurl;
-
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
@@ -22,6 +22,7 @@ namespace Netptune.Services
         private readonly IIdentityService Identity;
         private readonly IEmailService Email;
         private readonly IHostingService Hosting;
+        private readonly IWorkspaceUserCache WorkspaceUserCache;
         private readonly IUserRepository UserRepository;
         private readonly IWorkspaceRepository WorkspaceRepository;
 
@@ -29,12 +30,14 @@ namespace Netptune.Services
             INetptuneUnitOfWork unitOfWork,
             IIdentityService identity,
             IEmailService email,
-            IHostingService hosting)
+            IHostingService hosting,
+            IWorkspaceUserCache workspaceUserCache)
         {
             UnitOfWork = unitOfWork;
             Identity = identity;
             Email = email;
             Hosting = hosting;
+            WorkspaceUserCache = workspaceUserCache;
             UserRepository = unitOfWork.Users;
             WorkspaceRepository = unitOfWork.Workspaces;
         }
@@ -135,6 +138,15 @@ namespace Netptune.Services
 
             var users = await UserRepository.GetByEmailRange(emailList, true);
             var userIds = users.Select(user => user.Id).ToList();
+
+            foreach (var userId in userIds)
+            {
+                WorkspaceUserCache.Remove(new WorkspaceUserKey
+                {
+                    UserId = userId,
+                    WorkspaceKey = workspaceKey
+                });
+            }
 
             await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
 
