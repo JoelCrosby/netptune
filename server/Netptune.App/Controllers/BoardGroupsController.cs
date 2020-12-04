@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
 namespace Netptune.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class BoardGroupsController : ControllerBase
     {
         private readonly IBoardGroupService BoardGroupService;

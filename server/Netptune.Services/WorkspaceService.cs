@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
@@ -18,12 +18,14 @@ namespace Netptune.Services
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
+        private readonly IWorkspaceUserCache Cache;
         private readonly IWorkspaceRepository WorkspaceRepository;
 
-        public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+        public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IWorkspaceUserCache cache)
         {
             UnitOfWork = unitOfWork;
             IdentityService = identityService;
+            Cache = cache;
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
@@ -54,12 +56,38 @@ namespace Netptune.Services
             return result;
         }
 
+        public async Task<ClientResponse> Delete(string key)
+        {
+            var workspace = await WorkspaceRepository.GetBySlug(key);
+            var userId = await IdentityService.GetCurrentUserId();
+
+            if (workspace is null || userId is null) return null;
+
+            Cache.Remove(new WorkspaceUserKey
+            {
+                UserId = userId,
+                WorkspaceKey = workspace.Slug,
+            });
+
+            workspace.Delete(userId);
+
+            await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
+        }
+
         public async Task<ClientResponse> Delete(int id)
         {
             var workspace = await WorkspaceRepository.GetAsync(id);
             var userId = await IdentityService.GetCurrentUserId();
 
             if (workspace is null || userId is null) return null;
+
+            Cache.Remove(new WorkspaceUserKey
+            {
+                UserId = userId,
+                WorkspaceKey = workspace.Slug,
+            });
 
             workspace.Delete(userId);
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -17,10 +18,17 @@ namespace Netptune.Api.Controllers
     public class WorkspacesController : ControllerBase
     {
         private readonly IWorkspaceService WorkspaceService;
+        private readonly IAuthorizationService AuthorizationService;
 
-        public WorkspacesController(IWorkspaceService workspaceService)
+        public WorkspacesController(IWorkspaceService workspaceService, IAuthorizationService authorizationService)
         {
             WorkspaceService = workspaceService;
+            AuthorizationService = authorizationService;
+        }
+
+        private async Task<AuthorizationResult> AuthorizeWorkspace(string workspaceKey)
+        {
+            return await AuthorizationService.AuthorizeAsync(User, workspaceKey, NetptunePolicies.Workspace);
         }
 
         // GET: api/Workspaces
@@ -41,6 +49,9 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> GetWorkspace([FromRoute] string key)
         {
+            var authorizationResult = await AuthorizeWorkspace(key);
+            if (!authorizationResult.Succeeded) return Forbid();
+
             var result = await WorkspaceService.GetWorkspace(key);
 
             if (result is null) return NotFound();
@@ -56,6 +67,9 @@ namespace Netptune.Api.Controllers
         [Produces("application/json", Type = typeof(Workspace))]
         public async Task<IActionResult> PutWorkspace([FromBody] Workspace workspace)
         {
+            var authorizationResult = await AuthorizeWorkspace(workspace.Slug);
+            if (!authorizationResult.Succeeded) return Forbid();
+
             var result = await WorkspaceService.UpdateWorkspace(workspace);
 
             return Ok(result);
@@ -72,14 +86,17 @@ namespace Netptune.Api.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/Workspaces/5
-        [HttpDelete("{id}")]
+        // DELETE: api/Workspaces/key
+        [HttpDelete("{key}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(Workspace))]
-        public async Task<IActionResult> DeleteWorkspace([FromRoute] int id)
+        public async Task<IActionResult> DeleteWorkspace([FromRoute] string key)
         {
-            var result = await WorkspaceService.Delete(id);
+            var authorizationResult = await AuthorizeWorkspace(key);
+            if (!authorizationResult.Succeeded) return Forbid();
+
+            var result = await WorkspaceService.Delete(key);
 
             if (result is null) return NotFound();
 

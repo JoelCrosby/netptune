@@ -25,6 +25,8 @@ namespace Netptune.Core.Repositories
 
         Task<bool> IsUserInWorkspace(string userId, int workspaceId);
 
+        Task<bool> IsUserInWorkspace(string userId, string workspaceKey);
+
         Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId);
     }
 }

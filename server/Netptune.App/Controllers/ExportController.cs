@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Services.Export;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class ExportController : ControllerBase
     {
         private readonly ITaskExportService TaskExportService;

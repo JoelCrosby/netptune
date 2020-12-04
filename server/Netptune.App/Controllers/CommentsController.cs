@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.App.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService CommentService;

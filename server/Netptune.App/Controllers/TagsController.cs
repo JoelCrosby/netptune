@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -12,9 +13,9 @@ using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.App.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class TagsController : ControllerBase
     {
         private readonly ITagService TagService;

@@ -1,9 +1,12 @@
 using System;
+using System.Linq;
+using System.Security.Authentication;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 
@@ -11,34 +14,46 @@ namespace Netptune.Services
 {
     public class IdentityService : IIdentityService
     {
-        private readonly UserManager<AppUser> UserManager;
+        private readonly IUserCache Cache;
         private readonly IHttpContextAccessor ContextAccessor;
 
-        public IdentityService(UserManager<AppUser> userManager, IHttpContextAccessor contextAccessor)
+        public IdentityService(IUserCache cache, IHttpContextAccessor contextAccessor)
         {
-            UserManager = userManager;
+            Cache = cache;
             ContextAccessor = contextAccessor;
+        }
+
+        private string GetUserId()
+        {
+            var claimsPrincipal = ContextAccessor.HttpContext?.User;
+
+            var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var result = claim?.Value;
+
+            if (result is null)
+            {
+                throw new AuthenticationException(
+                    $"user does not have value for claim of type {nameof(ClaimTypes.NameIdentifier)}");
+            }
+
+            return result;
         }
 
         public Task<AppUser> GetCurrentUser()
         {
-            var user = ContextAccessor.HttpContext?.User;
-
-            return UserManager.GetUserAsync(user);
+            return Cache.Get(GetUserId());
         }
 
         public async Task<string> GetCurrentUserEmail()
         {
             var user = await GetCurrentUser();
 
-            return await UserManager.GetEmailAsync(user);
+            return user.Email;
         }
 
-        public async Task<string> GetCurrentUserId()
+        public Task<string> GetCurrentUserId()
         {
-            var user = await GetCurrentUser();
-
-            return await UserManager.GetUserIdAsync(user);
+            return Task.FromResult(GetUserId());
         }
 
         public string GetWorkspaceKey()

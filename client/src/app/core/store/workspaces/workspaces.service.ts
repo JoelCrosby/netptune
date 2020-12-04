@@ -31,7 +31,7 @@ export class WorkspacesService {
 
   delete(workspace: Workspace) {
     return this.http.delete<Workspace>(
-      environment.apiEndpoint + 'api/workspaces/' + workspace.id
+      environment.apiEndpoint + 'api/workspaces/' + workspace.slug
     );
   }
 

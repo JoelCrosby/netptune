@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Services.Import;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.App.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class ImportController : ControllerBase
     {
         private readonly ITaskImportService TaskImportService;
