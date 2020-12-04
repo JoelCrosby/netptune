@@ -49,9 +49,10 @@ namespace Netptune.Services.Authentication
             ContextAccessor = contextAccessor;
 
             Issuer = configuration["Tokens:Issuer"];
-            SecurityKey = configuration["Tokens:SecurityKey"];
             ExpireDays = configuration["Tokens:ExpireDays"];
             Origin = configuration["Origin"];
+
+            SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
         }
 
         public async Task<LoginResult> LogIn(TokenRequest model)
