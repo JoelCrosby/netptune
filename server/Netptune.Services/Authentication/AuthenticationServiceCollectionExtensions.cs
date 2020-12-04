@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -5,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,10 +16,24 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Services.Authentication
 {
+    public class NetptuneAuthenticationOptions
+    {
+        [Required]
+        public string Issuer { get; set; }
+
+        [Required]
+        public string Audience { get; set; }
+
+        [Required]
+        public string SecurityKey { get; set; }
+    }
+
     public static class AuthenticationServiceCollectionExtensions
     {
-        public static IServiceCollection AddNeptuneAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddNeptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
         {
+            var authenticationOptions = ConfigureServices(services, action);
+
             services.AddHttpContextAccessor();
 
             services.AddIdentity<AppUser, IdentityRole>()
@@ -50,9 +65,9 @@ namespace Netptune.Services.Authentication
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Tokens:Issuer"],
-                        ValidAudience = configuration["Tokens:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Tokens:SecurityKey"]))
+                        ValidIssuer = authenticationOptions.Issuer,
+                        ValidAudience = authenticationOptions.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
                     };
                     options.Events = new JwtBearerEvents
                     {
@@ -90,6 +105,20 @@ namespace Netptune.Services.Authentication
             services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
 
             return services;
+        }
+
+        private static NetptuneAuthenticationOptions ConfigureServices(
+            IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
+        {
+            if (action is null) throw new ArgumentNullException(nameof(action));
+
+            var options = new NetptuneAuthenticationOptions();
+
+            action(options);
+
+            services.Configure(action);
+
+            return options;
         }
     }
 }

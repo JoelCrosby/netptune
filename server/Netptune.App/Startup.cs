@@ -55,8 +55,14 @@ namespace Netptune.App
                 options.EnableDetailedErrors = WebHostEnvironment.IsDevelopment();
             });
 
-            services.AddNeptuneAuthentication(Configuration);
             services.AddNeptuneAuthorization();
+            services.AddNeptuneAuthentication(options =>
+            {
+                options.Issuer = Configuration["Tokens:Issuer"];
+                options.Audience = Configuration["Tokens:Audience"];
+                options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
+            });
+
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
