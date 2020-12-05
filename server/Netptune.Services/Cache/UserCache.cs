@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Caching.Memory;
@@ -13,7 +14,7 @@ namespace Netptune.Services.Cache
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
 
-        public UserCache(IMemoryCache cache, INetptuneUnitOfWork unitOfWork) : base(cache)
+        public UserCache(IMemoryCache cache, INetptuneUnitOfWork unitOfWork) : base(cache, TimeSpan.FromHours(1))
         {
             UnitOfWork = unitOfWork;
         }
