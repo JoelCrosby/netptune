@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
-using Netptune.Core.Meta;
-using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -40,30 +35,17 @@ namespace Netptune.Services
 
                 var user = await IdentityService.GetCurrentUser();
 
-                var project = new Project
+                var projectKey = await UnitOfWork.Projects.GenerateProjectKey(request.Name, workspace.Id);
+
+                var project = Project.Create(new CreateProjectOptions
                 {
                     Name = request.Name,
                     Description = request.Description,
-                    CreatedByUserId = user.Id,
-                    OwnerId = user.Id,
-                    RepositoryUrl = request.RepositoryUrl,
-                };
-
-                project.ProjectUsers.Add(new ProjectUser
-                {
-                    ProjectId = project.Id,
-                    UserId = user.Id
+                    Key = projectKey,
+                    User = user,
+                    WorkspaceId = workspace.Id,
+                    RepositoryUrl = request.RepositoryUrl
                 });
-
-                var projectKey = await GetProjectKey(project, workspace.Id);
-
-                if (projectKey is null)
-                {
-                    throw new Exception("Failed to generate unique project Key for project.");
-                }
-
-                project.Key = projectKey;
-                project.ProjectBoards.Add(GenerateDefaultBoard(project, workspace.Id));
 
                 workspace.Projects.Add(project);
 
@@ -71,48 +53,6 @@ namespace Netptune.Services
 
                 return await ProjectRepository.GetProjectViewModel(project.Id);
             });
-        }
-
-        private static Board GenerateDefaultBoard(Project project, int workspaceId)
-        {
-            return new Board
-            {
-                Identifier = GenerateDefaultBoardId(project.Key),
-                Name = project.Name,
-                OwnerId = project.OwnerId,
-                MetaInfo = new BoardMeta(),
-                BoardType = BoardType.Default,
-                WorkspaceId = workspaceId,
-                BoardGroups = new[]
-                {
-                    new BoardGroup
-                    {
-                        Name = "Backlog",
-                        Type = BoardGroupType.Backlog,
-                        SortOrder = 1D,
-                        WorkspaceId = workspaceId,
-                    },
-                    new BoardGroup
-                    {
-                        Name = "Todo",
-                        Type = BoardGroupType.Todo,
-                        SortOrder = 1.1D,
-                        WorkspaceId = workspaceId,
-                    },
-                    new BoardGroup
-                    {
-                        Name = "Done",
-                        Type = BoardGroupType.Done,
-                        SortOrder = 1.3D,
-                        WorkspaceId = workspaceId,
-                    }
-                }
-            };
-        }
-
-        private static string GenerateDefaultBoardId(string projectKey)
-        {
-            return $"{projectKey.ToLowerInvariant().ToUrlSlug()}-default-board";
         }
 
         public async Task<ClientResponse> Delete(int id)
@@ -154,31 +94,6 @@ namespace Netptune.Services
             await UnitOfWork.CompleteAsync();
 
             return await ProjectRepository.GetProjectViewModel(result.Id);
-        }
-
-        private Task<string> GetProjectKey(Project project, int workspaceId)
-        {
-            const int keyLength = 4;
-
-            var key = project.Name.Substring(0, keyLength).ToLowerInvariant();
-
-            async Task<string> TryGetKey(string currentKey, int currentKeyLength)
-            {
-                while (true)
-                {
-                    var isAvailable = await ProjectRepository.IsProjectKeyAvailable(currentKey, workspaceId);
-
-                    if (isAvailable) return currentKey;
-
-                    var nextKey = project.Name.Substring(0, currentKeyLength + 1).ToLowerInvariant();
-
-                    currentKey = nextKey;
-
-                    currentKeyLength++;
-                }
-            }
-
-            return TryGetKey(key, keyLength);
         }
     }
 }

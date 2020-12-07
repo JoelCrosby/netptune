@@ -80,5 +80,25 @@ namespace Netptune.Repositories
                 DefaultBoardIdentifier = identifier,
             };
         }
+
+        public Task<string> GenerateProjectKey(string projectName, int workspaceId)
+        {
+            const int keyLength = 4;
+            var key = projectName.Substring(0, keyLength).ToLowerInvariant();
+
+            async Task<string> TryGetKey(string currentKey, int currentKeyLength)
+            {
+                while (true)
+                {
+                    var isAvailable = await IsProjectKeyAvailable(currentKey, workspaceId);
+                    if (isAvailable) return currentKey;
+                    var nextKey = projectName.Substring(0, currentKeyLength + 1).ToLowerInvariant();
+                    currentKey = nextKey;
+                    currentKeyLength++;
+                }
+            }
+
+            return TryGetKey(key, keyLength);
+        }
     }
 }
