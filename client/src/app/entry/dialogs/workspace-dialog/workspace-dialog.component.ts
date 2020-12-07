@@ -19,16 +19,17 @@ import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
+import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { animationFrameScheduler, Subject } from 'rxjs';
 import {
   debounceTime,
   map,
+  observeOn,
   takeUntil,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { toUrlSlug } from '../../../core/util/strings';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -118,14 +119,13 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       this.name.valueChanges
         .pipe(
           takeUntil(this.onDestroy$),
+          observeOn(animationFrameScheduler),
           tap((value: string | undefined) => {
             if (!value) {
               this.identifier.setValue('');
               this.showIdentifierCheckSubject$.next(false);
               return;
             }
-
-            console.log({ color: this.selectedColor });
 
             if (typeof value !== 'string') return;
 
