@@ -7,9 +7,7 @@ import { ActionState, DefaultActionState } from '@core/types/action-state';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 
-export const adapter = createEntityAdapter<TaskViewModel>({
-  sortComparer: (a, b) => new Date(b.updatedAt).getUTCMilliseconds() - new Date(a.updatedAt).getUTCMilliseconds(),
-});
+export const adapter = createEntityAdapter<TaskViewModel>();
 
 export const initialState: TasksState = adapter.getInitialState({
   loading: true,
