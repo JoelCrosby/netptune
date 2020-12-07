@@ -24,8 +24,9 @@ import { colorDictionary } from '@core/util/colors/colors';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { animationFrameScheduler, Observable, Subject } from 'rxjs';
+import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
+import { toUrlSlug } from '../../../../core/util/strings';
 
 @Component({
   selector: 'app-create-board',
@@ -82,13 +83,14 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
       {
         name: new FormControl('', {
           validators: [Validators.required],
+          updateOn: 'change',
         }),
         identifier: new FormControl('', {
           validators: [Validators.required],
           asyncValidators: this.data ? null : this.validate.bind(this),
           updateOn: 'change',
         }),
-        color: new FormControl(''),
+        color: new FormControl('#673AB7'),
         projectId: new FormControl(null, {
           validators: [Validators.required],
         }),
@@ -104,6 +106,20 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
       this.color.setValue(board.metaInfo.color, { emitEvent: false });
       this.projectId.setValue(board.projectId, { emitEvent: false });
       this.identifier.disable({ emitEvent: false });
+    } else {
+      this.name.valueChanges
+        .pipe(
+          takeUntil(this.onDestroy$),
+          debounceTime(240),
+          tap((value: string | undefined) => {
+            console.log({ value });
+
+            if (typeof value !== 'string') return;
+
+            this.identifier.setValue(toUrlSlug(value));
+          })
+        )
+        .subscribe();
     }
   }
 
@@ -114,7 +130,8 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   validate(control: AbstractControl) {
     this.isUniqueLoading$.next(true);
     return this.boardsService.isIdentifierUnique(control.value).pipe(
-      debounceTime(140),
+      observeOn(animationFrameScheduler),
+      debounceTime(240),
       map((val) => {
         this.isUniqueLoading$.next(false);
         if (val?.payload?.isUnique) {
