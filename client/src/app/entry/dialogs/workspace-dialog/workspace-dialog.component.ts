@@ -15,9 +15,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
+import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -28,6 +28,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { toUrlSlug } from '../../../core/util/strings';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -128,9 +129,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
             if (typeof value !== 'string') return;
 
-            this.identifier.setValue(
-              value.trim().toLocaleLowerCase().replace(' ', '-')
-            );
+            this.identifier.setValue(toUrlSlug(value));
           })
         )
         .subscribe();
