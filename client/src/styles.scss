@@ -61,6 +61,7 @@
 @import './app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.scss-theme.scss';
 @import './app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.scss-theme.scss';
 @import './app/features/settings/components/tags/tags.component.scss-theme.scss';
+@import './app/features/settings/components/tags-input/tags-input.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include reset-theme($theme);
@@ -98,6 +99,7 @@
   @include move-tasks-dialog-theme($theme);
   @include reassign-tasks-dialog-theme($theme);
   @include tags-theme($theme);
+  @include tags-input-theme($theme);
 }
 
 .default-theme {

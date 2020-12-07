@@ -15,6 +15,7 @@
 
   .tag-item-list {
     .tag-item {
+      color: mat-color($foreground, text);
       background-color: $item-background;
 
       .tag-item-delete {
@@ -45,6 +46,7 @@
       background-color: transparent;
       border-width: 1px;
       border: 1px solid $item-background;
+      color: mat-color($foreground, text);
 
       &:hover:not(.edit-tag-item) {
         border-width: 2px;
@@ -56,6 +58,7 @@
     .edit-tag-item {
       border: 2px solid mat-color($primary);
       background-color: transparent;
+      color: mat-color($foreground, text);
     }
   }
 }
