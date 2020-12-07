@@ -18,6 +18,7 @@ using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
 using Netptune.Services.Authorization;
+using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
@@ -63,6 +64,10 @@ namespace Netptune.App
                 options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
             });
 
+            services.AddNetptuneRedis(options =>
+            {
+                options.Connection = Environment.GetEnvironmentVariable("REDIS_URL") ?? "localhost";
+            });
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
