@@ -43,6 +43,13 @@
   }
 
   .detail-list-item {
+    .mat-chip {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 242px;
+      overflow: hidden;
+    }
+
     .autocomplete-chips {
       .mat-form-field-infix {
         border-top: 0;
