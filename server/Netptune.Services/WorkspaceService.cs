@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
@@ -29,31 +30,44 @@ namespace Netptune.Services
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
-        public async Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
+        public Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
         {
-            var user = await IdentityService.GetCurrentUser();
-
-            var workspace = new Workspace
+            return UnitOfWork.Transaction(async () =>
             {
-                Name = request.Name,
-                Description = request.Description,
-                CreatedByUserId = user.Id,
-                OwnerId = user.Id,
-                Slug = request.Slug.ToUrlSlug(),
-                MetaInfo = request.MetaInfo
-            };
+                var user = await IdentityService.GetCurrentUser();
 
-            workspace.WorkspaceUsers.Add(new WorkspaceAppUser
-            {
-                UserId = user.Id,
-                WorkspaceId = workspace.Id
+                var workspace = await WorkspaceRepository.AddAsync(new Workspace
+                {
+                    Name = request.Name,
+                    Description = request.Description,
+                    CreatedByUserId = user.Id,
+                    OwnerId = user.Id,
+                    Slug = request.Slug.ToUrlSlug(),
+                    MetaInfo = request.MetaInfo
+                });
+
+                await UnitOfWork.CompleteAsync();
+
+                workspace.WorkspaceUsers.Add(new WorkspaceAppUser {UserId = user.Id, WorkspaceId = workspace.Id});
+
+                var requestKey = request.Name.ToUrlSlug();
+                var projectKey = await UnitOfWork.Projects.GenerateProjectKey(requestKey, workspace.Id);
+
+                var project = Project.Create(new CreateProjectOptions
+                {
+                    Name = request.Name,
+                    Description = request.Description,
+                    Key = projectKey,
+                    User = user,
+                    WorkspaceId = workspace.Id
+                });
+
+                workspace.Projects.Add(project);
+
+                await UnitOfWork.CompleteAsync();
+
+                return workspace;
             });
-
-            var result = await WorkspaceRepository.AddAsync(workspace);
-
-            await UnitOfWork.CompleteAsync();
-
-            return result;
         }
 
         public async Task<ClientResponse> Delete(string key)
@@ -110,8 +124,6 @@ namespace Netptune.Services
         {
             var user = await IdentityService.GetCurrentUser();
 
-            if (user is null) return null;
-
             return await WorkspaceRepository.GetWorkspaces(user);
         }
 
@@ -125,7 +137,6 @@ namespace Netptune.Services
             var user = await IdentityService.GetCurrentUser();
 
             if (workspace is null) throw new ArgumentNullException(nameof(workspace));
-            if (user is null) throw new ArgumentNullException(nameof(user));
 
             var result = await WorkspaceRepository.GetAsync(workspace.Id);
 
