@@ -230,11 +230,11 @@ namespace Netptune.App
                 .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
 
-            var user = conn[1];
             var pass = conn[2];
             var host = conn[3];
+            var port = conn[4];
 
-            return $"{host},user={user},password={pass}";
+            return $"{host}:{port},password={pass}";
         }
     }
 }
