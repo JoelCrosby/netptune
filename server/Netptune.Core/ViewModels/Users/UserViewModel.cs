@@ -22,4 +22,9 @@ namespace Netptune.Core.ViewModels.Users
 
         public DateTime? RegistrationDate { get; set; }
     }
+
+    public class WorkspaceUserViewModel : UserViewModel
+    {
+        public bool IsWorkspaceOwner { get; set; }
+    }
 }

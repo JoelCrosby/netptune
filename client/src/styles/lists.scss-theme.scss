@@ -26,4 +26,9 @@
   .app-list-drag-icon {
     color: rgba(mat-color($foreground, icon), .3);
   }
+
+  .app-list-item-pill {
+    color: mat-color($primary);
+    background-color: rgba(mat-color($primary), .1);
+  }
 }

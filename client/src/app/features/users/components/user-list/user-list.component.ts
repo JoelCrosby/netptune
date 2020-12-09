@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppUser } from '@core/models/appuser';
-import { select, Store } from '@ngrx/store';
+import { WorkspaceAppUser } from '@core/models/appuser';
 import {
   loadUsers,
   removeUsersFromWorkspace,
 } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ import { startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  users$: Observable<AppUser[]>;
+  users$: Observable<WorkspaceAppUser[]>;
   loading$: Observable<boolean>;
 
   constructor(
@@ -43,11 +43,11 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(loadUsers());
   }
 
-  trackById(_: number, user: AppUser) {
+  trackById(_: number, user: WorkspaceAppUser) {
     return user.id;
   }
 
-  onRemoveClicked(user: AppUser) {
+  onRemoveClicked(user: WorkspaceAppUser) {
     if (!user) return;
 
     const emailAddresses = [user.email];

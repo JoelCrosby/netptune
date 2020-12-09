@@ -113,4 +113,14 @@
       visibility: visible;
     }
   }
+
+  .app-list-item-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8rem;
+    padding: .2rem .4rem;
+    margin-right: .4rem;
+    font-size: 14px;
+  }
 }

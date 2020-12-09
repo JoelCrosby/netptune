@@ -14,3 +14,7 @@ export interface AppUser {
   token: string;
   tasks: ProjectTask[];
 }
+
+export interface WorkspaceAppUser extends AppUser {
+  isWorkspaceOwner: boolean;
+}

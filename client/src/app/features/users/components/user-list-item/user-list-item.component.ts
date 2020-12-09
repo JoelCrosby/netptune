@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AppUser } from '@core/models/appuser';
+import { WorkspaceAppUser } from '@core/models/appuser';
 
 @Component({
   selector: 'app-user-list-item',
@@ -8,5 +8,5 @@ import { AppUser } from '@core/models/appuser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListItemComponent {
-  @Input() user: AppUser;
+  @Input() user: WorkspaceAppUser;
 }

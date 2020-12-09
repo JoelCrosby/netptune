@@ -44,6 +44,23 @@ namespace Netptune.Core.Entities
             };
         }
 
+        public WorkspaceUserViewModel ToWorkspaceViewModel(string workspaceOwnerId)
+        {
+            return new WorkspaceUserViewModel
+            {
+                Id = Id,
+                Firstname = Firstname,
+                Lastname = Lastname,
+                PictureUrl = PictureUrl,
+                DisplayName = DisplayName,
+                Email = Email,
+                UserName = UserName,
+                LastLoginTime = LastLoginTime,
+                RegistrationDate = RegistrationDate,
+                IsWorkspaceOwner = workspaceOwnerId == Id
+            };
+        }
+
         #region NavigationProperties
 
         [JsonIgnore]
