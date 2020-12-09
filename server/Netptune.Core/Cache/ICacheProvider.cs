@@ -29,5 +29,7 @@ namespace Netptune.Core.Cache
         bool TryGetString(string key, out string value);
 
         bool TryGetValue<TValue>(string key, out TValue value);
+
+        Task<(bool, TValue)> TryGetValueAsync<TValue>(string key);
     }
 }

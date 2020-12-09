@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Caching.Distributed;
-
+using Microsoft.Extensions.Logging;
 using Netptune.Core.Cache;
 
 namespace Netptune.Services.Cache.Common
@@ -15,11 +16,13 @@ namespace Netptune.Services.Cache.Common
         protected abstract string GetCacheKey(TKey key);
 
         private readonly TimeSpan TimeToLive;
+        private readonly ILogger<EntityCache<TEntity, TKey>> Logger;
 
-        protected EntityCache(ICacheProvider cache, TimeSpan timeToLive)
+        protected EntityCache(ICacheProvider cache, TimeSpan timeToLive, ILogger<EntityCache<TEntity, TKey>> logger)
         {
             Cache = cache;
             TimeToLive = timeToLive;
+            Logger = logger;
         }
 
         public Task<TEntity> Get(TKey key)
@@ -34,9 +37,15 @@ namespace Netptune.Services.Cache.Common
 
         private async Task<TEntity> GetOrCreateAsync(string key, Func<Task<TEntity>> factory)
         {
-            if (Cache.TryGetValue(key, out TEntity result))
+            var watch = Stopwatch.StartNew();
+
+            var (hit, value) = await Cache.TryGetValueAsync<TEntity>(key);
+
+            if (hit)
             {
-                return result;
+                Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds}ms");
+
+                return value;
             }
 
             var entity = await factory();
@@ -45,6 +54,8 @@ namespace Netptune.Services.Cache.Common
             {
                 AbsoluteExpirationRelativeToNow = TimeToLive,
             });
+
+            Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds}ms");
 
             return entity;
         }
