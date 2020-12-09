@@ -1,6 +1,6 @@
-import { AppUser } from '@core/models/appuser';
-import { props, createAction } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
+import { WorkspaceAppUser } from '@core/models/appuser';
+import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Users] Clear State');
 
@@ -8,7 +8,7 @@ export const loadUsers = createAction('[Users] Load Users');
 
 export const loadUsersSuccess = createAction(
   '[Users] Load Users Success ',
-  props<{ users: AppUser[] }>()
+  props<{ users: WorkspaceAppUser[] }>()
 );
 
 export const loadUsersFail = createAction(

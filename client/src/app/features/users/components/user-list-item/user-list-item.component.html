@@ -26,8 +26,14 @@
       {{ user.email }}
     </div>
 
+    <div class="app-list-item-pill" *ngIf="user.isWorkspaceOwner">
+      Owner
+    </div>
+
   </div>
 
-  <div class="app-list-item-footer"></div>
+  <div class="app-list-item-footer">
+
+  </div>
 
 </div>

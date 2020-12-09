@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Flurl;
+
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
@@ -56,12 +57,13 @@ namespace Netptune.Services
             return user?.ToViewModel();
         }
 
-        public async Task<List<UserViewModel>> GetWorkspaceUsers()
+        public async Task<List<WorkspaceUserViewModel>> GetWorkspaceUsers()
         {
             var workspaceKey = Identity.GetWorkspaceKey();
+            var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey);
             var users = await UserRepository.GetWorkspaceUsers(workspaceKey, true);
 
-            return MapUsers(users);
+            return MapWorkspaceUsers(users, workspace.OwnerId);
         }
 
         public async Task<List<UserViewModel>> GetAll()
@@ -139,8 +141,15 @@ namespace Netptune.Services
             var users = await UserRepository.GetByEmailRange(emailList, true);
             var userIds = users.Select(user => user.Id).ToList();
 
+            if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId))
+            {
+                return ClientResponse.Failed("cannot remove thew owner of the workspace");
+            }
+
             foreach (var userId in userIds)
             {
+                if (userId == workspace.OwnerId) continue;
+
                 WorkspaceUserCache.Remove(new WorkspaceUserKey
                 {
                     UserId = userId,
@@ -204,6 +213,14 @@ namespace Netptune.Services
         private static List<UserViewModel> MapUsers(IEnumerable<AppUser> users)
         {
             return users.Select(user => user.ToViewModel()).ToList();
+        }
+
+        private static List<WorkspaceUserViewModel> MapWorkspaceUsers
+            (IEnumerable<AppUser> users, string workspaceOwnerId)
+        {
+            return users
+                .Select(user => user.ToWorkspaceViewModel(workspaceOwnerId))
+                .ToList();
         }
     }
 }
