@@ -81,6 +81,24 @@ namespace Netptune.Services.Cache.Redis
             return true;
         }
 
+        public async Task<(bool, TValue)> TryGetValueAsync<TValue>(string key)
+        {
+            if (key is null)
+            {
+                return (false, default);
+            }
+
+            var result = await Db.StringGetAsync(key);
+
+            if (result.IsNull)
+            {
+                return (false, default);
+            }
+
+            var value = JsonSerializer.Deserialize<TValue>(result);
+            return (true, value);
+        }
+
         public async Task<string> GetStringAsync(string key)
         {
             if (key is null) return null;
