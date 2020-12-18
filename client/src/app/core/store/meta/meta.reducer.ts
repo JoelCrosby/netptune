@@ -19,9 +19,7 @@ const reducer = createReducer(
   }))
 );
 
-export function metaReducer(
+export const metaReducer = (
   state: MetaState | undefined,
   action: Action
-): MetaState {
-  return reducer(state, action);
-}
+): MetaState => reducer(state, action);

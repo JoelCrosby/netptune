@@ -136,9 +136,7 @@ const reducer = createReducer(
   }))
 );
 
-export function projectTasksReducer(
+export const projectTasksReducer = (
   state: TasksState | undefined,
   action: Action
-): TasksState {
-  return reducer(state, action);
-}
+): TasksState => reducer(state, action);

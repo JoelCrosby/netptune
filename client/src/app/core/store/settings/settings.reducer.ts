@@ -11,9 +11,7 @@ const reducer = createReducer(
   on(actions.clearSttings, (state) => ({ ...state, theme: 'DEFAULT-THEME' }))
 );
 
-export function settingsReducer(
+export const settingsReducer = (
   state: SettingsState | undefined,
   action: Action
-): SettingsState {
-  return reducer(state, action);
-}
+): SettingsState => reducer(state, action);

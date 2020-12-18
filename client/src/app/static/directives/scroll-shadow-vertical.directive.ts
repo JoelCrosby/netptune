@@ -28,12 +28,12 @@ export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
         passive: true,
       })
         .pipe(takeUntil(this.onDestroy$))
-        .subscribe({ next: () => this._checkScroll() });
+        .subscribe({ next: () => this.checkScroll() });
 
-      this.topShadowEl = this._setScrollShadowTop();
-      this.bottomShadowEl = this._setScrollShadowBottom();
+      this.topShadowEl = this.setScrollShadowTop();
+      this.bottomShadowEl = this.setScrollShadowBottom();
 
-      this._checkScroll();
+      this.checkScroll();
     }, 1000);
   }
 
@@ -42,28 +42,28 @@ export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  private _checkScroll() {
+  private checkScroll() {
     if (!this.element) {
       return;
     }
 
     if (this.element.scrollTop > 8) {
-      this._toggleShadowElClass('top', true);
+      this.toggleShadowElClass('top', true);
     } else {
-      this._toggleShadowElClass('top', false);
+      this.toggleShadowElClass('top', false);
     }
 
     if (
       this.element.scrollTop + this.element.clientHeight <
       this.element.scrollHeight
     ) {
-      this._toggleShadowElClass('bottom', true);
+      this.toggleShadowElClass('bottom', true);
     } else {
-      this._toggleShadowElClass('bottom', false);
+      this.toggleShadowElClass('bottom', false);
     }
   }
 
-  private _getShadowDiv(className: string) {
+  private getShadowDiv(className: string) {
     const shadowDiv = document.createElement('div');
 
     shadowDiv.setAttribute(`data-scroll-shadow`, className);
@@ -71,21 +71,21 @@ export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
     return shadowDiv;
   }
 
-  private _setScrollShadowTop() {
-    const div = this._getShadowDiv(TOP_CLASS);
+  private setScrollShadowTop() {
+    const div = this.getShadowDiv(TOP_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  private _setScrollShadowBottom() {
-    const div = this._getShadowDiv(BOTTOM_CLASS);
+  private setScrollShadowBottom() {
+    const div = this.getShadowDiv(BOTTOM_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  private _toggleShadowElClass(el: 'top' | 'bottom', value: boolean) {
+  private toggleShadowElClass(el: 'top' | 'bottom', value: boolean) {
     const toggleEl = (target: Element, cls: string) => {
       if (value) {
         target.setAttribute('class', cls);

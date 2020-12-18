@@ -37,8 +37,6 @@ export class BoardGroupsViewComponent
   loading$: Observable<boolean>;
   boardGroupsLoaded$: Observable<boolean>;
 
-  private board: Board;
-
   secondaryActions: HeaderAction[] = [
     {
       label: 'Import Tasks',
@@ -53,6 +51,8 @@ export class BoardGroupsViewComponent
       iconClass: 'material-icons-outlined',
     },
   ];
+
+  private board: Board;
 
   constructor(
     private store: Store,

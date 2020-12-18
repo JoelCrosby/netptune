@@ -9,6 +9,6 @@ export interface BoardViewModel {
   project: Project;
   boardType: BoardType;
   createdAt: Date;
-  UpdatedAt?: Date;
+  updatedAt?: Date;
   ownerUsername: string;
 }

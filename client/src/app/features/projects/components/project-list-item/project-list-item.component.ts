@@ -29,8 +29,7 @@ export class ProjectListItemComponent implements OnInit {
     this.actions$ = this.store.select(selectCurrentWorkspaceIdentifier).pipe(
       filter((val) => !!val),
       first(),
-      map((identifier) => {
-        return [
+      map((identifier) => [
           {
             label: 'Go To Board',
             isLink: true,
@@ -42,8 +41,7 @@ export class ProjectListItemComponent implements OnInit {
               this.project.defaultBoardIdentifier,
             ],
           },
-        ];
-      })
+        ])
     );
   }
 

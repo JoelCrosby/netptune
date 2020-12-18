@@ -72,9 +72,7 @@ const reducer = createReducer(
   }))
 );
 
-export function workspacesReducer(
+export const workspacesReducer = (
   state: WorkspacesState | undefined,
   action: Action
-): WorkspacesState {
-  return reducer(state, action);
-}
+): WorkspacesState => reducer(state, action);

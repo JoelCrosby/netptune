@@ -3,26 +3,24 @@ import { environment } from '@env/environment';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AppState } from '@core/core.state';
 
-export function initStateFromLocalStorage(
+export const initStateFromLocalStorage = (
   reducer: ActionReducer<AppState>
-): ActionReducer<AppState> {
-  return (state, action) => {
-    const newState = reducer(state, action);
-    if ([INIT.toString(), UPDATE.toString()].includes(action.type)) {
-      const mergedState = {
-        ...newState,
-        ...LocalStorageService.loadInitialState(),
-      };
+): ActionReducer<AppState> => (state, action) => {
+  const newState = reducer(state, action);
+  if ([INIT.toString(), UPDATE.toString()].includes(action.type)) {
+    const mergedState = {
+      ...newState,
+      ...LocalStorageService.loadInitialState(),
+    };
 
-      if (!environment.production) {
-        logStorageStateChange(action, state, newState, mergedState);
-      }
-
-      return mergedState;
+    if (!environment.production) {
+      logStorageStateChange(action, state, newState, mergedState);
     }
-    return newState;
-  };
-}
+
+    return mergedState;
+  }
+  return newState;
+};
 
 const logStorageStateChange = (
   action: Action,

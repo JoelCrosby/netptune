@@ -1,9 +1,9 @@
 export enum TaskStatus {
-  New = 0,
-  Complete = 1,
-  InProgress = 2,
-  OnHold = 3,
-  UnAssigned = 4,
-  AwaitingClassification = 5,
-  InActive = 6,
+  new = 0,
+  complete = 1,
+  inProgress = 2,
+  onHold = 3,
+  unAssigned = 4,
+  awaitingClassification = 5,
+  inActive = 6,
 }

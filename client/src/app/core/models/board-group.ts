@@ -10,8 +10,8 @@ export interface BoardGroup extends Basemodel {
 }
 
 export enum BoardGroupType {
-  Basic = 0,
-  Backlog = 1,
-  Done = 2,
-  Todo = 3,
+  basic = 0,
+  backlog = 1,
+  done = 2,
+  todo = 3,
 }

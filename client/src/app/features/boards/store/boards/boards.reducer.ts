@@ -53,9 +53,7 @@ const reducer = createReducer(
   )
 );
 
-export function boardsReducer(
+export const boardsReducer = (
   state: BoardsState | undefined,
   action: Action
-): BoardsState {
-  return reducer(state, action);
-}
+): BoardsState => reducer(state, action);

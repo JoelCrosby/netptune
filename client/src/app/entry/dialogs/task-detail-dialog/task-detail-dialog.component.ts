@@ -62,15 +62,15 @@ export class TaskDetailDialogComponent
   onEditorLoadedSubject = new Subject<boolean>();
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
+  projectFromGroup: FormGroup;
+  commentsFromGroup: FormGroup;
+
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
     private store: Store,
     private actions$: Actions<Action>
   ) {}
-
-  projectFromGroup: FormGroup;
-  commentsFromGroup: FormGroup;
 
   get name() {
     return this.projectFromGroup.get('name');

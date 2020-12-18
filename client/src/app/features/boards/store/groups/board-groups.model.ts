@@ -5,9 +5,8 @@ import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { AppUser } from '@core/models/appuser';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 
-export function sortBySortOrder(a: BoardViewGroup, b: BoardViewGroup): number {
-  return a.sortOrder - b.sortOrder;
-}
+export const sortBySortOrder = (a: BoardViewGroup, b: BoardViewGroup): number =>
+  a.sortOrder - b.sortOrder;
 
 export const adapter = createEntityAdapter<BoardViewGroup>({
   sortComparer: sortBySortOrder,

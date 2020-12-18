@@ -18,9 +18,9 @@ import { first, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
-  private request: AuthCodeRequest;
-
   loading$: Observable<boolean>;
+
+  private request: AuthCodeRequest;
 
   constructor(private activatedRoute: ActivatedRoute, private store: Store) {
     this.activatedRoute.data

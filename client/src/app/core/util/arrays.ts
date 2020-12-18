@@ -1,4 +1,4 @@
-export function filterStringArray(array: string[], term: string): string[] {
+export const filterStringArray = (array: string[], term: string): string[] => {
   if (typeof term !== 'string') {
     return array;
   }
@@ -10,13 +10,13 @@ export function filterStringArray(array: string[], term: string): string[] {
   const filterValue = term.toLowerCase();
 
   return array.filter((item) => fuzzysearch(filterValue, item));
-}
+};
 
-export function filterObjectArray<T>(
+export const filterObjectArray = <T>(
   array: T[],
   prop: keyof T,
   term: string
-): T[] {
+): T[] => {
   if (typeof term !== 'string' || typeof prop !== 'string') {
     return array;
   }
@@ -26,9 +26,9 @@ export function filterObjectArray<T>(
   return array.filter((item) =>
     fuzzysearch(filterValue, (item[prop] as unknown) as string)
   );
-}
+};
 
-export function fuzzysearch(needle: string, haystack: string) {
+export const fuzzysearch = (needle: string, haystack: string) => {
   const haystackLC = haystack.toLowerCase();
   const needleLC = needle.toLowerCase();
 
@@ -56,4 +56,4 @@ export function fuzzysearch(needle: string, haystack: string) {
   }
 
   return true;
-}
+};

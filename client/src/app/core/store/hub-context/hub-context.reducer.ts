@@ -17,9 +17,7 @@ const reducer = createReducer(
   }))
 );
 
-export function hubContextReducer(
+export const hubContextReducer = (
   state: HubContextState | undefined,
   action: Action
-): HubContextState {
-  return reducer(state, action);
-}
+): HubContextState => reducer(state, action);

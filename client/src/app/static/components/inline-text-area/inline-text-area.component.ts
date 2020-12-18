@@ -127,7 +127,7 @@ export class InlineTextAreaComponent
     this.onChange(value);
   }
 
-  /* tslint:disable:no-any */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
 
   registerOnTouched(fn: any) {
     this.controlDirective?.valueAccessor.registerOnTouched(fn);
@@ -141,7 +141,7 @@ export class InlineTextAreaComponent
     this.controlDirective?.valueAccessor.writeValue(obj);
   }
 
-  /* tslint:enable:no-any */
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   setDisabledState(isDisabled: boolean) {
     this.controlDirective?.valueAccessor.setDisabledState(isDisabled);

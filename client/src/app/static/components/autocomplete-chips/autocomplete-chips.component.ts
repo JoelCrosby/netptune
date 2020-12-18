@@ -38,12 +38,13 @@ export class AutocompleteChipsComponent implements OnInit {
   @Input() options: string[];
   @Input() selected: string[] = [];
   @Input() appearance: MatFormFieldAppearance = 'fill';
+
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('input') input: ElementRef;
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
-  @Output() selectionChanged = new EventEmitter<
-    AutocompleteChipsSelectionChanged
-  >();
+  @Output()
+  selectionChanged = new EventEmitter<AutocompleteChipsSelectionChanged>();
 
   visible = true;
   selectable = true;
@@ -55,8 +56,6 @@ export class AutocompleteChipsComponent implements OnInit {
   formCtrl = new FormControl();
 
   filteredOptions: Observable<string[]>;
-
-  @ViewChild('input') input: ElementRef;
 
   ngOnInit() {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(

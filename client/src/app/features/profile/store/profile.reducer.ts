@@ -63,9 +63,7 @@ const reducer = createReducer(
   }))
 );
 
-export function profileReducer(
+export const profileReducer = (
   state: ProfileState | undefined,
   action: Action
-): ProfileState {
-  return reducer(state, action);
-}
+): ProfileState => reducer(state, action);

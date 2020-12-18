@@ -56,9 +56,7 @@ const reducer = createReducer(
   }))
 );
 
-export function layoutReducer(
+export const layoutReducer = (
   state: LayoutState | undefined,
   action: Action
-): LayoutState {
-  return reducer(state, action);
-}
+): LayoutState => reducer(state, action);

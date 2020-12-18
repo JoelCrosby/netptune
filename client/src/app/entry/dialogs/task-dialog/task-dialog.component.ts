@@ -47,6 +47,15 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
     return this.projectFromGroup.get('projectFormControl');
   }
 
+  projectFromGroup = new FormGroup({
+    nameFormControl: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+    ]),
+    projectFormControl: new FormControl(),
+    descriptionFormControl: new FormControl(),
+  });
+
   constructor(
     private store: Store,
     public dialogRef: MatDialogRef<TaskDialogComponent>,
@@ -56,15 +65,6 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
       this.task = data;
     }
   }
-
-  projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    projectFormControl: new FormControl(),
-    descriptionFormControl: new FormControl(),
-  });
 
   ngOnInit() {
     this.currentWorkspace$ = this.store.select(
@@ -109,7 +109,7 @@ export class TaskDialogComponent implements OnInit, OnDestroy {
         projectId: (this.project.value as Project).id,
         assigneeId: undefined,
         assignee: undefined,
-        status: TaskStatus.New,
+        status: TaskStatus.new,
         sortOrder: 0,
       };
 
