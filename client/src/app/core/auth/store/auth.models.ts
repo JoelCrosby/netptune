@@ -65,6 +65,13 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
+export interface WorkspaceInvite {
+  email?: string;
+  workspaceId?: string;
+  code?: string;
+  success: boolean;
+}
+
 export type AuthErrorKey =
   | 'loginError'
   | 'registerError'

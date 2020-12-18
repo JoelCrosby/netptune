@@ -14,12 +14,15 @@ using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Authentication
 {
@@ -29,6 +32,8 @@ namespace Netptune.Services.Authentication
         private readonly UserManager<AppUser> UserManager;
         private readonly IEmailService Email;
         private readonly IHttpContextAccessor ContextAccessor;
+        private readonly IInviteCache InviteCache;
+        private readonly INetptuneUnitOfWork UnitOfWork;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -40,13 +45,17 @@ namespace Netptune.Services.Authentication
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailService email,
-            IHttpContextAccessor contextAccessor
+            IHttpContextAccessor contextAccessor,
+            IInviteCache inviteCache,
+            INetptuneUnitOfWork unitOfWork
             )
         {
             SignInManager = signInManager;
             UserManager = userManager;
             Email = email;
             ContextAccessor = contextAccessor;
+            InviteCache = inviteCache;
+            UnitOfWork = unitOfWork;
 
             Issuer = configuration["Tokens:Issuer"];
             ExpireDays = configuration["Tokens:ExpireDays"];
@@ -77,6 +86,20 @@ namespace Netptune.Services.Authentication
 
         public async Task<RegisterResult> Register(RegisterRequest model)
         {
+            Task<WorkspaceInvite> GetWorkspaceInvite()
+            {
+                if (model.InviteCode is null) return null;
+                
+                return ValidateInviteCode(model.InviteCode);
+            }
+
+            var invite = await GetWorkspaceInvite();
+
+            if (model.InviteCode is {} && invite is null)
+            {
+                return RegisterResult.Failed("Invite code is invalid/expired.");
+            }
+
             var user = new AppUser
             {
                 Email = model.Email,
@@ -86,6 +109,19 @@ namespace Netptune.Services.Authentication
             };
 
             var result = await UserManager.CreateAsync(user, model.Password);
+
+            if (invite is {})
+            {
+                await UnitOfWork.WorkspaceUsers.AddAsync(new WorkspaceAppUser
+                {
+                    UserId = user.Id,
+                    WorkspaceId = invite.WorkspaceId,
+                });
+
+                await UnitOfWork.CompleteAsync();
+
+                InviteCache.Remove(model.InviteCode);
+            }
 
             if (!result.Succeeded)
             {
@@ -236,8 +272,8 @@ namespace Netptune.Services.Authentication
         private async Task LogNewlyRegisteredUserIn(AppUser appUser)
         {
             await SignInManager.SignInAsync(appUser, false);
-            appUser.RegistrationDate = DateTime.UtcNow;
 
+            appUser.RegistrationDate = DateTime.UtcNow;
             appUser.LastLoginTime = DateTime.UtcNow;
 
             await UserManager.UpdateAsync(appUser);
@@ -294,6 +330,11 @@ namespace Netptune.Services.Authentication
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public Task<WorkspaceInvite> ValidateInviteCode(string code)
+        {
+            return InviteCache.Get(code);
         }
     }
 }

@@ -8,6 +8,7 @@ using Flurl;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
+using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
@@ -24,6 +25,7 @@ namespace Netptune.Services
         private readonly IEmailService Email;
         private readonly IHostingService Hosting;
         private readonly IWorkspaceUserCache WorkspaceUserCache;
+        private readonly IInviteCache InviteCache;
         private readonly IUserRepository UserRepository;
         private readonly IWorkspaceRepository WorkspaceRepository;
 
@@ -32,13 +34,15 @@ namespace Netptune.Services
             IIdentityService identity,
             IEmailService email,
             IHostingService hosting,
-            IWorkspaceUserCache workspaceUserCache)
+            IWorkspaceUserCache workspaceUserCache,
+            IInviteCache inviteCache)
         {
             UnitOfWork = unitOfWork;
             Identity = identity;
             Email = email;
             Hosting = hosting;
             WorkspaceUserCache = workspaceUserCache;
+            InviteCache = inviteCache;
             UserRepository = unitOfWork.Users;
             WorkspaceRepository = unitOfWork.Workspaces;
         }
@@ -96,25 +100,27 @@ namespace Netptune.Services
                 return ClientResponse.Failed("no email addresses provided");
             }
 
-            var users = await UserRepository.GetByEmailRange(emailList, true);
+            //var users = await UserRepository.GetByEmailRange(emailList, true);
 
-            if (users.Count == 0)
-            {
-                return ClientResponse.Failed("user not found");
-            }
+            //if (users.Count == 0)
+            //{
+            //    return ClientResponse.Failed("user not found");
+            //}
 
-            var userIds = users.Select(user => user.Id).ToList();
-            var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
+            //var userIds = users.Select(user => user.Id).ToList();
+            //var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
 
-            var newUserIds = userIds.Except(existing).ToList();
+            //var newUserIds = userIds.Except(existing).ToList();
 
-            var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
+            //var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
 
-            if (result is null) throw new Exception();
+            //if (result is null) throw new Exception();
 
-            await UnitOfWork.CompleteAsync();
+            //await UnitOfWork.CompleteAsync();
 
-            var usersToInvite = onlyNewUsers ? users.Where(user => newUserIds.Contains(user.Id)).ToList() : users;
+            //var usersToInvite = onlyNewUsers ? users.Where(user => newUserIds.Contains(user.Id)).ToList() : users;
+
+            var usersToInvite = new HashSet<string>(emailList);
 
             await SendUserInviteEmails(usersToInvite, workspace);
 
@@ -180,23 +186,35 @@ namespace Netptune.Services
             return updatedUser.ToViewModel();
         }
 
-        private Task SendUserInviteEmails(IEnumerable<AppUser> users, Workspace workspace)
+        private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)
         {
-            var emailModels = users.Select(user =>
+            var emailModels = emails.Select(email =>
             {
+                var key = Guid.NewGuid()
+                    .ToString()
+                    .Replace("-", "")
+                    .ToLowerInvariant();
+
+                InviteCache.Create(key,
+                    new WorkspaceInvite
+                    {
+                        Email = email,
+                        WorkspaceId = workspace.Id
+                    });
+
                 var uri = Hosting.ClientOrigin
-                    .AppendPathSegments("app", workspace.Slug)
-                    .SetQueryParam("userId", user.Id, true)
+                    .AppendPathSegments("app", "auth", "register")
+                    .SetQueryParam("code", key, true)
                     .SetQueryParam("refer", "invite");
 
                 return new SendEmailModel
                 {
                     SendTo = new SendTo
                     {
-                        Address = user.Email,
-                        DisplayName = user.DisplayName,
+                        Address = email,
+                        DisplayName = email,
                     },
-                    Name = user.Firstname,
+                    Name = email,
                     Action = "Go to Workspace",
                     Link = uri,
                     Reason = "workspace invite",

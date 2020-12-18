@@ -3,4 +3,5 @@ export interface RegisterRequest {
   lastname: string;
   email: string;
   password: string;
+  inviteCode?: string;
 }
