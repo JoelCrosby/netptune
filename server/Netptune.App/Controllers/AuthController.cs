@@ -169,5 +169,21 @@ namespace Netptune.Api.Controllers
 
             return Ok(result);
         }
+
+        // GET: api/auth/validate-workspace-invite
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("validate-workspace-invite")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json", Type = typeof(CurrentUserResponse))]
+        public async Task<IActionResult> ValidateWorkspaceInvite([FromQuery] string code)
+        {
+            var result = await AuthenticationService.ValidateInviteCode(code);
+
+            if (result is null) return Unauthorized();
+
+            return Ok(result);
+        }
     }
 }

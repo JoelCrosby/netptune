@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
 import { ResetPasswordResolver } from './resolvers/reset-password.resolver';
+import { RegisterInviteResolver } from './resolvers/register-invite.resolver';
 
 // Components
 import { LoginComponent } from './components/login/login.component';
@@ -30,6 +31,10 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     StaticModule,
     AuthRoutingModule,
   ],
-  providers: [ConfirmEmailResolver, ResetPasswordResolver],
+  providers: [
+    ConfirmEmailResolver,
+    ResetPasswordResolver,
+    RegisterInviteResolver,
+  ],
 })
 export class AuthModule {}

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Netptune.Core.Cache.Common;
 
 namespace Netptune.Core.Cache
 {

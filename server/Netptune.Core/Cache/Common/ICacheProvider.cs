@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Netptune.Core.Cache
+namespace Netptune.Core.Cache.Common
 {
     public interface ICacheProvider
     {
@@ -18,7 +17,7 @@ namespace Netptune.Core.Cache
 
         Task RemoveAsync(string key);
 
-        void Set(string key, byte[] value, DistributedCacheEntryOptions options);
+        void Set(string key, string value, DistributedCacheEntryOptions options);
 
         void Set<TValue>(string key, TValue value, DistributedCacheEntryOptions options);
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Cache;
+using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Cache.Common;

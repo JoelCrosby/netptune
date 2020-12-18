@@ -25,5 +25,7 @@ namespace Netptune.Core.Authentication
         Task<ClientResponse> ChangePassword(ChangePasswordRequest request);
 
         Task<CurrentUserResponse> CurrentUser();
+
+        Task<WorkspaceInvite> ValidateInviteCode(string code);
     }
 }

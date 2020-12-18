@@ -2,7 +2,7 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Core.Cache;
+using Netptune.Core.Cache.Common;
 
 namespace Netptune.Services.Cache.Redis
 {

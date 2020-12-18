@@ -42,6 +42,7 @@ namespace Netptune.Services.Configuration
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IUserCache, UserCache>();
             services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
+            services.AddScoped<IInviteCache, InviteCache>();
         }
 
         private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)

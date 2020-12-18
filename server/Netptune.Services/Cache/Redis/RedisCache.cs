@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 
-using Netptune.Core.Cache;
+using Netptune.Core.Cache.Common;
 
 using StackExchange.Redis;
 
@@ -112,15 +112,15 @@ namespace Netptune.Services.Cache.Redis
         {
             if (key is null) return default;
 
-
             var json = await GetStringAsync(key);
+
+            if (json is null) return default;
             return JsonSerializer.Deserialize<TValue>(json);
         }
 
         public void Remove(string key)
         {
             if (key is null) return;
-
 
             Db.KeyDelete(key);
         }
@@ -132,7 +132,7 @@ namespace Netptune.Services.Cache.Redis
             return Db.KeyDeleteAsync(key);
         }
 
-        public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
+        public void Set(string key, string value, DistributedCacheEntryOptions options)
         {
             Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow);
         }
