@@ -86,7 +86,7 @@ export class ImageCropperComponent implements AfterViewInit {
       return;
     }
 
-    this.cropper.setImageUrl(this.src);
+    this.cropper.loadImage(this.src);
 
     this.ready = true;
   }

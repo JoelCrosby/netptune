@@ -8,7 +8,7 @@
     [opened]="sideNavOpen$ | async"
     [fixedInViewport]="sideNavOpen$ | async"
     [class.transparent]="transparentSideNav$ | async"
-    [class.zero-width]="(isMobileView$ | async) && !(sideMenuOpen$ | async)"
+    [class.zero-width]="(isMobileView$ | async) && ((sideMenuOpen$ | async) === (false || null || undefined))"
   >
     <mat-nav-list>
       <a
