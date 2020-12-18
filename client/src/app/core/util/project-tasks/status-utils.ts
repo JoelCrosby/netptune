@@ -5,14 +5,14 @@ export const getTaskStatusFromGroupType = (
   type: BoardGroupType
 ): TaskStatus => {
   switch (type) {
-    case BoardGroupType.Todo:
-      return TaskStatus.InProgress;
-    case BoardGroupType.Done:
-      return TaskStatus.Complete;
-    case BoardGroupType.Backlog:
-      return TaskStatus.InActive;
+    case BoardGroupType.todo:
+      return TaskStatus.inProgress;
+    case BoardGroupType.done:
+      return TaskStatus.complete;
+    case BoardGroupType.backlog:
+      return TaskStatus.inActive;
     default:
-      return TaskStatus.InActive;
+      return TaskStatus.inActive;
   }
 };
 
@@ -20,17 +20,17 @@ export const getGroupTypeFromTaskStatus = (
   status: TaskStatus
 ): BoardGroupType => {
   switch (status) {
-    case TaskStatus.New:
-      return BoardGroupType.Todo;
-    case TaskStatus.InActive:
-      return BoardGroupType.Todo;
-    case TaskStatus.Complete:
-      return BoardGroupType.Done;
-    case TaskStatus.AwaitingClassification:
-      return BoardGroupType.Todo;
-    case TaskStatus.UnAssigned:
-      return BoardGroupType.Backlog;
+    case TaskStatus.new:
+      return BoardGroupType.todo;
+    case TaskStatus.inActive:
+      return BoardGroupType.todo;
+    case TaskStatus.complete:
+      return BoardGroupType.done;
+    case TaskStatus.awaitingClassification:
+      return BoardGroupType.todo;
+    case TaskStatus.unAssigned:
+      return BoardGroupType.backlog;
     default:
-      return BoardGroupType.Backlog;
+      return BoardGroupType.backlog;
   }
 };

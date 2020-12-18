@@ -123,7 +123,7 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
       switchMap((action) => {
-        if (action.boardGroup.type === BoardGroupType.Done) {
+        if (action.boardGroup.type === BoardGroupType.done) {
           return this.confirmation
             .open({
               isInfoMessage: true,

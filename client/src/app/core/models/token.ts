@@ -3,8 +3,8 @@ export interface Token {
   username: string;
   displayName: string;
   token: string;
-  token_type: string;
-  expires_in: number;
+  ['token_type']: string;
+  ['expires_in']: number;
   issued: string;
   expires: string;
   userId: string;

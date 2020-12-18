@@ -1,6 +1,6 @@
 import { toWordCase } from '@core/util/text-helpers';
 
-export enum colors100 {
+export enum Colors100 {
   red = '#FFCDD2',
   pink = '#F8BBD0',
   purple = '#E1BEE7',
@@ -22,7 +22,7 @@ export enum colors100 {
   blueGrey = '#CFD8DC',
 }
 
-export enum colors500 {
+export enum Colors500 {
   red = '#F44336',
   pink = '#E91E63',
   purple = '#9C27B0',
@@ -44,7 +44,7 @@ export enum colors500 {
   blueGrey = '#607D8B',
 }
 
-export enum colors700 {
+export enum Colors700 {
   red = '#D32F2F',
   pink = '#C2185B',
   purple = '#4A148C',
@@ -88,11 +88,7 @@ export const avatarColors = [
   '#FF9800',
 ];
 
-export const colorDictionary = () => {
-  return Object.keys(colors500).map((color) => {
-    return {
-      name: toWordCase(color),
-      color: (colors500 as { [key: string]: string })[color],
-    };
-  });
-};
+export const colorDictionary = () => Object.keys(Colors500).map((color) => ({
+    name: toWordCase(color),
+    color: (Colors500 as { [key: string]: string })[color],
+  }));

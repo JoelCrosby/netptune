@@ -12,4 +12,4 @@ export const initialState = adapter.getInitialState({
   loadingCreate: false,
 });
 
-export interface UsersState extends AsyncEntityState<WorkspaceAppUser> {}
+export type UsersState = AsyncEntityState<WorkspaceAppUser>;

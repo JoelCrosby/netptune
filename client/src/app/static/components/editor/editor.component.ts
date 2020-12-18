@@ -101,7 +101,7 @@ export class EditorComponent implements ControlValueAccessor {
           class: InlineCode,
           shortcut: 'CMD+SHIFT+C',
         },
-        Marker: {
+        marker: {
           class: Marker,
           shortcut: 'CMD+SHIFT+M',
         },

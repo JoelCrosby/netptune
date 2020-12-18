@@ -3,7 +3,7 @@ import { TaskStatus } from '@core/enums/project-task-status';
 import { CommentViewModel } from '@core/models/comment';
 import { ProjectTask as TaskModel } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { ActionState, DefaultActionState } from '@core/types/action-state';
+import { ActionState, DEFAULT_ACTION_STATE } from '@core/types/action-state';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 
@@ -14,8 +14,8 @@ export const initialState: TasksState = adapter.getInitialState({
   loaded: false,
   loadingCreate: false,
   loadingNewTask: false,
-  deleteState: DefaultActionState,
-  editState: DefaultActionState,
+  deleteState: DEFAULT_ACTION_STATE,
+  editState: DEFAULT_ACTION_STATE,
   comments: [],
 });
 

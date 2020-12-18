@@ -10,4 +10,4 @@ export const initialState: BoardsState = adapter.getInitialState({
   loadingCreate: false,
 });
 
-export interface BoardsState extends AsyncEntityState<BoardViewModel> {}
+export type BoardsState = AsyncEntityState<BoardViewModel>;

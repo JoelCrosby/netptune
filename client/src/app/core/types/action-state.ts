@@ -5,6 +5,6 @@ export interface ActionState {
   error?: HttpErrorResponse;
 }
 
-export const DefaultActionState: ActionState = {
+export const DEFAULT_ACTION_STATE: ActionState = {
   loading: false,
 };

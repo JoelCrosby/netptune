@@ -28,12 +28,12 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
         passive: true,
       })
         .pipe(takeUntil(this.onDestroy$))
-        .subscribe({ next: () => this._checkScroll() });
+        .subscribe({ next: () => this.checkScroll() });
 
-      this.leftShadowEl = this._setScrollShadowLeft();
-      this.rightShadowEl = this._setScrollShadowRight();
+      this.leftShadowEl = this.setScrollShadowLeft();
+      this.rightShadowEl = this.setScrollShadowRight();
 
-      this._checkScroll();
+      this.checkScroll();
     }, 1000);
   }
 
@@ -42,28 +42,28 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  private _checkScroll() {
+  private checkScroll() {
     if (!this.element) {
       return;
     }
 
     if (this.element.scrollLeft > 8) {
-      this._toggleShadowElClass('left', true);
+      this.toggleShadowElClass('left', true);
     } else {
-      this._toggleShadowElClass('left', false);
+      this.toggleShadowElClass('left', false);
     }
 
     if (
       this.element.scrollLeft + this.element.clientWidth <
       this.element.scrollWidth
     ) {
-      this._toggleShadowElClass('right', true);
+      this.toggleShadowElClass('right', true);
     } else {
-      this._toggleShadowElClass('right', false);
+      this.toggleShadowElClass('right', false);
     }
   }
 
-  private _getShadowDiv(className: string) {
+  private getShadowDiv(className: string) {
     const shadowDiv = document.createElement('div');
 
     shadowDiv.setAttribute(`data-scroll-shadow`, className);
@@ -71,21 +71,21 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
     return shadowDiv;
   }
 
-  private _setScrollShadowLeft() {
-    const div = this._getShadowDiv(LEFT_CLASS);
+  private setScrollShadowLeft() {
+    const div = this.getShadowDiv(LEFT_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  private _setScrollShadowRight() {
-    const div = this._getShadowDiv(RIGHT_CLASS);
+  private setScrollShadowRight() {
+    const div = this.getShadowDiv(RIGHT_CLASS);
     this.element.insertAdjacentElement('afterbegin', div);
 
     return div;
   }
 
-  private _toggleShadowElClass(el: 'left' | 'right', value: boolean) {
+  private toggleShadowElClass(el: 'left' | 'right', value: boolean) {
     const toggleEl = (target: Element, cls: string) => {
       if (value) {
         target.setAttribute('class', cls);

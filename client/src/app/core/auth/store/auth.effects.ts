@@ -26,16 +26,6 @@ export const AUTH_KEY = 'AUTH';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
-  constructor(
-    private actions$: Actions<Action>,
-    private localStorageService: LocalStorageService,
-    private router: Router,
-    private authService: AuthService,
-    private store: Store,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar
-  ) {}
-
   init$ = createEffect(() =>
     this.actions$.pipe(
       ofType('[Auth]: Init'),
@@ -223,6 +213,16 @@ export class AuthEffects implements OnInitEffects {
       ),
     { dispatch: false }
   );
+
+  constructor(
+    private actions$: Actions<Action>,
+    private localStorageService: LocalStorageService,
+    private router: Router,
+    private authService: AuthService,
+    private store: Store,
+    private confirmation: ConfirmationService,
+    private snackbar: MatSnackBar
+  ) {}
 
   ngrxOnInitEffects(): Action {
     return { type: '[Auth]: Init' };

@@ -17,8 +17,7 @@ import {
 } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
 
-const STYLES = (_: ThemeVariables) => {
-  return {
+const STYLES = (_: ThemeVariables) => ({
     cropperUpload: lyl`{
       display: flex
       align-items: center
@@ -38,8 +37,7 @@ const STYLES = (_: ThemeVariables) => {
     cropResult: lyl`{
       border-radius: 50%
     }`,
-  };
-};
+  });
 
 @Component({
   selector: 'app-image-cropper',

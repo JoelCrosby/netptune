@@ -43,15 +43,15 @@ export interface UserResponse {
 }
 
 export interface UserToken extends UserResponse {
-  email_verified: boolean;
+  [key: string]: unknown;
+  ['email_verified']: boolean;
+  ['given_name']: string;
+  ['family_name']: string;
   name: string;
-  given_name: string;
-  family_name: string;
   picture: string;
   zoneinfo: string;
   expires: Date;
   token: string;
-  [key: string]: unknown;
 }
 
 export interface AuthCodeRequest {

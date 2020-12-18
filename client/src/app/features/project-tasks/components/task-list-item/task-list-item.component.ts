@@ -53,7 +53,7 @@ export class TaskListItemComponent {
         identifier: `[workspace] ${this.task.workspaceKey}`,
         task: {
           ...task,
-          status: TaskStatus.Complete,
+          status: TaskStatus.complete,
         },
       })
     );
@@ -65,7 +65,7 @@ export class TaskListItemComponent {
         identifier: `[workspace] ${this.task.workspaceKey}`,
         task: {
           ...task,
-          status: TaskStatus.InActive,
+          status: TaskStatus.inActive,
         },
       })
     );

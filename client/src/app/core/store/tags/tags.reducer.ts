@@ -37,9 +37,7 @@ const reducer = createReducer(
   on(actions.addTagSuccess, (state, { tag }) => adapter.addOne(tag, state))
 );
 
-export function tagsReducer(
+export const tagsReducer = (
   state: TagsState | undefined,
   action: Action
-): TagsState {
-  return reducer(state, action);
-}
+): TagsState => reducer(state, action);

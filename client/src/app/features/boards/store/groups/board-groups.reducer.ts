@@ -4,7 +4,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import {
   getBulkTaskSelection,
   moveTaskInBoardGroup,
-  updateTask
+  updateTask,
 } from './board-group.utils';
 import * as actions from './board-groups.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
@@ -169,9 +169,7 @@ const reducer = createReducer(
   on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
 );
 
-export function boardGroupsReducer(
+export const boardGroupsReducer = (
   state: BoardGroupsState | undefined,
   action: Action
-): BoardGroupsState {
-  return reducer(state, action);
-}
+): BoardGroupsState => reducer(state, action);

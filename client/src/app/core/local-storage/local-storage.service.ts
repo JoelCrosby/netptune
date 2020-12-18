@@ -8,6 +8,7 @@ const APP_PREFIX = 'Netptune-';
 export class LocalStorageService {
   constructor() {}
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   static loadInitialState<TState extends object>() {
     return Object.keys(localStorage).reduce((state: TState, storageKey) => {
       if (storageKey.includes(APP_PREFIX)) {
@@ -37,7 +38,8 @@ export class LocalStorageService {
             return;
           }
 
-          currentStateRef[key] = currentStateRef[key] || ({} as TState[keyof TState]);
+          currentStateRef[key] =
+            currentStateRef[key] || ({} as TState[keyof TState]);
           currentStateRef = (currentStateRef[key] as unknown) as TState;
         });
       }
@@ -65,11 +67,10 @@ export class LocalStorageService {
   testLocalStorage() {
     const testValue = 'testValue';
     const testKey = 'testKey';
-    let retrievedValue: string;
     const errorMessage = 'localStorage did not return expected value';
 
     this.setItem(testKey, testValue);
-    retrievedValue = this.getItem(testKey);
+    const retrievedValue = this.getItem(testKey);
     this.removeItem(testKey);
 
     if (retrievedValue !== testValue) {

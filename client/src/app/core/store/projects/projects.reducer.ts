@@ -64,9 +64,7 @@ const reducer = createReducer(
   )
 );
 
-export function projectsReducer(
+export const projectsReducer = (
   state: ProjectsState | undefined,
   action: Action
-): ProjectsState {
-  return reducer(state, action);
-}
+): ProjectsState => reducer(state, action);

@@ -1,4 +1,4 @@
-export function getNewSortOrder(preOrder: number, nextOrder: number) {
+export const getNewSortOrder = (preOrder: number, nextOrder: number) => {
   if (!isNumeric(nextOrder)) {
     // [REORDER] moved item to end.
     return preOrder + 1;
@@ -9,6 +9,6 @@ export function getNewSortOrder(preOrder: number, nextOrder: number) {
     // [REORDER] moved item to middle.
     return (preOrder + nextOrder) / 2;
   }
-}
+};
 
 const isNumeric = (value: unknown): boolean => Number.isFinite(value);

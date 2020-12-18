@@ -1,5 +1,5 @@
 import { Tag } from '@core/models/tag';
-import { ActionState, DefaultActionState } from '@core/types/action-state';
+import { ActionState, DEFAULT_ACTION_STATE } from '@core/types/action-state';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
 import { createEntityAdapter } from '@ngrx/entity';
 
@@ -10,8 +10,8 @@ export const initialState: TagsState = adapter.getInitialState({
   loaded: false,
   loadingCreate: false,
   loadingNewTag: false,
-  deleteState: DefaultActionState,
-  editState: DefaultActionState,
+  deleteState: DEFAULT_ACTION_STATE,
+  editState: DEFAULT_ACTION_STATE,
   selectedTags: [],
 });
 

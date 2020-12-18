@@ -43,8 +43,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
-  @Input() status: TaskStatus = TaskStatus.New;
+  @Input() status: TaskStatus = TaskStatus.new;
   @Input() siblings: TaskViewModel[];
+
+  @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
+  @ViewChild('taskInlineForm') formElementRef: ElementRef;
+  @ViewChild('taskInput') inputElementRef: ElementRef;
 
   outSideClickListener$: Observable<Event>;
 
@@ -66,10 +70,6 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   get taskName() {
     return this.taskGroup.get('taskName');
   }
-
-  @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
-  @ViewChild('taskInlineForm') formElementRef: ElementRef;
-  @ViewChild('taskInput') inputElementRef: ElementRef;
 
   constructor(private store: Store, private cd: ChangeDetectorRef) {}
 
