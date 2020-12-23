@@ -9,7 +9,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
-namespace Netptune.Api.Controllers
+namespace Netptune.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

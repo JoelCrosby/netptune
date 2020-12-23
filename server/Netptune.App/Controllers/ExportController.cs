@@ -8,7 +8,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Services.Export;
 using Netptune.Core.ViewModels.ProjectTasks;
 
-namespace Netptune.Api.Controllers
+namespace Netptune.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
