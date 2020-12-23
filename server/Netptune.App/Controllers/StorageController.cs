@@ -14,7 +14,6 @@ namespace Netptune.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class StorageController : ControllerBase
     {
         private readonly IStorageService StorageService;
@@ -55,6 +54,7 @@ namespace Netptune.App.Controllers
 
         [HttpPost]
         [Route("media/{workspace}")]
+        [Authorize(Policy = NetptunePolicies.Workspace)]
         public async Task<IActionResult> UploadMedia()
         {
             var workspaceKey = Identity.GetWorkspaceKey();
