@@ -9,7 +9,7 @@ using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 
-namespace Netptune.Api.Controllers
+namespace Netptune.App.Controllers
 {
     [Authorize]
     [ApiController]

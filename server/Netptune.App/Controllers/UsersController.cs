@@ -12,11 +12,10 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Users;
 
-namespace Netptune.Api.Controllers
+namespace Netptune.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = NetptunePolicies.Workspace)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService UserService;
@@ -28,6 +27,7 @@ namespace Netptune.Api.Controllers
 
         // GET: api/users
         [HttpGet]
+        [Authorize(Policy = NetptunePolicies.Workspace)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<UserViewModel>))]
         public async Task<IActionResult> GetWorkspaceUsersAsync()
@@ -67,6 +67,7 @@ namespace Netptune.Api.Controllers
         // POST: api/users/invite
         [HttpPost]
         [Route("invite")]
+        [Authorize(Policy = NetptunePolicies.Workspace)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,6 +82,7 @@ namespace Netptune.Api.Controllers
         // POST: api/users/remove
         [HttpPost]
         [Route("remove")]
+        [Authorize(Policy = NetptunePolicies.Workspace)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

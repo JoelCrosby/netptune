@@ -13,7 +13,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Api.Controllers
+namespace Netptune.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
