@@ -86,11 +86,11 @@ namespace Netptune.Services.Authentication
 
         public async Task<RegisterResult> Register(RegisterRequest model)
         {
-            Task<WorkspaceInvite> GetWorkspaceInvite()
+            async Task<WorkspaceInvite> GetWorkspaceInvite()
             {
                 if (model.InviteCode is null) return null;
-                
-                return ValidateInviteCode(model.InviteCode);
+
+                return await ValidateInviteCode(model.InviteCode);
             }
 
             var invite = await GetWorkspaceInvite();
