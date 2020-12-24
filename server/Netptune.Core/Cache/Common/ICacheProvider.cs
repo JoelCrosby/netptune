@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -12,6 +13,10 @@ namespace Netptune.Core.Cache.Common
         Task<string> GetStringAsync(string key);
 
         Task<TValue> GetValueAsync<TValue>(string key);
+
+        TValue GetOrCreate<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options);
+
+        Task<TValue> GetOrCreateAsync<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options);
 
         void Remove(string key);
 

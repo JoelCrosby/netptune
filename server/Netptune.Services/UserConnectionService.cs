@@ -1,7 +1,9 @@
+using System;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 
+using Netptune.Core.Cache.Common;
 using Netptune.Core.Hubs;
 using Netptune.Core.Services;
 
@@ -9,10 +11,10 @@ namespace Netptune.Services
 {
     public class UserConnectionService : IUserConnectionService
     {
-        private readonly IMemoryCache Cache;
+        private readonly ICacheProvider Cache;
         private readonly IIdentityService Identity;
 
-        public UserConnectionService(IMemoryCache cache, IIdentityService identity)
+        public UserConnectionService(ICacheProvider cache, IIdentityService identity)
         {
             Cache = cache;
             Identity = identity;
@@ -20,7 +22,7 @@ namespace Netptune.Services
 
         public Task<UserConnection> Get(string connectionId)
         {
-            return Task.FromResult(Cache.Get<UserConnection>(connectionId));
+            return Cache.GetValueAsync<UserConnection>(connectionId);
         }
 
         public async Task<UserConnection> Add(string connectionId)
@@ -34,11 +36,14 @@ namespace Netptune.Services
 
             if (user is null) return null;
 
-            return Cache.GetOrCreate(connectionId, _ => new UserConnection
+            return Cache.GetOrCreate(connectionId, () => new UserConnection
             {
                 ConnectId = connectionId,
                 User = user,
                 UserId = user.Id,
+            }, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
             });
         }
 
