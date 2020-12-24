@@ -118,6 +118,34 @@ namespace Netptune.Services.Cache.Redis
             return JsonSerializer.Deserialize<TValue>(json);
         }
 
+        public TValue GetOrCreate<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+        {
+            var value = GetValue<TValue>(key);
+
+            if (value is { })
+            {
+                return value;
+            }
+
+            Set<TValue>(key, factory.Invoke(), options);
+
+            return value;
+        }
+
+        public async Task<TValue> GetOrCreateAsync<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+        {
+            var value = await GetValueAsync<TValue>(key);
+
+            if (value is { })
+            {
+                return value;
+            }
+
+            await SetAsync(key, factory.Invoke(), options);
+
+            return value;
+        }
+
         public void Remove(string key)
         {
             if (key is null) return;
