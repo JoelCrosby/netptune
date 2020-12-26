@@ -69,6 +69,7 @@
 
         <ng-container *ngIf="pictureUrl.value; else elseTemplate">
           <img
+            crossorigin="anonymous"
             class="profile-picture"
             [src]="pictureUrl.value"
             alt="Profile Image"
@@ -89,6 +90,7 @@
         <ng-template #elseTemplate>
 
           <img
+            crossorigin="anonymous"
             class="profile-picture"
             src="https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png"
             alt="Placeholder Profile Image"
