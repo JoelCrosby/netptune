@@ -51,6 +51,7 @@ export class BoardGroupsEffects {
               boardGroups,
               selectedIds: paramMap.getAll('users'),
               onlyFlagged: paramMap.get('flagged') === 'true',
+              searchTerm: paramMap.get('term'),
             })
           ),
           catchError((error) => of(actions.loadBoardGroupsFail({ error })))
@@ -257,23 +258,26 @@ export class BoardGroupsEffects {
         ofType(
           actions.toggleUserSelection,
           toggleSelectedTag,
-          actions.toggleOnlyFlagged
+          actions.toggleOnlyFlagged,
+          actions.setSearchTerm
         ),
         withLatestFrom(
           this.store.select(selectors.selectBoardGroupsSelectedUserIds),
           this.store.select(selectSelectedTags),
-          this.store.select(selectors.selectOnlyFlagged)
+          this.store.select(selectors.selectOnlyFlagged),
+          this.store.select(selectors.selectSearchTerm)
         ),
-        map(([_, users, tags, flagged]) => {
+        map(([_, users, tags, flagged, term]) => {
           const usersParam = users?.length ? users : undefined;
           const tagsParam = tags?.length ? tags : undefined;
           const flaggedParam = flagged === true || undefined;
+          const termParam = term;
 
-          return [_, usersParam, tagsParam, flaggedParam];
+          return [_, usersParam, tagsParam, flaggedParam, termParam];
         }),
-        tap(async ([_, users, tags, flagged]) => {
+        tap(async ([_, users, tags, flagged, term]) => {
           await this.router.navigate([], {
-            queryParams: { users, tags, flagged },
+            queryParams: { users, tags, flagged, term },
           });
           this.store.dispatch(actions.loadBoardGroups());
         })

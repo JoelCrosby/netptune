@@ -22,7 +22,7 @@ const reducer = createReducer(
   })),
   on(
     actions.loadBoardGroupsSuccess,
-    (state, { boardGroups, selectedIds, onlyFlagged }) => {
+    (state, { boardGroups, selectedIds, onlyFlagged, searchTerm }) => {
       const selectedIdMap = new Set(selectedIds);
 
       return adapter.setAll(boardGroups.groups, {
@@ -32,6 +32,7 @@ const reducer = createReducer(
         board: boardGroups.board,
         users: boardGroups.users,
         onlyFlagged,
+        searchTerm,
         selectedTasks: [],
         selectedUsers: boardGroups.users.filter((user) =>
           selectedIdMap.has(user.id)
@@ -115,6 +116,13 @@ const reducer = createReducer(
   on(actions.toggleOnlyFlagged, (state) => ({
     ...state,
     onlyFlagged: !state.onlyFlagged,
+  })),
+
+  // Set Search Term
+
+  on(actions.setSearchTerm, (state, { term }) => ({
+    ...state,
+    searchTerm: term,
   })),
 
   // Select Task

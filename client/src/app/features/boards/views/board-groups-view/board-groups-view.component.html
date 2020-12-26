@@ -17,6 +17,12 @@
     [title]="selectedBoardName$ | async"
     [overflowActions]="secondaryActions"
   >
+    <div class="board-filter-seperator"></div>
+
+    <app-board-groups-search></app-board-groups-search>
+
+    <div class="board-filter-seperator"></div>
+
     <app-board-group-users></app-board-group-users>
 
     <div class="board-filter-seperator"></div>
@@ -25,7 +31,6 @@
     <app-board-groups-flagged></app-board-groups-flagged>
 
     <app-board-groups-selection></app-board-groups-selection>
-
 
   </app-page-header>
 

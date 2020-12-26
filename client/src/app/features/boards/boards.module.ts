@@ -25,6 +25,7 @@ import { ReactiveComponentModule } from '@ngrx/component';
 import { BoardGroupsSelectionComponent } from './components/board-groups-selection/board-groups-selection.component';
 import { MoveTasksDialogComponent } from './components/move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from './components/reassign-tasks-dialog/reassign-tasks-dialog.component';
+import { BoardGroupsSearchComponent } from './components/board-groups-search/board-groups-search.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ReassignTasksDialogComponent } from './components/reassign-tasks-dialog
     BoardGroupsSelectionComponent,
     MoveTasksDialogComponent,
     ReassignTasksDialogComponent,
+    BoardGroupsSearchComponent,
   ],
   imports: [
     SharedModule,

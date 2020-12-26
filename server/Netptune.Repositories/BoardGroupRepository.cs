@@ -40,11 +40,17 @@ namespace Netptune.Repositories
                 .ApplyReadonly(isReadonly);
         }
 
-        public async Task<List<BoardViewGroup>> GetBoardView(int boardId)
+        public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null)
         {
             using var connection = ConnectionFactory.StartConnection();
 
-            var results = await connection.QueryMultipleAsync(@"
+            var searchPhrase = searchTerm?.Trim().Replace(" ", " | ");
+
+            var searchQuery = searchTerm is null
+                ? null
+                : $"AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
+
+            var results = await connection.QueryMultipleAsync(@$"
                 SELECT b.id
                      , b.name              AS board_name
                      , b.identifier        AS board_identifier
@@ -71,6 +77,7 @@ namespace Netptune.Repositories
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
                          LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                            {searchQuery}
                          LEFT JOIN users u on pt.assignee_id = u.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
@@ -86,7 +93,7 @@ namespace Netptune.Repositories
                          LEFT JOIN workspaces w on b.workspace_id = w.id
                          LEFT JOIN projects p on b.project_id = p.id
                 WHERE b.id = @boardId
-            ", new { boardId });
+            ", new { boardId, searchPhrase });
 
             var rows = results.Read<BoardViewRowMap>();
             var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
@@ -98,17 +105,17 @@ namespace Netptune.Repositories
                 var lastGroup = result.LastOrDefault();
                 var lastTask = lastGroup?.Tasks.LastOrDefault();
 
-                if (lastTask?.Id is { } && row.Task_Id == lastTask.Id)
+                if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
                 {
                     lastTask.Tags.Add(row.Tag);
                     return result;
                 }
 
-                if (row.Board_Group_Id == lastGroup?.Id)
+                if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
                 {
                     lastGroup.Tasks.Add(new BoardViewTask
                     {
-                        Id = row.Task_Id,
+                        Id = row.Task_Id.Value,
                         Name = row.Task_Name,
                         Status = row.Task_Status,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
@@ -126,17 +133,22 @@ namespace Netptune.Repositories
                     return result;
                 }
 
+                if (row.Board_Group_Id == lastGroup?.Id && !row.Task_Id.HasValue)
+                {
+                    return result;
+                } 
+
                 result.Add(new BoardViewGroup
                 {
                     Id = row.Board_Group_Id,
                     Name = row.Board_Group_Name,
                     SortOrder = row.Board_Group_Sort_Order,
                     Type = row.Board_Group_Type,
-                    Tasks = row.Task_Name is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
+                    Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
                     {
                         new BoardViewTask
                         {
-                            Id = row.Task_Id,
+                            Id = row.Task_Id.Value,
                             Name = row.Task_Name,
                             Status = row.Task_Status,
                             SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
