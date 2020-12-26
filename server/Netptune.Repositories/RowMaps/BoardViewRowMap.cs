@@ -8,7 +8,7 @@ namespace Netptune.Repositories.RowMaps
 
         public string Board_Identifier { get; set; }
 
-        public int Task_Id { get; set; }
+        public int? Task_Id { get; set; }
 
         public string Task_Name { get; set; }
 

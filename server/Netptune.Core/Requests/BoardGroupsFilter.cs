@@ -9,5 +9,7 @@ namespace Netptune.Core.Requests
         public List<string> Tags { get; set; }
 
         public bool Flagged { get; set; }
+
+        public string Term { get; set; }
     }
 }

@@ -21,6 +21,7 @@ export const loadBoardGroupsSuccess = createAction(
     boardGroups: BoardView;
     selectedIds: string[];
     onlyFlagged?: boolean;
+    searchTerm?: string;
   }>()
 );
 
@@ -145,6 +146,13 @@ export const toggleUserSelection = createAction(
 
 export const toggleOnlyFlagged = createAction(
   '[BoardGroups] Toggle Only Flagged'
+);
+
+// Set Search Term
+
+export const setSearchTerm = createAction(
+  '[BoardGroups] Set Search Term',
+  props<{ term: string }>()
 );
 
 // Select Task

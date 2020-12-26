@@ -1,0 +1,36 @@
+.board-groups-search-input {
+  border: 2px solid;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: .4rem;
+  transition: background-color .24s ease-out;
+}
+
+input {
+  appearance: none;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  padding: 0 .8rem;
+  outline: none;
+  line-height: 33px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  width: 180px;
+  transition: width .14s ease-out;
+
+  &:placeholder-shown:not(:focus) {
+    width: 80px;
+  }
+
+  &::placeholder {
+    opacity: .6;
+  }
+}
+
+.clear-search {
+  cursor: pointer;
+}

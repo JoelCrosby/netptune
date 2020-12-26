@@ -58,6 +58,14 @@ namespace Netptune.Entities.EntityMaps
             builder
                 .Property(task => task.OwnerId)
                 .IsRequired();
+
+            builder
+                .HasIndex(task => new
+                {
+                    task.Name,
+                    task.Description
+                })
+                .IsTsVectorExpressionIndex("english");
         }
     }
 }

@@ -89,7 +89,10 @@ export const selectBoardId = createSelector(
 
 export const selectBoardIdAndIdentifier = createSelector(
   selectBoard,
-  (state: BoardViewModel): [id: number, identifier: string] => [state?.id, state?.identifier]
+  (state: BoardViewModel): [id: number, identifier: string] => [
+    state?.id,
+    state?.identifier,
+  ]
 );
 
 export const selectBoardProject = createSelector(
@@ -133,4 +136,9 @@ export const selectBoardProjectId = createSelector(
 export const selectOnlyFlagged = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.onlyFlagged
+);
+
+export const selectSearchTerm = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.searchTerm
 );

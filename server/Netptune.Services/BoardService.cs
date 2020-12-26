@@ -47,7 +47,7 @@ namespace Netptune.Services
 
             var boardId = nullableBoardId.Value;
 
-            var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId);
+            var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId, filter?.Term);
             var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
 
             var includeUserFilter = filter?.Users?.Any() ?? false;
