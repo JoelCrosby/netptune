@@ -35,3 +35,12 @@
   width: 100%;
   max-width: 1200px;
 }
+
+@media only screen and (max-width: 600px) {
+  .page-container {
+    .page-content {
+      padding-left: .8rem;
+      padding-right: .8rem;
+    }
+  }
+}
