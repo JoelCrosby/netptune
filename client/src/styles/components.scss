@@ -59,11 +59,6 @@ ul {
   display: flex;
 }
 
-.mat-card:not([class*='mat-elevation-z']) {
-  border-radius: .2rem !important;
-  margin-bottom: 1rem;
-}
-
 .mat-menu-item {
   line-height: 32px !important;
   height: 32px !important;

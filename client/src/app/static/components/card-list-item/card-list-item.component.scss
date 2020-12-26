@@ -5,8 +5,14 @@ mat-card-title {
 }
 
 mat-card {
-  margin-bottom: 2rem;
+  border-radius: .2rem;
   padding: 1.6rem;
+  overflow: hidden;
+}
+
+mat-card-actions {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 
 small {

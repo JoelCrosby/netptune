@@ -75,6 +75,11 @@
   flex-direction: column;
   padding: .6rem;
   border-radius: .4rem;
+
+  & > *:not(:last-child) {
+    display: block;
+    margin-bottom: 1rem;
+  }
 }
 
 
