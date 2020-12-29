@@ -127,7 +127,7 @@ namespace Netptune.Services.Cache.Redis
                 return value;
             }
 
-            Set<TValue>(key, factory.Invoke(), options);
+            Set(key, factory.Invoke(), options);
 
             return value;
         }
