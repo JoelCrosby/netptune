@@ -34,7 +34,12 @@ const reducer = createReducer(
     adapter.updateOne({ id: tag.id, changes: tag }, state)
   ),
 
-  on(actions.addTagSuccess, (state, { tag }) => adapter.addOne(tag, state))
+  on(actions.addTagSuccess, (state, { tag }) => adapter.addOne(tag, state)),
+
+  on(actions.setSelectedTags, (state, { selectedTags }) => ({
+    ...state,
+    selectedTags,
+  }))
 );
 
 export const tagsReducer = (
