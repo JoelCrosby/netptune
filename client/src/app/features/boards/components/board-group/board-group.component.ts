@@ -8,18 +8,22 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { BoardViewGroup, BoardViewTask } from '@core/models/view-models/board-view';
+import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
+import {
+  BoardViewGroup,
+  BoardViewTask,
+} from '@core/models/view-models/board-view';
 import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
   combineLatest,
   fromEvent,
   Observable,
-  Subject
+  Subject,
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -85,6 +89,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
@@ -116,6 +122,8 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDragStarted() {
+    this.trackMousePosition();
+
     this.zone.run(() => {
       this.store.dispatch(
         BoardGroupActions.setIsDragging({ isDragging: true })
@@ -123,7 +131,18 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onDragEnded() {
+  trackMousePosition() {
+    document.addEventListener('mousemove', mouseMoveHandler, {
+      passive: true,
+    });
+  }
+
+  untrackMousePosition() {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+  }
+
+  onDragRelease() {
+    this.untrackMousePosition();
     this.zone.run(() => {
       this.store.dispatch(
         BoardGroupActions.setIsDragging({ isDragging: false })
