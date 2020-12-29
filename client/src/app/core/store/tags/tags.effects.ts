@@ -1,16 +1,29 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './tags.actions';
 import { TagsService } from './tags.service';
 
 @Injectable()
 export class TagsEffects {
+  routerNavigated$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ROUTER_NAVIGATED),
+      withLatestFrom(this.route.queryParamMap),
+      map(([_, paramMap]) => {
+        const selectedTags = paramMap.getAll('tags');
+        return actions.setSelectedTags({ selectedTags });
+      })
+    )
+  );
+
   loadProjectTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadTags, actions.deleteTagsSuccess),
@@ -94,6 +107,7 @@ export class TagsEffects {
 
   constructor(
     private actions$: Actions<Action>,
+    private route: ActivatedRoute,
     private tagsService: TagsService,
     private confirmation: ConfirmationService
   ) {}

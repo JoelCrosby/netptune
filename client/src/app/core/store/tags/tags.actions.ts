@@ -106,3 +106,10 @@ export const editTagFail = createAction(
   '[Tags] Edit Tag Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Set Selected Tags
+
+export const setSelectedTags = createAction(
+  '[Tags] Set Selected Tags',
+  props<{ selectedTags: string[] }>()
+);
