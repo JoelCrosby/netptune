@@ -34,6 +34,7 @@ import {
   debounceTime,
   filter,
   first,
+  map,
   takeUntil,
   tap,
   withLatestFrom,
@@ -95,9 +96,13 @@ export class TaskDetailDialogComponent
 
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
     this.comments$ = this.store.select(TaskSelectors.selectComments);
-    this.user$ = this.store.select(selectCurrentUser);
-    this.users$ = this.store.select(UsersSelectors.selectAllUsers);
     this.tags$ = this.store.select(TagsSelectors.selectTagNames);
+
+    this.user$ = this.store.select(selectCurrentUser);
+    this.users$ = this.store.select(UsersSelectors.selectAllUsers).pipe(
+      withLatestFrom(this.task$),
+      map(([users, task]) => users.filter((u) => u.id !== task.assigneeId))
+    );
   }
 
   ngAfterViewInit() {
