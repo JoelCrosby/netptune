@@ -84,7 +84,7 @@ namespace Netptune.Repositories
 
                 WHERE b.id = @boardId
 
-                ORDER BY bg.sort_order, ptibg.sort_order;
+                ORDER BY bg.sort_order, ptibg.sort_order, t.name;
 
                 SELECT w.slug AS workspace_identifier
                      , p.key  AS project_key
