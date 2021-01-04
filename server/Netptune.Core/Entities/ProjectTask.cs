@@ -73,7 +73,7 @@ namespace Netptune.Core.Entities
                 OwnerUsername = Owner == null ? string.Empty : Owner.DisplayName,
                 OwnerPictureUrl = Owner == null ? string.Empty : Owner.PictureUrl,
                 ProjectName = Project == null ? string.Empty : Project.Name,
-                Tags = Tags.Select(x => x.Name).ToList(),
+                Tags = Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
             };
         }
 
