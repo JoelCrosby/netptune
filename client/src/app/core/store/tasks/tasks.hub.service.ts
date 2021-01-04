@@ -19,6 +19,7 @@ import { first, tap } from 'rxjs/operators';
 import { ReassignTasksRequest } from '@core/models/requests/re-assign-tasks-request';
 import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
 import * as actions from './tasks.actions';
+import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +47,10 @@ export class ProjectTasksHubService {
       },
       {
         method: 'Update',
+        callback: () => this.reloadRequiredViews(),
+      },
+      {
+        method: 'UpdateGroup',
         callback: () => this.reloadRequiredViews(),
       },
       {
@@ -126,6 +131,14 @@ export class ProjectTasksHubService {
       'update',
       groupId,
       task
+    );
+  }
+
+  putGroup(groupId: string, request: UpdateBoardGroupRequest) {
+    return this.hub.invoke<ClientResponse<BoardGroup>>(
+      'updateGroup',
+      groupId,
+      request
     );
   }
 

@@ -91,6 +91,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
 
   onSubmit(value: string) {
     this.submitted.emit(value);
+    this.value = value;
     this.isEditActiveSubject.next(false);
   }
 }

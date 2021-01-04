@@ -12,6 +12,7 @@ import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
+import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
@@ -139,8 +140,8 @@ export class BoardGroupsViewComponent
   moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
     this.store.dispatch(
       GroupActions.editBoardGroup({
-        boardGroup: {
-          ...boardGroup,
+        request: {
+          boardGroupId: boardGroup.id,
           sortOrder,
         },
       })
@@ -158,12 +159,12 @@ export class BoardGroupsViewComponent
   onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {
     if (value instanceof Event) return;
 
-    const boardGroup: BoardViewGroup = {
-      ...group,
+    const request: UpdateBoardGroupRequest = {
+      boardGroupId: group.id,
       name: value,
     };
 
-    this.store.dispatch(GroupActions.editBoardGroup({ boardGroup }));
+    this.store.dispatch(GroupActions.editBoardGroup({ request }));
   }
 
   onImportTasksClicked() {

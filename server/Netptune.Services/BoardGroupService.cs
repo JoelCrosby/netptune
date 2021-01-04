@@ -32,14 +32,21 @@ namespace Netptune.Services
             return BoardGroups.GetAsync(id, true);
         }
 
-        public async Task<ClientResponse<BoardGroup>> UpdateBoardGroup(BoardGroup boardGroup)
+        public async Task<ClientResponse<BoardGroup>> UpdateBoardGroup(UpdateBoardGroupRequest request)
         {
-            var result = await BoardGroups.GetAsync(boardGroup.Id);
+            var result = await BoardGroups.GetAsync(request.BoardGroupId);
 
             if (result is null) return null;
 
-            result.Name = boardGroup.Name;
-            result.SortOrder = boardGroup.SortOrder;
+            if (request.Name is { })
+            {
+                result.Name = request.Name;
+            }
+
+            if (request.SortOrder.HasValue)
+            {
+                result.SortOrder = request.SortOrder.Value;
+            }
 
             await UnitOfWork.CompleteAsync();
 

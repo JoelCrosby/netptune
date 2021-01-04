@@ -151,6 +151,23 @@ namespace Netptune.App.Hubs
             return result;
         }
 
+        public async Task<ClientResponse<BoardGroup>> UpdateGroup(HubRequest<UpdateBoardGroupRequest> request)
+        {
+            SetupHttpContext(request);
+
+            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroup>.Failed();
+
+            var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
+
+            if (!result.IsSuccess) return result;
+
+            await Clients
+                .OthersInGroup(request.Group)
+                .UpdateGroup(result.Payload);
+
+            return result;
+        }
+
         public async Task<ClientResponse<TagViewModel>> AddTagToTask(HubRequest<AddTagToTaskRequest> request)
         {
             SetupHttpContext(request);
