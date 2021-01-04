@@ -9,6 +9,7 @@ import { selectSelectedTags } from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -35,6 +36,7 @@ export class BoardGroupsEffects {
         actions.createBoardGroupSuccess,
         actions.moveSelectedTasksSuccess,
         actions.reassignTasksSuccess,
+        actions.editBoardGroupSuccess,
         TaskActions.importTasksSuccess,
         TaskActions.deleteTagFromTaskSuccess,
         TaskActions.addTagToTaskSuccess
@@ -160,8 +162,10 @@ export class BoardGroupsEffects {
   editBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.editBoardGroup),
-      switchMap((action) =>
-        this.boardGroupsService.put(action.boardGroup).pipe(
+      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      switchMap(([action, boardId]) =>
+        this.tasksHubService.putGroup(boardId, action.request).pipe(
+          unwrapClientReposne(),
           map((boardGroup) => actions.editBoardGroupSuccess({ boardGroup })),
           catchError((error) => of(actions.editBoardGroupFail({ error })))
         )

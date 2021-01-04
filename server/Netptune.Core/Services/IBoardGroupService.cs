@@ -10,7 +10,7 @@ namespace Netptune.Core.Services
     {
         Task<BoardGroup> GetBoardGroup(int id);
 
-        Task<ClientResponse<BoardGroup>> UpdateBoardGroup(BoardGroup boardGroup);
+        Task<ClientResponse<BoardGroup>> UpdateBoardGroup(UpdateBoardGroupRequest request);
 
         Task<ClientResponse<BoardGroup>> AddBoardGroup(AddBoardGroupRequest boardGroup);
 

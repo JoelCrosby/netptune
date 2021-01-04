@@ -42,9 +42,9 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(BoardGroup))]
-        public async Task<IActionResult> PutBoardGroup([FromBody] BoardGroup boardGroup)
+        public async Task<IActionResult> PutBoardGroup([FromBody] UpdateBoardGroupRequest request)
         {
-            var result = await BoardGroupService.UpdateBoardGroup(boardGroup);
+            var result = await BoardGroupService.UpdateBoardGroup(request);
 
             if (result is null) return NotFound();
 
