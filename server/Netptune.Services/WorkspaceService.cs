@@ -36,7 +36,7 @@ namespace Netptune.Services
             {
                 var user = await IdentityService.GetCurrentUser();
 
-                var workspace = await WorkspaceRepository.AddAsync(new Workspace
+                var entity = new Workspace
                 {
                     Name = request.Name,
                     Description = request.Description,
@@ -44,14 +44,15 @@ namespace Netptune.Services
                     OwnerId = user.Id,
                     Slug = request.Slug.ToUrlSlug(),
                     MetaInfo = request.MetaInfo
-                });
+                };
+
+                var workspace = await WorkspaceRepository.AddAsync(entity);
 
                 await UnitOfWork.CompleteAsync();
 
                 workspace.WorkspaceUsers.Add(new WorkspaceAppUser {UserId = user.Id, WorkspaceId = workspace.Id});
 
-                var requestKey = request.Name.ToUrlSlug();
-                var projectKey = await UnitOfWork.Projects.GenerateProjectKey(requestKey, workspace.Id);
+                var projectKey = await UnitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);
 
                 var project = Project.Create(new CreateProjectOptions
                 {

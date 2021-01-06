@@ -87,7 +87,7 @@ namespace Netptune.Services
         {
             var workspaceKey = Identity.GetWorkspaceKey();
 
-            var emailList = emailAddresses.ToList();
+            var emailList = emailAddresses.Select(email => email.Trim().Normalize()).ToHashSet();
             var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
             if (workspace is null)
@@ -100,27 +100,24 @@ namespace Netptune.Services
                 return ClientResponse.Failed("no email addresses provided");
             }
 
-            //var users = await UserRepository.GetByEmailRange(emailList, true);
+            async Task<HashSet<string>> InviteExistingUsersDirectly()
+            {
+                var users = await UserRepository.GetByEmailRange(emailList, true);
+                var userIds = users.Select(user => user.Id).ToList();
+                var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
+                var newUserIds = userIds.Except(existing).ToList();
 
-            //if (users.Count == 0)
-            //{
-            //    return ClientResponse.Failed("user not found");
-            //}
+                var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
 
-            //var userIds = users.Select(user => user.Id).ToList();
-            //var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
+                if (result is null) throw new Exception();
 
-            //var newUserIds = userIds.Except(existing).ToList();
+                await UnitOfWork.CompleteAsync();
 
-            //var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
+                var userEmails = users.Select(user => user.NormalizedEmail);
+                return emailList.Where(email => !userEmails.Contains(email)).ToHashSet();
+            }
 
-            //if (result is null) throw new Exception();
-
-            //await UnitOfWork.CompleteAsync();
-
-            //var usersToInvite = onlyNewUsers ? users.Where(user => newUserIds.Contains(user.Id)).ToList() : users;
-
-            var usersToInvite = new HashSet<string>(emailList);
+            var usersToInvite = await InviteExistingUsersDirectly();
 
             await SendUserInviteEmails(usersToInvite, workspace);
 
