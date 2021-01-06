@@ -27,8 +27,6 @@ export class TaskListGroupComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    console.log({ tasks: this.tasks });
-
     this.store
       .select(selectCurrentWorkspaceIdentifier)
       .pipe(

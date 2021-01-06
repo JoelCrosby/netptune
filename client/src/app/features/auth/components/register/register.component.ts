@@ -85,8 +85,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
         return invite.success ? invite : null;
       }),
       tap((invite) => {
-        console.log({ invite });
-
         if (invite) {
           this.email.setValue(invite.email, { emitEvent: false });
           this.email.disable({ emitEvent: false });

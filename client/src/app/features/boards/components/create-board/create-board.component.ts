@@ -27,6 +27,7 @@ import { Store } from '@ngrx/store';
 import { animationFrameScheduler, Observable, Subject } from 'rxjs';
 import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
 import { toUrlSlug } from '../../../../core/util/strings';
+import { Logger } from '@core/util/logger';
 
 @Component({
   selector: 'app-create-board',
@@ -112,8 +113,6 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
           takeUntil(this.onDestroy$),
           debounceTime(240),
           tap((value: string | undefined) => {
-            console.log({ value });
-
             if (typeof value !== 'string') return;
 
             this.identifier.setValue(toUrlSlug(value));
@@ -165,7 +164,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
     };
 
     if (this.isEditMode) {
-      console.log('Edit is not implemented');
+      Logger.warn('Edit is not implemented');
     } else {
       this.store.dispatch(Actions.createBoard({ request }));
     }

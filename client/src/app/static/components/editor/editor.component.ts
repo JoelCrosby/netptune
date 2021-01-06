@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
+import { Logger } from '@core/util/logger';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import EditorJS, { LogLevels, OutputData } from '@editorjs/editorjs';
@@ -65,7 +66,7 @@ export class EditorComponent implements ControlValueAccessor {
   }
 
   setDisabledState?(isDisabled: boolean) {
-    console.log('setDisabledState', isDisabled);
+    Logger.log('setDisabledState', isDisabled);
   }
 
   createEditor(initialValue: OutputData = null) {

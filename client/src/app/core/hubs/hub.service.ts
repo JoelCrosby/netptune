@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Logger } from '@core/util/logger';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
 import { from, Observable, throwError } from 'rxjs';
@@ -54,9 +55,9 @@ export class HubService {
             payload,
           })
         ).pipe(
-          tap((res) => console.log(`[SIGNAL-R][RESPONSE] `, { res })),
+          tap((res) => Logger.log(`[SIGNAL-R][RESPONSE] `, { res })),
           catchError((err: HubError) => {
-            console.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
+            Logger.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
 
             return throwError(err.message);
           })
