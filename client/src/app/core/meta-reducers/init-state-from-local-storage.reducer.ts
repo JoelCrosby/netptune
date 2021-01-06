@@ -2,6 +2,7 @@ import { Action, ActionReducer, INIT, UPDATE } from '@ngrx/store';
 import { environment } from '@env/environment';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AppState } from '@core/core.state';
+import { Logger } from '@core/util/logger';
 
 export const initStateFromLocalStorage = (
   reducer: ActionReducer<AppState>
@@ -30,7 +31,7 @@ const logStorageStateChange = (
 ) => {
   const { type, ...payload } = action;
 
-  console.log(
+  Logger.log(
     `%c[NGRX][LocalStorage] %c${type}`,
     'color: #D171E1',
     'color: inherit',

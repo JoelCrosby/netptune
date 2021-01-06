@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { selectAuthToken } from '@core/auth/store/auth.selectors';
+import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import {
   HubConnection,
@@ -71,7 +72,7 @@ export class HubConnectionService {
     try {
       await connection.start();
 
-      console.log(
+      Logger.log(
         `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
         'color: lime'
       );
@@ -82,7 +83,7 @@ export class HubConnectionService {
 
   async stop(connection: HubConnection) {
     if (!connection) {
-      return console.warn('[SIGNAL-R] attmpted to close a null connection.');
+      return Logger.warn('[SIGNAL-R] attmpted to close a null connection.');
     }
 
     const connectionId = connection.connectionId;
@@ -90,7 +91,7 @@ export class HubConnectionService {
 
     await connection.stop();
 
-    console.log(
+    Logger.log(
       `%c[SIGNAL-R][Disconnected] id: ${connectionId}`,
       'color: orange'
     );

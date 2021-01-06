@@ -18,6 +18,8 @@ export class RegisterInviteResolver
 
     const code = route.queryParamMap.get('code');
 
+    if (!code) return of({ success: false });
+
     return this.http
       .get<WorkspaceInvite>(
         environment.apiEndpoint + 'api/auth/validate-workspace-invite',

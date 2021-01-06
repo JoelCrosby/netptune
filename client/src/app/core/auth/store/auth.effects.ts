@@ -19,7 +19,6 @@ import {
 } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
-import { UserResponse } from './auth.models';
 import { selectAuthState, selectIsAuthenticated } from './auth.selectors';
 
 export const AUTH_KEY = 'AUTH';
@@ -67,17 +66,26 @@ export class AuthEffects implements OnInitEffects {
     )
   );
 
-  currentUser$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.currentUser),
-      withLatestFrom(this.store.select(selectIsAuthenticated)),
-      filter(([_, auth]) => auth),
-      switchMap(() =>
-        this.authService.currentUser().pipe(
-          map((user: UserResponse) => actions.currentUserSuccess({ user })),
-          catchError((error) => of(actions.currentUserFail({ error })))
+  currentUser$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.currentUser),
+        debounceTime(debounce, scheduler),
+        withLatestFrom(this.store.select(selectIsAuthenticated)),
+        filter(([_, auth]) => auth),
+        switchMap(() =>
+          this.authService.currentUser().pipe(
+            map((user) => actions.currentUserSuccess({ user })),
+            catchError((error) => of(actions.currentUserFail({ error })))
+          )
         )
       )
+  );
+
+  currentUserFail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.currentUserFail),
+      map(() => actions.logout({ silent: true }))
     )
   );
 
@@ -192,8 +200,8 @@ export class AuthEffects implements OnInitEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.logout),
-      switchMap(() =>
-        this.confirmation.open(LOGOUT_CONFIRMATION).pipe(
+      switchMap((action) =>
+        this.confirmation.open(LOGOUT_CONFIRMATION, action.silent).pipe(
           map((result) => {
             if (!result) return { type: 'NO_ACTION' };
 

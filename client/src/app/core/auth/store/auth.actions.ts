@@ -41,7 +41,10 @@ export const loginFail = createAction('[Auth] Login Failed');
 
 // Logout
 
-export const logout = createAction('[Auth] Logout');
+export const logout = createAction(
+  '[Auth] Logout',
+  (payload: { silent?: boolean } = {}) => payload
+);
 
 export const logoutSuccess = createAction('[Auth] Logout Success');
 

@@ -75,10 +75,7 @@ export class ProjectTasksHubService {
       },
       {
         method: 'ReassignTasks',
-        callback: () => {
-          console.log('Reassing Tasks');
-          this.reloadRequiredViews();
-        },
+        callback: () => this.reloadRequiredViews(),
       },
     ]);
   }
