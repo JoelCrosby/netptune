@@ -7,6 +7,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
   IHttpConnectionOptions,
+  LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
@@ -39,6 +40,7 @@ export class HubConnectionService {
 
     const httpOptions: IHttpConnectionOptions = {
       accessTokenFactory: () => token,
+      logger: environment.production ? LogLevel.Critical : undefined,
     };
 
     const baseUrl = `${environment.apiEndpoint}${path}`;
