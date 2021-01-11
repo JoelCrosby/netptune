@@ -227,6 +227,16 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
+        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
+        {
+            if (request.OldGroupId == request.NewGroupId)
+            {
+                return MoveTaskInGroup(request);
+            }
+
+            return TransferTaskInGroups(request);
+        }
+
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
         {
             await RemoveTaskFromGroups(result.Id);
@@ -314,16 +324,6 @@ namespace Netptune.Services
                 BoardGroup = boardGroup,
                 ProjectTask = task
             });
-        }
-
-        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
-        {
-            if (request.OldGroupId == request.NewGroupId)
-            {
-                return MoveTaskInGroup(request);
-            }
-
-            return TransferTaskInGroups(request);
         }
 
         private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)

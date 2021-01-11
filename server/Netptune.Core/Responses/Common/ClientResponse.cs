@@ -2,6 +2,10 @@ namespace Netptune.Core.Responses.Common
 {
     public class ClientResponse
     {
+        protected ClientResponse()
+        {
+        }
+
         public bool IsSuccess { get; protected set; }
 
         public string Message { get; protected set; }
@@ -27,6 +31,10 @@ namespace Netptune.Core.Responses.Common
 
     public class ClientResponse<TPayload> : ClientResponse
     {
+        protected ClientResponse()
+        {
+        }
+
         public TPayload Payload { get; set; }
 
         public static new ClientResponse<TPayload> Success(string message = null)
