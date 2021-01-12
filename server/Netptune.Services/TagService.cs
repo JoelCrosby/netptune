@@ -36,9 +36,9 @@ namespace Netptune.Services
             if (!workspaceId.HasValue) return null;
 
             var trimmedTag = request.Tag.Trim().Capitalize();
-            var existingTag = await Tags.GetByValue(trimmedTag, workspaceId.Value);
+            var alreadyExists = await Tags.Exists(trimmedTag, workspaceId.Value);
 
-            if (existingTag is { }) return Failed("Tag Name should be unique");
+            if (alreadyExists) return Failed("Tag Name should be unique");
 
             var tag = new Tag
             {

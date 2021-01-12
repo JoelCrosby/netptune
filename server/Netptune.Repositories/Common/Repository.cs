@@ -86,7 +86,7 @@ namespace Netptune.Repositories.Common
         /// <returns>List of Entities</returns>
         public virtual Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
         {
-            return Entities.IsReadonly(isReadonly).ToListAsync();
+            return Entities.ToReadonlyListAsync(isReadonly);
         }
 
         /// <summary>
@@ -99,8 +99,7 @@ namespace Netptune.Repositories.Common
         {
             return Entities
                 .Where(entity => ids.Contains(entity.Id))
-                .IsReadonly(isReadonly)
-                .ToList();
+                .ToReadonlyList(isReadonly);
         }
 
         /// <summary>
@@ -113,8 +112,7 @@ namespace Netptune.Repositories.Common
         {
             return Entities
                 .Where(entity => ids.Contains(entity.Id))
-                .IsReadonly(isReadonly)
-                .ToListAsync();
+                .ToReadonlyListAsync(isReadonly);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace Netptune.Repositories
                     where w.Slug == slug && !w.IsDeleted && !b.IsDeleted && !p.IsDeleted
                     select b)
                 .Include(x => x.Owner)
-                .ApplyReadonly(isReadonly);
+                .ToReadonlyListAsync(isReadonly);
         }
 
         public async Task<int?> GetIdByIdentifier(string identifier)

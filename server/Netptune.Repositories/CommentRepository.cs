@@ -29,7 +29,7 @@ namespace Netptune.Repositories
                 .Include(x => x.CreatedByUser)
                 .Include(x => x.Owner)
                 .Include(x => x.Reactions)
-                .ApplyReadonly(isReadonly);
+                .ToReadonlyListAsync(isReadonly);
         }
 
         public async Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId)

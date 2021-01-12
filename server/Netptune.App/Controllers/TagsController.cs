@@ -59,7 +59,7 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<TagViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId)
+        public async Task<IActionResult> GetTagsForTask([FromRoute] string systemId)
         {
             var result = await TagService.GetTagsForTask(systemId);
 
@@ -73,7 +73,7 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(List<TagViewModel>))]
-        public async Task<IActionResult> GetCommentsForTask()
+        public async Task<IActionResult> GetTagsForTask()
         {
             var result = await TagService.GetTagsForWorkspace();
 

@@ -37,7 +37,7 @@ namespace Netptune.Repositories
                 .Where(boardGroup => !boardGroup.IsDeleted)
                 .Include(boardGroup => boardGroup.TasksInGroups)
                 .OrderBy(boardGroup => boardGroup.SortOrder)
-                .ApplyReadonly(isReadonly);
+                .ToReadonlyListAsync(isReadonly);
         }
 
         public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null)
@@ -180,7 +180,7 @@ namespace Netptune.Repositories
                 .Include(group => group.TasksInGroups)
                     .ThenInclude(relational => relational.ProjectTask);
 
-            return query.ApplyReadonly(isReadonly);
+            return query.ToReadonlyListAsync(isReadonly);
         }
 
         public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false)
@@ -189,7 +189,7 @@ namespace Netptune.Repositories
                 .Where(item => item.BoardGroupId == groupId)
                 .Select(item => item.ProjectTask);
 
-            return query.ApplyReadonly(isReadonly);
+            return query.ToReadonlyListAsync(isReadonly);
         }
 
         public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId)

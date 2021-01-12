@@ -17,7 +17,9 @@ namespace Netptune.Core.Repositories
 
         Task<TagViewModel> GetViewModel(int id);
 
-        Task<Tag> GetByValue(string value, int workspaceId);
+        Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false);
+
+        Task<bool> Exists(string value, int workspaceId);
 
         Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false);
 

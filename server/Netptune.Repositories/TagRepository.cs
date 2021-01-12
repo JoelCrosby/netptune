@@ -26,7 +26,9 @@ namespace Netptune.Repositories
                 join ptt in Context.ProjectTaskTags on tag.Id equals ptt.TagId
                 join task in Context.ProjectTasks on ptt.ProjectTaskId equals task.Id
                 where !task.IsDeleted && !tag.IsDeleted && task.Id == taskId
-                select tag).ToListAsync();
+                select tag)
+                .IsReadonly(isReadonly)
+                .ToListAsync();
         }
 
         public Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false)
@@ -50,7 +52,9 @@ namespace Netptune.Repositories
                     Name = t.Name,
                     OwnerId = t.OwnerId,
                     OwnerName = $"{t.OwnerFirstname} {t.OwnerLastname}"
-                }).ToListAsync();
+                })
+                .IsReadonly(isReadonly)
+                .ToListAsync();
         }
 
         public async Task<TagViewModel> GetViewModel(int id)
@@ -70,6 +74,15 @@ namespace Netptune.Repositories
             };
         }
 
+
+        public Task<bool> Exists(string value, int workspaceId)
+        {
+            var trimmed = value.Trim();
+
+            return Entities
+                .AnyAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
+        }
+
         public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId)
         {
             return Entities
@@ -80,11 +93,12 @@ namespace Netptune.Repositories
                 .ToListAsync();
         }
 
-        public Task<Tag> GetByValue(string value, int workspaceId)
+        public Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false)
         {
             var trimmed = value.Trim();
 
             return Entities
+                .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
         }
 
