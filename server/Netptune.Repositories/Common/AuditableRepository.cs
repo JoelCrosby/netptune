@@ -39,28 +39,30 @@ namespace Netptune.Repositories.Common
 
         public override List<TEntity> GetAll(bool isReadonly = false)
         {
-            return Entities.IsReadonly(isReadonly).Where(entity => !entity.IsDeleted).ToList();
+            return Entities
+                .Where(entity => !entity.IsDeleted)
+                .ToReadonlyList(isReadonly);
         }
 
         public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
         {
-            return Entities.IsReadonly(isReadonly).ToListAsync();
+            return Entities
+                .Where(entity => !entity.IsDeleted)
+                .ToReadonlyListAsync(isReadonly);
         }
 
         public override List<TEntity> GetAllById(IEnumerable<TId> ids, bool isReadonly = false)
         {
             return Entities
                 .Where(entity =>  !entity.IsDeleted && ids.Contains(entity.Id))
-                .IsReadonly(isReadonly)
-                .ToList();
+                .ToReadonlyList(isReadonly);
         }
 
         public override Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
         {
             return Entities
                 .Where(entity => !entity.IsDeleted && ids.Contains(entity.Id))
-                .IsReadonly(isReadonly)
-                .ToListAsync();
+                .ToReadonlyListAsync(isReadonly);
         }
     }
 }

@@ -120,7 +120,7 @@ namespace Netptune.Repositories
                 .Include(x => x.Owner)
                 .Include(x => x.Workspace)
                 .Select(task => task.ToViewModel())
-                .ApplyReadonly(isReadonly);
+                .ToReadonlyListAsync(isReadonly);
         }
 
         public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)
