@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +35,6 @@ namespace Netptune.Services.Authentication
 
         [Required]
         public string GitHubSecret { get; set; }
-
-        [Required]
-        public string GitHubCallbackPath { get; set; }
     }
 
     public static class AuthenticationServiceCollectionExtensions
@@ -130,7 +122,7 @@ namespace Netptune.Services.Authentication
                 {
                     options.ClientId = authenticationOptions.GitHubClientId;
                     options.ClientSecret = authenticationOptions.GitHubSecret;
-                    options.CallbackPath = new PathString(authenticationOptions.GitHubCallbackPath);
+                    options.CallbackPath = new PathString("api/auth/github-callback");
                     options.Scope.Add("read:user");
                     options.Scope.Add("urn:github:name");
                     options.SaveTokens = true;
