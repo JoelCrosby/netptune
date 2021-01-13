@@ -1,5 +1,11 @@
+using System.Net;
 using System.Threading.Tasks;
 
+using Flurl;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +14,8 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+
+using AuthenticationTicket = Netptune.Core.Authentication.Models.AuthenticationTicket;
 
 namespace Netptune.App.Controllers
 {
@@ -184,6 +192,48 @@ namespace Netptune.App.Controllers
             if (result is null) return Unauthorized();
 
             return Ok(result);
+        }
+
+        // GET: api/auth/github-login
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("github-login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GithubLogin()
+        {
+            return Challenge(new AuthenticationProperties
+            {
+                RedirectUri = "/api/auth/provider-login-redirect",
+                IsPersistent = true
+            },"GitHub");
+        }
+
+        // GET: api/auth/provider-login-redirect
+        [HttpGet, HttpPost]
+        [Authorize(AuthenticationSchemes = "Identity.External")]
+        [Route("provider-login-redirect")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json", Type = typeof(AuthenticationTicket))]
+        public async Task<IActionResult> AuthProviderLogin()
+        {
+            var result = await AuthenticationService.LogInViaProvider();
+
+            if (!result.IsSuccess) return Unauthorized();
+
+            var redirect = "/app/auth/auth-provider-login".SetQueryParams(new
+            {
+                expires = result.Ticket.Expires,
+                issued = result.Ticket.Issued,
+                token = result.Ticket.Token,
+                displayName = result.Ticket.DisplayName,
+                email = result.Ticket.EmailAddress,
+                pictureUrl = result.Ticket.PictureUrl,
+                userId = result.Ticket.UserId,
+            }).ToString();
+
+            return Redirect(redirect);
         }
     }
 }

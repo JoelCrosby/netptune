@@ -23,21 +23,24 @@ namespace Netptune.Services
             ContextAccessor = contextAccessor;
         }
 
-        private string GetUserId()
+        public string GetUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
+
+        public string GetUserEmail() => GetClaimValue(ClaimTypes.Email);
+
+        public string GetUserName()
         {
-            var claimsPrincipal = ContextAccessor.HttpContext?.User;
-
-            var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var result = claim?.Value;
-
-            if (result is null)
+            if (GetClaimValue("urn:github:name") is var githubUserName && githubUserName is {})
             {
-                throw new AuthenticationException(
-                    $"user does not have value for claim of type {nameof(ClaimTypes.NameIdentifier)}");
+                return githubUserName;
             }
 
-            return result;
+            return GetClaimValue(ClaimTypes.Name);
         }
+
+        public string GetPictureUrl()
+        {
+            return GetClaimValue("Provider-Picture-Url");
+        } 
 
         public Task<AppUser> GetCurrentUser()
         {
@@ -46,8 +49,14 @@ namespace Netptune.Services
 
         public async Task<string> GetCurrentUserEmail()
         {
-            var user = await GetCurrentUser();
+            var claimEmail = GetUserEmail();
 
+            if (!string.IsNullOrEmpty(claimEmail))
+            {
+                return claimEmail;
+            }
+
+            var user = await GetCurrentUser();
             return user.Email;
         }
 
@@ -71,6 +80,21 @@ namespace Netptune.Services
             }
 
             throw new Exception("Client request did not contain a 'workspace' header.");
+        }
+
+        private string GetClaimValue(string type)
+        {
+            var claimsPrincipal = ContextAccessor.HttpContext?.User;
+
+            var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+            var result = claim?.Value;
+
+            if (result is null)
+            {
+                throw new AuthenticationException($"user does not have value for claim of type {type}");
+            }
+
+            return result;
         }
     }
 }

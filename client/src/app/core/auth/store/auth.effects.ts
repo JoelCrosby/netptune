@@ -96,12 +96,20 @@ export class AuthEffects implements OnInitEffects {
       switchMap((action) =>
         this.authService.login(action.request).pipe(
           map((token) => actions.loginSuccess({ token })),
-          tap(() => this.router.navigate(['/workspaces'])),
-          tap(() => this.store.dispatch(openSideNav())),
           catchError(() => of(actions.loginFail()))
         )
       )
     )
+  );
+
+  loginSuccess$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.loginSuccess),
+        debounceTime(debounce, scheduler),
+        tap(() => this.router.navigate(['/workspaces'])),
+        map(() => openSideNav())
+      )
   );
 
   register$ = createEffect(

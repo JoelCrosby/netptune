@@ -71,4 +71,8 @@ export class LoginComponent implements OnDestroy {
       })
     );
   }
+
+  onGithubSignInClicked() {
+    location.href = '/api/auth/github-login';
+  }
 }

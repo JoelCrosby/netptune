@@ -44,12 +44,6 @@ export interface UserResponse {
 
 export interface UserToken extends UserResponse {
   [key: string]: unknown;
-  ['email_verified']: boolean;
-  ['given_name']: string;
-  ['family_name']: string;
-  name: string;
-  picture: string;
-  zoneinfo: string;
   expires: Date;
   token: string;
 }

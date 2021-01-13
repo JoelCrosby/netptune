@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,12 +17,14 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Authentication
@@ -33,6 +36,7 @@ namespace Netptune.Services.Authentication
         private readonly IEmailService Email;
         private readonly IHttpContextAccessor ContextAccessor;
         private readonly IInviteCache InviteCache;
+        private readonly IIdentityService Identity;
         private readonly INetptuneUnitOfWork UnitOfWork;
 
         protected readonly string Issuer;
@@ -47,6 +51,7 @@ namespace Netptune.Services.Authentication
             IEmailService email,
             IHttpContextAccessor contextAccessor,
             IInviteCache inviteCache,
+            IIdentityService identity,
             INetptuneUnitOfWork unitOfWork
             )
         {
@@ -55,6 +60,7 @@ namespace Netptune.Services.Authentication
             Email = email;
             ContextAccessor = contextAccessor;
             InviteCache = inviteCache;
+            Identity = identity;
             UnitOfWork = unitOfWork;
 
             Issuer = configuration["Tokens:Issuer"];
@@ -84,6 +90,34 @@ namespace Netptune.Services.Authentication
             return LoginResult.Success(GenerateToken(appUser));
         }
 
+        public async Task<LoginResult> LogInViaProvider()
+        {
+            var email = await Identity.GetCurrentUserEmail();
+            var user = await UserManager.FindByEmailAsync(email);
+
+            if (user is null)
+            {
+                var registerRequest = new RegisterRequest
+                {
+                    Email = email,
+                    Firstname = Identity.GetUserName().Split(" ").FirstOrDefault(),
+                    Lastname = Identity.GetUserName().Split(" ").LastOrDefault(),
+                    PictureUrl = Identity.GetPictureUrl(),
+                    Password = null,
+                    AuthenticationProvider = AuthenticationProvider.GitHub,
+                };
+
+                await Register(registerRequest);
+            }
+
+            user = await UserManager.FindByEmailAsync(email);
+            user.LastLoginTime = DateTime.UtcNow;
+
+            await UserManager.UpdateAsync(user);
+
+            return LoginResult.Success(GenerateToken(user));
+        }
+
         public async Task<RegisterResult> Register(RegisterRequest model)
         {
             async Task<WorkspaceInvite> GetWorkspaceInvite()
@@ -105,10 +139,13 @@ namespace Netptune.Services.Authentication
                 Email = model.Email,
                 UserName = model.Email,
                 Firstname = model.Firstname,
-                Lastname = model.Lastname
+                Lastname = model.Lastname,
+                PictureUrl = model.PictureUrl,
             };
 
-            var result = await UserManager.CreateAsync(user, model.Password);
+            var result = model.AuthenticationProvider == AuthenticationProvider.Netptune
+                ? await UserManager.CreateAsync(user, model.Password)
+                : await UserManager.CreateAsync(user);
 
             if (invite is {})
             {

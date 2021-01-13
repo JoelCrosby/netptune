@@ -62,6 +62,8 @@ namespace Netptune.App
                 options.Issuer = Configuration["Tokens:Issuer"];
                 options.Audience = Configuration["Tokens:Audience"];
                 options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
+                options.GitHubClientId = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
+                options.GitHubSecret = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
             });
 
             services.AddNetptuneRedis(options =>

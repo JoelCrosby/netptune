@@ -5,6 +5,7 @@ import { SharedModule } from '@shared/shared.module';
 import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
 import { ResetPasswordResolver } from './resolvers/reset-password.resolver';
 import { RegisterInviteResolver } from './resolvers/register-invite.resolver';
+import { AuthProviderResolver } from './resolvers/auth-provider.resolver';
 
 // Components
 import { LoginComponent } from './components/login/login.component';
@@ -35,6 +36,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     ConfirmEmailResolver,
     ResetPasswordResolver,
     RegisterInviteResolver,
+    AuthProviderResolver,
   ],
 })
 export class AuthModule {}
