@@ -1,10 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +34,12 @@ namespace Netptune.Services.Authentication
 
         [Required]
         public string SecurityKey { get; set; }
+
+        [Required]
+        public string GitHubClientId { get; set; }
+
+        [Required]
+        public string GitHubSecret { get; set; }
     }
 
     public static class AuthenticationServiceCollectionExtensions
@@ -55,6 +69,12 @@ namespace Netptune.Services.Authentication
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
 
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/app/auth/login";
+                    options.LogoutPath = "/app/auth/login";
+                })
+
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
@@ -67,7 +87,8 @@ namespace Netptune.Services.Authentication
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = authenticationOptions.Issuer,
                         ValidAudience = authenticationOptions.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
                     };
                     options.Events = new JwtBearerEvents
                     {
@@ -78,7 +99,7 @@ namespace Netptune.Services.Authentication
                                 return Task.CompletedTask;
                             }
 
-                            var claims = new [] { new Claim(NetptuneClaims.Workspace, workspace) };
+                            var claims = new[] {new Claim(NetptuneClaims.Workspace, workspace)};
                             var identity = new ClaimsIdentity(claims);
 
                             context.Principal?.AddIdentity(identity);
@@ -99,6 +120,31 @@ namespace Netptune.Services.Authentication
 
                             return Task.CompletedTask;
                         }
+                    };
+                })
+
+                .AddGitHub(options =>
+                {
+                    options.ClientId = authenticationOptions.GitHubClientId;
+                    options.ClientSecret = authenticationOptions.GitHubSecret;
+                    options.CallbackPath = new PathString("/api/auth/github-callback");
+                    options.Scope.Add("read:user");
+                    options.Scope.Add("urn:github:name");
+                    options.SaveTokens = true;
+                    options.Events.OnCreatingTicket = async context =>
+                    {
+                        var token = context.AccessToken;
+                        using var client = new WebClient();
+
+                        client.Headers.Add("Authorization", $"token {token}");
+                        client.Headers.Add("User-Agent", "Netptune API");
+
+                        var stream = await client.OpenReadTaskAsync("https://api.github.com/user");
+                        var gitHubUser = await JsonSerializer.DeserializeAsync<GithubUserResponse>(stream);
+
+                        if (gitHubUser is null) return;
+
+                        context.Identity.AddClaim(new Claim("Provider-Picture-Url", gitHubUser.AvatarUrl.ToString()));
                     };
                 });
 

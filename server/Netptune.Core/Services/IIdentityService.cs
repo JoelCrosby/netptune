@@ -12,6 +12,14 @@ namespace Netptune.Core.Services
 
         Task<string> GetCurrentUserId();
 
+        string GetUserId();
+
+        string GetUserEmail();
+
+        string GetUserName();
+
+        string GetPictureUrl();
+
         string GetWorkspaceKey();
     }
 }

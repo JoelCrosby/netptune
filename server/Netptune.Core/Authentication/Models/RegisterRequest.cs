@@ -1,3 +1,5 @@
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Authentication.Models
 {
     public class RegisterRequest : TokenRequest
@@ -7,5 +9,9 @@ namespace Netptune.Core.Authentication.Models
         public string Lastname { get; set; }
 
         public string InviteCode { get; set; }
+
+        public string PictureUrl { get; set; }
+
+        public AuthenticationProvider AuthenticationProvider { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace Netptune.Core.Authentication
     {
         Task<LoginResult> LogIn(TokenRequest model);
 
+        Task<LoginResult> LogInViaProvider();
+
         Task<RegisterResult> Register(RegisterRequest model);
 
         Task<RegisterResult> ConfirmEmail(string userId, string code);

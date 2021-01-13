@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 
 namespace Netptune.Entities.EntityMaps
 {
@@ -22,6 +23,11 @@ namespace Netptune.Entities.EntityMaps
             builder
                 .Property(user => user.PictureUrl)
                 .HasMaxLength(2048);
+
+            builder
+                .Property(user => user.AuthenticationProvider)
+                .HasDefaultValue(AuthenticationProvider.Netptune)
+                .IsRequired();
 
             builder
                 .HasMany(user => user.Tasks)

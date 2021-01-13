@@ -1,1 +1,35 @@
+mat-divider {
+  margin: 1.6rem 0;
+}
 
+.signin-github {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: .8rem 1.6rem;
+  border-radius: 3px;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .14s ease-in;
+  background-color: #161b22;
+  color: #fff;
+  appearance: none;
+  white-space: nowrap;
+  border: 0;
+
+  &:hover {
+    background-color: #1d232c;
+  }
+}
+
+.github-icon {
+  fill: #fff;
+  color: #fff;
+  margin-right: 1rem;
+}

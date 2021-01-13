@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RequestPasswordResetComponent } from './components/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AuthProviderResolver } from './resolvers/auth-provider.resolver';
 import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
 import { RegisterInviteResolver } from './resolvers/register-invite.resolver';
 import { ResetPasswordResolver } from './resolvers/reset-password.resolver';
@@ -41,6 +42,12 @@ const routes: Routes = [
     component: ConfirmViewComponent,
     resolve: {
       confirmEmail: ConfirmEmailResolver,
+    },
+  },
+  {
+    path: 'auth-provider-login',
+    resolve: {
+      authProviderResult: AuthProviderResolver,
     },
   },
   { path: '**', redirectTo: 'login' },
