@@ -40,6 +40,9 @@ namespace Netptune.Services.Authentication
 
         [Required]
         public string GitHubSecret { get; set; }
+
+        [Required]
+        public string GitHubCallbackPath { get; set; }
     }
 
     public static class AuthenticationServiceCollectionExtensions
@@ -127,7 +130,7 @@ namespace Netptune.Services.Authentication
                 {
                     options.ClientId = authenticationOptions.GitHubClientId;
                     options.ClientSecret = authenticationOptions.GitHubSecret;
-                    options.CallbackPath = new PathString("/api/auth/github-callback");
+                    options.CallbackPath = new PathString(authenticationOptions.GitHubCallbackPath);
                     options.Scope.Add("read:user");
                     options.Scope.Add("urn:github:name");
                     options.SaveTokens = true;

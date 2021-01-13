@@ -64,6 +64,7 @@ namespace Netptune.App
                 options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
                 options.GitHubClientId = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
                 options.GitHubSecret = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
+                options.GitHubCallbackPath = $"{Configuration["Origin"]}/api/auth/github-callback";
             });
 
             services.AddNetptuneRedis(options =>
