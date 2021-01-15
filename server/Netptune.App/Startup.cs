@@ -68,7 +68,7 @@ namespace Netptune.App
 
             services.AddNetptuneRedis(options =>
             {
-                options.Connection = ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL")) ?? "localhost";
+                options.Connection = ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL"));
             });
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
@@ -224,7 +224,7 @@ namespace Netptune.App
 
         private static string ParseRedis(string value)
         {
-            if (value is null) return null;
+            if (value is null) return "localhost";
 
             var conn = value
                 .Replace("//", "")

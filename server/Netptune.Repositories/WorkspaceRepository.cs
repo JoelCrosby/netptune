@@ -51,13 +51,15 @@ namespace Netptune.Repositories
                     .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
             }
 
-            return Entities.FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+            return Entities
+                .IsReadonly(isReadonly)
+                .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
         }
 
-        public Task<List<Workspace>> GetWorkspaces(AppUser user)
+        public Task<List<Workspace>> GetUserWorkspaces(string userId)
         {
             return Context.WorkspaceAppUsers
-                .Where(x => x.UserId == user.Id)
+                .Where(x => x.UserId == userId)
                 .Select(w => w.Workspace)
                 .Where(x => !x.IsDeleted)
                 .ToListAsync();

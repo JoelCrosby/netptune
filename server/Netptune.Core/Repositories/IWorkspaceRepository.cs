@@ -14,7 +14,7 @@ namespace Netptune.Core.Repositories
 
         Task<Workspace> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false);
 
-        Task<List<Workspace>> GetWorkspaces(AppUser user);
+        Task<List<Workspace>> GetUserWorkspaces(string userId);
 
         Task<bool> Exists(string slug);
     }
