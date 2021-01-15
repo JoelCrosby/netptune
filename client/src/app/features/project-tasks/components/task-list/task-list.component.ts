@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
+import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -16,7 +16,7 @@ export class TaskListComponent {
   constructor(private dialog: MatDialog, private store: Store) {}
 
   showAddModal() {
-    this.dialog.open(TaskDialogComponent, {
+    this.dialog.open(CreateTaskDialogComponent, {
       width: '600px',
     });
   }
