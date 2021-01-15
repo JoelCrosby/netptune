@@ -25,7 +25,6 @@ export class WorkspacesEffects {
       ofType('[WORKSPACES]: Init'),
       withLatestFrom(this.store.select(selectIsAuthenticated)),
       filter(([_, isAuth]) => isAuth),
-      tap(([_, isAuth]) => console.log({ isAuth })),
       map(() => actions.loadWorkspaces())
     )
   );
