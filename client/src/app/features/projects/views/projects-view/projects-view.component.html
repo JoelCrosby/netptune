@@ -7,6 +7,14 @@
   >
   </app-page-header>
 
-  <app-project-list></app-project-list>
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="page-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-template #elseTemplate>
+    <app-project-list></app-project-list>
+  </ng-template>
 
 </app-page-container>

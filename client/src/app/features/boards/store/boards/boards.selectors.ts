@@ -19,7 +19,7 @@ export const selectBoardsEntities = createSelector(
 
 export const selectBoardsLoading = createSelector(
   selectBoardsFeature,
-  (state: BoardsState) => state.loading && !state.loaded
+  (state: BoardsState) => state.loading
 );
 
 export const selectBoardsLoaded = createSelector(

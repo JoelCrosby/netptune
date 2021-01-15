@@ -1,44 +1,36 @@
-<ng-container *ngIf="loading$ | async; else elseTemplate">
-  <div class="users-loading">
-    <mat-spinner diameter="32"></mat-spinner>
-  </div>
-</ng-container>
+<div class="app-list mb-5">
 
-<ng-template #elseTemplate>
-  <div class="app-list mb-5">
+  <app-user-list-item
+    *ngFor="let user of users$ | async as users; let i=index; trackBy:trackById;"
+    [user]="user"
+  >
 
-    <app-user-list-item
-      *ngFor="let user of users$ | async as users; let i=index; trackBy:trackById;"
-      [user]="user"
+    <button
+      class="app-list-item-action"
+      cdkDragHandle
+      mat-icon-button
+      aria-label="more"
+      matTooltip="click for more options. click and hold to drag task"
+      [matTooltipShowDelay]="1200"
+      [matMenuTriggerData]="{ user: user }"
+      [matMenuTriggerFor]="menu"
     >
+      <mat-icon class="app-list-drag-icon">
+        drag_indicator
+      </mat-icon>
+    </button>
 
-      <button
-        class="app-list-item-action"
-        cdkDragHandle
-        mat-icon-button
-        aria-label="more"
-        matTooltip="click for more options. click and hold to drag task"
-        [matTooltipShowDelay]="1200"
-        [matMenuTriggerData]="{ user: user }"
-        [matMenuTriggerFor]="menu"
-      >
-        <mat-icon class="app-list-drag-icon">
-          drag_indicator
-        </mat-icon>
-      </button>
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item (click)="onRemoveClicked(user)" *ngIf="!user.isWorkspaceOwner">
+          <mat-icon class="material-icons-outlined">
+            delete
+          </mat-icon>
+          <span>Remove user from workspace</span>
+        </button>
+      </ng-template>
+    </mat-menu>
 
-      <mat-menu #menu="matMenu">
-        <ng-template matMenuContent>
-          <button mat-menu-item (click)="onRemoveClicked(user)" *ngIf="!user.isWorkspaceOwner">
-            <mat-icon class="material-icons-outlined">
-              delete
-            </mat-icon>
-            <span>Remove user from workspace</span>
-          </button>
-        </ng-template>
-      </mat-menu>
+  </app-user-list-item>
 
-    </app-user-list-item>
-
-  </div>
-</ng-template>
+</div>

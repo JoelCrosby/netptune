@@ -7,28 +7,37 @@
   >
   </app-page-header>
 
-  <app-workspace-list></app-workspace-list>
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="page-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
 
-  <div class="build-info" *ngIf="buildInfo$ | async as buildInfo">
-    <a
-      class="gitHashShort"
-      [href]="'https://github.com/JoelCrosby/Netptune/commit/' + buildInfo.gitHash"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {{ buildInfo.gitHashShort }}
-    </a>
-    <span> | </span>
-    <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
-    <span> | </span>
-    <a
-      class="runId"
-      [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Github Action
-    </a>
-  </div>
+  <ng-template #elseTemplate>
+    <app-workspace-list></app-workspace-list>
+
+    <div class="build-info" *ngIf="buildInfo$ | async as buildInfo">
+      <a
+        class="gitHashShort"
+        [href]="'https://github.com/JoelCrosby/Netptune/commit/' + buildInfo.gitHash"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {{ buildInfo.gitHashShort }}
+      </a>
+      <span> | </span>
+      <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
+      <span> | </span>
+      <a
+        class="runId"
+        [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Github Action
+      </a>
+    </div>
+  </ng-template>
+
 
 </app-page-container>

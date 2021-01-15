@@ -8,6 +8,13 @@
 
   </app-page-header>
 
-  <app-boards-grid></app-boards-grid>
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="page-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <app-boards-grid></app-boards-grid>
+  </ng-template>
 
 </app-page-container>
