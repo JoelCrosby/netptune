@@ -35,6 +35,7 @@ import {
   filter,
   first,
   map,
+  share,
   takeUntil,
   tap,
   withLatestFrom,
@@ -91,7 +92,8 @@ export class TaskDetailDialogComponent
       tap((task) => {
         this.buildForm(task);
         this.loadComments(task);
-      })
+      }),
+      share()
     );
 
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);

@@ -22,8 +22,6 @@ export class AuthProviderResolver implements Resolve<Observable<boolean>> {
       pictureUrl: route.queryParamMap.get('pictureUrl'),
     };
 
-    console.log({ token });
-
     this.store.dispatch(loginSuccess({ token }));
 
     return of(true);
