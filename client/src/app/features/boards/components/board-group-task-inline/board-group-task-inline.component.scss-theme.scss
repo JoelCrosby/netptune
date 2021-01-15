@@ -17,4 +17,14 @@
     background-color: mat-color($background, card);
     box-shadow: 1px 2px 4px mat-color($foreground, text, .1) !important;
   }
+
+  .inline-task-info-message {
+    border-radius: 50%;
+    background-color: mat-color($primary);
+    text-align: center;
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    color: rgb(255, 255, 255);
+  }
 }
