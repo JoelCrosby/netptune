@@ -8,11 +8,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { selectSideBarTransparent } from '@core/core.route.selectors';
 import * as LayoutSelectors from '@core/store/layout/layout.selectors';
-import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -37,9 +36,6 @@ export class AppComponent implements OnInit {
     this.sideNavOpen$ = combineLatest([
       this.store.select(LayoutSelectors.selectSideNavOpen),
       this.store.select(AuthSelectors.selectIsAuthenticated),
-    ]).pipe(
-      tap(([_, isAuth]) => isAuth && this.store.dispatch(loadWorkspaces())),
-      map(([isNavOpen, isAuth]) => isAuth && isNavOpen)
-    );
+    ]).pipe(map(([isNavOpen, isAuth]) => isAuth && isNavOpen));
   }
 }
