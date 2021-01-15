@@ -18,6 +18,14 @@
   >
   </textarea>
   <div class="inline-task-footer">
+    <div
+      *ngIf="message$ | async as message"
+      class="inline-task-info-message"
+      [matTooltip]="message"
+    >
+      !
+    </div>
+
     <app-spinner
       *ngIf="createInProgress$ | async"
       diameter="1.4rem"

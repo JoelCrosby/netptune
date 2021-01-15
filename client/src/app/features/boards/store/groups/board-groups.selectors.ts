@@ -4,6 +4,7 @@ import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { selectSelectedTagCount } from '@core/store/tags/tags.selectors';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
 
@@ -131,10 +132,8 @@ export const selectBoardGroupsUsersModel = createSelector(
 
 export const selectBoardGroupTaskAssignee = createSelector(
   selectCurrentUserId,
-  selectBoardGroupsSelectedUsers,
-  (currentUserId: string, selectedUsers: AppUser[]): string => {
-    const selectedUserIds = selectedUsers.map((user) => user.id);
-
+  selectBoardGroupsSelectedUserIds,
+  (currentUserId: string, selectedUserIds: string[]): string => {
     if (selectedUserIds.length === 1) {
       return selectedUserIds[0];
     }
@@ -156,4 +155,28 @@ export const selectOnlyFlagged = createSelector(
 export const selectSearchTerm = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.searchTerm
+);
+
+export const selectCreateBoardGroupTaskMessage = createSelector(
+  selectCurrentUserId,
+  selectBoardGroupTaskAssignee,
+  selectOnlyFlagged,
+  selectSearchTerm,
+  selectSelectedTagCount,
+  (
+    currentUserId: string,
+    assigneeId: string,
+    onlyFlagged: boolean,
+    term: string,
+    tagCount: number
+  ): string | null => {
+    const differentUser = currentUserId !== assigneeId;
+    const filterApplied = onlyFlagged || term || tagCount;
+
+    if (differentUser || filterApplied) {
+      return 'The filters currently applied may cause the newly created task to be hidden.';
+    }
+
+    return null;
+  }
 );

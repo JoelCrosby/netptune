@@ -56,6 +56,7 @@ export class BoardGroupTaskInlineComponent
   currentWorkspace$: Observable<Workspace>;
   currentProjectId$: Observable<number>;
   currentUser$: Observable<UserResponse>;
+  message$: Observable<string | null>;
 
   createInProgress$ = new BehaviorSubject<boolean>(false);
 
@@ -98,6 +99,9 @@ export class BoardGroupTaskInlineComponent
       select(BoardGroupSelectors.selectBoardProjectId)
     );
     this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+    this.message$ = this.store.select(
+      BoardGroupSelectors.selectCreateBoardGroupTaskMessage
+    );
   }
 
   ngOnDestroy() {
