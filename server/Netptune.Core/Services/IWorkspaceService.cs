@@ -16,7 +16,7 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug);
 
-        Task<List<Workspace>> GetWorkspaces();
+        Task<List<Workspace>> GetUserWorkspaces();
 
         Task<List<Workspace>> GetAll();
 

@@ -121,11 +121,11 @@ namespace Netptune.Services
             return WorkspaceRepository.GetBySlug(slug);
         }
 
-        public async Task<List<Workspace>> GetWorkspaces()
+        public async Task<List<Workspace>> GetUserWorkspaces()
         {
-            var user = await IdentityService.GetCurrentUser();
+            var userId = await IdentityService.GetCurrentUserId();
 
-            return await WorkspaceRepository.GetWorkspaces(user);
+            return await WorkspaceRepository.GetUserWorkspaces(userId);
         }
 
         public Task<List<Workspace>> GetAll()

@@ -37,7 +37,7 @@ namespace Netptune.App.Controllers
         [Produces("application/json", Type = typeof(List<Workspace>))]
         public async Task<IActionResult> GetWorkspaces()
         {
-            var result = await WorkspaceService.GetWorkspaces();
+            var result = await WorkspaceService.GetUserWorkspaces();
 
             return Ok(result);
         }
