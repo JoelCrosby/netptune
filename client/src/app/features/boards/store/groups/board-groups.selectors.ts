@@ -1,3 +1,4 @@
+import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
@@ -125,6 +126,20 @@ export const selectBoardGroupsUsersModel = createSelector(
       ...user,
       selected: selectedUserIds.has(user.id),
     }));
+  }
+);
+
+export const selectBoardGroupTaskAssignee = createSelector(
+  selectCurrentUserId,
+  selectBoardGroupsSelectedUsers,
+  (currentUserId: string, selectedUsers: AppUser[]): string => {
+    const selectedUserIds = selectedUsers.map((user) => user.id);
+
+    if (selectedUserIds.length === 1) {
+      return selectedUserIds[0];
+    }
+
+    return currentUserId;
   }
 );
 

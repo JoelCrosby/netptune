@@ -95,13 +95,18 @@ export class BoardGroupsEffects {
   createProjectTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.createProjectTask),
-      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
-      switchMap(([action, identifier]) =>
-        this.tasksHubService.post(identifier, action.task).pipe(
-          tap(() => this.snackbar.open('Task created')),
-          map((task) => actions.createProjectTasksSuccess({ task })),
-          catchError((error) => of(actions.createProjectTasksFail({ error })))
-        )
+      withLatestFrom(
+        this.store.select(selectors.selectBoardIdentifier),
+        this.store.select(selectors.selectBoardGroupTaskAssignee)
+      ),
+      switchMap(([action, identifier, userId]) =>
+        this.tasksHubService
+          .post(identifier, { ...action.task, assigneeId: userId })
+          .pipe(
+            tap(() => this.snackbar.open('Task created')),
+            map((task) => actions.createProjectTasksSuccess({ task })),
+            catchError((error) => of(actions.createProjectTasksFail({ error })))
+          )
       )
     )
   );
