@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { openSideNav } from '@core/store/layout/layout.actions';
-import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { openSideNav } from '@core/store/layout/layout.actions';
+import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
@@ -108,7 +109,7 @@ export class AuthEffects implements OnInitEffects {
         ofType(actions.loginSuccess),
         debounceTime(debounce, scheduler),
         tap(() => this.router.navigate(['/workspaces'])),
-        map(() => openSideNav())
+        switchMap(() => [openSideNav(), loadWorkspaces()])
       )
   );
 

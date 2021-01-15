@@ -1,21 +1,40 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { of, asyncScheduler } from 'rxjs';
-import { catchError, map, switchMap, tap, debounceTime } from 'rxjs/operators';
+import { Action, Store } from '@ngrx/store';
+import { asyncScheduler, of } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  tap,
+  throttleTime,
+  withLatestFrom,
+} from 'rxjs/operators';
 import * as actions from './workspaces.actions';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable()
 export class WorkspacesEffects {
+  init$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[WORKSPACES]: Init'),
+      withLatestFrom(this.store.select(selectIsAuthenticated)),
+      filter(([_, isAuth]) => isAuth),
+      tap(([_, isAuth]) => console.log({ isAuth })),
+      map(() => actions.loadWorkspaces())
+    )
+  );
+
   loadWorkspaces$ = createEffect(
-    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
+    ({ throttle = 800, scheduler = asyncScheduler } = {}) =>
       this.actions$.pipe(
         ofType(actions.loadWorkspaces),
-        debounceTime(debounce, scheduler),
+        throttleTime(throttle, scheduler),
         switchMap(() =>
           this.workspacesService.get().pipe(
             map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
@@ -81,11 +100,16 @@ export class WorkspacesEffects {
   );
 
   constructor(
+    private store: Store,
     private actions$: Actions<Action>,
     private workspacesService: WorkspacesService,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar
   ) {}
+
+  ngrxOnInitEffects(): Action {
+    return { type: '[WORKSPACES]: Init' };
+  }
 }
 
 const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
