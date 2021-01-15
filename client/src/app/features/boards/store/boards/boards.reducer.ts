@@ -12,6 +12,7 @@ const reducer = createReducer(
   on(actions.loadBoardsFail, (state, { error }) => ({
     ...state,
     loadingError: error,
+    loading: false,
   })),
   on(actions.loadBoardsSuccess, (state, { boards }) =>
     adapter.setAll(boards, { ...state, loading: false, loaded: true })

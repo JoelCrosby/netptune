@@ -1,20 +1,11 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkspaceAppUser } from '@core/models/appuser';
-import {
-  loadUsers,
-  removeUsersFromWorkspace,
-} from '@core/store/users/users.actions';
+import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-list',
@@ -22,9 +13,8 @@ import { startWith } from 'rxjs/operators';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, AfterViewInit {
+export class UserListComponent implements OnInit {
   users$: Observable<WorkspaceAppUser[]>;
-  loading$: Observable<boolean>;
 
   constructor(
     public snackBar: MatSnackBar,
@@ -34,13 +24,6 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.users$ = this.store.pipe(select(UsersSelectors.selectAllUsers));
-    this.loading$ = this.store
-      .select(UsersSelectors.selectUsersLoading)
-      .pipe(startWith(true));
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(loadUsers());
   }
 
   trackById(_: number, user: WorkspaceAppUser) {

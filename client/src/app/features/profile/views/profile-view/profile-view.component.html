@@ -7,10 +7,17 @@
   >
   </app-page-header>
 
-  <app-update-profile></app-update-profile>
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="page-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #elseTemplate>
 
-  <div class="form-seperator"></div>
+    <app-update-profile></app-update-profile>
+    <div class="form-seperator"></div>
+    <app-change-password></app-change-password>
 
-  <app-change-password></app-change-password>
+  </ng-template>
 
 </app-page-container>

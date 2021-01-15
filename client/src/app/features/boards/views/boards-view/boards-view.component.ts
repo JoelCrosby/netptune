@@ -1,20 +1,31 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
+import { loadBoards } from '@boards/store/boards/boards.actions';
+import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   templateUrl: './boards-view.component.html',
   styleUrls: ['./boards-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardsViewComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+export class BoardsViewComponent implements AfterViewInit {
+  loading$ = this.store.select(selectBoardsLoading);
 
-  ngOnInit() {}
+  constructor(private dialog: MatDialog, private store: Store) {}
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {
       width: '600px',
     });
+  }
+
+  ngAfterViewInit() {
+    this.store.dispatch(loadBoards());
   }
 }

@@ -6,6 +6,13 @@
     (actionClick)="onInviteUsers()"
   ></app-page-header>
 
-  <app-user-list></app-user-list>
+  <ng-container *ngIf="loading$ | async; else elseTemplate">
+    <div class="page-loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <app-user-list></app-user-list>
+  </ng-template>
 
 </app-page-container>

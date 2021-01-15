@@ -1,12 +1,6 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-} from '@angular/core';
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
-import * as BoardActions from '@boards/store/boards/boards.actions';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -16,16 +10,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./boards-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardsGridComponent implements OnInit, AfterViewInit {
+export class BoardsGridComponent implements OnInit {
   boards$: Observable<BoardViewModel[]>;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
     this.boards$ = this.store.select(BoardSelectors.selectAllBoards);
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(BoardActions.loadBoards());
   }
 }

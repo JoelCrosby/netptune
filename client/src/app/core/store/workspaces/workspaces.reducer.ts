@@ -11,6 +11,7 @@ const reducer = createReducer(
   on(actions.loadWorkspacesFail, (state, { error }) => ({
     ...state,
     loadingError: error,
+    loading: false,
   })),
   on(actions.loadWorkspacesSuccess, (state, { workspaces }) =>
     adapter.setAll(workspaces, { ...state, loading: false, loaded: true })

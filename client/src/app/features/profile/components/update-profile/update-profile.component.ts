@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -9,7 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
-import { loadProfile, updateProfile } from '@profile/store/profile.actions';
+import { updateProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
@@ -20,8 +19,7 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UpdateProfileComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class UpdateProfileComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   onDestroy$ = new Subject();
   loadingUpdate$: Observable<boolean>;
@@ -80,10 +78,6 @@ export class UpdateProfileComponent
         })
       )
       .subscribe();
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(loadProfile());
   }
 
   ngOnDestroy() {

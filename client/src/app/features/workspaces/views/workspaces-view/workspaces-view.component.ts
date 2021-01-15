@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
+import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 
@@ -12,6 +13,7 @@ import { Store } from '@ngrx/store';
 })
 export class WorkspacesViewComponent implements OnInit {
   buildInfo$ = this.store.select(selectBuildInfo);
+  loading$ = this.store.select(selectWorkspacesLoading);
 
   constructor(private dialog: MatDialog, private store: Store) {}
 

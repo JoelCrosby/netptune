@@ -1,12 +1,14 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { exportTasks } from '@core/store/tasks/tasks.actions';
+import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
@@ -19,7 +21,10 @@ import { first, switchMap } from 'rxjs/operators';
   styleUrls: ['./project-tasks-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectTasksViewComponent implements OnInit, OnDestroy {
+export class ProjectTasksViewComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  loading$ = this.store.select(selectTasksLoading);
+
   secondaryActions: HeaderAction[] = [
     {
       label: 'Export Tasks',
@@ -47,6 +52,10 @@ export class ProjectTasksViewComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe();
+  }
+
+  ngAfterViewInit() {
+    this.store.dispatch(loadProjectTasks());
   }
 
   ngOnDestroy() {
