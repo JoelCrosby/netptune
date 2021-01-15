@@ -11,7 +11,7 @@ import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { HeaderAction } from '@core/types/header-action';
-import { TaskDialogComponent } from '@entry/dialogs/task-dialog/task-dialog.component';
+import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { Store } from '@ngrx/store';
 import { from } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
@@ -63,7 +63,7 @@ export class ProjectTasksViewComponent
   }
 
   showAddModal() {
-    this.dialog.open(TaskDialogComponent, {
+    this.dialog.open(CreateTaskDialogComponent, {
       width: '600px',
     });
   }

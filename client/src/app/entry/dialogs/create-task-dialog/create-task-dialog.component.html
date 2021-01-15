@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>
-  {{ task ? 'Edit Task' : 'Add new Task'}}
+  Add new Task
 </h1>
 
 <form [formGroup]="projectFromGroup">
@@ -37,7 +37,7 @@
       <mat-option>None</mat-option>
       <mat-option
         *ngFor="let project of projects$ | async"
-        [value]="project"
+        [value]="project.id"
       >
         {{ project.name }}
       </mat-option>
@@ -84,6 +84,6 @@
     (click)="saveClicked()"
     type="button"
   >
-    {{ task ? 'Save Changes' : 'Save Task'}}
+    Save Task
   </button>
 </div>
