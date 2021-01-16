@@ -18,9 +18,7 @@ export class TagsService {
   constructor(private http: HttpClient) {}
 
   get() {
-    return this.http.get<Tag[]>(
-      environment.apiEndpoint + 'api/tags/workspace/'
-    );
+    return this.http.get<Tag[]>(environment.apiEndpoint + 'api/tags/workspace');
   }
 
   getForTask(systemId: string) {
