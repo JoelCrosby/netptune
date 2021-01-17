@@ -124,6 +124,7 @@ namespace Netptune.Services.Authentication
                     options.Scope.Add("read:user");
                     options.Scope.Add("urn:github:name");
                     options.SaveTokens = true;
+                    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Events.OnCreatingTicket = async context =>
                     {
                         var token = context.AccessToken;
