@@ -40,6 +40,7 @@ RUN dotnet publish "Netptune.App.csproj" -c Release -o /app/publish /p:SourceRev
 
 FROM base AS final
 WORKDIR /app
+COPY nginx.conf.sigil .
 COPY --from=publish /app/publish .
 COPY --from=client-build /client/dist ./wwwroot/dist
 ENTRYPOINT ["dotnet", "Netptune.App.dll"]
