@@ -46,8 +46,8 @@ namespace Netptune.Core.Entities
             {
                 Name = options.Name,
                 Description = options.Description,
-                CreatedByUserId = options.User.Id,
-                OwnerId = options.User.Id,
+                CreatedByUserId = options.UserId,
+                OwnerId = options.UserId,
                 RepositoryUrl = options.RepositoryUrl,
                 Key = options.Key,
             };
@@ -55,7 +55,7 @@ namespace Netptune.Core.Entities
             project.ProjectUsers.Add(new ProjectUser
             {
                 ProjectId = project.Id,
-                UserId = options.User.Id
+                UserId = options.UserId
             });
 
             project.ProjectBoards.Add(GenerateDefaultBoard(project, options.WorkspaceId));
@@ -118,7 +118,7 @@ namespace Netptune.Core.Entities
 
         public string Key { get; set; }
 
-        public AppUser User { get; set; }
+        public string UserId { get; set; }
 
         public int WorkspaceId { get; set; }
     }
