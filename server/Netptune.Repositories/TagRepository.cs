@@ -74,7 +74,6 @@ namespace Netptune.Repositories
             };
         }
 
-
         public Task<bool> Exists(string value, int workspaceId)
         {
             var trimmed = value.Trim();

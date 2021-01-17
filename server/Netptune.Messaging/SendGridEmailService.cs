@@ -52,20 +52,20 @@ namespace Netptune.Messaging
 
             var modelList = models.ToList();
 
-            var subjects = modelList.Select(model => model.Subject).ToList();
+            var subjects = modelList.ConvertAll(model => model.Subject);
 
             var from = new EmailAddress(Options.DefaultFromAddress, Options.DefaultFromDisplayName);
-            var to = modelList.Select(model => new EmailAddress(model.SendTo.Address, model.SendTo.DisplayName)).ToList();
+            var to = modelList.ConvertAll(model => new EmailAddress(model.SendTo.Address, model.SendTo.DisplayName));
 
             var firstEmail = modelList.FirstOrDefault() ?? throw new ArgumentNullException(nameof(modelList), "models enumerable was empty.");
 
-            var substitutions = modelList.Select(model => new Dictionary<string, string>
+            var substitutions = modelList.ConvertAll(model => new Dictionary<string, string>
             {
                 {"-name-", model.Name},
                 {"-action-", model.Action},
                 {"-pre-header-", model.PreHeader},
                 {"-link-", model.Link},
-            }).ToList();
+            });
 
             var plainTextContent = firstEmail.RawTextContent;
 

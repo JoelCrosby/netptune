@@ -115,7 +115,7 @@ namespace Netptune.Services
 
             if (lower.StartsWith("http://"))
             {
-                return $"https://{lower.Substring(6, lower.Length - 6)}";
+                return $"https://{lower[6..]}";
             }
 
             return $"https://{lower}";

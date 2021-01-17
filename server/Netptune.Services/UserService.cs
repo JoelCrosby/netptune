@@ -103,7 +103,7 @@ namespace Netptune.Services
             async Task<HashSet<string>> InviteExistingUsersDirectly()
             {
                 var users = await UserRepository.GetByEmailRange(emailList, true);
-                var userIds = users.Select(user => user.Id).ToList();
+                var userIds = users.ConvertAll(user => user.Id);
                 var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
                 var newUserIds = userIds.Except(existing).ToList();
 
@@ -142,7 +142,7 @@ namespace Netptune.Services
             }
 
             var users = await UserRepository.GetByEmailRange(emailList, true);
-            var userIds = users.Select(user => user.Id).ToList();
+            var userIds = users.ConvertAll(user => user.Id);
 
             if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId))
             {

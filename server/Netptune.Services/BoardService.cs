@@ -171,7 +171,7 @@ namespace Netptune.Services
 
             var results = await Boards.GetBoards(workspaceId, true);
 
-            return results.Select(result => result.ToViewModel()).ToList();
+            return results.ConvertAll(result => result.ToViewModel());
         }
 
         public async Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier)

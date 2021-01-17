@@ -27,7 +27,7 @@ namespace Netptune.Services.Import
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
 
-        private readonly HashSet<string> OptionalHeaders = new HashSet<string>
+        private readonly HashSet<string> OptionalHeaders = new()
         {
             "Tags"
         };
@@ -99,7 +99,7 @@ namespace Netptune.Services.Import
             var workspaceId = project.WorkspaceId;
 
             var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
-            var existingGroupNames = existingGroups.Select(group => group.Name.Trim().ToLowerInvariant()).ToList();
+            var existingGroupNames = existingGroups.ConvertAll(group => group.Name.Trim().ToLowerInvariant());
             var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder).Select(group => group.SortOrder).FirstOrDefault() + 1;
 
             var newGroups = groups.Where(group => !existingGroupNames.Contains(group));

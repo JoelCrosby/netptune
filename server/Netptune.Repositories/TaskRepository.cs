@@ -74,7 +74,7 @@ namespace Netptune.Repositories
 
             if (!hasProjectId) return null;
 
-            var projectKey = parts.First();
+            var projectKey = parts[0];
 
             var workspaceIds = await Context.Workspaces
                 .AsNoTracking()

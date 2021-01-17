@@ -119,7 +119,7 @@ namespace Netptune.Services
             if (ids is null) throw new ArgumentNullException(nameof(ids));
 
             var tasks = await TaskRepository.GetAllByIdAsync(ids);
-            var taskIds = tasks.Select(task => task.Id).ToList();
+            var taskIds = tasks.ConvertAll(task => task.Id);
 
             await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
             await TaskRepository.DeletePermanent(taskIds);
