@@ -120,7 +120,7 @@ namespace Netptune.Services.Authentication
                 {
                     options.ClientId = authenticationOptions.GitHubClientId;
                     options.ClientSecret = authenticationOptions.GitHubSecret;
-                    options.CallbackPath = new PathString("/api/auth/github-callback");
+                    options.CallbackPath = "/signin-github";
                     options.Scope.Add("read:user");
                     options.Scope.Add("urn:github:name");
                     options.SaveTokens = true;
