@@ -72,7 +72,6 @@ namespace Netptune.Services.Authentication
 
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -82,8 +81,7 @@ namespace Netptune.Services.Authentication
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = authenticationOptions.Issuer,
                         ValidAudience = authenticationOptions.Audience,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
                     };
                     options.Events = new JwtBearerEvents
                     {

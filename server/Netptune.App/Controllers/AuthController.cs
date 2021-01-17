@@ -204,7 +204,7 @@ namespace Netptune.App.Controllers
             return Challenge(new AuthenticationProperties
             {
                 RedirectUri = "/api/auth/provider-login-redirect",
-                IsPersistent = true
+                IsPersistent = true,
             },"GitHub");
         }
 
