@@ -42,7 +42,7 @@ namespace Netptune.Services
                     Name = request.Name,
                     Description = request.Description,
                     Key = projectKey,
-                    User = user,
+                    UserId = user.Id,
                     WorkspaceId = workspace.Id,
                     RepositoryUrl = request.RepositoryUrl
                 });
