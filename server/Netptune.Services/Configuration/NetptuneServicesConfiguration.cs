@@ -36,7 +36,6 @@ namespace Netptune.Services.Configuration
             services.AddTransient<ITaskExportService, TaskExportService>();
             services.AddTransient<IWebService, WebService>();
 
-
             services.AddTransient<IUserConnectionService, UserConnectionService>();
 
             services.AddScoped<IIdentityService, IdentityService>();

@@ -48,7 +48,7 @@ namespace Netptune.Repositories
 
             var searchQuery = searchTerm is null
                 ? null
-                : $"AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
+                : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
 
             var results = await connection.QueryMultipleAsync(@$"
                 SELECT b.id
@@ -136,7 +136,7 @@ namespace Netptune.Repositories
                 if (row.Board_Group_Id == lastGroup?.Id && !row.Task_Id.HasValue)
                 {
                     return result;
-                } 
+                }
 
                 result.Add(new BoardViewGroup
                 {

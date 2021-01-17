@@ -44,7 +44,6 @@ namespace Netptune.Entities.EntityMaps
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
-
             builder
                 .HasMany(workspace => workspace.Users)
                 .WithMany(user => user.Workspaces)

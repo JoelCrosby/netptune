@@ -40,7 +40,7 @@ namespace Netptune.Services
         public string GetPictureUrl()
         {
             return GetClaimValue("Provider-Picture-Url");
-        } 
+        }
 
         public Task<AppUser> GetCurrentUser()
         {

@@ -14,7 +14,7 @@ namespace Netptune.Core.Models.Repository
 
         public bool SortDescending { get; set; }
 
-        public static PageQuery Default => new PageQuery
+        public static PageQuery Default => new()
         {
             PageSize = 30,
             Page = 0

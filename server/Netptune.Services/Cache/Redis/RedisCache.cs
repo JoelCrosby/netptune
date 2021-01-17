@@ -180,7 +180,7 @@ namespace Netptune.Services.Cache.Redis
 
         public Task SetAsync<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
         {
-            if (key is null) return default;
+            if (key is null) return Task.CompletedTask;
 
             var json = JsonSerializer.Serialize(value);
             return Db.StringSetAsync(key, json, options.AbsoluteExpirationRelativeToNow);

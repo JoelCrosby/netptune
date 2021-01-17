@@ -36,7 +36,7 @@ namespace Netptune.Repositories
         {
             var comments = await GetCommentsForTask(taskId, true);
 
-            return comments.Select(comment => comment.ToViewModel()).ToList();
+            return comments.ConvertAll(comment => comment.ToViewModel());
         }
 
         public async Task<CommentViewModel> GetCommentViewModel(int id)
