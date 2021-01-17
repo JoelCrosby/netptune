@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
@@ -112,6 +113,16 @@ namespace Netptune.App
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseForwardedHeaders();
+
+            app.Use((context, next) =>
+            {
+                foreach (var (key, value) in context.Request.Headers)
+                {
+                    Log.Information($"[Header] {key}:{value}");
+                }
+
+                return next();
+            });
 
             if (env.IsDevelopment())
             {
