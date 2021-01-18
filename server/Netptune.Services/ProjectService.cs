@@ -69,9 +69,14 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public Task<ProjectViewModel> GetProject(int id)
+        public async Task<ProjectViewModel> GetProject(string projectKey)
         {
-            return ProjectRepository.GetProjectViewModel(id);
+            var workspaceKey = IdentityService.GetWorkspaceKey();
+            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+
+            if (workspaceId is null) return null;
+
+            return await ProjectRepository.GetProjectViewModel(projectKey, workspaceId.Value);
         }
 
         public Task<List<ProjectViewModel>> GetProjects()

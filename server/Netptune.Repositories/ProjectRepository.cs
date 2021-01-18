@@ -54,6 +54,19 @@ namespace Netptune.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId)
+        {
+            Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
+
+            return Entities
+                .Where(project => project.Key == key && !project.IsDeleted)
+                .Include(project => project.Workspace)
+                .Include(project => project.Owner)
+                .AsNoTracking()
+                .Select(project => GetViewModel(project))
+                .FirstOrDefaultAsync();
+        }
+
         public Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
         {
             return Entities
@@ -70,6 +83,7 @@ namespace Netptune.Repositories
             return new ProjectViewModel
             {
                 Id = project.Id,
+                Key = project.Key,
                 Name = project.Name,
                 Description = project.Description,
                 RepositoryUrl = project.RepositoryUrl,

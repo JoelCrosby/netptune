@@ -24,7 +24,7 @@ namespace Netptune.App.Controllers
             ProjectService = projectService;
         }
 
-        // GET: api/Projects/5
+        // GET: api/projects/5
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(List<Project>))]
@@ -35,21 +35,21 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // GET: api/Projects/5
-        [HttpGet("{id}")]
+        // GET: api/projects/5
+        [HttpGet("{key}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json", Type = typeof(Project))]
-        public async Task<IActionResult> GetProject([FromRoute] int id)
+        public async Task<IActionResult> GetProject([FromRoute] string key)
         {
-            var result = await ProjectService.GetProject(id);
+            var result = await ProjectService.GetProject(key);
 
             if (result is null) return NotFound();
 
             return Ok(result);
         }
 
-        // PUT: api/Projects
+        // PUT: api/projects
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,7 +63,7 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // POST: api/Projects
+        // POST: api/projects
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json", Type = typeof(Project))]
@@ -74,7 +74,7 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/Projects/5
+        // DELETE: api/projects/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

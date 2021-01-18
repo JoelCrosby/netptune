@@ -21,15 +21,16 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
 import { AvatarFontSizePipe } from './pipes/avatar-font-size.pipe';
 import { PxPipe } from './pipes/px.pipe';
 import { EditorComponent } from './components/editor/editor.component';
+import { FormInputComponent } from './components/form-input/form-input.component';
 
 @NgModule({
   declarations: [
-    PageContainerComponent,
-    UsernamePipe,
-    AvatarComponent,
-    PxPipe,
     AvatarPipe,
     AvatarFontSizePipe,
+    PageContainerComponent,
+    UsernamePipe,
+    PxPipe,
+    AvatarComponent,
     SpinnerComponent,
     PageHeaderComponent,
     InlineEditInputComponent,
@@ -44,6 +45,7 @@ import { EditorComponent } from './components/editor/editor.component';
     AutocompleteChipsComponent,
     ImageCropperComponent,
     EditorComponent,
+    FormInputComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -51,7 +53,6 @@ import { EditorComponent } from './components/editor/editor.component';
     UsernamePipe,
     PxPipe,
     AvatarComponent,
-    AvatarPipe,
     SpinnerComponent,
     PageHeaderComponent,
     InlineEditInputComponent,
@@ -66,6 +67,7 @@ import { EditorComponent } from './components/editor/editor.component';
     AutocompleteChipsComponent,
     ImageCropperComponent,
     EditorComponent,
+    FormInputComponent,
   ],
 })
 export class StaticModule {}

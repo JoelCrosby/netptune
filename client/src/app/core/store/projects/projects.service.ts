@@ -15,6 +15,12 @@ export class ProjectsService {
     );
   }
 
+  getProjectDetail(projectKey: string) {
+    return this.http.get<ProjectViewModel>(
+      environment.apiEndpoint + `api/projects/${projectKey}`
+    );
+  }
+
   post(project: AddProjectRequest) {
     return this.http.post<ProjectViewModel>(
       environment.apiEndpoint + 'api/projects',

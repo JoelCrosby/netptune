@@ -22,6 +22,23 @@ const reducer = createReducer(
     })
   ),
 
+  // Load Project Detail
+
+  on(actions.loadProjectDetail, (state) => ({
+    ...state,
+    projectDetailLoading: true,
+  })),
+  on(actions.loadProjectDetailFail, (state, { error }) => ({
+    ...state,
+    loadingError: error,
+    projectDetailLoading: false,
+  })),
+  on(actions.loadProjectDetailSuccess, (state, { project }) => ({
+    ...state,
+    projectDetail: project,
+    projectDetailLoading: false,
+  })),
+
   // Create Project
 
   on(actions.createProject, (state) => ({ ...state, loading: true })),

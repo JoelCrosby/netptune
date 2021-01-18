@@ -20,6 +20,23 @@ export const loadProjectsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Load Project Detail
+
+export const loadProjectDetail = createAction(
+  '[Projects] Load Project Detail',
+  props<{ projectKey: string }>()
+);
+
+export const loadProjectDetailSuccess = createAction(
+  '[Projects] Load Project Detail Success ',
+  props<{ project: ProjectViewModel }>()
+);
+
+export const loadProjectDetailFail = createAction(
+  '[Projects] Load Project Detail Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
 // Create Project
 
 export const createProject = createAction(
