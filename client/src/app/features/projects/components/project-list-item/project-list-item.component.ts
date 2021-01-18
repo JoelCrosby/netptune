@@ -30,18 +30,18 @@ export class ProjectListItemComponent implements OnInit {
       filter((val) => !!val),
       first(),
       map((identifier) => [
-          {
-            label: 'Go To Board',
-            isLink: true,
-            icon: 'assessment',
-            routerLink: [
-              '/',
-              identifier,
-              'boards',
-              this.project.defaultBoardIdentifier,
-            ],
-          },
-        ])
+        {
+          label: 'Go To Board',
+          isLink: true,
+          icon: 'assessment',
+          routerLink: [
+            '/',
+            identifier,
+            'boards',
+            this.project.defaultBoardIdentifier,
+          ],
+        },
+      ])
     );
   }
 

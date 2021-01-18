@@ -6,6 +6,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectDetailViewComponent } from './views/project-detail-view/project-detail-view.component';
 import { ProjectListItemComponent } from './components/project-list-item/project-list-item.component';
+import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { ProjectListItemComponent } from './components/project-list-item/project
     ProjectListComponent,
     ProjectDetailViewComponent,
     ProjectListItemComponent,
+    ProjectDetailComponent,
   ],
   imports: [SharedModule, StaticModule, ProjectsRoutingModule],
   providers: [],

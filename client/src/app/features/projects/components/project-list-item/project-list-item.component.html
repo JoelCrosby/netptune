@@ -1,12 +1,12 @@
-<app-card-list-item
+<a [routerLink]="[ '.', project.key ]">
+  <app-card-list-item
   [title]="project.name"
   [description]="project.description"
   [actions]="actions$ | async"
   (delete)="onDeleteClicked()"
 >
-
-  <a class="link" [href]="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
-    {{ project.repositoryUrl }}
-  </a>
-
-</app-card-list-item>
+    <a class="link" [href]="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
+      {{ project.repositoryUrl }}
+    </a>
+  </app-card-list-item>
+</a>

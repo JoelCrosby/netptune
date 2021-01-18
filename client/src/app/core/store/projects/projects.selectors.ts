@@ -19,6 +19,16 @@ export const selectProjectsLoading = createSelector(
   (state: ProjectsState) => state.loading && !state.loaded
 );
 
+export const selectProjectDetailLoading = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.projectDetailLoading
+);
+
+export const selectProjectDetail = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.projectDetail
+);
+
 export const selectProjectsLoaded = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.loaded

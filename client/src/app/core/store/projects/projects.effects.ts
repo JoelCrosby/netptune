@@ -8,10 +8,10 @@ import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
-  debounceTime,
   map,
   switchMap,
   tap,
+  throttleTime,
   withLatestFrom,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
@@ -20,11 +20,25 @@ import { ProjectsService } from './projects.service';
 
 @Injectable()
 export class ProjectsEffects {
+  loadProjectDetail$ = createEffect(
+    ({ throttle = 200, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.loadProjectDetail),
+        throttleTime(throttle, scheduler),
+        switchMap((action) =>
+          this.projectsService.getProjectDetail(action.projectKey).pipe(
+            map((project) => actions.loadProjectDetailSuccess({ project })),
+            catchError((error) => of(actions.loadProjectDetailFail({ error })))
+          )
+        )
+      )
+  );
+
   loadProjects$ = createEffect(
-    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
+    ({ throttle = 200, scheduler = asyncScheduler } = {}) =>
       this.actions$.pipe(
         ofType(actions.loadProjects, selectWorkspace),
-        debounceTime(debounce, scheduler),
+        throttleTime(throttle, scheduler),
         switchMap(() =>
           this.projectsService.get().pipe(
             map((projects) => actions.loadProjectsSuccess({ projects })),

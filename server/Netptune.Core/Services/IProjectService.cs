@@ -12,7 +12,7 @@ namespace Netptune.Core.Services
     {
         Task<List<ProjectViewModel>> GetProjects();
 
-        Task<ProjectViewModel> GetProject(int id);
+        Task<ProjectViewModel> GetProject(string key);
 
         Task<ProjectViewModel> UpdateProject(Project project);
 

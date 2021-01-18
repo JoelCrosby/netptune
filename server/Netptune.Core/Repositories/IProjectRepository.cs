@@ -13,6 +13,8 @@ namespace Netptune.Core.Repositories
 
         Task<ProjectViewModel> GetProjectViewModel(int id);
 
+        Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId);
+
         Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
 
         Task<string> GenerateProjectKey(string projectName, int workspaceId);
