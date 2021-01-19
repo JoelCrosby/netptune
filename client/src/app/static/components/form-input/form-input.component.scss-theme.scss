@@ -1,0 +1,35 @@
+@import '~@angular/material/theming';
+
+@mixin form-control-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .form-control-label {
+    color: mat-color($foreground, text, .6);
+  }
+
+  .form-control-prefix {
+    opacity: .6;
+  }
+
+  .form-control-input {
+    background-color: transparent;
+    border-color: mat-color($foreground, text, .1) !important;
+
+    &:focus-within,
+    &.active {
+      border-color: mat-color($primary) !important;
+    }
+
+    &.invalid {
+      border-color: mat-color($warn) !important;
+    }
+
+    mat-icon {
+      color: mat-color($foreground, text, .1) !important;
+    }
+  }
+}
