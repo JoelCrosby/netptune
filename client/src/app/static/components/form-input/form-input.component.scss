@@ -1,0 +1,48 @@
+:host {
+  width: inherit;
+}
+
+
+.form-control-prefix {
+  padding-left: .8rem;
+}
+
+.form-control-input {
+  border: 2px solid;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: .4rem;
+  transition: background-color .24s ease-out;
+  margin-bottom: 1.4rem;
+  width: inherit;
+  max-width: inherit;
+}
+
+label {
+  display: block;
+  margin-bottom: .4rem;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .125px;
+  width: inherit;
+  max-width: inherit;
+}
+
+input {
+  appearance: none;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  outline: none;
+  line-height: 2.5rem;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  width: 100%;
+
+  &::placeholder {
+    opacity: .6;
+  }
+}

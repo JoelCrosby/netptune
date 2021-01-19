@@ -39,6 +39,7 @@
 @import './app/static/components/image-cropper/image-cropper.component.scss-theme.scss';
 @import './app/static/components/editor/editor.component.scss-theme.scss';
 @import './app/static/components/inline-text-area/inline-text-area.component.scss-theme.scss';
+@import './app/static/components/form-input/form-input.component.scss-theme.scss';
 
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme.scss';
 @import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme.scss';
@@ -73,6 +74,7 @@
   @include component-theme($theme);
   @include lists-theme($theme);
   @include shell-theme($theme);
+  @include form-control-input-theme($theme);
   @include baords-theme($theme);
   @include spinner-theme($theme);
   @include avatar-theme($theme);

@@ -1,1 +1,39 @@
-<p>form-input works!</p>
+<label
+  *ngIf="label"
+  [for]="name"
+  class="form-control-label"
+>
+  {{ label }}
+</label>
+
+<div
+  class="form-control-input"
+  [class.invalid]="formControl.value && formControl.touched && formControl.invalid"
+  [class.active]="formControl.value && formControl.pending"
+>
+
+  <div *ngIf="prefix" class="form-control-prefix">
+    {{ prefix }}
+  </div>
+
+  <input
+    #input
+    [id]="name"
+    [type]="type"
+    [autocomplete]="autocomplete"
+    [placeholder]="placeholder"
+    [formControl]="formControl"
+    (keydown.enter)="onSubmit()"
+    [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
+  >
+
+  <mat-icon
+    *ngIf="icon"
+    aria-hidden="false"
+    aria-label="Clear Search Icon"
+    class="material-icons-outlined"
+  >
+    {{ icon }}
+  </mat-icon>
+
+</div>
