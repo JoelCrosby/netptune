@@ -11,10 +11,12 @@ export const initialState: ProjectsState = adapter.getInitialState({
   currentProject: undefined,
   projectDetail: undefined,
   projectDetailLoading: true,
+  projectUpdateLoading: false,
 });
 
 export interface ProjectsState extends AsyncEntityState<ProjectViewModel> {
   currentProject?: ProjectViewModel;
   projectDetail?: ProjectViewModel;
   projectDetailLoading: boolean;
+  projectUpdateLoading: boolean;
 }

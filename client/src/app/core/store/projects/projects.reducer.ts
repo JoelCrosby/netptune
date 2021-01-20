@@ -54,6 +54,22 @@ const reducer = createReducer(
     })
   ),
 
+  // Update Project
+
+  on(actions.updateProject, (state) => ({
+    ...state,
+    projectUpdateLoading: true,
+  })),
+  on(actions.updateProjectFail, (state, { error }) => ({
+    ...state,
+    loadingError: error,
+    projectUpdateLoading: false,
+  })),
+  on(actions.updateProjectSuccess, (state) => ({
+    ...state,
+    projectUpdateLoading: false,
+  })),
+
   // Select Project
 
   on(actions.selectProject, (state, { project }) => ({

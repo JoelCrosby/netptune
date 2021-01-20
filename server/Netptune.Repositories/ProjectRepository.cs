@@ -49,6 +49,7 @@ namespace Netptune.Repositories
                 .Where(project => project.Id == id && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
+                .Include(project => project.ProjectBoards)
                 .AsNoTracking()
                 .Select(project => GetViewModel(project))
                 .FirstOrDefaultAsync();
@@ -62,6 +63,7 @@ namespace Netptune.Repositories
                 .Where(project => project.Key == key && !project.IsDeleted)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
+                .Include(project => project.ProjectBoards)
                 .AsNoTracking()
                 .Select(project => GetViewModel(project))
                 .FirstOrDefaultAsync();

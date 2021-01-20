@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { AddProjectRequest } from '@core/models/project';
+import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { environment } from '@env/environment';
 
@@ -23,6 +24,13 @@ export class ProjectsService {
 
   post(project: AddProjectRequest) {
     return this.http.post<ProjectViewModel>(
+      environment.apiEndpoint + 'api/projects',
+      project
+    );
+  }
+
+  put(project: UpdateProjectRequest) {
+    return this.http.put<ProjectViewModel>(
       environment.apiEndpoint + 'api/projects',
       project
     );

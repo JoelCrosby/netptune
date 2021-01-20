@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -15,6 +16,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
+import { selectCurrentWorkspaceIdentifier } from '../workspaces/workspaces.selectors';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
 
@@ -32,6 +34,18 @@ export class ProjectsEffects {
           )
         )
       )
+  );
+
+  loadProjectDetailfail$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.loadProjectDetailFail),
+        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+        tap(([_, workspaceId]) =>
+          this.router.navigate(['/', workspaceId, 'projects'])
+        )
+      ),
+    { dispatch: false }
   );
 
   loadProjects$ = createEffect(
@@ -82,7 +96,7 @@ export class ProjectsEffects {
             if (!result) return of({ type: 'NO_ACTION' });
 
             return this.projectsService.delete(project).pipe(
-              tap(() => this.snackbar.open('Project Deleted')),
+              tap(() => this.snackbar.open('Project deleted')),
               map((response) =>
                 actions.deleteProjectSuccess({
                   response,
@@ -97,6 +111,19 @@ export class ProjectsEffects {
     )
   );
 
+  updateProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateProject),
+      switchMap((action) =>
+        this.projectsService.put(action.project).pipe(
+          tap(() => this.snackbar.open('Project updated')),
+          map((project) => actions.updateProjectSuccess({ project })),
+          catchError((error) => of(actions.updateProjectFail({ error })))
+        )
+      )
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
@@ -106,6 +133,7 @@ export class ProjectsEffects {
     private projectsService: ProjectsService,
     private confirmation: ConfirmationService,
     private store: Store,
+    private router: Router,
     private snackbar: MatSnackBar
   ) {}
 }

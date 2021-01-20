@@ -8,8 +8,8 @@
 
 <div
   class="form-control-input"
-  [class.invalid]="formControl.value && formControl.touched && formControl.invalid"
-  [class.active]="formControl.value && formControl.pending"
+  [class.invalid]="control.touched && control.invalid"
+  [class.active]="control.value && control.pending"
 >
 
   <div *ngIf="prefix" class="form-control-prefix">
@@ -22,9 +22,10 @@
     [type]="type"
     [autocomplete]="autocomplete"
     [placeholder]="placeholder"
-    [formControl]="formControl"
-    (keydown.enter)="onSubmit()"
+    [value]="value"
     [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
+    (change)="onInputchange($event)"
+    (keydown)="onKeydown()"
   >
 
   <mat-icon
