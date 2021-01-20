@@ -19,6 +19,8 @@ import { Store } from '@ngrx/store';
 export class PageHeaderComponent {
   @Input() title?: string;
   @Input() actionTitle?: string;
+  @Input() backLink?: string[] | number[];
+  @Input() backLabel?: string;
   @Input() secondaryActions: HeaderAction[] = [];
   @Input() overflowActions: HeaderAction[] = [];
 

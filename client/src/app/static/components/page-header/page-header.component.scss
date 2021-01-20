@@ -1,7 +1,36 @@
 .page-header {
   display: flex;
   flex-direction: column;
-  padding: 2rem 0;
+  padding: .4rem 0 0;
+  max-height: 136px;
+  height: 136px;
+}
+
+.header-back-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .225px;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 24px;
+    height: 24px;
+    margin-right: .4rem;
+  }
+}
+
+.header-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  height: 100%;
+  align-items: center;
+}
+
+.header-main-back {
+  height: 24px;
 }
 
 .header-top-row {
@@ -9,12 +38,11 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 82px;
 
   .header-top-row-left {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    justify-content: start;
 
     .header-tool-bar {
       margin-left: 1.4rem;

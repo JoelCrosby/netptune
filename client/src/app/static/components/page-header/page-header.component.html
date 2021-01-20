@@ -1,7 +1,5 @@
 <header class="page-header">
 
-
-
   <div class="header-top-row">
     <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
       <button mat-icon-button color="accent" aria-label="Open Menu" (click)="onOpenMenu()">
@@ -11,13 +9,31 @@
 
     <div class="header-top-row-left">
 
-      <h1 class="page-header-title">
-        {{ title }}
-      </h1>
-
-      <div class="header-tool-bar">
-        <ng-content></ng-content>
+      <div class="header-main-back">
+        <a
+          *ngIf="backLink"
+          class="header-back-link"
+          [routerLink]="backLink"
+        >
+          <mat-icon>
+            arrow_back
+          </mat-icon>
+          <span>
+            {{ backLabel || 'Go back' }}
+          </span>
+        </a>
       </div>
+
+      <div class="header-main">
+        <h1 class="page-header-title">
+          {{ title }}
+        </h1>
+
+        <div class="header-tool-bar">
+          <ng-content></ng-content>
+        </div>
+      </div>
+
     </div>
 
     <div class="header-actions">

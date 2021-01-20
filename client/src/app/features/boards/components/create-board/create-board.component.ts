@@ -26,7 +26,7 @@ import { BoardsService } from '@boards/store/boards/boards.service';
 import { Store } from '@ngrx/store';
 import { animationFrameScheduler, Observable, Subject } from 'rxjs';
 import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
-import { toUrlSlug } from '../../../../core/util/strings';
+import { toUrlSlug } from '@core/util/strings';
 import { Logger } from '@core/util/logger';
 
 @Component({
