@@ -18,12 +18,11 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 export class FormInputComponent implements ControlValueAccessor {
   @Input() label: string;
   @Input() disabled: boolean;
-  @Input() name: string;
   @Input() icon: string;
   @Input() prefix: string;
   @Input() autocomplete = 'off';
   @Input() placeholder = '';
-  @Input() type: 'text' | 'number' = 'text';
+  @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
 
   @ViewChild('input') input: ElementRef;
 

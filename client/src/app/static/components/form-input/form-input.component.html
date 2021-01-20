@@ -1,6 +1,6 @@
 <label
   *ngIf="label"
-  [for]="name"
+  [for]="ngControl.name"
   class="form-control-label"
 >
   {{ label }}
@@ -18,7 +18,7 @@
 
   <input
     #input
-    [id]="name"
+    [id]="ngControl.name"
     [type]="type"
     [autocomplete]="autocomplete"
     [placeholder]="placeholder"
