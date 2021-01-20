@@ -16,6 +16,8 @@
     *ngIf="boardGroupsLoaded$ | async"
     [title]="selectedBoardName$ | async"
     [overflowActions]="secondaryActions"
+    [backLink]="['../../boards']"
+    backLabel="Back to boards"
   >
     <div class="board-filter-seperator"></div>
 

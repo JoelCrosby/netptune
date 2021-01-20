@@ -17,17 +17,15 @@
       {{ prefix }}
     </div>
 
-    <input
+    <textarea
       #input
       [id]="ngControl.name"
-      [type]="type"
-      [autocomplete]="autocomplete"
       [placeholder]="placeholder"
       [value]="value"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
       (change)="onInputchange($event)"
       (keydown)="onKeydown()"
-    >
+    ></textarea>
 
     <mat-icon
       *ngIf="icon"
@@ -39,5 +37,4 @@
     </mat-icon>
 
   </div>
-
 </div>

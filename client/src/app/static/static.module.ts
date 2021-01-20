@@ -22,6 +22,7 @@ import { AvatarFontSizePipe } from './pipes/avatar-font-size.pipe';
 import { PxPipe } from './pipes/px.pipe';
 import { EditorComponent } from './components/editor/editor.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
+import { FormTextAreaComponent } from './components/form-textarea/form-textarea.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FormInputComponent } from './components/form-input/form-input.component
     ImageCropperComponent,
     EditorComponent,
     FormInputComponent,
+    FormTextAreaComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -68,6 +70,7 @@ import { FormInputComponent } from './components/form-input/form-input.component
     ImageCropperComponent,
     EditorComponent,
     FormInputComponent,
+    FormTextAreaComponent,
   ],
 })
 export class StaticModule {}

@@ -12,6 +12,14 @@
     border-bottom: 2px solid mat-color($background, border);
   }
 
+  .header-back-link {
+    color: mat-color($foreground, text, .5);
+
+    &:hover {
+      color: mat-color($primary);
+    }
+  }
+
   .header-actions {
     display: flex;
     flex-direction: row;
