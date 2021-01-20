@@ -24,7 +24,7 @@
 .header-main {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   height: 100%;
   align-items: center;
 }
@@ -42,7 +42,7 @@
   .header-top-row-left {
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
 
     .header-tool-bar {
       margin-left: 1.4rem;

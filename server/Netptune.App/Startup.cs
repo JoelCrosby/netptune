@@ -31,10 +31,10 @@ namespace Netptune.App
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment WebHostEnvironment { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment WebHostEnvironment { get; }
 
-        public string[] CorsOrigins => GetCorsOrigins();
+        private string[] CorsOrigins => GetCorsOrigins();
 
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
@@ -117,7 +117,7 @@ namespace Netptune.App
             {
                 foreach (var (key, value) in context.Request.Headers)
                 {
-                    Log.Information($"[Header] {key}:{value}");
+                    Log.Information("[Header] {Key}:{Value}", key, value.ToString());
                 }
 
                 return next();
