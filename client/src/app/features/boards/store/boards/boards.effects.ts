@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -72,10 +72,10 @@ export class BoardsEffects {
     () =>
       this.actions$.pipe(
         ofType(actions.deleteBoardSuccess),
-        withLatestFrom(this.store.select(selectCurrentWorkspace)),
-        tap(([_, workspace]) => {
-          this.router.navigate(['/', workspace.slug, 'boards']);
-        })
+        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+        tap(([_, workspaceId]) =>
+          this.router.navigate(['/', workspaceId, 'boards'])
+        )
       ),
     { dispatch: false }
   );

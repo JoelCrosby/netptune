@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Authorization;
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.App.Controllers
 {
@@ -27,7 +27,7 @@ namespace Netptune.App.Controllers
         // GET: api/projects/5
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<Project>))]
+        [Produces("application/json", Type = typeof(List<ProjectViewModel>))]
         public async Task<IActionResult> GetProjects()
         {
             var result = await ProjectService.GetProjects();
@@ -39,7 +39,7 @@ namespace Netptune.App.Controllers
         [HttpGet("{key}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(Project))]
+        [Produces("application/json", Type = typeof(ProjectViewModel))]
         public async Task<IActionResult> GetProject([FromRoute] string key)
         {
             var result = await ProjectService.GetProject(key);
@@ -53,8 +53,8 @@ namespace Netptune.App.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(Project))]
-        public async Task<IActionResult> PutProject([FromBody] Project project)
+        [Produces("application/json", Type = typeof(ProjectViewModel))]
+        public async Task<IActionResult> PutProject([FromBody] UpdateProjectRequest project)
         {
             var result = await ProjectService.UpdateProject(project);
 
@@ -66,7 +66,7 @@ namespace Netptune.App.Controllers
         // POST: api/projects
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(Project))]
+        [Produces("application/json", Type = typeof(ProjectViewModel))]
         public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
         {
             var result = await ProjectService.AddProject(request);

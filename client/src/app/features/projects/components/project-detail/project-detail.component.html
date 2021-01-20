@@ -15,12 +15,7 @@
     >
     </app-form-input>
 
-    <app-form-input
-      name="repositoryUrl"
-      formControlName="repositoryUrl"
-      label="Repository URL"
-    >
-    </app-form-input>
+    <div class="form-seperator"></div>
 
     <app-form-input
       name="key"
@@ -29,6 +24,22 @@
       class="project-key-input"
     >
     </app-form-input>
+
+    <app-form-input
+      name="repositoryUrl"
+      formControlName="repositoryUrl"
+      label="Repository URL"
+    >
+    </app-form-input>
+
+    <button
+      class="form-submit-btn"
+      mat-stroked-button
+      (click)="updateClicked()"
+      [disabled]="updateDisabled$ | async"
+    >
+      Update Profile
+    </button>
 
   </form>
 

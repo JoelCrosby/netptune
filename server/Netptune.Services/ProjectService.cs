@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -85,15 +86,22 @@ namespace Netptune.Services
             return ProjectRepository.GetProjects(workspaceId);
         }
 
-        public async Task<ProjectViewModel> UpdateProject(Project project)
+        public async Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project)
         {
-            var result = await ProjectRepository.GetAsync(project.Id);
+            if (project.Id is null)
+            {
+                throw new Exception("project.Id cannot be null");
+            }
+
+            var result = await ProjectRepository.GetAsync(project.Id.Value);
             var user = await IdentityService.GetCurrentUser();
 
             if (result is null) return null;
 
             result.Name = project.Name;
             result.Description = project.Description;
+            result.RepositoryUrl = project.RepositoryUrl;
+            result.Key = project.Key ?? result.Key;
             result.ModifiedByUserId = user.Id;
 
             await UnitOfWork.CompleteAsync();

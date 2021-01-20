@@ -38,3 +38,8 @@ export const selectCurrentProject = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.currentProject
 );
+
+export const selectUpdateProjectLoading = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.projectUpdateLoading
+);

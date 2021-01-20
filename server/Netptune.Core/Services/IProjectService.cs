@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
@@ -14,7 +13,7 @@ namespace Netptune.Core.Services
 
         Task<ProjectViewModel> GetProject(string key);
 
-        Task<ProjectViewModel> UpdateProject(Project project);
+        Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project);
 
         Task<ProjectViewModel> AddProject(AddProjectRequest request);
 

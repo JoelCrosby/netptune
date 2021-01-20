@@ -3,6 +3,7 @@ import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClientResponse } from '@core/models/client-response';
+import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 
 export const clearState = createAction('[Projects] Clear State');
 
@@ -51,6 +52,23 @@ export const createProjectSuccess = createAction(
 
 export const createProjectFail = createAction(
   '[Projects] Create Project Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Update Project
+
+export const updateProject = createAction(
+  '[Projects] Update Project',
+  props<{ project: UpdateProjectRequest }>()
+);
+
+export const updateProjectSuccess = createAction(
+  '[Projects] Update Project Success',
+  props<{ project: ProjectViewModel }>()
+);
+
+export const updateProjectFail = createAction(
+  '[Projects] Update Project Fail',
   props<{ error: HttpErrorResponse }>()
 );
 
