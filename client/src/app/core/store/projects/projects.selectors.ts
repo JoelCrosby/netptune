@@ -1,4 +1,5 @@
 import { selectProjectsFeature } from '@core/core.state';
+import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createSelector } from '@ngrx/store';
 import { adapter, ProjectsState } from './projects.model';
 
@@ -37,6 +38,11 @@ export const selectProjectsLoaded = createSelector(
 export const selectCurrentProject = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.currentProject
+);
+
+export const selectCurrentProjectId = createSelector(
+  selectCurrentProject,
+  (state: ProjectViewModel) => state?.id
 );
 
 export const selectUpdateProjectLoading = createSelector(

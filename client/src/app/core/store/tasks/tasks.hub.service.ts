@@ -120,7 +120,11 @@ export class ProjectTasksHubService {
   }
 
   post(groupId: string, task: AddProjectTaskRequest) {
-    return this.hub.invoke<TaskViewModel>('Create', groupId, task);
+    return this.hub.invoke<ClientResponse<TaskViewModel>>(
+      'create',
+      groupId,
+      task
+    );
   }
 
   put(groupId: string, task: ProjectTask | BoardViewTask) {

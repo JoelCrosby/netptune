@@ -32,6 +32,7 @@ export class ProjectTasksEffects {
       ofType(actions.createProjectTask),
       switchMap((action) =>
         this.projectTasksHubService.post(action.identifier, action.task).pipe(
+          unwrapClientReposne(),
           tap(() => this.snackbar.open('Task created')),
           map((task) => actions.createProjectTasksSuccess({ task })),
           catchError((error) => of(actions.createProjectTasksFail({ error })))
@@ -45,8 +46,9 @@ export class ProjectTasksEffects {
       ofType(actions.editProjectTask),
       switchMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
+          unwrapClientReposne(),
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
-          map((res) => actions.editProjectTasksSuccess({ task: res.payload })),
+          map((task) => actions.editProjectTasksSuccess({ task })),
           catchError((error) => of(actions.editProjectTasksFail({ error })))
         )
       )
@@ -64,10 +66,10 @@ export class ProjectTasksEffects {
             return this.projectTasksHubService
               .delete(action.identifier, action.task)
               .pipe(
+                unwrapClientReposne(),
                 tap(() => this.snackbar.open('Task deleted')),
-                map((response) =>
+                map(() =>
                   actions.deleteProjectTasksSuccess({
-                    response,
                     taskId: action.task.id,
                   })
                 ),
