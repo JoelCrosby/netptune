@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
@@ -60,7 +61,11 @@ namespace Netptune.Services
                     Description = request.Description,
                     Key = projectKey,
                     UserId = user.Id,
-                    WorkspaceId = workspace.Id
+                    WorkspaceId = workspace.Id,
+                    MetaInfo = new ProjectMeta
+                    {
+                        Color = request.MetaInfo.Color,
+                    }
                 });
 
                 workspace.Projects.Add(project);

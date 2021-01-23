@@ -39,6 +39,11 @@ namespace Netptune.Entities.EntityMaps
                 .HasIndex(project => new { project.WorkspaceId, project.Key })
                 .IsUnique();
 
+            builder
+                .Property(project => project.MetaInfo)
+                .HasColumnType("jsonb")
+                .IsRequired();
+
             // (One-to-One) Project > Task
 
             builder
