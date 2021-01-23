@@ -1,7 +1,8 @@
 form {
   padding: .6rem;
-}
 
-mat-form-field {
-  margin-bottom: 1.5rem;
+  app-form-input,
+  app-form-textarea {
+    width: 100%;
+  }
 }

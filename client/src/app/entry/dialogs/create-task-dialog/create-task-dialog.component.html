@@ -2,68 +2,31 @@
   Add new Task
 </h1>
 
-<form [formGroup]="projectFromGroup">
+<form [formGroup]="formGroup">
 
-  <mat-form-field
-    class="w-100"
-    appearance="fill"
+  <app-form-input
+    formControlName="name"
+    label="Summary"
+    maxLength="1024"
   >
-    <mat-label>Enter Task Summary</mat-label>
-    <textarea
-      matInput
-      class="form-control"
-      formControlName="nameFormControl"
-      name="name"
-      rows="1"
-      required
-      cdkTextareaAutosize
-      #autosize="cdkTextareaAutosize"
-      cdkAutosizeMinRows="1"
-      cdkAutosizeMaxRows="5"
-    ></textarea>
-  </mat-form-field>
+  </app-form-input>
 
-  <br>
-
-  <mat-form-field
-    class="w-100"
-    appearance="fill"
+  <app-form-textarea
+    formControlName="description"
+    label="Description"
+    maxLength="4096"
   >
-    <mat-label>Task Project</mat-label>
-    <mat-select
-      name="type"
-      formControlName="projectFormControl"
-    >
-      <mat-option>None</mat-option>
-      <mat-option
-        *ngFor="let project of projects$ | async"
-        [value]="project.id"
-      >
-        {{ project.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  </app-form-textarea>
 
-  <br>
 
-  <mat-form-field
-    class="w-100"
-    appearance="fill"
+  <app-form-select
+    formControlName="project"
+    label="Project"
+    idKey="id"
+    labelKey="name"
+    [options]="projects$ | async"
   >
-    <mat-label>Description</mat-label>
-    <textarea
-      matInput
-      class="form-control"
-      formControlName="descriptionFormControl"
-      rows="3"
-      name="description"
-      required
-      cdkTextareaAutosize
-      #autosize="cdkTextareaAutosize"
-      cdkAutosizeMinRows="3"
-      cdkAutosizeMaxRows="6"
-    ></textarea>
-  </mat-form-field>
+  </app-form-select>
 
 </form>
 
