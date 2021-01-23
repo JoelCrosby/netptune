@@ -39,6 +39,14 @@ const reducer = createReducer(
     projectDetailLoading: false,
   })),
 
+  // Clear Project Detail
+
+  on(actions.clearProjectDetail, (state) => ({
+    ...state,
+    projectDetail: null,
+    projectDetailLoading: true,
+  })),
+
   // Create Project
 
   on(actions.createProject, (state) => ({ ...state, loading: true })),

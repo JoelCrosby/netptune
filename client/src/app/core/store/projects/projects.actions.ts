@@ -39,6 +39,12 @@ export const loadProjectDetailFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Clear Project Detail
+
+export const clearProjectDetail = createAction(
+  '[Projects] Clear Project Detail'
+);
+
 // Create Project
 
 export const createProject = createAction(

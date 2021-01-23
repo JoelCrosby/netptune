@@ -5,8 +5,8 @@
   [actions]="actions$ | async"
   (delete)="onDeleteClicked()"
 >
-    <a class="link" [href]="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
+    <div class="link">
       {{ project.repositoryUrl }}
-    </a>
+    </div>
   </app-card-list-item>
 </a>
