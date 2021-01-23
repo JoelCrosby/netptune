@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -26,9 +26,9 @@ import { first } from 'rxjs/operators';
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   projects$: Observable<ProjectViewModel[]>;
   currentWorkspace$: Observable<Workspace>;
-  currentProject$: Observable<ProjectViewModel>;
 
   selectedTypeValue: number;
+  formGroup: FormGroup;
 
   onDestroy$ = new Subject();
 
@@ -42,25 +42,27 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
     return this.formGroup.get('project');
   }
 
-  formGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    project: new FormControl(),
-    description: new FormControl(),
-  });
-
   constructor(
+    private fb: FormBuilder,
     private store: Store,
     public dialogRef: MatDialogRef<CreateTaskDialogComponent>
   ) {}
 
   ngOnInit() {
+    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
     this.currentWorkspace$ = this.store.select(
       WorkspaceSelectors.selectCurrentWorkspace
     );
-    this.currentProject$ = this.store.select(
-      ProjectSelectors.selectCurrentProject
-    );
-    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
+
+    this.store.select(ProjectSelectors.selectCurrentProjectId).subscribe({
+      next: (projectId) => {
+        this.formGroup = this.fb.group({
+          name: ['', [Validators.required, Validators.minLength(4)]],
+          project: [projectId],
+          description: [],
+        });
+      },
+    });
 
     this.store.dispatch(loadProjects());
   }
@@ -79,11 +81,8 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
       const task: AddProjectTaskRequest = {
         name: (this.name.value as string).trim(),
         description: (this.description.value as string)?.trim(),
-        projectId: this.project.value,
-        assigneeId: undefined,
-        assignee: undefined,
+        projectId: +this.project.value,
         status: TaskStatus.new,
-        sortOrder: 0,
       };
 
       this.store.dispatch(

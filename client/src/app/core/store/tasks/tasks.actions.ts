@@ -75,7 +75,7 @@ export const deleteProjectTask = createAction(
 
 export const deleteProjectTasksSuccess = createAction(
   '[ProjectTasks] Delete Project Task Success',
-  props<{ response: ClientResponse; taskId: number }>()
+  props<{ taskId: number }>()
 );
 
 export const deleteProjectTasksFail = createAction(

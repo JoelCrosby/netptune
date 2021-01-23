@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests
@@ -24,8 +23,6 @@ namespace Netptune.Core.Requests
         public int? BoardGroupId { get; set; }
 
         public double? SortOrder { get; set; }
-
-        public AppUser Assignee { get; set; }
 
         public string AssigneeId { get; set; }
     }
