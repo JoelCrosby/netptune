@@ -38,7 +38,6 @@ namespace Netptune.Core.Entities
                 Name = Name,
                 Identifier = Identifier,
                 ProjectId = ProjectId,
-                Project = Project,
                 BoardType = BoardType,
                 CreatedAt = CreatedAt,
                 UpdatedAt = UpdatedAt,

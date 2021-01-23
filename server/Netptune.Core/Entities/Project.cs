@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -6,6 +7,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.Core.Entities
 {
@@ -39,6 +41,26 @@ namespace Netptune.Core.Entities
         #endregion
 
         #region Methods
+
+        public ProjectViewModel ToViewModel()
+        {
+            var defaultBoard = ProjectBoards?.FirstOrDefault(board => board.BoardType == BoardType.Default);
+            var identifier = defaultBoard?.Identifier;
+
+            return new ProjectViewModel
+            {
+                Id = Id,
+                Key = Key,
+                Name = Name,
+                Description = Description,
+                RepositoryUrl = RepositoryUrl,
+                WorkspaceId = WorkspaceId,
+                OwnerDisplayName = Owner.DisplayName,
+                UpdatedAt = UpdatedAt,
+                CreatedAt = CreatedAt,
+                DefaultBoardIdentifier = identifier,
+            };
+        }
 
         public static Project Create(CreateProjectOptions options)
         {
