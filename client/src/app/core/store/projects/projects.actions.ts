@@ -4,6 +4,7 @@ import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClientResponse } from '@core/models/client-response';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 
 export const clearState = createAction('[Projects] Clear State');
 
@@ -93,5 +94,22 @@ export const deleteProjectSuccess = createAction(
 
 export const deleteProjectFail = createAction(
   '[Projects] Delete Project Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Get Project Boards
+
+export const getProjectBoards = createAction(
+  '[Projects] Get Project Boards',
+  props<{ projectId: number }>()
+);
+
+export const getProjectBoardsSuccess = createAction(
+  '[Projects] Get Project Boards Success',
+  props<{ boards: BoardViewModel[] }>()
+);
+
+export const getProjectBoardsFail = createAction(
+  '[Projects] Get Project Boards Fail',
   props<{ error: HttpErrorResponse }>()
 );

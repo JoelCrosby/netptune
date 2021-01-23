@@ -129,6 +129,18 @@ export class ProjectsEffects {
       )
   );
 
+  getProjectBoards$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.getProjectBoards),
+      switchMap((action) =>
+        this.projectsService.getProjectBoards(action.projectId).pipe(
+          map((boards) => actions.getProjectBoardsSuccess({ boards })),
+          catchError((error) => of(actions.getProjectBoardsFail({ error })))
+        )
+      )
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
