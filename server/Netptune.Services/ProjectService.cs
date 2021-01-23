@@ -45,7 +45,8 @@ namespace Netptune.Services
                     Key = projectKey,
                     UserId = user.Id,
                     WorkspaceId = workspace.Id,
-                    RepositoryUrl = request.RepositoryUrl
+                    RepositoryUrl = request.RepositoryUrl,
+                    MetaInfo = request.MetaInfo,
                 });
 
                 workspace.Projects.Add(project);

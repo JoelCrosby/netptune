@@ -23,5 +23,7 @@ namespace Netptune.Core.ViewModels.Projects
         public DateTime CreatedAt { get; set; }
 
         public string DefaultBoardIdentifier { get; set; }
+
+        public string Color { get; set; }
     }
 }

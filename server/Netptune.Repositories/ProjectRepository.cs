@@ -89,6 +89,7 @@ namespace Netptune.Repositories
                 Name = project.Name,
                 Description = project.Description,
                 RepositoryUrl = project.RepositoryUrl,
+                Color = project.MetaInfo.Color,
                 WorkspaceId = project.WorkspaceId,
                 OwnerDisplayName = project.Owner.DisplayName,
                 UpdatedAt = project.UpdatedAt,

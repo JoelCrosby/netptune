@@ -21,6 +21,8 @@ namespace Netptune.Core.Entities
 
         public string Key { get; set; }
 
+        public ProjectMeta MetaInfo { get; set; }
+
         #region NavigationProperties
 
         [JsonIgnore]
@@ -59,6 +61,7 @@ namespace Netptune.Core.Entities
                 UpdatedAt = UpdatedAt,
                 CreatedAt = CreatedAt,
                 DefaultBoardIdentifier = identifier,
+                Color = MetaInfo.Color,
             };
         }
 
@@ -72,6 +75,7 @@ namespace Netptune.Core.Entities
                 OwnerId = options.UserId,
                 RepositoryUrl = options.RepositoryUrl,
                 Key = options.Key,
+                MetaInfo = options.MetaInfo,
             };
 
             project.ProjectUsers.Add(new ProjectUser
@@ -92,7 +96,10 @@ namespace Netptune.Core.Entities
                 Identifier = GenerateDefaultBoardId(project.Key),
                 Name = project.Name,
                 OwnerId = project.OwnerId,
-                MetaInfo = new BoardMeta(),
+                MetaInfo = new BoardMeta
+                {
+                    Color = project.MetaInfo.Color,
+                },
                 BoardType = BoardType.Default,
                 WorkspaceId = workspaceId,
                 BoardGroups = new[]
@@ -143,5 +150,7 @@ namespace Netptune.Core.Entities
         public string UserId { get; set; }
 
         public int WorkspaceId { get; set; }
+
+        public ProjectMeta MetaInfo { get; set; }
     }
 }
