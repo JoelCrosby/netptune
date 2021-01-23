@@ -32,4 +32,9 @@
       color: mat-color($foreground, text, .1) !important;
     }
   }
+
+  .form-control-disabled {
+    color: mat-color($foreground, text, .4) !important;
+    background-color: mat-color($foreground, text, .02) !important;
+  }
 }

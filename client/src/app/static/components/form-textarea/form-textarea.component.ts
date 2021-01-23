@@ -20,7 +20,10 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   @Input() disabled: boolean;
   @Input() icon: string;
   @Input() prefix: string;
-  @Input() placeholder = '';
+  @Input() placeholder: string = null;
+  @Input() hint: string = null;
+  @Input() minLength: string = null;
+  @Input() maxLength: string = null;
 
   @ViewChild('input') input: ElementRef;
 
@@ -50,10 +53,6 @@ export class FormTextAreaComponent implements ControlValueAccessor {
     const value = target.value;
 
     this.onChange(value);
-    this.onTouch();
-  }
-
-  onKeydown() {
     this.onTouch();
   }
 

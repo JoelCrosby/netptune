@@ -6,3 +6,15 @@ form {
 .project-key-input {
   width: 120px;
 }
+
+.project-key-row {
+  display: flex;
+  align-items: center;
+
+  small {
+    display: block;
+    opacity: .6;
+    padding: 0 1.4rem;
+    justify-self: flex-end;
+  }
+}

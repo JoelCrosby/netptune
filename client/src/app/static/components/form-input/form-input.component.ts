@@ -21,7 +21,10 @@ export class FormInputComponent implements ControlValueAccessor {
   @Input() icon: string;
   @Input() prefix: string;
   @Input() autocomplete = 'off';
-  @Input() placeholder = '';
+  @Input() placeholder: string = null;
+  @Input() hint: string = null;
+  @Input() minLength: string = null;
+  @Input() maxLength: string = null;
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
 
   @ViewChild('input') input: ElementRef;
@@ -31,7 +34,7 @@ export class FormInputComponent implements ControlValueAccessor {
   value: string | number = '';
 
   onChange: (value: string) => void;
-  onTouch: () => void;
+  onTouch: (...args: unknown[]) => void;
 
   get control() {
     return this.ngControl.control;
@@ -52,10 +55,6 @@ export class FormInputComponent implements ControlValueAccessor {
     const value = target.value;
 
     this.onChange(value);
-    this.onTouch();
-  }
-
-  onKeydown() {
     this.onTouch();
   }
 
