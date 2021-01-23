@@ -8,7 +8,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { updateProject } from '@core/store/projects/projects.actions';
+import {
+  clearProjectDetail,
+  updateProject,
+} from '@core/store/projects/projects.actions';
 import {
   selectProjectDetail,
   selectUpdateProjectLoading,
@@ -101,6 +104,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+
+    this.store.dispatch(clearProjectDetail());
   }
 
   updateClicked() {
