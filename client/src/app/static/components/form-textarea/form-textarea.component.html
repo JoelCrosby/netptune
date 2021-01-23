@@ -20,11 +20,15 @@
     <textarea
       #input
       [id]="ngControl.name"
-      [placeholder]="placeholder"
       [value]="value"
+      [disabled]="disabled"
+      [class.form-control-disabled]="disabled"
+      [attr.maxLength]="maxLength"
+      [attr.minLength]="minLength"
+      [attr.placeholder]="placeholder"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
-      (change)="onInputchange($event)"
-      (keydown)="onKeydown()"
+      (input)="onInputchange($event)"
+      (blur)="onTouch()"
     ></textarea>
 
     <mat-icon
@@ -37,4 +41,11 @@
     </mat-icon>
 
   </div>
+
+  <small
+    *ngIf="hint"
+    class="form-control-hint"
+  >
+    {{ hint }}
+  </small>
 </div>

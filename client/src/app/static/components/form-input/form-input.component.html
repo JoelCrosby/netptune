@@ -20,24 +20,34 @@
     <input
       #input
       [id]="ngControl.name"
-      [type]="type"
-      [autocomplete]="autocomplete"
-      [placeholder]="placeholder"
       [value]="value"
+      [disabled]="disabled"
+      [class.form-control-disabled]="disabled"
+      [attr.type]="type"
+      [attr.autocomplete]="autocomplete"
+      [attr.placeholder]="placeholder"
+      [attr.maxLength]="maxLength"
+      [attr.minLength]="minLength"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
-      (change)="onInputchange($event)"
-      (keydown)="onKeydown()"
+      (input)="onInputchange($event)"
+      (blur)="onTouch()"
     >
 
     <mat-icon
       *ngIf="icon"
-      aria-hidden="false"
-      aria-label="Clear Search Icon"
+      aria-hidden="true"
       class="material-icons-outlined"
     >
       {{ icon }}
     </mat-icon>
 
   </div>
+
+  <small
+    *ngIf="hint"
+    class="form-control-hint"
+  >
+    {{ hint }}
+  </small>
 
 </div>

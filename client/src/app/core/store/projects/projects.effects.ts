@@ -9,6 +9,7 @@ import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
+  debounceTime,
   map,
   switchMap,
   tap,
@@ -87,41 +88,45 @@ export class ProjectsEffects {
     )
   );
 
-  deleteProject$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.deleteProject),
-      switchMap(({ project }) =>
-        this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
-          switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+  deleteProject$ = createEffect(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.deleteProject),
+        switchMap(({ project }) =>
+          this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
+            switchMap((result) => {
+              if (!result) return of({ type: 'NO_ACTION' });
 
-            return this.projectsService.delete(project).pipe(
-              tap(() => this.snackbar.open('Project deleted')),
-              map((response) =>
-                actions.deleteProjectSuccess({
-                  response,
-                  projectId: project.id,
-                })
-              ),
-              catchError((error) => of(actions.deleteProjectFail({ error })))
-            );
-          })
+              return this.projectsService.delete(project).pipe(
+                debounceTime(debounce, scheduler),
+                tap(() => this.snackbar.open('Project deleted')),
+                map((response) =>
+                  actions.deleteProjectSuccess({
+                    response,
+                    projectId: project.id,
+                  })
+                ),
+                catchError((error) => of(actions.deleteProjectFail({ error })))
+              );
+            })
+          )
         )
       )
-    )
   );
 
-  updateProject$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(actions.updateProject),
-      switchMap((action) =>
-        this.projectsService.put(action.project).pipe(
-          tap(() => this.snackbar.open('Project updated')),
-          map((project) => actions.updateProjectSuccess({ project })),
-          catchError((error) => of(actions.updateProjectFail({ error })))
+  updateProject$ = createEffect(
+    ({ debounce = 400, scheduler = asyncScheduler } = {}) =>
+      this.actions$.pipe(
+        ofType(actions.updateProject),
+        debounceTime(debounce, scheduler),
+        switchMap((action) =>
+          this.projectsService.put(action.project).pipe(
+            tap(() => this.snackbar.open('Project updated')),
+            map((project) => actions.updateProjectSuccess({ project })),
+            catchError((error) => of(actions.updateProjectFail({ error })))
+          )
         )
       )
-    )
   );
 
   onWorkspaceSelected$ = createEffect(() =>
