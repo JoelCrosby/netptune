@@ -23,6 +23,7 @@ import { PxPipe } from './pipes/px.pipe';
 import { EditorComponent } from './components/editor/editor.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
 import { FormTextAreaComponent } from './components/form-textarea/form-textarea.component';
+import { FormSelectComponent } from './components/form-select/form-select.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { FormTextAreaComponent } from './components/form-textarea/form-textarea.
     EditorComponent,
     FormInputComponent,
     FormTextAreaComponent,
+    FormSelectComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -71,6 +73,7 @@ import { FormTextAreaComponent } from './components/form-textarea/form-textarea.
     EditorComponent,
     FormInputComponent,
     FormTextAreaComponent,
+    FormSelectComponent,
   ],
 })
 export class StaticModule {}
