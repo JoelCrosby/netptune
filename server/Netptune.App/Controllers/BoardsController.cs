@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -30,7 +31,7 @@ namespace Netptune.App.Controllers
         // GET: api/boards
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<Board>))]
+        [Produces("application/json", Type = typeof(List<BoardViewModel>))]
         public async Task<IActionResult> GetBoards(int projectId)
         {
             var result = await BoardService.GetBoards(projectId);
@@ -41,10 +42,25 @@ namespace Netptune.App.Controllers
         // GET: api/boards/workspace
         [HttpGet("workspace")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<Board>))]
+        [Produces("application/json", Type = typeof(List<BoardViewModel>))]
         public async Task<IActionResult> GetBoardsInWorkspace()
         {
             var result = await BoardService.GetBoardsInWorkspace();
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // GET: api/boards/project/{id}
+        [HttpGet("project/{projectId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json", Type = typeof(List<BoardViewModel>))]
+        public async Task<IActionResult> GetBoardsInProject([Required] int? projectId)
+        {
+            if (!projectId.HasValue) return BadRequest();
+
+            var result = await BoardService.GetBoardsInProject(projectId.Value);
 
             if (result is null) return NotFound();
 

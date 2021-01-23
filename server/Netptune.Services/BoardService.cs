@@ -29,14 +29,18 @@ namespace Netptune.Services
             Boards = unitOfWork.Boards;
         }
 
-        public Task<List<Board>> GetBoards(int projectId)
+        public async Task<List<BoardViewModel>> GetBoards(int projectId)
         {
-            return Boards.GetBoardsInProject(projectId, true);
+            var results = await Boards.GetBoardsInProject(projectId, true);
+
+            return results.ConvertAll(result => result.ToViewModel());
         }
 
-        public Task<Board> GetBoard(int id)
+        public async Task<BoardViewModel> GetBoard(int id)
         {
-            return Boards.GetAsync(id, true);
+            var result = await Boards.GetAsync(id, true);
+
+            return result.ToViewModel();
         }
 
         public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
@@ -170,6 +174,13 @@ namespace Netptune.Services
             if (!workspaceExists) return null;
 
             var results = await Boards.GetBoards(workspaceId, true);
+
+            return results.ConvertAll(result => result.ToViewModel());
+        }
+
+        public async Task<List<BoardViewModel>> GetBoardsInProject(int projectId)
+        {
+            var results = await Boards.GetBoardsInProject(projectId, true);
 
             return results.ConvertAll(result => result.ToViewModel());
         }
