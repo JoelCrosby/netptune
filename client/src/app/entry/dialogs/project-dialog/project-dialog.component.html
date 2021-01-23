@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{ project ? 'Edit Project' : 'Add new Project'}}</h1>
+<h1 mat-dialog-title> Create Project </h1>
 
 <form [formGroup]="projectFromGroup">
 
@@ -10,7 +10,7 @@
       matInput
       id="name"
       class="form-control"
-      formControlName="nameFormControl"
+      formControlName="name"
       name="name"
       required
     >
@@ -24,7 +24,7 @@
       matInput
       id="url"
       class="form-control"
-      formControlName="repositoryUrlFormControl"
+      formControlName="repositoryUrl"
       name="url"
     >
   </mat-form-field>
@@ -37,7 +37,7 @@
       matInput
       id="description"
       class="form-control"
-      formControlName="descriptionFormControl"
+      formControlName="description"
       name="description" aria-label="With textarea"
     ></textarea>
   </mat-form-field>
@@ -49,6 +49,6 @@
   <button mat-stroked-button (click)="close()">Close</button>
   <div class="mr-2"></div>
   <button mat-flat-button color="primary" (click)="getResult()" type="button">
-    {{ project ? 'Save Changes' : 'Save Project'}}
+    Create Project
   </button>
 </div>
