@@ -33,22 +33,19 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   onDestroy$ = new Subject();
 
   get name() {
-    return this.projectFromGroup.get('nameFormControl');
+    return this.formGroup.get('name');
   }
   get description() {
-    return this.projectFromGroup.get('descriptionFormControl');
+    return this.formGroup.get('description');
   }
   get project() {
-    return this.projectFromGroup.get('projectFormControl');
+    return this.formGroup.get('project');
   }
 
-  projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    projectFormControl: new FormControl(),
-    descriptionFormControl: new FormControl(),
+  formGroup = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    project: new FormControl(),
+    description: new FormControl(),
   });
 
   constructor(

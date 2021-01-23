@@ -1,49 +1,27 @@
 <h1 mat-dialog-title> Create Project </h1>
 
 <form [formGroup]="projectFromGroup">
+  <app-form-input
+    formControlName="name"
+    label="Name"
+    maxLength="1024"
+  >
+  </app-form-input>
 
-  <mat-form-field class="w-100" appearance="fill">
-    <mat-label>
-      Project Name
-    </mat-label>
-    <input
-      matInput
-      id="name"
-      class="form-control"
-      formControlName="name"
-      name="name"
-      required
-    >
-  </mat-form-field>
+  <app-form-input
+    formControlName="repositoryUrl"
+    label="Repository URl"
+    maxLength="1024"
+  >
+  </app-form-input>
 
-  <mat-form-field class="w-100" appearance="fill">
-    <mat-label>
-      Repository Url
-    </mat-label>
-    <input
-      matInput
-      id="url"
-      class="form-control"
-      formControlName="repositoryUrl"
-      name="url"
-    >
-  </mat-form-field>
-
-  <mat-form-field class="w-100" appearance="fill">
-    <mat-label>
-      Description
-    </mat-label>
-    <textarea
-      matInput
-      id="description"
-      class="form-control"
-      formControlName="description"
-      name="description" aria-label="With textarea"
-    ></textarea>
-  </mat-form-field>
-
+  <app-form-textarea
+    formControlName="description"
+    label="Description"
+    maxLength="4096"
+  >
+  </app-form-textarea>
 </form>
-
 
 <div mat-dialog-actions align="end">
   <button mat-stroked-button (click)="close()">Close</button>

@@ -24,6 +24,6 @@ export class ProjectsViewComponent implements AfterViewInit {
   }
 
   showAddModal() {
-    this.dialog.open(ProjectDialogComponent);
+    this.dialog.open(ProjectDialogComponent, { width: '512px' });
   }
 }
