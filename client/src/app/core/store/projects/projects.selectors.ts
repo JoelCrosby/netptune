@@ -43,3 +43,13 @@ export const selectUpdateProjectLoading = createSelector(
   selectProjectsFeature,
   (state: ProjectsState) => state.projectUpdateLoading
 );
+
+export const selectProjectBoards = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.projectBoards
+);
+
+export const selectProjectBoardsLoading = createSelector(
+  selectProjectsFeature,
+  (state: ProjectsState) => state.projectBoardsLoading
+);

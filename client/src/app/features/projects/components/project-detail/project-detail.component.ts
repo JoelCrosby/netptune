@@ -6,8 +6,12 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
+import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { updateProject } from '@core/store/projects/projects.actions';
+import {
+  getProjectBoards,
+  updateProject,
+} from '@core/store/projects/projects.actions';
 import {
   selectProjectDetail,
   selectUpdateProjectLoading,
@@ -24,6 +28,7 @@ import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   project$: Observable<ProjectViewModel>;
+  boards$: Observable<BoardViewModel[]>;
   updateDisabled$: Observable<boolean>;
   onDestroy$ = new Subject();
 
@@ -93,6 +98,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
               }
             },
           });
+
+        this.store.dispatch(getProjectBoards({ projectId: project.id }));
       })
     );
   }

@@ -94,7 +94,21 @@ const reducer = createReducer(
           deleteState: { loading: false },
         })
       : state
-  )
+  ),
+
+  // Get Project Boards
+  on(actions.getProjectBoards, (state) => ({
+    ...state,
+    projectBoardsLoading: true,
+  })),
+  on(actions.getProjectBoardsFail, (state) => ({
+    ...state,
+    projectBoardsLoading: false,
+  })),
+  on(actions.getProjectBoardsSuccess, (state, { boards }) => ({
+    ...state,
+    projectBoards: boards,
+  }))
 );
 
 export const projectsReducer = (
