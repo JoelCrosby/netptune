@@ -1,14 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddProjectRequest, Project } from '@core/models/project';
+import { MatDialogRef } from '@angular/material/dialog';
+import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
@@ -20,56 +13,41 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./project-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectDialogComponent implements OnInit, OnDestroy {
-  project: Project;
+export class ProjectDialogComponent implements OnDestroy {
   currentWorkspace$ = this.store.select(selectCurrentWorkspace);
   subs = new Subscription();
 
   projectFromGroup = new FormGroup({
-    nameFormControl: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    repositoryUrlFormControl: new FormControl(),
-    descriptionFormControl: new FormControl(),
-    workspaceFormControl: new FormControl(),
+    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    repositoryUrl: new FormControl(),
+    description: new FormControl(),
+    workspace: new FormControl(),
+    color: new FormControl('#673AB7'),
   });
 
   get name() {
-    return this.projectFromGroup.get('nameFormControl');
+    return this.projectFromGroup.get('name');
   }
   get description() {
-    return this.projectFromGroup.get('descriptionFormControl');
+    return this.projectFromGroup.get('description');
   }
   get repositoryUrl() {
-    return this.projectFromGroup.get('repositoryUrlFormControl');
+    return this.projectFromGroup.get('repositoryUrl');
+  }
+  get color() {
+    return this.projectFromGroup.get('color');
   }
 
   constructor(
     private store: Store,
-    public dialogRef: MatDialogRef<ProjectDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Project
-  ) {
-    if (data) {
-      this.project = data;
-    }
-  }
+    public dialogRef: MatDialogRef<ProjectDialogComponent>
+  ) {}
 
-  ngOnInit() {
-    if (this.project) {
-      this.name.setValue(this.project.name);
-      this.description.setValue(this.project.description);
-      this.repositoryUrl.setValue(this.project.repositoryUrl);
-    } else {
-      this.projectFromGroup.reset();
-    }
-  }
-
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subs.unsubscribe();
   }
 
-  close(): void {
+  close() {
     this.dialogRef.close();
   }
 
@@ -80,6 +58,9 @@ export class ProjectDialogComponent implements OnInit, OnDestroy {
         description: this.description.value,
         repositoryUrl: this.repositoryUrl.value,
         workspace: workspace.slug,
+        metaInfo: {
+          color: this.color.value,
+        },
       };
 
       this.store.dispatch(createProject({ project }));

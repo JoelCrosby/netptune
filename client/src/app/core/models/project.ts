@@ -16,6 +16,10 @@ export interface AddProjectRequest {
   name: string;
   description: string;
   repositoryUrl: string;
-
+  metaInfo: ProjectMetaInfo;
   workspace: string;
+}
+
+export interface ProjectMetaInfo {
+  color: string;
 }
