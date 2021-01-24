@@ -113,16 +113,6 @@ namespace Netptune.App
         {
             app.UseForwardedHeaders();
 
-            app.Use((context, next) =>
-            {
-                foreach (var (key, value) in context.Request.Headers)
-                {
-                    Log.Information("[Header] {Key}:{Value}", key, value.ToString());
-                }
-
-                return next();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
