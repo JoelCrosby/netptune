@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.App.Controllers
 {
@@ -55,7 +57,7 @@ namespace Netptune.App.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(BoardGroup))]
+        [Produces("application/json", Type = typeof(ClientResponse<BoardGroupViewModel>))]
         public async Task<IActionResult> PostBoardGroup([FromBody] AddBoardGroupRequest request)
         {
             var result = await BoardGroupService.AddBoardGroup(request);
@@ -67,7 +69,7 @@ namespace Netptune.App.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(BoardGroup))]
+        [Produces("application/json", Type = typeof(ClientResponse))]
         public async Task<IActionResult> DeleteBoardGroup([FromRoute] int id)
         {
             var result = await BoardGroupService.Delete(id);

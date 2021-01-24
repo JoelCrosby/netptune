@@ -12,6 +12,7 @@ using Netptune.Core.Hubs;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
 
@@ -151,11 +152,11 @@ namespace Netptune.App.Hubs
             return result;
         }
 
-        public async Task<ClientResponse<BoardGroup>> UpdateGroup(HubRequest<UpdateBoardGroupRequest> request)
+        public async Task<ClientResponse<BoardGroupViewModel>> UpdateGroup(HubRequest<UpdateBoardGroupRequest> request)
         {
             SetupHttpContext(request);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroup>.Failed();
+            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
 
             var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
 
@@ -200,11 +201,11 @@ namespace Netptune.App.Hubs
             return response;
         }
 
-        public async Task<ClientResponse<BoardGroup>> AddBoardGroup(HubRequest<AddBoardGroupRequest> request)
+        public async Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(HubRequest<AddBoardGroupRequest> request)
         {
             SetupHttpContext(request);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroup>.Failed();
+            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
 
             var response = await BoardGroupService.AddBoardGroup(request.Payload);
 

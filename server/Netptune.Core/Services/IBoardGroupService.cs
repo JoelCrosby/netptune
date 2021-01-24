@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Services
 {
@@ -10,9 +11,9 @@ namespace Netptune.Core.Services
     {
         Task<BoardGroup> GetBoardGroup(int id);
 
-        Task<ClientResponse<BoardGroup>> UpdateBoardGroup(UpdateBoardGroupRequest request);
+        Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request);
 
-        Task<ClientResponse<BoardGroup>> AddBoardGroup(AddBoardGroupRequest boardGroup);
+        Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(AddBoardGroupRequest boardGroup);
 
         Task<ClientResponse> Delete(int id);
     }

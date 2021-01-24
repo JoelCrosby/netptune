@@ -1,5 +1,5 @@
-import { BoardGroupType } from '@core/models/board-group';
 import { TaskStatus } from '@core/enums/project-task-status';
+import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
 
 export const getTaskStatusFromGroupType = (
   type: BoardGroupType

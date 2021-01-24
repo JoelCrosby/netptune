@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { AppUser } from '@core/models/appuser';
-import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
+import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { createAction, props } from '@ngrx/store';
@@ -40,7 +40,7 @@ export const createBoardGroup = createAction(
 
 export const createBoardGroupSuccess = createAction(
   '[BoardGroups] Create Board Group Success',
-  props<{ response: ClientResponse<BoardGroup> }>()
+  props<{ boardGroup: BoardGroupViewModel }>()
 );
 
 export const createBoardGroupFail = createAction(
@@ -52,7 +52,7 @@ export const createBoardGroupFail = createAction(
 
 export const selectBoardGroup = createAction(
   '[BoardGroups] Select Board Group',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroup: BoardGroupViewModel }>()
 );
 
 // Delete Board Group
@@ -81,7 +81,7 @@ export const editBoardGroup = createAction(
 
 export const editBoardGroupSuccess = createAction(
   '[BoardGroups] Edit Board Group Success',
-  props<{ boardGroup: BoardGroup }>()
+  props<{ boardGroup: BoardGroupViewModel }>()
 );
 
 export const editBoardGroupFail = createAction(

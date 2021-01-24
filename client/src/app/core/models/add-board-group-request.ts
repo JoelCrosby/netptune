@@ -1,4 +1,4 @@
-import { BoardGroupType } from './board-group';
+import { BoardGroupType } from './view-models/board-group-view-model';
 
 export interface AddBoardGroupRequest {
   name: string;
