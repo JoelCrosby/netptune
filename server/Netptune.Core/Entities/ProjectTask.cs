@@ -52,7 +52,7 @@ namespace Netptune.Core.Entities
 
         public TaskViewModel ToViewModel()
         {
-            return new TaskViewModel
+            return new()
             {
                 Id = Id,
                 AssigneeId = Assignee == null ? string.Empty : Assignee.Id,
@@ -79,7 +79,7 @@ namespace Netptune.Core.Entities
 
         public ExportTaskViewModel ToExportViewModel()
         {
-            return new ExportTaskViewModel
+            return new()
             {
                 Name = Name,
                 Description = Description,

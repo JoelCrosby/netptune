@@ -25,7 +25,7 @@ namespace Netptune.Core.Entities
 
         public CommentViewModel ToViewModel()
         {
-            return new CommentViewModel
+            return new()
             {
                 Id = Id,
                 UserDisplayName = Owner.DisplayName,

@@ -32,7 +32,7 @@ namespace Netptune.Core.Entities
 
         public BoardViewModel ToViewModel()
         {
-            return new BoardViewModel
+            return new()
             {
                 Id = Id,
                 Name = Name,

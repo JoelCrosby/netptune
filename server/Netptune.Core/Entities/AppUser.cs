@@ -33,7 +33,7 @@ namespace Netptune.Core.Entities
 
         public UserViewModel ToViewModel()
         {
-            return new UserViewModel
+            return new()
             {
                 Id = Id,
                 Firstname = Firstname,
@@ -49,7 +49,7 @@ namespace Netptune.Core.Entities
 
         public WorkspaceUserViewModel ToWorkspaceViewModel(string workspaceOwnerId)
         {
-            return new WorkspaceUserViewModel
+            return new()
             {
                 Id = Id,
                 Firstname = Firstname,

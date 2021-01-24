@@ -12,7 +12,7 @@ namespace Netptune.Core.Models.Import
 
         public static HeaderValidationResult Success()
         {
-            return new HeaderValidationResult
+            return new()
             {
                 IsSuccess = true,
             };

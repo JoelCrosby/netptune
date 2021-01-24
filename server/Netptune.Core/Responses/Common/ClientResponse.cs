@@ -12,7 +12,7 @@ namespace Netptune.Core.Responses.Common
 
         public static ClientResponse Success(string message = null)
         {
-            return new ClientResponse
+            return new()
             {
                 IsSuccess = true,
                 Message = message,
@@ -21,7 +21,7 @@ namespace Netptune.Core.Responses.Common
 
         public static ClientResponse Failed(string message = null)
         {
-            return new ClientResponse
+            return new()
             {
                 IsSuccess = false,
                 Message = message,
@@ -39,7 +39,7 @@ namespace Netptune.Core.Responses.Common
 
         public static new ClientResponse<TPayload> Success(string message = null)
         {
-            return new ClientResponse<TPayload>
+            return new()
             {
                 IsSuccess = true,
                 Message = message,
@@ -48,7 +48,7 @@ namespace Netptune.Core.Responses.Common
 
         public static new ClientResponse<TPayload> Failed(string message = null)
         {
-            return new ClientResponse<TPayload>
+            return new()
             {
                 IsSuccess = false,
                 Message = message,
@@ -57,7 +57,7 @@ namespace Netptune.Core.Responses.Common
 
         public static ClientResponse<TPayload> Success(TPayload payload, string message = null)
         {
-            return new ClientResponse<TPayload>
+            return new()
             {
                 IsSuccess = true,
                 Message = message,
@@ -67,7 +67,7 @@ namespace Netptune.Core.Responses.Common
 
         public static ClientResponse<TPayload> Failed(TPayload payload, string message = null)
         {
-            return new ClientResponse<TPayload>
+            return new()
             {
                 IsSuccess = false,
                 Message = message,

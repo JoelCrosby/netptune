@@ -91,7 +91,7 @@ namespace Netptune.Core.Entities
 
         private static Board GenerateDefaultBoard(Project project, int workspaceId)
         {
-            return new Board
+            return new()
             {
                 Identifier = GenerateDefaultBoardId(project.Key),
                 Name = project.Name,
