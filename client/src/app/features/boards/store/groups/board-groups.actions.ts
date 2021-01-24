@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { AppUser } from '@core/models/appuser';
-import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
@@ -204,8 +203,7 @@ export const deleteTaskMultiple = createAction(
 );
 
 export const deleteTasksMultipleSuccess = createAction(
-  '[BoardGroups] Delete Task Multiple Success',
-  props<{ response: ClientResponse }>()
+  '[BoardGroups] Delete Task Multiple Success'
 );
 
 export const deleteTasksMultipleFail = createAction(
@@ -221,8 +219,7 @@ export const moveSelectedTasks = createAction(
 );
 
 export const moveSelectedTasksSuccess = createAction(
-  '[BoardGroups] Move Selected Tasks Success',
-  props<{ response: ClientResponse }>()
+  '[BoardGroups] Move Selected Tasks Success'
 );
 
 export const moveSelectedTasksFail = createAction(
@@ -238,8 +235,7 @@ export const reassignTasks = createAction(
 );
 
 export const reassignTasksSuccess = createAction(
-  '[BoardGroups] Re-assigned Tasks Success',
-  props<{ response: ClientResponse }>()
+  '[BoardGroups] Re-assigned Tasks Success'
 );
 
 export const reassignTasksFail = createAction(

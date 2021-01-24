@@ -95,13 +95,11 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteProjectSuccess, (state, { response, projectId }) =>
-    response.isSuccess
-      ? adapter.removeOne(projectId, {
-          ...state,
-          deleteState: { loading: false },
-        })
-      : state
+  on(actions.deleteProjectSuccess, (state, { projectId }) =>
+    adapter.removeOne(projectId, {
+      ...state,
+      deleteState: { loading: false },
+    })
   ),
 
   // Get Project Boards

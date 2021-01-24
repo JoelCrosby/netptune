@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -91,6 +92,7 @@ export class WorkspacesEffects {
       ofType(actions.isSlugUniue),
       switchMap((action) =>
         this.workspacesService.isSlugUnique(action.slug).pipe(
+          unwrapClientReposne(),
           map((response) => actions.isSlugUniueSuccess({ response })),
           catchError((error) => of(actions.isSlugUniueFail({ error })))
         )

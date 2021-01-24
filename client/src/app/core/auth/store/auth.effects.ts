@@ -5,6 +5,7 @@ import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { openSideNav } from '@core/store/layout/layout.actions';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -164,11 +165,10 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.requestPasswordReset(action.email).pipe(
+            unwrapClientReposne(),
             tap(() => this.snackbar.open('Password reset email has been sent')),
             tap(() => this.router.navigate(['/auth/login'])),
-            map((response) =>
-              actions.requestPasswordResetSuccess({ response })
-            ),
+            map(() => actions.requestPasswordResetSuccess()),
             catchError((error) =>
               of(actions.requestPasswordResetFail({ error }))
             )

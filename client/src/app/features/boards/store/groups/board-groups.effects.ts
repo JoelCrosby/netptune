@@ -223,8 +223,9 @@ export class BoardGroupsEffects {
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) =>
         this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
+          unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks Deleted')),
-          map((response) => actions.deleteTasksMultipleSuccess({ response })),
+          map(() => actions.deleteTasksMultipleSuccess()),
           catchError((error) => of(actions.deleteTasksMultipleFail({ error })))
         )
       )
@@ -253,8 +254,9 @@ export class BoardGroupsEffects {
             taskIds,
           })
           .pipe(
+            unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Moved')),
-            map((response) => actions.moveSelectedTasksSuccess({ response })),
+            map(() => actions.moveSelectedTasksSuccess()),
             catchError((error) => of(actions.moveSelectedTasksFail({ error })))
           )
       )
@@ -313,8 +315,9 @@ export class BoardGroupsEffects {
             taskIds,
           })
           .pipe(
+            unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Re-assigned')),
-            map((response) => actions.reassignTasksSuccess({ response })),
+            map(() => actions.reassignTasksSuccess()),
             catchError((error) => of(actions.reassignTasksFail({ error })))
           )
       )

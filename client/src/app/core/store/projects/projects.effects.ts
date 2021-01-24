@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -99,10 +100,10 @@ export class ProjectsEffects {
 
               return this.projectsService.delete(project).pipe(
                 debounceTime(debounce, scheduler),
+                unwrapClientReposne(),
                 tap(() => this.snackbar.open('Project deleted')),
-                map((response) =>
+                map(() =>
                   actions.deleteProjectSuccess({
-                    response,
                     projectId: project.id,
                   })
                 ),

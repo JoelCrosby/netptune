@@ -71,7 +71,8 @@ export class TagsEffects {
             if (!result) return of({ type: 'NO_ACTION' });
 
             return this.tagsService.delete({ tags: action.tags }).pipe(
-              map((response) => actions.deleteTagsSuccess({ response })),
+              unwrapClientReposne(),
+              map(() => actions.deleteTagsSuccess()),
               catchError((error) => of(actions.deleteTagsFail(error)))
             );
           })
@@ -85,7 +86,8 @@ export class TagsEffects {
       ofType(actions.deleteTagFromTask),
       switchMap(({ systemId, tag }) =>
         this.tagsService.deleteFromTask({ systemId, tag }).pipe(
-          map((response) => actions.deleteTagFromTaskSuccess({ response })),
+          unwrapClientReposne(),
+          map(() => actions.deleteTagFromTaskSuccess()),
           catchError((error) => of(actions.deleteTagFromTaskFail(error)))
         )
       )

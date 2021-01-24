@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { createAction, props } from '@ngrx/store';
@@ -63,10 +62,7 @@ export const deleteTags = createAction(
   props<{ tags: string[] }>()
 );
 
-export const deleteTagsSuccess = createAction(
-  '[Tags] Delete Tags Success',
-  props<{ response: ClientResponse }>()
-);
+export const deleteTagsSuccess = createAction('[Tags] Delete Tags Success');
 
 export const deleteTagsFail = createAction(
   '[Tags] Delete Tags Fail',
@@ -81,8 +77,7 @@ export const deleteTagFromTask = createAction(
 );
 
 export const deleteTagFromTaskSuccess = createAction(
-  '[Tags] Delete Tag From Task Success',
-  props<{ response: ClientResponse }>()
+  '[Tags] Delete Tag From Task Success'
 );
 
 export const deleteTagFromTaskFail = createAction(

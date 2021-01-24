@@ -2,7 +2,6 @@ import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 
@@ -95,7 +94,7 @@ export const deleteProject = createAction(
 
 export const deleteProjectSuccess = createAction(
   '[Projects] Delete Project Success',
-  props<{ response: ClientResponse; projectId: number }>()
+  props<{ projectId: number }>()
 );
 
 export const deleteProjectFail = createAction(

@@ -58,7 +58,7 @@ const reducer = createReducer(
     ...state,
     profile: {
       ...state.profile,
-      pictureUrl: response.payload?.uri,
+      pictureUrl: response?.uri,
     },
   }))
 );

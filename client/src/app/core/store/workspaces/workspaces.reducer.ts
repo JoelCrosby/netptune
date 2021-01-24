@@ -68,7 +68,7 @@ const reducer = createReducer(
   })),
   on(actions.isSlugUniueSuccess, (state, { response }) => ({
     ...state,
-    isSlugUnique: response.payload,
+    isSlugUnique: response,
     isSlugUniqueLoading: false,
   }))
 );

@@ -5,7 +5,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { CommentViewModel } from '@core/models/comment';
 import { FileResponse } from '@core/types/file-response';
-import { ClientResponse } from '@core/models/client-response';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
@@ -165,7 +164,7 @@ export const deleteComment = createAction(
 
 export const deleteCommentSuccess = createAction(
   '[ProjectTasks] Delete Comment Success',
-  props<{ response: ClientResponse; commentId: number }>()
+  props<{ commentId: number }>()
 );
 
 export const deleteCommentFail = createAction(
@@ -195,8 +194,7 @@ export const importTasks = createAction(
 );
 
 export const importTasksSuccess = createAction(
-  '[ProjectTasks] Import Tasks Success',
-  props<{ reponse: ClientResponse }>()
+  '[ProjectTasks] Import Tasks Success'
 );
 
 export const importTasksFail = createAction(
@@ -212,8 +210,7 @@ export const deleteTagFromTask = createAction(
 );
 
 export const deleteTagFromTaskSuccess = createAction(
-  '[ProjectTasks] Delete Tag From Task Success',
-  props<{ response: ClientResponse }>()
+  '[ProjectTasks] Delete Tag From Task Success'
 );
 
 export const deleteTagFromTaskFail = createAction(

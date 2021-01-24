@@ -26,12 +26,10 @@ const reducer = createReducer(
     loadingError: error,
   })),
   on(actions.createBoardSuccess, (state, { response }) =>
-    response.isSuccess
-      ? adapter.addOne(response.payload, {
-          ...state,
-          loadingCreate: false,
-        })
-      : state
+    adapter.addOne(response, {
+      ...state,
+      loadingCreate: false,
+    })
   ),
 
   // Delete Board
@@ -44,13 +42,11 @@ const reducer = createReducer(
     ...state,
     deleteState: { loading: false, error },
   })),
-  on(actions.deleteBoardSuccess, (state, { response, boardId }) =>
-    response.isSuccess
-      ? adapter.removeOne(boardId, {
-          ...state,
-          deleteState: { loading: false },
-        })
-      : state
+  on(actions.deleteBoardSuccess, (state, { boardId }) =>
+    adapter.removeOne(boardId, {
+      ...state,
+      deleteState: { loading: false },
+    })
   )
 );
 
