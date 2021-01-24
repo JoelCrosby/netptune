@@ -4,7 +4,7 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
@@ -21,18 +21,27 @@ export interface BoardGroupDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupDialogComponent implements OnInit {
-  groupFormControl = new FormControl();
+  formGroup: FormGroup;
+
+  get group() {
+    return this.formGroup.get('group');
+  }
 
   constructor(
     private store: Store,
+    private fb: FormBuilder,
     public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.formGroup = this.fb.group({
+      group: [],
+    });
+  }
 
   onSubmit() {
-    const name = this.groupFormControl.value;
+    const name = this.group.value;
     const identifier = this.data.identifier;
 
     this.store.dispatch(

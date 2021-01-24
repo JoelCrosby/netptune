@@ -95,7 +95,7 @@ export class ProjectTasksHubService {
   }
 
   disconnect() {
-    this.hub.disconnect();
+    this.hub.disconnect().then(() => console.log('disconnected'));
   }
 
   addToGroup(groupId: string) {

@@ -1,1 +1,9 @@
+.app-list {
+  min-height: 128px;
+  max-height: 496px;
+  overflow-y: auto;
+}
 
+.app-list-item {
+  padding: 0 1rem;
+}

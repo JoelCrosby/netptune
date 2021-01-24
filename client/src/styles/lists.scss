@@ -10,6 +10,15 @@
   padding: .6rem;
 }
 
+.app-list-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: .6;
+}
+
 .app-list-item {
   height: 40px;
   max-height: 40px;

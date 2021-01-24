@@ -31,7 +31,7 @@ export class FormInputComponent implements ControlValueAccessor {
 
   @Output() submitted = new EventEmitter<string>();
 
-  value: string | number = '';
+  value: string | number | null | undefined = '';
 
   onChange: (value: string) => void;
   onTouch: (...args: unknown[]) => void;
@@ -59,7 +59,12 @@ export class FormInputComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string) {
-    this.value = value;
+    if (value === null || value === undefined) {
+      this.value = '';
+      this.input.nativeElement.value = '';
+    } else {
+      this.value = value;
+    }
   }
 
   registerOnChange(fn: (...args: unknown[]) => unknown) {
