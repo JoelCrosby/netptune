@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { AppUser } from '@core/models/appuser';
+import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
 @Component({
@@ -16,7 +16,7 @@ import { CommentViewModel } from '@core/models/comment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsListComponent {
-  @Input() user: AppUser;
+  @Input() user: UserResponse;
   @Input() comments: CommentViewModel[];
 
   @Output() deleteComment = new EventEmitter<CommentViewModel>();
