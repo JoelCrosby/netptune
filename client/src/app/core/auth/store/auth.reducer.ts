@@ -84,10 +84,9 @@ const reducer = createReducer(
     ...state,
     requestPasswordResetLoading: true,
   })),
-  on(actions.requestPasswordResetSuccess, (state, { response }) => ({
+  on(actions.requestPasswordResetSuccess, (state) => ({
     ...state,
     requestPasswordResetLoading: false,
-    requestPasswordReset: response,
   })),
   on(actions.requestPasswordResetFail, (state, { error }) => ({
     ...state,

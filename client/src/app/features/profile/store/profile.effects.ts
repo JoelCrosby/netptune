@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -63,8 +64,9 @@ export class ProfileEffects {
       ofType(actions.changePassword),
       switchMap((action) =>
         this.profileService.changePassword(action.request).pipe(
-          tap((res) => res.isSuccess && this.snackbar.open('Password Changed')),
-          map((response) => actions.changePasswordSuccess({ response })),
+          unwrapClientReposne(),
+          tap(() => this.snackbar.open('Password Changed')),
+          map(() => actions.changePasswordSuccess()),
           catchError(() => of(actions.changePasswordFail()))
         )
       )
@@ -77,6 +79,7 @@ export class ProfileEffects {
       filter((action) => !!action.data),
       switchMap((action) =>
         this.profileService.uloadProfilePicture(action.data).pipe(
+          unwrapClientReposne(),
           map((response) => actions.uploadProfilePictureSuccess({ response })),
           catchError((error) => of(actions.uploadProfilePictureFail({ error })))
         )

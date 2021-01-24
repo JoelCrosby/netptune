@@ -1,9 +1,6 @@
 import { AppUser } from '@core/models/appuser';
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ClientResponse,
-} from '@core/models/client-response';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { UploadResponse } from '@core/models/upload-result';
 
@@ -46,8 +43,7 @@ export const changePassword = createAction(
 );
 
 export const changePasswordSuccess = createAction(
-  '[Profile] Change Password Success',
-  props<{ response: ClientResponse }>()
+  '[Profile] Change Password Success'
 );
 
 export const changePasswordFail = createAction(
@@ -63,7 +59,7 @@ export const uploadProfilePicture = createAction(
 
 export const uploadProfilePictureSuccess = createAction(
   '[Profile] Upload Profile Picture Success',
-  props<{ response: ClientResponse<UploadResponse> }>()
+  props<{ response: UploadResponse }>()
 );
 
 export const uploadProfilePictureFail = createAction(

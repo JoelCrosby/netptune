@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Workspace } from '@core/models/workspace';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 
 // Load Workspaces
@@ -85,7 +84,7 @@ export const isSlugUniue = createAction(
 
 export const isSlugUniueSuccess = createAction(
   '[Workspaces] Is Slug Unique Success ',
-  props<{ response: ClientResponse<IsSlugUniqueResponse> }>()
+  props<{ response: IsSlugUniqueResponse }>()
 );
 
 export const isSlugUniueFail = createAction(

@@ -1,7 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  ClientResponse,
-} from '@core/models/client-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { createAction, props } from '@ngrx/store';
@@ -31,7 +28,7 @@ export const createBoard = createAction(
 
 export const createBoardSuccess = createAction(
   '[Boards] Create Board Success',
-  props<{ response: ClientResponse<BoardViewModel> }>()
+  props<{ response: BoardViewModel }>()
 );
 
 export const createBoardFail = createAction(
@@ -48,7 +45,7 @@ export const deleteBoard = createAction(
 
 export const deleteBoardSuccess = createAction(
   '[Boards] Delete Board Success',
-  props<{ response: ClientResponse; boardId: number }>()
+  props<{ boardId: number }>()
 );
 
 export const deleteBoardFail = createAction(

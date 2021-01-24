@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
 import { RegisterRequest } from '@core/models/register-request';
 import { createAction, props } from '@ngrx/store';
 import {
@@ -90,8 +89,7 @@ export const requestPasswordReset = createAction(
 );
 
 export const requestPasswordResetSuccess = createAction(
-  '[Auth] Request Password Reset Succeeded',
-  props<{ response: ClientResponse }>()
+  '[Auth] Request Password Reset Succeeded'
 );
 
 export const requestPasswordResetFail = createAction(

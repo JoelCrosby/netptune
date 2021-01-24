@@ -94,10 +94,10 @@ export class ProjectTasksEffects {
             return this.projectTasksService
               .deleteComment(action.commentId)
               .pipe(
+                unwrapClientReposne(),
                 tap(() => this.snackbar.open('Comment deleted')),
-                map((response) =>
+                map(() =>
                   actions.deleteCommentSuccess({
-                    response,
                     commentId: action.commentId,
                   })
                 ),
@@ -165,14 +165,9 @@ export class ProjectTasksEffects {
         this.projectTasksService
           .import(action.boardIdentifier, action.file)
           .pipe(
-            map((reponse) => actions.importTasksSuccess({ reponse })),
-            tap((response) => {
-              if (response?.reponse?.isSuccess) {
-                this.snackbar.open('Import Successful');
-              } else {
-                this.snackbar.open('Import Failed');
-              }
-            }),
+            unwrapClientReposne(),
+            tap(() => this.snackbar.open('Import Successful')),
+            map(() => actions.importTasksSuccess()),
             catchError((error) => {
               this.snackbar.open('Import Failed');
               return of(actions.importTasksFail({ error }));
@@ -202,7 +197,8 @@ export class ProjectTasksEffects {
         this.projectTasksHubService
           .deleteTagFromTask(identifier, { systemId, tag })
           .pipe(
-            map((response) => actions.deleteTagFromTaskSuccess({ response })),
+            unwrapClientReposne(),
+            map(() => actions.deleteTagFromTaskSuccess()),
             catchError((error) => of(actions.deleteTagFromTaskFail(error)))
           )
       )

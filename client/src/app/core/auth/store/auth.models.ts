@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientResponse } from '@core/models/client-response';
 
 export interface AuthState {
   token?: UserToken;
@@ -17,7 +16,6 @@ export interface AuthState {
   requestPasswordResetError?: HttpErrorResponse | Error;
   resetPasswordLoading: boolean;
   resetPasswordError?: HttpErrorResponse | Error;
-  requestPasswordReset?: ClientResponse;
 }
 
 export const initialState: AuthState = {

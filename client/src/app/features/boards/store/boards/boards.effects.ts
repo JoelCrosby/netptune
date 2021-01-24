@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -37,6 +38,7 @@ export class BoardsEffects {
       ofType(actions.createBoard),
       switchMap((action) =>
         this.boardsService.post(action.request).pipe(
+          unwrapClientReposne(),
           map((response) => actions.createBoardSuccess({ response })),
           catchError((error) => of(actions.createBoardFail({ error })))
         )
@@ -53,10 +55,10 @@ export class BoardsEffects {
             if (!result) return of({ type: 'NO_ACTION' });
 
             return this.boardsService.delete(action.boardId).pipe(
+              unwrapClientReposne(),
               tap(() => this.snackbar.open('Board Deleted')),
-              map((response) =>
+              map(() =>
                 actions.deleteBoardSuccess({
-                  response,
                   boardId: action.boardId,
                 })
               ),
