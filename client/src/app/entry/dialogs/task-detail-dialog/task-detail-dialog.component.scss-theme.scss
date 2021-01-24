@@ -18,15 +18,6 @@
   }
 
   .comments-container {
-    .mat-form-field-flex {
-      border-radius: 4px 4px 0 0;
-      padding: 0 .75em;
-    }
-
-    .mat-form-field-suffix {
-      margin: auto;
-    }
-
     .material-icons-outlined {
       color: mat-color($foreground, icon, .4);
     }

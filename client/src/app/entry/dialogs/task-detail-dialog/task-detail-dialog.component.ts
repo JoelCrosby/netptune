@@ -65,7 +65,6 @@ export class TaskDetailDialogComponent
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
   projectFromGroup: FormGroup;
-  commentsFromGroup: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
@@ -80,10 +79,6 @@ export class TaskDetailDialogComponent
 
   get description() {
     return this.projectFromGroup.get('description');
-  }
-
-  get comment() {
-    return this.commentsFromGroup.get('comment');
   }
 
   ngOnInit() {
@@ -126,12 +121,6 @@ export class TaskDetailDialogComponent
       description: new FormControl(task?.description, {
         updateOn: 'change',
         validators: [],
-      }),
-    });
-
-    this.commentsFromGroup = new FormGroup({
-      comment: new FormControl('', {
-        updateOn: 'change',
       }),
     });
 
@@ -178,9 +167,7 @@ export class TaskDetailDialogComponent
     this.store.dispatch(TaskActions.loadComments({ systemId: task.systemId }));
   }
 
-  onCommentSubmit() {
-    const value = this.comment.value as string;
-
+  onCommentSubmit(value: string) {
     if (!value) return;
 
     this.getTaskObservable()
@@ -193,8 +180,6 @@ export class TaskDetailDialogComponent
           };
 
           this.store.dispatch(TaskActions.addComment({ request }));
-
-          this.comment.reset();
         })
       )
       .subscribe();
