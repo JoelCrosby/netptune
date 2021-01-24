@@ -1,14 +1,6 @@
-import {
-  Component,
-  Inject,
-  OnInit,
-  Optional,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -17,31 +9,21 @@ import { MatChipInputEvent } from '@angular/material/chips';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InviteDialogComponent implements OnInit {
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
   users: string[] = [];
 
   get email() {
-    return this.inviteFromGroup.get('email');
+    return this.formGroup.get('email');
   }
 
-  inviteFromGroup = new FormGroup({
+  formGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(
-    public dialogRef: MatDialogRef<InviteDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: string
-  ) {}
+  constructor(private dialogRef: MatDialogRef<InviteDialogComponent>) {}
 
   ngOnInit() {}
 
-  close(): void {
+  close() {
     this.dialogRef.close();
   }
 
@@ -49,18 +31,20 @@ export class InviteDialogComponent implements OnInit {
     this.dialogRef.close(this.users);
   }
 
-  add(event: MatChipInputEvent): void {
+  add() {
     if (!this.email.valid) {
       this.email.markAsDirty();
       return;
     }
 
-    const value = event.value;
+    const user = this.email.value;
 
-    if ((value || '').trim()) {
-      this.users.push(value.trim());
+    if (this.users.includes(user)) {
+      this.email.reset();
+      return;
     }
 
+    this.users.push(user);
     this.email.reset();
   }
 

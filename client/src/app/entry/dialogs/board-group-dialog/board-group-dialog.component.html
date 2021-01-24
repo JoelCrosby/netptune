@@ -1,16 +1,16 @@
 <h1 mat-dialog-title>Add Group</h1>
 
 <div mat-dialog-content>
-  <mat-form-field appearance="fill">
-    <mat-label>
-      Group Name
-    </mat-label>
-    <input
-      matInput
-      [formControl]="groupFormControl"
-      (keydown.enter)="onSubmit()"
+
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <app-form-input
+      formControlName="group"
+      label="Group Name"
+      maxLength="128"
     >
-  </mat-form-field>
+    </app-form-input>
+  </form>
+
 </div>
 
 <div mat-dialog-actions align="end">

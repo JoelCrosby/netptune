@@ -1,47 +1,29 @@
 <h1 mat-dialog-title>Invite Users to Workspace</h1>
 
 <mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="add()">
 
-  <p>
-    You can enter multiple addresses seperated by commas
-  </p>
-
-  <form [formGroup]="inviteFromGroup">
-
-    <mat-form-field
-      class="w-100"
-      appearance="fill"
+    <app-form-input
+      formControlName="email"
+      label="Invitee Email"
+      maxLength="128"
+      type="email"
     >
-      <mat-label>Email Addresses</mat-label>
-      <mat-chip-list
-        #chipList
-        aria-label="Users"
-      >
-        <mat-chip
-          *ngFor="let user of users"
-          [selectable]="selectable"
-          [removable]="removable"
-          (removed)="remove(user)"
-        >
-          {{user}}
-          <mat-icon
-            matChipRemove
-            *ngIf="removable"
-          >
-            cancel
-          </mat-icon>
-        </mat-chip>
-        <input
-          class="form-control"
-          formControlName="email"
-          [matChipInputFor]="chipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="add($event)"
-        >
-      </mat-chip-list>
-      <mat-error *ngIf="email.invalid">{{ getErrorMessage() }}</mat-error>
-    </mat-form-field>
+    </app-form-input>
+
+    <div class="app-list">
+      <ng-container *ngIf="users?.length; else elseTemplate">
+        <div *ngFor="let user of users" class="app-list-item">
+          {{ user }}
+        </div>
+      </ng-container>
+
+      <ng-template #elseTemplate>
+        <div class="app-list-message">
+          Email addresses entered below will show here.
+        </div>
+      </ng-template>
+    </div>
 
   </form>
 </mat-dialog-content>
