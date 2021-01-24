@@ -103,6 +103,7 @@ export class BoardGroupsEffects {
         this.tasksHubService
           .post(identifier, { ...action.task, assigneeId: userId })
           .pipe(
+            unwrapClientReposne(),
             tap(() => this.snackbar.open('Task created')),
             map((task) => actions.createProjectTasksSuccess({ task })),
             catchError((error) => of(actions.createProjectTasksFail({ error })))
