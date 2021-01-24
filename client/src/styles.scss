@@ -111,6 +111,7 @@
   @include angular-material-theme($default-theme);
   @include custom-components-theme($default-theme);
 
+  color-scheme: light;
   color: rgba(0, 0, 0, .8);
 }
 
@@ -118,5 +119,6 @@
   @include angular-material-theme($dark-theme);
   @include custom-components-theme($dark-theme);
 
+  color-scheme: dark;
   color: rgba(255, 255, 255, .8);
 }
