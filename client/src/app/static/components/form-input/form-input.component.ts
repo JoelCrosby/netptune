@@ -61,7 +61,9 @@ export class FormInputComponent implements ControlValueAccessor {
   writeValue(value: string) {
     if (value === null || value === undefined) {
       this.value = '';
-      this.input.nativeElement.value = '';
+      if (this.input) {
+        this.input.nativeElement.value = '';
+      }
     } else {
       this.value = value;
     }
