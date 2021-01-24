@@ -7,8 +7,8 @@ namespace Netptune.Core.Import
 {
     public class HeaderValidator
     {
-        private readonly List<string> InValidHeaders = new List<string>();
-        private readonly List<string> MissingHeaders = new List<string>();
+        private readonly List<string> InValidHeaders = new();
+        private readonly List<string> MissingHeaders = new();
 
         public void ValidateHeaderRow(bool isValid, IList<string> headerNames, int index, ICollection<string> optionalHeaders)
         {

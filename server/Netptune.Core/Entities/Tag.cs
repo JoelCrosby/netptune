@@ -23,7 +23,7 @@ namespace Netptune.Core.Entities
 
         public TagViewModel ToViewModel()
         {
-            return new TagViewModel
+            return new()
             {
                 Id = Id,
                 Name = Name,

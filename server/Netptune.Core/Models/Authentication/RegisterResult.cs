@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Authentication.Models;
+using Netptune.Core.Authentication.Models;
 
 namespace Netptune.Core.Models.Authentication
 {
@@ -19,12 +19,12 @@ namespace Netptune.Core.Models.Authentication
 
         public static RegisterResult Success(AuthenticationTicket ticket)
         {
-            return new RegisterResult(true, ticket);
+            return new(true, ticket);
         }
 
         public static RegisterResult Failed(string message = null)
         {
-            return new RegisterResult(false, null, message);
+            return new(false, null, message);
         }
     }
 }

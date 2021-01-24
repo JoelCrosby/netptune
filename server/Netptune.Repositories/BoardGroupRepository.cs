@@ -146,7 +146,7 @@ namespace Netptune.Repositories
                     Type = row.Board_Group_Type,
                     Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
                     {
-                        new BoardViewTask
+                        new()
                         {
                             Id = row.Task_Id.Value,
                             Name = row.Task_Name,

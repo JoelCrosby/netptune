@@ -14,7 +14,7 @@ namespace Netptune.Core.ViewModels.Web
 
         public string Keywords { get; set; }
 
-        public MetaInfoImage Image { get; set; } = new MetaInfoImage();
+        public MetaInfoImage Image { get; set; } = new();
     }
 
     public class MetaInfoImage
