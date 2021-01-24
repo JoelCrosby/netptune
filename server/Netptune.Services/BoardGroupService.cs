@@ -9,10 +9,11 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services
 {
-    public class BoardGroupService : ServiceBase<BoardGroup>, IBoardGroupService
+    public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupService
     {
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
@@ -32,7 +33,7 @@ namespace Netptune.Services
             return BoardGroups.GetAsync(id, true);
         }
 
-        public async Task<ClientResponse<BoardGroup>> UpdateBoardGroup(UpdateBoardGroupRequest request)
+        public async Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request)
         {
             var result = await BoardGroups.GetAsync(request.BoardGroupId);
 
@@ -50,10 +51,10 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return Success(result);
+            return Success(result.ToViewModel());
         }
 
-        public async Task<ClientResponse<BoardGroup>> AddBoardGroup(AddBoardGroupRequest request)
+        public async Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(AddBoardGroupRequest request)
         {
             var boardId = request.BoardId ?? throw new ArgumentNullException(nameof(request.BoardId));
 
@@ -75,7 +76,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            return Success(boardGroup);
+            return Success(boardGroup.ToViewModel());
         }
 
         public async Task<ClientResponse> Delete(int id)

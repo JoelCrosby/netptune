@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
-import { BoardGroupType } from '@core/models/board-group';
+import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
 import { selectSelectedTags } from '@core/store/tags/tags.selectors';
@@ -85,7 +85,10 @@ export class BoardGroupsEffects {
         this.tasksHubService
           .addBoardGroup(action.identifier, action.request)
           .pipe(
-            map((response) => actions.createBoardGroupSuccess({ response })),
+            unwrapClientReposne(),
+            map((boardGroup) =>
+              actions.createBoardGroupSuccess({ boardGroup })
+            ),
             catchError((error) => of(actions.createBoardGroupFail({ error })))
           )
       )

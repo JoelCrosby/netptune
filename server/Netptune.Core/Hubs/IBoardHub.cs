@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
 
@@ -25,7 +25,7 @@ namespace Netptune.Core.Hubs
 
         Task Update(TaskViewModel request);
 
-        Task UpdateGroup(BoardGroup request);
+        Task UpdateGroup(BoardGroupViewModel request);
 
         Task AddTagToTask(TagViewModel response);
 

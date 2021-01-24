@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Entities
@@ -32,7 +33,23 @@ namespace Netptune.Core.Entities
         #region NotMapped
 
         [NotMapped]
-        public List<TaskViewModel> Tasks { get; set; } = new List<TaskViewModel>();
+        public List<TaskViewModel> Tasks { get; set; } = new();
+
+        #endregion
+
+        #region Methods
+
+        public BoardGroupViewModel ToViewModel()
+        {
+            return new()
+            {
+                Id = Id,
+                Name = Name,
+                BoardId = BoardId,
+                Type = Type,
+                SortOrder = SortOrder,
+            };
+        }
 
         #endregion
     }

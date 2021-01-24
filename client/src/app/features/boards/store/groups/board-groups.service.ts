@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
-import { BoardGroup } from '@core/models/board-group';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { environment } from '@env/environment';
 
@@ -22,7 +22,7 @@ export class BoardGroupsService {
   }
 
   post(request: AddBoardGroupRequest) {
-    return this.http.post<BoardGroup>(
+    return this.http.post<BoardGroupViewModel>(
       environment.apiEndpoint + 'api/boardgroups',
       request
     );
@@ -41,8 +41,8 @@ export class BoardGroupsService {
     );
   }
 
-  put(boardGorup: BoardGroup | BoardViewGroup) {
-    return this.http.put<BoardGroup>(
+  put(boardGorup: BoardGroupViewModel | BoardViewGroup) {
+    return this.http.put<BoardGroupViewModel>(
       environment.apiEndpoint + 'api/boardgroups',
       boardGorup
     );

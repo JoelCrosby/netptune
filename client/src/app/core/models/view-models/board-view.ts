@@ -1,6 +1,6 @@
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AppUser } from '../appuser';
-import { BoardGroupType } from '../board-group';
+import { BoardGroupType } from './board-group-view-model';
 import { BoardViewModel } from './board-view-model';
 
 export interface BoardView {
