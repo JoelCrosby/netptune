@@ -12,10 +12,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
-interface SelectOption {
-  [key: string]: unknown;
-}
-
 @Component({
   selector: 'app-form-select',
   templateUrl: './form-select.component.html',
@@ -33,8 +29,12 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
   @Input() minLength: string = null;
   @Input() maxLength: string = null;
 
-  @Input() options: SelectOption[] = [];
-  @Input() model: SelectOption;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() options: any[] = [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() model: any;
+
   @Input() labelKey: string;
   @Input() idKey: string;
 
