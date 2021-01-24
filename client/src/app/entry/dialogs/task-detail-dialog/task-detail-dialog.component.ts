@@ -102,7 +102,7 @@ export class TaskDetailDialogComponent
 
     this.user$ = this.store.select(selectCurrentUser);
     this.users$ = this.store.select(UsersSelectors.selectAllUsers).pipe(
-      withLatestFrom(this.task$),
+      withLatestFrom(this.getTaskObservable()),
       map(([users, task]) => users.filter((u) => u.id !== task.assigneeId))
     );
   }
@@ -170,6 +170,10 @@ export class TaskDetailDialogComponent
       .subscribe();
   }
 
+  getTaskObservable() {
+    return this.store.select(TaskSelectors.selectDetailTask);
+  }
+
   loadComments(task: TaskViewModel) {
     this.store.dispatch(TaskActions.loadComments({ systemId: task.systemId }));
   }
@@ -179,7 +183,7 @@ export class TaskDetailDialogComponent
 
     if (!value) return;
 
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         tap((viewModel) => {
@@ -224,7 +228,7 @@ export class TaskDetailDialogComponent
   }
 
   onFlagClicked() {
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         tap((task) => {
@@ -240,7 +244,7 @@ export class TaskDetailDialogComponent
   }
 
   selectProject(projectId: number) {
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         tap((task) => {
@@ -256,7 +260,7 @@ export class TaskDetailDialogComponent
   }
 
   selectAssignee(user: AppUser) {
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         tap((task) => {
@@ -283,7 +287,7 @@ export class TaskDetailDialogComponent
       )
       .subscribe();
 
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         withLatestFrom(this.store.select(selectCurrentHubGroupId)),
@@ -302,7 +306,7 @@ export class TaskDetailDialogComponent
   }
 
   onTagsSelectionChanged(event: AutocompleteChipsSelectionChanged) {
-    this.task$
+    this.getTaskObservable()
       .pipe(
         first(),
         withLatestFrom(this.store.select(selectCurrentHubGroupId)),
