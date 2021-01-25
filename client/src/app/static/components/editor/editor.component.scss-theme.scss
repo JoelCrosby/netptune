@@ -125,4 +125,9 @@
       display: block !important;
     }
   }
+
+  .link-tool__content--rendered {
+    border: 1px solid if($is-dark-theme, #2f2f2f, rgba(201, 201, 204, .48));
+    background-color: if($is-dark-theme, #2f2f2f, #fff);
+  }
 }

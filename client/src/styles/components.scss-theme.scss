@@ -7,6 +7,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  $is-dark-theme: map-get($theme, is-dark);
+
   // Material Cards
 
   .mat-card:not([class*='mat-elevation-z']) {
@@ -164,5 +166,11 @@
     font-size: 14px;
     font-weight: 500;
     color: mat-color($warn);
+  }
+
+  // Dialogs
+
+  .mat-dialog-container {
+    background: if($is-dark-theme, #353535, #fff);
   }
 }
