@@ -7,6 +7,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  $is-dark-theme: map-get($theme, is-dark);
+
   .form-control-label {
     color: mat-color($foreground, text, .6);
   }
@@ -17,7 +19,7 @@
 
   .form-control-input {
     background-color: transparent;
-    border-color: mat-color($foreground, text, .1) !important;
+    border-color: if($is-dark-theme, mat-color($foreground, text, .3), mat-color($foreground, text, .1)) !important;
 
     &:focus-within,
     &.active {
