@@ -127,7 +127,21 @@
   }
 
   .link-tool__content--rendered {
-    border: 1px solid if($is-dark-theme, #2f2f2f, rgba(201, 201, 204, .48));
+    border: 1px solid if($is-dark-theme, #3e3e3e, #c9c9cc7a);
     background-color: if($is-dark-theme, #2f2f2f, #fff);
+    box-shadow: none;
+  }
+
+  .link-tool__progress {
+    background-color: mat-color($primary, .08);
+  }
+
+  .link-tool__input {
+    background-color: transparent
+  }
+
+  .link-tool__input-holder--error
+  .link-tool__input {
+    background-color: mat-color($warn, .08);
   }
 }

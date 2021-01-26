@@ -77,7 +77,7 @@ export class EditorComponent implements ControlValueAccessor {
     this.editor = new EditorJS({
       logLevel: environment.production
         ? ('ERROR' as LogLevels)
-        : ('INFO' as LogLevels),
+        : ('WARN' as LogLevels),
       placeholder: this.placeholder,
       holder: this.el.nativeElement,
       minHeight: 100,
