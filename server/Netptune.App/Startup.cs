@@ -127,7 +127,6 @@ namespace Netptune.App
 
                 app.UseSpaStaticFiles(new StaticFileOptions
                 {
-                    RequestPath = "/app",
                     FileProvider = new PhysicalFileProvider(spaPath),
                 });
             }
