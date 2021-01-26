@@ -1,7 +1,10 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using AngleSharp;
 using AngleSharp.Dom;
+
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Web;
 
@@ -69,7 +72,7 @@ namespace Netptune.Services
                             matchCount++;
                             break;
                         case "twitter:image":
-                            metaInfo.Image.Url = GetTagContent(metaInfo.Image.Url, tagContent);
+                            metaInfo.Image.Url = GetImageTagContent(metaInfo.Image.Url, tagContent, formalUrl);
                             matchCount++;
                             break;
                     }
@@ -87,7 +90,7 @@ namespace Netptune.Services
                             matchCount++;
                             break;
                         case "og:image":
-                            metaInfo.Image.Url = GetTagContent(metaInfo.Image.Url, tagContent);
+                            metaInfo.Image.Url = GetImageTagContent(metaInfo.Image.Url, tagContent, formalUrl);
                             matchCount++;
                             break;
                     }
@@ -99,6 +102,26 @@ namespace Netptune.Services
             return metaInfo;
         }
 
+        private static string GetImageTagContent(string value, IAttr tagContent, string formalUrl)
+        {
+            var tag = GetTagContent(value, tagContent);
+
+            if (tag.StartsWith("https://") || tag.StartsWith("http://"))
+            {
+                return tag;
+            }
+
+            if (tag.StartsWith('.'))
+            {
+                return Path.Join(formalUrl, tag[1..]);
+            }
+
+            var uri = new Uri(formalUrl);
+            var baseUrl = uri.GetLeftPart(UriPartial.Authority);
+
+            return Path.Join(baseUrl, tag);
+        }
+
         private static string GetTagContent(string value, IAttr tagContent)
         {
             return string.IsNullOrEmpty(value) ? tagContent.Value : value;
@@ -108,14 +131,14 @@ namespace Netptune.Services
         {
             var lower = url.ToLowerInvariant();
 
-            if (lower.StartsWith("https://"))
+            if (lower.StartsWith("https://", StringComparison.Ordinal))
             {
                 return lower;
             }
 
-            if (lower.StartsWith("http://"))
+            if (lower.StartsWith("http://", StringComparison.Ordinal))
             {
-                return $"https://{lower[6..]}";
+                return lower;
             }
 
             return $"https://{lower}";
