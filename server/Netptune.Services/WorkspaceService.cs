@@ -51,7 +51,11 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                workspace.WorkspaceUsers.Add(new WorkspaceAppUser {UserId = user.Id, WorkspaceId = workspace.Id});
+                workspace.WorkspaceUsers.Add(new WorkspaceAppUser
+                {
+                    UserId = user.Id,
+                    WorkspaceId = workspace.Id
+                });
 
                 var projectKey = await UnitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);
 
