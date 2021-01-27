@@ -6,9 +6,9 @@ namespace Netptune.Core.Responses.Common
         {
         }
 
-        public bool IsSuccess { get; protected set; }
+        public bool IsSuccess { get; protected init; }
 
-        public string Message { get; protected set; }
+        public string Message { get; protected init; }
 
         public static ClientResponse Success(string message = null)
         {
@@ -35,7 +35,7 @@ namespace Netptune.Core.Responses.Common
         {
         }
 
-        public TPayload Payload { get; set; }
+        public TPayload Payload { get; protected init; }
 
         public static new ClientResponse<TPayload> Success(string message = null)
         {
