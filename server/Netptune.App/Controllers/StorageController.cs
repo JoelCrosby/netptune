@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
@@ -29,11 +30,17 @@ namespace Netptune.App.Controllers
 
         [HttpPost]
         [Route("profile-picture")]
+        [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadProfilePicture()
         {
-            var file = Request.Form.Files.FirstOrDefault();
+            var file = Request.Form.Files[0];
 
             if (file is null) return BadRequest();
+
+            if (file.Length > 50 * 1024 * 1024)
+            {
+                return BadRequest("Request file size exceeds maximum of 50MB.");
+            }
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
@@ -53,14 +60,20 @@ namespace Netptune.App.Controllers
         }
 
         [HttpPost]
-        [Route("media/{workspace}")]
+        [Route("media")]
         [Authorize(Policy = NetptunePolicies.Workspace)]
+        [DisableFormValueModelBinding]
         public async Task<IActionResult> UploadMedia()
         {
             var workspaceKey = Identity.GetWorkspaceKey();
-            var file = Request.Form.Files.ElementAtOrDefault(0);
+            var file = Request.Form.Files[0];
 
             if (file is null) return BadRequest();
+
+            if (file.Length > 50 * 1024 * 1024)
+            {
+                return BadRequest("Request file size exceeds maximum of 50MB.");
+            }
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
