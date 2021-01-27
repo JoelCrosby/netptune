@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Responses
+namespace Netptune.Core.Responses
 {
     public class UploadResponse
     {
@@ -7,5 +7,7 @@
         public string Path { get; set; }
 
         public string Uri { get; set; }
+
+        public long Size { get; set; }
     }
 }

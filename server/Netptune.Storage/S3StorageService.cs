@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -61,6 +61,7 @@ namespace Netptune.Storage
                     Key = key,
                     Path = key,
                     Uri = uri,
+                    Size = stream.Length,
                 });
             }
             catch (Exception e)
