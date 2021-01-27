@@ -45,18 +45,18 @@ namespace Netptune.Services.Import
             using var reader = new StreamReader(stream);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            csv.Configuration.PrepareHeaderForMatch = (header, index) => header.ToLower();
+            csv.Configuration.PrepareHeaderForMatch = (header, _) => header.ToLower();
 
             var headerValidator = new HeaderValidator();
 
-            csv.Configuration.MissingFieldFound = (headerNames, index, context) =>
+            csv.Configuration.MissingFieldFound = (headerNames, index, _) =>
             {
                 if (OptionalHeaders.Contains(headerNames[index])) return;
 
                 headerValidator.AddMissingField(headerNames[index]);
             };
 
-            csv.Configuration.HeaderValidated = (isValid, headerNames, index, context) =>
+            csv.Configuration.HeaderValidated = (isValid, headerNames, index, _) =>
             {
                 headerValidator.ValidateHeaderRow(isValid, headerNames, index, OptionalHeaders);
             };
@@ -297,7 +297,7 @@ namespace Netptune.Services.Import
                 .ToList();
         }
 
-        private static List<string> ParseUniqueTags(IEnumerable<TaskImportRow> rows)
+        private static IEnumerable<string> ParseUniqueTags(IEnumerable<TaskImportRow> rows)
         {
             return rows.Select(row => row.Tags).Select(ParseTagString).Aggregate(new HashSet<string>(), (prev, tags) =>
             {
@@ -307,7 +307,7 @@ namespace Netptune.Services.Import
                 }
 
                 return prev;
-            }).ToList();
+            });
         }
 
         private static IEnumerable<string> ParseTagString(string tagString)
