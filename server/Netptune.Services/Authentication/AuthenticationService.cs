@@ -143,9 +143,11 @@ namespace Netptune.Services.Authentication
                 PictureUrl = model.PictureUrl,
             };
 
-            var result = model.AuthenticationProvider == AuthenticationProvider.Netptune
-                ? await UserManager.CreateAsync(user, model.Password)
-                : await UserManager.CreateAsync(user);
+            var result = model.AuthenticationProvider switch
+            {
+                AuthenticationProvider.GitHub => await UserManager.CreateAsync(user),
+                _ => await UserManager.CreateAsync(user, model.Password),
+            };
 
             if (invite is {})
             {
