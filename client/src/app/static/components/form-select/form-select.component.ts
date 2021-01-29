@@ -42,7 +42,7 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
 
   @Output() submitted = new EventEmitter<string>();
 
-  value: string | number = '';
+  value: string | number = null;
 
   onChange: (value: string) => void;
   onTouch: (...args: unknown[]) => void;

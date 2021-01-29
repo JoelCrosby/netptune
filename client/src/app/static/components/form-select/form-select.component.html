@@ -31,6 +31,7 @@
       (input)="onInputchange($event)"
       (blur)="onTouch()"
     >
+      <option *ngIf="value == null" [value]="null"></option>
       <option *ngFor="let option of options" [value]="option[idKey]">
         {{ option[labelKey] }}
       </option>
