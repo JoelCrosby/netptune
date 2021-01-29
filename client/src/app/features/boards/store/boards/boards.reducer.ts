@@ -20,7 +20,7 @@ const reducer = createReducer(
 
   // Create Board
 
-  on(actions.createBoard, (state) => ({ ...state, loading: true })),
+  on(actions.createBoard, (state) => ({ ...state, loadingCreate: true })),
   on(actions.createBoardFail, (state, { error }) => ({
     ...state,
     loadingError: error,
