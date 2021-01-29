@@ -1,5 +1,9 @@
 version: "3.8"
 services:
+  netptune_redis:
+    image: redis
+    ports:
+    - '6379:6379'
   netptune_db:
     image: postgres
     environment:
@@ -11,10 +15,15 @@ services:
     ports:
       - '5432:5432'
   netptune:
-    image: joelcrosby/netptune:0.0.1
+    image: netptune
     environment:
+      NETPTUNE_SIGNING_KEY: '<netptune-jwt-key>'
+      NETPTUNE_GITHUB_CLIENT_ID: '<github-oauth-client-id>'
+      NETPTUNE_GITHUB_SECRET: '<github-oath-secret>'
+      SEND_GRID_API_KEY: '<send-grid-api-key'
       ASPNETCORE_ENVIRONMENT: 'docker'
     ports:
       - '8000:80'
     depends_on:
       - netptune_db
+      - netptune_redis
