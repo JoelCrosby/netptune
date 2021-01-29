@@ -36,7 +36,6 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'projects',
-        canActivate: [AuthGuardService],
         pathMatch: 'full',
       },
       {
@@ -88,10 +87,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-    enableTracing: false,
-    preloadingStrategy: PreloadAllModules,
-    relativeLinkResolution: 'legacy'
-}),
+      enableTracing: false,
+      preloadingStrategy: PreloadAllModules,
+      relativeLinkResolution: 'legacy',
+    }),
   ],
   exports: [RouterModule],
 })
