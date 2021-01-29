@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using CsvHelper;
+
 using Netptune.Core.Models.Import;
 
 namespace Netptune.Core.Import
@@ -10,11 +12,11 @@ namespace Netptune.Core.Import
         private readonly List<string> InValidHeaders = new();
         private readonly List<string> MissingHeaders = new();
 
-        public void ValidateHeaderRow(bool isValid, IList<string> headerNames, int index, ICollection<string> optionalHeaders)
+        public void ValidateHeaderRow(IEnumerable<InvalidHeader> invalidHeaders)
         {
-            if (isValid || optionalHeaders.Contains(headerNames[index])) return;
+            var headerNames = invalidHeaders.SelectMany(header => header.Names);
 
-            InValidHeaders.Add(headerNames[index]);
+            InValidHeaders.AddRange(headerNames);
         }
 
         public void AddMissingField(string field)

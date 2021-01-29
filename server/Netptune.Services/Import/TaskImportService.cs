@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using CsvHelper;
+using CsvHelper.Configuration;
 
 using MoreLinq.Extensions;
 
@@ -27,11 +28,6 @@ namespace Netptune.Services.Import
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
 
-        private readonly HashSet<string> OptionalHeaders = new()
-        {
-            "Tags"
-        };
-
         public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
         {
             UnitOfWork = unitOfWork;
@@ -42,25 +38,25 @@ namespace Netptune.Services.Import
         {
             var userId = await IdentityService.GetCurrentUserId();
 
-            using var reader = new StreamReader(stream);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-            csv.Configuration.PrepareHeaderForMatch = (header, _) => header.ToLower();
-
             var headerValidator = new HeaderValidator();
 
-            csv.Configuration.MissingFieldFound = (headerNames, index, _) =>
+            using var reader = new StreamReader(stream);
+            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                if (OptionalHeaders.Contains(headerNames[index])) return;
+                PrepareHeaderForMatch = (header, _) => header.ToLower(),
+                MissingFieldFound = (headerNames, index, _) =>
+                {
+                    headerValidator.AddMissingField(headerNames[index]);
+                },
+                HeaderValidated = (invalidHeaders, _) =>
+                {
+                    headerValidator.ValidateHeaderRow(invalidHeaders);
+                }
+            });
 
-                headerValidator.AddMissingField(headerNames[index]);
-            };
+            csv.Context.RegisterClassMap<TaskImportRowMap>();
 
-            csv.Configuration.HeaderValidated = (isValid, headerNames, index, _) =>
-            {
-                headerValidator.ValidateHeaderRow(isValid, headerNames, index, OptionalHeaders);
-            };
-
+            // Read csv rows into PCO
             var rows = await csv.GetRecordsAsync<TaskImportRow>().ToListAsync();
 
             var validationResult = headerValidator.GetResult();
