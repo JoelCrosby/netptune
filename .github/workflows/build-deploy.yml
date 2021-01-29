@@ -37,8 +37,4 @@ jobs:
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
-          echo "waiting 10s to deploy new image $GITHUB_SHA"
-          sleep 10
-          echo "deploying new image"
           ssh $DOKKU_HOST "dokku tags:deploy netptune $GITHUB_SHA"
-          echo "new image deployed"
