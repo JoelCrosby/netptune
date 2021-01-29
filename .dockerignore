@@ -1,9 +1,10 @@
-bin/
-obj/
+**/bin
+**/obj
 
-node_modules/
+**/dist
+**/node_modules
 
-.idea/
-.vs/
-.github/
+.idea
+.vs
+.github
 
