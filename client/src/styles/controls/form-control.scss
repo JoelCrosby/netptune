@@ -1,5 +1,6 @@
 .nept-form-control {
   width: inherit;
+  margin-bottom: 1.4rem;
 
   .form-control-prefix {
     padding-left: .8rem;
@@ -12,7 +13,6 @@
     flex-direction: row;
     align-items: center;
     transition: background-color .24s ease-out, border-color .14s ease-out;
-    margin-bottom: 1.4rem;
     width: inherit;
     max-width: inherit;
   }
@@ -29,7 +29,7 @@
 
   small {
     display: block;
-    margin-bottom: .4rem;
+    margin: .4rem .2rem;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: .125px;

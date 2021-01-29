@@ -25,6 +25,7 @@ export class FormInputComponent implements ControlValueAccessor {
   @Input() hint: string = null;
   @Input() minLength: string = null;
   @Input() maxLength: string = null;
+  @Input() loading = false;
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
 
   @ViewChild('input') input: ElementRef;
