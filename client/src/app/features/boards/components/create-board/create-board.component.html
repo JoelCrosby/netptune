@@ -9,96 +9,44 @@
 
   <div class="name-color-row">
 
-    <mat-form-field
-      class="w-100"
-      appearance="fill"
+    <app-form-input
+      formControlName="name"
+      label="Board Name"
+      maxLength="1024"
+      class="board-input-name"
     >
-      <mat-label>Board Name</mat-label>
-      <input
-        matInput
-        id="name"
-        class="form-control"
-        name="name"
-        formControlName="name"
-      >
-    </mat-form-field>
+    </app-form-input>
 
-    <mat-form-field
-      class="w-100 color-field color-select"
-      appearance="fill"
+    <app-form-select
+      formControlName="color"
+      label="Color"
+      [options]="colors"
+      labelKey="name"
+      idKey="color"
+      class="board-input-color"
     >
-      <mat-label>Color</mat-label>
-      <mat-select
-        formControlName="color"
-      >
-
-
-        <mat-select-trigger>
-          <div class="color-option">
-            <div
-              class="color-pallete"
-              [style.background-color]="selectedColor"
-            ></div>
-            <div class="label">{{ getColorLabel(selectedColor) }}</div>
-          </div>
-        </mat-select-trigger>
-
-
-        <mat-option
-          *ngFor="let item of colors"
-          [value]="item.color"
-        >
-          <div class="color-option">
-            <div
-              class="color-pallete"
-              [style.background-color]="item.color"
-            ></div>
-            <div class="label">{{ item.name }}</div>
-          </div>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    </app-form-select>
 
   </div>
 
-  <mat-form-field
-    class="w-100 identifier"
-    appearance="fill"
+  <app-form-input
+    formControlName="identifier"
+    label="Board Identifier"
+    maxLength="1024"
+    [icon]="identifierIcon$ | async"
+    [loading]="isUniqueLoading$ | async"
+    [hint]="identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
   >
-    <mat-label>Board Identifier</mat-label>
-    <input
-      matInput
-      id="identifier"
-      class="form-control"
-      name="identifier"
-      formControlName="identifier"
-    >
-    <mat-error *ngIf="identifier.hasError('already-taken')">
-      Identifier is already taken
-    </mat-error>
-    <mat-icon matSuffix *ngIf="isUniqueLoading$ | async">
-      <mat-spinner diameter="24"></mat-spinner>
-    </mat-icon>
-  </mat-form-field>
+  </app-form-input>
 
-
-  <mat-form-field
-    class="w-100"
-    appearance="fill"
+  <app-form-select
+    formControlName="projectId"
+    label="Project"
+    [options]="projects$ | async"
+    labelKey="name"
+    idKey="id"
   >
-    <mat-label>Project</mat-label>
-    <mat-select
-        formControlName="projectId"
-      >
-        <mat-option
-          *ngFor="let project of projects$ | async"
-          [value]="project.id"
-        >
-          {{ project.name }}
-        </mat-option>
-      </mat-select>
-  </mat-form-field>
-
+  </app-form-select>
 
 </form>
 
@@ -116,6 +64,6 @@
     (click)="getResult()"
     type="button"
   >
-    {{ isEditMode ? 'Save Changes' : 'Save Board'}}
+    {{ isEditMode ? 'Save Changes' : 'Create Board'}}
   </button>
 </div>

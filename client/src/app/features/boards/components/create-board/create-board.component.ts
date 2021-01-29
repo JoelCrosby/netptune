@@ -15,19 +15,24 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as Actions from '@boards/store/boards/boards.actions';
+import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { colorDictionary } from '@core/util/colors/colors';
-import * as Actions from '@boards/store/boards/boards.actions';
-import { BoardsService } from '@boards/store/boards/boards.service';
-import { Store } from '@ngrx/store';
-import { animationFrameScheduler, Observable, Subject } from 'rxjs';
-import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
-import { toUrlSlug } from '@core/util/strings';
 import { Logger } from '@core/util/logger';
+import { toUrlSlug } from '@core/util/strings';
+import { Store } from '@ngrx/store';
+import {
+  animationFrameScheduler,
+  combineLatest,
+  Observable,
+  Subject,
+} from 'rxjs';
+import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-board',
@@ -38,6 +43,7 @@ import { Logger } from '@core/util/logger';
 export class CreateBoardComponent implements OnInit, AfterViewInit {
   isUniqueLoading$ = new Subject<boolean>();
   projects$: Observable<ProjectViewModel[]>;
+  identifierIcon$: Observable<string>;
 
   onDestroy$ = new Subject();
 
@@ -99,6 +105,21 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
       { updateOn: 'blur' }
     );
 
+    this.identifierIcon$ = combineLatest([
+      this.isUniqueLoading$.pipe(),
+      this.identifier.statusChanges,
+    ]).pipe(
+      map(([loading]) => {
+        if (loading) return null;
+
+        if (this.identifier?.valid) {
+          return 'check';
+        }
+
+        return '';
+      })
+    );
+
     if (this.data) {
       const board = this.data;
 
@@ -144,6 +165,8 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   }
 
   getResult() {
+    console.log({ fg: this.formGroup });
+
     if (this.formGroup.pending) {
       return;
     }

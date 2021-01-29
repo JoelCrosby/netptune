@@ -88,7 +88,13 @@ export const avatarColors = [
   '#FF9800',
 ];
 
-export const colorDictionary = () => Object.keys(Colors500).map((color) => ({
+export interface NamedColor {
+  name: string;
+  color: string;
+}
+
+export const colorDictionary = (): NamedColor[] =>
+  Object.keys(Colors500).map((color) => ({
     name: toWordCase(color),
     color: (Colors500 as { [key: string]: string })[color],
   }));
