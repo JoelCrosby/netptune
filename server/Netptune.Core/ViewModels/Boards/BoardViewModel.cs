@@ -1,6 +1,7 @@
 using System;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 
 namespace Netptune.Core.ViewModels.Boards
 {
@@ -12,6 +13,8 @@ namespace Netptune.Core.ViewModels.Boards
 
         public string Identifier { get; set; }
 
+        public string ProjectName { get; set; }
+
         public int ProjectId { get; set; }
 
         public BoardType BoardType { get; set; }
@@ -21,5 +24,7 @@ namespace Netptune.Core.ViewModels.Boards
         public DateTimeOffset? UpdatedAt { get; set; }
 
         public string OwnerUsername { get; set; }
+
+        public BoardMeta MetaInfo { get; set; }
     }
 }

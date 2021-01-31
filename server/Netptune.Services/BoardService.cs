@@ -173,9 +173,7 @@ namespace Netptune.Services
 
             if (!workspaceExists) return null;
 
-            var results = await Boards.GetBoards(workspaceId, true);
-
-            return results.ConvertAll(result => result.ToViewModel());
+            return await Boards.GetBoardViewModels(workspaceId);
         }
 
         public async Task<List<BoardViewModel>> GetBoardsInProject(int projectId)
