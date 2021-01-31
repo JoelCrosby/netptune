@@ -1,4 +1,4 @@
-import { BoardType } from '../board';
+import { BoardMeta, BoardType } from '../board';
 import { Project } from '../project';
 
 export interface BoardViewModel {
@@ -11,4 +11,5 @@ export interface BoardViewModel {
   createdAt: Date;
   updatedAt?: Date;
   ownerUsername: string;
+  metaInfo: BoardMeta;
 }

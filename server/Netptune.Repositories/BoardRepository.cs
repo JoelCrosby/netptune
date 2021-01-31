@@ -1,16 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+using Dapper;
 
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.RowMaps;
 
 namespace Netptune.Repositories
 {
@@ -57,7 +62,51 @@ namespace Netptune.Repositories
                     where w.Slug == slug && !w.IsDeleted && !b.IsDeleted && !p.IsDeleted
                     select b)
                 .Include(x => x.Owner)
+                .Include(x => x.Project)
                 .ToReadonlyListAsync(isReadonly);
+        }
+
+        public async Task<List<BoardViewModel>> GetBoardViewModels(string slug)
+        {
+            using var connection = ConnectionFactory.StartConnection();
+
+            var results = await connection.QueryMultipleAsync(@"
+                SELECT b.id,
+                       b.name,
+                       b.identifier,
+                       b.project_id,
+                       b.board_type,
+                       CAST(b.created_at AS timestamp with time zone),
+                       CAST(b.updated_at AS timestamp with time zone),
+                       b.meta_info,
+                       (u.id IS NULL),
+                       u.firstname,
+                       u.lastname,
+                       p.name AS project_name
+                FROM boards AS b
+                         INNER JOIN projects AS p ON b.project_id = p.id AND NOT p.is_deleted
+                         INNER JOIN workspaces AS w ON p.workspace_id = w.id AND NOT w.is_deleted
+                         LEFT JOIN users AS u ON b.owner_id = u.id
+                WHERE w.slug = 'netptune' AND NOT b.is_deleted
+                ORDER BY p.updated_at, b.updated_at
+            ", new { slug });
+
+            var rows = results.Read<BoardViewModelRowMap>();
+
+            return rows.Select(board => new BoardViewModel
+                {
+                    Id = board.Id,
+                    Name = board.Name,
+                    Identifier = board.Identifier,
+                    ProjectId = board.Project_Id,
+                    ProjectName = board.Project_Name,
+                    BoardType = board.Board_Type,
+                    CreatedAt = board.Created_At,
+                    UpdatedAt = board.Updated_At,
+                    MetaInfo = JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info),
+                    OwnerUsername = $"{board.Firstname} {board.Lastname}",
+                })
+                .ToList();
         }
 
         public async Task<int?> GetIdByIdentifier(string identifier)
