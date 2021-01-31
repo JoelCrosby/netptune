@@ -21,7 +21,12 @@ import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
 import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
-import { animationFrameScheduler, Subject } from 'rxjs';
+import {
+  animationFrameScheduler,
+  combineLatest,
+  Observable,
+  Subject,
+} from 'rxjs';
 import {
   debounceTime,
   map,
@@ -40,6 +45,7 @@ import {
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   isUniqueLoadingSubject$ = new Subject<boolean>();
   showIdentifierCheckSubject$ = new Subject<boolean>();
+  identifierIcon$: Observable<string>;
 
   showIdentifierCheck$ = this.showIdentifierCheckSubject$.pipe(
     withLatestFrom(this.isUniqueLoadingSubject$),
@@ -104,6 +110,21 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
         color: new FormControl('#673AB7'),
       },
       { updateOn: 'blur' }
+    );
+
+    this.identifierIcon$ = combineLatest([
+      this.isUniqueLoading$.pipe(),
+      this.identifier.statusChanges,
+    ]).pipe(
+      map(([loading]) => {
+        if (loading) return null;
+
+        if (this.identifier?.valid) {
+          return 'check';
+        }
+
+        return '';
+      })
     );
 
     if (this.data) {
