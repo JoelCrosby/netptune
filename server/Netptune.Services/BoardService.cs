@@ -107,7 +107,7 @@ namespace Netptune.Services
                 throw new Exception("ProjectId is required");
             }
 
-            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value);
+            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true);
             var workspaceId = project.WorkspaceId;
 
             var board = new Board
