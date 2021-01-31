@@ -25,6 +25,7 @@ import { FormInputComponent } from './components/form-input/form-input.component
 import { FormTextAreaComponent } from './components/form-textarea/form-textarea.component';
 import { FormSelectComponent } from './components/form-select/form-select.component';
 import { CommentsListComponent } from './components/comments-list/comments-list.component';
+import { ColorSelectComponent } from './components/color-select/color-select.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { CommentsListComponent } from './components/comments-list/comments-list.
     FormTextAreaComponent,
     FormSelectComponent,
     CommentsListComponent,
+    ColorSelectComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -77,6 +79,7 @@ import { CommentsListComponent } from './components/comments-list/comments-list.
     FormTextAreaComponent,
     FormSelectComponent,
     CommentsListComponent,
+    ColorSelectComponent,
   ],
 })
 export class StaticModule {}
