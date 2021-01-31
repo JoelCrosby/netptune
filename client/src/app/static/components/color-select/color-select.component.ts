@@ -21,6 +21,12 @@ export class ColorSelectComponent implements ControlValueAccessor {
 
   colors = colorDictionary();
 
+  colorsRowTop = this.colors.slice(0, this.colors.length / 2);
+  colorsRowBottom = this.colors.slice(
+    this.colors.length / 2,
+    this.colors.length - 1
+  );
+
   value: string | undefined;
 
   get control() {

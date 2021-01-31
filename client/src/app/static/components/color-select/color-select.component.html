@@ -10,7 +10,18 @@
   <div class="color-options">
     <div
       class="color-option"
-      *ngFor="let color of colors"
+      *ngFor="let color of colorsRowTop"
+      [matTooltip]="color.name"
+      [style.background-color]="color.color"
+      (click)="onOptionClicked(color)"
+    >
+      <mat-icon *ngIf="value == color.color">done</mat-icon>
+    </div>
+  </div>
+  <div class="color-options">
+    <div
+      class="color-option"
+      *ngFor="let color of colorsRowBottom"
       [matTooltip]="color.name"
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"

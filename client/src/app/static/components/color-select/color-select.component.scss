@@ -1,9 +1,9 @@
 .color-options {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: stretch;
 
   .color-option {
-    width: 36px;
+    flex: 1;
     height: 36px;
     min-width: 36px;
     min-height: 36px;
