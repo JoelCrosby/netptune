@@ -1,5 +1,7 @@
+@import './typography';
+
 body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans, Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: $netptune-font-family;
   margin: 0;
   height: 100vh;
 }
