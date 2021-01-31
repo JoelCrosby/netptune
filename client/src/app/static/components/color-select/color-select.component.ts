@@ -48,6 +48,8 @@ export class ColorSelectComponent implements ControlValueAccessor {
 
   onOptionClicked(color: NamedColor) {
     this.value = color.color;
+    this.onChange(this.value);
+    this.onTouch();
   }
 
   writeValue(value: string) {
