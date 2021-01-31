@@ -6,28 +6,13 @@
   class="form-auth"
   [formGroup]="formGroup"
 >
-
-  <div class="name-color-row">
-
-    <app-form-input
-      formControlName="name"
-      label="Board Name"
-      maxLength="1024"
-      class="board-input-name"
-    >
-    </app-form-input>
-
-    <app-form-select
-      formControlName="color"
-      label="Color"
-      [options]="colors"
-      labelKey="name"
-      idKey="color"
-      class="board-input-color"
-    >
-    </app-form-select>
-
-  </div>
+  <app-form-input
+    formControlName="name"
+    label="Board Name"
+    maxLength="1024"
+    class="board-input-name"
+  >
+  </app-form-input>
 
   <app-form-input
     formControlName="identifier"
@@ -47,6 +32,12 @@
     idKey="id"
   >
   </app-form-select>
+
+  <app-color-select
+    formControlName="color"
+    label="Color"
+  >
+  </app-color-select>
 
 </form>
 
