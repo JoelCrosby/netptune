@@ -23,6 +23,7 @@ export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav: MatSidenav;
 
   authenticated$: Observable<boolean>;
+  sideNavExpanded = true;
 
   links = [
     { label: 'Projects', value: ['./projects'], icon: 'assessment' },
@@ -49,5 +50,9 @@ export class ShellComponent implements OnInit {
 
   onSidenavClosedStart() {
     this.store.dispatch(toggleSideMenu());
+  }
+
+  onToggleExpandClicked() {
+    this.sideNavExpanded = !this.sideNavExpanded;
   }
 }

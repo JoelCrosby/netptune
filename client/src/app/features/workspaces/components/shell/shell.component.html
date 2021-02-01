@@ -1,62 +1,65 @@
-<mat-sidenav-container class="app-container app-sidenav-container">
-  <mat-sidenav
-    [opened]="sideMenuOpen$ | async"
-    [mode]="sideMenuMode$ | async"
-    [fixedInViewport]="false"
-    (closedStart)="onSidenavClosedStart()"
+<div class="app-container">
+  <div
     class="app-sidenav"
+    [class.app-sidenav-expanded]="sideNavExpanded"
+    *ngIf="sideMenuOpen$ | async"
+    (closedStart)="onSidenavClosedStart()"
   >
-    <mat-nav-list>
-      <mat-list-item class="app-logo">
-        Netptune
-      </mat-list-item>
-      <h3 matSubheader class="app-sub-header">
-        Browse
-      </h3>
+    <div class="app-sidenav-list">
       <a
-        mat-list-item
+        class="main-logo"
+        [routerLink]="['/workspaces']"
+        matTooltip="Go to Workspaces"
+        matTooltipPosition="right"
+      >
+        <img
+          src="assets/apple-touch-icon.png"
+          alt="Netptune logo"
+          width="48"
+          height="48"
+        >
+      </a>
+      <a
         *ngFor="let link of links"
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
       >
-      <mat-icon mat-list-icon class="material-icons-round">
-        {{ link.icon }}
-      </mat-icon>
-      <p mat-line>
-        {{ link.label }}
-      </p>
+        <mat-icon mat-list-icon class="material-icons-round">
+          {{ link.icon }}
+        </mat-icon>
+        <p>
+          {{ link.label }}
+        </p>
       </a>
-    </mat-nav-list>
+    </div>
 
-    <mat-nav-list>
-      <h3 matSubheader class="app-sub-header">
-        Settings
-      </h3>
+    <div class="app-sidenav-list">
       <a
-        mat-list-item
         *ngFor="let link of bottomLinks"
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
       >
-      <mat-icon mat-list-icon class="material-icons-round">
-        {{ link.icon }}
-      </mat-icon>
-      <p mat-line>
-        {{ link.label }}
-      </p>
+        <mat-icon mat-list-icon class="material-icons-round">
+          {{ link.icon }}
+        </mat-icon>
+        <p>
+          {{ link.label }}
+        </p>
       </a>
-    </mat-nav-list>
 
-  </mat-sidenav>
+      <div class="app-menu-link app-menu-collapse" (click)="onToggleExpandClicked()">
+        <mat-icon mat-list-icon class="material-icons-round">
+          {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
+        </mat-icon>
+      </div>
+    </div>
 
-  <mat-sidenav-content>
+  </div>
 
-    <main>
-      <router-outlet></router-outlet>
-    </main>
+  <main [class.app-sidenav-expanded]="sideNavExpanded">
+    <router-outlet></router-outlet>
+  </main>
 
-  </mat-sidenav-content>
-
-</mat-sidenav-container>
+</div>
