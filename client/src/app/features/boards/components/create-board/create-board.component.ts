@@ -165,8 +165,6 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   }
 
   getResult() {
-    console.log({ fg: this.formGroup });
-
     if (this.formGroup.pending) {
       return;
     }
