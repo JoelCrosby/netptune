@@ -1,13 +1,15 @@
-import { AsyncEntityState } from '@core/util/entity/async-entity-state';
-import { createEntityAdapter } from '@ngrx/entity';
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 
-export const adapter = createEntityAdapter<BoardViewModel>();
-
-export const initialState: BoardsState = adapter.getInitialState({
+export const initialState: BoardsState = {
+  boards: [],
   loading: true,
   loaded: false,
   loadingCreate: false,
-});
+};
 
-export type BoardsState = AsyncEntityState<BoardViewModel>;
+export interface BoardsState {
+  boards: BoardsViewModel[];
+  loading: boolean;
+  loaded: boolean;
+  loadingCreate: boolean;
+}

@@ -97,11 +97,6 @@ export const selectBoardIdAndIdentifier = createSelector(
   ]
 );
 
-export const selectBoardProject = createSelector(
-  selectBoard,
-  (state: BoardViewModel) => state.project
-);
-
 export const selectBoardGroupUsers = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.users

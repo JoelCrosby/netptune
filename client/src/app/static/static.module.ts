@@ -26,6 +26,12 @@ import { FormTextAreaComponent } from './components/form-textarea/form-textarea.
 import { FormSelectComponent } from './components/form-select/form-select.component';
 import { CommentsListComponent } from './components/comments-list/comments-list.component';
 import { ColorSelectComponent } from './components/color-select/color-select.component';
+import { CardComponent } from './components/card/card.component';
+import { CardTitleComponent } from './components/card/card-title/card-title.component';
+import { CardSubtitleComponent } from './components/card/card-subtitle/card-subtitle.component';
+import { CardHeaderComponent } from './components/card/card-header/card-header.component';
+import { CardHeaderImageComponent } from './components/card/card-header-image/card-header-image.component';
+import { CardGroupComponent } from './components/card/card-group/card-group.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +60,12 @@ import { ColorSelectComponent } from './components/color-select/color-select.com
     FormSelectComponent,
     CommentsListComponent,
     ColorSelectComponent,
+    CardComponent,
+    CardTitleComponent,
+    CardSubtitleComponent,
+    CardHeaderComponent,
+    CardHeaderImageComponent,
+    CardGroupComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -80,6 +92,12 @@ import { ColorSelectComponent } from './components/color-select/color-select.com
     FormSelectComponent,
     CommentsListComponent,
     ColorSelectComponent,
+    CardComponent,
+    CardTitleComponent,
+    CardSubtitleComponent,
+    CardHeaderComponent,
+    CardHeaderImageComponent,
+    CardGroupComponent,
   ],
 })
 export class StaticModule {}
