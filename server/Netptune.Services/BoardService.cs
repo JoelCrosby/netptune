@@ -166,7 +166,7 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public async Task<List<BoardViewModel>> GetBoardsInWorkspace()
+        public async Task<List<BoardsViewModel>> GetBoardsInWorkspace()
         {
             var workspaceId = IdentityService.GetWorkspaceKey();
             var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceId);

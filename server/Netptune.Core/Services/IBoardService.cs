@@ -25,7 +25,7 @@ namespace Netptune.Core.Services
 
         Task<ClientResponse> Delete(int id);
 
-        Task<List<BoardViewModel>> GetBoardsInWorkspace();
+        Task<List<BoardsViewModel>> GetBoardsInWorkspace();
 
         Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier);
     }
