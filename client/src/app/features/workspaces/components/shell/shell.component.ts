@@ -13,6 +13,7 @@ import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { toggleSideMenu } from '@core/store/layout/layout.actions';
+import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -38,6 +39,8 @@ export class ShellComponent implements OnInit {
 
   sideMenuOpen$ = this.store.select(selectSideMenuOpen);
   sideMenuMode$ = this.store.select(selectSideMenuMode);
+  user$ = this.store.select(AuthSelectors.selectCurrentUser);
+  workspaces$ = this.store.select(selectAllWorkspaces);
   fixedInViewport$ = of(true);
 
   constructor(private store: Store) {}

@@ -24,8 +24,10 @@
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
+        [matTooltip]="sideNavExpanded ? null : link.label"
+        matTooltipPosition="right"
       >
-        <mat-icon mat-list-icon class="material-icons-round">
+        <mat-icon mat-list-icon class="material-icons-outline">
           {{ link.icon }}
         </mat-icon>
         <p>
@@ -34,14 +36,18 @@
       </a>
     </div>
 
+    <div class="app-sidenav-spacer"></div>
+
     <div class="app-sidenav-list">
       <a
         *ngFor="let link of bottomLinks"
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
+        [matTooltip]="sideNavExpanded ? null : link.label"
+        matTooltipPosition="right"
       >
-        <mat-icon mat-list-icon class="material-icons-round">
+        <mat-icon mat-list-icon class="material-icons-outline">
           {{ link.icon }}
         </mat-icon>
         <p>
@@ -49,11 +55,41 @@
         </p>
       </a>
 
-      <div class="app-menu-link app-menu-collapse" (click)="onToggleExpandClicked()">
-        <mat-icon mat-list-icon class="material-icons-round">
-          {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
-        </mat-icon>
-      </div>
+      <a
+        class="app-menu-link profile-nav-btn"
+        *ngIf="user$ | async as user"
+        [routerLink]="['./profile']"
+        routerLinkActive="router-link-active"
+        [matTooltip]="sideNavExpanded ? null : 'Profile'"
+        matTooltipPosition="right"
+      >
+        <app-avatar
+          class="app-menu-link-profile"
+          [name]="user.displayName"
+          [imageUrl]="user.pictureUrl"
+          [size]="24"
+          [border]="true"
+          [tooltip]="false"
+        ></app-avatar>
+        <p>
+          Profile
+        </p>
+      </a>
+
+    </div>
+
+    <div
+      class="app-menu-link app-menu-collapse"
+      (click)="onToggleExpandClicked()"
+      [matTooltip]="sideNavExpanded ? null : 'Expand'"
+      matTooltipPosition="right"
+    >
+      <mat-icon mat-list-icon class="material-icons-round">
+        {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
+      </mat-icon>
+      <p>
+        Collapse
+      </p>
     </div>
 
   </div>

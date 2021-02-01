@@ -8,7 +8,9 @@
   right: 0;
 }
 
-
+.app-sidenav-spacer {
+  flex: 1;
+}
 
 .app-sidenav {
   display: flex;
@@ -28,6 +30,11 @@
       margin-right: auto;
     }
 
+    .app-menu-link-profile {
+      margin-left: 13px;
+      margin-right: 18px;
+    }
+
     .app-sidenav-list {
       align-items: flex-start;
       padding: 1rem .5rem;
@@ -39,7 +46,7 @@
     }
 
     mat-icon {
-      margin: 0 1rem;
+      margin: 0 20px 0 1rem;
     }
 
     p {
@@ -85,7 +92,16 @@
 }
 
 .app-menu-collapse {
+  user-select: none;
   align-items: center;
+  width: 100%;
+  border-radius: 0;
+  margin-bottom: 0;
+  padding: .4rem 0;
+
+  mat-icon {
+    margin: 0 20px 0 22px !important;
+  }
 }
 
 main {

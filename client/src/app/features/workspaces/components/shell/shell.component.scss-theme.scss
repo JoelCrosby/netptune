@@ -32,6 +32,11 @@
     background-color: lighten(mat-color($background, side-bar), 12) !important;
   }
 
+  .app-menu-collapse {
+    background-color: lighten(mat-color($background, side-bar), 12) !important;
+
+  }
+
   .app-is-mobile {
     .app-sidenav {
       width: calc(100vw - 72px- 72px) !important;
