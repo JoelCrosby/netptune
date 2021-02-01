@@ -20,6 +20,7 @@
   display: flex;
   padding: 16px;
   border-radius: 3px;
+  min-height: 96px;
 }
 
 .netp-card-header {
@@ -54,4 +55,5 @@
   height: 1rem;
   font-size: 14px;
   margin-right: .6rem;
+  margin-top: auto;
 }
