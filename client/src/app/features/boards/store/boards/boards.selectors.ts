@@ -1,6 +1,6 @@
 import { AppState } from '@core/core.state';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { adapter, BoardsState } from './boards.model';
+import { BoardsState } from './boards.model';
 
 export interface State extends AppState {
   boards: BoardsState;
@@ -8,13 +8,9 @@ export interface State extends AppState {
 
 const selectBoardsFeature = createFeatureSelector<State, BoardsState>('boards');
 
-const { selectEntities, selectAll } = adapter.getSelectors();
-
-export const selectAllBoards = createSelector(selectBoardsFeature, selectAll);
-
-export const selectBoardsEntities = createSelector(
+export const selectAllBoards = createSelector(
   selectBoardsFeature,
-  selectEntities
+  (state: BoardsState) => state?.boards
 );
 
 export const selectBoardsLoading = createSelector(

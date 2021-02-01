@@ -6,20 +6,4 @@
   $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
-
-  .boards-grid {
-    .mat-card {
-      margin-bottom: 0 !important;
-    }
-
-    .user-header-image {
-      background-color: mat-color($primary);
-      border-radius: 50%;
-    }
-
-    .mat-card-avatar .mat-icon {
-      color: #fff;
-      margin: 8px;
-    }
-  }
 }

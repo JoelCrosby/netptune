@@ -4,6 +4,7 @@ import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { environment } from '@env/environment';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class BoardsService {
   }
 
   getByWorkspace() {
-    return this.http.get<BoardViewModel[]>(
+    return this.http.get<BoardsViewModel[]>(
       environment.apiEndpoint + `api/boards/workspace`
     );
   }

@@ -1,0 +1,29 @@
+@import '~@angular/material/theming';
+
+@mixin cards-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  $is-dark-theme: map-get($theme, is-dark);
+
+  .netp-card-group {
+    background-color: darken(mat-color($background, board-group), 1);
+  }
+
+  .netp-card {
+    background-color: mat-color($background, card);
+    box-shadow: 1px 2px 4px mat-color($foreground, text, .1);
+  }
+
+  .netp-card-title {
+    color: mat-color($foreground, text);
+  }
+
+  .netp-card-subtitle {
+    color: mat-color($foreground, text, .54);
+    background-color: mat-color($foreground, text, .06);
+  }
+}

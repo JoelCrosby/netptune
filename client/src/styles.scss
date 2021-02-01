@@ -31,6 +31,8 @@
 @import './styles/boards.scss-theme';
 @import './styles/controls/form-control';
 @import './styles/controls/form-control.scss-theme';
+@import './styles/controls/cards';
+@import './styles/controls/cards.scss-theme';
 
 @import './app/app.component.scss-theme';
 
@@ -73,6 +75,7 @@
   @include form-control-theme($theme);
   @include containers-theme($theme);
   @include colors-theme($theme);
+  @include cards-theme($theme);
   @include component-theme($theme);
   @include lists-theme($theme);
   @include shell-theme($theme);

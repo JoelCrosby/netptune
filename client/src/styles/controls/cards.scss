@@ -1,0 +1,57 @@
+.netp-card-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 0 .6rem .6rem;
+  border-radius: 3px;
+  margin-bottom: 2.4rem;
+
+  & > * {
+    margin-top: .6rem;
+    min-width: 320px;
+  }
+
+  & > *:not(:last-child) {
+    display: block;
+    margin-right: .8rem;
+  }
+}
+
+.netp-card {
+  display: flex;
+  padding: 16px;
+  border-radius: 3px;
+}
+
+.netp-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.netp-card-header-image {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .4rem;
+  border-radius: 3px;
+  color: #fff;
+  opacity: .6;
+}
+
+.netp-card-title {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: 'Overpass', sans-serif;
+}
+
+.netp-card-subtitle {
+  display: block;
+  border-radius: 4px;
+  padding: .2rem .4rem;
+  height: 1rem;
+  font-size: 14px;
+  margin-right: .6rem;
+}

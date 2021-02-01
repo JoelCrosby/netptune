@@ -1,29 +1,32 @@
-<div class="boards-grid card-group">
+<div class="boards-grid-group" *ngFor="let group of groups$ | async">
 
+  <h1 class="section-heading">
+    {{ group.projectName }}
+  </h1>
+
+  <app-card-group>
     <a
-      *ngFor="let board of boards$ | async"
+      *ngFor="let board of group.boards"
       [routerLink]="['.', board.identifier]"
       routerLinkActive="router-link-active"
     >
-      <mat-card class="board-grid-item">
-        <mat-card-header>
-          <div
-            mat-card-avatar
-            class="user-header-image"
-            [style.background-color]="board.metaInfo.color || 'inherit'"
+      <app-card>
+        <app-card-header-image
+          [style.background-color]="board.metaInfo.color || 'inherit'"
+        >
+          <mat-icon
+            class="material-icons-outlined"
           >
-            <mat-icon class="material-icons-outlined">table_chart</mat-icon>
-          </div>
-          <mat-card-title>{{ board.name }}</mat-card-title>
-          <mat-card-subtitle>{{ board.identifier }}</mat-card-subtitle>
-        </mat-card-header>
+            table_chart
+          </mat-icon>
+        </app-card-header-image>
+        <app-card-header>
+          <app-card-title>{{ board.name }}</app-card-title>
+          <app-card-subtitle>{{ board.identifier }}</app-card-subtitle>
+        </app-card-header>
 
-        <mat-card-content>
-          <mat-chip-list>
-            <mat-chip>{{ 'created ' + (board.createdAt | fromNow) }}</mat-chip>
-          </mat-chip-list>
-        </mat-card-content>
-
-      </mat-card>
+      </app-card>
     </a>
+  </app-card-group>
+
 </div>

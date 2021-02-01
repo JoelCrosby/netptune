@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -11,11 +11,11 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardsGridComponent implements OnInit {
-  boards$: Observable<BoardViewModel[]>;
+  groups$: Observable<BoardsViewModel[]>;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.boards$ = this.store.select(BoardSelectors.selectAllBoards);
+    this.groups$ = this.store.select(BoardSelectors.selectAllBoards);
   }
 }
