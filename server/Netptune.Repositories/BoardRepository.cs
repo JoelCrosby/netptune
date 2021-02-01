@@ -66,7 +66,7 @@ namespace Netptune.Repositories
                 .ToReadonlyListAsync(isReadonly);
         }
 
-        public async Task<List<BoardViewModel>> GetBoardViewModels(string slug)
+        public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug)
         {
             using var connection = ConnectionFactory.StartConnection();
 
@@ -106,6 +106,30 @@ namespace Netptune.Repositories
                     MetaInfo = JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info),
                     OwnerUsername = $"{board.Firstname} {board.Lastname}",
                 })
+                .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
+                {
+                    var last = prev.Count > 0 ? prev[^1] : null;
+
+                    if (last?.ProjectId == board.ProjectId)
+                    {
+                        last.Boards.Add(board);
+
+                        return prev;
+                    }
+
+                    if (last is null || last.ProjectId != board.ProjectId)
+                    {
+                        prev.Add(new BoardsViewModel
+                        {
+                            ProjectId = board.ProjectId,
+                            ProjectName = board.ProjectName,
+                            Boards = new List<BoardViewModel> { board }
+                        });
+                    }
+
+                    return prev;
+                })
+
                 .ToList();
         }
 
