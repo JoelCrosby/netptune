@@ -8,14 +8,6 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .main-content {
-    background-color: mat-color($background, background);
-  }
-
-  .app-toolbar {
-    color: mat-color($foreground, text, .6);
-  }
-
   .app-menu-link {
     color: rgba(255, 255, 255, 1);
   }
@@ -27,12 +19,6 @@
 
   .app-sidenav {
     background-color: mat-color($background, side-bar);
-
-    .mat-drawer-inner-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
   }
 
   .app-menu-link.router-link-active {
@@ -58,12 +44,6 @@
         width: 24px !important;
         height: 24px !important;
         font-size: 24px !important;
-      }
-
-      .mat-line {
-        font-weight: 400 !important;
-        letter-spacing: .5px !important;
-        font-size: 16px !important;
       }
     }
   }
