@@ -32,6 +32,7 @@ import { CardSubtitleComponent } from './components/card/card-subtitle/card-subt
 import { CardHeaderComponent } from './components/card/card-header/card-header.component';
 import { CardHeaderImageComponent } from './components/card/card-header-image/card-header-image.component';
 import { CardGroupComponent } from './components/card/card-group/card-group.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { CardGroupComponent } from './components/card/card-group/card-group.comp
     TaskStatusPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
+    AutofocusDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
@@ -81,6 +83,7 @@ import { CardGroupComponent } from './components/card/card-group/card-group.comp
     TaskStatusPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
+    AutofocusDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,

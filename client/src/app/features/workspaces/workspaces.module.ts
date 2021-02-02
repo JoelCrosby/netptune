@@ -8,6 +8,7 @@ import { ShellComponent } from './components/shell/shell.component';
 import { WorkspacesViewComponent } from './views/workspaces-view/workspaces-view.component';
 import { WorkspaceListItemComponent } from './components/workspace-list-item/workspace-list-item.component';
 import { CreateWorkspaceListItemComponent } from './components/create-workspace-list-item/create-workspace-list-item.component';
+import { WorkspaceSelectComponent } from './components/workspace-select/workspace-select.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CreateWorkspaceListItemComponent } from './components/create-workspace-
     WorkspacesViewComponent,
     WorkspaceListItemComponent,
     CreateWorkspaceListItemComponent,
+    WorkspaceSelectComponent,
   ],
   imports: [SharedModule, StaticModule, WorkspacesRoutingModule],
 })

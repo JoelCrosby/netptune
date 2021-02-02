@@ -1,0 +1,63 @@
+<div class="dropdown" #dropdown>
+
+  <button
+    class="select-trigger"
+    (click)="open(selectmenu, origin)"
+    #origin
+  >
+
+    <ng-template
+      [ngIf]="!isOpen"
+      [ngIfElse]="searchTpl"
+    >
+      <div class="label-input">
+        {{ label }}
+      </div>
+    </ng-template>
+
+    <ng-template #searchTpl>
+      <input
+        appAutofocus
+        class="label-input"
+        placeholder="Search.."
+        [formControl]="searchControl"
+        (click)="$event.stopPropagation()"
+      >
+    </ng-template>
+
+  </button>
+
+  <div #selectmenu class="select-menu">
+    <div
+      *ngIf="isOpen"
+      class="select-menu-inner custom-scroll"
+    >
+
+      <div
+        *ngIf="!options.length"
+        class="no-results-item"
+      >
+        No results found...
+      </div>
+
+      <div
+        *ngFor="let option of options$ | async"
+        class="select-item"
+        [class.active]="isActive(option)"
+        (click)="select(option)"
+      >
+        <div
+          class="app-workspace-link-inner"
+          [style.backgroundColor]="option?.metaInfo.color"
+        >
+          {{ option.name[0] }}
+        </div>
+
+        <span>
+          {{ option.name }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -19,6 +19,14 @@
           height="48"
         >
       </a>
+
+      <app-workspace-select
+        [options]="workspaces$ | async"
+        idKey="id"
+        labelKey="name"
+      >
+      </app-workspace-select>
+
       <a
         *ngFor="let link of links"
         [routerLink]="link.value"
