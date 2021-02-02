@@ -207,7 +207,7 @@ namespace Netptune.Services.Authentication
             var resetCode = await UserManager.GeneratePasswordResetTokenAsync(user);
 
             var callbackUrl = Origin
-                .AppendPathSegments("app", "auth", "reset-password")
+                .AppendPathSegments("auth", "reset-password")
                 .SetQueryParam("userId", user.Id, true)
                 .SetQueryParam("code", Uri.EscapeDataString(resetCode), true);
 
@@ -284,7 +284,7 @@ namespace Netptune.Services.Authentication
             var confirmEmailCode = await UserManager.GenerateEmailConfirmationTokenAsync(appUser);
 
             var callbackUrl = Origin
-                .AppendPathSegments("app", "auth", "confirm")
+                .AppendPathSegments("auth", "confirm")
                 .SetQueryParam("userId", appUser.Id, true)
                 .SetQueryParam("code", Uri.EscapeDataString(confirmEmailCode), true);
 
