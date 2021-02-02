@@ -87,7 +87,7 @@ namespace Netptune.Repositories
                          INNER JOIN projects AS p ON b.project_id = p.id AND NOT p.is_deleted
                          INNER JOIN workspaces AS w ON p.workspace_id = w.id AND NOT w.is_deleted
                          LEFT JOIN users AS u ON b.owner_id = u.id
-                WHERE w.slug = 'netptune' AND NOT b.is_deleted
+                WHERE w.slug = @slug AND NOT b.is_deleted
                 ORDER BY p.updated_at, b.updated_at
             ", new { slug });
 
