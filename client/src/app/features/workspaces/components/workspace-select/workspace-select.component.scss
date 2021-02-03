@@ -6,23 +6,34 @@
   position: relative;
 }
 
+.select-label {
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: .225px;
+  color: #fff;
+}
+
 .select-menu {
   overflow: hidden;
   border-radius: 3px;
   position: absolute;
-  top: 40px;
+  top: 55px;
   left: 0;
 }
 
 .select-trigger {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   text-align: left;
   font-size: 14px;
-  color: #212529;
   cursor: pointer;
   font-family: inherit;
   border: 0;
+  padding: 8px;
+  transition: background-color .14s ease-out;
 
   &:focus {
     outline: none;
@@ -30,23 +41,31 @@
 }
 
 .select-menu-inner {
+  display: flex;
+  flex-direction: column;
+  transform-origin: 50% top;
   height: 100%;
-  max-height: 196px;
-  background-color: #fff;
   text-align: left;
   list-style: none;
   overflow-x: hidden;
   font-family: inherit;
+  padding: .4rem 0 .4rem .4rem;
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.select-menu-inner-options {
+  max-height: 196px;
   overflow-y: auto;
-  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
 .label-input {
-  width: 100%;
   font-size: 14px;
-  background-color: transparent;
   font-family: inherit;
   padding: 8px;
+  margin: 8px;
+  appearance: none;
+  position: sticky;
+  top: 0;
 }
 
 input {
@@ -66,15 +85,7 @@ input {
   cursor: pointer;
   font-size: 14px;
   font-family: inherit;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.active {
-    background-color: #e7e7e7;
-    color: #29242e;
-  }
+  border-radius: 3px;
 }
 
 .no-results-item {
@@ -86,11 +97,10 @@ input {
   font-size: 14px;
 }
 
-
-
 .app-workspace-link-inner {
   opacity: .75;
   height: 32px;
+  min-width: 32px;
   width: 32px;
   vertical-align: middle;
   display: flex;
@@ -99,6 +109,6 @@ input {
   flex-direction: column;
   border-radius: .12rem;
   transition: opacity .2s ease-in-out;
-  margin-right: .6rem;
-  color: #fff;
+  margin-right: 14px;
+  margin-left: 4px;
 }

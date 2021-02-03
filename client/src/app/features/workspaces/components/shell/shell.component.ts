@@ -13,7 +13,12 @@ import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { toggleSideMenu } from '@core/store/layout/layout.actions';
-import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
+import {
+  selectAllWorkspaces,
+  selectCurrentWorkspaceIdentifier,
+} from '@core/store/workspaces/workspaces.selectors';
+import { Router } from '@angular/router';
+import { Workspace } from '@core/models/workspace';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -41,9 +46,10 @@ export class ShellComponent implements OnInit {
   sideMenuMode$ = this.store.select(selectSideMenuMode);
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
   workspaces$ = this.store.select(selectAllWorkspaces);
+  workspaceId$ = this.store.select(selectCurrentWorkspaceIdentifier);
   fixedInViewport$ = of(true);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private router: Router) {}
 
   ngOnInit() {
     this.authenticated$ = this.store.select(
@@ -57,5 +63,13 @@ export class ShellComponent implements OnInit {
 
   onToggleExpandClicked() {
     this.sideNavExpanded = !this.sideNavExpanded;
+  }
+
+  onWorkspaceChange(workspace: Workspace) {
+    if (!workspace) {
+      throw new Error('onWorkspaceChange workspace is null');
+    }
+
+    this.router.navigate(['/', workspace.slug]);
   }
 }

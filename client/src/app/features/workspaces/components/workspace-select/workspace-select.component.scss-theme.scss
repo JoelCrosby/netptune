@@ -1,0 +1,55 @@
+@use 'sass:color';
+
+@import '~@angular/material/theming';
+
+@mixin workspace-select-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $is-dark-theme: map-get($theme, is-dark);
+
+  .label-input {
+    color: mat-color($foreground, text);
+  }
+
+  .label-input {
+    $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
+    $light-bg: color.scale(mat-color($background, card), $lightness: -10%);
+    background-color: if($is-dark-theme, $dark-bg, $light-bg);
+  }
+
+  .select-trigger {
+    color: mat-color($background, text);
+    background-color: transparent;
+
+    &:hover {
+      background-color: mat-color($foreground, text, .08);
+    }
+  }
+
+  .select-menu-inner {
+    background-color: mat-color($background, card);
+  }
+
+  .select-item {
+    &:hover {
+      $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
+      $light-bg: color.scale(mat-color($background, card), $lightness: -6%);
+      background-color: if($is-dark-theme, $dark-bg, $light-bg);
+    }
+
+    &.active {
+      $dark-bg: color.scale(mat-color($primary, .2), $lightness: 20%);
+      $light-bg: color.scale(mat-color($primary, .2), $lightness: -10%);
+      background-color: if($is-dark-theme, $dark-bg, $light-bg);
+    }
+  }
+
+  .app-workspace-link-inner {
+    color: #fff;
+  }
+
+}
