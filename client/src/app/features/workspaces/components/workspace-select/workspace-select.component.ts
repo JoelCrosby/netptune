@@ -1,17 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent } from 'rxjs';
+import { debounceTime, tap, throttleTime } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -20,32 +23,119 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./workspace-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkspaceSelectComponent implements OnInit {
-  @Input() options: Workspace[] = [];
-  @Input() value: number;
+export class WorkspaceSelectComponent implements OnInit, OnChanges {
+  @ViewChild('dropdown') dropdownElementRef: ElementRef;
 
-  @Output() selectChange = new EventEmitter();
+  @Input() options: Workspace[] = [];
+  @Input() value: string;
+
+  @Output() selectChange = new EventEmitter<Workspace>();
   @Output() closed = new EventEmitter();
 
   searchControl = new FormControl();
 
   isOpen = false;
+  currentWorkspace: Workspace;
   selected: Workspace;
-
-  get label() {
-    return this.selected ? this.selected.name : 'Select...';
-  }
 
   options$ = new BehaviorSubject<Workspace[]>([]);
 
   constructor() {}
 
   ngOnInit() {
-    this.options$.next(this.options ?? []);
-
     this.searchControl.valueChanges
       .pipe(debounceTime(300), untilDestroyed(this))
       .subscribe((term) => this.search(term));
+
+    fromEvent(document, 'mousedown', {
+      passive: true,
+    })
+      .pipe(
+        untilDestroyed(this),
+        throttleTime(200),
+        tap(this.handleDocumentClick.bind(this))
+      )
+      .subscribe();
+
+    fromEvent(document, 'keydown', {
+      passive: true,
+    })
+      .pipe(untilDestroyed(this), tap(this.handleKeyDown.bind(this)))
+      .subscribe();
+  }
+
+  ngOnChanges() {
+    if (this.value) {
+      const option = this.options.find((opt) => opt.slug === this.value);
+      this.select(option);
+    }
+
+    this.resetOptions();
+  }
+
+  resetOptions() {
+    this.options$.next(
+      this.options?.filter((opt) => opt.slug !== this.currentWorkspace.slug) ??
+        []
+    );
+  }
+
+  handleDocumentClick(event: Event) {
+    if (!this.dropdownElementRef.nativeElement.contains(event.target)) {
+      this.close();
+    }
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowUp':
+        this.selectPreviousOption();
+        break;
+      case 'ArrowDown':
+        this.selectNextOptiom();
+        break;
+      case 'Enter':
+        this.select();
+        break;
+    }
+  }
+
+  selectNextOptiom() {
+    const options = this.options$.value;
+
+    if (!this.selected) {
+      this.selected = options.length && options[0];
+    } else {
+      const currentIndex = options.findIndex(
+        (opt) => opt.id === this.selected.id
+      );
+
+      if (options.length === currentIndex + 1) {
+        return;
+      }
+
+      this.selected = options[currentIndex + 1];
+    }
+
+    this.options$.next(options);
+  }
+
+  selectPreviousOption() {
+    const options = this.options$.value;
+
+    if (!this.selected) {
+      this.selected = options.length && options[0];
+    } else {
+      const currentIndex = options.findIndex(
+        (opt) => opt.id === this.selected.id
+      );
+
+      if (currentIndex === 0) return;
+
+      this.selected = this.options[currentIndex - 1];
+    }
+
+    this.options$.next(options);
   }
 
   open(dropdown: HTMLElement, origin: HTMLElement) {
@@ -57,12 +147,18 @@ export class WorkspaceSelectComponent implements OnInit {
     this.closed.emit();
     this.isOpen = false;
     this.searchControl.patchValue('');
+
+    this.resetOptions();
   }
 
-  select(option: Workspace) {
-    this.selected = option;
-    this.selectChange.emit(option.id);
+  select(option: Workspace = null) {
+    this.selected = option ?? this.selected;
+    this.currentWorkspace = this.selected;
+    this.selectChange.emit(this.selected);
     this.close();
+    this.selected = null;
+
+    this.resetOptions();
   }
 
   isActive(option: Workspace) {
@@ -77,6 +173,7 @@ export class WorkspaceSelectComponent implements OnInit {
       this.options$.next(this.options);
     } else {
       this.options$.next(filterObjectArray(this.options, 'name', value));
+      this.selectNextOptiom();
     }
   }
 }

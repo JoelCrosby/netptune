@@ -6,23 +6,28 @@
     #origin
   >
 
-    <ng-template
-      [ngIf]="!isOpen"
-      [ngIfElse]="searchTpl"
+    <ng-container
+      *ngIf="currentWorkspace; else elseTemplate"
     >
-      <div class="label-input">
-        {{ label }}
-      </div>
-    </ng-template>
-
-    <ng-template #searchTpl>
-      <input
-        appAutofocus
-        class="label-input"
-        placeholder="Search.."
-        [formControl]="searchControl"
-        (click)="$event.stopPropagation()"
+      <div
+        class="app-workspace-link-inner"
+        [style.backgroundColor]="currentWorkspace?.metaInfo.color"
       >
+        {{ currentWorkspace.name[0] }}
+      </div>
+      <div class="select-label">
+        {{ currentWorkspace.name }}
+      </div>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div
+        class="app-workspace-link-inner"
+      >
+      </div>
+      <div class="select-label">
+        Select Workspace
+      </div>
     </ng-template>
 
   </button>
@@ -30,7 +35,7 @@
   <div #selectmenu class="select-menu">
     <div
       *ngIf="isOpen"
-      class="select-menu-inner custom-scroll"
+      class="select-menu-inner menu-scale-in"
     >
 
       <div
@@ -40,23 +45,35 @@
         No results found...
       </div>
 
-      <div
-        *ngFor="let option of options$ | async"
-        class="select-item"
-        [class.active]="isActive(option)"
-        (click)="select(option)"
+      <input
+        *ngIf="options.length"
+        appAutofocus
+        class="label-input"
+        placeholder="Search.."
+        [formControl]="searchControl"
+        (click)="$event.stopPropagation()"
       >
-        <div
-          class="app-workspace-link-inner"
-          [style.backgroundColor]="option?.metaInfo.color"
-        >
-          {{ option.name[0] }}
-        </div>
 
-        <span>
-          {{ option.name }}
-        </span>
+      <div class="select-menu-inner-options custom-scroll">
+        <div
+          *ngFor="let option of options$ | async"
+          class="select-item"
+          [class.active]="isActive(option)"
+          (click)="select(option)"
+        >
+          <div
+            class="app-workspace-link-inner"
+            [style.backgroundColor]="option?.metaInfo.color"
+          >
+            {{ option.name[0] }}
+          </div>
+
+          <span>
+            {{ option.name }}
+          </span>
+        </div>
       </div>
+
     </div>
   </div>
 

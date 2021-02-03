@@ -11,6 +11,7 @@
 @import './styles/containers';
 @import './styles/modals';
 @import './styles/editor';
+@import './styles/animations/menu';
 
 // Angular Material Theming core
 @import '~@angular/material/theming';
@@ -48,6 +49,7 @@
 @import './app/entry/dialogs/workspace-dialog/workspace-dialog.component.scss-theme';
 
 @import './app/features/workspaces/components/shell/shell.component.scss-theme';
+@import './app/features/workspaces/components/workspace-select/workspace-select.component.scss-theme.scss';
 @import './app/features/workspaces/components/create-workspace-list-item/create-workspace-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-item/task-list-item.component.scss-theme';
 @import './app/features/project-tasks/components/task-list-group/task-list-group.component.scss-theme';
@@ -87,6 +89,7 @@
   @include autocomplete-chips-theme($theme);
   @include inline-text-area-theme($theme);
   @include image-cropper-theme($theme);
+  @include workspace-select-theme($theme);
   @include create-workspace-list-item-theme($theme);
   @include task-list-group-theme($theme);
   @include task-list-item-theme($theme);
