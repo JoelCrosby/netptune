@@ -1,4 +1,4 @@
-<div class="dropdown" [class.dropdown-compact]="compact" #dropdown>
+<div class="workspace-select" [class.workspace-select-compact]="compact" #dropdown>
 
   <button
     class="select-trigger"
@@ -71,6 +71,21 @@
           <span>
             {{ option.name }}
           </span>
+        </div>
+      </div>
+
+      <div class="select-menu-footer">
+        <a
+          class="select-menu-footer-item"
+          [routerLink]="['/workspaces']"
+        >
+          Workspaces
+        </a>
+        <div
+          class="select-menu-footer-item"
+          (click)="onlogOutClicked()"
+        >
+          Logout
         </div>
       </div>
 

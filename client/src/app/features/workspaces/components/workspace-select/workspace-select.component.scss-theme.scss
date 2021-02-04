@@ -9,47 +9,65 @@
   $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
+
   $is-dark-theme: map-get($theme, is-dark);
 
-  .label-input {
-    color: mat-color($foreground, text);
-  }
+  .workspace-select {
 
-  .label-input {
-    $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
-    $light-bg: color.scale(mat-color($background, card), $lightness: -10%);
-    background-color: if($is-dark-theme, $dark-bg, $light-bg);
-  }
-
-  .select-trigger {
-    color: mat-color($background, text);
-    background-color: transparent;
-
-    &:hover {
-      background-color: mat-color($foreground, text, .08);
+    .label-input {
+      color: mat-color($foreground, text);
     }
-  }
 
-  .select-menu-inner {
-    background-color: mat-color($background, card);
-  }
-
-  .select-item {
-    &:hover {
+    .label-input {
       $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
-      $light-bg: color.scale(mat-color($background, card), $lightness: -6%);
+      $light-bg: color.scale(mat-color($background, card), $lightness: -10%);
       background-color: if($is-dark-theme, $dark-bg, $light-bg);
     }
 
-    &.active {
-      $dark-bg: color.scale(mat-color($primary, .2), $lightness: 20%);
-      $light-bg: color.scale(mat-color($primary, .2), $lightness: -10%);
-      background-color: if($is-dark-theme, $dark-bg, $light-bg);
+    .select-trigger {
+      color: mat-color($foreground, text);
+      background-color: transparent;
+
+      &:hover {
+        background-color: mat-color($foreground, text, .08);
+      }
+    }
+
+    .select-menu-inner {
+      background-color: mat-color($background, card);
+    }
+
+    .select-item {
+      &:hover {
+        $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
+        $light-bg: color.scale(mat-color($background, card), $lightness: -6%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
+
+      &.active {
+        $dark-bg: color.scale(mat-color($primary, .2), $lightness: 20%);
+        $light-bg: color.scale(mat-color($primary, .2), $lightness: -10%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
+    }
+
+    .app-workspace-link-inner {
+      color: #fff;
+    }
+
+    .select-menu-footer {
+      border-top: 1px solid mat-color($foreground, text, .1);
+      background-color: color.scale(mat-color($background, card), $lightness: -4%);
+    }
+
+    .select-menu-footer-item {
+      color: mat-color($foreground, text);
+
+      &:hover {
+        $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
+        $light-bg: color.scale(mat-color($background, card), $lightness: -8%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
     }
   }
-
-  .app-workspace-link-inner {
-    color: #fff;
-  }
-
 }

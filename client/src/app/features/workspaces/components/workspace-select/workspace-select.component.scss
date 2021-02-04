@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-.dropdown {
+.workspace-select {
   position: relative;
 }
 
@@ -50,10 +50,10 @@
   list-style: none;
   overflow-x: hidden;
   font-family: inherit;
-  padding: .4rem 0 .4rem .4rem;
 }
 
 .select-menu-inner-options {
+  padding: .4rem 0 .4rem .4rem;
   max-height: 216px;
   overflow-y: auto;
 }
@@ -110,10 +110,28 @@ input {
   border-radius: .12rem;
   transition: opacity .2s ease-in-out;
   margin-right: 14px;
-  margin-left: 4px;
 }
 
-.dropdown-compact {
+.select-menu-footer {
+  padding: .4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  .select-menu-footer-item {
+    cursor: pointer;
+    height: 24px;
+    line-height: 24px;
+    display: block;
+    padding: .2rem .4rem;
+    margin: .2rem 0;
+    font-size: 14px;
+    letter-spacing: .225px;
+    border-radius: 3px;
+  }
+}
+
+.workspace-select-compact {
   .select-label {
     display: none;
   }

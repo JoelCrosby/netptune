@@ -19,6 +19,7 @@ import {
 } from '@core/store/workspaces/workspaces.selectors';
 import { Router } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -49,7 +50,13 @@ export class ShellComponent implements OnInit {
   workspaceId$ = this.store.select(selectCurrentWorkspaceIdentifier);
   fixedInViewport$ = of(true);
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+    private storage: LocalStorageService
+  ) {
+    this.sideNavExpanded = this.storage.getItem('side-nav-expanded') ?? true;
+  }
 
   ngOnInit() {
     this.authenticated$ = this.store.select(
@@ -63,6 +70,7 @@ export class ShellComponent implements OnInit {
 
   onToggleExpandClicked() {
     this.sideNavExpanded = !this.sideNavExpanded;
+    this.storage.setItem('side-nav-expanded', this.sideNavExpanded);
   }
 
   onWorkspaceChange(workspace: Workspace) {
