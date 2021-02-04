@@ -28,6 +28,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   @Input() options: Workspace[] = [];
   @Input() value: string;
+  @Input() compact = false;
 
   @Output() selectChange = new EventEmitter<Workspace>();
   @Output() closed = new EventEmitter();
@@ -140,7 +141,15 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   open(dropdown: HTMLElement, origin: HTMLElement) {
     this.isOpen = true;
-    dropdown.style.width = `${origin.offsetWidth}px`;
+    if (this.compact) {
+      dropdown.style.width = '200px';
+      dropdown.style.left = '80px';
+      dropdown.style.top = '0px';
+    } else {
+      dropdown.style.width = `${origin.offsetWidth}px`;
+      dropdown.style.left = '0';
+      dropdown.style.top = '55px';
+    }
   }
 
   close() {

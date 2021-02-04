@@ -23,6 +23,7 @@
       <app-workspace-select
         idKey="id"
         labelKey="name"
+        [compact]="!sideNavExpanded"
         [options]="workspaces$ | async"
         [value]="workspaceId$ | async"
         (selectChange)="onWorkspaceChange($event)"
