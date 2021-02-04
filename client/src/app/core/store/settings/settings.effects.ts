@@ -31,7 +31,7 @@ export class SettingsEffects {
       merge(INIT, this.actions$.pipe(ofType(actions.changeTheme))).pipe(
         withLatestFrom(this.store.pipe(select(selectEffectiveTheme))),
         tap(([_, effectiveTheme]) => {
-          const classList = document.querySelector('body').classList;
+          const classList = document.documentElement.classList;
           const toRemove = Array.from(classList).filter((item: string) =>
             item.includes('-theme')
           );
