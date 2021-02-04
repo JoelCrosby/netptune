@@ -131,9 +131,18 @@ input {
   }
 }
 
+.select-trigger .app-workspace-link-inner {
+  margin-left: 4px;
+}
+
 .workspace-select-compact {
   .select-label {
     display: none;
+  }
+
+  .select-trigger {
+    margin: 0 auto;
+    width: initial;
   }
 
   .select-trigger .app-workspace-link-inner {
