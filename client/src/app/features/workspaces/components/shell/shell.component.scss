@@ -106,9 +106,12 @@
 }
 
 main {
-  margin-left: 72px;
   height: 100vh;
   transition: margin-left .2s ease-in-out;
+
+  &.app-sidenav-open {
+    margin-left: 72px;
+  }
 
   &.app-sidenav-expanded {
     margin-left: 248px;

@@ -90,7 +90,10 @@
 
   </div>
 
-  <main [class.app-sidenav-expanded]="sideNavExpanded">
+  <main
+    [class.app-sidenav-expanded]="sideNavExpanded"
+    [class.app-sidenav-open]="sideMenuOpen$ | async"
+  >
     <router-outlet></router-outlet>
   </main>
 
