@@ -16,6 +16,7 @@ import {
   throttleTime,
   withLatestFrom,
 } from 'rxjs/operators';
+import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './workspaces.actions';
 import { WorkspacesService } from './workspaces.service';
 
@@ -28,6 +29,15 @@ export class WorkspacesEffects {
       filter(([_, isAuth]) => isAuth),
       map(() => actions.loadWorkspaces())
     )
+  );
+
+  selectWorkspace$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.selectWorkspace),
+        tap(async () => await this.hubService.disconnect())
+      ),
+    { dispatch: false }
   );
 
   loadWorkspaces$ = createEffect(
@@ -105,7 +115,8 @@ export class WorkspacesEffects {
     private actions$: Actions<Action>,
     private workspacesService: WorkspacesService,
     private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private hubService: ProjectTasksHubService
   ) {}
 
   ngrxOnInitEffects(): Action {

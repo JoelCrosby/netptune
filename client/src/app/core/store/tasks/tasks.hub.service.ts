@@ -95,7 +95,7 @@ export class ProjectTasksHubService {
   }
 
   disconnect() {
-    this.hub.disconnect();
+    return this.hub.disconnect();
   }
 
   addToGroup(groupId: string) {

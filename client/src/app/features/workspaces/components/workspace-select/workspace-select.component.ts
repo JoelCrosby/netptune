@@ -7,12 +7,15 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, tap, throttleTime } from 'rxjs/operators';
 
@@ -41,7 +44,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   options$ = new BehaviorSubject<Workspace[]>([]);
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.searchControl.valueChanges
@@ -65,13 +68,15 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
       .subscribe();
   }
 
-  ngOnChanges() {
-    if (this.value) {
-      const option = this.options.find((opt) => opt.slug === this.value);
-      this.select(option);
-    }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.value || changes.options) {
+      if (this.value) {
+        const option = this.options.find((opt) => opt.slug === this.value);
+        this.select(option);
+      }
 
-    this.resetOptions();
+      this.resetOptions();
+    }
   }
 
   resetOptions() {
@@ -184,5 +189,10 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
       this.options$.next(filterObjectArray(this.options, 'name', value));
       this.selectNextOptiom();
     }
+  }
+
+  onlogOutClicked() {
+    this.close();
+    this.store.dispatch(logout());
   }
 }
