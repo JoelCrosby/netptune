@@ -17,7 +17,7 @@ import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime, tap, throttleTime } from 'rxjs/operators';
+import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -64,26 +64,21 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     fromEvent(document, 'keydown', {
       passive: true,
     })
-      .pipe(untilDestroyed(this), tap(this.handleKeyDown.bind(this)))
+      .pipe(
+        untilDestroyed(this),
+        filter(() => this.isOpen),
+        tap(this.handleKeyDown.bind(this))
+      )
       .subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
-      if (this.value) {
+      if (this.value && !this.currentWorkspace) {
         const option = this.options.find((opt) => opt.slug === this.value);
         this.select(option);
       }
-
-      this.resetOptions();
     }
-  }
-
-  resetOptions() {
-    this.options$.next(
-      this.options?.filter((opt) => opt.slug !== this.currentWorkspace.slug) ??
-        []
-    );
   }
 
   handleDocumentClick(event: Event) {
@@ -161,18 +156,18 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     this.closed.emit();
     this.isOpen = false;
     this.searchControl.patchValue('');
-
-    this.resetOptions();
   }
 
   select(option: Workspace = null) {
     this.selected = option ?? this.selected;
     this.currentWorkspace = this.selected;
-    this.selectChange.emit(this.selected);
-    this.close();
-    this.selected = null;
 
-    this.resetOptions();
+    if (this.isOpen) {
+      this.selectChange.emit(this.selected);
+      this.close();
+    }
+
+    this.selected = null;
   }
 
   isActive(option: Workspace) {
