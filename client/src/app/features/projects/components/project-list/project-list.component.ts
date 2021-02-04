@@ -13,7 +13,6 @@ import { Observable } from 'rxjs';
 })
 export class ProjectListComponent implements OnInit {
   projects$: Observable<ProjectViewModel[]>;
-  loading$: Observable<boolean>;
 
   constructor(private store: Store) {}
 
