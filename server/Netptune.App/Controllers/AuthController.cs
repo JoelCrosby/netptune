@@ -222,7 +222,7 @@ namespace Netptune.App.Controllers
 
             if (!result.IsSuccess) return Unauthorized();
 
-            var redirect = "/app/auth/auth-provider-login".SetQueryParams(new
+            var redirect = "/auth/auth-provider-login".SetQueryParams(new
             {
                 expires = result.Ticket.Expires,
                 issued = result.Ticket.Issued,
