@@ -16,9 +16,11 @@ using Microsoft.IdentityModel.Tokens;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Cache;
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Messaging;
+using Netptune.Core.Meta;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
@@ -38,6 +40,7 @@ namespace Netptune.Services.Authentication
         private readonly IInviteCache InviteCache;
         private readonly IIdentityService Identity;
         private readonly INetptuneUnitOfWork UnitOfWork;
+        private readonly IWorkspaceService WorkspaceService;
 
         protected readonly string Issuer;
         protected readonly string SecurityKey;
@@ -52,7 +55,8 @@ namespace Netptune.Services.Authentication
             IHttpContextAccessor contextAccessor,
             IInviteCache inviteCache,
             IIdentityService identity,
-            INetptuneUnitOfWork unitOfWork
+            INetptuneUnitOfWork unitOfWork,
+            IWorkspaceService workspaceService
             )
         {
             SignInManager = signInManager;
@@ -62,6 +66,7 @@ namespace Netptune.Services.Authentication
             InviteCache = inviteCache;
             Identity = identity;
             UnitOfWork = unitOfWork;
+            WorkspaceService = workspaceService;
 
             Issuer = configuration["Tokens:Issuer"];
             ExpireDays = configuration["Tokens:ExpireDays"];
@@ -161,6 +166,17 @@ namespace Netptune.Services.Authentication
 
                 InviteCache.Remove(model.InviteCode);
             }
+
+            await WorkspaceService.AddWorkspace(new AddWorkspaceRequest
+            {
+                Name = $"{user.Firstname}'s Workspace",
+                Description = "Personal Workspace",
+                Slug = user.Firstname.ToUrlSlug(true),
+                MetaInfo = new ()
+                {
+                    Color = "#843ADF"
+                }
+            });
 
             if (!result.Succeeded)
             {

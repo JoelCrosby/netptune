@@ -43,7 +43,7 @@ namespace Netptune.App.Controllers
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueId.Generate(userId)}{extension}");
+            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
 
             var fileStream = file.OpenReadStream();
 
@@ -76,7 +76,7 @@ namespace Netptune.App.Controllers
 
             var userId = await Identity.GetCurrentUserId();
             var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueId.Generate(userId)}{extension}");
+            var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueIdBuilder.Generate(userId)}{extension}");
 
             var fileStream = file.OpenReadStream();
 
