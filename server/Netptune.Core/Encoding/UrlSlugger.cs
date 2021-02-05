@@ -39,7 +39,7 @@ namespace Netptune.Core.Encoding
 
             if (!appendUniqueId) return result;
 
-            return $"{result}-{UniqueId.Generate(result)}";
+            return $"{result}-{UniqueIdBuilder.Generate()}";
         }
 
         private static string RemoveDiacritics(string value)
