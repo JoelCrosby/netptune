@@ -31,12 +31,17 @@ namespace Netptune.Services
             WorkspaceRepository = unitOfWork.Workspaces;
         }
 
-        public Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
+        public async Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
+        {
+            var user = await IdentityService.GetCurrentUser();
+
+            return await AddWorkspace(request, user);
+        }
+
+        public Task<Workspace> AddWorkspace(AddWorkspaceRequest request, AppUser user)
         {
             return UnitOfWork.Transaction(async () =>
             {
-                var user = await IdentityService.GetCurrentUser();
-
                 var entity = new Workspace
                 {
                     Name = request.Name,
