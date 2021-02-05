@@ -176,7 +176,7 @@ namespace Netptune.Services.Authentication
                 {
                     Color = "#843ADF"
                 }
-            });
+            }, user);
 
             if (!result.Succeeded)
             {
