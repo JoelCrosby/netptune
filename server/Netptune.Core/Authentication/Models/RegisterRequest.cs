@@ -1,5 +1,3 @@
-using Netptune.Core.Enums;
-
 namespace Netptune.Core.Authentication.Models
 {
     public class RegisterRequest : TokenRequest

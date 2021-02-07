@@ -1,4 +1,4 @@
-namespace Netptune.Core.Enums
+namespace Netptune.Core.Authentication
 {
     public enum AuthenticationProvider
     {

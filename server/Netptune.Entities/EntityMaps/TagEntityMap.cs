@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
+using Netptune.Entities.EntityMaps.BaseMaps;
 
-namespace Netptune.Entities.EntityMaps.BaseMaps
+namespace Netptune.Entities.EntityMaps
 {
     public class TagEntityMap : WorkspaceEntityMap<Tag, int>
     {

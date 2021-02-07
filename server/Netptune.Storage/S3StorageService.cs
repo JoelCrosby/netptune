@@ -66,7 +66,7 @@ namespace Netptune.Storage
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message);
+                Logger.LogError("{Exception}", e.Message);
 
                 return Failed();
             }
