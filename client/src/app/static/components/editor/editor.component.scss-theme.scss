@@ -126,6 +126,10 @@
     }
   }
 
+  .link-tool__content {
+    color: inherit !important;
+  }
+
   .link-tool__content--rendered {
     border: 1px solid if($is-dark-theme, #3e3e3e, #c9c9cc7a);
     background-color: if($is-dark-theme, #2f2f2f, #fff);
