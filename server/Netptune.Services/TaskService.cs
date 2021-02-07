@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +16,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
+
+using Polly;
 
 namespace Netptune.Services
 {
@@ -68,33 +69,23 @@ namespace Netptune.Services
 
             var result = await TaskRepository.AddAsync(task);
 
-            var saveCounter = 0;
+            var scopeIdRef = await TaskRepository.GetNextScopeId(project.Id);
 
-            async Task SaveTask(int increment)
+            if (!scopeIdRef.HasValue)
             {
-                if (saveCounter > 4) throw new Exception($"Save Task failed after {saveCounter + 1} attempts.");
-
-                if (project is null) throw new Exception("ProjectId cannot be null.");
-
-                var scopeId = await TaskRepository.GetNextScopeId(project.Id, increment);
-
-                if (!scopeId.HasValue) throw new Exception($"Unable to get scope id for project with id {project.Id}.");
-
-                result.ProjectScopeId = scopeId.Value;
-
-                try
-                {
-                    await UnitOfWork.CompleteAsync();
-                }
-                catch (Exception ex) when (ex is DBConcurrencyException || ex is DbUpdateException)
-                {
-                    saveCounter++;
-
-                    await SaveTask(saveCounter);
-                }
+                throw new Exception($"Unable to get scope id for project with id {project.Id}.");
             }
 
-            await SaveTask(saveCounter);
+            var scopeId = scopeIdRef.Value;
+
+            await Policy
+                .Handle<DbUpdateException>()
+                .Retry(4, (_, _, _) => scopeId++)
+                .Execute(async () =>
+                {
+                    result.ProjectScopeId = scopeId;
+                    return await UnitOfWork.CompleteAsync();
+                });
 
             var response = await TaskRepository.GetTaskViewModel(result.Id);
 
