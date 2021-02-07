@@ -26,7 +26,7 @@ namespace Netptune.App
 #else
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-                
+
 #endif
                 .WriteTo.Console()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, shared: true)
@@ -65,9 +65,9 @@ namespace Netptune.App
 
                 Directory.CreateDirectory(appDataDir);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Error("Unable to create App_Data directory. See inner-exception for details.", ex);
+                Log.Error("Unable to create App_Data directory. See inner-exception for details");
             }
         }
     }

@@ -44,7 +44,7 @@ namespace Netptune.Services.Cache.Common
 
             if (hit)
             {
-                Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds}ms");
+                Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds.ToString()}ms");
 
                 return value;
             }
@@ -56,7 +56,7 @@ namespace Netptune.Services.Cache.Common
                 AbsoluteExpirationRelativeToNow = TimeToLive,
             });
 
-            Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds}ms");
+            Logger.LogInformation($"[REDIS] [GetOrCreateAsync] key: {key} responded in {watch.ElapsedMilliseconds.ToString()}ms");
 
             return entity;
         }
