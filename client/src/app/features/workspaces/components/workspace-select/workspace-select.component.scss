@@ -55,7 +55,7 @@
 .select-menu-inner-options {
   padding: .4rem 0 .4rem .4rem;
   max-height: 216px;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .label-input {
@@ -86,6 +86,7 @@ input {
   font-size: 14px;
   font-family: inherit;
   border-radius: 3px;
+  margin: .2rem 0;
 }
 
 .no-results-item {
@@ -99,9 +100,9 @@ input {
 
 .app-workspace-link-inner {
   opacity: .75;
-  height: 32px;
-  min-width: 32px;
-  width: 32px;
+  height: 28px;
+  min-width: 28px;
+  width: 28px;
   vertical-align: middle;
   display: flex;
   align-items: center;
@@ -132,7 +133,7 @@ input {
 }
 
 .select-trigger .app-workspace-link-inner {
-  margin-left: 4px;
+  margin-left: 8px;
 }
 
 .workspace-select-compact {

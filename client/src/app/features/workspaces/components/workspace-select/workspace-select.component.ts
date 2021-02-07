@@ -70,6 +70,8 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
         tap(this.handleKeyDown.bind(this))
       )
       .subscribe();
+
+    this.options$.next(this.options);
   }
 
   ngOnChanges(changes: SimpleChanges) {
