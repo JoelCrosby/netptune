@@ -20,7 +20,6 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Messaging;
-using Netptune.Core.Meta;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;

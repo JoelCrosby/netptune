@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Hubs;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;

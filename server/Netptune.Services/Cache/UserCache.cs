@@ -18,7 +18,7 @@ namespace Netptune.Services.Cache
         public UserCache(
             ICacheProvider cache,
             INetptuneUnitOfWork unitOfWork,
-            ILogger<EntityCache<AppUser, string>> logger)
+            ILogger<UserCache> logger)
             : base(cache, TimeSpan.FromHours(1), logger)
         {
             UnitOfWork = unitOfWork;
