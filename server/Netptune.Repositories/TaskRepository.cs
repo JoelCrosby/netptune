@@ -241,7 +241,11 @@ namespace Netptune.Repositories
 
         public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
         {
-            var taskCount = await Entities.CountAsync(x => x.ProjectId == projectId);
+            var taskCount = await Entities
+                .Where(x => x.ProjectId == projectId)
+                .OrderByDescending(x => x.ProjectScopeId)
+                .Select(x => x.ProjectScopeId)
+                .FirstOrDefaultAsync();
 
             return taskCount + 1 + increment;
         }
