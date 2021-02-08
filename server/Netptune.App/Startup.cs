@@ -120,6 +120,20 @@ namespace Netptune.App
             }
             else
             {
+                // TODO: remove this middleware.
+
+                // This is currently being used to ensure that the github oauth middleware
+                // generates the callback url with a https:// scheme. Without this middleware
+                // it generates a plain http url.
+
+                // This is due to the app not recieiving XForwardedFor heades correctly from
+                // the ngix reverse proxy
+
+                // See links below for more detail
+
+                // https://github.com/dotnet/AspNetCore.Docs/issues/2384
+                // https://github.com/aspnet/Security/issues/1070
+
                 app.Use((context, next) =>
                 {
                     context.Request.Scheme = "https";
