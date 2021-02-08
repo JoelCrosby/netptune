@@ -120,6 +120,12 @@ namespace Netptune.App
             }
             else
             {
+                app.Use((context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+
                 app.UseExceptionHandler("/error");
                 app.UseHsts();
                 app.UseHttpsRedirection();
