@@ -30,7 +30,6 @@ RUN yarn build
 
 FROM base AS final
 WORKDIR /app
-COPY nginx.conf.sigil .
 COPY --from=build /app/publish .
 COPY --from=client-build /client/dist ./wwwroot/dist
 ENTRYPOINT ["dotnet", "Netptune.App.dll"]
