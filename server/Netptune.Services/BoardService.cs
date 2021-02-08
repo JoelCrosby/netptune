@@ -45,7 +45,8 @@ namespace Netptune.Services
 
         public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
         {
-            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier);
+            var workspaceId = await IdentityService.GetWorkspaceId();
+            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier, workspaceId);
 
             if (!nullableBoardId.HasValue) return null;
 

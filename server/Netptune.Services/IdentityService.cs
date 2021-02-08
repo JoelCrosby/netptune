@@ -14,12 +14,14 @@ namespace Netptune.Services
 {
     public class IdentityService : IIdentityService
     {
-        private readonly IUserCache Cache;
+        private readonly IUserCache UserCache;
+        private readonly IWorkspaceCache WorkspaceCache;
         private readonly IHttpContextAccessor ContextAccessor;
 
-        public IdentityService(IUserCache cache, IHttpContextAccessor contextAccessor)
+        public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor contextAccessor)
         {
-            Cache = cache;
+            UserCache = userCache;
+            WorkspaceCache = workspaceCache;
             ContextAccessor = contextAccessor;
         }
 
@@ -44,7 +46,7 @@ namespace Netptune.Services
 
         public Task<AppUser> GetCurrentUser()
         {
-            return Cache.Get(GetUserId());
+            return UserCache.Get(GetUserId());
         }
 
         public async Task<string> GetCurrentUserEmail()
@@ -80,6 +82,18 @@ namespace Netptune.Services
             }
 
             throw new Exception("Client request did not contain a 'workspace' header.");
+        }
+
+        public async Task<int> GetWorkspaceId()
+        {
+            var id = await WorkspaceCache.GetIdBySlug(GetWorkspaceKey());
+
+            if (id is null)
+            {
+                throw new Exception("Failed to get workspace from cache.");
+            }
+
+            return id.Value;
         }
 
         private string GetClaimValue(string type)

@@ -21,5 +21,7 @@ namespace Netptune.Core.Services
         string GetPictureUrl();
 
         string GetWorkspaceKey();
+
+        Task<int> GetWorkspaceId();
     }
 }

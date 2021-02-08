@@ -19,7 +19,7 @@ namespace Netptune.Core.Repositories
 
         Task<Board> GetByIdentifier(string identifier, bool isReadonly = false);
 
-        Task<int?> GetIdByIdentifier(string identifier);
+        Task<int?> GetIdByIdentifier(string identifier, int workspaceId);
 
         Task<BoardViewModel> GetViewModel(int id, bool isReadonly = false);
 
