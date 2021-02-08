@@ -1,9 +1,9 @@
 using Netptune.Core.Cache.Common;
-using Netptune.Core.Entities;
+using Netptune.Core.Models.Authentication;
 
 namespace Netptune.Core.Cache
 {
-    public interface IUserCache : IEntityCache<AppUser, string>
+    public interface IInviteCache : IValueCache<WorkspaceInvite>
     {
     }
 }

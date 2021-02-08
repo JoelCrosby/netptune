@@ -133,10 +133,12 @@ namespace Netptune.Repositories
                 .ToList();
         }
 
-        public async Task<int?> GetIdByIdentifier(string identifier)
+        public async Task<int?> GetIdByIdentifier(string identifier, int workspaceId)
         {
             var result = await
-                (from b in Entities where b.Identifier == identifier select b.Id)
+                (from b in Entities
+                    where b.Identifier == identifier && b.WorkspaceId == workspaceId
+                    select b.Id)
                 .ToListAsync();
 
             if (result.Any()) return result.FirstOrDefault();
