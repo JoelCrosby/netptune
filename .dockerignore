@@ -4,6 +4,12 @@
 **/dist
 **/node_modules
 **/App_Data
+**/.vscode
+**/.github
+
+npm-debug.log
+yarn-error.log
+
 
 .idea
 .vs
