@@ -24,6 +24,7 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   @Input() hint: string = null;
   @Input() minLength: string = null;
   @Input() maxLength: string = null;
+  @Input() rows = '2';
 
   @ViewChild('input') input: ElementRef;
 
