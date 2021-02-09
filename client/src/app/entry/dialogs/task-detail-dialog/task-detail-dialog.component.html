@@ -1,7 +1,6 @@
 <ng-container *ngIf="task$ | async as task; else loading">
 
   <mat-dialog-content class="task-detail-dialog">
-    <div class="detail-container">
 
       <div class="detail-form">
         <form [formGroup]="projectFromGroup">
@@ -191,7 +190,6 @@
         </div>
 
       </div>
-    </div>
   </mat-dialog-content>
 
   <div mat-dialog-actions align="end">

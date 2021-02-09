@@ -27,7 +27,8 @@
   }
 }
 
-.detail-container {
+mat-dialog-content {
+  position: relative;
   display: flex;
   flex-direction: row;
 
@@ -40,6 +41,8 @@
   }
 
   .detail-column {
+    position: sticky;
+    top: 0;
     margin-left: 1.6rem;
     flex: 0 0 240px;
   }
@@ -105,6 +108,11 @@
 
 .task-detail-title {
   font-size: 1.3rem;
+
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
 }
 
 .task-detail-loading {
