@@ -55,4 +55,13 @@
       }
     }
   }
+
+  .detail-form {
+    .inline-edit {
+      position: sticky;
+      top: 0;
+      background-color: mat-color($background, card);
+      z-index: 2;
+    }
+  }
 }
