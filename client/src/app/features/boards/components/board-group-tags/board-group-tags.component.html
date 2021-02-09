@@ -1,6 +1,7 @@
 <button
   *ngrxLet="selectedCount$ as count"
   mat-button
+  matTooltip="Filter by Tag"
   class="board-filter-button"
   [matMenuTriggerFor]="tagMenu"
   (click)="onClicked()"
