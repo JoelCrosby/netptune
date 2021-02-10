@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Options;
 
+using Netptune.Core.Jobs;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 
@@ -16,15 +17,27 @@ namespace Netptune.Messaging
     public class SendGridEmailService : IEmailService
     {
         private readonly IEmailRenderService EmailRenderer;
+        private readonly IJobClient JobClient;
         private readonly SendGridEmailOptions Options;
 
-        public SendGridEmailService(IOptionsMonitor<SendGridEmailOptions> options, IEmailRenderService emailRenderer)
+        public SendGridEmailService(
+            IOptionsMonitor<SendGridEmailOptions> options,
+            IEmailRenderService emailRenderer,
+            IJobClient jobClient)
         {
             EmailRenderer = emailRenderer;
+            JobClient = jobClient;
             Options = options.CurrentValue;
         }
 
-        public async Task Send(SendEmailModel model)
+        public Task Send(SendEmailModel model)
+        {
+            JobClient.Enqueue<IEmailService>(service => service.EnqueueSend(model));
+
+            return Task.CompletedTask;
+        }
+
+        public async Task EnqueueSend(SendEmailModel model)
         {
             var client = new SendGridClient(Options.SendGridApiKey);
 
@@ -46,7 +59,14 @@ namespace Netptune.Messaging
             }
         }
 
-        public async Task Send(IEnumerable<SendEmailModel> models)
+        public Task Send(IEnumerable<SendEmailModel> models)
+        {
+            JobClient.Enqueue<IEmailService>(service => service.EnqueueSend(models));
+
+            return Task.CompletedTask;
+        }
+
+        public async Task EnqueueSend(IEnumerable<SendEmailModel> models)
         {
             var client = new SendGridClient(Options.SendGridApiKey);
 

@@ -13,8 +13,10 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
+using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
+using Netptune.JobClient;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
@@ -46,6 +48,7 @@ namespace Netptune.App
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = GetConnectionString();
+            var redisConnectionString = GetRedisConnectionString();
 
             services.AddCors();
             services.AddControllers();
@@ -74,7 +77,7 @@ namespace Netptune.App
 
             services.AddNetptuneRedis(options =>
             {
-                options.Connection = ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL"));
+                options.Connection = redisConnectionString;
             });
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
@@ -101,6 +104,11 @@ namespace Netptune.App
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
 
+            services.AddNetptuneJobClient(options =>
+            {
+                options.ConnectionString = redisConnectionString;
+            });
+
             services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist"));
 
             ConfigureDatabase(services);
@@ -120,14 +128,14 @@ namespace Netptune.App
             }
             else
             {
-                // TODO: remove this middleware.
+                // TODO: remove the below middleware when possible.
 
                 // This is currently being used to ensure that the github oauth middleware
                 // generates the callback url with a https:// scheme. Without this middleware
                 // it generates a plain http url.
 
-                // This is due to the app not recieiving XForwardedFor heades correctly from
-                // the ngix reverse proxy
+                // This is due to the app not receiving XForwardedFor headers correctly from
+                // the nginx reverse proxy
 
                 // See links below for more detail
 
@@ -223,7 +231,7 @@ namespace Netptune.App
 
         private string GetConnectionString()
         {
-            var appSettingsConString = Configuration.GetConnectionString("ProjectsDatabase");
+            var appSettingsConString = Configuration.GetConnectionString("netptune");
             var envVar = Configuration["ConnectionStringEnvironmentVariable"];
 
             if (envVar is null) return appSettingsConString;
@@ -232,41 +240,19 @@ namespace Netptune.App
 
             if (envConString is null) return appSettingsConString;
 
-            return ParseConnectionString(envConString);
+            return ConnectionStringParser.ParseConnectionString(envConString);
         }
 
-        private static string ParseConnectionString(string value)
+        private static string GetRedisConnectionString()
         {
-            var conn = value
-                .Replace("//", "")
-                .Split('/', ':', '@', '?')
-                .Where(x => !string.IsNullOrEmpty(x))
-                .ToList();
+            var envVar = Environment.GetEnvironmentVariable("REDIS_URL");
 
-            var user = conn[1];
-            var pass = conn[2];
-            var server = conn[3];
-            var database = conn[5];
-            var port = conn[4];
+            if (envVar is null)
+            {
+                throw new Exception("An environment variable with the key of {REDIS_URL} not found.");
+            }
 
-            return $"host={server};port={port};database={database};uid={user};pwd={pass};Timeout=1000";
-        }
-
-        private static string ParseRedis(string value)
-        {
-            if (value is null) return "localhost";
-
-            var conn = value
-                .Replace("//", "")
-                .Split('/', ':', '@', '?')
-                .Where(x => !string.IsNullOrEmpty(x))
-                .ToList();
-
-            var pass = conn[2];
-            var host = conn[3];
-            var port = conn[4];
-
-            return $"{host}:{port},password={pass}";
+            return ConnectionStringParser.ParseRedis(envVar);
         }
     }
 }

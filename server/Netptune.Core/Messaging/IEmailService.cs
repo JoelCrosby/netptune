@@ -10,5 +10,9 @@ namespace Netptune.Core.Messaging
         Task Send(SendEmailModel model);
 
         Task Send(IEnumerable<SendEmailModel> models);
+
+        Task EnqueueSend(SendEmailModel model);
+
+        Task EnqueueSend(IEnumerable<SendEmailModel> models);
     }
 }
