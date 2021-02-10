@@ -1,0 +1,26 @@
+ARG COMMIT
+ARG GITHUB_REF
+ARG BUILD_NUMBER
+ARG RUN_ID
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS base
+WORKDIR /
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+ARG COMMIT
+ARG GITHUB_REF
+ARG BUILD_NUMBER
+ARG RUN_ID
+WORKDIR /
+COPY server/*/*.csproj ./
+RUN for file in $(ls *.csproj); do \
+      mkdir -p ${file%.*}/ && mv $file ${file%.*}/; \
+    done
+COPY /server .
+WORKDIR "/Netptune.JobServer"
+RUN dotnet publish "Netptune.JobServer.csproj" -c Release -o /app/publish /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "Netptune.JobServer.dll"]
