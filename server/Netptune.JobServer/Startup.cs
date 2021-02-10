@@ -128,7 +128,6 @@ namespace Netptune.JobServer
                 new DashboardOptions
                 {
                     DashboardTitle = "Netptune Jobs",
-                    DisplayStorageConnectionString = true,
                     Authorization = new[]
                     {
                         new HangfireAuthorizationFilter()
