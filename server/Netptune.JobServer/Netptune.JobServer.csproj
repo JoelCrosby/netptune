@@ -16,6 +16,8 @@
     <PackageReference Include="Hangfire" Version="1.7.19" />
     <PackageReference Include="Hangfire.Core" Version="1.7.19" />
     <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.3" />
   </ItemGroup>
 
   <ItemGroup>

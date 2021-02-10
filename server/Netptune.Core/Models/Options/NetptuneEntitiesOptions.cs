@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Entities.Configuration
+namespace Netptune.Core.Models.Options
 {
     public class NetptuneEntitiesOptions
     {

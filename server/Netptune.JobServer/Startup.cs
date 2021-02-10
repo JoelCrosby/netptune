@@ -5,7 +5,6 @@ using Hangfire.Redis;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,11 +13,15 @@ using Netptune.Core.Constants;
 using Netptune.Core.Jobs;
 using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
+using Netptune.JobServer.Auth;
+using Netptune.JobServer.Data;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
+
+using Polly;
 
 using StackExchange.Redis;
 
@@ -68,9 +71,13 @@ namespace Netptune.JobServer
             });
 
             var connectionString = GetConnectionString();
+            var jobsConnectionString = GetJobsConnectionString();
 
             services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
             services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
+
+            services.AddNetptuneJobServerAuth();
+            services.AddNetptuneJobServerEntities(options => options.ConnectionString = jobsConnectionString);
 
             services.AddNetptuneServices(options =>
             {
@@ -92,6 +99,8 @@ namespace Netptune.JobServer
                 options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
+
+            ConfigureDatabase(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -100,10 +109,22 @@ namespace Netptune.JobServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseStaticFiles();
 
             app.UseHangfireServer();
 
-            app.UseHangfireDashboard("",
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseHangfireDashboard("/dashboard",
                 new DashboardOptions
                 {
                     DashboardTitle = "Netptune Jobs",
@@ -113,6 +134,23 @@ namespace Netptune.JobServer
                         new HangfireAuthorizationFilter()
                     }
                 });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+        }
+
+        private static void ConfigureDatabase(IServiceCollection services)
+        {
+            using var serviceScope = services.BuildServiceProvider().CreateScope();
+
+            var context = serviceScope.ServiceProvider.GetRequiredService<NetptuneJobContext>();
+
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(4, _ => TimeSpan.FromSeconds(4))
+                .Execute(() => context.Database.EnsureCreated());
         }
 
         private string GetConnectionString()
@@ -127,6 +165,20 @@ namespace Netptune.JobServer
             if (envConString is null) return appSettingsConString;
 
             return ConnectionStringParser.ParseConnectionString(envConString);
+        }
+
+        private string GetJobsConnectionString()
+        {
+            var appSettingsConString = Configuration.GetConnectionString("netptune-jobs");
+            var envVar = Configuration["JobsConnectionStringEnvironmentVariable"];
+
+            if (envVar is null) return appSettingsConString;
+
+            var envConString = Environment.GetEnvironmentVariable(envVar);
+
+            if (envConString is null) return appSettingsConString;
+
+            return ConnectionStringParser.ParseConnectionString(envConString, "netptune-jobs");
         }
     }
 }
