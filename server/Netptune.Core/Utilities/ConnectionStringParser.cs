@@ -4,7 +4,7 @@ namespace Netptune.Core.Utilities
 {
     public static class ConnectionStringParser
     {
-        public static string ParseConnectionString(string value)
+        public static string ParseConnectionString(string value, string databaseName = null)
         {
             var conn = value
                 .Replace("//", "")
@@ -15,7 +15,7 @@ namespace Netptune.Core.Utilities
             var user = conn[1];
             var pass = conn[2];
             var server = conn[3];
-            var database = conn[5];
+            var database = databaseName ?? conn[5];
             var port = conn[4];
 
             return $"host={server};port={port};database={database};uid={user};pwd={pass};Timeout=1000";

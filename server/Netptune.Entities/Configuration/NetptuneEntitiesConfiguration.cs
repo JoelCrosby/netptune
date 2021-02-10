@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Models.Options;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.Entities.Configuration
