@@ -103,7 +103,7 @@ namespace Netptune.JobServer
 
             app.UseHangfireServer();
 
-            app.UseHangfireDashboard(new PathString("/"),
+            app.UseHangfireDashboard("",
                 new DashboardOptions
                 {
                     DashboardTitle = "Netptune Jobs",
