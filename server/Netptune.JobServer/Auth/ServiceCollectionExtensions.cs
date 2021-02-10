@@ -10,7 +10,10 @@ namespace Netptune.JobServer.Auth
         public static IServiceCollection AddNetptuneJobServerAuth(this IServiceCollection services)
         {
             services
-                .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                })
                 .AddEntityFrameworkStores<NetptuneJobContext>();
 
             services.AddRazorPages();
