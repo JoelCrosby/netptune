@@ -16,7 +16,7 @@ using Netptune.Repositories.RowMaps;
 
 namespace Netptune.Repositories
 {
-    public class BoardGroupRepository : Repository<DataContext, BoardGroup, int>, IBoardGroupRepository
+    public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, BoardGroup, int>, IBoardGroupRepository
     {
         public BoardGroupRepository(DataContext dataContext, IDbConnectionFactory connectionFactories)
             : base(dataContext, connectionFactories)

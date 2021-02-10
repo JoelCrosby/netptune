@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
+using Dapper;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Repositories.Common;
@@ -26,10 +30,16 @@ namespace Netptune.Repositories.Common
         protected readonly TContext Context;
         protected readonly DbSet<TEntity> Entities;
 
+        protected readonly string TableName;
+
         protected Repository(TContext context, IDbConnectionFactory connectionFactory) : base(connectionFactory)
         {
             Context = context;
             Entities = context.Set<TEntity>();
+
+            var entityType = Context.Model.FindEntityType(typeof(TEntity));
+
+            TableName = entityType.GetTableName();
         }
 
         /// <summary>
@@ -243,13 +253,28 @@ namespace Netptune.Repositories.Common
         /// <summary>
         /// Permanently Deletes the given entities.
         /// </summary>
-        /// <param name="idList"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
-        public virtual async Task DeletePermanent(IEnumerable<TId> idList)
+        public virtual async Task DeletePermanent(IEnumerable<TId> ids)
         {
-            var entities = await GetAllByIdAsync(idList);
+            var idList = ids.ToList();
 
-            Entities.RemoveRange(entities);
+            if (idList.Count == 0)
+            {
+                return;
+            }
+
+            using var connection = ConnectionFactory.StartConnection();
+
+            var transaction = Context.Database.CurrentTransaction?.GetDbTransaction();
+
+            var idSqlString = idList
+                .Aggregate(new StringBuilder(), (builder, id) => builder.AppendFormat("{0},", id))
+                .ToString();
+
+            var formatted = idSqlString[..^1];
+
+            await connection.ExecuteAsync($"DELETE FROM {TableName} WHERE id IN ({formatted})", transaction: transaction);
         }
 
         /// <summary>

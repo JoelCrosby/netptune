@@ -14,7 +14,7 @@ using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
 {
-    public class ProjectRepository : Repository<DataContext, Project, int>, IProjectRepository
+    public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project, int>, IProjectRepository
     {
         public ProjectRepository(DataContext dataContext, IDbConnectionFactory connectionFactories)
             : base(dataContext, connectionFactories)

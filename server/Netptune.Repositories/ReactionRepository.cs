@@ -6,7 +6,7 @@ using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
 {
-    public class ReactionRepository : Repository<DataContext, Reaction, int>, IReactionRepository
+    public class ReactionRepository : WorkspaceEntityRepository<DataContext, Reaction, int>, IReactionRepository
     {
         public ReactionRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)

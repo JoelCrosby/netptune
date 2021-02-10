@@ -17,7 +17,7 @@ using Netptune.Repositories.RowMaps;
 
 namespace Netptune.Repositories
 {
-    public class TaskRepository : Repository<DataContext, ProjectTask, int>, ITaskRepository
+    public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask, int>, ITaskRepository
     {
         public TaskRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)

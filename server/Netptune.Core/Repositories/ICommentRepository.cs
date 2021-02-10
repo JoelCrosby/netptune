@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Core.Repositories
 {
-    public interface ICommentRepository : IRepository<Comment, int>
+    public interface ICommentRepository : IWorkspaceEntityRepository<Comment, int>
     {
         Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false);
 

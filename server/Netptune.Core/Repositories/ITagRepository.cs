@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Core.Repositories
 {
-    public interface ITagRepository : IRepository<Tag, int>
+    public interface ITagRepository : IWorkspaceEntityRepository<Tag, int>
     {
         Task<List<Tag>> GetForTask(int taskId, bool isReadonly = false);
 

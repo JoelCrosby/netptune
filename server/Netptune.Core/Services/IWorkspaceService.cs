@@ -29,5 +29,9 @@ namespace Netptune.Core.Services
         Task<ClientResponse> Delete(int id);
 
         Task<ClientResponse> Delete(string key);
+
+        Task<ClientResponse> DeletePermanent(int id);
+
+        Task<ClientResponse> DeletePermanent(string key);
     }
 }

@@ -88,21 +88,10 @@ namespace Netptune.Services
         public async Task<ClientResponse> Delete(string key)
         {
             var workspace = await WorkspaceRepository.GetBySlug(key);
-            var userId = await IdentityService.GetCurrentUserId();
 
-            if (workspace is null || userId is null) return null;
+            if (workspace is null) return null;
 
-            Cache.Remove(new WorkspaceUserKey
-            {
-                UserId = userId,
-                WorkspaceKey = workspace.Slug,
-            });
-
-            workspace.Delete(userId);
-
-            await UnitOfWork.CompleteAsync();
-
-            return ClientResponse.Success();
+            return await Delete(workspace.Id);
         }
 
         public async Task<ClientResponse> Delete(int id)
@@ -121,6 +110,52 @@ namespace Netptune.Services
             workspace.Delete(userId);
 
             await UnitOfWork.CompleteAsync();
+
+            return ClientResponse.Success();
+        }
+
+        public async Task<ClientResponse> DeletePermanent(string key)
+        {
+            var workspace = await WorkspaceRepository.GetBySlug(key);
+
+            if (workspace is null) return null;
+
+            return await DeletePermanent(workspace.Id);
+        }
+
+        public async Task<ClientResponse> DeletePermanent(int id)
+        {
+            var workspace = await WorkspaceRepository.GetAsync(id);
+            var userId = await IdentityService.GetCurrentUserId();
+
+            if (workspace is null || userId is null) return null;
+
+            Cache.Remove(new WorkspaceUserKey
+            {
+                UserId = userId,
+                WorkspaceKey = workspace.Slug,
+            });
+
+            await UnitOfWork.Transaction(async () =>
+            {
+                var u = UnitOfWork;
+                var workspaceId = workspace.Id;
+
+                var taskIds = await u.Tasks.GetAllIdsInWorkspace(workspaceId, true);
+                await u.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
+                await u.ProjectTaskTags.DeleteAllByTaskId(taskIds);
+
+                await u.Tags.DeleteAllInWorkspace(workspaceId);
+                await u.Comments.DeleteAllInWorkspace(workspaceId);
+                await u.Tasks.DeleteAllInWorkspace(workspaceId);
+                await u.BoardGroups.DeleteAllInWorkspace(workspaceId);
+                await u.Boards.DeleteAllInWorkspace(workspaceId);
+                await u.Projects.DeleteAllInWorkspace(workspaceId);
+
+                await u.Workspaces.DeletePermanent(workspaceId);
+
+                await UnitOfWork.CompleteAsync();
+            });
 
             return ClientResponse.Success();
         }
