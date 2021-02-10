@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.JobServer.Data;
@@ -15,6 +16,11 @@ namespace Netptune.JobServer.Auth
                     options.SignIn.RequireConfirmedAccount = true;
                 })
                 .AddEntityFrameworkStores<NetptuneJobContext>();
+
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer()));
+            });
 
             services.AddRazorPages();
 
