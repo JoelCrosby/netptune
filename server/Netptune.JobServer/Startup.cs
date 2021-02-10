@@ -170,7 +170,7 @@ namespace Netptune.JobServer
         private string GetJobsConnectionString()
         {
             var appSettingsConString = Configuration.GetConnectionString("netptune-jobs");
-            var envVar = Configuration["JobsConnectionStringEnvironmentVariable"];
+            var envVar = Configuration["ConnectionStringEnvironmentVariable"];
 
             if (envVar is null) return appSettingsConString;
 
