@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.Core.Repositories
 {
-    public interface IProjectRepository : IRepository<Project, int>
+    public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
     {
         Task<List<ProjectViewModel>> GetProjects(string workspaceKey);
 

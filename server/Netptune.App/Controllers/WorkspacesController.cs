@@ -103,6 +103,23 @@ namespace Netptune.App.Controllers
             return Ok(result);
         }
 
+        // DELETE: api/Workspaces/key
+        [HttpDelete("permanent/{key}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json", Type = typeof(Workspace))]
+        public async Task<IActionResult> DeleteWorkspacePermanent([FromRoute] string key)
+        {
+            var authorizationResult = await AuthorizeWorkspace(key);
+            if (!authorizationResult.Succeeded) return Forbid();
+
+            var result = await WorkspaceService.DeletePermanent(key);
+
+            if (result is null) return NotFound();
+
+            return Ok(result);
+        }
+
         // GET: api/Workspaces/all
         [HttpGet("all")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Core.Repositories
 {
-    public interface IBoardRepository : IRepository<Board, int>
+    public interface IBoardRepository : IWorkspaceEntityRepository<Board, int>
     {
         Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false);
 

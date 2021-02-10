@@ -14,7 +14,7 @@ using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories
 {
-    public class CommentRepository : Repository<DataContext, Comment, int>, ICommentRepository
+    public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment, int>, ICommentRepository
     {
         public CommentRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)
