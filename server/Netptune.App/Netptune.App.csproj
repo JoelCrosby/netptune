@@ -18,6 +18,8 @@
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+
+    <!-- Docker -->
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 
   </PropertyGroup>
@@ -48,6 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.JobClient\Netptune.JobClient.csproj" />
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
