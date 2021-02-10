@@ -8,7 +8,13 @@ namespace Netptune.JobServer
         {
             var httpContext = context.GetHttpContext();
 
-            return httpContext.User.Identity?.IsAuthenticated ?? false;
+            var isAuthenticated = httpContext.User.Identity?.IsAuthenticated ?? false;
+
+            if (isAuthenticated) return true;
+
+            httpContext.Response.Redirect("/identity/account/login");
+
+            return true;
         }
     }
 }

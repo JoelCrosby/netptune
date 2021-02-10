@@ -124,20 +124,21 @@ namespace Netptune.JobServer
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHangfireDashboard("/dashboard",
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+
+            app.UseHangfireDashboard("",
                 new DashboardOptions
                 {
                     DashboardTitle = "Netptune Jobs",
+                    AppPath = "/identity/account/logout",
                     Authorization = new[]
                     {
                         new HangfireAuthorizationFilter()
                     }
                 });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
         }
 
         private static void ConfigureDatabase(IServiceCollection services)
