@@ -18,7 +18,7 @@ namespace Netptune.JobServer.Data
             if (optionsBuilder.IsConfigured) return;
 
             optionsBuilder
-                .UseNpgsql("Host=localhost;Database=netptune;Username=postgres-jobs;")
+                .UseNpgsql("Host=localhost;Database=netptune-jobs;Username=postgres;")
                 .UseSnakeCaseNamingConvention();
         }
 

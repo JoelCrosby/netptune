@@ -9,7 +9,7 @@ namespace Netptune.Core.Utilities
             var conn = value
                 .Replace("//", "")
                 .Split('/', ':', '@', '?')
-                .Where(x => !string.IsNullOrEmpty(x))
+                .Where(s => !string.IsNullOrEmpty(s))
                 .ToList();
 
             var user = conn[1];
@@ -23,7 +23,7 @@ namespace Netptune.Core.Utilities
 
         public static string ParseRedis(string value)
         {
-            if (value == "localhost") return value;
+            if (value is "localhost") return value;
 
             var conn = value
                 .Replace("//", "")
