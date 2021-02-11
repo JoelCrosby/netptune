@@ -35,7 +35,6 @@ namespace Netptune.JobServer
         private IConfiguration Configuration { get; }
         private IWebHostEnvironment WebHostEnvironment { get; }
 
-
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             WebHostEnvironment = webHostEnvironment;
@@ -132,6 +131,7 @@ namespace Netptune.JobServer
             app.UseHangfireDashboard("",
                 new DashboardOptions
                 {
+                    DisplayStorageConnectionString = false,
                     DashboardTitle = "Netptune Jobs",
                     AppPath = "/identity/account/logout",
                     Authorization = new[]
