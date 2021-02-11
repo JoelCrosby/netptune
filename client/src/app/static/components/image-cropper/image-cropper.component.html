@@ -1,6 +1,9 @@
 <div class="image-cropper" [style.visibility]="ready ? 'visible' : 'hidden'">
 
-  <ly-img-cropper [ngClass]="[classes.cropper]"
+  <ly-img-cropper
+    class="cropper"
+    [style.max-width]="size"
+    [style.height]="size"
     [config]="myConfig"
     [(scale)]="scale"
     (minScale)="minScale = $event"
@@ -13,13 +16,13 @@
     </span>
   </ly-img-cropper>
 
-  <div [ngClass]="[classes.cropperUpload]">
+  <div class="cropper-upload">
 
     <input #_fileInput type="file" (change)="cropper.selectInputEvent($event)" accept="image/*" hidden>
 
   </div>
 
-  <div [ngClass]="[classes.cropperToolBar]" *ngIf="ready">
+  <div class="cropper-tool-bar" *ngIf="ready">
 
     <button class="icon-button" (click)="cropper.zoomIn()" mat-button matTooltip="Zoom In">
       <mat-icon>zoom_in</mat-icon>

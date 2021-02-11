@@ -1,4 +1,4 @@
-import { lyl, StyleRenderer, ThemeVariables } from '@alyle/ui';
+import { StyleRenderer } from '@alyle/ui';
 import {
   ImgCropperConfig,
   ImgCropperEvent,
@@ -12,66 +12,49 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
 
-const STYLES = (_: ThemeVariables) => ({
-    cropperUpload: lyl`{
-      display: flex
-      align-items: center
-      justify-content: space-around
-    }`,
-    cropperToolBar: lyl`{
-      display: flex
-      align-items: center
-      padding-top: .2rem
-    }`,
-    cropper: lyl`{
-      max-width: 260px
-      height: 260px
-      border-radius: 4px
-      margin: auto
-    }`,
-    cropResult: lyl`{
-      border-radius: 50%
-    }`,
-  });
-
 @Component({
   selector: 'app-image-cropper',
   templateUrl: './image-cropper.component.html',
   styleUrls: ['./image-cropper.component.scss'],
-  providers: [StyleRenderer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageCropperComponent implements AfterViewInit {
+export class ImageCropperComponent implements OnInit, AfterViewInit {
   @Input() src: string;
+  @Input() size: number;
+
   @Output() cropped = new EventEmitter<{ blob: Blob; src: string }>();
   @Output() canceled = new EventEmitter();
   @Output() cleared = new EventEmitter();
 
   @ViewChild(LyImageCropper, { static: true }) readonly cropper: LyImageCropper;
 
-  classes = this.sRenderer.renderSheet(STYLES);
   croppedImage?: string;
   scale: number;
   ready: boolean;
   minScale: number;
 
-  myConfig: ImgCropperConfig = {
-    width: 250,
-    height: 250,
-    type: 'image/png',
-    round: true,
-  };
+  myConfig: ImgCropperConfig;
 
   constructor(
     readonly sRenderer: StyleRenderer,
     private platform: Platform,
     private cd: ChangeDetectorRef
   ) {}
+
+  ngOnInit() {
+    this.myConfig = {
+      width: this.size,
+      height: this.size,
+      type: 'image/png',
+      round: true,
+    };
+  }
 
   ngAfterViewInit() {
     if (!this.platform.isBrowser) {

@@ -46,6 +46,7 @@
 
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
         <app-image-cropper
+          [size]="180"
           [src]="pictureUrl.value"
           (cropped)="onCropped($event)"
           (canceled)="onCropperCanceled()"
@@ -60,8 +61,8 @@
             class="profile-picture"
             [src]="pictureUrl.value"
             alt="Profile Image"
-            height="260"
-            width="260"
+            height="180"
+            width="180"
           >
 
           <button
@@ -81,8 +82,8 @@
             class="profile-picture"
             src="https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png"
             alt="Placeholder Profile Image"
-            height="260"
-            width="260"
+            height="180"
+            width="180"
           >
 
           <button
