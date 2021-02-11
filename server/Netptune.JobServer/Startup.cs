@@ -15,6 +15,7 @@ using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
 using Netptune.JobServer.Auth;
 using Netptune.JobServer.Data;
+using Netptune.JobServer.Util;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Cache.Redis;
@@ -116,8 +117,6 @@ namespace Netptune.JobServer
 
             app.UseStaticFiles();
 
-            app.UseHangfireServer();
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -133,7 +132,7 @@ namespace Netptune.JobServer
                 {
                     DisplayStorageConnectionString = false,
                     DashboardTitle = "Netptune Jobs",
-                    AppPath = "/identity/account/logout",
+                    AppPath = "/account/logout",
                     Authorization = new[]
                     {
                         new HangfireAuthorizationFilter()

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.JobServer.Data;
+using Netptune.JobServer.Util;
 
 namespace Netptune.JobServer.Auth
 {
@@ -11,18 +12,18 @@ namespace Netptune.JobServer.Auth
         public static IServiceCollection AddNetptuneJobServerAuth(this IServiceCollection services)
         {
             services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                 })
-                .AddEntityFrameworkStores<NetptuneJobContext>();
+                .AddEntityFrameworkStores<NetptuneJobContext>()
+                .AddDefaultTokenProviders()
+                .AddSignInManager();
 
             services.AddRazorPages().AddRazorPagesOptions(options =>
             {
                 options.Conventions.Add(new PageRouteTransformerConvention(new SlugifyParameterTransformer()));
             });
-
-            services.AddRazorPages();
 
             return services;
         }
