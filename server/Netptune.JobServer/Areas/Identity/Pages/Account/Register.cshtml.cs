@@ -64,12 +64,21 @@ namespace Netptune.JobServer.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (!Request.HttpContext.User.Identity.IsAuthenticated) {
+                Response.Redirect("/identity/account/login");
+                return;
+            }
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (!Request.HttpContext.User.Identity.IsAuthenticated) {
+                return Redirect("/identity/account/login");
+            }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
