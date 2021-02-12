@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
