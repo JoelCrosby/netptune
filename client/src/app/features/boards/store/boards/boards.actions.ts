@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
+import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { createAction, props } from '@ngrx/store';
@@ -51,5 +52,22 @@ export const deleteBoardSuccess = createAction(
 
 export const deleteBoardFail = createAction(
   '[Boards] Delete Board Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Update Board
+
+export const updateBoard = createAction(
+  '[Boards] Update Board',
+  props<{ request: UpdateBoardRequest }>()
+);
+
+export const updateBoardSuccess = createAction(
+  '[Boards] Update Board Success',
+  props<{ response: BoardViewModel }>()
+);
+
+export const updateBoardFail = createAction(
+  '[Boards] Update Board Fail',
   props<{ error: HttpErrorResponse }>()
 );

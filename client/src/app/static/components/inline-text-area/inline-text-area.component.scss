@@ -1,9 +1,9 @@
-.inline-edit {
+.inline-text-area {
   width: 100%;
   padding-bottom: .4rem;
   display: flex;
 
-  .inline-edit-label {
+  .inline-text-area-label {
     font-size: inherit;
     font-weight: inherit;
     letter-spacing: inherit;
@@ -15,11 +15,11 @@
     transition: background-color .2s ease-in-out;
   }
 
-  .inline-edit-label:hover {
+  .inline-text-area-label:hover {
     background-color: rgba(0, 0, 0, .04);
   }
 
-  .inline-edit-input {
+  .inline-text-area-input {
     font-size: inherit;
     font-weight: inherit;
     letter-spacing: inherit;

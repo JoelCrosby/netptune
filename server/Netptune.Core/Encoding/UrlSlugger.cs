@@ -19,6 +19,8 @@ namespace Netptune.Core.Encoding
 
         public static string ToUrlSlug(this string value, bool appendUniqueId = false)
         {
+            if (value is null) return null;
+
             // convert to lower case
             value = value.ToLowerInvariant();
 

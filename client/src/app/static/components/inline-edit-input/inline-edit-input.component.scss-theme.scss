@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin inline-text-area-theme($theme) {
+@mixin inline-edit-input-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -8,9 +8,11 @@
   $background: map-get($theme, background);
 
 
-  .inline-text-area-input.active-border {
+  .inline-edit-input.active-border {
+    width: 320px;
+
     &:focus {
-      padding: 10px !important;
+      padding: 4px !important;
       border: 2px solid mat-color($primary, .6) !important;
     }
   }

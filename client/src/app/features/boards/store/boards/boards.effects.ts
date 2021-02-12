@@ -46,6 +46,19 @@ export class BoardsEffects {
     )
   );
 
+  updateBoard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.updateBoard),
+      switchMap((action) =>
+        this.boardsService.put(action.request).pipe(
+          unwrapClientReposne(),
+          map((response) => actions.updateBoardSuccess({ response })),
+          catchError((error) => of(actions.updateBoardFail({ error })))
+        )
+      )
+    )
+  );
+
   deleteBoard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.deleteBoard),

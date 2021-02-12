@@ -43,6 +43,7 @@
 @import './app/static/components/autocomplete-chips/autocomplete-chips.component.scss-theme';
 @import './app/static/components/image-cropper/image-cropper.component.scss-theme';
 @import './app/static/components/editor/editor.component.scss-theme';
+@import './app/static/components/inline-edit-input/inline-edit-input.component.scss-theme.scss';
 @import './app/static/components/inline-text-area/inline-text-area.component.scss-theme';
 
 @import './app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.scss-theme';
@@ -87,6 +88,7 @@
   @include editor-theme($theme);
   @include page-header-theme($theme);
   @include autocomplete-chips-theme($theme);
+  @include inline-edit-input-theme($theme);
   @include inline-text-area-theme($theme);
   @include image-cropper-theme($theme);
   @include workspace-select-theme($theme);

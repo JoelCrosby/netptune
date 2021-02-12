@@ -99,9 +99,9 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
-        public async Task<IActionResult> PutBoard([FromBody] Board board)
+        public async Task<IActionResult> PutBoard([FromBody] UpdateBoardRequest request)
         {
-            var result = await BoardService.UpdateBoard(board);
+            var result = await BoardService.UpdateBoard(request);
 
             return Ok(result);
         }
@@ -111,9 +111,9 @@ namespace Netptune.App.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
-        public async Task<IActionResult> PostBoard([FromBody] AddBoardRequest board)
+        public async Task<IActionResult> PostBoard([FromBody] AddBoardRequest request)
         {
-            var result = await BoardService.AddBoard(board);
+            var result = await BoardService.AddBoard(request);
 
             return Ok(result);
         }

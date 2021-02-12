@@ -19,9 +19,9 @@ namespace Netptune.Core.Services
 
         Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null);
 
-        Task<ClientResponse<BoardViewModel>> UpdateBoard(Board board);
+        Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request);
 
-        Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest board);
+        Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request);
 
         Task<ClientResponse> Delete(int id);
 

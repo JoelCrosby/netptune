@@ -25,9 +25,19 @@
       </div>
 
       <div class="header-main">
-        <h1 class="page-header-title">
+        <h1 class="page-header-title" *ngIf="!titleEditable">
           {{ title }}
         </h1>
+
+        <app-inline-edit-input
+          *ngIf="titleEditable"
+          class="page-header-title page-header-title-editable"
+          activeBorder="true"
+          [value]="title"
+          [size]="title.length"
+          (submitted)="titleSubmitted.emit($event)"
+        >
+        </app-inline-edit-input>
 
         <div class="header-tool-bar">
           <ng-content></ng-content>

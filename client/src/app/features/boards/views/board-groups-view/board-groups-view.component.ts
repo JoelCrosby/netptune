@@ -105,6 +105,19 @@ export class BoardGroupsViewComponent
     this.hubService.disconnect();
   }
 
+  onTitleSubmitted(title: string) {
+    if (!title) return;
+
+    this.store.dispatch(
+      BoardActions.updateBoard({
+        request: {
+          id: this.board.id,
+          name: title,
+        },
+      })
+    );
+  }
+
   getsiblingIds(group: BoardViewGroup, groups: BoardViewGroup[]): string[] {
     return groups
       .filter((item) => item.id !== group.id)

@@ -15,8 +15,10 @@
   <app-page-header
     *ngIf="boardGroupsLoaded$ | async"
     [title]="selectedBoardName$ | async"
+    [titleEditable]="true"
     [overflowActions]="secondaryActions"
     [backLink]="['../../boards']"
+    (titleSubmitted)="onTitleSubmitted($event)"
     backLabel="Back to boards"
   >
     <div class="board-filter-seperator"></div>
@@ -78,6 +80,7 @@
 
             <app-inline-edit-input
               class="title-input"
+              [size]="group.name.length"
               [value]="group.name"
               (submitted)="onGroupNameSubmitted($event, group)"
             >
