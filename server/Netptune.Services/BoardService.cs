@@ -85,14 +85,19 @@ namespace Netptune.Services
             };
         }
 
-        public async Task<ClientResponse<BoardViewModel>> UpdateBoard(Board board)
+        public async Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request)
         {
-            var result = await Boards.GetAsync(board.Id);
+            if (!request.Id.HasValue)
+            {
+                throw new Exception($"{nameof(request.Id)} is required");
+            }
+
+            var result = await Boards.GetAsync(request.Id.Value);
 
             if (result is null) return null;
 
-            result.Name = board.Name;
-            result.Identifier = board.Identifier.ToUrlSlug();
+            result.Name = request.Name ?? result.Name;
+            result.Identifier = request.Identifier?.ToUrlSlug() ?? result.Identifier;
 
             await UnitOfWork.CompleteAsync();
 
@@ -105,7 +110,7 @@ namespace Netptune.Services
         {
             if (!request.ProjectId.HasValue)
             {
-                throw new Exception("ProjectId is required");
+                throw new Exception($"{nameof(request.ProjectId)} is required");
             }
 
             var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true);

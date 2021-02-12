@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
+import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { environment } from '@env/environment';
@@ -28,6 +29,13 @@ export class BoardsService {
 
   post(request: AddBoardRequest) {
     return this.http.post<ClientResponse<BoardViewModel>>(
+      environment.apiEndpoint + 'api/boards',
+      request
+    );
+  }
+
+  put(request: UpdateBoardRequest) {
+    return this.http.put<ClientResponse<BoardViewModel>>(
       environment.apiEndpoint + 'api/boards',
       request
     );

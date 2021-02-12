@@ -24,6 +24,9 @@ import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
   @Input() value: string;
+  @Input() size: number | undefined;
+  @Input() activeBorder: boolean | string;
+
   @ViewChild('input', { static: false }) input: ElementRef;
   @HostBinding('class.edit-active') editActiveClass: boolean;
   @Output() submitted = new EventEmitter<string>();

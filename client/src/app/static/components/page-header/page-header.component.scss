@@ -34,6 +34,7 @@
 }
 
 .header-top-row {
+  height: 108px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -42,7 +43,8 @@
   .header-top-row-left {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
+    height: 100%;
 
     .header-tool-bar {
       margin-left: 1.4rem;
@@ -56,6 +58,11 @@
     font-weight: 400;
     font-size: 2rem;
     font-family: 'Overpass', sans-serif;
+    margin: 0;
+  }
+
+  .page-header-title-editable {
+    cursor: pointer;
   }
 
   .header-actions {

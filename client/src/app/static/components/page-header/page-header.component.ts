@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 })
 export class PageHeaderComponent {
   @Input() title?: string;
+  @Input() titleEditable = false;
   @Input() actionTitle?: string;
   @Input() backLink?: string[] | number[];
   @Input() backLabel?: string;
@@ -25,6 +26,7 @@ export class PageHeaderComponent {
   @Input() overflowActions: HeaderAction[] = [];
 
   @Output() actionClick = new EventEmitter();
+  @Output() titleSubmitted = new EventEmitter<string>();
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);
 
