@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace Netptune.JobServer.Pages.Account
 {
@@ -14,12 +13,10 @@ namespace Netptune.JobServer.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> SignInManager;
-        private readonly ILogger<LoginModel> Logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager)
         {
             SignInManager = signInManager;
-            Logger = logger;
         }
 
         [BindProperty]
@@ -74,7 +71,6 @@ namespace Netptune.JobServer.Pages.Account
 
             if (result.Succeeded)
             {
-                Logger.LogInformation("User logged in.");
                 return LocalRedirect(returnUrl);
             }
 

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace Netptune.JobServer.Pages.Account
 {
@@ -14,16 +13,13 @@ namespace Netptune.JobServer.Pages.Account
     {
         private readonly SignInManager<IdentityUser> SignInManager;
         private readonly UserManager<IdentityUser> UserManager;
-        private readonly ILogger<RegisterModel> Logger;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger)
+            SignInManager<IdentityUser> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
-            Logger = logger;
         }
 
         [BindProperty]
@@ -87,8 +83,6 @@ namespace Netptune.JobServer.Pages.Account
 
             if (result.Succeeded)
             {
-                Logger.LogInformation("User created a new account with password.");
-
                 await SignInManager.SignInAsync(user, false);
 
                 return LocalRedirect(returnUrl);
