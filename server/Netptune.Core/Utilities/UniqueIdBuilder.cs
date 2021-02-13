@@ -13,12 +13,14 @@ namespace Netptune.Core.Utilities
         {
             UseNumbers = true,
             UseSpecialCharacters = false,
-            Length = 12
+            Length = 12,
         };
 
-        public static string Generate()
+        public static string Generate(GenerationOptions options = null)
         {
-            return ShortId.Generate(ShortIdOptions);
+            options ??= ShortIdOptions;
+
+            return ShortId.Generate(options);
         }
 
         public static string Generate(string seed)

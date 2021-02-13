@@ -109,7 +109,10 @@ namespace Netptune.App
                 options.ConnectionString = redisConnectionString;
             });
 
-            services.AddSpaStaticFiles(configuration => configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist"));
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
+            });
 
             ConfigureDatabase(services);
         }
@@ -119,7 +122,7 @@ namespace Netptune.App
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             });
 
             if (env.IsDevelopment())
