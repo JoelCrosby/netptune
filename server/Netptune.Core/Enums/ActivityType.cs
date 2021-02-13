@@ -6,5 +6,6 @@ namespace Netptune.Core.Entities
         Modify = 1,
         Delete = 2,
         Assign = 3,
+        Move = 5,
     }
 }
