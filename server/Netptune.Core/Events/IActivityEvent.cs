@@ -1,4 +1,3 @@
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Events
@@ -11,6 +10,8 @@ namespace Netptune.Core.Events
 
         ActivityType Type { get; }
 
-        int EntityId { get; }
+        int? EntityId { get; }
+
+        int WorkspaceId { get; }
     }
 }

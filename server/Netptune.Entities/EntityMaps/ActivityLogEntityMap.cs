@@ -5,25 +5,27 @@ using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps
 {
-    public class ReactionEntityMap : WorkspaceEntityMap<Reaction, int>
+    public class ActivityLogEntityMap : AuditableEntityMap<ActivityLog, int>
     {
-        public override void Configure(EntityTypeBuilder<Reaction> builder)
+        public override void Configure(EntityTypeBuilder<ActivityLog> builder)
         {
             base.Configure(builder);
 
             builder
-                .Property(reaction => reaction.Value)
-                .HasMaxLength(128)
+                .HasIndex(log => new { log.Type });
+
+            builder
+                .HasIndex(log => new { log.EntityType });
+
+            builder
+                .HasIndex(log => new { log.EntityId });
+
+            builder
+                .Property(log => log.Type)
                 .IsRequired();
 
             builder
-                .Property(reaction => reaction.CommentId)
-                .IsRequired();
-
-            builder
-                .HasOne(reaction => reaction.Comment)
-                .WithMany(comment => comment.Reactions)
-                .HasForeignKey(reaction => reaction.CommentId)
+                .Property(log => log.EntityType)
                 .IsRequired();
         }
     }

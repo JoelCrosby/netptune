@@ -1,4 +1,4 @@
-namespace Netptune.Core.Entities
+namespace Netptune.Core.Enums
 {
     public enum ActivityType
     {

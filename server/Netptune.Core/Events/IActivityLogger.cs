@@ -1,4 +1,11 @@
-$HEADER$namespace $NAMESPACE$
+using System;
+
+using Netptune.Core.Models.Activity;
+
+namespace Netptune.Core.Events
 {
-  public class $CLASS$ {$END$}
+    public interface IActivityLogger
+    {
+        void Log(Action<ActivityOptions> options);
+    }
 }

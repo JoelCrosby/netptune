@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
+using Netptune.Core.Events;
 using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
@@ -103,6 +104,8 @@ namespace Netptune.App
                 options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
+
+            services.AddActivityLogger();
 
             services.AddNetptuneJobClient(options =>
             {

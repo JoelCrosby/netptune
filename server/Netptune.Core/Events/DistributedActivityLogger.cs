@@ -20,10 +20,12 @@ namespace Netptune.Core.Events
         public void Log(Action<ActivityOptions> options)
         {
             var userId = Identity.GetUserId();
+            var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
             var activityOptions = new ActivityOptions
             {
                 UserId = userId,
+                WorkspaceId = workspaceId,
             };
 
             options.Invoke(activityOptions);
@@ -33,12 +35,18 @@ namespace Netptune.Core.Events
                 throw new Exception($"Cannot call log with null {nameof(activityOptions.EntityId)}.");
             }
 
-            var activity = new Activity
+            if (activityOptions.WorkspaceId is null)
+            {
+                throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
+            }
+
+            var activity = new ActivityEvent
             {
                 Type = activityOptions.Type,
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
                 EntityId = activityOptions.EntityId.Value,
+                WorkspaceId = activityOptions.WorkspaceId.Value,
             };
 
             Client.Enqueue<IActivityObservable>(service => service.Track(activity));

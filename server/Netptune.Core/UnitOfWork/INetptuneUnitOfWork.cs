@@ -28,5 +28,7 @@ namespace Netptune.Core.UnitOfWork
         IReactionRepository Reactions { get; }
 
         ITagRepository Tags { get; }
+
+        IActivityLogRepository ActivityLogs { get; }
     }
 }

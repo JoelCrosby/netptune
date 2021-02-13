@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -26,12 +27,17 @@ namespace Netptune.Services
         private readonly ITaskRepository TaskRepository;
         private readonly INetptuneUnitOfWork UnitOfWork;
         private readonly IIdentityService IdentityService;
+        private readonly IActivityLogger Activity;
 
-        public TaskService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+        public TaskService(
+            INetptuneUnitOfWork unitOfWork,
+            IIdentityService identityService,
+            IActivityLogger activity)
         {
             TaskRepository = unitOfWork.Tasks;
             UnitOfWork = unitOfWork;
             IdentityService = identityService;
+            Activity = activity;
         }
 
         public async Task<ClientResponse<TaskViewModel>> Create(AddProjectTaskRequest request)
@@ -89,6 +95,13 @@ namespace Netptune.Services
 
             var response = await TaskRepository.GetTaskViewModel(result.Id);
 
+            Activity.Log(options =>
+            {
+                options.EntityId = result.Id;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Create;
+            });
+
             return Success(response);
         }
 
@@ -101,6 +114,13 @@ namespace Netptune.Services
 
             await TaskRepository.DeletePermanent(task.Id);
             await UnitOfWork.CompleteAsync();
+
+            Activity.Log(options =>
+            {
+                options.EntityId = task.Id;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Delete;
+            });
 
             return ClientResponse.Success();
         }
@@ -168,6 +188,13 @@ namespace Netptune.Services
 
             var response = await TaskRepository.GetTaskViewModel(result.Id);
 
+            Activity.Log(options =>
+            {
+                options.EntityId = response.Id;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Modify;
+            });
+
             return Success(response);
         }
 
@@ -218,14 +245,32 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
+        public async Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
-                return MoveTaskInGroup(request);
+                var moveResponse = await MoveTaskInGroup(request);
+
+                Activity.Log(options =>
+                {
+                    options.EntityId = request.TaskId;
+                    options.EntityType = EntityType.Task;
+                    options.Type = ActivityType.Move;
+                });
+
+                return moveResponse;
             }
 
-            return TransferTaskInGroups(request);
+            var transferResponse = await TransferTaskInGroups(request);
+
+            Activity.Log(options =>
+            {
+                options.EntityId = request.TaskId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+            });
+
+            return transferResponse;
         }
 
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)

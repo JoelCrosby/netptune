@@ -1,7 +1,9 @@
+using Netptune.Core.Entities;
+using Netptune.Core.Repositories.Common;
+
 namespace Netptune.Core.Repositories
 {
-    public interface IActivityRepository
+    public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
     {
-        
     }
 }

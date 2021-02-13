@@ -11,5 +11,7 @@ namespace Netptune.Core.Events
         public ActivityType Type { get; set; }
 
         public int? EntityId { get; set; }
+
+        public int WorkspaceId { get; set; }
     }
 }
