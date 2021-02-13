@@ -1,4 +1,19 @@
-$HEADER$namespace $NAMESPACE$
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Netptune.Core.Events
 {
-  public class $CLASS$ {$END$}
+    public static class ServiceCollectionExtensions
+    {
+        public static void AddActivityLogger(this IServiceCollection services)
+        {
+            services.AddTransient<IActivityLogger, DistributedActivityLogger>();
+        }
+
+        public static void AddActivitySink(this IServiceCollection services)
+        {
+            services.AddSingleton<IActivityObservable, ActivityObservable>();
+            services.AddTransient<IActivityLogger, ActivityLogger>();
+            services.AddHostedService<ActivityWriterService>();
+        }
+    }
 }

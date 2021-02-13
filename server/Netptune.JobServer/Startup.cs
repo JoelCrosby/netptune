@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Netptune.Core.Constants;
+using Netptune.Core.Events;
 using Netptune.Core.Jobs;
 using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
@@ -99,6 +100,8 @@ namespace Netptune.JobServer
                 options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
                 options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
             });
+
+            services.AddActivitySink();
 
             ConfigureDatabase(services);
         }

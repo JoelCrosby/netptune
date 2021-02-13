@@ -20,6 +20,7 @@ namespace Netptune.Repositories.UnitOfWork
         public ICommentRepository Comments { get; }
         public IReactionRepository Reactions { get; }
         public ITagRepository Tags { get; }
+        public IActivityLogRepository ActivityLogs { get; }
 
         public NetptuneUnitOfWork(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
         {
@@ -35,6 +36,7 @@ namespace Netptune.Repositories.UnitOfWork
             Comments = new CommentRepository(context, connectionFactory);
             Reactions = new ReactionRepository(context, connectionFactory);
             Tags = new TagRepository(context, connectionFactory);
+            ActivityLogs = new ActivityLogRepository(context, connectionFactory);
         }
     }
 }

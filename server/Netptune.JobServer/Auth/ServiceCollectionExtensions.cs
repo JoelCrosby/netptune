@@ -15,6 +15,8 @@ namespace Netptune.JobServer.Auth
                 .AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
                 })
                 .AddEntityFrameworkStores<NetptuneJobContext>()
                 .AddDefaultTokenProviders()

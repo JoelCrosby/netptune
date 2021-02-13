@@ -29,6 +29,7 @@ namespace Netptune.Entities.Contexts
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }

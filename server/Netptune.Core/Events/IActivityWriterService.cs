@@ -1,4 +1,9 @@
-$HEADER$namespace $NAMESPACE$
+using System;
+
+namespace Netptune.Core.Events
 {
-  public class $CLASS$ {$END$}
+    public interface IActivityWriterService : IObserver<IActivityEvent>
+    {
+
+    }
 }
