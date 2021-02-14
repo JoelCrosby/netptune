@@ -31,6 +31,7 @@ namespace Netptune.Services.Configuration
             services.AddTransient<IBoardGroupService, BoardGroupService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IActivityService, ActivityService>();
 
             services.AddTransient<ITaskImportService, TaskImportService>();
             services.AddTransient<ITaskExportService, TaskExportService>();
