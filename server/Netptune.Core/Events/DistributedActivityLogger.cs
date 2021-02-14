@@ -47,6 +47,7 @@ namespace Netptune.Core.Events
                 UserId = activityOptions.UserId,
                 EntityId = activityOptions.EntityId.Value,
                 WorkspaceId = activityOptions.WorkspaceId.Value,
+                Time = DateTime.UtcNow,
             };
 
             Client.Enqueue<IActivityObservable>(service => service.Track(activity));
