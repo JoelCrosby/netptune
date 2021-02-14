@@ -1,3 +1,5 @@
+using System;
+
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 
@@ -12,5 +14,7 @@ namespace Netptune.Core.Entities
         public ActivityType Type { get; set; }
 
         public int? EntityId { get; set; }
+
+        public DateTime Time { get; set; }
     }
 }

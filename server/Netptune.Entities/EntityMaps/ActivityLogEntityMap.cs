@@ -21,11 +21,18 @@ namespace Netptune.Entities.EntityMaps
                 .HasIndex(log => new { log.EntityId });
 
             builder
+                .HasIndex(log => new { log.Time });
+
+            builder
                 .Property(log => log.Type)
                 .IsRequired();
 
             builder
                 .Property(log => log.EntityType)
+                .IsRequired();
+
+            builder
+                .Property(log => log.Time)
                 .IsRequired();
         }
     }
