@@ -36,6 +36,7 @@ namespace Netptune.Core.Events
                 UserId = activityOptions.UserId,
                 EntityId = activityOptions.EntityId.Value,
                 WorkspaceId = activityOptions.WorkspaceId.Value,
+                Time = DateTime.UtcNow,
             };
 
             Observable.Track(activity);
