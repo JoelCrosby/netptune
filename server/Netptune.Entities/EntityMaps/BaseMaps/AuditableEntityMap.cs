@@ -25,6 +25,10 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
                 .Property(entity => entity.IsDeleted)
                 .HasDefaultValue(false);
 
+            builder
+                .HasIndex(entity => entity.IsDeleted);
+
+
             // Entity > AppUser
 
             builder
