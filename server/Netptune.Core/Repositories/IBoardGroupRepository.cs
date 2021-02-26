@@ -20,5 +20,7 @@ namespace Netptune.Core.Repositories
         Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false);
 
         ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId);
+
+        Task<int?> GetBoardGroupIdForTask(int projectTaskId);
     }
 }
