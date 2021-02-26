@@ -26,9 +26,6 @@ namespace Netptune.Core.Entities
         #region NavigationProperties
 
         [JsonIgnore]
-        public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
-
-        [JsonIgnore]
         public ICollection<ProjectUser> ProjectUsers { get; set; } = new HashSet<ProjectUser>();
 
         [JsonIgnore]
