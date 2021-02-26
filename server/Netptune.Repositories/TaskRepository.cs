@@ -249,5 +249,33 @@ namespace Netptune.Repositories
 
             return taskCount + 1 + increment;
         }
+
+        public async Task<List<int>> GetAncestors(int taskId)
+        {
+            using var connection = ConnectionFactory.StartConnection();
+
+            var result = await connection.QueryFirstAsync<TaskAncestorRow>(@"
+                SELECT
+                      ptibg.project_task_id as task_id
+                    , ptibg.board_group_id as board_group_id
+                    , b.id as board_id
+                    , p.id as project_id
+                    , p.workspace_id as workspace_id
+                FROM project_task_in_board_groups ptibg
+                LEFT JOIN board_groups bg on bg.id = ptibg.board_group_id
+                LEFT JOIN boards b on b.id = bg.board_id
+                LEFT Join projects p on p.id = b.project_id
+                WHERE ptibg.project_task_id = @taskId
+            ", new { taskId });
+
+            return new List<int>
+            {
+                result.Task_id,
+                result.Board_group_id,
+                result.Board_id,
+                result.Project_id,
+                result.Workspace_id
+            };
+        }
     }
 }
