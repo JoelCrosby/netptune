@@ -26,9 +26,6 @@ namespace Netptune.Core.Entities
         public ICollection<WorkspaceAppUser> WorkspaceUsers { get; set; } = new HashSet<WorkspaceAppUser>();
 
         [JsonIgnore]
-        public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();
-
-        [JsonIgnore]
         public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
 
         [JsonIgnore]
