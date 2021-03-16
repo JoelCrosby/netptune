@@ -26,5 +26,7 @@ namespace Netptune.Core.Repositories
         Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey);
 
         Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
+
+        Task<List<int>> GetAncestors(int taskId);
     }
 }

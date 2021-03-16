@@ -33,7 +33,6 @@ namespace Netptune.Entities.Contexts
 
         // relational data models
         public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
-        public DbSet<WorkspaceProject> WorkspaceProjects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; }
         public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; }
