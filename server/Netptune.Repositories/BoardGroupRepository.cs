@@ -208,5 +208,27 @@ namespace Netptune.Repositories
 
             return sortOrders.Max() + 1;
         }
+
+        public async Task<int?> GetBoardGroupIdForTask(int projectTaskId)
+        {
+            var results = await Context.ProjectTaskInBoardGroups
+                .AsNoTracking()
+                .Where(x => x.ProjectTaskId == projectTaskId)
+                .Select(x => x.BoardGroupId)
+                .ToListAsync();
+
+            return results.Count > 0 ? results.Single() : null;
+        }
+
+        public async Task<int?> GetTaskAncestors(int projectTaskId)
+        {
+            var results = await Context.ProjectTaskInBoardGroups
+                .AsNoTracking()
+                .Where(x => x.ProjectTaskId == projectTaskId)
+                .Select(x => x.BoardGroupId)
+                .ToListAsync();
+
+            return results.Count > 0 ? results.Single() : null;
+        }
     }
 }
