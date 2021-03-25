@@ -1,3 +1,5 @@
+using System;
+
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Events
@@ -13,5 +15,7 @@ namespace Netptune.Core.Events
         int? EntityId { get; }
 
         int WorkspaceId { get; }
+
+        DateTime Time { get; set; }
     }
 }

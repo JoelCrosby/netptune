@@ -1,10 +1,11 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Netptune.Core.Models.Activity;
 
 namespace Netptune.Core.Events
 {
-    public interface IAncestorService<TEntityType>
+    public interface IAncestorService
     {
-        Task<List<int>> GetAncestors(int entityId);
+        Task<ActivityAncestors> GetTaskAncestors(int entityId);
     }
 }

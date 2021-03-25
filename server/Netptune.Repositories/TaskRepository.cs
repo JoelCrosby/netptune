@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -250,7 +251,7 @@ namespace Netptune.Repositories
             return taskCount + 1 + increment;
         }
 
-        public async Task<List<int>> GetAncestors(int taskId)
+        public async Task<ActivityAncestors> GetAncestors(int taskId)
         {
             using var connection = ConnectionFactory.StartConnection();
 
@@ -268,13 +269,13 @@ namespace Netptune.Repositories
                 WHERE ptibg.project_task_id = @taskId
             ", new { taskId });
 
-            return new List<int>
+            return new ActivityAncestors
             {
-                result.Task_id,
-                result.Board_group_id,
-                result.Board_id,
-                result.Project_id,
-                result.Workspace_id
+                TaskId = result.Task_id,
+                BoardGroupId = result.Board_group_id,
+                BoardId = result.Board_id,
+                ProjectId = result.Project_id,
+                WorkspaceId = result.Workspace_id
             };
         }
     }
