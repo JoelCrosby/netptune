@@ -25,9 +25,17 @@ namespace Netptune.Core.Events
 
         private async Task WriteActivity(IActivityEvent activityEvent)
         {
+            if (activityEvent.EntityId is null)
+            {
+                throw new Exception("IActivityEvent EntityId cannot be null.");
+            }
+
             using var scope = ServiceProvider.CreateScope();
 
             var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+            var ancestorService = scope.ServiceProvider.GetRequiredService<IAncestorService>();
+
+            var ancestors = await ancestorService.GetTaskAncestors(activityEvent.EntityId.Value);
 
             await unitOfWork.ActivityLogs.AddAsync(new ActivityLog
             {
@@ -38,6 +46,11 @@ namespace Netptune.Core.Events
                 UserId = activityEvent.UserId,
                 CreatedByUserId = activityEvent.UserId,
                 WorkspaceId = activityEvent.WorkspaceId,
+                TaskId = activityEvent.EntityId,
+                ProjectId = ancestors.ProjectId,
+                BoardId = ancestors.ProjectId,
+                BoardGroupId = ancestors.BoardGroupId,
+                Time = activityEvent.Time,
             });
 
             await unitOfWork.CompleteAsync();

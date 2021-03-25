@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
@@ -18,6 +17,12 @@ namespace Netptune.Core.Entities
 
         public DateTime Time { get; set; }
 
-        public List<int> Ancestors { get; set; }
+        public int? ProjectId { get; set; }
+
+        public int? BoardId { get; set; }
+
+        public int? BoardGroupId { get; set; }
+
+        public int? TaskId { get; set; }
     }
 }

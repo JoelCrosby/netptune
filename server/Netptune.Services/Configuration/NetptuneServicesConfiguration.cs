@@ -2,6 +2,7 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Cache;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Export;
@@ -44,6 +45,7 @@ namespace Netptune.Services.Configuration
             services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
             services.AddScoped<IInviteCache, InviteCache>();
             services.AddScoped<IWorkspaceCache, WorkspaceCache>();
+            services.AddScoped<IAncestorService, AncestorService>();
         }
 
         private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)

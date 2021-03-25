@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
@@ -27,6 +28,6 @@ namespace Netptune.Core.Repositories
 
         Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
 
-        Task<List<int>> GetAncestors(int taskId);
+        Task<ActivityAncestors> GetAncestors(int taskId);
     }
 }
