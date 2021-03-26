@@ -1,10 +1,8 @@
-import { ProjectsEffects } from './store/projects/projects.effects';
-import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { environment } from '@env/environment';
 import { EntryModule } from '@entry/entry.module';
+import { environment } from '@env/environment';
 import { EffectsModule } from '@ngrx/effects';
 import {
   RouterStateSerializer,
@@ -15,14 +13,17 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthEffects } from './auth/store/auth.effects';
 import { metaReducers, reducers } from './core.state';
+import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CustomSerializer } from './router/custom-serializer';
-import { SettingsEffects } from './store/settings/settings.effects';
+import { ActivityEffects } from './store/activity/activity.effects';
 import { LayoutEffects } from './store/layout/layout.effects';
-import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
+import { MetaEffects } from './store/meta/meta.effects';
+import { ProjectsEffects } from './store/projects/projects.effects';
+import { SettingsEffects } from './store/settings/settings.effects';
+import { TagsEffects } from './store/tags/tags.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
-import { TagsEffects } from './store/tags/tags.effects';
-import { MetaEffects } from './store/meta/meta.effects';
+import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { MetaEffects } from './store/meta/meta.effects';
     EffectsModule.forRoot([
       AuthEffects,
       MetaEffects,
+      ActivityEffects,
       LayoutEffects,
       SettingsEffects,
       WorkspacesEffects,

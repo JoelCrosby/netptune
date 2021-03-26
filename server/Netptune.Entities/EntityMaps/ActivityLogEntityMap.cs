@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -33,6 +34,13 @@ namespace Netptune.Entities.EntityMaps
 
             builder
                 .Property(log => log.Time)
+                .IsRequired();
+
+            builder
+                .HasOne(log => log.User)
+                .WithMany()
+                .HasForeignKey(task => task.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
         }
     }

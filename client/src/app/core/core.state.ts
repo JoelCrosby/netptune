@@ -1,3 +1,4 @@
+import { ActivityState } from './store/activity/activity.model';
 import { environment } from '@env/environment';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import {
@@ -30,10 +31,12 @@ import { UsersState } from './store/users/users.model';
 import { usersReducer } from './store/users/users.reducer';
 import { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
+import { activityReducer } from './store/activity/activity.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authReducer,
   meta: metaReducer,
+  activites: activityReducer,
   router: routerReducer,
   layout: layoutReducer,
   settings: settingsReducer,
@@ -59,6 +62,7 @@ const feature = <TState>(name: keyof AppState) =>
 
 export const selectAuthFeature = feature<AuthState>('auth');
 export const selectMetaFeature = feature<MetaState>('meta');
+export const selectActivitesFeature = feature<ActivityState>('activites');
 export const selectLayoutFeature = feature<LayoutState>('layout');
 export const selectSettingsFeature = feature<SettingsState>('settings');
 export const selectWorkspacesFeature = feature<WorkspacesState>('workspaces');
@@ -71,6 +75,7 @@ export const selectHubContextFeature = feature<HubContextState>('hub');
 export interface AppState {
   auth: AuthState;
   meta: MetaState;
+  activites: ActivityState;
   router: RouterReducerState<RouterStateUrl>;
   layout: LayoutState;
   settings: SettingsState;
