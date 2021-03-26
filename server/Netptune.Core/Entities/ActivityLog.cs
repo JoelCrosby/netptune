@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
@@ -24,5 +25,12 @@ namespace Netptune.Core.Entities
         public int? BoardGroupId { get; set; }
 
         public int? TaskId { get; set; }
+
+        #region NavigationProperties
+
+        [JsonIgnore]
+        public AppUser User { get; set; }
+
+        #endregion
     }
 }

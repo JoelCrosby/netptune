@@ -234,3 +234,17 @@ export const addTagToTaskFail = createAction(
   '[ProjectTasks] Add Tag To Task Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Load Activity
+
+export const loadActivity = createAction('[ProjectTasks] Load Activity');
+
+export const loadActivitySuccess = createAction(
+  '[ProjectTasks] Load Activity Success',
+  props<{ tags: Tag[] }>()
+);
+
+export const loadActivityFail = createAction(
+  '[ProjectTasks] Load Activity Fail',
+  props<{ error: HttpErrorResponse }>()
+);

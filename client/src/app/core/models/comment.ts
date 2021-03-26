@@ -1,3 +1,5 @@
+import { EntityType } from './entity-type';
+
 export interface CommentViewModel {
   id: number;
   userDisplayName: string;
@@ -9,10 +11,6 @@ export interface CommentViewModel {
   reactions: Reaction[];
   createdAt: Date;
   updatedAt: Date;
-}
-
-export enum EntityType {
-  task = 0,
 }
 
 export interface Reaction {

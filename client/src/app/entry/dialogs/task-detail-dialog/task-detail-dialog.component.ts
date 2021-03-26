@@ -1,3 +1,4 @@
+import { EntityType } from '@core/models/entity-type';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -26,6 +27,7 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
+import * as ActivityActions from '@core/store/activity/activity.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
@@ -110,6 +112,13 @@ export class TaskDetailDialogComponent
     this.store.dispatch(ProjectActions.loadProjects());
     this.store.dispatch(UsersActions.loadUsers());
     this.store.dispatch(TagsActions.loadTags());
+
+    this.store.dispatch(
+      ActivityActions.loadActivity({
+        entityType: EntityType.task,
+        entityId: this.data.id,
+      })
+    );
   }
 
   buildForm(task: TaskViewModel) {
@@ -208,6 +217,7 @@ export class TaskDetailDialogComponent
 
   ngOnDestroy() {
     this.store.dispatch(TaskActions.clearTaskDetail());
+    this.store.dispatch(ActivityActions.clearState());
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
