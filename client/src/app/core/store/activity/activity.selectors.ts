@@ -11,3 +11,8 @@ export const selectActivitiesLoading = createSelector(
   selectActivitesFeature,
   (state: ActivityState) => state.loading
 );
+
+export const selectActivitiesLoaded = createSelector(
+  selectActivitesFeature,
+  (state: ActivityState) => state.loaded
+);

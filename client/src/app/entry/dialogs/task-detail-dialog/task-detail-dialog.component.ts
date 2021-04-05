@@ -1,4 +1,3 @@
-import { EntityType } from '@core/models/entity-type';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,10 +13,12 @@ import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
+import { EntityType } from '@core/models/entity-type';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import * as ActivityActions from '@core/store/activity/activity.actions';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
@@ -27,7 +28,6 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
-import * as ActivityActions from '@core/store/activity/activity.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
@@ -61,6 +61,7 @@ export class TaskDetailDialogComponent
   tags$: Observable<string[]>;
 
   selectedTypeValue: number;
+  entityType = EntityType.task;
 
   onDestroy$ = new Subject();
   onEditorLoadedSubject = new Subject<boolean>();
@@ -112,13 +113,6 @@ export class TaskDetailDialogComponent
     this.store.dispatch(ProjectActions.loadProjects());
     this.store.dispatch(UsersActions.loadUsers());
     this.store.dispatch(TagsActions.loadTags());
-
-    this.store.dispatch(
-      ActivityActions.loadActivity({
-        entityType: EntityType.task,
-        entityId: this.data.id,
-      })
-    );
   }
 
   buildForm(task: TaskViewModel) {

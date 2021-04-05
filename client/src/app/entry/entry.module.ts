@@ -9,6 +9,7 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { SharedModule } from '@shared/shared.module';
 import { BoardGroupDialogComponent } from './dialogs/board-group-dialog/board-group-dialog.component';
 import { StaticModule } from '@static/static.module';
+import { ActivityMenuComponent } from './components/activity-menu/activity-menu.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { StaticModule } from '@static/static.module';
     InviteDialogComponent,
     WorkspaceDialogComponent,
     BoardGroupDialogComponent,
+    ActivityMenuComponent,
   ],
   imports: [CommonModule, SharedModule, StaticModule],
 })

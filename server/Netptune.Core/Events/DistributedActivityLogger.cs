@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using Netptune.Core.Jobs;
 using Netptune.Core.Models.Activity;
@@ -51,6 +52,41 @@ namespace Netptune.Core.Events
             };
 
             Client.Enqueue<IActivityObservable>(service => service.Track(activity));
+        }
+
+        public void LogMultiple(Action<ActivityMultipleOptions> options)
+        {
+            var userId = Identity.GetUserId();
+            var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
+
+            var activityOptions = new ActivityMultipleOptions
+            {
+                UserId = userId,
+                WorkspaceId = workspaceId,
+            };
+
+            options.Invoke(activityOptions);
+
+            if (activityOptions.WorkspaceId is null)
+            {
+                throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
+            }
+
+            var activities = activityOptions.EntityIds
+                .Select(entityId => new ActivityEvent
+                {
+                    Type = activityOptions.Type,
+                    EntityType = activityOptions.EntityType,
+                    UserId = activityOptions.UserId,
+                    EntityId = entityId,
+                    WorkspaceId = activityOptions.WorkspaceId.Value,
+                    Time = DateTime.UtcNow,
+                });
+
+            foreach (var activity in activities)
+            {
+                Client.Enqueue<IActivityObservable>(service => service.Track(activity));
+            }
         }
     }
 }

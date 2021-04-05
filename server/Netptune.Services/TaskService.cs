@@ -224,6 +224,13 @@ namespace Netptune.Services
             await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
             await UnitOfWork.CompleteAsync();
 
+            Activity.LogMultiple(options =>
+            {
+                options.EntityIds = taskIds;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+            });
+
             return ClientResponse.Success();
         }
 
@@ -241,6 +248,13 @@ namespace Netptune.Services
             }
 
             await UnitOfWork.CompleteAsync();
+
+            Activity.LogMultiple(options =>
+            {
+                options.EntityIds = taskIds;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Assign;
+            });
 
             return ClientResponse.Success();
         }
@@ -416,6 +430,13 @@ namespace Netptune.Services
             taskInBoardGroup.SortOrder = sortOrder;
 
             await UnitOfWork.CompleteAsync();
+
+            Activity.Log(options =>
+            {
+                options.EntityId = request.TaskId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+            });
 
             return ClientResponse.Success();
         }

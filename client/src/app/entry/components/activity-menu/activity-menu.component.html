@@ -1,0 +1,79 @@
+<button
+  mat-button
+  matTooltip="Show activity"
+  class="board-filter-button"
+  [matMenuTriggerFor]="menu"
+  (click)="onClicked()"
+>
+  <mat-icon
+    aria-hidden="false"
+    aria-label="Show activity"
+    class="material-icons-outlined"
+  >
+    timeline
+  </mat-icon>
+</button>
+
+<mat-menu
+  #menu="matMenu"
+  class="activity-menu"
+  panelClass="activity-menu"
+  (closed)="onClosed()"
+>
+  <ng-template matMenuContent>
+
+    <ng-container *ngIf="loaded$ | async; else elseTemplate">
+      <ng-container *ngIf="activities$ | async as activities">
+
+        <ng-container *ngIf="activities.length; else elseTemplate">
+
+          <div
+            class="activity-menu-item"
+           *ngFor="let activity of activities; trackBy: trackByActivity"
+          >
+            <app-avatar
+              [imageUrl]="activity.userPictureUrl"
+              [name]="activity.userUsername"
+              size="24"
+            >
+            </app-avatar>
+            <span class="user">
+              {{ activity.userUsername }}
+            </span>
+            <span class="label">
+              {{
+                (activity.type| activityType)
+                  + ' ' +
+                (activity.entityType | entityType)
+                  + ' ' +
+                (activity.time | fromNow)
+              }}
+            </span>
+          </div>
+        </ng-container>
+
+        <ng-template #elseTemplate>
+          <div class="no-activity-message">
+            <mat-icon class="material-icons-outlined">
+              timeline
+            </mat-icon>
+            <span>
+              There is no activity
+            </span>
+            <p>
+              Activity on the item will appear here
+            </p>
+          </div>
+        </ng-template>
+
+      </ng-container>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div class="loading">
+        <mat-spinner diameter="24"></mat-spinner>
+      </div>
+    </ng-template>
+
+  </ng-template>
+</mat-menu>
