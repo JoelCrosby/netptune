@@ -16,6 +16,8 @@ import { FromNowPipe } from './pipes/from-now.pipe';
 import { PrettyDatePipe } from './pipes/pretty-date.pipe';
 import { TaskStatusPipe } from './pipes/task-status.pipe';
 import { UsernamePipe } from './pipes/username.pipe';
+import { EntityTypePipe } from './pipes/entity-type.pipe';
+import { ActivityTypePipe } from './pipes/activity-type.pipe';
 import { AutocompleteChipsComponent } from './components/autocomplete-chips/autocomplete-chips.component';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { AvatarFontSizePipe } from './pipes/avatar-font-size.pipe';
@@ -48,6 +50,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FromNowPipe,
     PrettyDatePipe,
     TaskStatusPipe,
+    EntityTypePipe,
+    ActivityTypePipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,
@@ -81,6 +85,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FromNowPipe,
     PrettyDatePipe,
     TaskStatusPipe,
+    EntityTypePipe,
+    ActivityTypePipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,

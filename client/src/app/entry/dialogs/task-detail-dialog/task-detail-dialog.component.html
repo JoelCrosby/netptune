@@ -52,6 +52,12 @@
             done
           </mat-icon>
 
+          <app-activity-menu
+            [entityType]="entityType"
+            [entityId]="task.id"
+          >
+          </app-activity-menu>
+
           <div class="task-scope-id">
             {{ task.systemId }}
           </div>

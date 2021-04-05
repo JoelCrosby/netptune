@@ -12,11 +12,13 @@ const reducer = createReducer(
   on(actions.loadActivityFail, (state, { error }) => ({
     ...state,
     loading: false,
+    loaded: true,
     loadingError: error,
   })),
   on(actions.loadActivitySuccess, (state, { activities }) => ({
     ...state,
     loading: false,
+    loaded: true,
     activities,
   }))
 );

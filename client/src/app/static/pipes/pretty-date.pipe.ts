@@ -18,6 +18,6 @@ export class PrettyDatePipe implements PipeTransform {
     dayjs.extend(UTC);
     dayjs.extend(LocalizedFormat);
 
-    return dayjs(value).utc().local().format('llll');
+    return dayjs.utc(value).local().format('llll');
   }
 }
