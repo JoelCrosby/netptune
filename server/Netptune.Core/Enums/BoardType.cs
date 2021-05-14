@@ -3,6 +3,6 @@
     public enum BoardType
     {
         UserDefined = 0,
-        Default = 1
+        Default = 1,
     }
 }

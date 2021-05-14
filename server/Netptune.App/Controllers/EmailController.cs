@@ -36,7 +36,7 @@ namespace Netptune.App.Controllers
                 {
                     Address = "joelcrosby94@gmail.com",
                     DisplayName = "Joel Crosby",
-                }
+                },
             });
 
             return Ok();

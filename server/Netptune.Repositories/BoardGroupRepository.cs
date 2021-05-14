@@ -127,7 +127,7 @@ namespace Netptune.Repositories
                         SortOrder = row.Task_Sort_Order,
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
-                        WorkspaceKey = meta.Workspace_Identifier
+                        WorkspaceKey = meta.Workspace_Identifier,
                     });
 
                     return result;
@@ -160,9 +160,9 @@ namespace Netptune.Repositories
                             SortOrder = row.Task_Sort_Order,
                             ProjectId = row.Project_Id,
                             WorkspaceId = row.Workspace_Id,
-                            WorkspaceKey = meta.Workspace_Identifier
-                        }
-                    }
+                            WorkspaceKey = meta.Workspace_Identifier,
+                        },
+                    },
                 });
 
                 return result;

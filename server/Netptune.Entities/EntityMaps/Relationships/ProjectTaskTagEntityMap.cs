@@ -15,7 +15,7 @@ namespace Netptune.Entities.EntityMaps.Relationships
                 .HasAlternateKey(projectTaskTag => new
                 {
                     projectTaskTag.TagId,
-                    projectTaskTag.ProjectTaskId
+                    projectTaskTag.ProjectTaskId,
                 });
 
             builder

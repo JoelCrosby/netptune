@@ -17,7 +17,7 @@ namespace Netptune.Core.Models.Repository
         public static PageQuery Default => new()
         {
             PageSize = 30,
-            Page = 0
+            Page = 0,
         };
     }
 }

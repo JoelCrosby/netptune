@@ -198,7 +198,7 @@ namespace Netptune.Services
             {
                 Request = identifier,
                 Slug = slugLower,
-                IsUnique = !exists
+                IsUnique = !exists,
             });
         }
     }

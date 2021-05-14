@@ -14,7 +14,7 @@ namespace Netptune.Core.Enums
 
         AwaitingClassification = 5,
 
-        InActive = 6
+        InActive = 6,
     }
 
     public static class ProjectTaskStatusExtensions
@@ -28,7 +28,7 @@ namespace Netptune.Core.Enums
                 ProjectTaskStatus.Complete => BoardGroupType.Done,
                 ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
                 ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
-                _ => BoardGroupType.Backlog
+                _ => BoardGroupType.Backlog,
             };
         }
     }

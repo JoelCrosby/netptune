@@ -87,7 +87,7 @@ namespace Netptune.Services
 
                 var tag = await GetOrCreateTag();
 
-                var taskTag = new ProjectTaskTag {TagId = tag.Id, ProjectTaskId = taskId.Value,};
+                var taskTag = new ProjectTaskTag {TagId = tag.Id, ProjectTaskId = taskId.Value};
 
                 var tagForTaskExists = await Tags.ExistsForTask(tag.Id, taskId.Value);
 

@@ -60,7 +60,7 @@ namespace Netptune.Core.Entities
                 UserName = UserName,
                 LastLoginTime = LastLoginTime,
                 RegistrationDate = RegistrationDate,
-                IsWorkspaceOwner = workspaceOwnerId == Id
+                IsWorkspaceOwner = workspaceOwnerId == Id,
             };
         }
 

@@ -58,7 +58,7 @@ namespace Netptune.JobServer
             {
                 configuration.UseRedisStorage(Redis, new RedisStorageOptions
                 {
-                    Prefix = NetptuneJobConstants.RedisPrefix
+                    Prefix = NetptuneJobConstants.RedisPrefix,
                 });
             });
 
@@ -138,8 +138,8 @@ namespace Netptune.JobServer
                     AppPath = "/account/logout",
                     Authorization = new[]
                     {
-                        new HangfireAuthorizationFilter()
-                    }
+                        new HangfireAuthorizationFilter(),
+                    },
                 });
         }
 

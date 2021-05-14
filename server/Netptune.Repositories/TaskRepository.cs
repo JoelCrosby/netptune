@@ -170,7 +170,7 @@ namespace Netptune.Repositories
                 ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
             ", new
             {
-                workspaceKey
+                workspaceKey,
             });
 
             return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
@@ -236,7 +236,7 @@ namespace Netptune.Repositories
                 AllTasks = tasks.Count,
                 CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),
                 InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
-                BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned)
+                BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned),
             };
         }
 
@@ -275,7 +275,7 @@ namespace Netptune.Repositories
                 BoardGroupId = result.Board_group_id,
                 BoardId = result.Board_id,
                 ProjectId = result.Project_id,
-                WorkspaceId = result.Workspace_id
+                WorkspaceId = result.Workspace_id,
             };
         }
     }

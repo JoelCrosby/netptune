@@ -123,7 +123,7 @@ namespace Netptune.Repositories
                         {
                             ProjectId = board.ProjectId,
                             ProjectName = board.ProjectName,
-                            Boards = new List<BoardViewModel> { board }
+                            Boards = new List<BoardViewModel> { board },
                         });
                     }
 

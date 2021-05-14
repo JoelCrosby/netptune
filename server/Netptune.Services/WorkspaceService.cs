@@ -49,7 +49,7 @@ namespace Netptune.Services
                     CreatedByUserId = user.Id,
                     OwnerId = user.Id,
                     Slug = request.Slug.ToUrlSlug(),
-                    MetaInfo = request.MetaInfo
+                    MetaInfo = request.MetaInfo,
                 };
 
                 var workspace = await WorkspaceRepository.AddAsync(entity);
@@ -59,7 +59,7 @@ namespace Netptune.Services
                 workspace.WorkspaceUsers.Add(new WorkspaceAppUser
                 {
                     UserId = user.Id,
-                    WorkspaceId = workspace.Id
+                    WorkspaceId = workspace.Id,
                 });
 
                 var projectKey = await UnitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);
@@ -74,7 +74,7 @@ namespace Netptune.Services
                     MetaInfo = new ProjectMeta
                     {
                         Color = request.MetaInfo.Color,
-                    }
+                    },
                 });
 
                 workspace.Projects.Add(project);
@@ -218,7 +218,7 @@ namespace Netptune.Services
             {
                 Request = slug,
                 Slug = slugLower,
-                IsUnique = !exists
+                IsUnique = !exists,
             });
         }
     }
