@@ -1,7 +1,8 @@
 .activity-menu {
   @extend .custom-scroll;
 
-  min-width: 360px;
+  min-width: 360px !important;
+  max-width: 420px !important;
   margin: .4rem 0;
 }
 

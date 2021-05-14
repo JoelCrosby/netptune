@@ -8,4 +8,10 @@ namespace Netptune.Core.Enums
         Assign = 3,
         Move = 5,
     }
+
+    public enum ActivitySubType
+    {
+        MoveTaskToGroup = 0,
+        FlagTask
+    }
 }
