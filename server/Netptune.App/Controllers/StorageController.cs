@@ -34,8 +34,6 @@ namespace Netptune.App.Controllers
         {
             var file = Request.Form.Files[0];
 
-            if (file is null) return BadRequest();
-
             if (file.Length > 50 * 1024 * 1024)
             {
                 return BadRequest("Request file size exceeds maximum of 50MB.");
@@ -66,8 +64,6 @@ namespace Netptune.App.Controllers
         {
             var workspaceKey = Identity.GetWorkspaceKey();
             var file = Request.Form.Files[0];
-
-            if (file is null) return BadRequest();
 
             if (file.Length > 50 * 1024 * 1024)
             {
