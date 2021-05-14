@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -169,6 +170,8 @@ namespace Netptune.Services
 
             if (result is null) return null;
 
+            var reassigned = request.AssigneeId != result.AssigneeId;
+
             await UnitOfWork.Transaction(async () =>
             {
                 if (request.Status.HasValue && result.Status != request.Status.Value)
@@ -194,6 +197,20 @@ namespace Netptune.Services
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.Modify;
             });
+
+            if (reassigned)
+            {
+                Activity.LogWith<AssignActivityMeta>(options =>
+                {
+                    options.EntityId = response.Id;
+                    options.EntityType = EntityType.Task;
+                    options.Type = ActivityType.Assign;
+                    options.Meta = new AssignActivityMeta
+                    {
+                        AssigneeId = request.AssigneeId,
+                    };
+                });
+            }
 
             return Success(response);
         }
@@ -224,11 +241,16 @@ namespace Netptune.Services
             await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
             await UnitOfWork.CompleteAsync();
 
-            Activity.Log(options =>
+            Activity.LogWithMany<MoveTaskActivityMeta>(options =>
             {
                 options.EntityIds = taskIds;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.Move;
+                options.Meta = new MoveTaskActivityMeta
+                {
+                    Group = boardGroup.Name,
+                    GroupId = boardGroup.Id,
+                };
             });
 
             return ClientResponse.Success();
@@ -249,11 +271,15 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            Activity.Log(options =>
+            Activity.LogWithMany<AssignActivityMeta>(options =>
             {
                 options.EntityIds = taskIds;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.Assign;
+                options.Meta = new AssignActivityMeta
+                {
+                    AssigneeId = request.AssigneeId,
+                };
             });
 
             return ClientResponse.Success();
@@ -360,7 +386,7 @@ namespace Netptune.Services
 
         private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)
         {
-            await UnitOfWork.Transaction(async () =>
+            var boardGroup = await UnitOfWork.Transaction(async () =>
             {
                 var itemToRemove = await UnitOfWork
                     .ProjectTasksInGroups
@@ -395,7 +421,7 @@ namespace Netptune.Services
 
                 await UnitOfWork.CompleteAsync();
 
-                return newRelational;
+                return newGroup;
             });
 
             var taskInBoardGroup = await UnitOfWork
@@ -413,11 +439,16 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            Activity.Log(options =>
+            Activity.LogWith<MoveTaskActivityMeta>(options =>
             {
                 options.EntityId = request.TaskId;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.Move;
+                options.Meta = new MoveTaskActivityMeta
+                {
+                    Group = boardGroup.Name,
+                    GroupId = boardGroup.Id,
+                };
             });
 
             return ClientResponse.Success();
@@ -443,7 +474,7 @@ namespace Netptune.Services
             {
                 options.EntityId = request.TaskId;
                 options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Move;
+                options.Type = ActivityType.Reorder;
             });
 
             return ClientResponse.Success();

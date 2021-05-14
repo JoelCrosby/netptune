@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,6 +55,7 @@ namespace Netptune.Core.Events
                     BoardId = ancestors.ProjectId,
                     BoardGroupId = ancestors.BoardGroupId,
                     Time = activityEvent.Time,
+                    Meta = JsonDocument.Parse(activityEvent.Meta),
                 });
             }
 
