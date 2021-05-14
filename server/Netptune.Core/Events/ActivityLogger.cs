@@ -40,10 +40,10 @@ namespace Netptune.Core.Events
                 Time = DateTime.UtcNow,
             };
 
-            Observable.Track(activity);
+            Observable.Track(new [] { activity });
         }
 
-        public void LogMultiple(Action<ActivityMultipleOptions> options)
+        public void Log(Action<ActivityMultipleOptions> options)
         {
             var activityOptions = new ActivityMultipleOptions();
 
@@ -65,10 +65,7 @@ namespace Netptune.Core.Events
                     Time = DateTime.UtcNow,
                 });
 
-            foreach (var activity in activities)
-            {
-                Observable.Track(activity);
-            }
+            Observable.Track(activities);
         }
     }
 }

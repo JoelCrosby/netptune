@@ -224,7 +224,7 @@ namespace Netptune.Services
             await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
             await UnitOfWork.CompleteAsync();
 
-            Activity.LogMultiple(options =>
+            Activity.Log(options =>
             {
                 options.EntityIds = taskIds;
                 options.EntityType = EntityType.Task;
@@ -249,7 +249,7 @@ namespace Netptune.Services
 
             await UnitOfWork.CompleteAsync();
 
-            Activity.LogMultiple(options =>
+            Activity.Log(options =>
             {
                 options.EntityIds = taskIds;
                 options.EntityType = EntityType.Task;
@@ -259,32 +259,14 @@ namespace Netptune.Services
             return ClientResponse.Success();
         }
 
-        public async Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
+        public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
         {
             if (request.OldGroupId == request.NewGroupId)
             {
-                var moveResponse = await MoveTaskInGroup(request);
-
-                Activity.Log(options =>
-                {
-                    options.EntityId = request.TaskId;
-                    options.EntityType = EntityType.Task;
-                    options.Type = ActivityType.Move;
-                });
-
-                return moveResponse;
+                return MoveTaskInGroup(request);
             }
 
-            var transferResponse = await TransferTaskInGroups(request);
-
-            Activity.Log(options =>
-            {
-                options.EntityId = request.TaskId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Move;
-            });
-
-            return transferResponse;
+            return TransferTaskInGroups(request);
         }
 
         private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
@@ -456,6 +438,13 @@ namespace Netptune.Services
                 request.CurrentIndex);
 
             await UnitOfWork.CompleteAsync();
+
+            Activity.Log(options =>
+            {
+                options.EntityId = request.TaskId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Move;
+            });
 
             return ClientResponse.Success();
         }

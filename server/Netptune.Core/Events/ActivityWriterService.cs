@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,35 +24,38 @@ namespace Netptune.Core.Events
             ServiceProvider = serviceProvider;
         }
 
-        private async Task WriteActivity(IActivityEvent activityEvent)
+        private async Task WriteActivity(IEnumerable<IActivityEvent> events)
         {
-            if (activityEvent.EntityId is null)
-            {
-                throw new Exception("IActivityEvent EntityId cannot be null.");
-            }
-
             using var scope = ServiceProvider.CreateScope();
 
             var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
             var ancestorService = scope.ServiceProvider.GetRequiredService<IAncestorService>();
 
-            var ancestors = await ancestorService.GetTaskAncestors(activityEvent.EntityId.Value);
-
-            await unitOfWork.ActivityLogs.AddAsync(new ActivityLog
+            foreach (var activityEvent in events)
             {
-                OwnerId = activityEvent.UserId,
-                Type = activityEvent.Type,
-                EntityType = activityEvent.EntityType,
-                EntityId = activityEvent.EntityId,
-                UserId = activityEvent.UserId,
-                CreatedByUserId = activityEvent.UserId,
-                WorkspaceId = activityEvent.WorkspaceId,
-                TaskId = activityEvent.EntityId,
-                ProjectId = ancestors.ProjectId,
-                BoardId = ancestors.ProjectId,
-                BoardGroupId = ancestors.BoardGroupId,
-                Time = activityEvent.Time,
-            });
+                if (activityEvent.EntityId is null)
+                {
+                    throw new Exception("IActivityEvent EntityId cannot be null.");
+                }
+
+                var ancestors = await ancestorService.GetTaskAncestors(activityEvent.EntityId.Value);
+
+                await unitOfWork.ActivityLogs.AddAsync(new ActivityLog
+                {
+                    OwnerId = activityEvent.UserId,
+                    Type = activityEvent.Type,
+                    EntityType = activityEvent.EntityType,
+                    EntityId = activityEvent.EntityId,
+                    UserId = activityEvent.UserId,
+                    CreatedByUserId = activityEvent.UserId,
+                    WorkspaceId = activityEvent.WorkspaceId,
+                    TaskId = activityEvent.EntityId,
+                    ProjectId = ancestors.ProjectId,
+                    BoardId = ancestors.ProjectId,
+                    BoardGroupId = ancestors.BoardGroupId,
+                    Time = activityEvent.Time,
+                });
+            }
 
             await unitOfWork.CompleteAsync();
         }
@@ -64,7 +68,7 @@ namespace Netptune.Core.Events
         {
         }
 
-        public void OnNext(IActivityEvent value)
+        public void OnNext(IEnumerable<IActivityEvent> value)
         {
             WriteActivity(value).GetAwaiter().GetResult();
         }

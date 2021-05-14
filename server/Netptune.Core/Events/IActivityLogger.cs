@@ -8,6 +8,6 @@ namespace Netptune.Core.Events
     {
         void Log(Action<ActivityOptions> options);
 
-        void LogMultiple(Action<ActivityMultipleOptions> options);
+        void Log(Action<ActivityMultipleOptions> options);
     }
 }

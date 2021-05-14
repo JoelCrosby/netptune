@@ -17,7 +17,9 @@ namespace Netptune.Core.Events
         public void Dispose()
         {
             if (Observers.Contains(Observer))
+            {
                 Observers.Remove(Observer);
+            }
         }
     }
 }

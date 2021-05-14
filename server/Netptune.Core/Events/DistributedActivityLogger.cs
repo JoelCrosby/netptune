@@ -51,10 +51,10 @@ namespace Netptune.Core.Events
                 Time = DateTime.UtcNow,
             };
 
-            Client.Enqueue<IActivityObservable>(service => service.Track(activity));
+            Client.Enqueue<IActivityObservable>(service => service.Track(new []{ activity }));
         }
 
-        public void LogMultiple(Action<ActivityMultipleOptions> options)
+        public void Log(Action<ActivityMultipleOptions> options)
         {
             var userId = Identity.GetUserId();
             var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
@@ -83,10 +83,8 @@ namespace Netptune.Core.Events
                     Time = DateTime.UtcNow,
                 });
 
-            foreach (var activity in activities)
-            {
-                Client.Enqueue<IActivityObservable>(service => service.Track(activity));
-            }
+
+            Client.Enqueue<IActivityObservable>(service => service.Track(activities));
         }
     }
 }
