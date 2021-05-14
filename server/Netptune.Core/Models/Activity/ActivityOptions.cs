@@ -23,6 +23,11 @@ namespace Netptune.Core.Models.Activity
         public ActivityType Type { get; set; }
     }
 
+    public class ActivityOptions<TMeta> : ActivityOptions
+    {
+        public TMeta Meta { get; set; }
+    }
+
     public class ActivityMultipleOptions
     {
         [Required]
@@ -39,5 +44,10 @@ namespace Netptune.Core.Models.Activity
 
         [Required]
         public ActivityType Type { get; set; }
+    }
+
+    public class ActivityMultipleOptions<TMeta> : ActivityMultipleOptions
+    {
+        public TMeta Meta { get; set; }
     }
 }

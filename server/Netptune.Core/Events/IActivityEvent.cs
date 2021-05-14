@@ -16,6 +16,8 @@ namespace Netptune.Core.Events
 
         int WorkspaceId { get; }
 
-        DateTime Time { get; set; }
+        DateTime Time { get; }
+
+        string Meta { get; }
     }
 }

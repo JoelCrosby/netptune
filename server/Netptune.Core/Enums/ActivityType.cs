@@ -7,6 +7,7 @@ namespace Netptune.Core.Enums
         Delete = 2,
         Assign = 3,
         Move = 5,
+        Reorder = 6,
     }
 
     public enum ActivitySubType
