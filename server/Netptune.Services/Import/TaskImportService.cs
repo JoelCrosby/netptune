@@ -51,7 +51,7 @@ namespace Netptune.Services.Import
                 HeaderValidated = (invalidHeaders, _) =>
                 {
                     headerValidator.ValidateHeaderRow(invalidHeaders);
-                }
+                },
             });
 
             csv.Context.RegisterClassMap<TaskImportRowMap>();
@@ -144,7 +144,7 @@ namespace Netptune.Services.Import
                 var orderDict = existingGroups.Select(group => new
                 {
                     GroupId = group.Id,
-                    BaseOrder = group.TasksInGroups.OrderByDescending(task => task.SortOrder).FirstOrDefault()?.SortOrder
+                    BaseOrder = group.TasksInGroups.OrderByDescending(task => task.SortOrder).FirstOrDefault()?.SortOrder,
                 })
                     .ToDictionary(group => group.GroupId, group => group.BaseOrder);
 
@@ -267,7 +267,7 @@ namespace Netptune.Services.Import
                 Status = ParseStatus(row.Status),
                 AssigneeId = FindUserId(row.Assignee),
                 OwnerId = FindUserId(row.Owner),
-                ProjectScopeId = initialScopeId + i
+                ProjectScopeId = initialScopeId + i,
             };
         }
 

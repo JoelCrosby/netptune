@@ -44,14 +44,14 @@ namespace Netptune.Repositories
                     tag.Name,
                     OwnerId = owner.Id,
                     OwnerFirstname = owner.Firstname,
-                    OwnerLastname = owner.Lastname
+                    OwnerLastname = owner.Lastname,
                 })
                 .Select(t => new TagViewModel
                 {
                     Id = t.Id,
                     Name = t.Name,
                     OwnerId = t.OwnerId,
-                    OwnerName = $"{t.OwnerFirstname} {t.OwnerLastname}"
+                    OwnerName = $"{t.OwnerFirstname} {t.OwnerLastname}",
                 })
                 .IsReadonly(isReadonly)
                 .ToListAsync();
@@ -70,7 +70,7 @@ namespace Netptune.Repositories
                 Id = id,
                 Name = result.Name,
                 OwnerName = result.Owner.DisplayName,
-                OwnerId = result.OwnerId
+                OwnerId = result.OwnerId,
             };
         }
 

@@ -296,7 +296,7 @@ namespace Netptune.Repositories.Common
                 PageCount = (entities.Count() + pageQuery.PageSize - 1) / pageQuery.PageSize,
                 CurrentPage = pageQuery.Page,
                 PageSize = pageQuery.PageSize,
-                RowCount = entities.Count()
+                RowCount = entities.Count(),
             };
         }
 

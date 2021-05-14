@@ -38,7 +38,7 @@ namespace Netptune.Repositories
             var invite = new WorkspaceAppUser
             {
                 WorkspaceId = workspaceId,
-                UserId = userId
+                UserId = userId,
             };
 
             var result = await Context.WorkspaceAppUsers.AddAsync(invite);
@@ -51,7 +51,7 @@ namespace Netptune.Repositories
             var invites = userIds.Select(userId => new WorkspaceAppUser
             {
                 WorkspaceId = workspaceId,
-                UserId = userId
+                UserId = userId,
             }).ToList();
 
             await Context.WorkspaceAppUsers.AddRangeAsync(invites);

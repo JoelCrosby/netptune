@@ -10,6 +10,6 @@
 
         Unauthorized = 3,
 
-        NoContent = 4
+        NoContent = 4,
     }
 }

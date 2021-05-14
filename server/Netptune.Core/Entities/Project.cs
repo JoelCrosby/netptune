@@ -78,7 +78,7 @@ namespace Netptune.Core.Entities
             project.ProjectUsers.Add(new ProjectUser
             {
                 ProjectId = project.Id,
-                UserId = options.UserId
+                UserId = options.UserId,
             });
 
             project.ProjectBoards.Add(GenerateDefaultBoard(project, options.WorkspaceId));
@@ -121,8 +121,8 @@ namespace Netptune.Core.Entities
                         Type = BoardGroupType.Done,
                         SortOrder = 1.3D,
                         WorkspaceId = workspaceId,
-                    }
-                }
+                    },
+                },
             };
         }
 

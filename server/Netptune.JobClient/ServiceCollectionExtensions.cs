@@ -28,7 +28,7 @@ namespace Netptune.JobClient
             GlobalConfiguration.Configuration.UseRedisStorage(clientOptions.ConnectionString,
                 new RedisStorageOptions
                 {
-                    Prefix = NetptuneJobConstants.RedisPrefix
+                    Prefix = NetptuneJobConstants.RedisPrefix,
                 });
 
             services.Configure(action);

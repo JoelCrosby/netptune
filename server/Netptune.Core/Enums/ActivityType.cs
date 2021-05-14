@@ -12,6 +12,6 @@ namespace Netptune.Core.Enums
     public enum ActivitySubType
     {
         MoveTaskToGroup = 0,
-        FlagTask
+        FlagTask,
     }
 }

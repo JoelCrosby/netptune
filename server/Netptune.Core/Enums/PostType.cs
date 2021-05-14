@@ -4,6 +4,6 @@ namespace Netptune.Core.Enums
     {
         Board = 0,
 
-        Comment = 1
+        Comment = 1,
     }
 }

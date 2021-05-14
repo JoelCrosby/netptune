@@ -218,7 +218,7 @@ namespace Netptune.Services
             {
                 BoardGroupId = boardGroup.Id,
                 ProjectTaskId = id,
-                SortOrder = baseSortOrder + index
+                SortOrder = baseSortOrder + index,
             });
 
             await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
@@ -323,7 +323,7 @@ namespace Netptune.Services
             {
                 SortOrder = sortOrder,
                 BoardGroup = boardGroup,
-                ProjectTask = task
+                ProjectTask = task,
             });
         }
 
@@ -354,7 +354,7 @@ namespace Netptune.Services
             {
                 SortOrder = sortOrder,
                 BoardGroup = boardGroup,
-                ProjectTask = task
+                ProjectTask = task,
             });
         }
 

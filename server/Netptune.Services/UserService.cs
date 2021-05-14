@@ -156,7 +156,7 @@ namespace Netptune.Services
                 WorkspaceUserCache.Remove(new WorkspaceUserKey
                 {
                     UserId = userId,
-                    WorkspaceKey = workspaceKey
+                    WorkspaceKey = workspaceKey,
                 });
             }
 
@@ -196,7 +196,7 @@ namespace Netptune.Services
                     new WorkspaceInvite
                     {
                         Email = email,
-                        WorkspaceId = workspace.Id
+                        WorkspaceId = workspace.Id,
                     });
 
                 var uri = Hosting.ClientOrigin
@@ -218,7 +218,7 @@ namespace Netptune.Services
                     Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
                     Subject = "Netptune workspace invitation.",
                     PreHeader = $"Hi you've been invited to join the {workspace.Name} in Netptune.",
-                    RawTextContent = $"Hi you've been invited to join the {workspace.Name} in Netptune. Click the link below to start. \n\n {uri}"
+                    RawTextContent = $"Hi you've been invited to join the {workspace.Name} in Netptune. Click the link below to start. \n\n {uri}",
                 };
             });
 

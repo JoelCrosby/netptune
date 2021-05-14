@@ -43,7 +43,7 @@ namespace Netptune.Services
                 UserId = user.Id,
             }, new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
             });
         }
 

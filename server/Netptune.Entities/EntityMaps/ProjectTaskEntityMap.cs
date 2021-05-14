@@ -63,7 +63,7 @@ namespace Netptune.Entities.EntityMaps
                 .HasIndex(task => new
                 {
                     task.Name,
-                    task.Description
+                    task.Description,
                 })
                 .IsTsVectorExpressionIndex("english");
         }

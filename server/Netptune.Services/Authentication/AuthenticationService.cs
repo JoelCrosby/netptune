@@ -172,8 +172,8 @@ namespace Netptune.Services.Authentication
                 Slug = user.Firstname.ToUrlSlug(true),
                 MetaInfo = new ()
                 {
-                    Color = "#843ADF"
-                }
+                    Color = "#843ADF",
+                },
             }, user);
 
             if (!result.Succeeded)
@@ -241,7 +241,7 @@ namespace Netptune.Services.Authentication
                 Link = callbackUrl,
                 PreHeader = "Reset Password",
                 Name = user.Firstname,
-                Message = "Click the following link to reset your password."
+                Message = "Click the following link to reset your password.",
             });
 
             return ClientResponse.Success();
@@ -318,7 +318,7 @@ namespace Netptune.Services.Authentication
                 Link = callbackUrl,
                 PreHeader = "Thanks for signing up",
                 Name = appUser.Firstname,
-                Message = "Thanks for registering with Netptune. \n\n Please confirm your email address with the following link."
+                Message = "Thanks for registering with Netptune. \n\n Please confirm your email address with the following link.",
             });
         }
 

@@ -81,7 +81,7 @@ namespace Netptune.Services.Authentication
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = authenticationOptions.Issuer,
                         ValidAudience = authenticationOptions.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey)),
                     };
                     options.Events = new JwtBearerEvents
                     {
@@ -112,7 +112,7 @@ namespace Netptune.Services.Authentication
                             }
 
                             return Task.CompletedTask;
-                        }
+                        },
                     };
                 })
 

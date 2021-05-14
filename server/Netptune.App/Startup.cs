@@ -170,7 +170,7 @@ namespace Netptune.App
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                ContentTypeProvider = GetFileExtensionContentTypeProvider()
+                ContentTypeProvider = GetFileExtensionContentTypeProvider(),
             });
 
             app.UseSerilogRequestLogging();

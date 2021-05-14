@@ -76,7 +76,7 @@ namespace Netptune.JobServer.Pages.Account
             var user = new IdentityUser
             {
                 UserName = Input.Email,
-                Email = Input.Email
+                Email = Input.Email,
             };
 
             var result = await UserManager.CreateAsync(user, Input.Password);

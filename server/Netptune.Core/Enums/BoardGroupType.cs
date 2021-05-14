@@ -20,7 +20,7 @@
                 BoardGroupType.Todo => ProjectTaskStatus.InProgress,
                 BoardGroupType.Done => ProjectTaskStatus.Complete,
                 BoardGroupType.Backlog => ProjectTaskStatus.InActive,
-                _ => ProjectTaskStatus.InActive
+                _ => ProjectTaskStatus.InActive,
             };
         }
     }
