@@ -35,6 +35,7 @@ import { CardHeaderComponent } from './components/card/card-header/card-header.c
 import { CardHeaderImageComponent } from './components/card/card-header-image/card-header-image.component';
 import { CardGroupComponent } from './components/card/card-group/card-group.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { ActivityPipe } from './pipes/activity.pipe';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     TaskStatusPipe,
     EntityTypePipe,
     ActivityTypePipe,
+    ActivityPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,
@@ -87,6 +89,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     TaskStatusPipe,
     EntityTypePipe,
     ActivityTypePipe,
+    ActivityPipe,
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,
@@ -108,5 +111,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     CardHeaderImageComponent,
     CardGroupComponent,
   ],
+  providers: [FromNowPipe],
 })
 export class StaticModule {}

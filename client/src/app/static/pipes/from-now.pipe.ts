@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import * as dayjs from 'dayjs';
 import * as RelativeTime from 'dayjs/plugin/relativeTime';
 import * as UTC from 'dayjs/plugin/utc';
@@ -8,6 +8,7 @@ import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
   name: 'fromNow',
   pure: true,
 })
+@Injectable()
 export class FromNowPipe implements PipeTransform {
   transform(value: string | Date): string {
     if (!value) {
