@@ -41,13 +41,7 @@
               {{ activity.userUsername }}
             </span>
             <span class="label">
-              {{
-                (activity.type| activityType)
-                  + ' ' +
-                (activity.entityType | entityType)
-                  + ' ' +
-                (activity.time | fromNow)
-              }}
+              {{ activity | activity }}
             </span>
           </div>
         </ng-container>

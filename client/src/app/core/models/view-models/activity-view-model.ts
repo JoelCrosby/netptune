@@ -8,6 +8,7 @@ export interface ActivityViewModel {
   type: ActivityType;
   entityId: number;
   time: Date;
+  meta: { [key: string]: unknown };
 }
 
 export enum ActivityType {
