@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 
 using Netptune.Core.Enums;
 
@@ -19,5 +20,7 @@ namespace Netptune.Core.ViewModels.Activity
         public int? EntityId { get; set; }
 
         public DateTime Time { get; set; }
+
+        public JsonDocument Meta { get; set; }
     }
 }
