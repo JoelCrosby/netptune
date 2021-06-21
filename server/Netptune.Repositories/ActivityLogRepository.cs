@@ -50,6 +50,7 @@ namespace Netptune.Repositories
                     UserUsername = y.User.DisplayName,
                     UserPictureUrl = y.User.PictureUrl,
                     Time = y.Time,
+                    Meta = y.Meta,
                 })
                 .ToReadonlyListAsync(true);
         }
