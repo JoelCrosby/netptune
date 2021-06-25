@@ -55,7 +55,7 @@ namespace Netptune.Core.Events
                     BoardId = ancestors.ProjectId,
                     BoardGroupId = ancestors.BoardGroupId,
                     Time = activityEvent.Time,
-                    Meta = JsonDocument.Parse(activityEvent.Meta),
+                    Meta = activityEvent.Meta is {} ? JsonDocument.Parse(activityEvent.Meta) : null,
                 });
             }
 
