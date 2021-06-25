@@ -1,8 +1,8 @@
 .activity-menu {
   @extend .custom-scroll;
 
-  min-width: 360px !important;
-  max-width: 420px !important;
+  min-width: 400px !important;
+  max-width: 480px !important;
   margin: .4rem 0;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: .4rem 1.2rem;
+  padding: .6rem 1.2rem;
   min-width: 320px;
   font-size: 14px;
 
@@ -21,6 +21,7 @@
   .user {
     font-weight: 500;
     letter-spacing: .225px;
+    white-space: nowrap;
   }
 
   .label {
