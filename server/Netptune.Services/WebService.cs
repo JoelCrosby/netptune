@@ -20,18 +20,8 @@ namespace Netptune.Services
             var context = BrowsingContext.New(config);
             var document = await context.OpenAsync(formalUrl);
 
-            if (document is null)
-            {
-                return new MetaInfo();
-            }
-
             var title = document.QuerySelector("title")?.TextContent;
             var metaTags = document.QuerySelectorAll("meta");
-
-            if (metaTags is null)
-            {
-                return new MetaInfo();
-            }
 
             var matchCount = 0;
             var metaInfo = new MetaInfo
