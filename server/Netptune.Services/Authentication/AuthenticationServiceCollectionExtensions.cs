@@ -123,6 +123,7 @@ namespace Netptune.Services.Authentication
                     options.CallbackPath = "/api/auth/github-callback";
                     options.Scope.Add("read:user");
                     options.Scope.Add("urn:github:name");
+                    options.Scope.Add("user:email");
                     options.SaveTokens = true;
                     options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Events.OnCreatingTicket = async context =>
