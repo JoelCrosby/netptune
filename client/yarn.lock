@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alyle/ui@^10.5.1":
-  version "10.5.1"
-  resolved "https://registry.yarnpkg.com/@alyle/ui/-/ui-10.5.1.tgz#0dd4c168082ae309dffcf5ff5b856163451a8637"
-  integrity sha512-gPCmPHTiYBxSsKPQbcDqS+buQTf/kzM7UuaQp3gbJ8j14MqTdKtiNj5328HOFSxpEf1BOwKLvuvbtkTE441yWQ==
+"@alyle/ui@^10.5.3":
+  version "10.5.3"
+  resolved "https://registry.yarnpkg.com/@alyle/ui/-/ui-10.5.3.tgz#c4bee222f664d9a0cd69bf9e9d788d84988308d3"
+  integrity sha512-0TJNxsRQm8mgqKZ5bT745HUlHFDSWCMGT5LldQXj8+ittGM3ntXa/7GkOSmxSx2NL+BnZbMcaZm2fLXInxysvA==
   dependencies:
     tslib "^1.9.0"
 
@@ -1354,10 +1354,10 @@
   resolved "https://registry.yarnpkg.com/@mdi/font/-/font-5.9.55.tgz#41acd50b88073ded7095fc3029d8712b6e12f38e"
   integrity sha512-jswRF6q3eq8NWpWiqct6q+6Fg/I7nUhrxYJfiEM8JJpap0wVJLQdbKtyS65GdlK7S7Ytnx3TTi/bmw+tBhkGmg==
 
-"@microsoft/signalr@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-5.0.3.tgz#562762d750333c2154951af5db2327365a655003"
-  integrity sha512-/+8DeefKxsz29+OgLBpMH6xs/akEzFrGTCsBhwQV67x0GR+uN03I74vn8X7FunXWO8BApamOjF2DLmLGU83SFw==
+"@microsoft/signalr@^5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-5.0.7.tgz#e63c04809a408b712322e346e2fded251214ad57"
+  integrity sha512-DqNssGZ8ML8IL4sB4GS+zaX8s2BNnv4acQujs/i/WxojpGQJOZ7OyONfnYbNePRYItXgbHmm7b6SVPikqQcLCg==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^1.0.7"
@@ -1365,10 +1365,10 @@
     node-fetch "^2.6.0"
     ws "^6.0.0"
 
-"@ngneat/until-destroy@^8.0.3":
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/@ngneat/until-destroy/-/until-destroy-8.0.3.tgz#d27523d71fb3941a1c22a22e2eb9c86629dfc7cb"
-  integrity sha512-mHU118pETO+71yeKKr8HTwCP+4X/tYSYxgMNYZSJ7oiOAujHc8Rwz7TQpAFCM1trkCZEEe6fKKzQZ0V3cZFkJw==
+"@ngneat/until-destroy@^8.0.4":
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/@ngneat/until-destroy/-/until-destroy-8.0.4.tgz#08c61fc791012d38fcb3310ec03de4f4df9f29d1"
+  integrity sha512-FBh40y22VLFBOReBNOEhSn9dWix0AVYdEAF08N54jUYOGTbwjSORe/hjCrpuxcEdlw3lgTO5r2EgEl3n+kvfyA==
   dependencies:
     glob "^7.1.6"
     minimist "1.2.5"
@@ -3539,10 +3539,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-dayjs@^1.10.4:
-  version "1.10.4"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
-  integrity sha512-RI/Hh4kqRc1UKLOAf/T5zdMMX5DQIlDxwUe3wSyMMnEbGunnpENCdbUgM+dW7kXidZqCttBrmw7BhN4TMddkCw==
+dayjs@^1.10.5:
+  version "1.10.5"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.5.tgz#5600df4548fc2453b3f163ebb2abbe965ccfb986"
+  integrity sha512-BUFis41ikLz+65iH6LHQCDm4YPMj5r1YFLdupPIyM4SGcXMmtiLQ7U37i+hGS8urIuqe7I/ou3IS1jVc4nbN4g==
 
 debug@2.6.9, debug@^2.1.1, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   version "2.6.9"
@@ -6168,10 +6168,10 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.20:
-  version "4.17.20"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.20.tgz#29f6332eefc60e849f869c264bc71126ad61e8f7"
-  integrity sha512-JD1COMZsq8maT6mnuz1UMV0jvYD0E0aUsSOdrr1/nAG3dhqQXwRRgeW0cSqH1U43INKcqxaiVIQNOUDld7gRDA==
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.capitalize@^4.1.0:
   version "4.2.1"
@@ -8702,10 +8702,10 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-slugify@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.4.6.tgz#ef288d920a47fb01c2be56b3487b6722f5e34ace"
-  integrity sha512-ZdJIgv9gdrYwhXqxsH9pv7nXxjUEyQ6nqhngRxoAAOlmMGA28FDq5O4/5US4G2/Nod7d1ovNcgURQJ7kHq50KQ==
+slugify@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.5.3.tgz#36e009864f5476bfd5db681222643d92339c890d"
+  integrity sha512-/HkjRdwPY3yHJReXu38NiusZw2+LLE2SrhkWJtmlPDB1fqFSvioYj62NkPcrKiNCgRLeGcGK7QBvr1iQwybeXw==
 
 smart-buffer@^4.1.0:
   version "4.1.0"
