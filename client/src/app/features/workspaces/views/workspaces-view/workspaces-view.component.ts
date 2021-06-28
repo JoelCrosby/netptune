@@ -4,6 +4,7 @@ import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
+import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -19,6 +20,7 @@ export class WorkspacesViewComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(loadBuildInfo());
+    this.store.dispatch(WorkspaceActions.loadWorkspaces());
   }
 
   openWorkspaceDialog() {
