@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 // Styles reset
 @import './styles/reset';
 
@@ -16,7 +17,7 @@
 // Angular Material Theming core
 @import '~@angular/material/theming';
 
-@include mat-core($netptune-typography);
+@include mat.core($netptune-typography);
 
 // Themes
 @import './themes/default-theme';
@@ -117,7 +118,7 @@
 }
 
 .default-theme {
-  @include angular-material-theme($default-theme);
+  @include mat.all-component-themes($default-theme);
   @include custom-components-theme($default-theme);
 
   color-scheme: light;
@@ -126,7 +127,7 @@
 }
 
 .dark-theme {
-  @include angular-material-theme($dark-theme);
+  @include mat.all-component-themes($dark-theme);
   @include custom-components-theme($dark-theme);
 
   color-scheme: dark;

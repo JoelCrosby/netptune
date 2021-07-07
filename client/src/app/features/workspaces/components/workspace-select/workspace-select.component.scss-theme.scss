@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @use 'sass:color';
 
 @import '~@angular/material/theming';
@@ -15,38 +16,38 @@
   .workspace-select {
 
     .label-input {
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
     }
 
     .label-input {
-      $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
-      $light-bg: color.scale(mat-color($background, card), $lightness: -10%);
+      $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
+      $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -10%);
       background-color: if($is-dark-theme, $dark-bg, $light-bg);
     }
 
     .select-trigger {
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
       background-color: transparent;
 
       &:hover {
-        background-color: mat-color($foreground, text, .08);
+        background-color: mat.get-color-from-palette($foreground, text, .08);
       }
     }
 
     .select-menu-inner {
-      background-color: mat-color($background, card);
+      background-color: mat.get-color-from-palette($background, card);
     }
 
     .select-item {
       &:hover {
-        $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
-        $light-bg: color.scale(mat-color($background, card), $lightness: -6%);
+        $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
+        $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -6%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
 
       &.active {
-        $dark-bg: color.scale(mat-color($primary, .2), $lightness: 20%);
-        $light-bg: color.scale(mat-color($primary, .2), $lightness: -10%);
+        $dark-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: 20%);
+        $light-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: -10%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
     }
@@ -56,16 +57,16 @@
     }
 
     .select-menu-footer {
-      border-top: 1px solid mat-color($foreground, text, .1);
-      background-color: color.scale(mat-color($background, card), $lightness: -4%);
+      border-top: 1px solid mat.get-color-from-palette($foreground, text, .1);
+      background-color: color.scale(mat.get-color-from-palette($background, card), $lightness: -4%);
     }
 
     .select-menu-footer-item {
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
 
       &:hover {
-        $dark-bg: color.scale(mat-color($background, card), $lightness: 10%);
-        $light-bg: color.scale(mat-color($background, card), $lightness: -8%);
+        $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
+        $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -8%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
     }

@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 @mixin cards-theme($theme) {
   $primary: map-get($theme, primary);
@@ -10,20 +10,20 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   .netp-card-group {
-    background-color: darken(mat-color($background, board-group), 1);
+    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
   }
 
   .netp-card {
-    background-color: mat-color($background, card);
+    background-color: mat.get-color-from-palette($background, card);
     box-shadow: 1px 2px 4px if($is-dark-theme, rgba(0, 0, 0, .2), rgba(0, 0, 0, .1));
   }
 
   .netp-card-title {
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 
   .netp-card-subtitle {
-    color: mat-color($foreground, text, .54);
-    background-color: mat-color($foreground, text, .06);
+    color: mat.get-color-from-palette($foreground, text, .54);
+    background-color: mat.get-color-from-palette($foreground, text, .06);
   }
 }

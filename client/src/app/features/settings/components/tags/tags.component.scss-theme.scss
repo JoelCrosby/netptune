@@ -1,6 +1,6 @@
+@use '~@angular/material' as mat;
 @use 'sass:color';
 
-@import '~@angular/material/theming';
 
 @mixin tags-theme($theme) {
 
@@ -10,12 +10,12 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  $item-background: mat-color($foreground, text, .06);
-  $item-background-hover: mat-color($foreground, text, .1);
+  $item-background: mat.get-color-from-palette($foreground, text, .06);
+  $item-background-hover: mat.get-color-from-palette($foreground, text, .1);
 
   .tag-item-list {
     .tag-item {
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
       background-color: $item-background;
 
       .tag-item-delete {
@@ -46,19 +46,19 @@
       background-color: transparent;
       border-width: 1px;
       border: 1px solid $item-background;
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
 
       &:hover:not(.edit-tag-item) {
         border-width: 2px;
         background-color: transparent;
-        border: 2px solid mat-color($foreground, text, 1);
+        border: 2px solid mat.get-color-from-palette($foreground, text, 1);
       }
     }
 
     .edit-tag-item {
-      border: 2px solid mat-color($primary);
+      border: 2px solid mat.get-color-from-palette($primary);
       background-color: transparent;
-      color: mat-color($foreground, text);
+      color: mat.get-color-from-palette($foreground, text);
     }
   }
 }

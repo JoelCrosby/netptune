@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin task-list-group-theme($theme) {
@@ -9,16 +10,16 @@
 
   .tasks-container {
     h4 {
-      color: mat-color($foreground, text, .6);
+      color: mat.get-color-from-palette($foreground, text, .6);
     }
 
     .task-list {
-      background-color: darken(mat-color($background, board-group), 1);
+      background-color: darken(mat.get-color-from-palette($background, board-group), 1);
     }
 
 
     .task-drag {
-      background-color: mat-color($background);
+      background-color: mat.get-color-from-palette($background);
     }
 
     .cdk-virtual-scroll-orientation-vertical
@@ -29,10 +30,10 @@
 
   .empty-list-img,
   .list-empty-mark {
-    color: mat-color($foreground, empty-list);
+    color: mat.get-color-from-palette($foreground, empty-list);
   }
 
   .empty-text {
-    color: mat-color($foreground, disabled-button);
+    color: mat.get-color-from-palette($foreground, disabled-button);
   }
 }

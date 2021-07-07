@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin board-group-tags-theme($theme) {
@@ -19,7 +20,7 @@
       .mat-checkbox-layout .mat-checkbox-label {
         border-radius: 4px;
         padding: 0 .4rem;
-        background-color: mat-color($foreground, text, .06);
+        background-color: mat.get-color-from-palette($foreground, text, .06);
       }
     }
   }

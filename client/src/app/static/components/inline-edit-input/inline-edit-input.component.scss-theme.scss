@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin inline-edit-input-theme($theme) {
@@ -13,7 +14,7 @@
 
     &:focus {
       padding: 4px !important;
-      border: 2px solid mat-color($primary, .6) !important;
+      border: 2px solid mat.get-color-from-palette($primary, .6) !important;
     }
   }
 }

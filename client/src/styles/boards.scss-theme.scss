@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin baords-theme($theme) {
@@ -22,25 +23,25 @@
     }
 
     .mat-icon {
-      color: mat-color($foreground, text, .4);
+      color: mat.get-color-from-palette($foreground, text, .4);
     }
   }
 
   .board-filter-button:not(.mat-warn) {
-    background-color: darken(mat-color($background, board-group), 1);
+    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
   }
 
   .board-filter-button.mat-warn {
-    background-color: mat-color($warn, .08);
+    background-color: mat.get-color-from-palette($warn, .08);
   }
 
   .board-filter-button.mat-primary {
-    background-color: mat-color($primary, .08);
+    background-color: mat.get-color-from-palette($primary, .08);
   }
 
   .board-filter-seperator {
     height: 1.4rem;
     margin: 0 .4rem;
-    border-right: 1px solid mat-color($foreground, text, .1);
+    border-right: 1px solid mat.get-color-from-palette($foreground, text, .1);
   }
 }

@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin page-header-theme($theme) {
@@ -9,14 +10,14 @@
   $background: map-get($theme, background);
 
   .header-top-row {
-    border-bottom: 2px solid mat-color($background, border);
+    border-bottom: 2px solid mat.get-color-from-palette($background, border);
   }
 
   .header-back-link {
-    color: mat-color($foreground, text, .5);
+    color: mat.get-color-from-palette($foreground, text, .5);
 
     &:hover {
-      color: mat-color($primary);
+      color: mat.get-color-from-palette($primary);
     }
   }
 
@@ -25,30 +26,30 @@
     flex-direction: row;
 
     .header-primary-action {
-      background-color: mat-color($primary);
+      background-color: mat.get-color-from-palette($primary);
       color: #fff;
     }
 
     .header-primary-action:hover {
-      background-color: lighten(mat-color($primary), 4);
+      background-color: lighten(mat.get-color-from-palette($primary), 4);
     }
 
     .header-secondary-action {
-      background-color: mat-color($foreground, text, .08);
-      color: mat-color($foreground, text, .7);
+      background-color: mat.get-color-from-palette($foreground, text, .08);
+      color: mat.get-color-from-palette($foreground, text, .7);
     }
 
     .header-secondary-action:hover {
-      background-color: mat-color($foreground, text, .2);
+      background-color: mat.get-color-from-palette($foreground, text, .2);
     }
 
     .header-menu-action {
-      background-color: mat-color($foreground, text, .08);
-      color: mat-color($foreground, text, .4);
+      background-color: mat.get-color-from-palette($foreground, text, .08);
+      color: mat.get-color-from-palette($foreground, text, .4);
     }
 
     .header-menu-action:hover {
-      background-color: mat-color($foreground, text, .2);
+      background-color: mat.get-color-from-palette($foreground, text, .2);
     }
   }
 

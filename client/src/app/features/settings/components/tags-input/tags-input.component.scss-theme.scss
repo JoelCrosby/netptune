@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 @mixin tags-input-theme($theme) {
 
@@ -8,10 +8,10 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  $item-background: mat-color($foreground, text, .06);
-  $item-background-hover: mat-color($foreground, text, .1);
+  $item-background: mat.get-color-from-palette($foreground, text, .06);
+  $item-background-hover: mat.get-color-from-palette($foreground, text, .1);
 
   .edit-tag-item {
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
   }
 }
