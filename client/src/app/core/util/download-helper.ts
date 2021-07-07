@@ -1,9 +1,10 @@
 export const downloadFile = async (
   file: Blob,
   filename: string
-): Promise<boolean> => {
+): Promise<void> => {
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    return window.navigator.msSaveOrOpenBlob(file);
+    window.navigator.msSaveOrOpenBlob(file);
+    return;
   }
 
   const a = document.createElement('a');
