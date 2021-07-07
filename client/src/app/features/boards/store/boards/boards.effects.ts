@@ -95,6 +95,13 @@ export class BoardsEffects {
     { dispatch: false }
   );
 
+  createBoardSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.createBoardSuccess),
+      map(() => actions.loadBoards())
+    )
+  );
+
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
