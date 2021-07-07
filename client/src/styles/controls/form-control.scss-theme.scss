@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin form-control-theme($theme) {
@@ -10,7 +11,7 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   .form-control-label {
-    color: mat-color($foreground, text, .6);
+    color: mat.get-color-from-palette($foreground, text, .6);
   }
 
   .form-control-prefix {
@@ -19,24 +20,24 @@
 
   .form-control-input {
     background-color: transparent;
-    border-color: if($is-dark-theme, mat-color($foreground, text, .3), mat-color($foreground, text, .1)) !important;
+    border-color: if($is-dark-theme, mat.get-color-from-palette($foreground, text, .3), mat.get-color-from-palette($foreground, text, .1)) !important;
 
     &:focus-within,
     &.active {
-      border-color: mat-color($primary) !important;
+      border-color: mat.get-color-from-palette($primary) !important;
     }
 
     &.invalid {
-      border-color: mat-color($warn) !important;
+      border-color: mat.get-color-from-palette($warn) !important;
     }
 
     mat-icon {
-      color: mat-color($foreground, text, .1) !important;
+      color: mat.get-color-from-palette($foreground, text, .1) !important;
     }
   }
 
   .form-control-disabled {
-    color: mat-color($foreground, text, .4) !important;
-    background-color: mat-color($foreground, text, .02) !important;
+    color: mat.get-color-from-palette($foreground, text, .4) !important;
+    background-color: mat.get-color-from-palette($foreground, text, .02) !important;
   }
 }

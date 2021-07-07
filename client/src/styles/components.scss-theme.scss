@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 @mixin components-theme($theme) {
   $primary: map-get($theme, primary);
@@ -12,17 +12,17 @@
   // Material Cards
 
   .mat-card:not([class*='mat-elevation-z']) {
-    background-color: mat-color($background, card) !important;
+    background-color: mat.get-color-from-palette($background, card) !important;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
     transition: background-color .2s ease-in, color .2s ease-in;
   }
 
   .mat-card:not([class*='selected']):hover {
-    background-color: mat-color($background, hover) !important;
+    background-color: mat.get-color-from-palette($background, hover) !important;
   }
 
   .mat-card.flagged:not([class*='mat-elevation-z']):hover {
-    background-color: mix(mat-color($warn), mat-color($background, board-group), 24%) !important;
+    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, board-group), 24%) !important;
   }
 
   // Custom Scrollbars
@@ -38,20 +38,20 @@
 
   .custom-scroll::-webkit-scrollbar-thumb {
     border: 6px solid transparent;
-    background: mat-color($foreground, text, .2);
+    background: mat.get-color-from-palette($foreground, text, .2);
     border-radius: 10px;
     background-clip: padding-box;
   }
 
   .custom-scroll {
-    scrollbar-color: mat-color($foreground, text, .2) transparent;
+    scrollbar-color: mat.get-color-from-palette($foreground, text, .2) transparent;
     scrollbar-width: thin;
   }
 
   // Modal Backdrops
 
   .cdk-overlay-dark-backdrop {
-    background-color: darken(mat-color($primary, .5), 42);
+    background-color: darken(mat.get-color-from-palette($primary, .5), 42);
   }
 
   // Form Fileds
@@ -155,7 +155,7 @@
   // Form Seperator
 
   .form-seperator {
-    border-bottom: 2px solid mat-color($background, border);
+    border-bottom: 2px solid mat.get-color-from-palette($background, border);
     margin: 2rem 0;
   }
 
@@ -165,7 +165,7 @@
     margin: .4rem 0 .8rem;
     font-size: 14px;
     font-weight: 500;
-    color: mat-color($warn);
+    color: mat.get-color-from-palette($warn);
   }
 
   // Dialogs

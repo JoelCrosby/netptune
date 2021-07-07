@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin board-group-theme($theme) {
@@ -8,6 +9,6 @@
   $background: map-get($theme, background);
 
   .board-group-card {
-    background-color: darken(mat-color($background, board-group), 1);
+    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
   }
 }

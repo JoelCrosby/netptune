@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin lists-theme($theme) {
@@ -8,27 +9,27 @@
   $background: map-get($theme, background);
 
   .app-list {
-    background-color: darken(mat-color($background, board-group), 1);
+    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
 
     .mat-checkbox-frame {
-      border-color: rgba(mat-color($foreground, icon), .3);
+      border-color: rgba(mat.get-color-from-palette($foreground, icon), .3);
     }
   }
 
   .app-list-item {
-    background-color: mat-color($background, card);
+    background-color: mat.get-color-from-palette($background, card);
 
     .description {
-      color: mat-color($foreground, text, .6);
+      color: mat.get-color-from-palette($foreground, text, .6);
     }
   }
 
   .app-list-drag-icon {
-    color: rgba(mat-color($foreground, icon), .3);
+    color: rgba(mat.get-color-from-palette($foreground, icon), .3);
   }
 
   .app-list-item-pill {
-    color: mat-color($primary);
-    background-color: rgba(mat-color($primary), .1);
+    color: mat.get-color-from-palette($primary);
+    background-color: rgba(mat.get-color-from-palette($primary), .1);
   }
 }

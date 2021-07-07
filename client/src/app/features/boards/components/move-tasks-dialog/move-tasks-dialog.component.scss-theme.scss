@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin move-tasks-dialog-theme($theme) {
@@ -17,16 +18,16 @@
       }
 
       .pill {
-        background-color: mat-color($foreground, text, .1);
+        background-color: mat.get-color-from-palette($foreground, text, .1);
       }
 
 
       &.selected {
-        color: invert(mat-color($foreground, text));
-        background-color: mat-color($primary);
+        color: invert(mat.get-color-from-palette($foreground, text));
+        background-color: mat.get-color-from-palette($primary);
 
         .pill {
-          background-color: invert(mat-color($foreground, text, .4));
+          background-color: invert(mat.get-color-from-palette($foreground, text, .4));
         }
       }
     }

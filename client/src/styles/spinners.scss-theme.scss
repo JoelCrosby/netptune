@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin spinners-theme($theme) {
@@ -9,18 +10,18 @@
 
   @keyframes typing {
     0% {
-      background-color: mat-color($background, background);
-      box-shadow: 12px 0 0 0 mat-color($primary, .2), 24px 0 0 0 mat-color($primary, .2);
+      background-color: mat.get-color-from-palette($background, background);
+      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 mat.get-color-from-palette($primary, .2);
     }
 
     25% {
-      background-color: mat-color($primary, .4);
-      box-shadow: 12px 0 0 0 mat-color($primary, 2), 24px 0 0 0 mat-color($primary, .2);
+      background-color: mat.get-color-from-palette($primary, .4);
+      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, 2), 24px 0 0 0 mat.get-color-from-palette($primary, .2);
     }
 
     75% {
-      background-color: mat-color($primary, .4);
-      box-shadow: 12px 0 0 0 mat-color($primary, .2), 24px 0 0 0 mat-color($background, background);
+      background-color: mat.get-color-from-palette($primary, .4);
+      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 mat.get-color-from-palette($background, background);
     }
   }
 }

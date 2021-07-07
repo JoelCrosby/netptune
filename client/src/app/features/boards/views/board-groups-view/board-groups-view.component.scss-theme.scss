@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin board-groups-view-theme($theme) {
@@ -15,21 +16,21 @@
     text-transform: uppercase;
 
     span {
-      color: mat-color($foreground, text, .3);
+      color: mat.get-color-from-palette($foreground, text, .3);
     }
 
     .title {
-      color: mat-color($foreground, text, .6);
+      color: mat.get-color-from-palette($foreground, text, .6);
 
       .title-input:hover,
       .title-input.edit-active {
-        background-color: mat-color($primary, .06);
+        background-color: mat.get-color-from-palette($primary, .06);
       }
     }
 
     .delete-board-group-btn
     .mat-icon {
-      color: mat-color($foreground, icon, .4);
+      color: mat.get-color-from-palette($foreground, icon, .4);
     }
   }
 }

@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin project-tasks-list-theme($theme) {
@@ -9,10 +10,10 @@
 
   .empty-list-img,
   .list-empty-mark {
-    color: mat-color($foreground, empty-list);
+    color: mat.get-color-from-palette($foreground, empty-list);
 
     .empty-text {
-      color: mat-color($foreground, disabled-button);
+      color: mat.get-color-from-palette($foreground, disabled-button);
     }
   }
 }

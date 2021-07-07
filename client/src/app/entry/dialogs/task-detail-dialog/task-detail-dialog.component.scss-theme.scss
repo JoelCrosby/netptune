@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '~@angular/material/theming';
 
 @mixin task-detail-dialog-theme($theme) {
@@ -8,7 +9,7 @@
   $background: map-get($theme, background);
 
   .task-scope-id {
-    background-color: mat-color($primary, .2);
+    background-color: mat.get-color-from-palette($primary, .2);
   }
 
   .actions-row {
@@ -19,7 +20,7 @@
 
   .comments-container {
     .material-icons-outlined {
-      color: mat-color($foreground, icon, .4);
+      color: mat.get-color-from-palette($foreground, icon, .4);
     }
 
     .comment-button .material-icons {
@@ -30,7 +31,7 @@
   }
 
   .clickable:hover {
-    background-color: mat-color($foreground, text, .06);
+    background-color: mat.get-color-from-palette($foreground, text, .06);
   }
 
   .detail-list-item {
@@ -60,7 +61,7 @@
     .inline-edit {
       position: sticky;
       top: 0;
-      background-color: mat-color($background, card);
+      background-color: mat.get-color-from-palette($background, card);
       z-index: 2;
     }
   }

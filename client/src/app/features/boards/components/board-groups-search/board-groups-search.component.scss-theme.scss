@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 @mixin board-groups-search-theme($theme) {
   $primary: map-get($theme, primary);
@@ -8,25 +8,25 @@
   $background: map-get($theme, background);
 
   .board-groups-search-input {
-    background-color: mat-color($foreground, text, .04);
-    border-color: mat-color($foreground, text, .1) !important;
+    background-color: mat.get-color-from-palette($foreground, text, .04);
+    border-color: mat.get-color-from-palette($foreground, text, .1) !important;
 
     &:focus-within,
     &.active {
       background-color: transparent;
-      border-color: mat-color($primary) !important;
+      border-color: mat.get-color-from-palette($primary) !important;
     }
 
     &.invalid {
-      border-color: mat-color($warn) !important;
+      border-color: mat.get-color-from-palette($warn) !important;
     }
 
     mat-icon {
-      color: mat-color($foreground, text, .1) !important;
+      color: mat.get-color-from-palette($foreground, text, .1) !important;
     }
 
     .clear-search:hover {
-      color: mat-color($primary) !important;
+      color: mat.get-color-from-palette($primary) !important;
     }
   }
 }

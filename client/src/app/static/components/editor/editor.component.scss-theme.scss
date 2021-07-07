@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @use 'sass:color';
 @use '~@angular/material/theming';
 
@@ -12,16 +13,16 @@
   $is-dark-theme: map-get($theme, is-dark);
   $fill-background: transparent;
 
-  $background-color: mat-color($background, background);
+  $background-color: mat.get-color-from-palette($background, background);
   $tooltip-background-color: color.scale($background-color, $lightness: 10%);
 
   .editor {
     background-color: $fill-background;
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
 
     .inline-code,
     .ce-code__textarea.cdx-input {
-      color: mat-color($foreground, text, .6);
+      color: mat.get-color-from-palette($foreground, text, .6);
       background-color: color.scale($fill-background, $lightness: 10%);
       font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
       white-space: pre-wrap;
@@ -36,7 +37,7 @@
 
       background-color: if($is-dark-theme, #1e1e1e, #fbfbfb);
       color: if($is-dark-theme, #F4F4F4, #1e1e1e);
-      border: 1px solid mat-color($foreground, text, .12);
+      border: 1px solid mat.get-color-from-palette($foreground, text, .12);
       border-radius: 3px;
       font-size: 14px;
       resize: none;
@@ -48,7 +49,7 @@
   .cdx-settings-button,
   .ce-settings__button,
   .ce-conversion-tool {
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
 
     &:hover {
       background-color: color.scale($fill-background, $lightness: 10%);
@@ -56,7 +57,7 @@
   }
 
   .ce-paragraph[data-placeholder]:empty::before {
-    color: mat-color($foreground, text, .6);
+    color: mat.get-color-from-palette($foreground, text, .6);
   }
 
   .ce-inline-toolbar,
@@ -73,7 +74,7 @@
 
   .ce-conversion-tool--focused {
     box-shadow: none;
-    background-color: mat-color($primary, .1) !important;
+    background-color: mat.get-color-from-palette($primary, .1) !important;
   }
 
   .ce-toolbar__settings-btn,
@@ -83,7 +84,7 @@
   .ce-conversion-tool__icon {
     border-radius: 3px;
     background-color: $tooltip-background-color;
-    color: mat-color($foreground, text, .6);
+    color: mat.get-color-from-palette($foreground, text, .6);
     box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .13);
   }
 
@@ -92,16 +93,16 @@
   }
 
   .ce-toolbar__plus {
-    color: mat-color($primary, .8);
+    color: mat.get-color-from-palette($primary, .8);
   }
 
   .ce-block--selected
   .ce-block__content {
-    background-color: color.scale(mat-color($primary), $lightness: 88%);
+    background-color: color.scale(mat.get-color-from-palette($primary), $lightness: 88%);
   }
 
   .ce-inline-tool-input {
-    color: mat-color($foreground, text, .6);
+    color: mat.get-color-from-palette($foreground, text, .6);
     background-color: color.scale($fill-background, $lightness: 20%);
   }
 
@@ -113,7 +114,7 @@
 
   .embed-tool__caption[contentEditable=true][data-placeholder]::before,
   .image-tool__caption[contentEditable=true][data-placeholder]::before {
-    color: mat-color($foreground, text, .6);
+    color: mat.get-color-from-palette($foreground, text, .6);
   }
 
   .codex-editor__loader {
@@ -137,7 +138,7 @@
   }
 
   .link-tool__progress {
-    background-color: mat-color($primary, .08);
+    background-color: mat.get-color-from-palette($primary, .08);
   }
 
   .link-tool__input {
@@ -146,6 +147,6 @@
 
   .link-tool__input-holder--error
   .link-tool__input {
-    background-color: mat-color($warn, .08);
+    background-color: mat.get-color-from-palette($warn, .08);
   }
 }
