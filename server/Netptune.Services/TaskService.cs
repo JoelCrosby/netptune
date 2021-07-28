@@ -9,6 +9,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -170,7 +171,7 @@ namespace Netptune.Services
 
             if (result is null) return null;
 
-            var reassigned = request.AssigneeId != result.AssigneeId;
+            var old = result.ToViewModel().Clone() as TaskViewModel;
 
             await UnitOfWork.Transaction(async () =>
             {
@@ -191,26 +192,9 @@ namespace Netptune.Services
 
             var response = await TaskRepository.GetTaskViewModel(result.Id);
 
-            Activity.Log(options =>
-            {
-                options.EntityId = response.Id;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Modify;
-            });
-
-            if (reassigned)
-            {
-                Activity.LogWith<AssignActivityMeta>(options =>
-                {
-                    options.EntityId = response.Id;
-                    options.EntityType = EntityType.Task;
-                    options.Type = ActivityType.Assign;
-                    options.Meta = new AssignActivityMeta
-                    {
-                        AssigneeId = request.AssigneeId,
-                    };
-                });
-            }
+            ProjectTaskDiff
+                .Create(old, response)
+                .LogDiff(Activity, response.Id);
 
             return Success(response);
         }

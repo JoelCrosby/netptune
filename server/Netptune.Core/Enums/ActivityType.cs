@@ -8,6 +8,11 @@ namespace Netptune.Core.Enums
         Assign = 3,
         Move = 5,
         Reorder = 6,
+        Flag = 7,
+        UnFlag = 8,
+        ModifyName = 9,
+        ModifyDescription = 10,
+        ModifyStatus = 11,
     }
 
     public enum ActivitySubType

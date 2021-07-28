@@ -5,7 +5,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.ProjectTasks
 {
-    public class TaskViewModel
+    public class TaskViewModel : ICloneable
     {
         public int Id { get; set; }
 
@@ -48,5 +48,10 @@ namespace Netptune.Core.ViewModels.ProjectTasks
         public string OwnerPictureUrl { get; set; }
 
         public string ProjectName { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }
