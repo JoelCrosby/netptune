@@ -25,6 +25,17 @@ namespace Netptune.Repositories
         {
         }
 
+        public override Task<ProjectTask> GetAsync(int id, bool isReadonly = false)
+        {
+            return Entities
+                .Include(x => x.Assignee)
+                .Include(x => x.Project)
+                .Include(x => x.Owner)
+                .Include(x => x.Workspace)
+                .IsReadonly(isReadonly)
+                .FirstOrDefaultAsync(EqualsPredicate(id));
+        }
+
         public Task<TaskViewModel> GetTaskViewModel(int taskId)
         {
             return Entities

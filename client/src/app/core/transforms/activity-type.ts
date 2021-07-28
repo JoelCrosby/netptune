@@ -12,6 +12,18 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'modified';
     case ActivityType.move:
       return 'moved';
+    case ActivityType.reorder:
+      return 'reordered';
+    case ActivityType.flag:
+      return 'flagged';
+    case ActivityType.unFlag:
+      return 'unFlagged';
+    case ActivityType.modifyName:
+      return 'modified name';
+    case ActivityType.modifyDescription:
+      return 'modified description';
+    case ActivityType.modifyStatus:
+      return 'changed status';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }
