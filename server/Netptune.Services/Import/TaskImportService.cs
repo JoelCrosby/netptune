@@ -70,7 +70,8 @@ namespace Netptune.Services.Import
             }
 
             var groups = rows.Select(row => row.Group.Trim().ToLowerInvariant()).Distinct();
-            var board = await UnitOfWork.Boards.GetByIdentifier(boardId, true);
+            var workspaceId = await IdentityService.GetWorkspaceId();
+            var board = await UnitOfWork.Boards.GetByIdentifier(boardId, workspaceId, true);
 
             if (board is null)
             {
@@ -92,8 +93,6 @@ namespace Netptune.Services.Import
             }
 
             var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
-            var workspaceId = project.WorkspaceId;
-
             var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
             var existingGroupNames = existingGroups.ConvertAll(group => group.Name.Trim().ToLowerInvariant());
             var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder).Select(group => group.SortOrder).FirstOrDefault() + 1;

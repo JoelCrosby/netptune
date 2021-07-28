@@ -146,10 +146,10 @@ namespace Netptune.Repositories
             return null;
         }
 
-        public Task<Board> GetByIdentifier(string identifier, bool isReadonly = false)
+        public Task<Board> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false)
         {
             return Entities
-                .Where(board => !board.IsDeleted && board.Identifier == identifier)
+                .Where(b => !b.IsDeleted && b.Identifier == identifier && b.WorkspaceId == workspaceId)
                 .IsReadonly(isReadonly)
                 .FirstOrDefaultAsync();
         }
