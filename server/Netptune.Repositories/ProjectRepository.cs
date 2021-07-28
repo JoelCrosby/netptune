@@ -60,7 +60,7 @@ namespace Netptune.Repositories
             Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
             return Entities
-                .Where(project => project.Key == key && !project.IsDeleted)
+                .Where(project =>  !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
                 .Include(project => project.Workspace)
                 .Include(project => project.Owner)
                 .Include(project => project.ProjectBoards)
@@ -101,7 +101,7 @@ namespace Netptune.Repositories
         public Task<string> GenerateProjectKey(string projectName, int workspaceId)
         {
             const int keyLength = 4;
-            var key = projectName.Substring(0, keyLength).ToLowerInvariant();
+            var key = projectName[..keyLength].ToLowerInvariant();
 
             async Task<string> TryGetKey(string currentKey, int currentKeyLength)
             {
@@ -109,7 +109,7 @@ namespace Netptune.Repositories
                 {
                     var isAvailable = await IsProjectKeyAvailable(currentKey, workspaceId);
                     if (isAvailable) return currentKey;
-                    var nextKey = projectName.Substring(0, currentKeyLength + 1).ToLowerInvariant();
+                    var nextKey = projectName[..(currentKeyLength + 1)].ToLowerInvariant();
                     currentKey = nextKey;
                     currentKeyLength++;
                 }
