@@ -17,7 +17,7 @@ namespace Netptune.Core.Repositories
 
         Task<List<BoardsViewModel>> GetBoardViewModels(string slug);
 
-        Task<Board> GetByIdentifier(string identifier, bool isReadonly = false);
+        Task<Board> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false);
 
         Task<int?> GetIdByIdentifier(string identifier, int workspaceId);
 
