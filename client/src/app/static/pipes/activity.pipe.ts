@@ -28,6 +28,8 @@ const getMeta = (value: ActivityViewModel) => {
   switch (value.type) {
     case ActivityType.move:
       return `to ${value.meta?.group ?? ''} group`;
+    case ActivityType.assign:
+      return `to ${value.assignee?.displayName ?? '(removed user)'}`;
     default:
       return '';
   }

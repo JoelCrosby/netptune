@@ -17,7 +17,7 @@ export const activityTypeToString = (value: ActivityType): string => {
     case ActivityType.flag:
       return 'flagged';
     case ActivityType.unFlag:
-      return 'unFlagged';
+      return 'un-flagged';
     case ActivityType.modifyName:
       return 'modified name';
     case ActivityType.modifyDescription:

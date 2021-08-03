@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
 
@@ -28,5 +29,7 @@ namespace Netptune.Core.Repositories
         Task<bool> IsUserInWorkspace(string userId, string workspaceKey);
 
         Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId);
+
+        Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId);
     }
 }
