@@ -1,4 +1,5 @@
 import { EntityType } from '../entity-type';
+import { UserAvatar } from '../user-avatar';
 
 export interface ActivityViewModel {
   entityType: EntityType;
@@ -9,6 +10,7 @@ export interface ActivityViewModel {
   entityId: number;
   time: Date;
   meta: { [key: string]: unknown };
+  assignee?: UserAvatar;
 }
 
 export enum ActivityType {
