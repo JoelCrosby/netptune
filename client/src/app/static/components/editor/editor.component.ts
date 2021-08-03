@@ -5,6 +5,7 @@ import {
   EventEmitter,
   forwardRef,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
   ViewEncapsulation,
@@ -39,7 +40,7 @@ import { environment } from '@env/environment';
     },
   ],
 })
-export class EditorComponent implements ControlValueAccessor {
+export class EditorComponent implements ControlValueAccessor, OnDestroy {
   @ViewChild('editorJs', { static: true }) el: ElementRef;
 
   @Input() placeholder = '';
@@ -51,6 +52,10 @@ export class EditorComponent implements ControlValueAccessor {
   onTouch: () => void;
 
   constructor(private storage: StorageService) {}
+
+  ngOnDestroy() {
+    this.editor?.destroy();
+  }
 
   writeValue(obj: string) {
     const intialValue = obj && JSON.parse(obj);
