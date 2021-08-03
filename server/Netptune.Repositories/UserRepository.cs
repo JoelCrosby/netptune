@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -119,6 +120,20 @@ namespace Netptune.Repositories
             return Context.WorkspaceAppUsers
                 .Where(x => x.WorkspaceId == workspaceId && userIds.Contains(x.UserId))
                 .Select(x => x.UserId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId)
+        {
+            return Context.WorkspaceAppUsers
+                .Where(x => x.WorkspaceId == workspaceId && userIds.Contains(x.UserId))
+                .Select(x => new UserAvatar
+                {
+                    Id = x.UserId,
+                    DisplayName = x.User.DisplayName,
+                    ProfilePictureUrl = x.User.PictureUrl,
+                })
                 .AsNoTracking()
                 .ToListAsync();
         }

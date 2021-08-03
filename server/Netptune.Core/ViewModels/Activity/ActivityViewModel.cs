@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models;
 
 namespace Netptune.Core.ViewModels.Activity
 {
@@ -22,5 +23,7 @@ namespace Netptune.Core.ViewModels.Activity
         public DateTime Time { get; set; }
 
         public JsonDocument Meta { get; set; }
+
+        public UserAvatar Assignee { get; set; }
     }
 }
