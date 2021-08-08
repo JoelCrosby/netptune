@@ -29,7 +29,13 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { first, takeUntil, tap, throttleTime } from 'rxjs/operators';
+import {
+  first,
+  takeUntil,
+  tap,
+  throttleTime,
+  debounceTime,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -38,7 +44,8 @@ import { first, takeUntil, tap, throttleTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupTaskInlineComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild('taskInput') inputElementRef: ElementRef;
   @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
 
@@ -89,6 +96,23 @@ export class BoardGroupTaskInlineComponent
         })
       )
       .subscribe();
+
+    this.store
+      .select(BoardGroupSelectors.selectInlineTaskContent)
+      .pipe(first())
+      .subscribe({
+        next: (content) =>
+          this.taskInputControl.setValue(content, { emitEvent: false }),
+      });
+
+    this.taskInputControl.valueChanges
+      .pipe(debounceTime(200), takeUntil(this.onDestroy$))
+      .subscribe({
+        next: (content) =>
+          this.store.dispatch(
+            BoardGroupActions.setInlineTaskContent({ content })
+          ),
+      });
   }
 
   ngAfterViewInit() {

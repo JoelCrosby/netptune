@@ -174,7 +174,14 @@ const reducer = createReducer(
 
   // ProjectTaskActions
 
-  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task))
+  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task)),
+
+  // Set Inline Task Content
+
+  on(actions.setInlineTaskContent, (state, { content }) => ({
+    ...state,
+    inlineTaskContent: content,
+  }))
 );
 
 export const boardGroupsReducer = (
