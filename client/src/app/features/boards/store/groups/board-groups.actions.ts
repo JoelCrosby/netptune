@@ -242,3 +242,10 @@ export const reassignTasksFail = createAction(
   '[BoardGroups] Re-assigned Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Inline Task Content
+
+export const setInlineTaskContent = createAction(
+  '[BoardGroups] Set Inline Task Content',
+  props<{ content: string }>()
+);

@@ -175,3 +175,8 @@ export const selectCreateBoardGroupTaskMessage = createSelector(
     return null;
   }
 );
+
+export const selectInlineTaskContent = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.inlineTaskContent
+);

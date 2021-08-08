@@ -33,4 +33,5 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   onlyFlagged?: boolean;
   selectedTasks: number[];
   searchTerm?: string;
+  inlineTaskContent?: string;
 }
