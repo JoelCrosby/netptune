@@ -9,6 +9,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
+import { CookieService } from 'ngx-cookie-service';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
@@ -214,7 +215,9 @@ export class AuthEffects implements OnInitEffects {
           map((result) => {
             if (!result) return { type: 'NO_ACTION' };
 
+            this.cookie.deleteAll();
             this.router.navigate(['auth/login']);
+
             return actions.logoutSuccess();
           })
         )
@@ -238,7 +241,8 @@ export class AuthEffects implements OnInitEffects {
     private authService: AuthService,
     private store: Store,
     private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private cookie: CookieService
   ) {}
 
   ngrxOnInitEffects(): Action {

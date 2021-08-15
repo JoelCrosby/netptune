@@ -46,12 +46,6 @@ namespace Netptune.Services.Authentication
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
 
-                // .AddCookie(options =>
-                // {
-                //     options.LoginPath = "/app/auth/login";
-                //     options.LogoutPath = "/app/auth/login";
-                // })
-
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
