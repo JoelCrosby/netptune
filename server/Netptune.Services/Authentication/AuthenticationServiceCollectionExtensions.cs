@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -19,27 +18,10 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Services.Authentication
 {
-    public class NetptuneAuthenticationOptions
-    {
-        [Required]
-        public string Issuer { get; set; }
-
-        [Required]
-        public string Audience { get; set; }
-
-        [Required]
-        public string SecurityKey { get; set; }
-
-        [Required]
-        public string GitHubClientId { get; set; }
-
-        [Required]
-        public string GitHubSecret { get; set; }
-    }
-
     public static class AuthenticationServiceCollectionExtensions
     {
-        public static IServiceCollection AddNeptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
+        public static IServiceCollection AddNeptuneAuthentication(
+            this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
         {
             var authenticationOptions = ConfigureServices(services, action);
 
@@ -64,11 +46,11 @@ namespace Netptune.Services.Authentication
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
 
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/app/auth/login";
-                    options.LogoutPath = "/app/auth/login";
-                })
+                // .AddCookie(options =>
+                // {
+                //     options.LoginPath = "/app/auth/login";
+                //     options.LogoutPath = "/app/auth/login";
+                // })
 
                 .AddJwtBearer(options =>
                 {
