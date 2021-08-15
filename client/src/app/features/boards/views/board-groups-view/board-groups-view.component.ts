@@ -29,7 +29,8 @@ import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
   providers: [],
 })
 export class BoardGroupsViewComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild('importTasksInput') importTasksInput: ElementRef;
 
   groups$: Observable<BoardViewGroup[]>;
@@ -181,7 +182,10 @@ export class BoardGroupsViewComponent
   }
 
   onImportTasksClicked() {
-    this.importTasksInput?.nativeElement.click();
+    if (!this.importTasksInput) return;
+
+    this.importTasksInput.nativeElement.value = null;
+    this.importTasksInput.nativeElement.click();
   }
 
   onDeleteBoardClicked() {
