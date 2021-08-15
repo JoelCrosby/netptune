@@ -43,6 +43,7 @@
     "@ngrx/store-devtools": "12.3.0",
     "dayjs": "^1.10.6",
     "lodash-es": "^4.17.21",
+    "ngx-cookie-service": "^12.0.3",
     "rxjs": "~6.6.3",
     "slugify": "^1.6.0",
     "tslib": "^2.0.0",
