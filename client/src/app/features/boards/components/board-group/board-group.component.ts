@@ -10,13 +10,16 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
+import { Selected } from '@core/models/selected';
 import {
   BoardViewGroup,
   BoardViewTask,
 } from '@core/models/view-models/board-view';
+import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
@@ -49,7 +52,13 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showAddButton$: Observable<boolean>;
 
-  constructor(private store: Store, private zone: NgZone) {}
+  dragging = false;
+
+  constructor(
+    private store: Store,
+    private dialog: MatDialog,
+    private zone: NgZone
+  ) {}
 
   ngOnInit() {
     this.focused$ = this.focusedSubject.pipe();
@@ -122,6 +131,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDragStarted() {
+    this.dragging = true;
     this.trackMousePosition();
 
     this.zone.run(() => {
@@ -143,6 +153,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onDragRelease() {
     this.untrackMousePosition();
+
     this.zone.run(() => {
       this.store.dispatch(
         BoardGroupActions.setIsDragging({ isDragging: false })
@@ -152,5 +163,42 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   trackGroupTask(_: number, task: BoardViewTask) {
     return task?.id;
+  }
+
+  onTaskClicked(
+    event: KeyboardEvent | MouseEvent,
+    task: Selected<BoardViewTask>,
+    groupId: number
+  ) {
+    if (this.dragging) {
+      this.dragging = false;
+      return;
+    }
+
+    this.dragging = false;
+
+    const id = task.id;
+    const selected = task.selected;
+
+    if (event.shiftKey) {
+      this.store.dispatch(
+        selected
+          ? BoardGroupActions.deSelectTaskBulk({ id, groupId })
+          : BoardGroupActions.selectTaskBulk({ id, groupId })
+      );
+    } else if (event.ctrlKey) {
+      this.store.dispatch(
+        selected
+          ? BoardGroupActions.deSelectTask({ id })
+          : BoardGroupActions.selectTask({ id })
+      );
+    } else {
+      this.dialog.open(TaskDetailDialogComponent, {
+        width: TaskDetailDialogComponent.width,
+        data: task,
+        panelClass: 'app-modal-class',
+        autoFocus: false,
+      });
+    }
   }
 }
