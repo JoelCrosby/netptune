@@ -25,6 +25,7 @@
       [groupId]="group.id"
       (cdkDragStarted)="onDragStarted()"
       (cdkDragReleased)="onDragRelease()"
+      (click)="onTaskClicked($event, task, group.id)"
     >
     </app-board-group-card>
 
