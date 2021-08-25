@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alyle/ui@^10.5.3":
-  version "10.5.3"
-  resolved "https://registry.yarnpkg.com/@alyle/ui/-/ui-10.5.3.tgz"
-  integrity sha512-0TJNxsRQm8mgqKZ5bT745HUlHFDSWCMGT5LldQXj8+ittGM3ntXa/7GkOSmxSx2NL+BnZbMcaZm2fLXInxysvA==
+"@alyle/ui@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@alyle/ui/-/ui-11.0.0.tgz#7c722ab2ebdd5efd7ffa48832be7f751474e5233"
+  integrity sha512-N8GnhJMe4QS5eoAuzqQPC6hQ8ChkO/jRaSqGdKU1Dk2qqoL/QEIn+gZiCOwa+Jfy4P4xIkpbcnJcxg9aa+iekQ==
   dependencies:
     tslib "^1.9.0"
 
