@@ -8,6 +8,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  $is-dark-theme: map-get($theme, is-dark);
+
   .task-scope-id {
     background-color: mat.get-color-from-palette($primary, .2);
   }
@@ -64,5 +66,11 @@
       background-color: mat.get-color-from-palette($background, card);
       z-index: 2;
     }
+  }
+
+  .inline-text-area {
+    $inline-backgroud: if($is-dark-theme, #353535, #fff);
+    background-color: $inline-backgroud;
+    box-shadow: 0 0 6px 4px $inline-backgroud;
   }
 }
