@@ -45,7 +45,7 @@
 
   .custom-scroll {
     scrollbar-color: mat.get-color-from-palette($foreground, text, .2) transparent;
-    scrollbar-width: thin;
+    scrollbar-width: auto;
   }
 
   // Modal Backdrops
