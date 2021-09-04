@@ -112,7 +112,7 @@ namespace Netptune.Repositories
 
                     if (last?.ProjectId == board.ProjectId)
                     {
-                        last.Boards.Add(board);
+                        last?.Boards.Add(board);
 
                         return prev;
                     }
