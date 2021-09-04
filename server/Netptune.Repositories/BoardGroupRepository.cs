@@ -113,7 +113,7 @@ namespace Netptune.Repositories
 
                 if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
                 {
-                    lastGroup.Tasks.Add(new BoardViewTask
+                    lastGroup?.Tasks.Add(new BoardViewTask
                     {
                         Id = row.Task_Id.Value,
                         Name = row.Task_Name,
