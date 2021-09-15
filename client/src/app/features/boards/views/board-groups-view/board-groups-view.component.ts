@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
+import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
@@ -31,13 +32,13 @@ import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  @ViewChild('importTasksInput') importTasksInput: ElementRef;
+  @ViewChild('importTasksInput') importTasksInput!: ElementRef;
 
-  groups$: Observable<BoardViewGroup[]>;
-  selectedBoard$: Observable<Board>;
-  selectedBoardName$: Observable<string>;
-  loading$: Observable<boolean>;
-  boardGroupsLoaded$: Observable<boolean>;
+  groups$!: Observable<BoardViewGroup[]>;
+  selectedBoard$!: Observable<Board>;
+  selectedBoardName$!: Observable<string>;
+  loading$!: Observable<boolean>;
+  boardGroupsLoaded$!: Observable<boolean>;
 
   secondaryActions: HeaderAction[] = [
     {
@@ -54,10 +55,10 @@ export class BoardGroupsViewComponent
     },
   ];
 
-  private board: Board;
+  private board?: Board;
 
   constructor(
-    private store: Store,
+    private store: Store<BoardGroupsState>,
     private hubService: ProjectTasksHubService
   ) {}
 

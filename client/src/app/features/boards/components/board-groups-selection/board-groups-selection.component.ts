@@ -14,8 +14,8 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupsSelectionComponent implements OnInit {
-  selected$: Observable<number[]>;
-  count$: Observable<number>;
+  selected$!: Observable<number[]>;
+  count$!: Observable<number>;
 
   constructor(private store: Store, private dialog: MatDialog) {}
 

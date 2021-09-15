@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AppState } from '@core/core.state';
+import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
+import * as TagActions from '@core/store/tags/tags.actions';
+import * as TagSelectors from '@core/store/tags/tags.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as TagSelectors from '@core/store/tags/tags.selectors';
-import * as TagActions from '@core/store/tags/tags.actions';
-import { Selected } from '@core/models/selected';
 
 @Component({
   selector: 'app-board-group-tags',
@@ -13,11 +14,11 @@ import { Selected } from '@core/models/selected';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupTagsComponent implements OnInit {
-  tags$: Observable<Selected<Tag>[]>;
-  loaded$: Observable<boolean>;
-  selectedCount$: Observable<number>;
+  tags$!: Observable<Selected<Tag>[]>;
+  loaded$!: Observable<boolean>;
+  selectedCount$!: Observable<number>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.tags$ = this.store.select(TagSelectors.selectTasksWithSelect);

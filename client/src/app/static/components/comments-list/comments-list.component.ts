@@ -16,8 +16,8 @@ import { CommentViewModel } from '@core/models/comment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsListComponent {
-  @Input() user: UserResponse;
-  @Input() comments: CommentViewModel[];
+  @Input() user!: UserResponse | null;
+  @Input() comments!: CommentViewModel[] | null;
 
   @Output() deleteComment = new EventEmitter<CommentViewModel>();
   @Output() commentSubmit = new EventEmitter<string>();
@@ -27,7 +27,7 @@ export class CommentsListComponent {
   });
 
   get comment() {
-    return this.formGroup.get('comment');
+    return this.formGroup.get('comment') as FormControl;
   }
 
   get value() {

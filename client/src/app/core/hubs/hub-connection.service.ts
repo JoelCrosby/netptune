@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { selectAuthToken } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import {
@@ -23,7 +24,7 @@ interface ConnectionMap {
 export class HubConnectionService {
   connections: ConnectionMap = {};
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   async connect(
     path: string,
@@ -37,6 +38,12 @@ export class HubConnectionService {
       .select(selectAuthToken)
       .pipe(first())
       .toPromise();
+
+    if (token === undefined) {
+      throw new Error(
+        'Unable to connect to hub, authentication token not present.'
+      );
+    }
 
     const httpOptions: IHttpConnectionOptions = {
       accessTokenFactory: () => token,
@@ -68,7 +75,7 @@ export class HubConnectionService {
 
   async start(connection: HubConnection): Promise<void> {
     if (connection.state !== HubConnectionState.Disconnected) {
-      return null;
+      return;
     }
 
     try {

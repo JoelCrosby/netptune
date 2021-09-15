@@ -68,11 +68,17 @@ export class ProjectTasksEffects {
               .pipe(
                 unwrapClientReposne(),
                 tap(() => this.snackbar.open('Task deleted')),
-                map(() =>
-                  actions.deleteProjectTasksSuccess({
-                    taskId: action.task.id,
-                  })
-                ),
+                map(() => {
+                  const taskId = action.task.id;
+
+                  if (taskId === undefined || taskId === null) {
+                    throw new Error('taskid was null or undefined');
+                  }
+
+                  return actions.deleteProjectTasksSuccess({
+                    taskId,
+                  });
+                }),
                 catchError((error) =>
                   of(actions.deleteProjectTasksFail({ error }))
                 )

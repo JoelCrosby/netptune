@@ -9,7 +9,7 @@ import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
   pure: true,
 })
 export class PrettyDatePipe implements PipeTransform {
-  transform(value: Date): string {
+  transform(value: Date | undefined | null): string {
     if (!value) {
       return '';
     }

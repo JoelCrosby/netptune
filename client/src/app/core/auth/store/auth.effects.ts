@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AppState } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { openSideNav } from '@core/store/layout/layout.actions';
@@ -239,7 +240,7 @@ export class AuthEffects implements OnInitEffects {
     private localStorageService: LocalStorageService,
     private router: Router,
     private authService: AuthService,
-    private store: Store,
+    private store: Store<AppState>,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private cookie: CookieService

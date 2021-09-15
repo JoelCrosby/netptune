@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
+import { AppState } from '@core/core.state';
 import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
@@ -13,7 +14,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import {
   catchError,
   filter,
@@ -102,16 +103,20 @@ export class BoardGroupsEffects {
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectBoardGroupTaskAssignee)
       ),
-      switchMap(([action, identifier, userId]) =>
-        this.tasksHubService
+      switchMap(([action, identifier, userId]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService
           .post(identifier, { ...action.task, assigneeId: userId })
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Task created')),
             map((task) => actions.createProjectTasksSuccess({ task })),
             catchError((error) => of(actions.createProjectTasksFail({ error })))
-          )
-      )
+          );
+      })
     )
   );
 
@@ -149,6 +154,10 @@ export class BoardGroupsEffects {
           switchMap(([result, identifier]) => {
             if (!result) return of({ type: 'NO_ACTION' });
 
+            if (identifier === undefined) {
+              return throwError('board identifier is undefined');
+            }
+
             return this.tasksHubService
               .deleteBoardGroup(identifier, action.boardGroup.id)
               .pipe(
@@ -172,13 +181,17 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.editBoardGroup),
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
-      switchMap(([action, boardId]) =>
-        this.tasksHubService.putGroup(boardId, action.request).pipe(
+      switchMap(([action, identifier]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService.putGroup(identifier, action.request).pipe(
           unwrapClientReposne(),
           map((boardGroup) => actions.editBoardGroupSuccess({ boardGroup })),
           catchError((error) => of(actions.editBoardGroupFail({ error })))
-        )
-      )
+        );
+      })
     )
   );
 
@@ -186,16 +199,20 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
-      switchMap(([action, identifier]) =>
-        this.tasksHubService
+      switchMap(([action, identifier]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService
           .moveTaskInBoardGroup(identifier, action.request)
           .pipe(
             map(actions.moveTaskInBoardGroupSuccess),
             catchError((error) =>
               of(actions.moveTaskInBoardGroupFail({ error }))
             )
-          )
-      )
+          );
+      })
     )
   );
 
@@ -221,14 +238,18 @@ export class BoardGroupsEffects {
     this.actions$.pipe(
       ofType(actions.deleteTaskMultiple),
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
-      switchMap(([action, identifier]) =>
-        this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
+      switchMap(([action, identifier]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks Deleted')),
           map(() => actions.deleteTasksMultipleSuccess()),
           catchError((error) => of(actions.deleteTasksMultipleFail({ error })))
-        )
-      )
+        );
+      })
     )
   );
 
@@ -246,8 +267,12 @@ export class BoardGroupsEffects {
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectSelectedTasks)
       ),
-      switchMap(([action, identifier, taskIds]) =>
-        this.tasksHubService
+      switchMap(([action, identifier, taskIds]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService
           .moveTasksToGroup(identifier, {
             boardId: identifier,
             newGroupId: action.newGroupId,
@@ -258,8 +283,8 @@ export class BoardGroupsEffects {
             tap(() => this.snackbar.open('Tasks Moved')),
             map(() => actions.moveSelectedTasksSuccess()),
             catchError((error) => of(actions.moveSelectedTasksFail({ error })))
-          )
-      )
+          );
+      })
     )
   );
 
@@ -307,8 +332,12 @@ export class BoardGroupsEffects {
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectSelectedTasks)
       ),
-      switchMap(([action, identifier, taskIds]) =>
-        this.tasksHubService
+      switchMap(([action, identifier, taskIds]) => {
+        if (identifier === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.tasksHubService
           .reassignTasks(identifier, {
             boardId: identifier,
             assigneeId: action.assigneeId,
@@ -319,8 +348,8 @@ export class BoardGroupsEffects {
             tap(() => this.snackbar.open('Tasks Re-assigned')),
             map(() => actions.reassignTasksSuccess()),
             catchError((error) => of(actions.reassignTasksFail({ error })))
-          )
-      )
+          );
+      })
     )
   );
 
@@ -328,7 +357,7 @@ export class BoardGroupsEffects {
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
     private tasksHubService: ProjectTasksHubService,
-    private store: Store,
+    private store: Store<AppState>,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private router: Router,

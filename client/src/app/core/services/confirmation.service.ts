@@ -5,6 +5,7 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogOptions,
 } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { map } from 'rxjs/operators';
 
 const DEFAULT_CONFIG: ConfirmDialogOptions = {
   acceptLabel: 'Accept',
@@ -34,6 +35,6 @@ export class ConfirmationService {
       data: config,
     });
 
-    return dialogRef.afterClosed();
+    return dialogRef.afterClosed().pipe(map((value) => !!value));
   }
 }

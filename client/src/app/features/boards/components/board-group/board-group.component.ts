@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
+import { AppState } from '@core/core.state';
 import { Selected } from '@core/models/selected';
 import {
   BoardViewGroup,
@@ -37,25 +38,25 @@ import { map, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() dragListId: string;
-  @Input() group: BoardViewGroup;
-  @Input() siblingIds: string[];
+  @Input() dragListId!: string;
+  @Input() group!: BoardViewGroup;
+  @Input() siblingIds!: string[];
 
-  @ViewChild('container') container: ElementRef;
+  @ViewChild('container') container!: ElementRef;
 
   focusedSubject = new BehaviorSubject<boolean>(false);
   onDestroy$ = new Subject();
 
-  focused$: Observable<boolean>;
-  isDragging$: Observable<boolean>;
-  isInlineActive$: Observable<boolean>;
+  focused$!: Observable<boolean>;
+  isDragging$!: Observable<boolean>;
+  isInlineActive$!: Observable<boolean>;
 
-  showAddButton$: Observable<boolean>;
+  showAddButton$!: Observable<boolean>;
 
   dragging = false;
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private dialog: MatDialog,
     private zone: NgZone
   ) {}

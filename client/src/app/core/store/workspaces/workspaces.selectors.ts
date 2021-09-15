@@ -32,7 +32,7 @@ export const selectCurrentWorkspace = createSelector(
 
 export const selectCurrentWorkspaceIdentifier = createSelector(
   selectCurrentWorkspace,
-  (state: Workspace) => state?.slug
+  (state?: Workspace) => state?.slug
 );
 
 export const selectIsSlugUnique = createSelector(

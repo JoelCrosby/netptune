@@ -29,7 +29,7 @@
             role="menuitemcheckbox"
             (click)="$event.stopPropagation()"
             (change)="onOptionClicked(tag)"
-            [checked]="tag.selected"
+            [checked]="tag.selected ?? false"
             *ngFor="let tag of tags; trackBy: trackByTag"
           >
             {{ tag.name }}

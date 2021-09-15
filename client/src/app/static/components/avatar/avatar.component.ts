@@ -8,9 +8,9 @@ import { avatarColors } from '@core/util/colors/colors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
-  @Input() name: string;
-  @Input() size: string | number = '32';
-  @Input() imageUrl: string;
+  @Input() name?: string | null;
+  @Input() size?: string | number | null = '32';
+  @Input() imageUrl?: string | null;
   @Input() border = false;
   @Input() tooltip = true;
   @Input() borderRadius: string | number = '50%';

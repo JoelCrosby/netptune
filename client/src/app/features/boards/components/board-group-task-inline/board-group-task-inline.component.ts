@@ -12,29 +12,29 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { UserResponse } from '@core/auth/store/auth.models';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { AddProjectTaskRequest } from '@core/models/project-task';
-import { Workspace } from '@core/models/workspace';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { UserResponse } from '@core/auth/store/auth.models';
+import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
+import { AddProjectTaskRequest } from '@core/models/project-task';
+import { Workspace } from '@core/models/workspace';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import {
   BehaviorSubject,
   combineLatest,
   fromEvent,
   Observable,
   Subject,
-  Subscription,
 } from 'rxjs';
 import {
+  debounceTime,
   first,
   takeUntil,
   tap,
   throttleTime,
-  debounceTime,
 } from 'rxjs/operators';
 
 @Component({
@@ -46,10 +46,10 @@ import {
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  @ViewChild('taskInput') inputElementRef: ElementRef;
-  @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
+  @ViewChild('taskInput') inputElementRef!: ElementRef;
+  @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
 
-  @Input() boardGroupId: number;
+  @Input() boardGroupId!: number;
   @Output() canceled = new EventEmitter();
 
   taskInputControl = new FormControl(null, [
@@ -58,18 +58,17 @@ export class BoardGroupTaskInlineComponent
   ]);
 
   onDestroy$ = new Subject();
-  outsideClickSubscription: Subscription;
 
-  currentWorkspace$: Observable<Workspace>;
-  currentProjectId$: Observable<number>;
-  currentUser$: Observable<UserResponse>;
-  message$: Observable<string | null>;
+  currentWorkspace$!: Observable<Workspace | undefined>;
+  currentProjectId$!: Observable<number | undefined>;
+  currentUser$!: Observable<UserResponse | undefined>;
+  message$!: Observable<string | null>;
 
   createInProgress$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private cd: ChangeDetectorRef,
-    private store: Store,
+    private store: Store<AppState>,
     private actions$: Actions<Action>
   ) {}
 
@@ -118,11 +117,11 @@ export class BoardGroupTaskInlineComponent
   ngAfterViewInit() {
     this.inputElementRef.nativeElement.focus();
 
-    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
-    this.currentProjectId$ = this.store.pipe(
-      select(BoardGroupSelectors.selectBoardProjectId)
+    this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);
+    this.currentProjectId$ = this.store.select(
+      BoardGroupSelectors.selectBoardProjectId
     );
-    this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store.select(selectCurrentUser);
     this.message$ = this.store.select(
       BoardGroupSelectors.selectCreateBoardGroupTaskMessage
     );
@@ -146,7 +145,11 @@ export class BoardGroupTaskInlineComponent
     combineLatest([this.currentProjectId$, this.currentUser$])
       .pipe(first())
       .subscribe({
-        next: ([projectId, user]) => this.createTask(projectId, user),
+        next: ([projectId, user]) => {
+          if (!projectId || !user) return;
+
+          this.createTask(projectId, user);
+        },
       });
   }
 

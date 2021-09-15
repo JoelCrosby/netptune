@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { AppState } from '@core/core.state';
 import { EntityType } from '@core/models/entity-type';
 import { ActivityViewModel } from '@core/models/view-models/activity-view-model';
 import * as ActivityActions from '@core/store/activity/activity.actions';
@@ -18,13 +19,13 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActivityMenuComponent implements OnInit {
-  @Input() entityType: EntityType;
-  @Input() entityId: number;
+  @Input() entityType!: EntityType;
+  @Input() entityId?: number;
 
-  activities$: Observable<ActivityViewModel[]>;
-  loaded$: Observable<boolean>;
+  activities$!: Observable<ActivityViewModel[]>;
+  loaded$!: Observable<boolean>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.activities$ = this.store.select(ActivitySelectors.selectActivities);
@@ -38,6 +39,9 @@ export class ActivityMenuComponent implements OnInit {
   onClicked() {
     const entityType = this.entityType;
     const entityId = this.entityId;
+
+    if (entityId === undefined) return;
+
     this.store.dispatch(ActivityActions.loadActivity({ entityType, entityId }));
   }
 

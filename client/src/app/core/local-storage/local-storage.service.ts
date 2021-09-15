@@ -11,40 +11,43 @@ export class LocalStorageService {
   // eslint-disable-next-line @typescript-eslint/ban-types
   static loadInitialState<TState extends object>() {
     return Object.keys(localStorage).reduce((state: TState, storageKey) => {
-      if (storageKey.includes(APP_PREFIX)) {
-        const stateKeys: (keyof TState)[] = storageKey
-          .replace(APP_PREFIX, '')
-          .toLowerCase()
-          .split('.')
-          .map(
-            (key) =>
-              key
-                .split('-')
-                .map((token, index) =>
-                  index === 0
-                    ? token
-                    : token.charAt(0).toUpperCase() + token.slice(1)
-                )
-                .join('') as keyof TState
-          );
-        let currentStateRef = state;
-        stateKeys.forEach((key, index) => {
-          if (index === stateKeys.length - 1) {
-            const item = localStorage.getItem(storageKey);
-            if (!item) {
-              return;
-            }
-            currentStateRef[key] = JSON.parse(item);
+      if (!storageKey.includes(APP_PREFIX)) {
+        return state;
+      }
+
+      const stateKeys: (keyof TState)[] = storageKey
+        .replace(APP_PREFIX, '')
+        .toLowerCase()
+        .split('.')
+        .map(
+          (key) =>
+            key
+              .split('-')
+              .map((token, index) =>
+                index === 0
+                  ? token
+                  : token.charAt(0).toUpperCase() + token.slice(1)
+              )
+              .join('') as keyof TState
+        );
+      let currentStateRef = state;
+      stateKeys.forEach((key, index) => {
+        if (index === stateKeys.length - 1) {
+          const item = localStorage.getItem(storageKey);
+          if (!item) {
             return;
           }
+          currentStateRef[key] = JSON.parse(item);
+          return;
+        }
 
-          currentStateRef[key] =
-            currentStateRef[key] || ({} as TState[keyof TState]);
-          currentStateRef = (currentStateRef[key] as unknown) as TState;
-        });
-      }
+        currentStateRef[key] =
+          currentStateRef[key] || ({} as TState[keyof TState]);
+        currentStateRef = currentStateRef[key] as unknown as TState;
+      });
+
       return state;
-    }, {});
+    }, {} as TState);
   }
 
   setItem(key: string, value: unknown) {

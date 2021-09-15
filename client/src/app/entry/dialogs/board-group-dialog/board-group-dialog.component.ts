@@ -21,7 +21,7 @@ export interface BoardGroupDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupDialogComponent implements OnInit {
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   get group() {
     return this.formGroup.get('group');
@@ -41,7 +41,7 @@ export class BoardGroupDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    const name = this.group.value;
+    const name = this.group?.value;
     const identifier = this.data.identifier;
 
     this.store.dispatch(

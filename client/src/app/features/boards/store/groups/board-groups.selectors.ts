@@ -12,9 +12,8 @@ export interface State extends AppState {
   boardgroups: BoardGroupsState;
 }
 
-const selectBoardGroupsFeature = createFeatureSelector<State, BoardGroupsState>(
-  'boardgroups'
-);
+const selectBoardGroupsFeature =
+  createFeatureSelector<BoardGroupsState>('boardgroups');
 
 const { selectEntities, selectAll } = adapter.getSelectors();
 
@@ -81,17 +80,17 @@ export const selectBoard = createSelector(
 
 export const selectBoardIdentifier = createSelector(
   selectBoard,
-  (state: BoardViewModel) => state?.identifier
+  (state?: BoardViewModel) => state?.identifier
 );
 
 export const selectBoardId = createSelector(
   selectBoard,
-  (state: BoardViewModel) => state.id
+  (state?: BoardViewModel) => state?.id
 );
 
 export const selectBoardIdAndIdentifier = createSelector(
   selectBoard,
-  (state: BoardViewModel): [id: number, identifier: string] => [
+  (state?: BoardViewModel): [id?: number, identifier?: string] => [
     state?.id,
     state?.identifier,
   ]
@@ -128,8 +127,8 @@ export const selectBoardGroupsUsersModel = createSelector(
 export const selectBoardGroupTaskAssignee = createSelector(
   selectCurrentUserId,
   selectBoardGroupsSelectedUserIds,
-  (currentUserId: string, selectedUserIds: string[]): string => {
-    if (selectedUserIds.length === 1) {
+  (currentUserId?: string, selectedUserIds?: string[]): string | undefined => {
+    if (selectedUserIds?.length === 1) {
       return selectedUserIds[0];
     }
 
@@ -139,7 +138,7 @@ export const selectBoardGroupTaskAssignee = createSelector(
 
 export const selectBoardProjectId = createSelector(
   selectBoard,
-  (state: BoardViewModel) => state.projectId
+  (state?: BoardViewModel) => state?.projectId
 );
 
 export const selectOnlyFlagged = createSelector(
@@ -159,10 +158,10 @@ export const selectCreateBoardGroupTaskMessage = createSelector(
   selectSearchTerm,
   selectSelectedTagCount,
   (
-    currentUserId: string,
-    assigneeId: string,
-    onlyFlagged: boolean,
-    term: string,
+    currentUserId: string | undefined,
+    assigneeId: string | undefined,
+    onlyFlagged: boolean | undefined,
+    term: string | undefined | null,
     tagCount: number
   ): string | null => {
     const differentUser = currentUserId !== assigneeId;

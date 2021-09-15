@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -45,10 +46,10 @@
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
+    "fullTemplateTypeCheck": true,
     "strictTemplates": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "fullTemplateTypeCheck": true,
   },
   "exclude": [
     "node_modules",

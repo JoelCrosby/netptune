@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
+import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -18,7 +19,7 @@ import { takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
-  term$: Observable<string>;
+  term$!: Observable<string>;
   onDestroy$ = new Subject();
 
   termFormControl = new FormControl('', [
@@ -27,7 +28,7 @@ export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
     Validators.maxLength(64),
   ]);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<BoardGroupsState>) {}
 
   ngOnInit() {
     this.store

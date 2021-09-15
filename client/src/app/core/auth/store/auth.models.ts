@@ -1,5 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
+export const authFeatureKey = 'auth';
+
+export interface AuthFeatureState {
+  [authFeatureKey]: AuthState;
+}
+
 export interface AuthState {
   token?: UserToken;
   currentUser?: UserResponse;

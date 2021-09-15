@@ -9,8 +9,8 @@ import { BoardViewTask } from '@core/models/view-models/board-view';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupCardComponent {
-  @Input() task: Selected<BoardViewTask>;
-  @Input() groupId: number;
+  @Input() task!: Selected<BoardViewTask>;
+  @Input() groupId!: number;
 
   constructor() {}
 

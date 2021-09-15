@@ -4,8 +4,14 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -24,27 +30,27 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
-  projects$: Observable<ProjectViewModel[]>;
-  currentWorkspace$: Observable<Workspace>;
+  projects$!: Observable<ProjectViewModel[]>;
+  currentWorkspace$!: Observable<Workspace | undefined>;
 
-  selectedTypeValue: number;
-  formGroup: FormGroup;
+  selectedTypeValue!: number;
+  formGroup!: FormGroup;
 
   onDestroy$ = new Subject();
 
   get name() {
-    return this.formGroup.get('name');
+    return this.formGroup.get('name') as FormControl;
   }
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.get('description') as FormControl;
   }
   get project() {
-    return this.formGroup.get('project');
+    return this.formGroup.get('project') as FormControl;
   }
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
+    private store: Store<AppState>,
     public dialogRef: MatDialogRef<CreateTaskDialogComponent>
   ) {}
 
@@ -84,6 +90,10 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
         projectId: +this.project.value,
         status: TaskStatus.new,
       };
+
+      if (!workspace) {
+        throw new Error('workspace is undefined');
+      }
 
       this.store.dispatch(
         createProjectTask({

@@ -17,6 +17,7 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
+import { AppState } from '@core/core.state';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -42,29 +43,30 @@ import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
 })
 export class CreateBoardComponent implements OnInit, AfterViewInit {
   isUniqueLoading$ = new Subject<boolean>();
-  projects$: Observable<ProjectViewModel[]>;
-  identifierIcon$: Observable<string>;
+
+  projects$!: Observable<ProjectViewModel[]>;
+  identifierIcon$!: Observable<string | null>;
 
   onDestroy$ = new Subject();
 
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   colors = colorDictionary();
 
   get name() {
-    return this.formGroup.get('name');
+    return this.formGroup.get('name') as FormControl;
   }
 
   get identifier() {
-    return this.formGroup.get('identifier');
+    return this.formGroup.get('identifier') as FormControl;
   }
 
   get color() {
-    return this.formGroup.get('color');
+    return this.formGroup.get('color') as FormControl;
   }
 
   get projectId() {
-    return this.formGroup.get('projectId');
+    return this.formGroup.get('projectId') as FormControl;
   }
 
   get selectedColor() {
@@ -76,7 +78,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private boardsService: BoardsService,
@@ -125,7 +127,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
 
       this.name.setValue(board.name, { emitEvent: false });
       this.identifier.setValue(board.identifier, { emitEvent: false });
-      this.color.setValue(board.metaInfo.color, { emitEvent: false });
+      this.color.setValue(board.metaInfo?.color, { emitEvent: false });
       this.projectId.setValue(board.projectId, { emitEvent: false });
       this.identifier.disable({ emitEvent: false });
     } else {

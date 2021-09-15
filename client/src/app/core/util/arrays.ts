@@ -1,4 +1,9 @@
-export const filterStringArray = (array: string[], term: string): string[] => {
+export const filterStringArray = (
+  array: string[] | null,
+  term: string
+): string[] => {
+  if (array === null) return [];
+
   if (typeof term !== 'string') {
     return array;
   }
@@ -24,7 +29,7 @@ export const filterObjectArray = <T>(
   const filterValue = term.toLowerCase();
 
   return array.filter((item) =>
-    fuzzysearch(filterValue, (item[prop] as unknown) as string)
+    fuzzysearch(filterValue, item[prop] as unknown as string)
   );
 };
 
