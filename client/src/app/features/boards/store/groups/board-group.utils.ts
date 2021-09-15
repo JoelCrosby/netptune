@@ -1,6 +1,9 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
-import { BoardViewGroup, BoardViewTask } from '@core/models/view-models/board-view';
+import {
+  BoardViewGroup,
+  BoardViewTask,
+} from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
@@ -15,6 +18,8 @@ export const moveTaskInBoardGroup = (
   const stateClone = cloneDeep(state);
   const newGroup = stateClone.entities[request.newGroupId];
 
+  if (!newGroup || !stateClone?.entities) return state;
+
   if (request.oldGroupId === request.newGroupId) {
     moveItemInArray(
       newGroup.tasks,
@@ -23,7 +28,8 @@ export const moveTaskInBoardGroup = (
     );
   } else {
     transferArrayItem(
-      stateClone.entities[request.oldGroupId].tasks,
+      (stateClone.entities[request.oldGroupId] as unknown as BoardViewGroup)
+        .tasks,
       newGroup.tasks,
       request.previousIndex,
       request.currentIndex
@@ -40,24 +46,28 @@ export const moveTaskInBoardGroup = (
 
   const sortOrder = getNewSortOrder(preOrder, nextOrder);
 
-  stateClone.entities[request.newGroupId].tasks = stateClone.entities[
-    request.newGroupId
-  ].tasks.map((task) => {
-    if (task.id !== request.taskId) {
-      return task;
-    }
+  (stateClone.entities[request.newGroupId] as unknown as BoardViewGroup).tasks =
+    (
+      stateClone.entities[request.newGroupId] as unknown as BoardViewGroup
+    ).tasks.map((task) => {
+      if (task.id !== request.taskId) {
+        return task;
+      }
 
-    return {
-      ...task,
-      sortOrder,
-      status: getTaskStatusFromGroupType(newGroup.type),
-    };
-  });
+      return {
+        ...task,
+        sortOrder,
+        status: getTaskStatusFromGroupType(newGroup.type),
+      };
+    });
 
   return stateClone;
 };
 
-export const updateTask = (state: BoardGroupsState, task: BoardViewTask | TaskViewModel) => {
+export const updateTask = (
+  state: BoardGroupsState,
+  task: BoardViewTask | TaskViewModel
+) => {
   const getGroupWithTask = (): BoardViewGroup | undefined => {
     for (const g of Object.values(state.entities)) {
       if (g?.tasks.findIndex((x) => x.id === task.id) !== -1) {
@@ -78,7 +88,7 @@ export const updateTask = (state: BoardGroupsState, task: BoardViewTask | TaskVi
     }
 
     return {
-      ...task as BoardViewTask,
+      ...(task as BoardViewTask),
     };
   });
 
@@ -97,10 +107,13 @@ export const getBulkTaskSelection = (
   state: BoardGroupsState,
   id: number,
   groupId: number
-) => {
+): number[] => {
   const set = new Set(state.selectedTasks);
 
   const sourceGroup = state.entities[groupId];
+
+  if (!sourceGroup) return [];
+
   const siblingTasks = sourceGroup.tasks;
   const siblingIds = siblingTasks.map((task) => task.id);
   const selectedSiblingIds = siblingIds.filter((sibling) => set.has(sibling));
@@ -132,8 +145,8 @@ export const getBulkTaskSelection = (
   }
 
   const walkSiblings = (): number[] => {
-    let startIndex: number = null;
-    let endIndex: number = null;
+    let startIndex: number | null = null;
+    let endIndex: number | null = null;
 
     for (let i = 0; i < siblingIds.length; i++) {
       const curr = siblingIds[i];
@@ -147,6 +160,12 @@ export const getBulkTaskSelection = (
         endIndex = i;
         break;
       }
+    }
+
+    if (startIndex == null || endIndex == null) {
+      throw new Error(
+        'unable to determine start/end index in getBulkTaskSelection'
+      );
     }
 
     const selection = siblingIds.slice(startIndex, endIndex);

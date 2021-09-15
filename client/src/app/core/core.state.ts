@@ -33,7 +33,7 @@ import { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 import { activityReducer } from './store/activity/activity.reducer';
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<Partial<AppState>> = {
   auth: authReducer,
   meta: metaReducer,
   activites: activityReducer,

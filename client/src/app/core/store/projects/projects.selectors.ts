@@ -42,7 +42,7 @@ export const selectCurrentProject = createSelector(
 
 export const selectCurrentProjectId = createSelector(
   selectCurrentProject,
-  (state: ProjectViewModel) => state?.id
+  (state?: ProjectViewModel) => state?.id
 );
 
 export const selectUpdateProjectLoading = createSelector(

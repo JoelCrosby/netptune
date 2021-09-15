@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -111,7 +112,7 @@ export class WorkspacesEffects {
   );
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private actions$: Actions<Action>,
     private workspacesService: WorkspacesService,
     private confirmation: ConfirmationService,

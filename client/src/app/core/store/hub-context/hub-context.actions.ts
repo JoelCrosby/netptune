@@ -6,5 +6,5 @@ export const clearState = createAction('[Hub-Context] Clear State');
 
 export const setCurrentGroupId = createAction(
   '[Hub-Context] Set Current Group ID',
-  props<{ groupId: string }>()
+  props<{ groupId: string | null }>()
 );

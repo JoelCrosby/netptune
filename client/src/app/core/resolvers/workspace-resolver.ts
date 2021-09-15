@@ -16,7 +16,9 @@ export class WorkspaceResolver implements Resolve<Workspace> {
     return this.get(route.paramMap.get('workspace'));
   }
 
-  get(workspaceKey: string): Observable<Workspace> {
+  get(workspaceKey: string | null): Observable<Workspace> {
+    // TODO: handle when workspaceKey is null
+
     return this.http
       .get<Workspace>(
         environment.apiEndpoint + `api/workspaces/${workspaceKey}`

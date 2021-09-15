@@ -5,6 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { AppState } from '@core/core.state';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -17,11 +18,11 @@ import { Store } from '@ngrx/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeaderComponent {
-  @Input() title?: string;
+  @Input() title?: string | null;
   @Input() titleEditable = false;
-  @Input() actionTitle?: string;
-  @Input() backLink?: string[] | number[];
-  @Input() backLabel?: string;
+  @Input() actionTitle?: string | null;
+  @Input() backLink?: string[] | number[] | null;
+  @Input() backLabel?: string | null;
   @Input() secondaryActions: HeaderAction[] = [];
   @Input() overflowActions: HeaderAction[] = [];
 
@@ -30,7 +31,7 @@ export class PageHeaderComponent {
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   onOpenMenu() {
     this.store.dispatch(openSideMenu());

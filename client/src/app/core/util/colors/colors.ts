@@ -93,8 +93,28 @@ export interface NamedColor {
   color: string;
 }
 
-export const colorDictionary = (): NamedColor[] =>
-  Object.keys(Colors500).map((color) => ({
-    name: toWordCase(color),
-    color: (Colors500 as { [key: string]: string })[color],
-  }));
+export const colorDictionary = (): NamedColor[] => {
+  const pre = Object.keys(Colors500).map((colorKey) => {
+    const name = toWordCase(colorKey);
+    const color = (Colors500 as { [key: string]: string })[colorKey];
+
+    if (!name || !color) return null;
+
+    const item: NamedColor = {
+      name,
+      color,
+    };
+
+    return item;
+  });
+
+  const result: NamedColor[] = [];
+
+  for (const c of pre) {
+    if (!c) continue;
+
+    result.push(c);
+  }
+
+  return result;
+};

@@ -45,7 +45,7 @@ import {
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   isUniqueLoadingSubject$ = new Subject<boolean>();
   showIdentifierCheckSubject$ = new Subject<boolean>();
-  identifierIcon$: Observable<string>;
+  identifierIcon$!: Observable<string | null>;
 
   showIdentifierCheck$ = this.showIdentifierCheckSubject$.pipe(
     withLatestFrom(this.isUniqueLoadingSubject$),
@@ -57,24 +57,24 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   onDestroy$ = new Subject();
 
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   colors = colorDictionary();
 
   get name() {
-    return this.formGroup.get('name');
+    return this.formGroup.get('name') as FormControl;
   }
 
   get identifier() {
-    return this.formGroup.get('identifier');
+    return this.formGroup.get('identifier') as FormControl;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.get('description') as FormControl;
   }
 
   get color() {
-    return this.formGroup.get('color');
+    return this.formGroup.get('color') as FormControl;
   }
 
   get selectedColor() {
@@ -133,7 +133,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       this.name.setValue(workspace.name, { emitEvent: false });
       this.identifier.setValue(workspace.slug, { emitEvent: false });
       this.description.setValue(workspace.description, { emitEvent: false });
-      this.color.setValue(workspace.metaInfo.color, { emitEvent: false });
+      this.color.setValue(workspace.metaInfo?.color, { emitEvent: false });
 
       this.identifier.disable({ emitEvent: false });
     } else {

@@ -10,7 +10,7 @@ export class FormErrorStateMatcher implements ErrorStateMatcher {
       control &&
       control.invalid &&
       control.touched &&
-      control.parent.dirty
+      control.parent?.dirty
     );
     const invalidParent = !!(
       control &&

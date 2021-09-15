@@ -33,15 +33,15 @@ export interface AutocompleteChipsSelectionChanged {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteChipsComponent implements OnInit {
-  @Input() placeholder: string;
-  @Input() label: string;
-  @Input() options: string[];
-  @Input() selected: string[] = [];
+  @Input() placeholder!: string;
+  @Input() label!: string | null;
+  @Input() options!: string[] | null;
+  @Input() selected: string[] | null = [];
   @Input() appearance: MatFormFieldAppearance = 'fill';
 
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
-  @ViewChild('input') input: ElementRef;
-  @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
+  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
+  @ViewChild('input') input!: ElementRef;
+  @ViewChild(MatAutocompleteTrigger) autoTrigger!: MatAutocompleteTrigger;
 
   @Output()
   selectionChanged = new EventEmitter<AutocompleteChipsSelectionChanged>();
@@ -55,7 +55,7 @@ export class AutocompleteChipsComponent implements OnInit {
 
   formCtrl = new FormControl();
 
-  filteredOptions: Observable<string[]>;
+  filteredOptions!: Observable<string[]>;
 
   ngOnInit() {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
@@ -109,7 +109,11 @@ export class AutocompleteChipsComponent implements OnInit {
     }
   }
 
-  filter(name: string) {
+  filter(name: string | null) {
+    if (name === null) {
+      return [];
+    }
+
     return filterStringArray(this.options, name);
   }
 

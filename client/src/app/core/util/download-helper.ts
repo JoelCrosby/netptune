@@ -2,11 +2,6 @@ export const downloadFile = async (
   file: Blob,
   filename: string
 ): Promise<void> => {
-  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(file);
-    return;
-  }
-
   const a = document.createElement('a');
   a.setAttribute('style', 'display: none');
   document.body.appendChild(a);

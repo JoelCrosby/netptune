@@ -5,6 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AppState } from '@core/core.state';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
@@ -14,7 +15,7 @@ import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   intercept<T>(
     req: HttpRequest<T>,

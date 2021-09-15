@@ -10,7 +10,7 @@ import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
 })
 @Injectable()
 export class FromNowPipe implements PipeTransform {
-  transform(value: string | Date): string {
+  transform(value: string | Date | undefined | null): string {
     if (!value) {
       return '';
     }

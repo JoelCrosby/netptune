@@ -1,7 +1,11 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { selectAuthFeature } from '@core/core.state';
+import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse, UserToken } from './auth.models';
 
-export const selectAuthState = createFeatureSelector<AuthState>('auth');
+export const selectAuthState = createSelector(
+  selectAuthFeature,
+  (state: AuthState) => state
+);
 
 export const selectLoginLoading = createSelector(
   selectAuthState,
@@ -15,7 +19,7 @@ export const selectCurrentUser = createSelector(
 
 export const selectCurrentUserId = createSelector(
   selectCurrentUser,
-  (state: UserResponse) => state?.userId
+  (state?: UserResponse) => state?.userId
 );
 
 export const selectUserToken = createSelector(
@@ -25,7 +29,7 @@ export const selectUserToken = createSelector(
 
 export const selectAuthToken = createSelector(
   selectUserToken,
-  (token: UserToken) => token?.token
+  (token?: UserToken) => token?.token
 );
 
 export const selectLoginError = createSelector(
@@ -35,12 +39,12 @@ export const selectLoginError = createSelector(
 
 export const selectCurrentUserDisplayName = createSelector(
   selectCurrentUser,
-  (user: UserToken) => user && (user.displayName || user.email)
+  (user?: UserResponse) => user && (user.displayName || user.email)
 );
 
 export const selectIsAuthenticated = createSelector(
   selectUserToken,
-  (token: UserToken) => {
+  (token?: UserToken) => {
     if (!token || !token.expires) return false;
 
     const expires = new Date(token.expires);

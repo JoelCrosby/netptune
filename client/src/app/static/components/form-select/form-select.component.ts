@@ -19,33 +19,33 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectComponent implements OnInit, ControlValueAccessor {
-  @Input() label: string;
-  @Input() disabled: boolean;
-  @Input() icon: string;
-  @Input() prefix: string;
+  @Input() label!: string;
+  @Input() disabled!: boolean;
+  @Input() icon!: string;
+  @Input() prefix!: string;
   @Input() autocomplete = 'off';
-  @Input() placeholder: string = null;
-  @Input() hint: string = null;
-  @Input() minLength: string = null;
-  @Input() maxLength: string = null;
+  @Input() placeholder?: string;
+  @Input() hint?: string;
+  @Input() minLength?: string;
+  @Input() maxLength?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() options: any[] = [];
+  @Input() options: unknown[] | null = [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() model: any;
 
-  @Input() labelKey: string;
-  @Input() idKey: string;
+  @Input() labelKey!: string;
+  @Input() idKey!: string;
 
-  @ViewChild('input') input: ElementRef;
+  @ViewChild('input') input!: ElementRef;
 
   @Output() submitted = new EventEmitter<string>();
 
-  value: string | number = null;
+  value?: string | number;
 
-  onChange: (value: string) => void;
-  onTouch: (...args: unknown[]) => void;
+  onChange!: (value: string) => void;
+  onTouch!: (...args: unknown[]) => void;
 
   get control() {
     return this.ngControl.control;
@@ -66,9 +66,10 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
-    if (this.model !== undefined) {
+    if (this.model !== undefined && this.options) {
       this.model = this.options.find(
-        (currentOption) => currentOption[this.idKey] === this.model
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (currentOption) => (currentOption as any)[this.idKey] === this.model
       );
     }
   }

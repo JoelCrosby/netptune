@@ -16,26 +16,26 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   styleUrls: ['./form-input.component.scss'],
 })
 export class FormInputComponent implements ControlValueAccessor {
-  @Input() label: string;
-  @Input() disabled: boolean;
-  @Input() icon: string;
-  @Input() prefix: string;
+  @Input() label!: string;
+  @Input() disabled?: boolean;
+  @Input() icon?: string | null;
+  @Input() prefix?: string | null;
   @Input() autocomplete = 'off';
-  @Input() placeholder: string = null;
-  @Input() hint: string = null;
-  @Input() minLength: string = null;
-  @Input() maxLength: string = null;
-  @Input() loading = false;
+  @Input() placeholder?: string | null;
+  @Input() hint?: string | null;
+  @Input() minLength?: string | null;
+  @Input() maxLength?: string | null;
+  @Input() loading: boolean | null = false;
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
 
-  @ViewChild('input') input: ElementRef;
+  @ViewChild('input') input!: ElementRef;
 
   @Output() submitted = new EventEmitter<string>();
 
   value: string | number | null | undefined = '';
 
-  onChange: (value: string) => void;
-  onTouch: (...args: unknown[]) => void;
+  onChange!: (value: string) => void;
+  onTouch!: (...args: unknown[]) => void;
 
   get control() {
     return this.ngControl.control;

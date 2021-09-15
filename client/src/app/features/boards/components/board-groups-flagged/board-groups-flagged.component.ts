@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupsFlaggedComponent implements OnInit {
-  onyFlagged$: Observable<boolean>;
+  onyFlagged$!: Observable<boolean>;
 
   constructor(private store: Store) {}
 

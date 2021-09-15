@@ -1,4 +1,4 @@
-let timer: NodeJS.Timeout = null;
+let timer: NodeJS.Timeout | null = null;
 const edgeSize = 120;
 
 // Original auto scroll code from the link below.
@@ -50,7 +50,9 @@ export const mouseMoveHandler = (e: MouseEvent) => {
   // If the mouse is not in the viewport edge, there's no need to calculate
   // anything else.
   if (!(isInLeftEdge || isInRightEdge || isInTopEdge || isInBottomEdge)) {
-    clearTimeout(timer);
+    if (timer) {
+      clearTimeout(timer);
+    }
     return;
   }
 
@@ -159,7 +161,9 @@ export const mouseMoveHandler = (e: MouseEvent) => {
   // check. But, the point of this demo is really about the math logic, not so
   // much about the interval logic.
   const checkForWindowScroll = () => {
-    clearTimeout(timer);
+    if (timer) {
+      clearTimeout(timer);
+    }
 
     adjustWindowScroll();
     timer = setTimeout(checkForWindowScroll, 20);
