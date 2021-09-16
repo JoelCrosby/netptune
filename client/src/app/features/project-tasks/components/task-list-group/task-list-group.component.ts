@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { AppState } from '@core/core.state';
 
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -17,14 +18,14 @@ import { first, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListGroupComponent implements OnInit {
-  @Input() groupName: string;
-  @Input() tasks: TaskViewModel[];
-  @Input() header: string;
-  @Input() emptyMessage: string;
+  @Input() groupName!: string;
+  @Input() tasks!: TaskViewModel[];
+  @Input() header!: string;
+  @Input() emptyMessage!: string;
 
-  workspaceIdentifier: string;
+  workspaceIdentifier?: string;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.store

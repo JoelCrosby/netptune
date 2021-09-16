@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AppState } from '@core/core.state';
 import { changeTheme } from '@core/store/settings/settings.actions';
 import { SettingsState } from '@core/store/settings/settings.model';
 import { selectSettings } from '@core/store/settings/settings.selectors';
@@ -12,14 +13,14 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
-  settings$: Observable<SettingsState>;
+  settings$!: Observable<SettingsState>;
 
   themes = [
     { value: 'DEFAULT-THEME', label: 'Light' },
     { value: 'DARK-THEME', label: 'Dark' },
   ];
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.settings$ = this.store.select(selectSettings);
