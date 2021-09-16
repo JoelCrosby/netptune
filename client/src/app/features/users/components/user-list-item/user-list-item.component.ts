@@ -8,5 +8,5 @@ import { WorkspaceAppUser } from '@core/models/appuser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListItemComponent {
-  @Input() user: WorkspaceAppUser;
+  @Input() user!: WorkspaceAppUser;
 }

@@ -69,7 +69,7 @@
             mat-flat-button
             color="primary"
             class="action-button"
-            (click)="action.click()"
+            (click)="action.click?.call(action)"
           >
             <mat-icon
               *ngIf="action.icon"
@@ -85,7 +85,7 @@
             mat-button
             color="primary"
             class="action-button"
-            (click)="action.click()"
+            (click)="action.click?.call(action)"
           >
             <mat-icon
               *ngIf="action.icon"

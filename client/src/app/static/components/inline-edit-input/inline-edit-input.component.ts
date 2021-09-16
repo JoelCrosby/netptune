@@ -23,12 +23,12 @@ import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
-  @Input() value: string;
+  @Input() value!: string | null | undefined;
   @Input() size: number | undefined;
-  @Input() activeBorder: boolean | string;
+  @Input() activeBorder: boolean | string | null | undefined;
 
-  @ViewChild('input', { static: false }) input: ElementRef;
-  @HostBinding('class.edit-active') editActiveClass: boolean;
+  @ViewChild('input', { static: false }) input!: ElementRef;
+  @HostBinding('class.edit-active') editActiveClass!: boolean;
   @Output() submitted = new EventEmitter<string>();
 
   control = new FormControl('', {

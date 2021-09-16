@@ -38,30 +38,31 @@ export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
   providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
 })
 export class InlineTextAreaComponent
-  implements OnInit, OnDestroy, ControlValueAccessor {
-  @Input() value: string;
-  @Input() formControlName: string;
-  @Input() formControl: FormControl;
-  @Input() activeBorder: boolean | string;
+  implements OnInit, OnDestroy, ControlValueAccessor
+{
+  @Input() value!: string;
+  @Input() formControlName!: string;
+  @Input() formControl!: FormControl;
+  @Input() activeBorder!: boolean | string;
 
   @Input() minRows = 1;
   @Input() maxRows = 3;
 
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
-  @ViewChild('textarea', { static: false }) textarea: ElementRef;
+  @ViewChild('autosize') autosize!: CdkTextareaAutosize;
+  @ViewChild('textarea', { static: false }) textarea!: ElementRef;
   @ViewChild(FormControlDirective, { static: false })
-  controlDirective: FormControlDirective;
+  controlDirective!: FormControlDirective;
 
-  @HostBinding('class.edit-active') editActiveClass: boolean;
+  @HostBinding('class.edit-active') editActiveClass!: boolean;
 
-  zone: NgZone;
-  onChange: (value: string) => void;
-  onTouched: () => void;
+  zone!: NgZone;
+  onChange!: (value: string) => void;
+  onTouched!: () => void;
 
   get control(): FormControl {
     return (
       this.formControl ||
-      (this.controlContainer.control.get(this.formControlName) as FormControl)
+      (this.controlContainer.control?.get(this.formControlName) as FormControl)
     );
   }
 
@@ -130,20 +131,24 @@ export class InlineTextAreaComponent
   /* eslint-disable @typescript-eslint/no-explicit-any */
 
   registerOnTouched(fn: any) {
-    this.controlDirective?.valueAccessor.registerOnTouched(fn);
+    this.controlDirective?.valueAccessor?.registerOnTouched(fn);
   }
 
   registerOnChange(fn: any) {
-    this.controlDirective?.valueAccessor.registerOnChange(fn);
+    this.controlDirective?.valueAccessor?.registerOnChange(fn);
   }
 
   writeValue(obj: any) {
-    this.controlDirective?.valueAccessor.writeValue(obj);
+    this.controlDirective?.valueAccessor?.writeValue(obj);
   }
 
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   setDisabledState(isDisabled: boolean) {
-    this.controlDirective?.valueAccessor.setDisabledState(isDisabled);
+    if (!this.controlDirective?.valueAccessor?.setDisabledState) {
+      return;
+    }
+
+    this.controlDirective.valueAccessor.setDisabledState(isDisabled);
   }
 }

@@ -21,14 +21,14 @@ import { takeUntil, tap, throttleTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() value: string = null;
-  @ViewChild('input') input: ElementRef;
+  @Input() value: string | null = null;
+  @ViewChild('input') input!: ElementRef;
 
   @Output() submitted = new EventEmitter<string>();
   @Output() canceled = new EventEmitter();
 
   onDestroy$ = new Subject();
-  formControl: FormControl;
+  formControl!: FormControl;
 
   constructor() {}
 

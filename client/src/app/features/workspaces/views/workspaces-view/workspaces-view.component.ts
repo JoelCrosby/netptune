@@ -6,6 +6,7 @@ import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selec
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { Store } from '@ngrx/store';
+import { AppState } from '@core/core.state';
 
 @Component({
   templateUrl: './workspaces-view.component.html',
@@ -16,7 +17,7 @@ export class WorkspacesViewComponent implements OnInit {
   buildInfo$ = this.store.select(selectBuildInfo);
   loading$ = this.store.select(selectWorkspacesLoading);
 
-  constructor(private dialog: MatDialog, private store: Store) {}
+  constructor(private dialog: MatDialog, private store: Store<AppState>) {}
 
   ngOnInit() {
     this.store.dispatch(loadBuildInfo());

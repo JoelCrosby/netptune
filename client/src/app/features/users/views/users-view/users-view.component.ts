@@ -4,6 +4,7 @@ import {
   Component,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AppState } from '@core/core.state';
 import {
   inviteUsersToWorkspace,
   loadUsers,
@@ -21,7 +22,7 @@ import { first } from 'rxjs/operators';
 export class UsersViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectUsersLoading);
 
-  constructor(private dialog: MatDialog, private store: Store) {}
+  constructor(private dialog: MatDialog, private store: Store<AppState>) {}
 
   ngAfterViewInit() {
     this.store.dispatch(loadUsers());

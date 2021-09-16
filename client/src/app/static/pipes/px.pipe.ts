@@ -5,7 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true,
 })
 export class PxPipe implements PipeTransform {
-  transform(value: string | number): string {
+  transform(value: string | number | undefined | null): string {
+    if (value === undefined || value === null) {
+      return '';
+    }
+
     return value + 'px';
   }
 }
