@@ -2,18 +2,13 @@ import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse, UserToken } from './auth.models';
 
-export const selectAuthState = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state
-);
-
 export const selectLoginLoading = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.loginLoading
 );
 
 export const selectCurrentUser = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.currentUser
 );
 
@@ -23,7 +18,7 @@ export const selectCurrentUserId = createSelector(
 );
 
 export const selectUserToken = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.token
 );
 
@@ -33,7 +28,7 @@ export const selectAuthToken = createSelector(
 );
 
 export const selectLoginError = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.loginError
 );
 
@@ -54,26 +49,26 @@ export const selectIsAuthenticated = createSelector(
 );
 
 export const selectIsConfirmEmailLoading = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.confirmEmailLoading
 );
 
 export const selectRequestPasswordResetLoading = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.requestPasswordResetLoading
 );
 
 export const selectResetPasswordLoading = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.resetPasswordLoading
 );
 
 export const selectRegisterLoading = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => state.registerLoading
 );
 
 export const selectShowLoginError = createSelector(
-  selectAuthState,
+  selectAuthFeature,
   (state: AuthState) => !!state.loginError
 );

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
 import { selectResetPasswordLoading } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
@@ -17,7 +18,7 @@ import { first, tap } from 'rxjs/operators';
 export class ResetPasswordComponent implements OnInit {
   authLoading$: Observable<boolean>;
 
-  request: ResetPasswordRequest;
+  request?: ResetPasswordRequest;
 
   passwordResetGroup = new FormGroup({
     password0: new FormControl('', [
@@ -31,14 +32,17 @@ export class ResetPasswordComponent implements OnInit {
   });
 
   get password0() {
-    return this.passwordResetGroup.get('password0');
+    return this.passwordResetGroup.get('password0') as FormControl;
   }
 
   get password1() {
-    return this.passwordResetGroup.get('password1');
+    return this.passwordResetGroup.get('password1') as FormControl;
   }
 
-  constructor(private activatedRoute: ActivatedRoute, private store: Store) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private store: Store<AppState>
+  ) {
     this.activatedRoute.data
       .pipe(
         first(),
@@ -59,6 +63,8 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit() {}
 
   resetPassword() {
+    if (!this.request) return;
+
     if (this.password0.invalid || this.password1.invalid) {
       this.password0.markAllAsTouched();
       return;
