@@ -1,3 +1,4 @@
+import { AppState } from './../../../../core/core.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
@@ -35,8 +36,8 @@ export class BoardGroupsViewComponent
   @ViewChild('importTasksInput') importTasksInput!: ElementRef;
 
   groups$!: Observable<BoardViewGroup[]>;
-  selectedBoard$!: Observable<Board>;
-  selectedBoardName$!: Observable<string>;
+  selectedBoard$!: Observable<Board | undefined>;
+  selectedBoardName$!: Observable<string | undefined>;
   loading$!: Observable<boolean>;
   boardGroupsLoaded$!: Observable<boolean>;
 
@@ -58,7 +59,7 @@ export class BoardGroupsViewComponent
   private board?: Board;
 
   constructor(
-    private store: Store<BoardGroupsState>,
+    private store: Store<AppState>,
     private hubService: ProjectTasksHubService
   ) {}
 

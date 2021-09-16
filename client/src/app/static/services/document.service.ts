@@ -9,7 +9,11 @@ export class DocumentService {
 
   constructor() {
     fromEvent(document, 'click').subscribe({
-      next: (el) => this.documentClickedTarget.next(el.target),
+      next: (el) => {
+        if (!el?.target) return;
+
+        this.documentClickedTarget.next(el.target);
+      },
     });
   }
 

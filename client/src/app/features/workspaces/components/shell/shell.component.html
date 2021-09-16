@@ -20,7 +20,7 @@
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? null : link.label"
+        [matTooltip]="sideNavExpanded ? '' : link.label"
         matTooltipPosition="right"
       >
         <mat-icon mat-list-icon class="material-icons-outline">
@@ -40,7 +40,7 @@
         [routerLink]="link.value"
         class="app-menu-link"
         routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? null : link.label"
+        [matTooltip]="sideNavExpanded ? '' : link.label"
         matTooltipPosition="right"
       >
         <mat-icon mat-list-icon class="material-icons-outline">
@@ -56,7 +56,7 @@
         *ngIf="user$ | async as user"
         [routerLink]="['./profile']"
         routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? null : 'Profile'"
+        [matTooltip]="sideNavExpanded ? '' : 'Profile'"
         matTooltipPosition="right"
       >
         <app-avatar
@@ -77,7 +77,7 @@
     <div
       class="app-menu-link app-menu-collapse"
       (click)="onToggleExpandClicked()"
-      [matTooltip]="sideNavExpanded ? null : 'Expand'"
+      [matTooltip]="sideNavExpanded ? '' : 'Expand'"
       matTooltipPosition="right"
     >
       <mat-icon mat-list-icon class="material-icons-round">

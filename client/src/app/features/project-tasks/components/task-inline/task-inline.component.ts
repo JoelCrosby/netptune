@@ -46,7 +46,7 @@ import {
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.new;
-  @Input() siblings!: TaskViewModel[];
+  @Input() siblings!: TaskViewModel[] | null;
 
   @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
   @ViewChild('taskInlineForm') formElementRef!: ElementRef;

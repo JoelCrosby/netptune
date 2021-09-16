@@ -61,7 +61,7 @@ export class AutocompleteChipsComponent implements OnInit {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
       startWith(''),
       map((option: string | null) => this.filter(option)),
-      map((values) => values.filter((value) => !this.selected.includes(value)))
+      map((values) => values.filter((value) => !this.selected?.includes(value)))
     );
   }
 
@@ -85,7 +85,7 @@ export class AutocompleteChipsComponent implements OnInit {
         option: newOption,
       });
 
-      this.selected = [...this.selected, newOption];
+      this.selected = [...(this.selected ?? []), newOption];
     }
 
     if (input) {
@@ -96,6 +96,8 @@ export class AutocompleteChipsComponent implements OnInit {
   }
 
   remove(option: string) {
+    if (!this.selected) return;
+
     const index = this.selected.indexOf(option);
 
     if (index >= 0) {
@@ -128,7 +130,7 @@ export class AutocompleteChipsComponent implements OnInit {
       return;
     }
 
-    this.selected = [...this.selected, newOption];
+    this.selected = [...(this.selected ?? []), newOption];
 
     this.selectionChanged.emit({
       type: 'Added',

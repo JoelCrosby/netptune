@@ -9,8 +9,8 @@
 
   <div
     class="form-control-input"
-    [class.invalid]="control.touched && control.invalid"
-    [class.active]="control.value && control.pending"
+    [class.invalid]="control?.touched && control?.invalid"
+    [class.active]="control?.value && control?.pending"
   >
 
     <div *ngIf="prefix" class="form-control-prefix">

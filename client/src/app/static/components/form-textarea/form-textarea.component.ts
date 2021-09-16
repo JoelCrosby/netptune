@@ -16,24 +16,24 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   styleUrls: ['./form-textarea.component.scss'],
 })
 export class FormTextAreaComponent implements ControlValueAccessor {
-  @Input() label: string;
-  @Input() disabled: boolean;
-  @Input() icon: string;
-  @Input() prefix: string;
-  @Input() placeholder: string = null;
-  @Input() hint: string = null;
-  @Input() minLength: string = null;
-  @Input() maxLength: string = null;
+  @Input() label!: string;
+  @Input() disabled!: boolean;
+  @Input() icon!: string;
+  @Input() prefix!: string;
+  @Input() placeholder: string | null = null;
+  @Input() hint: string | null = null;
+  @Input() minLength: string | null = null;
+  @Input() maxLength: string | null = null;
   @Input() rows = '2';
 
-  @ViewChild('input') input: ElementRef;
+  @ViewChild('input') input!: ElementRef;
 
   @Output() submitted = new EventEmitter<string>();
 
   value: string | number = '';
 
-  onChange: (value: string) => void;
-  onTouch: () => void;
+  onChange!: (value: string) => void;
+  onTouch!: () => void;
 
   get control() {
     return this.ngControl.control;

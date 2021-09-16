@@ -7,9 +7,9 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageContainerComponent {
-  @Input() verticalPadding = false;
-  @Input() showProgress = false;
-  @Input() marginBottom = false;
-  @Input() fullHeight = true;
-  @Input() centerPage = false;
+  @Input() verticalPadding: boolean | null = false;
+  @Input() showProgress: boolean | null = false;
+  @Input() marginBottom: boolean | null = false;
+  @Input() fullHeight: boolean | null = true;
+  @Input() centerPage: boolean | null = false;
 }
