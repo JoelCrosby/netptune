@@ -4,7 +4,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
+import { AppState } from '@core/core.state';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -27,38 +33,40 @@ import { map, startWith, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
-  project$: Observable<ProjectViewModel>;
-  boards$: Observable<BoardViewModel[]>;
-  updateDisabled$: Observable<boolean>;
+  project$!: Observable<ProjectViewModel | undefined>;
+  boards$!: Observable<BoardViewModel[]>;
+  updateDisabled$!: Observable<boolean>;
   onDestroy$ = new Subject();
 
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   get id() {
-    return this.formGroup.get('id');
+    return this.formGroup.get('id') as FormControl;
   }
 
   get name() {
-    return this.formGroup.get('name');
+    return this.formGroup.get('name') as FormControl;
   }
 
   get description() {
-    return this.formGroup.get('description');
+    return this.formGroup.get('description') as FormControl;
   }
 
   get repositoryUrl() {
-    return this.formGroup.get('repositoryUrl');
+    return this.formGroup.get('repositoryUrl') as FormControl;
   }
 
   get key() {
-    return this.formGroup.get('key');
+    return this.formGroup.get('key') as FormControl;
   }
 
-  constructor(private store: Store, private fb: FormBuilder) {}
+  constructor(private store: Store<AppState>, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.project$ = this.store.select(selectProjectDetail).pipe(
       tap((project) => {
+        if (!project) return;
+
         this.formGroup = this.fb.group(
           {
             id: [project.id, Validators.required],

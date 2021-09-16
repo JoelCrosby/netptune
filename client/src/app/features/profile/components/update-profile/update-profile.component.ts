@@ -5,7 +5,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
+import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import { updateProfile } from '@profile/store/profile.actions';
@@ -20,28 +26,28 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
   onDestroy$ = new Subject();
-  loadingUpdate$: Observable<boolean>;
+  loadingUpdate$!: Observable<boolean>;
   editProfilePicture$ = new Subject<boolean>();
 
   data?: FormData;
 
   get firstname() {
-    return this.formGroup.get('firstname');
+    return this.formGroup.get('firstname') as FormControl;
   }
   get lastname() {
-    return this.formGroup.get('lastname');
+    return this.formGroup.get('lastname') as FormControl;
   }
   get email() {
-    return this.formGroup.get('email');
+    return this.formGroup.get('email') as FormControl;
   }
   get pictureUrl() {
-    return this.formGroup.get('pictureUrl');
+    return this.formGroup.get('pictureUrl') as FormControl;
   }
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
   ) {}
@@ -69,10 +75,10 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         filter((profile) => !!profile),
         first(),
         tap((profile) => {
-          this.firstname.setValue(profile.firstname, { emitEvent: false });
-          this.lastname.setValue(profile.lastname, { emitEvent: false });
-          this.email.setValue(profile.email, { emitEvent: false });
-          this.pictureUrl.setValue(profile.pictureUrl, { emitEvent: false });
+          this.firstname.setValue(profile?.firstname, { emitEvent: false });
+          this.lastname.setValue(profile?.lastname, { emitEvent: false });
+          this.email.setValue(profile?.email, { emitEvent: false });
+          this.pictureUrl.setValue(profile?.pictureUrl, { emitEvent: false });
 
           this.cd.markForCheck();
         })
@@ -142,7 +148,7 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         filter((profile) => !!profile),
         first(),
         tap((current) => {
-          const profile: AppUser = {
+          const profile: Partial<AppUser> = {
             ...current,
             pictureUrl: null,
           };

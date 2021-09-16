@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { clearUserInfo } from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
+import { AppState } from '@core/core.state';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -10,8 +11,9 @@ import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class RegisterInviteResolver
-  implements Resolve<Observable<WorkspaceInvite>> {
-  constructor(private store: Store, private http: HttpClient) {}
+  implements Resolve<Observable<WorkspaceInvite>>
+{
+  constructor(private store: Store<AppState>, private http: HttpClient) {}
 
   resolve(route: ActivatedRouteSnapshot) {
     this.store.dispatch(clearUserInfo());

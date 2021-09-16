@@ -5,6 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { HeaderAction } from '@core/types/header-action';
@@ -18,11 +19,11 @@ import { Store } from '@ngrx/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceListItemComponent implements OnInit {
-  @Input() workspace: Workspace;
+  @Input() workspace!: Workspace;
 
-  actions: HeaderAction[];
+  actions!: HeaderAction[];
 
-  constructor(private store: Store, private dialog: MatDialog) {}
+  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.actions = [

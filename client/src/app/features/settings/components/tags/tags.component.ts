@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { AppState } from '@core/core.state';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { selectTags } from '@core/store/tags/tags.selectors';
@@ -23,11 +24,11 @@ export class TagsComponent implements OnInit, OnDestroy {
   tag$ = this.store.select(selectTags);
   onDestroy$ = new Subject();
 
-  addTagActive: boolean;
+  addTagActive = false;
   editTagIndex: number | null = null;
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private actions$: Actions,
     private cd: ChangeDetectorRef
   ) {}

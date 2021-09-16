@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first, map, takeUntil, tap } from 'rxjs/operators';
@@ -21,7 +22,7 @@ import { first, map, takeUntil, tap } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   authLoading$: Observable<boolean>;
-  request$: Observable<WorkspaceInvite>;
+  request$!: Observable<WorkspaceInvite | null>;
 
   onDestroy$ = new Subject();
 
@@ -50,26 +51,29 @@ export class RegisterComponent implements OnInit, OnDestroy {
   });
 
   get firstname() {
-    return this.registerGroup.get('firstname');
+    return this.registerGroup.get('firstname') as FormControl;
   }
 
   get lastname() {
-    return this.registerGroup.get('lastname');
+    return this.registerGroup.get('lastname') as FormControl;
   }
 
   get email() {
-    return this.registerGroup.get('email');
+    return this.registerGroup.get('email') as FormControl;
   }
 
   get password0() {
-    return this.registerGroup.get('password0');
+    return this.registerGroup.get('password0') as FormControl;
   }
 
   get password1() {
-    return this.registerGroup.get('password1');
+    return this.registerGroup.get('password1') as FormControl;
   }
 
-  constructor(private store: Store, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private store: Store<AppState>,
+    private activatedRoute: ActivatedRoute
+  ) {
     this.authLoading$ = this.store.select(selectRegisterLoading).pipe(
       tap((loading) => {
         if (loading) return this.registerGroup.disable();

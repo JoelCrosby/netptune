@@ -20,6 +20,7 @@ import {
 import { Router } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { AppState } from '@core/core.state';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -27,9 +28,9 @@ import { LocalStorageService } from '@core/local-storage/local-storage.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent implements OnInit {
-  @ViewChild(MatSidenav) sideNav: MatSidenav;
+  @ViewChild(MatSidenav) sideNav!: MatSidenav;
 
-  authenticated$: Observable<boolean>;
+  authenticated$!: Observable<boolean>;
   sideNavExpanded = true;
 
   links = [
@@ -51,7 +52,7 @@ export class ShellComponent implements OnInit {
   fixedInViewport$ = of(true);
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private router: Router,
     private storage: LocalStorageService
   ) {

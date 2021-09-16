@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -24,30 +25,34 @@ export class ProfileEffects {
     this.actions$.pipe(
       ofType(actions.loadProfile),
       withLatestFrom(this.store.select(selectCurrentUser)),
-      switchMap(([_, user]) =>
-        this.profileService.get(user.userId).pipe(
+      switchMap(([_, user]) => {
+        if (!user) return of({ type: 'noop' });
+
+        return this.profileService.get(user.userId).pipe(
           map((profile) => actions.loadProfileSuccess({ profile })),
           catchError((error) => of(actions.loadProfileFail({ error })))
-        )
-      )
+        );
+      })
     )
   );
 
   updateProfile$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.updateProfile),
-      switchMap((action) =>
-        this.profileService.put(action.profile).pipe(
+      switchMap(({ profile, data }) => {
+        if (!profile || !data) return of({ type: 'noop' });
+
+        return this.profileService.put(profile).pipe(
           tap(() => this.snackbar.open('Profile Updated')),
           tap(() =>
-            this.store.dispatch(
-              actions.uploadProfilePicture({ data: action.data })
-            )
+            this.store.dispatch(actions.uploadProfilePicture({ data }))
           ),
-          map((profile) => actions.updateProfileSuccess({ profile })),
+          map((response) =>
+            actions.updateProfileSuccess({ profile: response })
+          ),
           catchError((error) => of(actions.updateProfileFail({ error })))
-        )
-      )
+        );
+      })
     )
   );
 
@@ -90,7 +95,7 @@ export class ProfileEffects {
   constructor(
     private actions$: Actions<Action>,
     private profileService: ProfileService,
-    private store: Store,
+    private store: Store<AppState>,
     private snackbar: MatSnackBar
   ) {}
 }

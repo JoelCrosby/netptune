@@ -11,6 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { EntityType } from '@core/models/entity-type';
@@ -50,38 +51,39 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDetailDialogComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   static width = '972px';
 
-  task$: Observable<TaskViewModel>;
-  projects$: Observable<ProjectViewModel[]>;
-  users$: Observable<AppUser[]>;
-  comments$: Observable<CommentViewModel[]>;
-  user$: Observable<UserResponse>;
-  tags$: Observable<string[]>;
+  task$!: Observable<TaskViewModel>;
+  projects$!: Observable<ProjectViewModel[]>;
+  users$!: Observable<AppUser[]>;
+  comments$!: Observable<CommentViewModel[]>;
+  user$!: Observable<UserResponse | undefined>;
+  tags$!: Observable<string[]>;
 
-  selectedTypeValue: number;
+  selectedTypeValue!: number;
   entityType = EntityType.task;
 
   onDestroy$ = new Subject();
   onEditorLoadedSubject = new Subject<boolean>();
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
-  projectFromGroup: FormGroup;
+  projectFromGroup!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
-    private store: Store,
+    private store: Store<AppState>,
     private actions$: Actions<Action>
   ) {}
 
   get name() {
-    return this.projectFromGroup.get('name');
+    return this.projectFromGroup.get('name') as FormControl;
   }
 
   get description() {
-    return this.projectFromGroup.get('description');
+    return this.projectFromGroup.get('description') as FormControl;
   }
 
   ngOnInit() {
