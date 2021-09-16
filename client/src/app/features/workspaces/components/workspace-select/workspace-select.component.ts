@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
+import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -27,10 +28,10 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
-  @ViewChild('dropdown') dropdownElementRef: ElementRef;
+  @ViewChild('dropdown') dropdownElementRef!: ElementRef;
 
   @Input() options: Workspace[] = [];
-  @Input() value: string;
+  @Input() value!: string;
   @Input() compact = false;
 
   @Output() selectChange = new EventEmitter<Workspace>();
@@ -39,12 +40,12 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   searchControl = new FormControl();
 
   isOpen = false;
-  currentWorkspace: Workspace;
-  selected: Workspace;
+  currentWorkspace: Workspace | null = null;
+  selected: Workspace | null = null;
 
   options$ = new BehaviorSubject<Workspace[]>([]);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.searchControl.valueChanges
@@ -61,7 +62,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
       )
       .subscribe();
 
-    fromEvent(document, 'keydown', {
+    fromEvent<KeyboardEvent>(document, 'keydown', {
       passive: true,
     })
       .pipe(
@@ -107,10 +108,10 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     const options = this.options$.value;
 
     if (!this.selected) {
-      this.selected = options.length && options[0];
+      this.selected = (options.length && options[0]) || null;
     } else {
       const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected.id
+        (opt) => opt.id === this.selected?.id
       );
 
       if (options.length === currentIndex + 1) {
@@ -127,10 +128,10 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     const options = this.options$.value;
 
     if (!this.selected) {
-      this.selected = options.length && options[0];
+      this.selected = (options.length && options[0]) || null;
     } else {
       const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected.id
+        (opt) => opt.id === this.selected?.id
       );
 
       if (currentIndex === 0) return;
@@ -160,11 +161,11 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     this.searchControl.patchValue('');
   }
 
-  select(option: Workspace = null) {
+  select(option: Workspace | null = null) {
     this.selected = option ?? this.selected;
     this.currentWorkspace = this.selected;
 
-    if (this.isOpen) {
+    if (this.isOpen && this.selected) {
       this.selectChange.emit(this.selected);
       this.close();
     }

@@ -16,7 +16,7 @@ import { CommentViewModel } from '@core/models/comment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsListComponent {
-  @Input() user!: UserResponse | null;
+  @Input() user!: UserResponse | null | undefined;
   @Input() comments!: CommentViewModel[] | null;
 
   @Output() deleteComment = new EventEmitter<CommentViewModel>();

@@ -7,6 +7,7 @@ import {
 import { MatSidenav } from '@angular/material/sidenav';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { selectSideBarTransparent } from '@core/core.route.selectors';
+import { AppState } from '@core/core.state';
 import * as LayoutSelectors from '@core/store/layout/layout.selectors';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
@@ -20,9 +21,9 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MatSidenav) sideNav: MatSidenav;
+  @ViewChild(MatSidenav) sideNav!: MatSidenav;
 
-  sideNavOpen$: Observable<boolean>;
+  sideNavOpen$!: Observable<boolean>;
 
   workspaces$ = this.store.select(selectAllWorkspaces);
   isMobileView$ = this.store.select(LayoutSelectors.selectIsMobileView);
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
   sideMenuOpen$ = this.store.select(LayoutSelectors.selectSideMenuOpen);
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.sideNavOpen$ = combineLatest([

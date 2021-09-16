@@ -143,7 +143,7 @@ export const selectBoardProjectId = createSelector(
 
 export const selectOnlyFlagged = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.onlyFlagged
+  (state: BoardGroupsState) => state.onlyFlagged ?? false
 );
 
 export const selectSearchTerm = createSelector(

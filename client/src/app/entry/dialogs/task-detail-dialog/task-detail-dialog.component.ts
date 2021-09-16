@@ -55,7 +55,7 @@ export class TaskDetailDialogComponent
 {
   static width = '972px';
 
-  task$!: Observable<TaskViewModel>;
+  task$!: Observable<TaskViewModel | undefined>;
   projects$!: Observable<ProjectViewModel[]>;
   users$!: Observable<AppUser[]>;
   comments$!: Observable<CommentViewModel[]>;
@@ -88,8 +88,10 @@ export class TaskDetailDialogComponent
 
   ngOnInit() {
     this.task$ = this.store.select(TaskSelectors.selectDetailTask).pipe(
-      filter((task) => !!task),
+      filter((task) => task !== undefined),
       tap((task) => {
+        if (!task) return;
+
         this.buildForm(task);
         this.loadComments(task);
       }),
@@ -103,7 +105,9 @@ export class TaskDetailDialogComponent
     this.user$ = this.store.select(selectCurrentUser);
     this.users$ = this.store.select(UsersSelectors.selectAllUsers).pipe(
       withLatestFrom(this.getTaskObservable()),
-      map(([users, task]) => users.filter((u) => u.id !== task.assigneeId))
+      map(([users, task]) =>
+        task ? users.filter((u) => u.id !== task.assigneeId) : users
+      )
     );
   }
 
@@ -179,6 +183,8 @@ export class TaskDetailDialogComponent
       .pipe(
         first(),
         tap((viewModel) => {
+          if (!viewModel) return;
+
           const request: AddCommentRequest = {
             comment: value.trim(),
             systemId: viewModel.systemId,
@@ -196,6 +202,8 @@ export class TaskDetailDialogComponent
       .pipe(
         first(),
         tap((identifier) => {
+          if (!identifier) return;
+
           this.store.dispatch(
             TaskActions.editProjectTask({
               identifier,
@@ -223,6 +231,8 @@ export class TaskDetailDialogComponent
       .pipe(
         first(),
         tap((task) => {
+          if (!task) return;
+
           const updated: TaskViewModel = {
             ...task,
             isFlagged: !task.isFlagged,
@@ -239,6 +249,8 @@ export class TaskDetailDialogComponent
       .pipe(
         first(),
         tap((task) => {
+          if (!task) return;
+
           const updated: TaskViewModel = {
             ...task,
             projectId,
@@ -255,6 +267,8 @@ export class TaskDetailDialogComponent
       .pipe(
         first(),
         tap((task) => {
+          if (!task) return;
+
           const updated: TaskViewModel = {
             ...task,
             assigneeId: user.id,
@@ -283,6 +297,8 @@ export class TaskDetailDialogComponent
         first(),
         withLatestFrom(this.store.select(selectCurrentHubGroupId)),
         tap(([task, identifier]) => {
+          if (!task || !identifier) return;
+
           this.store.dispatch(
             TaskActions.deleteProjectTask({ identifier, task })
           );
@@ -302,6 +318,8 @@ export class TaskDetailDialogComponent
         first(),
         withLatestFrom(this.store.select(selectCurrentHubGroupId)),
         tap(([task, identifier]) => {
+          if (!task || !identifier) return;
+
           if (event.type === 'Removed') {
             const systemId = task.systemId;
             const tag = event.option;
