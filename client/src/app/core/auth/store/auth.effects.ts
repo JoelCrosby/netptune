@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AppState } from '@core/core.state';
+import { AppState, selectAuthFeature } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { openSideNav } from '@core/store/layout/layout.actions';
@@ -23,7 +23,7 @@ import {
 } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
-import { selectAuthState, selectIsAuthenticated } from './auth.selectors';
+import { selectIsAuthenticated } from './auth.selectors';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -50,7 +50,7 @@ export class AuthEffects implements OnInitEffects {
           actions.confirmEmailFail,
           actions.currentUserSuccess
         ),
-        withLatestFrom(this.store.select(selectAuthState)),
+        withLatestFrom(this.store.select(selectAuthFeature)),
         tap(([_, settings]) => {
           const { token, currentUser } = settings;
           this.localStorageService.setItem(AUTH_KEY, { token, currentUser });

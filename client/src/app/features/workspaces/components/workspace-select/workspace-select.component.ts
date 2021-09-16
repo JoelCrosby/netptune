@@ -30,8 +30,8 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;
 
-  @Input() options: Workspace[] = [];
-  @Input() value!: string;
+  @Input() options: Workspace[] | null = [];
+  @Input() value?: string | null;
   @Input() compact = false;
 
   @Output() selectChange = new EventEmitter<Workspace>();
@@ -72,12 +72,12 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
       )
       .subscribe();
 
-    this.options$.next(this.options);
+    this.options$.next(this.options ?? []);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
-      if (this.value && !this.currentWorkspace) {
+      if (this.value && !this.currentWorkspace && this.options) {
         const option = this.options.find((opt) => opt.slug === this.value);
         this.select(option);
       }
@@ -126,6 +126,8 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   selectPreviousOption() {
     const options = this.options$.value;
+
+    if (!this.options) return;
 
     if (!this.selected) {
       this.selected = (options.length && options[0]) || null;
@@ -181,6 +183,8 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   }
 
   search(value: string) {
+    if (!this.options) return;
+
     if (!value) {
       this.options$.next(this.options);
     } else {

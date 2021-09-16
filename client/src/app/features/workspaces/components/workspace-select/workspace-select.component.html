@@ -11,7 +11,7 @@
     >
       <div
         class="app-workspace-link-inner"
-        [style.backgroundColor]="currentWorkspace?.metaInfo.color"
+        [style.backgroundColor]="currentWorkspace?.metaInfo?.color"
       >
         {{ currentWorkspace.name[0] }}
       </div>
@@ -39,14 +39,14 @@
     >
 
       <div
-        *ngIf="!options.length"
+        *ngIf="!options?.length"
         class="no-results-item"
       >
         No results found...
       </div>
 
       <input
-        *ngIf="options.length"
+        *ngIf="options?.length"
         appAutofocus
         class="label-input"
         placeholder="Search.."
@@ -63,7 +63,7 @@
         >
           <div
             class="app-workspace-link-inner"
-            [style.backgroundColor]="option?.metaInfo.color"
+            [style.backgroundColor]="option?.metaInfo?.color"
           >
             {{ option.name[0] }}
           </div>

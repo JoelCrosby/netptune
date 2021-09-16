@@ -30,7 +30,7 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
   @Input() maxLength?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() options: unknown[] | null = [];
+  @Input() options: any[] | null = [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() model: any;

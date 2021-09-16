@@ -19,7 +19,7 @@ import { first, tap } from 'rxjs/operators';
 })
 export class TaskListGroupComponent implements OnInit {
   @Input() groupName!: string;
-  @Input() tasks!: TaskViewModel[];
+  @Input() tasks!: TaskViewModel[] | null;
   @Input() header!: string;
   @Input() emptyMessage!: string;
 
