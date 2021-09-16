@@ -7,6 +7,7 @@ import {
 import { MatDialogRef } from '@angular/material/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import * as selectors from '@boards/store/groups/board-groups.selectors';
+import { AppState } from '@core/core.state';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -17,11 +18,11 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoveTasksDialogComponent implements OnInit {
-  groups$: Observable<BoardViewGroup[]>;
+  groups$!: Observable<BoardViewGroup[]>;
   selected: number | null = null;
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private cd: ChangeDetectorRef,
     public dialogRef: MatDialogRef<MoveTasksDialogComponent>
   ) {}

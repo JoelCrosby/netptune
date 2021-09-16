@@ -12,7 +12,7 @@ export class InviteDialogComponent implements OnInit {
   users: string[] = [];
 
   get email() {
-    return this.formGroup.get('email');
+    return this.formGroup.get('email') as FormControl;
   }
 
   formGroup = new FormGroup({

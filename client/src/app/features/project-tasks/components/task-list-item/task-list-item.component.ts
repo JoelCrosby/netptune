@@ -5,6 +5,7 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import { Store } from '@ngrx/store';
 import { TaskStatus } from '@core/enums/project-task-status';
 import * as actions from '@core/store/tasks/tasks.actions';
+import { AppState } from '@core/core.state';
 
 @Component({
   selector: 'app-task-list-item',
@@ -13,9 +14,9 @@ import * as actions from '@core/store/tasks/tasks.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListItemComponent {
-  @Input() task: TaskViewModel;
+  @Input() task!: TaskViewModel;
 
-  constructor(private store: Store, private dialog: MatDialog) {}
+  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {

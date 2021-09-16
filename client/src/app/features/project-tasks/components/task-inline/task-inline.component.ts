@@ -11,6 +11,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -30,6 +31,7 @@ import {
 } from 'rxjs';
 import {
   first,
+  map,
   shareReplay,
   takeUntil,
   tap,
@@ -44,22 +46,23 @@ import {
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.new;
-  @Input() siblings: TaskViewModel[];
+  @Input() siblings!: TaskViewModel[];
 
-  @ViewChild('taskInlineContainer') containerElementRef: ElementRef;
-  @ViewChild('taskInlineForm') formElementRef: ElementRef;
-  @ViewChild('taskInput') inputElementRef: ElementRef;
+  @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
+  @ViewChild('taskInlineForm') formElementRef!: ElementRef;
+  @ViewChild('taskInput') inputElementRef!: ElementRef;
 
-  outSideClickListener$: Observable<Event>;
+  outSideClickListener$!: Observable<Event>;
 
   editActive = false;
 
-  outsideClickSubscription: Subscription;
+  outsideClickSubscription!: Subscription;
 
-  currentWorkspace$: Observable<Workspace>;
-  currentProject$: Observable<ProjectViewModel>;
-  inlineEditActive$: Observable<boolean>;
-  currentUser$: Observable<UserResponse>;
+  currentWorkspace$!: Observable<Workspace | undefined>;
+  currentProject$!: Observable<ProjectViewModel | undefined>;
+  currentUser$!: Observable<UserResponse | undefined>;
+
+  inlineEditActive$!: Observable<boolean>;
 
   taskGroup = new FormGroup({
     taskName: new FormControl(),
@@ -68,18 +71,19 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   onDestroy$ = new Subject();
 
   get taskName() {
-    return this.taskGroup.get('taskName');
+    return this.taskGroup.get('taskName') as FormControl;
   }
 
-  constructor(private store: Store, private cd: ChangeDetectorRef) {}
+  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.currentWorkspace$ = this.store.pipe(select(selectCurrentWorkspace));
-    this.currentProject$ = this.store.pipe(select(selectCurrentProject));
-    this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+    this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);
+    this.currentProject$ = this.store.select(selectCurrentProject);
+    this.currentUser$ = this.store.select(selectCurrentUser);
 
     this.inlineEditActive$ = this.store.pipe(
       select(TaskSelectors.selectInlineEditActive),
+      map((editActive) => !!editActive),
       shareReplay()
     );
 
@@ -126,8 +130,11 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     ])
       .pipe(first())
       .subscribe({
-        next: ([workspace, project, user]) =>
-          this.createTask(workspace, project, user),
+        next: ([workspace, project, user]) => {
+          if (!workspace || !project || !user) return;
+
+          this.createTask(workspace, project, user);
+        },
       });
   }
 

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AppState } from '@core/core.state';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -26,20 +27,20 @@ export class ProjectDialogComponent implements OnDestroy {
   });
 
   get name() {
-    return this.projectFromGroup.get('name');
+    return this.projectFromGroup.get('name') as FormControl;
   }
   get description() {
-    return this.projectFromGroup.get('description');
+    return this.projectFromGroup.get('description') as FormControl;
   }
   get repositoryUrl() {
-    return this.projectFromGroup.get('repositoryUrl');
+    return this.projectFromGroup.get('repositoryUrl') as FormControl;
   }
   get color() {
-    return this.projectFromGroup.get('color');
+    return this.projectFromGroup.get('color') as FormControl;
   }
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     public dialogRef: MatDialogRef<ProjectDialogComponent>
   ) {}
 
@@ -52,20 +53,24 @@ export class ProjectDialogComponent implements OnDestroy {
   }
 
   getResult() {
-    this.subs = this.currentWorkspace$.subscribe((workspace) => {
-      const project: AddProjectRequest = {
-        name: this.name.value,
-        description: this.description.value,
-        repositoryUrl: this.repositoryUrl.value,
-        workspace: workspace.slug,
-        metaInfo: {
-          color: this.color.value,
-        },
-      };
+    this.subs = this.currentWorkspace$.subscribe({
+      next: (workspace) => {
+        if (!workspace?.slug) return;
 
-      this.store.dispatch(createProject({ project }));
+        const project: AddProjectRequest = {
+          name: this.name.value,
+          description: this.description.value,
+          repositoryUrl: this.repositoryUrl.value,
+          workspace: workspace.slug,
+          metaInfo: {
+            color: this.color.value,
+          },
+        };
 
-      this.dialogRef.close();
+        this.store.dispatch(createProject({ project }));
+
+        this.dialogRef.close();
+      },
     });
   }
 }

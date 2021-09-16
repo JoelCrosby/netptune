@@ -15,6 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
@@ -86,7 +87,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private workspaceServcie: WorkspacesService,
