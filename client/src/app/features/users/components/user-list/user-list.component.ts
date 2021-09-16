@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppState } from '@core/core.state';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
@@ -14,12 +15,12 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent implements OnInit {
-  users$: Observable<WorkspaceAppUser[]>;
+  users$!: Observable<WorkspaceAppUser[]>;
 
   constructor(
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private store: Store
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {

@@ -25,21 +25,22 @@ import { dataURItoBlob } from '@core/util/blob';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageCropperComponent implements OnInit, AfterViewInit {
-  @Input() src: string;
-  @Input() size: number;
+  @Input() src!: string;
+  @Input() size!: number;
 
   @Output() cropped = new EventEmitter<{ blob: Blob; src: string }>();
   @Output() canceled = new EventEmitter();
   @Output() cleared = new EventEmitter();
 
-  @ViewChild(LyImageCropper, { static: true }) readonly cropper: LyImageCropper;
+  @ViewChild(LyImageCropper, { static: true })
+  readonly cropper!: LyImageCropper;
 
   croppedImage?: string;
-  scale: number;
-  ready: boolean;
-  minScale: number;
+  scale!: number;
+  ready!: boolean;
+  minScale!: number;
 
-  myConfig: ImgCropperConfig;
+  myConfig!: ImgCropperConfig;
 
   constructor(
     readonly sRenderer: StyleRenderer,
@@ -80,6 +81,9 @@ export class ImageCropperComponent implements OnInit, AfterViewInit {
     this.cropper.crop();
 
     const src = this.croppedImage;
+
+    if (!src) return;
+
     const blob = dataURItoBlob(src);
 
     this.cropped.emit({ blob, src });

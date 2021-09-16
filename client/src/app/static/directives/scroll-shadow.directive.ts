@@ -9,8 +9,8 @@ const RIGHT_CLASS = 'scroll-shadow-right';
   selector: '[appScrollShadow]',
 })
 export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
-  leftShadowEl: Element;
-  rightShadowEl: Element;
+  leftShadowEl!: Element;
+  rightShadowEl!: Element;
 
   onDestroy$ = new Subject();
 

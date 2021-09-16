@@ -9,8 +9,8 @@ const BOTTOM_CLASS = 'scroll-shadow-bottom';
   selector: '[appScrollShadowVertical]',
 })
 export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
-  topShadowEl: Element;
-  bottomShadowEl: Element;
+  topShadowEl!: Element;
+  bottomShadowEl!: Element;
 
   onDestroy$ = new Subject();
 

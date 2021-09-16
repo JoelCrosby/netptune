@@ -6,7 +6,7 @@
   [style.color]="color"
   [style.border-radius]="borderRadius"
   [class.avatar-border]="border"
-  [matTooltip]="tooltip ? name : undefined"
+  [matTooltip]="tooltip && name ? name : ''"
   [style.font-size]="size | avatarFontSize"
 >
   <ng-container *ngIf="imageUrl; else elseTemplate">

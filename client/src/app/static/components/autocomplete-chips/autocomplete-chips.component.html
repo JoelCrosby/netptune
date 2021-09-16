@@ -22,7 +22,7 @@
     <input
       #input
       class="form-control"
-      [placeholder]="selected.length ? undefined : placeholder"
+      [placeholder]="selected?.length ? '' : placeholder"
       [formControl]="formCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"

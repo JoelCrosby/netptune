@@ -15,7 +15,7 @@
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"
     >
-      <mat-icon *ngIf="value == color.color">done</mat-icon>
+      <mat-icon *ngIf="value === color.color">done</mat-icon>
     </div>
   </div>
   <div class="color-options">
@@ -26,7 +26,7 @@
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"
     >
-      <mat-icon *ngIf="value == color.color">done</mat-icon>
+      <mat-icon *ngIf="value === color.color">done</mat-icon>
     </div>
   </div>
 

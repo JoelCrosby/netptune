@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@boards/store/boards/boards.actions';
 import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -17,7 +18,7 @@ import { Store } from '@ngrx/store';
 export class BoardsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectBoardsLoading);
 
-  constructor(private dialog: MatDialog, private store: Store) {}
+  constructor(private dialog: MatDialog, private store: Store<AppState>) {}
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {

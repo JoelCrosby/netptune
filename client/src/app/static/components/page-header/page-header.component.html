@@ -34,7 +34,7 @@
           class="page-header-title page-header-title-editable"
           activeBorder="true"
           [value]="title"
-          [size]="title.length"
+          [size]="title?.length"
           (submitted)="titleSubmitted.emit($event)"
         >
         </app-inline-edit-input>
@@ -52,7 +52,7 @@
         *ngFor="let action of secondaryActions"
         matRipple
         class="header-secondary-action"
-        (click)="action.click()"
+        (click)="action.click?.call(null)"
       >
         {{ action.label }}
       </button>
@@ -74,7 +74,7 @@
           <button
             mat-menu-item
             *ngFor="let action of overflowActions"
-            (click)="action.click()"
+            (click)="action.click?.call(null)"
           >
           <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
             {{ action.icon || 'more_horiz'  }}

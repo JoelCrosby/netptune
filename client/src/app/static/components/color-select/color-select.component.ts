@@ -15,9 +15,9 @@ import { colorDictionary, NamedColor } from '@core/util/colors/colors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorSelectComponent implements ControlValueAccessor {
-  @Input() label: string;
-  @Input() disabled: boolean;
-  @Input() hint: string = null;
+  @Input() label!: string;
+  @Input() disabled!: boolean;
+  @Input() hint: string | null = null;
 
   colors = colorDictionary();
 
@@ -33,8 +33,8 @@ export class ColorSelectComponent implements ControlValueAccessor {
     return this.ngControl.control;
   }
 
-  onChange: (value: string) => void;
-  onTouch: (...args: unknown[]) => void;
+  onChange!: (value: string) => void;
+  onTouch!: (...args: unknown[]) => void;
 
   constructor(
     @Self()

@@ -41,15 +41,15 @@ import { environment } from '@env/environment';
   ],
 })
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
-  @ViewChild('editorJs', { static: true }) el: ElementRef;
+  @ViewChild('editorJs', { static: true }) el!: ElementRef;
 
   @Input() placeholder = '';
   @Output() loaded = new EventEmitter();
 
-  editor: EditorJS;
+  editor!: EditorJS;
 
-  onChange: (value: string) => void;
-  onTouch: () => void;
+  onChange!: (value: string) => void;
+  onTouch!: () => void;
 
   constructor(private storage: StorageService) {}
 
@@ -74,7 +74,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
     Logger.log('setDisabledState', isDisabled);
   }
 
-  createEditor(initialValue: OutputData = null) {
+  createEditor(initialValue: OutputData | null = null) {
     if (this.editor) {
       return;
     }
@@ -128,7 +128,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
           },
         },
       },
-      data: initialValue,
+      data: initialValue || undefined,
       onReady: () => this.loaded.emit(),
       onChange: () => {
         this.editor.save().then((value) => {
@@ -143,7 +143,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
     return {
       success: 1,
       file: {
-        url: response.payload.uri,
+        url: response.payload?.uri,
       },
     };
   }
