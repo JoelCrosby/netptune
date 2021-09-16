@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
 import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
@@ -18,11 +19,14 @@ import { first, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
-  loading$: Observable<boolean>;
+  loading$!: Observable<boolean>;
 
-  private request: AuthCodeRequest;
+  private request?: AuthCodeRequest;
 
-  constructor(private activatedRoute: ActivatedRoute, private store: Store) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private store: Store<AppState>
+  ) {
     this.activatedRoute.data
       .pipe(
         first(),
@@ -38,6 +42,8 @@ export class ConfirmViewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (!this.request) return;
+
     this.store.dispatch(confirmEmail({ request: this.request }));
   }
 }

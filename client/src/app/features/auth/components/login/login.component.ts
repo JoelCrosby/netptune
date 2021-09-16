@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
-import { AuthState } from '@core/auth/store/auth.models';
 import {
   selectLoginLoading,
   selectShowLoginError,
@@ -9,6 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { AppState } from '@core/core.state';
 
 @Component({
   selector: 'app-login',
@@ -29,14 +29,14 @@ export class LoginComponent implements OnDestroy {
   });
 
   get email() {
-    return this.loginGroup.get('email');
+    return this.loginGroup.get('email') as FormControl;
   }
 
   get password() {
-    return this.loginGroup.get('password');
+    return this.loginGroup.get('password') as FormControl;
   }
 
-  constructor(private store: Store<AuthState>) {
+  constructor(private store: Store<AppState>) {
     this.showLoginError$ = this.store.select(selectShowLoginError);
     this.authLoading$ = this.store.select(selectLoginLoading).pipe(
       tap((loading) => {
