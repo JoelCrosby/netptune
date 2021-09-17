@@ -33,7 +33,7 @@ import { map, startWith, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
-  project$!: Observable<ProjectViewModel | undefined>;
+  project$!: Observable<ProjectViewModel | null | undefined>;
   boards$!: Observable<BoardViewModel[]>;
   updateDisabled$!: Observable<boolean>;
   onDestroy$ = new Subject();

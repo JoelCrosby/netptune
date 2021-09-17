@@ -6,6 +6,10 @@ export class FormErrorStateMatcher implements ErrorStateMatcher {
     control: FormControl | null,
     _: FormGroupDirective | NgForm | null
   ): boolean {
+    if (control === null) {
+      return true;
+    }
+
     const invalidCtrl = !!(
       control &&
       control.invalid &&

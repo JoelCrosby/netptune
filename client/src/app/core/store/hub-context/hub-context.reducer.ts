@@ -4,7 +4,7 @@ import * as actions from './hub-context.actions';
 const initialState: HubContextState = {};
 
 export interface HubContextState {
-  groupId?: string;
+  groupId?: string | null;
 }
 
 const reducer = createReducer(

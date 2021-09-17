@@ -54,9 +54,13 @@ const reducer = createReducer(
 
   // Delete Workspace
 
-  on(actions.deleteWorkspaceSuccess, (state, { workspace }) =>
-    adapter.removeOne(workspace.id, state)
-  ),
+  on(actions.deleteWorkspaceSuccess, (state, { workspace }) => {
+    if (workspace.id === undefined || workspace.id === null) {
+      return state;
+    }
+
+    return adapter.removeOne(workspace.id, state);
+  }),
 
   // Is Slug Unique
 

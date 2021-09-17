@@ -8,8 +8,8 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -80,10 +80,16 @@ export class ProjectTasksService {
         responseType: 'blob',
       })
       .pipe(
-        map((response) => ({
-          file: response.body,
-          filename: extractFilenameFromHeaders(response.headers),
-        }))
+        switchMap((response) => {
+          if (response.body === null) {
+            return throwError('repsone body was null');
+          }
+
+          return of({
+            file: response.body,
+            filename: extractFilenameFromHeaders(response.headers),
+          });
+        })
       );
   }
 

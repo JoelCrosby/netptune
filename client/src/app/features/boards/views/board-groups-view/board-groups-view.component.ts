@@ -1,4 +1,4 @@
-import { AppState } from './../../../../core/core.state';
+import { AppState } from '@core/core.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
-import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { Board } from '@core/models/board';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
@@ -21,7 +20,7 @@ import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
@@ -92,7 +91,11 @@ export class BoardGroupsViewComponent
         first(),
         switchMap((identifier) =>
           from(this.hubService.connect()).pipe(
-            switchMap(() => this.hubService.addToGroup(identifier))
+            switchMap(() => {
+              if (!identifier) return of({ type: 'NOOP' });
+
+              return this.hubService.addToGroup(identifier);
+            })
           )
         )
       )
@@ -109,7 +112,7 @@ export class BoardGroupsViewComponent
   }
 
   onTitleSubmitted(title: string) {
-    if (!title) return;
+    if (!title || !this.board?.id) return;
 
     this.store.dispatch(
       BoardActions.updateBoard({
@@ -191,7 +194,7 @@ export class BoardGroupsViewComponent
   }
 
   onDeleteBoardClicked() {
-    const boardId = this.board.id;
+    const boardId = this.board?.id;
 
     if (boardId === undefined || boardId === null) return;
 
@@ -205,7 +208,9 @@ export class BoardGroupsViewComponent
 
     const file = files[0];
 
-    const boardIdentifier = this.board.identifier;
+    const boardIdentifier = this.board?.identifier;
+
+    if (boardIdentifier === undefined || boardIdentifier === null) return;
 
     this.store.dispatch(TaskActions.importTasks({ boardIdentifier, file }));
   }

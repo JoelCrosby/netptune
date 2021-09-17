@@ -54,13 +54,19 @@ const reducer = createReducer(
 
   // Upload Profile Picture
 
-  on(actions.uploadProfilePictureSuccess, (state, { response }) => ({
-    ...state,
-    profile: {
-      ...state.profile,
-      pictureUrl: response?.uri,
-    },
-  }))
+  on(actions.uploadProfilePictureSuccess, (state, { response }) => {
+    if (!response?.uri || !state.profile) {
+      return state;
+    }
+
+    return {
+      ...state,
+      profile: {
+        ...state.profile,
+        pictureUrl: response?.uri,
+      },
+    };
+  })
 );
 
 export const profileReducer = (

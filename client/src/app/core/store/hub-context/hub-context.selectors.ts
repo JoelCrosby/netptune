@@ -9,5 +9,5 @@ export const selectCurrentHubGroupId = createSelector(
 
 export const selectIsWorkspaceGroup = createSelector(
   selectCurrentHubGroupId,
-  (state?: string) => state?.startsWith('[workspace]')
+  (state?: string | null) => state?.startsWith('[workspace]')
 );
