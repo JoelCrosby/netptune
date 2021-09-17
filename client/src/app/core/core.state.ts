@@ -48,7 +48,7 @@ export const reducers: ActionReducerMap<Partial<AppState>> = {
   hub: hubContextReducer,
 };
 
-export const metaReducers: MetaReducer<AppState>[] = [
+export const metaReducers: MetaReducer<Partial<AppState>>[] = [
   initStateFromLocalStorage,
   clearState,
 ];

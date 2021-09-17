@@ -1,26 +1,28 @@
 import { ActionReducer } from '@ngrx/store';
 import { AppState } from '../core.state';
 
-export const debug = (
-  reducer: ActionReducer<AppState>
-): ActionReducer<AppState> => (state, action) => {
-  const newState = reducer(state, action);
+export const debug =
+  (
+    reducer: ActionReducer<Partial<AppState>>
+  ): ActionReducer<Partial<AppState>> =>
+  (state, action) => {
+    const newState = reducer(state, action);
 
-  if (action.type === '@ngrx/store-devtools/recompute') {
+    if (action.type === '@ngrx/store-devtools/recompute') {
+      return newState;
+    }
+
+    const { type, ...payload } = action;
+    const error = type.includes('Fail');
+
+    // eslint-disable-next-line no-console
+    const log = console[error ? 'error' : 'info'];
+
+    log(`%c[NGRX] %c${type}`, 'color: #D171E1', 'color: inherit', {
+      payload,
+      oldState: state,
+      newState,
+    });
+
     return newState;
-  }
-
-  const { type, ...payload } = action;
-  const error = type.includes('Fail');
-
-  // eslint-disable-next-line no-console
-  const log = console[error ? 'error' : 'info'];
-
-  log(`%c[NGRX] %c${type}`, 'color: #D171E1', 'color: inherit', {
-    payload,
-    oldState: state,
-    newState,
-  });
-
-  return newState;
-};
+  };

@@ -5,7 +5,9 @@ import { AppState } from '@core/core.state';
 import { Logger } from '@core/util/logger';
 
 export const initStateFromLocalStorage =
-  (reducer: ActionReducer<AppState>): ActionReducer<AppState> =>
+  (
+    reducer: ActionReducer<Partial<AppState>>
+  ): ActionReducer<Partial<AppState>> =>
   (state, action) => {
     const newState = reducer(state, action);
 
@@ -27,9 +29,9 @@ export const initStateFromLocalStorage =
 
 const logStorageStateChange = (
   action: Action,
-  state: AppState | undefined,
-  newState: AppState,
-  mergedState: AppState
+  state: Partial<AppState> | undefined,
+  newState: Partial<AppState>,
+  mergedState: Partial<AppState>
 ) => {
   const { type, ...payload } = action;
 
