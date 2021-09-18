@@ -15,7 +15,10 @@ export class AuthProviderResolver implements Resolve<Observable<boolean>> {
 
     const expiresValue = route.queryParamMap.get('expires');
 
-    if (expiresValue === null) return of(false);
+    if (expiresValue === null) {
+      console.log('activated route auth code faild');
+      return of(false);
+    }
 
     const expires = new Date(expiresValue);
 
@@ -28,6 +31,7 @@ export class AuthProviderResolver implements Resolve<Observable<boolean>> {
     const pictureUrl = route.queryParamMap.get('pictureUrl') ?? '';
 
     if (!token || !email || !userId) {
+      console.log('activated route auth code faild');
       return of(false);
     }
 
