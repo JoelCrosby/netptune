@@ -156,6 +156,10 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       assigneeId: user.userId,
     };
 
+    if (!workspace.slug) {
+      return;
+    }
+
     this.store.dispatch(
       TaskActions.createProjectTask({
         identifier: `[workspace] ${workspace.slug}`,

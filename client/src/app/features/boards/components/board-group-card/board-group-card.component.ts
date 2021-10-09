@@ -12,8 +12,6 @@ export class BoardGroupCardComponent {
   @Input() task!: Selected<BoardViewTask>;
   @Input() groupId!: number;
 
-  constructor() {}
-
   trackByTag(_: number, tag: string) {
     return tag;
   }

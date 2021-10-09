@@ -91,8 +91,8 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
         status: TaskStatus.new,
       };
 
-      if (!workspace) {
-        throw new Error('workspace is undefined');
+      if (!workspace?.slug) {
+        throw new Error('workspace slug is undefined');
       }
 
       this.store.dispatch(

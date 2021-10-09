@@ -23,7 +23,7 @@ export class ProfileService {
     );
   }
 
-  put(user: Partial<AppUser>) {
+  put(user: Partial<AppUser> & { id: string }) {
     return this.http.put<AppUser>(
       environment.apiEndpoint + `api/users/${user.id}`,
       user

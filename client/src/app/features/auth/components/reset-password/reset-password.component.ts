@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
@@ -15,7 +15,7 @@ import { first, tap } from 'rxjs/operators';
   styleUrls: ['./reset-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
   authLoading$: Observable<boolean>;
 
   request?: ResetPasswordRequest;
@@ -59,8 +59,6 @@ export class ResetPasswordComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit() {}
 
   resetPassword() {
     if (!this.request) return;

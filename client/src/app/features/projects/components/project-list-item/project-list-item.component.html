@@ -1,13 +1,11 @@
 <a [routerLink]="[ '.', project.key ]">
   <app-card-list-item
-  [title]="project.name"
-  [description]="project.description"
-  [actions]="actions$ | async"
-  (delete)="onDeleteClicked()"
->
-    <h5>
-      Repository
-    </h5>
+    [title]="project.name"
+    [description]="project.description"
+    [actions]="actions$ | async"
+    (delete)="onDeleteClicked()"
+  >
+    <h5>Repository</h5>
 
     <a (click)="$event.stopPropagation()" class="link">
       {{ project.repositoryUrl }}

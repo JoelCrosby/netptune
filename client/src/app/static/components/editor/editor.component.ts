@@ -131,7 +131,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
       data: initialValue || undefined,
       onReady: () => this.loaded.emit(),
       onChange: () => {
-        this.editor.save().then((value) => {
+        void this.editor.save().then((value) => {
           this.onChange(JSON.stringify(value));
         });
       },

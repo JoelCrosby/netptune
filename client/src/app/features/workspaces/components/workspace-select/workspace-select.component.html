@@ -1,47 +1,28 @@
-<div class="workspace-select" [class.workspace-select-compact]="compact" #dropdown>
-
-  <button
-    class="select-trigger"
-    (click)="open(selectmenu, origin)"
-    #origin
-  >
-
-    <ng-container
-      *ngIf="currentWorkspace; else elseTemplate"
-    >
+<div
+  class="workspace-select"
+  [class.workspace-select-compact]="compact"
+  #dropdown
+>
+  <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
+    <ng-container *ngIf="currentWorkspace; else elseTemplate">
       <div
         class="app-workspace-link-inner"
         [style.backgroundColor]="currentWorkspace?.metaInfo?.color"
       >
         {{ currentWorkspace.name[0] }}
       </div>
-      <div class="select-label">
-        {{ currentWorkspace.name }}
-      </div>
+      <div class="select-label">{{ currentWorkspace.name }}</div>
     </ng-container>
 
     <ng-template #elseTemplate>
-      <div
-        class="app-workspace-link-inner"
-      >
-      </div>
-      <div class="select-label">
-        Select Workspace
-      </div>
+      <div class="app-workspace-link-inner"></div>
+      <div class="select-label">Select Workspace</div>
     </ng-template>
-
   </button>
 
   <div #selectmenu class="select-menu">
-    <div
-      *ngIf="isOpen"
-      class="select-menu-inner menu-scale-in"
-    >
-
-      <div
-        *ngIf="!options?.length"
-        class="no-results-item"
-      >
+    <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">
+      <div *ngIf="!options?.length" class="no-results-item">
         No results found...
       </div>
 
@@ -52,7 +33,7 @@
         placeholder="Search.."
         [formControl]="searchControl"
         (click)="$event.stopPropagation()"
-      >
+      />
 
       <div class="select-menu-inner-options custom-scroll">
         <div
@@ -68,28 +49,18 @@
             {{ option.name[0] }}
           </div>
 
-          <span>
-            {{ option.name }}
-          </span>
+          <span> {{ option.name }} </span>
         </div>
       </div>
 
       <div class="select-menu-footer">
-        <a
-          class="select-menu-footer-item"
-          [routerLink]="['/workspaces']"
-        >
+        <a class="select-menu-footer-item" [routerLink]="['/workspaces']">
           Workspaces
         </a>
-        <div
-          class="select-menu-footer-item"
-          (click)="onlogOutClicked()"
-        >
+        <div class="select-menu-footer-item" (click)="onlogOutClicked()">
           Logout
         </div>
       </div>
-
     </div>
   </div>
-
 </div>

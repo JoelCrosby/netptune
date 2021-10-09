@@ -1,31 +1,21 @@
 <mat-card>
   <mat-card-title>
     {{ title }}
-    <button
-      mat-button
-      color="primary"
-      type="button"
-      (click)="delete.emit()"
-    >
+    <button mat-button color="primary" type="button" (click)="delete.emit()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-card-title>
   <mat-card-content>
     <pre>{{ description }}</pre>
 
-    <small class="text-muted">
-      {{ subText }}
-    </small>
+    <small class="text-muted"> {{ subText }} </small>
 
     <ng-content></ng-content>
-
   </mat-card-content>
 
   <mat-card-actions>
-
     <ng-container *ngFor="let action of actions; first as isFirst">
       <ng-container *ngIf="action.isLink; else elseTemplate">
-
         <ng-container *ngIf="isFirst; else elseTemplate">
           <a
             mat-flat-button
@@ -34,10 +24,7 @@
             type="button"
             [routerLink]="action.routerLink"
           >
-            <mat-icon
-              *ngIf="action.icon"
-              class="action-mat-icon"
-            >
+            <mat-icon *ngIf="action.icon" class="action-mat-icon">
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
@@ -51,19 +38,14 @@
             type="button"
             [routerLink]="action.routerLink"
           >
-            <mat-icon
-              *ngIf="action.icon"
-              class="action-mat-icon"
-            >
+            <mat-icon *ngIf="action.icon" class="action-mat-icon">
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
           </a>
         </ng-template>
-
       </ng-container>
       <ng-template #elseTemplate>
-
         <ng-container *ngIf="isFirst; else elseTemplate">
           <button
             mat-flat-button
@@ -71,10 +53,7 @@
             class="action-button"
             (click)="action.click?.call(action)"
           >
-            <mat-icon
-              *ngIf="action.icon"
-              class="action-mat-icon"
-            >
+            <mat-icon *ngIf="action.icon" class="action-mat-icon">
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
@@ -87,19 +66,13 @@
             class="action-button"
             (click)="action.click?.call(action)"
           >
-            <mat-icon
-              *ngIf="action.icon"
-              class="action-mat-icon"
-            >
+            <mat-icon *ngIf="action.icon" class="action-mat-icon">
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
           </button>
         </ng-template>
-
       </ng-template>
-
     </ng-container>
-
   </mat-card-actions>
 </mat-card>

@@ -1,3 +1,4 @@
+import { throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
@@ -30,6 +31,8 @@ export class WorkspacesService {
   }
 
   delete(workspace: Workspace) {
+    if (!workspace?.slug) return throwError('workspace slug empty');
+
     return this.http.delete<Workspace>(
       environment.apiEndpoint + 'api/workspaces/' + workspace.slug
     );

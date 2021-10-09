@@ -9,7 +9,12 @@ import { SettingsViewComponent } from './views/settings-view/settings-view.compo
 import { TagsInputComponent } from './components/tags-input/tags-input.component';
 
 @NgModule({
-  declarations: [SettingsComponent, SettingsViewComponent, TagsComponent, TagsInputComponent],
+  declarations: [
+    SettingsComponent,
+    SettingsViewComponent,
+    TagsComponent,
+    TagsInputComponent,
+  ],
   imports: [CommonModule, SharedModule, StaticModule, SettingsRoutingModule],
 })
 export class SettingsModule {}

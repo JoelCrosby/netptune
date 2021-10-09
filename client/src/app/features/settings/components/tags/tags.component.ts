@@ -45,8 +45,7 @@ export class TagsComponent implements OnInit, OnDestroy {
         takeUntil(this.onDestroy$),
         ofType(actions.editTag, actions.editTagSuccess, actions.editTagFail),
         tap((action) => {
-          if (action.type !== actions.editTagSuccess.type) {
-          } else {
+          if (action.type === actions.editTagSuccess.type) {
             this.editTagIndex = null;
           }
           this.cd.detectChanges();
@@ -61,8 +60,7 @@ export class TagsComponent implements OnInit, OnDestroy {
         takeUntil(this.onDestroy$),
         ofType(actions.addTag, actions.addTagSuccess, actions.addTagFail),
         tap((action) => {
-          if (action.type !== actions.addTagSuccess.type) {
-          } else {
+          if (action.type === actions.addTagSuccess.type) {
             this.addTagActive = false;
           }
           this.cd.detectChanges();

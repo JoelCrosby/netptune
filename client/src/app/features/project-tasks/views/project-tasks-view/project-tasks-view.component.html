@@ -1,6 +1,6 @@
 <app-page-container>
-
-  <app-page-header title="Tasks"
+  <app-page-header
+    title="Tasks"
     actionTitle="Create Task"
     (actionClick)="showAddModal()"
     [overflowActions]="secondaryActions"
@@ -15,7 +15,4 @@
   <ng-template #elseTemplate>
     <app-task-list></app-task-list>
   </ng-template>
-
-
-
 </app-page-container>

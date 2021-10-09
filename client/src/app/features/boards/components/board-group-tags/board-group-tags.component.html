@@ -19,10 +19,8 @@
 
 <mat-menu #tagMenu="matMenu" class="tags-menu">
   <ng-template matMenuContent>
-
     <ng-container *ngIf="loaded$ | async; else elseTemplate">
       <ng-container *ngrxLet=" tags$ as tags">
-
         <ng-container *ngIf="tags.length; else elseTemplate">
           <mat-checkbox
             class="tag-checkbox mat-menu-item"
@@ -38,18 +36,11 @@
 
         <ng-template #elseTemplate>
           <div class="no-tags-message">
-            <mat-icon class="material-icons-outlined">
-              local_offer
-            </mat-icon>
-            <span>
-              There are currently No Tags
-            </span>
-            <p>
-              Tags Assigned to tasks will show here
-            </p>
+            <mat-icon class="material-icons-outlined"> local_offer </mat-icon>
+            <span> There are currently No Tags </span>
+            <p>Tags Assigned to tasks will show here</p>
           </div>
         </ng-template>
-
       </ng-container>
     </ng-container>
 
@@ -58,6 +49,5 @@
         <mat-spinner diameter="24"></mat-spinner>
       </div>
     </ng-template>
-
   </ng-template>
 </mat-menu>

@@ -44,8 +44,9 @@ export class ProjectsEffects {
       this.actions$.pipe(
         ofType(actions.loadProjectDetailFail),
         withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
-        tap(([_, workspaceId]) =>
-          this.router.navigate(['/', workspaceId, 'projects'])
+        tap(
+          ([_, workspaceId]) =>
+            void this.router.navigate(['/', workspaceId, 'projects'])
         )
       ),
     { dispatch: false }

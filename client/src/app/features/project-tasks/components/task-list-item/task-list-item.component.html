@@ -1,7 +1,4 @@
-<div
-  class="task-item"
-  [class.flagged]="task.isFlagged"
->
+<div class="task-item" [class.flagged]="task.isFlagged">
   <button
     class="task-action"
     mat-icon-button
@@ -9,43 +6,20 @@
     [matMenuTriggerData]="{ task: task }"
     [matMenuTriggerFor]="menu"
   >
-    <mat-icon class="drag">
-      more_vert
-    </mat-icon>
+    <mat-icon class="drag"> more_vert </mat-icon>
   </button>
 
-  <mat-checkbox
-    class="task-checkbox"
-    color="primary"
-  >
-  </mat-checkbox>
+  <mat-checkbox class="task-checkbox" color="primary"> </mat-checkbox>
 
   <div class="task-scope-id-col">
-    <div class="task-scope-id">
-      {{ task.systemId }}
-    </div>
+    <div class="task-scope-id">{{ task.systemId }}</div>
   </div>
 
+  <div class="title" (click)="titleClicked()">{{ task.name }}</div>
 
-  <div class="title" (click)="titleClicked()">
-    {{ task.name }}
-  </div>
+  <mat-icon *ngIf="task.isFlagged" color="warn" class="flag"> flag </mat-icon>
 
-  <mat-icon
-    *ngIf="task.isFlagged"
-    color="warn"
-    class="flag"
-  >
-    flag
-  </mat-icon>
-
-
-  <mat-icon
-    class="task-complete"
-    *ngIf="task.status === 1"
-  >
-    done
-  </mat-icon>
+  <mat-icon class="task-complete" *ngIf="task.status === 1"> done </mat-icon>
 
   <app-avatar
     size="24"
@@ -54,43 +28,25 @@
     [imageUrl]="task.assigneePictureUrl"
   >
   </app-avatar>
-
 </div>
 
 <mat-menu #menu="matMenu">
-  <ng-template
-    matMenuContent
-    let-task="task"
-  >
-    <button
-      mat-menu-item
-      (click)="markCompleteClicked(task)"
-    >
-      <mat-icon class="material-icons-outlined">
-        done
-      </mat-icon>
+  <ng-template matMenuContent let-task="task">
+    <button mat-menu-item (click)="markCompleteClicked(task)">
+      <mat-icon class="material-icons-outlined"> done </mat-icon>
       <span>Mark Complete</span>
     </button>
 
-    <button
-      mat-menu-item
-      (click)="moveToBacklogClicked(task)"
-    >
+    <button mat-menu-item (click)="moveToBacklogClicked(task)">
       <mat-icon class="material-icons-outlined">
         assignment_returned_outline
       </mat-icon>
       <span>Move to Backlog</span>
     </button>
 
-    <button
-      mat-menu-item
-      (click)="deleteClicked(task)"
-    >
-      <mat-icon class="material-icons-outlined">
-        delete
-      </mat-icon>
+    <button mat-menu-item (click)="deleteClicked(task)">
+      <mat-icon class="material-icons-outlined"> delete </mat-icon>
       <span>Delete</span>
     </button>
-
   </ng-template>
 </mat-menu>

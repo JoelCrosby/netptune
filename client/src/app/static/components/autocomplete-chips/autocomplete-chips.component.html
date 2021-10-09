@@ -1,7 +1,9 @@
-<mat-form-field class="autocomplete-chips w-100" [appearance]="appearance" *ngIf="filteredOptions | async as filtered">
-  <mat-label>
-    {{ label }}
-  </mat-label>
+<mat-form-field
+  class="autocomplete-chips w-100"
+  [appearance]="appearance"
+  *ngIf="filteredOptions | async as filtered"
+>
+  <mat-label> {{ label }} </mat-label>
 
   <mat-chip-list #chipList>
     <mat-chip
@@ -11,12 +13,7 @@
       (removed)="remove(option)"
     >
       {{ option }}
-      <mat-icon
-        matChipRemove
-        *ngIf="removable"
-      >
-        clear
-      </mat-icon>
+      <mat-icon matChipRemove *ngIf="removable"> clear </mat-icon>
     </mat-chip>
 
     <input
@@ -29,7 +26,7 @@
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       [matChipInputAddOnBlur]="addOnBlur"
       (matChipInputTokenEnd)="add($event)"
-    >
+    />
   </mat-chip-list>
 
   <mat-autocomplete
@@ -45,5 +42,4 @@
       {{ option }}
     </mat-option>
   </mat-autocomplete>
-
 </mat-form-field>

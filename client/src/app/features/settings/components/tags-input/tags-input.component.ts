@@ -30,8 +30,6 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   onDestroy$ = new Subject();
   formControl!: FormControl;
 
-  constructor() {}
-
   ngOnInit() {
     this.formControl = new FormControl(this.value);
 

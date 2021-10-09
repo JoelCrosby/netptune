@@ -73,7 +73,7 @@ export class BoardGroupsEffects {
           parts.pop();
           const base = parts.join('/');
 
-          this.router.navigateByUrl(base);
+          void this.router.navigateByUrl(base);
         })
       ),
     { dispatch: false }
@@ -315,11 +315,12 @@ export class BoardGroupsEffects {
 
           return [_, usersParam, tagsParam, flaggedParam, termParam];
         }),
-        tap(async ([_, users, tags, flagged, term]) => {
-          await this.router.navigate([], {
-            queryParams: { users, tags, flagged, term },
-          });
-          this.store.dispatch(actions.loadBoardGroups());
+        tap(([_, users, tags, flagged, term]) => {
+          void this.router
+            .navigate([], {
+              queryParams: { users, tags, flagged, term },
+            })
+            .then(() => this.store.dispatch(actions.loadBoardGroups()));
         })
       ),
     { dispatch: false }

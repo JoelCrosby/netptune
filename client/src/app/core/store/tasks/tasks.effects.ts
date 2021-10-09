@@ -156,7 +156,7 @@ export class ProjectTasksEffects {
       ofType(actions.exportTasks),
       switchMap(() =>
         this.projectTasksService.export().pipe(
-          tap(async (res) => await downloadFile(res.file, res.filename)),
+          tap((res) => void downloadFile(res.file, res.filename)),
           map((reponse) => actions.exportTasksSuccess({ reponse })),
           catchError((error) => of(actions.exportTasksFail({ error })))
         )

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -8,7 +8,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./invite-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InviteDialogComponent implements OnInit {
+export class InviteDialogComponent {
   users: string[] = [];
 
   get email() {
@@ -20,8 +20,6 @@ export class InviteDialogComponent implements OnInit {
   });
 
   constructor(private dialogRef: MatDialogRef<InviteDialogComponent>) {}
-
-  ngOnInit() {}
 
   close() {
     this.dialogRef.close();

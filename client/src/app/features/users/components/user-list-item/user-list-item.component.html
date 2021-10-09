@@ -1,14 +1,8 @@
 <div class="app-list-item">
-
   <div class="app-list-item-header">
-
     <ng-content></ng-content>
 
-    <mat-checkbox
-      class="user-checkbox"
-      color="primary"
-    >
-    </mat-checkbox>
+    <mat-checkbox class="user-checkbox" color="primary"> </mat-checkbox>
 
     <div class="image">
       <app-avatar
@@ -18,22 +12,12 @@
       ></app-avatar>
     </div>
 
-    <div class="title">
-      {{ user.displayName }}
-    </div>
+    <div class="title">{{ user.displayName }}</div>
 
-    <div class="description">
-      {{ user.email }}
-    </div>
+    <div class="description">{{ user.email }}</div>
 
-    <div class="app-list-item-pill" *ngIf="user.isWorkspaceOwner">
-      Owner
-    </div>
-
+    <div class="app-list-item-pill" *ngIf="user.isWorkspaceOwner">Owner</div>
   </div>
 
-  <div class="app-list-item-footer">
-
-  </div>
-
+  <div class="app-list-item-footer"></div>
 </div>

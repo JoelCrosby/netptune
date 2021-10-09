@@ -36,7 +36,7 @@ export class WorkspacesEffects {
     () =>
       this.actions$.pipe(
         ofType(actions.selectWorkspace),
-        tap(async () => await this.hubService.disconnect())
+        tap(() => void this.hubService.disconnect())
       ),
     { dispatch: false }
   );

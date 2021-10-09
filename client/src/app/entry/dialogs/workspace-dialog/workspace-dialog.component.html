@@ -2,15 +2,8 @@
   {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}
 </h1>
 
-<form
-  class="form-auth"
-  [formGroup]="formGroup"
->
-  <app-form-input
-    formControlName="name"
-    label="Name"
-    maxLength="1024"
-  >
+<form class="form-auth" [formGroup]="formGroup">
+  <app-form-input formControlName="name" label="Name" maxLength="1024">
   </app-form-input>
 
   <app-form-input
@@ -30,27 +23,13 @@
   >
   </app-form-textarea>
 
-  <app-color-select
-    formControlName="color"
-    label="Color"
-  >
-  </app-color-select>
+  <app-color-select formControlName="color" label="Color"> </app-color-select>
 </form>
 
 <div mat-dialog-actions align="end">
-  <button
-    mat-stroked-button
-    mat-dialog-close
-  >
-    Close
-  </button>
+  <button mat-stroked-button mat-dialog-close>Close</button>
 
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="getResult()"
-    type="button"
-  >
+  <button mat-flat-button color="primary" (click)="getResult()" type="button">
     {{ isEditMode ? 'Save Changes' : 'Save Workspace'}}
   </button>
 </div>

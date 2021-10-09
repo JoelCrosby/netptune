@@ -1,5 +1,4 @@
 <div class="comments-container" *ngIf="user">
-
   <div class="comments-input">
     <app-avatar
       size="24"
@@ -21,10 +20,7 @@
   </div>
 
   <div class="comments-list">
-    <div
-      class="comments-list-item"
-      *ngFor="let comment of comments"
-    >
+    <div class="comments-list-item" *ngFor="let comment of comments">
       <app-avatar
         size="24"
         class="task-card-user-chip"
@@ -36,9 +32,7 @@
         <span class="comment-user-display-name">
           {{ comment.userDisplayName }}
 
-          <small>
-            {{ comment.createdAt | fromNow }}
-          </small>
+          <small> {{ comment.createdAt | fromNow }} </small>
 
           <div class="comment-actions">
             <button
@@ -60,13 +54,9 @@
               </ng-template>
             </mat-menu>
           </div>
-
         </span>
-        <span class="comment-body-text">
-          {{ comment.body }}
-        </span>
+        <span class="comment-body-text"> {{ comment.body }} </span>
       </div>
     </div>
   </div>
-
 </div>

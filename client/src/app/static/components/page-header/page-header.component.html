@@ -1,33 +1,26 @@
 <header class="page-header">
-
   <div class="header-top-row">
     <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
-      <button mat-icon-button color="accent" aria-label="Open Menu" (click)="onOpenMenu()">
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Open Menu"
+        (click)="onOpenMenu()"
+      >
         <mat-icon>menu</mat-icon>
       </button>
     </div>
 
     <div class="header-top-row-left">
-
       <div class="header-main-back">
-        <a
-          *ngIf="backLink"
-          class="header-back-link"
-          [routerLink]="backLink"
-        >
-          <mat-icon>
-            arrow_back
-          </mat-icon>
-          <span>
-            {{ backLabel || 'Go back' }}
-          </span>
+        <a *ngIf="backLink" class="header-back-link" [routerLink]="backLink">
+          <mat-icon> arrow_back </mat-icon>
+          <span> {{ backLabel || 'Go back' }} </span>
         </a>
       </div>
 
       <div class="header-main">
-        <h1 class="page-header-title" *ngIf="!titleEditable">
-          {{ title }}
-        </h1>
+        <h1 class="page-header-title" *ngIf="!titleEditable">{{ title }}</h1>
 
         <app-inline-edit-input
           *ngIf="titleEditable"
@@ -43,11 +36,9 @@
           <ng-content></ng-content>
         </div>
       </div>
-
     </div>
 
     <div class="header-actions">
-
       <button
         *ngFor="let action of secondaryActions"
         matRipple
@@ -64,9 +55,7 @@
         aria-label="Actions"
         [matMenuTriggerFor]="overflowMenu"
       >
-        <mat-icon>
-          more_horiz
-        </mat-icon>
+        <mat-icon> more_horiz </mat-icon>
       </button>
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
@@ -76,10 +65,10 @@
             *ngFor="let action of overflowActions"
             (click)="action.click?.call(null)"
           >
-          <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
-            {{ action.icon || 'more_horiz'  }}
-          </mat-icon>
-          <span>{{ action.label }}</span>
+            <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
+              {{ action.icon || 'more_horiz' }}
+            </mat-icon>
+            <span>{{ action.label }}</span>
           </button>
         </ng-template>
       </mat-menu>
