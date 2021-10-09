@@ -6,5 +6,21 @@
   "printWidth": 80,
   "parser": "typescript",
   "useTabs": false,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": "*.component.html",
+      "options": {
+        "parser": "angular"
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
 }
