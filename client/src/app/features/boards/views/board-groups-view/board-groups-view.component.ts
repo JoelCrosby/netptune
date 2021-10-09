@@ -108,7 +108,7 @@ export class BoardGroupsViewComponent
 
   ngOnDestroy() {
     this.store.dispatch(GroupActions.clearState());
-    this.hubService.disconnect();
+    void this.hubService.disconnect();
   }
 
   onTitleSubmitted(title: string) {

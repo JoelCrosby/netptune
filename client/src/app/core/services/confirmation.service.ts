@@ -20,7 +20,7 @@ export class ConfirmationService {
 
   open(
     config: ConfirmDialogOptions = DEFAULT_CONFIG,
-    silent: boolean = false
+    silent = false
   ): Observable<boolean> {
     if (silent) {
       return of(true);

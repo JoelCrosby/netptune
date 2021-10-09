@@ -8,7 +8,7 @@
     placeholder="Search"
     [formControl]="termFormControl"
     (keydown.enter)="onSubmit()"
-  >
+  />
 
   <ng-container *ngIf="termFormControl.value; else elseTemplate">
     <mat-icon
@@ -30,6 +30,4 @@
       search
     </mat-icon>
   </ng-template>
-
-
 </div>

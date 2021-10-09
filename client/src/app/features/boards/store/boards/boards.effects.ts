@@ -89,8 +89,9 @@ export class BoardsEffects {
       this.actions$.pipe(
         ofType(actions.deleteBoardSuccess),
         withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
-        tap(([_, workspaceId]) =>
-          this.router.navigate(['/', workspaceId, 'boards'])
+        tap(
+          ([_, workspaceId]) =>
+            void this.router.navigate(['/', workspaceId, 'boards'])
         )
       ),
     { dispatch: false }

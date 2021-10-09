@@ -1,9 +1,7 @@
 <div class="tasks-container">
-
   <h4>{{ header }}</h4>
 
   <div class="task-list">
-
     <ng-container *ngIf="tasks?.length; else elseTemplate">
       <cdk-virtual-scroll-viewport
         class="task-list-group custom-scroll"
@@ -18,15 +16,11 @@
         >
         </app-task-list-item>
 
-        <app-task-inline
-          [siblings]="tasks"
-        ></app-task-inline>
-
+        <app-task-inline [siblings]="tasks"></app-task-inline>
       </cdk-virtual-scroll-viewport>
     </ng-container>
 
     <ng-template #elseTemplate>
-
       <app-task-inline></app-task-inline>
 
       <div class="list-empty">
@@ -35,8 +29,6 @@
           <h4 class="empty-text">{{ emptyMessage }}</h4>
         </div>
       </div>
-
     </ng-template>
-
   </div>
 </div>

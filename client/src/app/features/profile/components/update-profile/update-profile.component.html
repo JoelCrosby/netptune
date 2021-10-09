@@ -1,35 +1,15 @@
-<form
-  [formGroup]="formGroup"
-  class="px-0"
->
-
+<form [formGroup]="formGroup" class="px-0">
   <div class="column">
-
-
-    <app-form-input
-      formControlName="firstname"
-      label="Firstname"
-    >
+    <app-form-input formControlName="firstname" label="Firstname">
     </app-form-input>
 
-
-    <app-form-input
-      formControlName="lastname"
-      label="Lastname"
-    >
+    <app-form-input formControlName="lastname" label="Lastname">
     </app-form-input>
 
-
-    <app-form-input
-      formControlName="email"
-      label="Email Address"
-    >
+    <app-form-input formControlName="email" label="Email Address">
     </app-form-input>
 
-    <input
-      type="hidden"
-      formControlName="pictureUrl"
-    >
+    <input type="hidden" formControlName="pictureUrl" />
 
     <button
       class="form-submit-btn"
@@ -43,7 +23,6 @@
 
   <div class="column-fill">
     <div class="profile-image">
-
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
         <app-image-cropper
           [size]="180"
@@ -54,7 +33,6 @@
         ></app-image-cropper>
       </ng-container>
       <ng-template #elseTemplate>
-
         <ng-container *ngIf="pictureUrl.value; else elseTemplate">
           <img
             crossorigin="anonymous"
@@ -63,7 +41,7 @@
             alt="Profile Image"
             height="180"
             width="180"
-          >
+          />
 
           <button
             class="profile-picture-btn"
@@ -72,11 +50,9 @@
           >
             Change Picture
           </button>
-
         </ng-container>
 
         <ng-template #elseTemplate>
-
           <img
             crossorigin="anonymous"
             class="profile-picture"
@@ -84,7 +60,7 @@
             alt="Placeholder Profile Image"
             height="180"
             width="180"
-          >
+          />
 
           <button
             class="profile-picture-btn"
@@ -95,9 +71,6 @@
           </button>
         </ng-template>
       </ng-template>
-
-
     </div>
   </div>
-
 </form>

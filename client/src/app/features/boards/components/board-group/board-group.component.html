@@ -1,59 +1,47 @@
 <div class="board-group-card">
-
   <ng-content></ng-content>
 
-  <div
-    #container
-    class="task-container"
-  >
-
-  <div
-    cdkDropList
-    appScrollShadowVertical
-    class="board-task-list custom-scroll"
-    [id]="dragListId"
-    [cdkDropListConnectedTo]="siblingIds"
-    (cdkDropListDropped)="drop($event)"
-    [cdkDropListData]="group.tasks"
-  >
-    <app-board-group-card
-      cdkDrag
-      class="board-group-task-card"
-      *ngFor="let task of group.tasks; trackBy:trackGroupTask"
-      [cdkDragData]="task"
-      [task]="task"
-      [groupId]="group.id"
-      (cdkDragStarted)="onDragStarted()"
-      (cdkDragReleased)="onDragRelease()"
-      (click)="onTaskClicked($event, task, group.id)"
+  <div #container class="task-container">
+    <div
+      cdkDropList
+      appScrollShadowVertical
+      class="board-task-list custom-scroll"
+      [id]="dragListId"
+      [cdkDropListConnectedTo]="siblingIds"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListData]="group.tasks"
     >
-    </app-board-group-card>
+      <app-board-group-card
+        cdkDrag
+        class="board-group-task-card"
+        *ngFor="let task of group.tasks; trackBy:trackGroupTask"
+        [cdkDragData]="task"
+        [task]="task"
+        [groupId]="group.id"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragReleased)="onDragRelease()"
+        (click)="onTaskClicked($event, task, group.id)"
+      >
+      </app-board-group-card>
 
+      <app-board-group-task-inline
+        *ngIf="isInlineActive$ | async"
+        (canceled)="onInlineCanceled()"
+        [boardGroupId]="group.id"
+      >
+      </app-board-group-task-inline>
 
-    <app-board-group-task-inline
-      *ngIf="isInlineActive$ | async"
-      (canceled)="onInlineCanceled()"
-      [boardGroupId]="group.id"
-    >
-    </app-board-group-task-inline>
+      <ng-container *ngIf="showAddButton$ | async; else elseTemplate">
+        <div class="create-task">
+          <button mat-button color="primary" (click)="onAddTaskClicked()">
+            ADD TASK
+          </button>
+        </div>
+      </ng-container>
 
-    <ng-container *ngIf="showAddButton$ | async; else elseTemplate">
-      <div class="create-task">
-        <button
-          mat-button color="primary"
-          (click)="onAddTaskClicked()"
-        >
-          ADD TASK
-        </button>
-      </div>
-    </ng-container>
-
-    <ng-template #elseTemplate>
-      <div class="create-task-spacer">
-        {{ ' ' }}
-      </div>
-    </ng-template>
-  </div>
-
+      <ng-template #elseTemplate>
+        <div class="create-task-spacer">{{ ' ' }}</div>
+      </ng-template>
+    </div>
   </div>
 </div>

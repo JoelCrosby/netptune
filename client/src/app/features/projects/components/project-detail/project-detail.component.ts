@@ -87,7 +87,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         ]).pipe(
           takeUntil(this.onDestroy$),
           map(
-            ([_, loading]) =>
+            ([, loading]) =>
               this.formGroup.pristine || this.formGroup.invalid || loading
           ),
           startWith(true)

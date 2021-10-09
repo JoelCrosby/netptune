@@ -3,8 +3,6 @@
 <p>Select the group you wish to move the selected tasks to</p>
 
 <div mat-dialog-content>
-
-
   <div class="group-selection">
     <button
       [class.selected]="selected === group.id"
@@ -13,22 +11,21 @@
       *ngFor="let group of groups$ | async"
       (click)="onGroupClicked(group.id)"
     >
-      <label>
-        {{ group.name }}
-      </label>
+      <label> {{ group.name }} </label>
       <div class="pill"></div>
-
     </button>
   </div>
-
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-stroked-button mat-dialog-close>
-    Cancel
-  </button>
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
   <div class="mr-2"></div>
-  <button mat-flat-button color="primary" (click)="onMoveTasksClicked()" type="button">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onMoveTasksClicked()"
+    type="button"
+  >
     Move Tasks
   </button>
 </div>

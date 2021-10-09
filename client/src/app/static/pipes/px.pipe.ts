@@ -10,6 +10,6 @@ export class PxPipe implements PipeTransform {
       return '';
     }
 
-    return value + 'px';
+    return `${value}px`;
   }
 }

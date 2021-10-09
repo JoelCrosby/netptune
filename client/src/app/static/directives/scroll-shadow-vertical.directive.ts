@@ -15,7 +15,7 @@ export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
   onDestroy$ = new Subject();
 
   get element() {
-    return this.elementRef.nativeElement;
+    return this.elementRef.nativeElement as Element;
   }
 
   constructor(private elementRef: ElementRef) {}

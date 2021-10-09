@@ -6,7 +6,7 @@ import { Workspace } from '@core/models/workspace';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,9 @@ export class WorkspaceResolver implements Resolve<Workspace> {
   }
 
   get(workspaceKey: string | null): Observable<Workspace> {
-    // TODO: handle when workspaceKey is null
+    if (!workspaceKey) {
+      return throwError('workspace key null');
+    }
 
     return this.http
       .get<Workspace>(

@@ -1,11 +1,6 @@
 <div *ngIf="project$ | async as project">
-
   <form [formGroup]="formGroup">
-    <app-form-input
-      formControlName="name"
-      label="Name"
-      maxLength="1024"
-    >
+    <app-form-input formControlName="name" label="Name" maxLength="1024">
     </app-form-input>
 
     <app-form-textarea
@@ -30,9 +25,7 @@
         <small>
           The Project ID is displayed as the first part of task's ID
         </small>
-        <small>
-          max 6 characters. should be unique to workspace
-        </small>
+        <small> max 6 characters. should be unique to workspace </small>
       </div>
     </div>
 
@@ -52,7 +45,5 @@
     >
       Save Changes
     </button>
-
   </form>
-
 </div>

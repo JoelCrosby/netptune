@@ -79,6 +79,6 @@ export class ShellComponent implements OnInit {
       throw new Error('onWorkspaceChange workspace is null');
     }
 
-    this.router.navigate(['/', workspace.slug]);
+    void this.router.navigate(['/', workspace.slug]);
   }
 }

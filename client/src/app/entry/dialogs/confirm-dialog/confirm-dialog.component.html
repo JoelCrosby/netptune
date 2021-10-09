@@ -1,6 +1,4 @@
-<h1 mat-dialog-title>
-  {{ data.title }}
-</h1>
+<h1 mat-dialog-title>{{ data.title }}</h1>
 
 <div mat-dialog-content *ngIf="data.message || data.confirmationCheckboxLabel">
   <div class="message-icon">
@@ -17,9 +15,7 @@
       {{ data.message }}
     </p>
 
-    <p *ngIf="data.messageExtended">
-      {{ data.messageExtended }}
-    </p>
+    <p *ngIf="data.messageExtended">{{ data.messageExtended }}</p>
   </ng-container>
 
   <ng-container *ngIf="data.confirmationCheckboxLabel">
@@ -34,13 +30,7 @@
 
 <div mat-dialog-actions align="end">
   <ng-container *ngIf="data.isInfoMessage; else elseTemplate">
-    <button
-      mat-stroked-button
-      cdkFocusInitial
-      mat-dialog-close
-    >
-      Ok
-    </button>
+    <button mat-stroked-button cdkFocusInitial mat-dialog-close>Ok</button>
   </ng-container>
 
   <ng-template #elseTemplate>

@@ -1,10 +1,8 @@
 <div class="app-list mb-5">
-
   <app-user-list-item
     *ngFor="let user of users$ | async as users; let i=index; trackBy:trackById;"
     [user]="user"
   >
-
     <button
       class="app-list-item-action"
       cdkDragHandle
@@ -15,22 +13,20 @@
       [matMenuTriggerData]="{ user: user }"
       [matMenuTriggerFor]="menu"
     >
-      <mat-icon class="app-list-drag-icon">
-        drag_indicator
-      </mat-icon>
+      <mat-icon class="app-list-drag-icon"> drag_indicator </mat-icon>
     </button>
 
     <mat-menu #menu="matMenu">
       <ng-template matMenuContent>
-        <button mat-menu-item (click)="onRemoveClicked(user)" *ngIf="!user.isWorkspaceOwner">
-          <mat-icon class="material-icons-outlined">
-            delete
-          </mat-icon>
+        <button
+          mat-menu-item
+          (click)="onRemoveClicked(user)"
+          *ngIf="!user.isWorkspaceOwner"
+        >
+          <mat-icon class="material-icons-outlined"> delete </mat-icon>
           <span>Remove user from workspace</span>
         </button>
       </ng-template>
     </mat-menu>
-
   </app-user-list-item>
-
 </div>

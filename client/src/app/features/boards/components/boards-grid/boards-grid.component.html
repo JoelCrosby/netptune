@@ -1,8 +1,5 @@
 <div class="boards-grid-group" *ngFor="let group of groups$ | async">
-
-  <h1 class="section-heading">
-    {{ group.projectName }}
-  </h1>
+  <h1 class="section-heading">{{ group.projectName }}</h1>
 
   <app-card-group>
     <a
@@ -14,19 +11,13 @@
         <app-card-header-image
           [style.background-color]="board.metaInfo.color || 'inherit'"
         >
-          <mat-icon
-            class="material-icons-outlined"
-          >
-            table_chart
-          </mat-icon>
+          <mat-icon class="material-icons-outlined"> table_chart </mat-icon>
         </app-card-header-image>
         <app-card-header>
           <app-card-title>{{ board.name }}</app-card-title>
           <app-card-subtitle>{{ board.identifier }}</app-card-subtitle>
         </app-card-header>
-
       </app-card>
     </a>
   </app-card-group>
-
 </div>

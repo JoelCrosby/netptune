@@ -1,11 +1,13 @@
-<app-page-container [marginBottom]="false" [verticalPadding]="false" [fullHeight]="true">
-
+<app-page-container
+  [marginBottom]="false"
+  [verticalPadding]="false"
+  [fullHeight]="true"
+>
   <app-page-header
     title="Boards"
     actionTitle="Create Board"
     (actionClick)="onCreateBoardClicked()"
   >
-
   </app-page-header>
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">
@@ -16,5 +18,4 @@
   <ng-template #elseTemplate>
     <app-boards-grid></app-boards-grid>
   </ng-template>
-
 </app-page-container>

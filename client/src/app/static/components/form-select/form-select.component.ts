@@ -69,7 +69,7 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
     if (this.model !== undefined && this.options) {
       this.model = this.options.find(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (currentOption) => (currentOption as any)[this.idKey] === this.model
+        (currentOption) => currentOption[this.idKey] === this.model
       );
     }
   }

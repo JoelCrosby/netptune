@@ -1,5 +1,4 @@
 <div class="image-cropper" [style.visibility]="ready ? 'visible' : 'hidden'">
-
   <ly-img-cropper
     class="cropper"
     [style.max-width]="size"
@@ -11,52 +10,60 @@
     (cleaned)="ready = false"
     (cropped)="onCropped($event)"
   >
-    <span class="empty-image" *ngIf="ready">
-      Drag and drop image
-    </span>
+    <span class="empty-image" *ngIf="ready"> Drag and drop image </span>
   </ly-img-cropper>
 
   <div class="cropper-upload">
-
-    <input #_fileInput type="file" (change)="cropper.selectInputEvent($event)" accept="image/*" hidden>
-
+    <input
+      #_fileInput
+      type="file"
+      (change)="cropper.selectInputEvent($event)"
+      accept="image/*"
+      hidden
+    />
   </div>
 
   <div class="cropper-tool-bar" *ngIf="ready">
-
-    <button class="icon-button" (click)="cropper.zoomIn()" mat-button matTooltip="Zoom In">
+    <button
+      class="icon-button"
+      (click)="cropper.zoomIn()"
+      mat-button
+      matTooltip="Zoom In"
+    >
       <mat-icon>zoom_in</mat-icon>
     </button>
-    <button class="icon-button" (click)="cropper.zoomOut()" mat-button matTooltip="Zoom Out">
+    <button
+      class="icon-button"
+      (click)="cropper.zoomOut()"
+      mat-button
+      matTooltip="Zoom Out"
+    >
       <mat-icon>zoom_out</mat-icon>
     </button>
-    <button class="icon-button" (click)="cropper.center()" mat-button matTooltip="Center Focus">
+    <button
+      class="icon-button"
+      (click)="cropper.center()"
+      mat-button
+      matTooltip="Center Focus"
+    >
       <mat-icon>filter_center_focus</mat-icon>
     </button>
-    <button class="icon-button" (click)="cropper.rotate(-90)" mat-button matTooltip="Rotate">
+    <button
+      class="icon-button"
+      (click)="cropper.rotate(-90)"
+      mat-button
+      matTooltip="Rotate"
+    >
       <mat-icon>rotate_90_degrees_ccw</mat-icon>
     </button>
 
-    <button (click)="cropper.fit()" mat-button>
-      Fit
-    </button>
-    <button (click)="cropper.fitToScreen()" mat-button>
-      Fit to screen
-    </button>
-    <button (click)="cropper.setScale(1)" mat-button>
-      1:1
-    </button>
-    <button (click)="cropper.clean()" mat-button>
-      Clean
-    </button>
-
+    <button (click)="cropper.fit()" mat-button>Fit</button>
+    <button (click)="cropper.fitToScreen()" mat-button>Fit to screen</button>
+    <button (click)="cropper.setScale(1)" mat-button>1:1</button>
+    <button (click)="cropper.clean()" mat-button>Clean</button>
   </div>
 
-  <button
-    mat-stroked-button
-    class="crop-image-btn"
-    (click)="onCancelClicked()"
-  >
+  <button mat-stroked-button class="crop-image-btn" (click)="onCancelClicked()">
     Cancel
   </button>
 
@@ -87,5 +94,4 @@
   >
     <mat-icon>crop</mat-icon>Save
   </button>
-
 </div>

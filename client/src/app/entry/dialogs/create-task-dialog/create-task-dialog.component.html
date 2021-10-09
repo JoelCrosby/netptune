@@ -1,14 +1,7 @@
-<h1 mat-dialog-title>
-  Add new Task
-</h1>
+<h1 mat-dialog-title>Add new Task</h1>
 
 <form [formGroup]="formGroup">
-
-  <app-form-input
-    formControlName="name"
-    label="Summary"
-    maxLength="1024"
-  >
+  <app-form-input formControlName="name" label="Summary" maxLength="1024">
   </app-form-input>
 
   <app-form-textarea
@@ -18,7 +11,6 @@
   >
   </app-form-textarea>
 
-
   <app-form-select
     formControlName="project"
     label="Project"
@@ -27,26 +19,12 @@
     [options]="projects$ | async"
   >
   </app-form-select>
-
 </form>
 
-<div
-  mat-dialog-actions
-  align="end"
->
-  <button
-    mat-stroked-button
-    (click)="close()"
-  >
-    Close
-  </button>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">Close</button>
   <div class="mr-2"></div>
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="saveClicked()"
-    type="button"
-  >
+  <button mat-flat-button color="primary" (click)="saveClicked()" type="button">
     Save Task
   </button>
 </div>

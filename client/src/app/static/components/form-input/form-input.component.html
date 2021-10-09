@@ -1,9 +1,5 @@
 <div class="nept-form-control">
-  <label
-    *ngIf="label"
-    [for]="ngControl.name"
-    class="form-control-label"
-  >
+  <label *ngIf="label" [for]="ngControl.name" class="form-control-label">
     {{ label }}
   </label>
 
@@ -12,10 +8,7 @@
     [class.invalid]="control?.touched && control?.invalid"
     [class.active]="control?.value && control?.pending"
   >
-
-    <div *ngIf="prefix" class="form-control-prefix">
-      {{ prefix }}
-    </div>
+    <div *ngIf="prefix" class="form-control-prefix">{{ prefix }}</div>
 
     <input
       #input
@@ -31,23 +24,12 @@
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
       (input)="onInputchange($event)"
       (blur)="onTouch()"
-    >
+    />
 
-    <mat-icon
-      *ngIf="icon"
-      aria-hidden="true"
-      class="material-icons-outlined"
-    >
+    <mat-icon *ngIf="icon" aria-hidden="true" class="material-icons-outlined">
       {{ icon }}
     </mat-icon>
-
   </div>
 
-  <small
-    *ngIf="hint"
-    class="form-control-hint"
-  >
-    {{ hint }}
-  </small>
-
+  <small *ngIf="hint" class="form-control-hint"> {{ hint }} </small>
 </div>

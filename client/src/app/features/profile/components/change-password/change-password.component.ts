@@ -107,7 +107,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.formGroup.markAllAsTouched();
     this.cd.detectChanges();
 
-    if (!!this.checkPasswords(this.formGroup)) {
+    if (this.checkPasswords(this.formGroup)) {
       this.errorMessage$.next('Passwords do not match');
       return;
     }

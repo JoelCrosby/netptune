@@ -65,7 +65,7 @@ export class ProjectTasksViewComponent
   }
 
   ngOnDestroy() {
-    this.hubService.disconnect();
+    void this.hubService.disconnect();
   }
 
   showAddModal() {

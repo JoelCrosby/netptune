@@ -1,6 +1,7 @@
 import slugify from 'slugify';
 
-export const toUrlSlug = (value: string) => slugify(value, {
+export const toUrlSlug = (value: string) =>
+  slugify(value, {
     replacement: '-',
     remove: undefined,
     lower: true,

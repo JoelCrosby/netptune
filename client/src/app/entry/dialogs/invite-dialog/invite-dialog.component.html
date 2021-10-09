@@ -2,7 +2,6 @@
 
 <mat-dialog-content>
   <form [formGroup]="formGroup" (ngSubmit)="add()">
-
     <app-form-input
       formControlName="email"
       label="Invitee Email"
@@ -13,9 +12,7 @@
 
     <div class="app-list">
       <ng-container *ngIf="users?.length; else elseTemplate">
-        <div *ngFor="let user of users" class="app-list-item">
-          {{ user }}
-        </div>
+        <div *ngFor="let user of users" class="app-list-item">{{ user }}</div>
       </ng-container>
 
       <ng-template #elseTemplate>
@@ -24,27 +21,13 @@
         </div>
       </ng-template>
     </div>
-
   </form>
 </mat-dialog-content>
 
-<div
-  mat-dialog-actions
-  align="end"
->
-  <button
-    mat-stroked-button
-    (click)="close()"
-  >
-    Close
-  </button>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">Close</button>
   <div class="mr-2"></div>
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="getResult()"
-    type="button"
-  >
+  <button mat-flat-button color="primary" (click)="getResult()" type="button">
     Invite Users
   </button>
 </div>
