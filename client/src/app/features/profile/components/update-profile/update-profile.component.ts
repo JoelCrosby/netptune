@@ -98,6 +98,10 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         filter((profile) => !!profile),
         first(),
         tap((currentProfile) => {
+          if (!currentProfile) {
+            return;
+          }
+
           const profile = {
             ...currentProfile,
             firstname: this.firstname.value,
@@ -131,6 +135,8 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         filter((profile) => !!profile),
         first(),
         tap((profile) => {
+          if (!profile) return;
+
           this.store.dispatch(updateProfile({ profile, data }));
         })
       )
@@ -148,7 +154,11 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         filter((profile) => !!profile),
         first(),
         tap((current) => {
-          const profile: Partial<AppUser> = {
+          if (!current) {
+            return;
+          }
+
+          const profile: AppUser = {
             ...current,
             pictureUrl: null,
           };
