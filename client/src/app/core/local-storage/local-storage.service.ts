@@ -6,8 +6,6 @@ const APP_PREFIX = 'Netptune-';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  constructor() {}
-
   // eslint-disable-next-line @typescript-eslint/ban-types
   static loadInitialState<TState extends object>() {
     return Object.keys(localStorage).reduce((state: TState, storageKey) => {

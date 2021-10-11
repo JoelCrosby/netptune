@@ -111,7 +111,7 @@ export class AuthEffects implements OnInitEffects {
       this.actions$.pipe(
         ofType(actions.loginSuccess),
         debounceTime(debounce, scheduler),
-        tap(() => this.router.navigate(['/workspaces'])),
+        tap(() => void this.router.navigate(['/workspaces'])),
         switchMap(() => [openSideNav(), loadWorkspaces()])
       )
   );
@@ -124,7 +124,7 @@ export class AuthEffects implements OnInitEffects {
         switchMap((action) =>
           this.authService.register(action.request).pipe(
             map((token) => actions.registerSuccess({ token })),
-            tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => void this.router.navigate(['/workspaces'])),
             catchError((error) => of(actions.registerFail({ error })))
           )
         )
@@ -139,7 +139,7 @@ export class AuthEffects implements OnInitEffects {
         switchMap((action) =>
           this.authService.confirmEmail(action.request).pipe(
             map((token) => actions.confirmEmailSuccess({ token })),
-            tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Email confirmed successfully')),
             catchError((error) => of(actions.confirmEmailFail({ error })))
           )
@@ -152,7 +152,7 @@ export class AuthEffects implements OnInitEffects {
       this.actions$.pipe(
         ofType(actions.confirmEmailFail),
         debounceTime(debounce, scheduler),
-        tap(() => this.router.navigate(['/auth/login'])),
+        tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>
           this.snackbar.open('Email confirmation code is invalid or expired')
         ),
@@ -169,7 +169,7 @@ export class AuthEffects implements OnInitEffects {
           this.authService.requestPasswordReset(action.email).pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Password reset email has been sent')),
-            tap(() => this.router.navigate(['/auth/login'])),
+            tap(() => void this.router.navigate(['/auth/login'])),
             map(() => actions.requestPasswordResetSuccess()),
             catchError((error) =>
               of(actions.requestPasswordResetFail({ error }))
@@ -187,7 +187,7 @@ export class AuthEffects implements OnInitEffects {
         switchMap((action) =>
           this.authService.resetPassword(action.request).pipe(
             map((token) => actions.resetPasswordSuccess({ token })),
-            tap(() => this.router.navigate(['/workspaces'])),
+            tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Password has been reset')),
             catchError((error) => of(actions.resetPasswordFail({ error })))
           )
@@ -200,7 +200,7 @@ export class AuthEffects implements OnInitEffects {
       this.actions$.pipe(
         ofType(actions.resetPasswordFail),
         debounceTime(debounce, scheduler),
-        tap(() => this.router.navigate(['/auth/login'])),
+        tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>
           this.snackbar.open('Reset password request is invalid or expired')
         ),
@@ -217,7 +217,7 @@ export class AuthEffects implements OnInitEffects {
             if (!result) return { type: 'NO_ACTION' };
 
             this.cookie.deleteAll();
-            this.router.navigate(['auth/login']);
+            void this.router.navigate(['auth/login']);
 
             return actions.logoutSuccess();
           })
