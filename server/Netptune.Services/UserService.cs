@@ -200,7 +200,7 @@ namespace Netptune.Services
                     });
 
                 var uri = Hosting.ClientOrigin
-                    .AppendPathSegments("app", "auth", "register")
+                    .AppendPathSegments("auth", "register")
                     .SetQueryParam("code", key, true)
                     .SetQueryParam("refer", "invite");
 
