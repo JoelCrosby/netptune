@@ -18,7 +18,6 @@ namespace Netptune.Repositories
 {
     public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, ActivityLog, int>, IActivityLogRepository
     {
-
         public ActivityLogRepository(DataContext context, IDbConnectionFactory connectionFactory)
             : base(context, connectionFactory)
         {

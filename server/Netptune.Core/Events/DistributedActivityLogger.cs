@@ -85,7 +85,6 @@ namespace Netptune.Core.Events
                     Time = DateTime.UtcNow,
                 });
 
-
             Client.Enqueue<IActivityObservable>(service => service.Track(activities));
         }
 
@@ -155,7 +154,6 @@ namespace Netptune.Core.Events
                     Time = DateTime.UtcNow,
                     Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
                 });
-
 
             Client.Enqueue<IActivityObservable>(service => service.Track(activities));
         }

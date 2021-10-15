@@ -37,7 +37,7 @@ namespace Netptune.Core.Extensions
 
             if (input.Length == 1) return input.ToUpper();
 
-            return $"{input.FirstOrDefault().ToString().ToUpper()}{input.Substring(1)}";
+            return $"{input.FirstOrDefault().ToString().ToUpper()}{input[1..]}";
         }
 
         public static string Truncate(this string str, int length)

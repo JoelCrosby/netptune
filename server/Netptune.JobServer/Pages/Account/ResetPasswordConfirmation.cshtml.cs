@@ -8,7 +8,6 @@ namespace Netptune.JobServer.Pages.Account
     {
         public void OnGet()
         {
-
         }
     }
 }
