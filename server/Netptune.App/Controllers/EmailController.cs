@@ -10,7 +10,6 @@ using Netptune.Core.Models.Messaging;
 
 namespace Netptune.App.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Policy = NetptunePolicies.Workspace)]

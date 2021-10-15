@@ -28,7 +28,6 @@ namespace Netptune.Entities.EntityMaps.BaseMaps
             builder
                 .HasIndex(entity => entity.IsDeleted);
 
-
             // Entity > AppUser
 
             builder
