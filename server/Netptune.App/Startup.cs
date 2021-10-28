@@ -249,16 +249,19 @@ namespace Netptune.App
             return ConnectionStringParser.ParseConnectionString(envConString);
         }
 
-        private static string GetRedisConnectionString()
+        private string GetRedisConnectionString()
         {
+            var appSettingsConString = Configuration.GetConnectionString("redis");
             var envVar = Environment.GetEnvironmentVariable("REDIS_URL");
 
-            if (envVar is null)
+            var connectionString = envVar ?? appSettingsConString;
+
+            if (connectionString is null)
             {
                 throw new Exception("An environment variable with the key of {REDIS_URL} not found.");
             }
 
-            return ConnectionStringParser.ParseRedis(envVar);
+            return ConnectionStringParser.ParseRedis(connectionString);
         }
     }
 }
