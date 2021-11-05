@@ -7,9 +7,11 @@ import { AuthGuardService } from '@core/auth/auth-guard.service';
 // prettier-ignore
 
 const routes: Routes = [
-  { path: '',
+  {
+    path: '',
     redirectTo: '/workspaces',
-    pathMatch: 'full' },
+    pathMatch: 'full'
+  },
   {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then((m) => m.AuthModule),
