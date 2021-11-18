@@ -15,6 +15,11 @@ public static class NetptuneEntitiesConfiguration
         if (configuration == null)
             throw new ArgumentNullException(nameof(configuration));
 
+        // Use legacy Npgsql timestamp behavior
+        // https://www.npgsql.org/doc/types/datetime.html#timestamps-and-timezones
+
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
         configuration(netptuneEntitiesOptions);
 
