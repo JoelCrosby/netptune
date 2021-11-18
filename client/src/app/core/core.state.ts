@@ -58,7 +58,7 @@ if (!environment.production) {
 }
 
 const feature = <TState>(name: keyof AppState) =>
-  createFeatureSelector<AppState, TState>(name);
+  createFeatureSelector< TState>(name);
 
 export const selectAuthFeature = feature<AuthState>('auth');
 export const selectMetaFeature = feature<MetaState>('meta');
