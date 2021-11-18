@@ -1,5 +1,5 @@
 using System;
-using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -105,17 +105,17 @@ namespace Netptune.Services.Authentication
                     options.Events.OnCreatingTicket = async context =>
                     {
                         var token = context.AccessToken;
-                        using var client = new WebClient();
+                        using var client = new HttpClient();
 
-                        client.Headers.Add("Authorization", $"token {token}");
-                        client.Headers.Add("User-Agent", "Netptune API");
+                        client.DefaultRequestHeaders.Add("Authorization", $"token {token}");
+                        client.DefaultRequestHeaders.Add("User-Agent", "Netptune API");
 
-                        var stream = await client.OpenReadTaskAsync("https://api.github.com/user");
+                        var stream = await client.GetStreamAsync("https://api.github.com/user");
                         var gitHubUser = await JsonSerializer.DeserializeAsync<GithubUserResponse>(stream);
 
                         if (gitHubUser is null) return;
 
-                        context.Identity.AddClaim(new Claim("Provider-Picture-Url", gitHubUser.AvatarUrl.ToString()));
+                        context.Identity?.AddClaim(new Claim("Provider-Picture-Url", gitHubUser.AvatarUrl.ToString()));
                     };
                 });
 
