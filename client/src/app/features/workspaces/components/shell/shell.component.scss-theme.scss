@@ -1,5 +1,5 @@
-@use '~@angular/material' as mat;
-@import '~@angular/material/theming';
+@use '@angular/material' as mat;
+@import '@angular/material/theming';
 
 @mixin shell-theme($theme) {
 
@@ -40,7 +40,7 @@
 
   .app-is-mobile {
     .app-sidenav {
-      width: calc(100vw - 72px- 72px) !important;
+      width: calc(100vw - 72px - 72px) !important;
     }
 
     .app-menu-link {
