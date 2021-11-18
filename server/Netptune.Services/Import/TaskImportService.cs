@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-using MoreLinq.Extensions;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Import;
@@ -95,7 +93,7 @@ namespace Netptune.Services.Import
             var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
             var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
             var existingGroupNames = existingGroups.ConvertAll(group => group.Name.Trim().ToLowerInvariant());
-            var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder).Select(group => group.SortOrder).FirstOrDefault() + 1;
+            var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder)?.SortOrder + 1 ?? 0;
 
             var newGroups = groups.Where(group => !existingGroupNames.Contains(group));
 
