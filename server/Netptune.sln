@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\netptune-client.code-workspace = ..\netptune-client.code-workspace
 		..\netptune-server.code-workspace = ..\netptune-server.code-workspace
 		..\README.md = ..\README.md
+		..\.github\workflows\build-deploy-jobs.yml = ..\.github\workflows\build-deploy-jobs.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.Messaging", "Netptune.Messaging\Netptune.Messaging.csproj", "{C1A80FA9-1194-4A5B-9591-AF186A55C2F0}"
