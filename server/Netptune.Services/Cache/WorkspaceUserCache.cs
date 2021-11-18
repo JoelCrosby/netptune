@@ -8,38 +8,37 @@ using Netptune.Core.Cache.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Cache.Common;
 
-namespace Netptune.Services.Cache
+namespace Netptune.Services.Cache;
+
+public class WorkspaceUserCache : EntityCache<bool, WorkspaceUserKey>, IWorkspaceUserCache
 {
-    public class WorkspaceUserCache : EntityCache<bool, WorkspaceUserKey>, IWorkspaceUserCache
+    private readonly INetptuneUnitOfWork UnitOfWork;
+
+    public WorkspaceUserCache(
+        ICacheProvider cache,
+        INetptuneUnitOfWork unitOfWork,
+        ILogger<WorkspaceUserCache> logger)
+        : base(cache, TimeSpan.FromHours(1), logger)
     {
-        private readonly INetptuneUnitOfWork UnitOfWork;
+        UnitOfWork = unitOfWork;
+    }
 
-        public WorkspaceUserCache(
-            ICacheProvider cache,
-            INetptuneUnitOfWork unitOfWork,
-            ILogger<WorkspaceUserCache> logger)
-            : base(cache, TimeSpan.FromHours(1), logger)
-        {
-            UnitOfWork = unitOfWork;
-        }
+    protected override Task<bool> GetEntity(WorkspaceUserKey key)
+    {
+        return UnitOfWork.Users.IsUserInWorkspace(key.UserId, key.WorkspaceKey);
+    }
 
-        protected override Task<bool> GetEntity(WorkspaceUserKey key)
-        {
-            return UnitOfWork.Users.IsUserInWorkspace(key.UserId, key.WorkspaceKey);
-        }
+    protected override string GetCacheKey(WorkspaceUserKey key)
+    {
+        return $"workspace:{key.WorkspaceKey}:{key.UserId}";
+    }
 
-        protected override string GetCacheKey(WorkspaceUserKey key)
+    public Task<bool> IsUserInWorkspace(string userId, string workspaceKey)
+    {
+        return Get(new WorkspaceUserKey
         {
-            return $"workspace:{key.WorkspaceKey}:{key.UserId}";
-        }
-
-        public Task<bool> IsUserInWorkspace(string userId, string workspaceKey)
-        {
-            return Get(new WorkspaceUserKey
-            {
-                UserId = userId,
-                WorkspaceKey = workspaceKey,
-            });
-        }
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+        });
     }
 }

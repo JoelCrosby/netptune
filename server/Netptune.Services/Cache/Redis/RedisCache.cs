@@ -9,181 +9,180 @@ using Netptune.Core.Cache.Common;
 
 using StackExchange.Redis;
 
-namespace Netptune.Services.Cache.Redis
+namespace Netptune.Services.Cache.Redis;
+
+public class RedisCache : ICacheProvider
 {
-    public class RedisCache : ICacheProvider
+    private readonly ConnectionMultiplexer Redis;
+
+    private IDatabase Db => Redis.GetDatabase();
+
+    public RedisCache(IOptions<RedisCacheOptions> options)
     {
-        private readonly ConnectionMultiplexer Redis;
-
-        private IDatabase Db => Redis.GetDatabase();
-
-        public RedisCache(IOptions<RedisCacheOptions> options)
+        if (options?.Value is null)
         {
-            if (options?.Value is null)
-            {
-                throw new Exception($"{nameof(RedisCache)} was instantiated without options provided");
-            }
-
-            Redis = ConnectionMultiplexer.Connect(options.Value.Connection);
+            throw new Exception($"{nameof(RedisCache)} was instantiated without options provided");
         }
 
-        public string GetString(string key)
+        Redis = ConnectionMultiplexer.Connect(options.Value.Connection);
+    }
+
+    public string GetString(string key)
+    {
+        return Db.StringGet(key);
+    }
+
+    public TValue GetValue<TValue>(string key)
+    {
+        if (key is null) return default;
+
+        var json = GetString(key);
+
+        if (json is null) return default;
+
+        return JsonSerializer.Deserialize<TValue>(json);
+    }
+
+    public bool TryGetString(string key, out string value)
+    {
+        if (key is null)
         {
-            return Db.StringGet(key);
+            value = null;
+            return false;
         }
 
-        public TValue GetValue<TValue>(string key)
+        if (GetString(key) is {} result)
         {
-            if (key is null) return default;
-
-            var json = GetString(key);
-
-            if (json is null) return default;
-
-            return JsonSerializer.Deserialize<TValue>(json);
+            value = result;
+            return true;
         }
 
-        public bool TryGetString(string key, out string value)
+        value = default;
+        return false;
+    }
+
+    public bool TryGetValue<TValue>(string key, out TValue value)
+    {
+        if (key is null)
         {
-            if (key is null)
-            {
-                value = null;
-                return false;
-            }
-
-            if (GetString(key) is {} result)
-            {
-                value = result;
-                return true;
-            }
-
             value = default;
             return false;
         }
 
-        public bool TryGetValue<TValue>(string key, out TValue value)
+        var result = Db.StringGet(key);
+
+        if (result.IsNull)
         {
-            if (key is null)
-            {
-                value = default;
-                return false;
-            }
-
-            var result = Db.StringGet(key);
-
-            if (result.IsNull)
-            {
-                value = default;
-                return false;
-            }
-
-            value = JsonSerializer.Deserialize<TValue>(result);
-            return true;
+            value = default;
+            return false;
         }
 
-        public async Task<(bool, TValue)> TryGetValueAsync<TValue>(string key)
+        value = JsonSerializer.Deserialize<TValue>(result);
+        return true;
+    }
+
+    public async Task<(bool, TValue)> TryGetValueAsync<TValue>(string key)
+    {
+        if (key is null)
         {
-            if (key is null)
-            {
-                return (false, default);
-            }
-
-            var result = await Db.StringGetAsync(key);
-
-            if (result.IsNull)
-            {
-                return (false, default);
-            }
-
-            var value = JsonSerializer.Deserialize<TValue>(result);
-            return (true, value);
+            return (false, default);
         }
 
-        public async Task<string> GetStringAsync(string key)
+        var result = await Db.StringGetAsync(key);
+
+        if (result.IsNull)
         {
-            if (key is null) return null;
-
-            string result = await Db.StringGetAsync(key);
-
-            return result;
+            return (false, default);
         }
 
-        public async Task<TValue> GetValueAsync<TValue>(string key)
+        var value = JsonSerializer.Deserialize<TValue>(result);
+        return (true, value);
+    }
+
+    public async Task<string> GetStringAsync(string key)
+    {
+        if (key is null) return null;
+
+        string result = await Db.StringGetAsync(key);
+
+        return result;
+    }
+
+    public async Task<TValue> GetValueAsync<TValue>(string key)
+    {
+        if (key is null) return default;
+
+        var json = await GetStringAsync(key);
+
+        if (json is null) return default;
+        return JsonSerializer.Deserialize<TValue>(json);
+    }
+
+    public TValue GetOrCreate<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+    {
+        var value = GetValue<TValue>(key);
+
+        if (value is { })
         {
-            if (key is null) return default;
-
-            var json = await GetStringAsync(key);
-
-            if (json is null) return default;
-            return JsonSerializer.Deserialize<TValue>(json);
-        }
-
-        public TValue GetOrCreate<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
-        {
-            var value = GetValue<TValue>(key);
-
-            if (value is { })
-            {
-                return value;
-            }
-
-            Set(key, factory.Invoke(), options);
-
             return value;
         }
 
-        public async Task<TValue> GetOrCreateAsync<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+        Set(key, factory.Invoke(), options);
+
+        return value;
+    }
+
+    public async Task<TValue> GetOrCreateAsync<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+    {
+        var value = await GetValueAsync<TValue>(key);
+
+        if (value is { })
         {
-            var value = await GetValueAsync<TValue>(key);
-
-            if (value is { })
-            {
-                return value;
-            }
-
-            await SetAsync(key, factory.Invoke(), options);
-
             return value;
         }
 
-        public void Remove(string key)
-        {
-            if (key is null) return;
+        await SetAsync(key, factory.Invoke(), options);
 
-            Db.KeyDelete(key);
-        }
+        return value;
+    }
 
-        public Task RemoveAsync(string key)
-        {
-            if (key is null) return Task.CompletedTask;
+    public void Remove(string key)
+    {
+        if (key is null) return;
 
-            return Db.KeyDeleteAsync(key);
-        }
+        Db.KeyDelete(key);
+    }
 
-        public void Set(string key, string value, DistributedCacheEntryOptions options)
-        {
-            Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow);
-        }
+    public Task RemoveAsync(string key)
+    {
+        if (key is null) return Task.CompletedTask;
 
-        public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options)
-        {
-            return Db.StringSetAsync(key, value, options.AbsoluteExpirationRelativeToNow);
-        }
+        return Db.KeyDeleteAsync(key);
+    }
 
-        public void Set<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
-        {
-            if (key is null) return;
+    public void Set(string key, string value, DistributedCacheEntryOptions options)
+    {
+        Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow);
+    }
 
-            var json = JsonSerializer.Serialize(value);
-            Db.StringSet(key, json, options.AbsoluteExpirationRelativeToNow);
-        }
+    public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options)
+    {
+        return Db.StringSetAsync(key, value, options.AbsoluteExpirationRelativeToNow);
+    }
 
-        public Task SetAsync<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
-        {
-            if (key is null) return Task.CompletedTask;
+    public void Set<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
+    {
+        if (key is null) return;
 
-            var json = JsonSerializer.Serialize(value);
-            return Db.StringSetAsync(key, json, options.AbsoluteExpirationRelativeToNow);
-        }
+        var json = JsonSerializer.Serialize(value);
+        Db.StringSet(key, json, options.AbsoluteExpirationRelativeToNow);
+    }
+
+    public Task SetAsync<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
+    {
+        if (key is null) return Task.CompletedTask;
+
+        var json = JsonSerializer.Serialize(value);
+        return Db.StringSetAsync(key, json, options.AbsoluteExpirationRelativeToNow);
     }
 }

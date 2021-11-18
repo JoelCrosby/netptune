@@ -5,22 +5,21 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Core.Repositories
+namespace Netptune.Core.Repositories;
+
+public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, int>
 {
-    public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, int>
-    {
-        Task<BoardGroup> GetWithTasksInGroups(int id);
+    Task<BoardGroup> GetWithTasksInGroups(int id);
 
-        Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false);
+    Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false);
 
-        Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null);
+    Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null);
 
-        Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false);
+    Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false);
 
-        Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false);
+    Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false);
 
-        ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId);
+    ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId);
 
-        Task<int?> GetBoardGroupIdForTask(int projectTaskId);
-    }
+    Task<int?> GetBoardGroupIdForTask(int projectTaskId);
 }

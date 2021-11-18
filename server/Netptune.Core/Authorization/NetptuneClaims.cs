@@ -1,7 +1,6 @@
-namespace Netptune.Core.Authorization
+namespace Netptune.Core.Authorization;
+
+public static class NetptuneClaims
 {
-    public static class NetptuneClaims
-    {
-        public const string Workspace = "workspace";
-    }
+    public const string Workspace = "workspace";
 }

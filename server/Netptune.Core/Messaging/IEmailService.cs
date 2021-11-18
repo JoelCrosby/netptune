@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Models.Messaging;
 
-namespace Netptune.Core.Messaging
+namespace Netptune.Core.Messaging;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task Send(SendEmailModel model);
+    Task Send(SendEmailModel model);
 
-        Task Send(IEnumerable<SendEmailModel> models);
+    Task Send(IEnumerable<SendEmailModel> models);
 
-        Task EnqueueSend(SendEmailModel model);
+    Task EnqueueSend(SendEmailModel model);
 
-        Task EnqueueSend(IEnumerable<SendEmailModel> models);
-    }
+    Task EnqueueSend(IEnumerable<SendEmailModel> models);
 }

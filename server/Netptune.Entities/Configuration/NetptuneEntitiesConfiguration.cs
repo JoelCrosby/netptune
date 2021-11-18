@@ -6,29 +6,28 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Models.Options;
 using Netptune.Entities.Contexts;
 
-namespace Netptune.Entities.Configuration
+namespace Netptune.Entities.Configuration;
+
+public static class NetptuneEntitiesConfiguration
 {
-    public static class NetptuneEntitiesConfiguration
+    public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitiesOptions> configuration)
     {
-        public static IServiceCollection AddNetptuneEntities(this IServiceCollection services, Action<NetptuneEntitiesOptions> configuration)
+        if (configuration == null)
+            throw new ArgumentNullException(nameof(configuration));
+
+        var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
+        configuration(netptuneEntitiesOptions);
+
+        services.Configure(configuration);
+
+        services.AddScoped<DbContext, DataContext>();
+        services.AddDbContext<DataContext>(options =>
         {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
+            options
+                .UseNpgsql(netptuneEntitiesOptions.ConnectionString)
+                .UseSnakeCaseNamingConvention();
+        });
 
-            var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
-            configuration(netptuneEntitiesOptions);
-
-            services.Configure(configuration);
-
-            services.AddScoped<DbContext, DataContext>();
-            services.AddDbContext<DataContext>(options =>
-            {
-                options
-                    .UseNpgsql(netptuneEntitiesOptions.ConnectionString)
-                    .UseSnakeCaseNamingConvention();
-            });
-
-            return services;
-        }
+        return services;
     }
 }

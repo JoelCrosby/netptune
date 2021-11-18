@@ -3,22 +3,21 @@
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 
-namespace Netptune.Core.Relationships
+namespace Netptune.Core.Relationships;
+
+public class WorkspaceAppUser : KeyedEntity<int>
 {
-    public class WorkspaceAppUser : KeyedEntity<int>
-    {
-        public int WorkspaceId { get; set; }
+    public int WorkspaceId { get; set; }
 
-        public string UserId { get; set; }
+    public string UserId { get; set; }
 
-        #region NavigationProperties
+    #region NavigationProperties
 
-        [JsonIgnore]
-        public Workspace Workspace { get; set; }
+    [JsonIgnore]
+    public Workspace Workspace { get; set; }
 
-        [JsonIgnore]
-        public AppUser User { get; set; }
+    [JsonIgnore]
+    public AppUser User { get; set; }
 
-        #endregion
-    }
+    #endregion
 }

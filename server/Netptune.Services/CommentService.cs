@@ -10,66 +10,65 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 
-namespace Netptune.Services
+namespace Netptune.Services;
+
+public class CommentService : ICommentService
 {
-    public class CommentService : ICommentService
+    private readonly ICommentRepository Comments;
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IIdentityService Identity;
+
+    public CommentService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
     {
-        private readonly ICommentRepository Comments;
-        private readonly INetptuneUnitOfWork UnitOfWork;
-        private readonly IIdentityService Identity;
+        UnitOfWork = unitOfWork;
+        Identity = identity;
+        Comments = unitOfWork.Comments;
+    }
 
-        public CommentService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public async Task<CommentViewModel> AddCommentToTask(AddCommentRequest request)
+    {
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var userId = await Identity.GetCurrentUserId();
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+
+        if (taskId is null || !workspaceId.HasValue) return null;
+
+        var comment = new Comment
         {
-            UnitOfWork = unitOfWork;
-            Identity = identity;
-            Comments = unitOfWork.Comments;
-        }
+            Body = request.Comment,
+            EntityType = EntityType.Task,
+            OwnerId = userId,
+            EntityId = taskId.Value,
+            WorkspaceId = workspaceId.Value,
+        };
 
-        public async Task<CommentViewModel> AddCommentToTask(AddCommentRequest request)
-        {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var userId = await Identity.GetCurrentUserId();
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        await Comments.AddAsync(comment);
 
-            if (taskId is null || !workspaceId.HasValue) return null;
+        await UnitOfWork.CompleteAsync();
 
-            var comment = new Comment
-            {
-                Body = request.Comment,
-                EntityType = EntityType.Task,
-                OwnerId = userId,
-                EntityId = taskId.Value,
-                WorkspaceId = workspaceId.Value,
-            };
+        return await Comments.GetCommentViewModel(comment.Id);
+    }
 
-            await Comments.AddAsync(comment);
+    public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId)
+    {
+        var workspaceId = Identity.GetWorkspaceKey();
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceId);
 
-            await UnitOfWork.CompleteAsync();
+        if (taskId is null) return null;
 
-            return await Comments.GetCommentViewModel(comment.Id);
-        }
+        return await Comments.GetCommentViewModelsForTask(taskId.Value);
+    }
 
-        public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId)
-        {
-            var workspaceId = Identity.GetWorkspaceKey();
-            var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceId);
+    public async Task<ClientResponse> Delete(int id)
+    {
+        var comment = await Comments.GetAsync(id);
 
-            if (taskId is null) return null;
+        if (comment is null) return null;
 
-            return await Comments.GetCommentViewModelsForTask(taskId.Value);
-        }
+        await Comments.DeletePermanent(comment.Id);
+        await UnitOfWork.CompleteAsync();
 
-        public async Task<ClientResponse> Delete(int id)
-        {
-            var comment = await Comments.GetAsync(id);
-
-            if (comment is null) return null;
-
-            await Comments.DeletePermanent(comment.Id);
-            await UnitOfWork.CompleteAsync();
-
-            return ClientResponse.Success();
-        }
+        return ClientResponse.Success();
     }
 }

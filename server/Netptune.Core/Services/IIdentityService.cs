@@ -2,26 +2,25 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
 
-namespace Netptune.Core.Services
+namespace Netptune.Core.Services;
+
+public interface IIdentityService
 {
-    public interface IIdentityService
-    {
-        Task<AppUser> GetCurrentUser();
+    Task<AppUser> GetCurrentUser();
 
-        Task<string> GetCurrentUserEmail();
+    Task<string> GetCurrentUserEmail();
 
-        Task<string> GetCurrentUserId();
+    Task<string> GetCurrentUserId();
 
-        string GetUserId();
+    string GetUserId();
 
-        string GetUserEmail();
+    string GetUserEmail();
 
-        string GetUserName();
+    string GetUserName();
 
-        string GetPictureUrl();
+    string GetPictureUrl();
 
-        string GetWorkspaceKey();
+    string GetWorkspaceKey();
 
-        Task<int> GetWorkspaceId();
-    }
+    Task<int> GetWorkspaceId();
 }

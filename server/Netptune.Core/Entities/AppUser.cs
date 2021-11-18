@@ -9,81 +9,80 @@ using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Users;
 
-namespace Netptune.Core.Entities
+namespace Netptune.Core.Entities;
+
+public class AppUser : IdentityUser, IKeyedEntity<string>
 {
-    public class AppUser : IdentityUser, IKeyedEntity<string>
+    public string Firstname { get; set; }
+
+    public string Lastname { get; set; }
+
+    public string PictureUrl { get; set; }
+
+    public string DisplayName => GetDisplayName();
+
+    public AuthenticationProvider AuthenticationProvider { get; set; }
+
+    private string GetDisplayName()
     {
-        public string Firstname { get; set; }
+        if (string.IsNullOrWhiteSpace(Firstname) && string.IsNullOrWhiteSpace(Lastname))
+            return UserName;
 
-        public string Lastname { get; set; }
-
-        public string PictureUrl { get; set; }
-
-        public string DisplayName => GetDisplayName();
-
-        public AuthenticationProvider AuthenticationProvider { get; set; }
-
-        private string GetDisplayName()
-        {
-            if (string.IsNullOrWhiteSpace(Firstname) && string.IsNullOrWhiteSpace(Lastname))
-                return UserName;
-
-            return $"{Firstname} {Lastname}";
-        }
-
-        public UserViewModel ToViewModel()
-        {
-            return new()
-            {
-                Id = Id,
-                Firstname = Firstname,
-                Lastname = Lastname,
-                PictureUrl = PictureUrl,
-                DisplayName = DisplayName,
-                Email = Email,
-                UserName = UserName,
-                LastLoginTime = LastLoginTime,
-                RegistrationDate = RegistrationDate,
-            };
-        }
-
-        public WorkspaceUserViewModel ToWorkspaceViewModel(string workspaceOwnerId)
-        {
-            return new()
-            {
-                Id = Id,
-                Firstname = Firstname,
-                Lastname = Lastname,
-                PictureUrl = PictureUrl,
-                DisplayName = DisplayName,
-                Email = Email,
-                UserName = UserName,
-                LastLoginTime = LastLoginTime,
-                RegistrationDate = RegistrationDate,
-                IsWorkspaceOwner = workspaceOwnerId == Id,
-            };
-        }
-
-        #region NavigationProperties
-
-        [JsonIgnore]
-        public DateTime? LastLoginTime { get; set; }
-
-        [JsonIgnore]
-        public DateTime? RegistrationDate { get; set; }
-
-        [JsonIgnore]
-        public ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new HashSet<WorkspaceAppUser>();
-
-        [JsonIgnore]
-        public ICollection<ProjectUser> ProjectUsers { get; } = new HashSet<ProjectUser>();
-
-        [JsonIgnore]
-        public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
-
-        [JsonIgnore]
-        public ICollection<Workspace> Workspaces { get; } = new HashSet<Workspace>();
-
-        #endregion
+        return $"{Firstname} {Lastname}";
     }
+
+    public UserViewModel ToViewModel()
+    {
+        return new()
+        {
+            Id = Id,
+            Firstname = Firstname,
+            Lastname = Lastname,
+            PictureUrl = PictureUrl,
+            DisplayName = DisplayName,
+            Email = Email,
+            UserName = UserName,
+            LastLoginTime = LastLoginTime,
+            RegistrationDate = RegistrationDate,
+        };
+    }
+
+    public WorkspaceUserViewModel ToWorkspaceViewModel(string workspaceOwnerId)
+    {
+        return new()
+        {
+            Id = Id,
+            Firstname = Firstname,
+            Lastname = Lastname,
+            PictureUrl = PictureUrl,
+            DisplayName = DisplayName,
+            Email = Email,
+            UserName = UserName,
+            LastLoginTime = LastLoginTime,
+            RegistrationDate = RegistrationDate,
+            IsWorkspaceOwner = workspaceOwnerId == Id,
+        };
+    }
+
+    #region NavigationProperties
+
+    [JsonIgnore]
+    public DateTime? LastLoginTime { get; set; }
+
+    [JsonIgnore]
+    public DateTime? RegistrationDate { get; set; }
+
+    [JsonIgnore]
+    public ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new HashSet<WorkspaceAppUser>();
+
+    [JsonIgnore]
+    public ICollection<ProjectUser> ProjectUsers { get; } = new HashSet<ProjectUser>();
+
+    [JsonIgnore]
+    public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
+
+    [JsonIgnore]
+    public ICollection<Workspace> Workspaces { get; } = new HashSet<Workspace>();
+
+    #endregion
 }

@@ -1,15 +1,14 @@
-﻿namespace Netptune.Core.Repositories.Common
+﻿namespace Netptune.Core.Repositories.Common;
+
+public interface IPageQuery
 {
-    public interface IPageQuery
-    {
-        int Page { get; }
+    int Page { get; }
 
-        int PageSize { get; }
+    int PageSize { get; }
 
-        string Query { get; }
+    string Query { get; }
 
-        string Sort { get; set; }
+    string Sort { get; set; }
 
-        bool SortDescending { get; set; }
-    }
+    bool SortDescending { get; set; }
 }

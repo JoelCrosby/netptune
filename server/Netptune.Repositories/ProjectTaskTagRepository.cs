@@ -10,26 +10,25 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
-namespace Netptune.Repositories
+namespace Netptune.Repositories;
+
+public class ProjectTaskTagRepository : Repository<DataContext, ProjectTaskTag, int>, IProjectTaskTagRepository
 {
-    public class ProjectTaskTagRepository : Repository<DataContext, ProjectTaskTag, int>, IProjectTaskTagRepository
+    public ProjectTaskTagRepository(DataContext context, IDbConnectionFactory connectionFactory)
+        : base(context, connectionFactory)
     {
-        public ProjectTaskTagRepository(DataContext context, IDbConnectionFactory connectionFactory)
-            : base(context, connectionFactory)
-        {
-        }
+    }
 
-        public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds)
-        {
-            var taskIdList = taskIds.ToList();
-            var ids = await Entities
-                .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
-                .Select(entity => entity.Id)
-                .ToListAsync();
+    public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds)
+    {
+        var taskIdList = taskIds.ToList();
+        var ids = await Entities
+            .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
+            .Select(entity => entity.Id)
+            .ToListAsync();
 
-            await DeletePermanent(ids);
+        await DeletePermanent(ids);
 
-            return ids;
-        }
+        return ids;
     }
 }

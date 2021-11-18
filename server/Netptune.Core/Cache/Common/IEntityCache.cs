@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 
-namespace Netptune.Core.Cache.Common
-{
-    public interface IEntityCache<TEntity, TKey>
-    {
-        Task<TEntity> Get(TKey key);
+namespace Netptune.Core.Cache.Common;
 
-        void Remove(TKey key);
-    }
+public interface IEntityCache<TEntity, TKey>
+{
+    Task<TEntity> Get(TKey key);
+
+    void Remove(TKey key);
 }

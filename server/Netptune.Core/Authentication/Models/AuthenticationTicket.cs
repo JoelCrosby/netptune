@@ -1,13 +1,12 @@
 using System;
 
-namespace Netptune.Core.Authentication.Models
+namespace Netptune.Core.Authentication.Models;
+
+public class AuthenticationTicket : CurrentUserResponse
 {
-    public class AuthenticationTicket : CurrentUserResponse
-    {
-        public object Token { get; set; }
+    public object Token { get; set; }
 
-        public DateTime Issued { get; set; }
+    public DateTime Issued { get; set; }
 
-        public DateTime Expires { get; set; }
-    }
+    public DateTime Expires { get; set; }
 }

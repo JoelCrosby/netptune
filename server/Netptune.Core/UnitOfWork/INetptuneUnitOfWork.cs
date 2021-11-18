@@ -1,34 +1,33 @@
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 
-namespace Netptune.Core.UnitOfWork
+namespace Netptune.Core.UnitOfWork;
+
+public interface INetptuneUnitOfWork : IUnitOfWork
 {
-    public interface INetptuneUnitOfWork : IUnitOfWork
-    {
-        IProjectRepository Projects { get; }
+    IProjectRepository Projects { get; }
 
-        IWorkspaceRepository Workspaces { get; }
+    IWorkspaceRepository Workspaces { get; }
 
-        IWorkspaceUserRepository WorkspaceUsers { get; }
+    IWorkspaceUserRepository WorkspaceUsers { get; }
 
-        ITaskRepository Tasks { get; }
+    ITaskRepository Tasks { get; }
 
-        IUserRepository Users { get; }
+    IUserRepository Users { get; }
 
-        IBoardRepository Boards { get; }
+    IBoardRepository Boards { get; }
 
-        IBoardGroupRepository BoardGroups { get; }
+    IBoardGroupRepository BoardGroups { get; }
 
-        ITaskInGroupRepository ProjectTasksInGroups { get; }
+    ITaskInGroupRepository ProjectTasksInGroups { get; }
 
-        IProjectTaskTagRepository ProjectTaskTags { get; }
+    IProjectTaskTagRepository ProjectTaskTags { get; }
 
-        ICommentRepository Comments { get; }
+    ICommentRepository Comments { get; }
 
-        IReactionRepository Reactions { get; }
+    IReactionRepository Reactions { get; }
 
-        ITagRepository Tags { get; }
+    ITagRepository Tags { get; }
 
-        IActivityLogRepository ActivityLogs { get; }
-    }
+    IActivityLogRepository ActivityLogs { get; }
 }

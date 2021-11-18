@@ -5,28 +5,27 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Core.Repositories
+namespace Netptune.Core.Repositories;
+
+public interface ITagRepository : IWorkspaceEntityRepository<Tag, int>
 {
-    public interface ITagRepository : IWorkspaceEntityRepository<Tag, int>
-    {
-        Task<List<Tag>> GetForTask(int taskId, bool isReadonly = false);
+    Task<List<Tag>> GetForTask(int taskId, bool isReadonly = false);
 
-        Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false);
+    Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false);
 
-        Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId);
+    Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId);
 
-        Task<TagViewModel> GetViewModel(int id);
+    Task<TagViewModel> GetViewModel(int id);
 
-        Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false);
+    Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false);
 
-        Task<bool> Exists(string value, int workspaceId);
+    Task<bool> Exists(string value, int workspaceId);
 
-        Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false);
+    Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false);
 
-        Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false);
+    Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false);
 
-        Task<bool> ExistsForTask(int tagId, int taskId);
+    Task<bool> ExistsForTask(int tagId, int taskId);
 
-        Task DeleteTagFromTask(int workspaceId, int taskId, string tag);
-    }
+    Task DeleteTagFromTask(int workspaceId, int taskId, string tag);
 }

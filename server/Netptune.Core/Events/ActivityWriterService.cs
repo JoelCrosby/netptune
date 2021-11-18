@@ -10,83 +10,82 @@ using Microsoft.Extensions.Hosting;
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Core.Events
+namespace Netptune.Core.Events;
+
+public class ActivityWriterService : IActivityWriterService, IHostedService
 {
-    public class ActivityWriterService : IActivityWriterService, IHostedService
+    private readonly IActivityObservable ActivityObservable;
+    private readonly IServiceProvider ServiceProvider;
+
+    private IDisposable Subscription { get; set; }
+
+    public ActivityWriterService(IActivityObservable activityObservable, IServiceProvider serviceProvider)
     {
-        private readonly IActivityObservable ActivityObservable;
-        private readonly IServiceProvider ServiceProvider;
+        ActivityObservable = activityObservable;
+        ServiceProvider = serviceProvider;
+    }
 
-        private IDisposable Subscription { get; set; }
+    private async Task WriteActivity(IEnumerable<IActivityEvent> events)
+    {
+        using var scope = ServiceProvider.CreateScope();
 
-        public ActivityWriterService(IActivityObservable activityObservable, IServiceProvider serviceProvider)
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+        var ancestorService = scope.ServiceProvider.GetRequiredService<IAncestorService>();
+
+        foreach (var activityEvent in events)
         {
-            ActivityObservable = activityObservable;
-            ServiceProvider = serviceProvider;
-        }
-
-        private async Task WriteActivity(IEnumerable<IActivityEvent> events)
-        {
-            using var scope = ServiceProvider.CreateScope();
-
-            var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
-            var ancestorService = scope.ServiceProvider.GetRequiredService<IAncestorService>();
-
-            foreach (var activityEvent in events)
+            if (activityEvent.EntityId is null)
             {
-                if (activityEvent.EntityId is null)
-                {
-                    throw new Exception("IActivityEvent EntityId cannot be null.");
-                }
-
-                var ancestors = await ancestorService.GetTaskAncestors(activityEvent.EntityId.Value);
-
-                await unitOfWork.ActivityLogs.AddAsync(new ActivityLog
-                {
-                    OwnerId = activityEvent.UserId,
-                    Type = activityEvent.Type,
-                    EntityType = activityEvent.EntityType,
-                    EntityId = activityEvent.EntityId,
-                    UserId = activityEvent.UserId,
-                    CreatedByUserId = activityEvent.UserId,
-                    WorkspaceId = activityEvent.WorkspaceId,
-                    TaskId = activityEvent.EntityId,
-                    ProjectId = ancestors.ProjectId,
-                    BoardId = ancestors.ProjectId,
-                    BoardGroupId = ancestors.BoardGroupId,
-                    Time = activityEvent.Time,
-                    Meta = activityEvent.Meta is {} ? JsonDocument.Parse(activityEvent.Meta) : null,
-                });
+                throw new Exception("IActivityEvent EntityId cannot be null.");
             }
 
-            await unitOfWork.CompleteAsync();
+            var ancestors = await ancestorService.GetTaskAncestors(activityEvent.EntityId.Value);
+
+            await unitOfWork.ActivityLogs.AddAsync(new ActivityLog
+            {
+                OwnerId = activityEvent.UserId,
+                Type = activityEvent.Type,
+                EntityType = activityEvent.EntityType,
+                EntityId = activityEvent.EntityId,
+                UserId = activityEvent.UserId,
+                CreatedByUserId = activityEvent.UserId,
+                WorkspaceId = activityEvent.WorkspaceId,
+                TaskId = activityEvent.EntityId,
+                ProjectId = ancestors.ProjectId,
+                BoardId = ancestors.ProjectId,
+                BoardGroupId = ancestors.BoardGroupId,
+                Time = activityEvent.Time,
+                Meta = activityEvent.Meta is {} ? JsonDocument.Parse(activityEvent.Meta) : null,
+            });
         }
 
-        public void OnCompleted()
-        {
-        }
+        await unitOfWork.CompleteAsync();
+    }
 
-        public void OnError(Exception error)
-        {
-        }
+    public void OnCompleted()
+    {
+    }
 
-        public void OnNext(IEnumerable<IActivityEvent> value)
-        {
-            WriteActivity(value).GetAwaiter().GetResult();
-        }
+    public void OnError(Exception error)
+    {
+    }
 
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            Subscription = ActivityObservable.Subscribe(this);
+    public void OnNext(IEnumerable<IActivityEvent> value)
+    {
+        WriteActivity(value).GetAwaiter().GetResult();
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        Subscription = ActivityObservable.Subscribe(this);
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            Subscription.Dispose();
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        Subscription.Dispose();
+
+        return Task.CompletedTask;
     }
 }

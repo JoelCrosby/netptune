@@ -1,11 +1,10 @@
-﻿namespace Netptune.Core.Models
+﻿namespace Netptune.Core.Models;
+
+public class UserAvatar
 {
-    public class UserAvatar
-    {
-        public string Id { get; set; }
+    public string Id { get; set; }
 
-        public string DisplayName { get; set; }
+    public string DisplayName { get; set; }
 
-        public string ProfilePictureUrl { get; set; }
-    }
+    public string ProfilePictureUrl { get; set; }
 }

@@ -7,40 +7,39 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Utility;
 using Netptune.Core.Services;
 
-namespace Netptune.App.Controllers
+namespace Netptune.App.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class MetaController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class MetaController : ControllerBase
+    private readonly IWebService WebService;
+    private readonly BuildInfo BuildInfo;
+
+    public MetaController(IWebService webService, BuildInfo buildInfo)
     {
-        private readonly IWebService WebService;
-        private readonly BuildInfo BuildInfo;
+        WebService = webService;
+        BuildInfo = buildInfo;
+    }
 
-        public MetaController(IWebService webService, BuildInfo buildInfo)
+    [Route("build-info")]
+    public IActionResult GetBuildInfo()
+    {
+        var gitHash = BuildInfo.GetBuildInfo();
+
+        return Ok(gitHash);
+    }
+
+    [AllowAnonymous]
+    [Route("uri-meta-info")]
+    public async Task<IActionResult> GetUriMetaInfo([Required] string url)
+    {
+        var meta = await WebService.GetMetaDataFromUrl(url);
+
+        return Ok(new
         {
-            WebService = webService;
-            BuildInfo = buildInfo;
-        }
-
-        [Route("build-info")]
-        public IActionResult GetBuildInfo()
-        {
-            var gitHash = BuildInfo.GetBuildInfo();
-
-            return Ok(gitHash);
-        }
-
-        [AllowAnonymous]
-        [Route("uri-meta-info")]
-        public async Task<IActionResult> GetUriMetaInfo([Required] string url)
-        {
-            var meta = await WebService.GetMetaDataFromUrl(url);
-
-            return Ok(new
-            {
-                Success = 1,
-                Meta = meta,
-            });
-        }
+            Success = 1,
+            Meta = meta,
+        });
     }
 }

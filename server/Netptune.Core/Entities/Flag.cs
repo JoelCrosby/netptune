@@ -1,11 +1,10 @@
 using Netptune.Core.BaseEntities;
 
-namespace Netptune.Core.Entities
-{
-    public class Flag : WorkspaceEntity<int>
-    {
-        public string Name { get; set; }
+namespace Netptune.Core.Entities;
 
-        public string Description { get; set; }
-    }
+public class Flag : WorkspaceEntity<int>
+{
+    public string Name { get; set; }
+
+    public string Description { get; set; }
 }

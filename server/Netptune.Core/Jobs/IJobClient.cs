@@ -1,12 +1,11 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Netptune.Core.Jobs
-{
-    public interface IJobClient
-    {
-        string Enqueue(Expression<Action> methodCall);
+namespace Netptune.Core.Jobs;
 
-        string Enqueue<TService>(Expression<Action<TService>> methodCall);
-    }
+public interface IJobClient
+{
+    string Enqueue(Expression<Action> methodCall);
+
+    string Enqueue<TService>(Expression<Action<TService>> methodCall);
 }

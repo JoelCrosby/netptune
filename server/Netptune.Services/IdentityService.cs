@@ -10,105 +10,104 @@ using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 
-namespace Netptune.Services
+namespace Netptune.Services;
+
+public class IdentityService : IIdentityService
 {
-    public class IdentityService : IIdentityService
+    private readonly IUserCache UserCache;
+    private readonly IWorkspaceCache WorkspaceCache;
+    private readonly IHttpContextAccessor ContextAccessor;
+
+    public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor contextAccessor)
     {
-        private readonly IUserCache UserCache;
-        private readonly IWorkspaceCache WorkspaceCache;
-        private readonly IHttpContextAccessor ContextAccessor;
+        UserCache = userCache;
+        WorkspaceCache = workspaceCache;
+        ContextAccessor = contextAccessor;
+    }
 
-        public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor contextAccessor)
+    public string GetUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
+
+    public string GetUserEmail() => GetClaimValue(ClaimTypes.Email);
+
+    public string GetUserName()
+    {
+        if (GetClaimValue("urn:github:name") is var githubUserName && githubUserName is {})
         {
-            UserCache = userCache;
-            WorkspaceCache = workspaceCache;
-            ContextAccessor = contextAccessor;
+            return githubUserName;
         }
 
-        public string GetUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
+        return GetClaimValue(ClaimTypes.Name);
+    }
 
-        public string GetUserEmail() => GetClaimValue(ClaimTypes.Email);
+    public string GetPictureUrl()
+    {
+        return GetClaimValue("Provider-Picture-Url");
+    }
 
-        public string GetUserName()
+    public Task<AppUser> GetCurrentUser()
+    {
+        return UserCache.Get(GetUserId());
+    }
+
+    public async Task<string> GetCurrentUserEmail()
+    {
+        var claimEmail = GetUserEmail();
+
+        if (!string.IsNullOrEmpty(claimEmail))
         {
-            if (GetClaimValue("urn:github:name") is var githubUserName && githubUserName is {})
-            {
-                return githubUserName;
-            }
-
-            return GetClaimValue(ClaimTypes.Name);
+            return claimEmail;
         }
 
-        public string GetPictureUrl()
+        var user = await GetCurrentUser();
+        return user.Email;
+    }
+
+    public Task<string> GetCurrentUserId()
+    {
+        return Task.FromResult(GetUserId());
+    }
+
+    public string GetWorkspaceKey()
+    {
+        var context = ContextAccessor.HttpContext;
+
+        if (context is null)
         {
-            return GetClaimValue("Provider-Picture-Url");
+            throw new Exception("HttpContext was null");
         }
 
-        public Task<AppUser> GetCurrentUser()
+        if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
-            return UserCache.Get(GetUserId());
+            return workspace;
         }
 
-        public async Task<string> GetCurrentUserEmail()
+        throw new Exception("Client request did not contain a 'workspace' header.");
+    }
+
+    public async Task<int> GetWorkspaceId()
+    {
+        var id = await WorkspaceCache.GetIdBySlug(GetWorkspaceKey());
+
+        if (id is null)
         {
-            var claimEmail = GetUserEmail();
-
-            if (!string.IsNullOrEmpty(claimEmail))
-            {
-                return claimEmail;
-            }
-
-            var user = await GetCurrentUser();
-            return user.Email;
+            throw new Exception("Failed to get workspace from cache.");
         }
 
-        public Task<string> GetCurrentUserId()
+        return id.Value;
+    }
+
+    private string GetClaimValue(string type)
+    {
+        var claimsPrincipal = ContextAccessor.HttpContext?.User;
+
+        var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+        var result = claim?.Value;
+
+        if (result is null)
         {
-            return Task.FromResult(GetUserId());
+            throw new AuthenticationException($"user does not have value for claim of type {type}");
         }
 
-        public string GetWorkspaceKey()
-        {
-            var context = ContextAccessor.HttpContext;
-
-            if (context is null)
-            {
-                throw new Exception("HttpContext was null");
-            }
-
-            if (context.Request.Headers.TryGetValue("workspace", out var workspace))
-            {
-                return workspace;
-            }
-
-            throw new Exception("Client request did not contain a 'workspace' header.");
-        }
-
-        public async Task<int> GetWorkspaceId()
-        {
-            var id = await WorkspaceCache.GetIdBySlug(GetWorkspaceKey());
-
-            if (id is null)
-            {
-                throw new Exception("Failed to get workspace from cache.");
-            }
-
-            return id.Value;
-        }
-
-        private string GetClaimValue(string type)
-        {
-            var claimsPrincipal = ContextAccessor.HttpContext?.User;
-
-            var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
-            var result = claim?.Value;
-
-            if (result is null)
-            {
-                throw new AuthenticationException($"user does not have value for claim of type {type}");
-            }
-
-            return result;
-        }
+        return result;
     }
 }

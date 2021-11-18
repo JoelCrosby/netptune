@@ -16,130 +16,130 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 
-namespace Netptune.Repositories
+namespace Netptune.Repositories;
+
+public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask, int>, ITaskRepository
 {
-    public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask, int>, ITaskRepository
+    public TaskRepository(DataContext context, IDbConnectionFactory connectionFactory)
+        : base(context, connectionFactory)
     {
-        public TaskRepository(DataContext context, IDbConnectionFactory connectionFactory)
-            : base(context, connectionFactory)
-        {
-        }
+    }
 
-        public override Task<ProjectTask> GetAsync(int id, bool isReadonly = false)
-        {
-            return Entities
-                .Include(x => x.Assignee)
-                .Include(x => x.Project)
-                .Include(x => x.Owner)
-                .Include(x => x.Workspace)
-                .IsReadonly(isReadonly)
-                .FirstOrDefaultAsync(EqualsPredicate(id));
-        }
+    public override Task<ProjectTask> GetAsync(int id, bool isReadonly = false)
+    {
+        return Entities
+            .Include(x => x.Assignee)
+            .Include(x => x.Project)
+            .Include(x => x.Owner)
+            .Include(x => x.Workspace)
+            .IsReadonly(isReadonly)
+            .FirstOrDefaultAsync(EqualsPredicate(id));
+    }
 
-        public Task<TaskViewModel> GetTaskViewModel(int taskId)
-        {
-            return Entities
-                .Where(x => x.Id == taskId)
-                .OrderByDescending(x => x.UpdatedAt)
-                .Include(x => x.Assignee)
-                .Include(x => x.Project)
-                .Include(x => x.Owner)
-                .Include(x => x.Workspace)
-                .Include(x => x.Tags)
-                .AsNoTracking()
-                .Select(task => task.ToViewModel())
-                .FirstOrDefaultAsync();
-        }
+    public Task<TaskViewModel> GetTaskViewModel(int taskId)
+    {
+        return Entities
+            .Where(x => x.Id == taskId)
+            .OrderByDescending(x => x.UpdatedAt)
+            .Include(x => x.Assignee)
+            .Include(x => x.Project)
+            .Include(x => x.Owner)
+            .Include(x => x.Workspace)
+            .Include(x => x.Tags)
+            .AsNoTracking()
+            .Select(task => task.ToViewModel())
+            .FirstOrDefaultAsync();
+    }
 
-        public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey)
-        {
-            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+    public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey)
+    {
+        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
-            if (entity is null) return null;
+        if (entity is null) return null;
 
-            var task = await entity.FirstOrDefaultAsync();
+        var task = await entity.FirstOrDefaultAsync();
 
-            return task?.Id;
-        }
+        return task?.Id;
+    }
 
-        public async Task<ProjectTask> GetTask(string systemId, string workspaceKey)
-        {
-            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+    public async Task<ProjectTask> GetTask(string systemId, string workspaceKey)
+    {
+        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
-            return await entity.FirstOrDefaultAsync();
-        }
+        return await entity.FirstOrDefaultAsync();
+    }
 
-        public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceKey)
-        {
-            var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+    public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceKey)
+    {
+        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
 
-            return await entity
-                .Select(task => task.ToViewModel())
-                .FirstOrDefaultAsync();
-        }
+        return await entity
+            .Select(task => task.ToViewModel())
+            .FirstOrDefaultAsync();
+    }
 
-        private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
-        {
-            var parts = systemId.Split("-");
+    private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
+    {
+        var parts = systemId.Split("-");
 
-            var hasProjectId = int.TryParse(parts.LastOrDefault(), out var projectScopeId);
+        var hasProjectId = int.TryParse(parts.LastOrDefault(), out var projectScopeId);
 
-            if (!hasProjectId) return null;
+        if (!hasProjectId) return null;
 
-            var projectKey = parts[0];
+        var projectKey = parts[0];
 
-            var workspaceIds = await Context.Workspaces
-                .AsNoTracking()
-                .Where(x => x.Slug == workspaceKey)
-                .Select(x => x.Id)
-                .Take(1)
-                .ToListAsync();
+        var workspaceIds = await Context.Workspaces
+            .AsNoTracking()
+            .Where(x => x.Slug == workspaceKey)
+            .Select(x => x.Id)
+            .Take(1)
+            .ToListAsync();
 
-            if (!workspaceIds.Any()) return null;
+        if (!workspaceIds.Any()) return null;
 
-            var workspaceId = workspaceIds.FirstOrDefault();
+        var workspaceId = workspaceIds.FirstOrDefault();
 
-            var projectIds = await Context.Projects
-                .AsNoTracking()
-                .Where(x => x.Key == projectKey && x.WorkspaceId == workspaceId)
-                .Select(x => x.Id)
-                .Take(1)
-                .ToListAsync();
+        var projectIds = await Context.Projects
+            .AsNoTracking()
+            .Where(x => x.Key == projectKey && x.WorkspaceId == workspaceId)
+            .Select(x => x.Id)
+            .Take(1)
+            .ToListAsync();
 
-            if (!projectIds.Any()) return null;
+        if (!projectIds.Any()) return null;
 
-            var projectId = projectIds.FirstOrDefault();
+        var projectId = projectIds.FirstOrDefault();
 
-            var queryable = Entities
-                .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
-                .OrderByDescending(x => x.UpdatedAt)
-                .Include(x => x.Assignee)
-                .Include(x => x.Project)
-                .Include(x => x.Owner)
-                .Include(x => x.Workspace)
-                .Include(x => x.Tags);
+        var queryable = Entities
+            .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
+            .OrderByDescending(x => x.UpdatedAt)
+            .Include(x => x.Assignee)
+            .Include(x => x.Project)
+            .Include(x => x.Owner)
+            .Include(x => x.Workspace)
+            .Include(x => x.Tags);
 
-            return isReadonly ? queryable.AsNoTracking() : queryable;
-        }
+        return isReadonly ? queryable.AsNoTracking() : queryable;
+    }
 
-        public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false)
-        {
-            return Entities
-                .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
-                .OrderByDescending(x => x.UpdatedAt)
-                .Include(x => x.Assignee)
-                .Include(x => x.Project)
-                .Include(x => x.Owner)
-                .Include(x => x.Workspace)
-                .Select(task => task.ToViewModel())
-                .ToReadonlyListAsync(isReadonly);
-        }
+    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false)
+    {
+        return Entities
+            .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
+            .OrderByDescending(x => x.UpdatedAt)
+            .Include(x => x.Assignee)
+            .Include(x => x.Project)
+            .Include(x => x.Owner)
+            .Include(x => x.Workspace)
+            .Select(task => task.ToViewModel())
+            .ToReadonlyListAsync(isReadonly);
+    }
 
-        public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)
-        {
-            using var connection = ConnectionFactory.StartConnection();
+    public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)
+    {
+        using var connection = ConnectionFactory.StartConnection();
 
-            var rows = await connection.QueryAsync<TasksViewRowMap>(@"
+        var rows = await connection.QueryAsync<TasksViewRowMap>(@"
                 SELECT w.slug              AS workspace_key
                      , p.name              AS project_name
                      , p.key               AS project_key
@@ -180,48 +180,48 @@ namespace Netptune.Repositories
 
                 ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
             ", new
-            {
-                workspaceKey,
-            });
-
-            return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
-            {
-                var lastTask = result.LastOrDefault();
-                var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
-
-                if (lastTask?.SystemId is { } && systemId == lastTask.SystemId)
-                {
-                    lastTask.Tags = $"{lastTask.Tags} | {row.Tag}";
-                    return result;
-                }
-
-                result.Add(new ExportTaskViewModel
-                {
-                    Name = row.Task_Name,
-                    Description = row.Task_Description,
-                    SystemId = systemId,
-                    Status = row.Task_Status.ToString(),
-                    IsFlagged = row.Task_Is_Flagged,
-                    SortOrder = row.Task_Sort_Order,
-                    Board = row.Board_Identifier,
-                    CreatedAt = row.Task_Created_At,
-                    UpdatedAt = row.Task_Updated_At,
-                    Assignee = row.Assignee_Email,
-                    Owner = row.Owner_Email,
-                    Project = row.Project_Name,
-                    Group = row.Board_Group_Name,
-                    Tags = row.Tag,
-                });
-
-                return result;
-            });
-        }
-
-        public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)
         {
-            using var connection = ConnectionFactory.StartConnection();
+            workspaceKey,
+        });
 
-            var results = await connection.QueryAsync<int>(@"
+        return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
+        {
+            var lastTask = result.LastOrDefault();
+            var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
+
+            if (lastTask?.SystemId is { } && systemId == lastTask.SystemId)
+            {
+                lastTask.Tags = $"{lastTask.Tags} | {row.Tag}";
+                return result;
+            }
+
+            result.Add(new ExportTaskViewModel
+            {
+                Name = row.Task_Name,
+                Description = row.Task_Description,
+                SystemId = systemId,
+                Status = row.Task_Status.ToString(),
+                IsFlagged = row.Task_Is_Flagged,
+                SortOrder = row.Task_Sort_Order,
+                Board = row.Board_Identifier,
+                CreatedAt = row.Task_Created_At,
+                UpdatedAt = row.Task_Updated_At,
+                Assignee = row.Assignee_Email,
+                Owner = row.Owner_Email,
+                Project = row.Project_Name,
+                Group = row.Board_Group_Name,
+                Tags = row.Tag,
+            });
+
+            return result;
+        });
+    }
+
+    public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var results = await connection.QueryAsync<int>(@"
                 SELECT pt.id
                 FROM boards b
 
@@ -232,41 +232,41 @@ namespace Netptune.Repositories
                 WHERE b.identifier = @boardIdentifier
             ", new { boardIdentifier });
 
-            return results.ToList();
-        }
+        return results.ToList();
+    }
 
-        public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
+    public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
+    {
+        var tasks = await Entities
+            .Where(x => x.ProjectId == projectId && !x.IsDeleted)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return new ProjectTaskCounts
         {
-            var tasks = await Entities
-                .Where(x => x.ProjectId == projectId && !x.IsDeleted)
-                .AsNoTracking()
-                .ToListAsync();
+            AllTasks = tasks.Count,
+            CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),
+            InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
+            BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned),
+        };
+    }
 
-            return new ProjectTaskCounts
-            {
-                AllTasks = tasks.Count,
-                CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),
-                InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
-                BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned),
-            };
-        }
+    public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
+    {
+        var taskCount = await Entities
+            .Where(x => x.ProjectId == projectId)
+            .OrderByDescending(x => x.ProjectScopeId)
+            .Select(x => x.ProjectScopeId)
+            .FirstOrDefaultAsync();
 
-        public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
-        {
-            var taskCount = await Entities
-                .Where(x => x.ProjectId == projectId)
-                .OrderByDescending(x => x.ProjectScopeId)
-                .Select(x => x.ProjectScopeId)
-                .FirstOrDefaultAsync();
+        return taskCount + 1 + increment;
+    }
 
-            return taskCount + 1 + increment;
-        }
+    public async Task<ActivityAncestors> GetAncestors(int taskId)
+    {
+        using var connection = ConnectionFactory.StartConnection();
 
-        public async Task<ActivityAncestors> GetAncestors(int taskId)
-        {
-            using var connection = ConnectionFactory.StartConnection();
-
-            var result = await connection.QueryFirstAsync<TaskAncestorRow>(@"
+        var result = await connection.QueryFirstAsync<TaskAncestorRow>(@"
                 SELECT
                       ptibg.project_task_id as task_id
                     , ptibg.board_group_id as board_group_id
@@ -280,14 +280,13 @@ namespace Netptune.Repositories
                 WHERE ptibg.project_task_id = @taskId
             ", new { taskId });
 
-            return new ActivityAncestors
-            {
-                TaskId = result.Task_id,
-                BoardGroupId = result.Board_group_id,
-                BoardId = result.Board_id,
-                ProjectId = result.Project_id,
-                WorkspaceId = result.Workspace_id,
-            };
-        }
+        return new ActivityAncestors
+        {
+            TaskId = result.Task_id,
+            BoardGroupId = result.Board_group_id,
+            BoardId = result.Board_id,
+            ProjectId = result.Project_id,
+            WorkspaceId = result.Workspace_id,
+        };
     }
 }

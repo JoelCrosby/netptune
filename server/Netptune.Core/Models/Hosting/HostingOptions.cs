@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Core.Models.Hosting
-{
-    public class HostingOptions
-    {
-        [Required]
-        public string ContentRootPath { get; set; }
+namespace Netptune.Core.Models.Hosting;
 
-        [Required]
-        public string ClientOrigin { get; set; }
-    }
+public class HostingOptions
+{
+    [Required]
+    public string ContentRootPath { get; set; }
+
+    [Required]
+    public string ClientOrigin { get; set; }
 }

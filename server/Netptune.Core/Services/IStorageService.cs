@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 
-namespace Netptune.Core.Services
+namespace Netptune.Core.Services;
+
+public interface IStorageService
 {
-    public interface IStorageService
-    {
-        Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, string key = null);
-    }
+    Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, string key = null);
 }

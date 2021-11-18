@@ -1,7 +1,6 @@
-namespace Netptune.Core.Requests
+namespace Netptune.Core.Requests;
+
+public class RequestPasswordResetRequest
 {
-    public class RequestPasswordResetRequest
-    {
-        public string Email { get; set; }
-    }
+    public string Email { get; set; }
 }

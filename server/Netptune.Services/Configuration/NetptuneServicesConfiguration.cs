@@ -11,52 +11,51 @@ using Netptune.Services.Cache;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
 
-namespace Netptune.Services.Configuration
+namespace Netptune.Services.Configuration;
+
+public static class NetptuneServicesConfiguration
 {
-    public static class NetptuneServicesConfiguration
+    public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
     {
-        public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
-        {
-            ConfigureServices(services, action);
+        ConfigureServices(services, action);
 
-            services.AddMemoryCache();
-            services.AddHttpContextAccessor();
+        services.AddMemoryCache();
+        services.AddHttpContextAccessor();
 
-            services.AddTransient<IHostingService, HostingService>();
+        services.AddTransient<IHostingService, HostingService>();
 
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<ITaskService, TaskService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IWorkspaceService, WorkspaceService>();
-            services.AddTransient<IBoardService, BoardService>();
-            services.AddTransient<IBoardGroupService, BoardGroupService>();
-            services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<ITagService, TagService>();
-            services.AddTransient<IActivityService, ActivityService>();
+        services.AddTransient<IProjectService, ProjectService>();
+        services.AddTransient<ITaskService, TaskService>();
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IWorkspaceService, WorkspaceService>();
+        services.AddTransient<IBoardService, BoardService>();
+        services.AddTransient<IBoardGroupService, BoardGroupService>();
+        services.AddTransient<ICommentService, CommentService>();
+        services.AddTransient<ITagService, TagService>();
+        services.AddTransient<IActivityService, ActivityService>();
 
-            services.AddTransient<ITaskImportService, TaskImportService>();
-            services.AddTransient<ITaskExportService, TaskExportService>();
-            services.AddTransient<IWebService, WebService>();
+        services.AddTransient<ITaskImportService, TaskImportService>();
+        services.AddTransient<ITaskExportService, TaskExportService>();
+        services.AddTransient<IWebService, WebService>();
 
-            services.AddTransient<IUserConnectionService, UserConnectionService>();
+        services.AddTransient<IUserConnectionService, UserConnectionService>();
 
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IUserCache, UserCache>();
-            services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
-            services.AddScoped<IInviteCache, InviteCache>();
-            services.AddScoped<IWorkspaceCache, WorkspaceCache>();
-            services.AddScoped<IAncestorService, AncestorService>();
-        }
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IUserCache, UserCache>();
+        services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
+        services.AddScoped<IInviteCache, InviteCache>();
+        services.AddScoped<IWorkspaceCache, WorkspaceCache>();
+        services.AddScoped<IAncestorService, AncestorService>();
+    }
 
-        private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
-        {
-            if (action is null) throw new ArgumentNullException(nameof(action));
+    private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
+    {
+        if (action is null) throw new ArgumentNullException(nameof(action));
 
-            var options = new HostingOptions();
+        var options = new HostingOptions();
 
-            action(options);
+        action(options);
 
-            services.Configure(action);
-        }
+        services.Configure(action);
     }
 }

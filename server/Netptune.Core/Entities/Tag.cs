@@ -5,31 +5,30 @@ using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Core.Entities
+namespace Netptune.Core.Entities;
+
+public class Tag : WorkspaceEntity<int>
 {
-    public class Tag : WorkspaceEntity<int>
+    public string Name { get; set; }
+
+    #region NavigationProperties
+
+    [JsonIgnore]
+    public ICollection<ProjectTaskTag> ProjectTaskTags { get; set; } = new HashSet<ProjectTaskTag>();
+
+    [JsonIgnore]
+    public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
+
+    #endregion
+
+    public TagViewModel ToViewModel()
     {
-        public string Name { get; set; }
-
-        #region NavigationProperties
-
-        [JsonIgnore]
-        public ICollection<ProjectTaskTag> ProjectTaskTags { get; set; } = new HashSet<ProjectTaskTag>();
-
-        [JsonIgnore]
-        public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
-
-        #endregion
-
-        public TagViewModel ToViewModel()
+        return new()
         {
-            return new()
-            {
-                Id = Id,
-                Name = Name,
-                OwnerId = OwnerId,
-                OwnerName = Owner?.DisplayName,
-            };
-        }
+            Id = Id,
+            Name = Name,
+            OwnerId = OwnerId,
+            OwnerName = Owner?.DisplayName,
+        };
     }
 }

@@ -1,9 +1,8 @@
-namespace Netptune.Core.Events.Tasks
-{
-    public class MoveTaskActivityMeta : IActivityMetaData
-    {
-        public string Group { get; init; }
+namespace Netptune.Core.Events.Tasks;
 
-        public int GroupId { get; init; }
-    }
+public class MoveTaskActivityMeta : IActivityMetaData
+{
+    public string Group { get; init; }
+
+    public int GroupId { get; init; }
 }

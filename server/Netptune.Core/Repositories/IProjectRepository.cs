@@ -5,18 +5,17 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.Core.Repositories
+namespace Netptune.Core.Repositories;
+
+public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
 {
-    public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
-    {
-        Task<List<ProjectViewModel>> GetProjects(string workspaceKey);
+    Task<List<ProjectViewModel>> GetProjects(string workspaceKey);
 
-        Task<ProjectViewModel> GetProjectViewModel(int id);
+    Task<ProjectViewModel> GetProjectViewModel(int id);
 
-        Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId);
+    Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId);
 
-        Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
+    Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
 
-        Task<string> GenerateProjectKey(string projectName, int workspaceId);
-    }
+    Task<string> GenerateProjectKey(string projectName, int workspaceId);
 }

@@ -14,43 +14,43 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 
-namespace Netptune.Repositories
+namespace Netptune.Repositories;
+
+public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, BoardGroup, int>, IBoardGroupRepository
 {
-    public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, BoardGroup, int>, IBoardGroupRepository
+    public BoardGroupRepository(DataContext dataContext, IDbConnectionFactory connectionFactories)
+        : base(dataContext, connectionFactories)
     {
-        public BoardGroupRepository(DataContext dataContext, IDbConnectionFactory connectionFactories)
-            : base(dataContext, connectionFactories)
-        {
-        }
+    }
 
-        public Task<BoardGroup> GetWithTasksInGroups(int id)
-        {
-            return Entities
-                .Include(group => group.TasksInGroups)
-                .FirstOrDefaultAsync(group => group.Id == id);
-        }
+    public Task<BoardGroup> GetWithTasksInGroups(int id)
+    {
+        return Entities
+            .Include(group => group.TasksInGroups)
+            .FirstOrDefaultAsync(group => group.Id == id);
+    }
 
-        public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
-        {
-            return Entities
-                .Where(boardGroup => boardGroup.BoardId == boardId)
-                .Where(boardGroup => !boardGroup.IsDeleted)
-                .Include(boardGroup => boardGroup.TasksInGroups)
-                .OrderBy(boardGroup => boardGroup.SortOrder)
-                .ToReadonlyListAsync(isReadonly);
-        }
+    public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
+    {
+        return Entities
+            .Where(boardGroup => boardGroup.BoardId == boardId)
+            .Where(boardGroup => !boardGroup.IsDeleted)
+            .Include(boardGroup => boardGroup.TasksInGroups)
+            .OrderBy(boardGroup => boardGroup.SortOrder)
+            .ToReadonlyListAsync(isReadonly);
+    }
 
-        public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null)
-        {
-            using var connection = ConnectionFactory.StartConnection();
+    public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null)
+    {
+        using var connection = ConnectionFactory.StartConnection();
 
-            var searchPhrase = searchTerm?.Trim().Replace(" ", " | ");
+        var searchPhrase = searchTerm?.Trim().Replace(" ", " | ");
 
-            var searchQuery = searchTerm is null
-                ? null
-                : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
+        var searchQuery = searchTerm is null
+            ? null
+            : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
 
-            var results = await connection.QueryMultipleAsync(@$"
+        var results = await connection.QueryMultipleAsync(@$"
                 SELECT b.id
                      , b.name              AS board_name
                      , b.identifier        AS board_identifier
@@ -95,25 +95,58 @@ namespace Netptune.Repositories
                 WHERE b.id = @boardId
             ", new { boardId, searchPhrase });
 
-            var rows = results.Read<BoardViewRowMap>();
-            var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
+        var rows = results.Read<BoardViewRowMap>();
+        var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
 
-            if (meta is null) return null;
+        if (meta is null) return null;
 
-            return rows.Aggregate(new List<BoardViewGroup>(200), (result, row) =>
+        return rows.Aggregate(new List<BoardViewGroup>(200), (result, row) =>
+        {
+            var lastGroup = result.LastOrDefault();
+            var lastTask = lastGroup?.Tasks.LastOrDefault();
+
+            if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
             {
-                var lastGroup = result.LastOrDefault();
-                var lastTask = lastGroup?.Tasks.LastOrDefault();
+                lastTask.Tags.Add(row.Tag);
+                return result;
+            }
 
-                if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
+            if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
+            {
+                lastGroup?.Tasks.Add(new BoardViewTask
                 {
-                    lastTask.Tags.Add(row.Tag);
-                    return result;
-                }
+                    Id = row.Task_Id.Value,
+                    Name = row.Task_Name,
+                    Status = row.Task_Status,
+                    SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
+                    AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                    AssigneePictureUrl = row.Assignee_Picture_Url,
+                    AssigneeId = row.Assignee_Id,
+                    Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
+                    IsFlagged = row.Task_Is_Flagged,
+                    SortOrder = row.Task_Sort_Order,
+                    ProjectId = row.Project_Id,
+                    WorkspaceId = row.Workspace_Id,
+                    WorkspaceKey = meta.Workspace_Identifier,
+                });
 
-                if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
+                return result;
+            }
+
+            if (row.Board_Group_Id == lastGroup?.Id && !row.Task_Id.HasValue)
+            {
+                return result;
+            }
+
+            result.Add(new BoardViewGroup
+            {
+                Id = row.Board_Group_Id,
+                Name = row.Board_Group_Name,
+                SortOrder = row.Board_Group_Sort_Order,
+                Type = row.Board_Group_Type,
+                Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
                 {
-                    lastGroup?.Tasks.Add(new BoardViewTask
+                    new()
                     {
                         Id = row.Task_Id.Value,
                         Name = row.Task_Name,
@@ -128,107 +161,73 @@ namespace Netptune.Repositories
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
                         WorkspaceKey = meta.Workspace_Identifier,
-                    });
-
-                    return result;
-                }
-
-                if (row.Board_Group_Id == lastGroup?.Id && !row.Task_Id.HasValue)
-                {
-                    return result;
-                }
-
-                result.Add(new BoardViewGroup
-                {
-                    Id = row.Board_Group_Id,
-                    Name = row.Board_Group_Name,
-                    SortOrder = row.Board_Group_Sort_Order,
-                    Type = row.Board_Group_Type,
-                    Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
-                    {
-                        new()
-                        {
-                            Id = row.Task_Id.Value,
-                            Name = row.Task_Name,
-                            Status = row.Task_Status,
-                            SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                            AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                            AssigneePictureUrl = row.Assignee_Picture_Url,
-                            AssigneeId = row.Assignee_Id,
-                            Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
-                            IsFlagged = row.Task_Is_Flagged,
-                            SortOrder = row.Task_Sort_Order,
-                            ProjectId = row.Project_Id,
-                            WorkspaceId = row.Workspace_Id,
-                            WorkspaceKey = meta.Workspace_Identifier,
-                        },
                     },
-                });
-
-                return result;
+                },
             });
-        }
 
-        public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false)
-        {
-            var query = Entities
+            return result;
+        });
+    }
 
-                .Where(group => group.TasksInGroups
-                    .Select(x => x.ProjectTaskId)
-                    .Contains(taskId))
+    public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false)
+    {
+        var query = Entities
 
-                .Include(group => group.TasksInGroups)
-                    .ThenInclude(relational => relational.ProjectTask);
+            .Where(group => group.TasksInGroups
+                .Select(x => x.ProjectTaskId)
+                .Contains(taskId))
 
-            return query.ToReadonlyListAsync(isReadonly);
-        }
+            .Include(group => group.TasksInGroups)
+            .ThenInclude(relational => relational.ProjectTask);
 
-        public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false)
-        {
-            var query = Context.ProjectTaskInBoardGroups
-                .Where(item => item.BoardGroupId == groupId)
-                .Select(item => item.ProjectTask);
+        return query.ToReadonlyListAsync(isReadonly);
+    }
 
-            return query.ToReadonlyListAsync(isReadonly);
-        }
+    public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false)
+    {
+        var query = Context.ProjectTaskInBoardGroups
+            .Where(item => item.BoardGroupId == groupId)
+            .Select(item => item.ProjectTask);
 
-        public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId)
-        {
-            var sortOrders = await Entities
+        return query.ToReadonlyListAsync(isReadonly);
+    }
 
-                .Where(boardGroup => boardGroup.BoardId == boardId)
-                .Where(boardGroup => !boardGroup.IsDeleted)
+    public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId)
+    {
+        var sortOrders = await Entities
 
-                .OrderBy(boardGroup => boardGroup.SortOrder)
+            .Where(boardGroup => boardGroup.BoardId == boardId)
+            .Where(boardGroup => !boardGroup.IsDeleted)
 
-                .AsNoTracking()
+            .OrderBy(boardGroup => boardGroup.SortOrder)
 
-                .Select(boardGroup => boardGroup.SortOrder)
-                .ToListAsync();
+            .AsNoTracking()
 
-            return sortOrders.Max() + 1;
-        }
+            .Select(boardGroup => boardGroup.SortOrder)
+            .ToListAsync();
 
-        public async Task<int?> GetBoardGroupIdForTask(int projectTaskId)
-        {
-            var results = await Context.ProjectTaskInBoardGroups
-                .AsNoTracking()
-                .Where(x => x.ProjectTaskId == projectTaskId)
-                .Select(x => x.BoardGroupId)
-                .ToListAsync();
+        return sortOrders.Max() + 1;
+    }
 
-            return results.Count > 0 ? results.Single() : null;
-        }
+    public async Task<int?> GetBoardGroupIdForTask(int projectTaskId)
+    {
+        var results = await Context.ProjectTaskInBoardGroups
+            .AsNoTracking()
+            .Where(x => x.ProjectTaskId == projectTaskId)
+            .Select(x => x.BoardGroupId)
+            .ToListAsync();
 
-        public async Task<int?> GetTaskAncestors(int projectTaskId)
-        {
-            var results = await Context.ProjectTaskInBoardGroups
-                .AsNoTracking()
-                .Where(x => x.ProjectTaskId == projectTaskId)
-                .Select(x => x.BoardGroupId)
-                .ToListAsync();
+        return results.Count > 0 ? results.Single() : null;
+    }
 
-            return results.Count > 0 ? results.Single() : null;
-        }
+    public async Task<int?> GetTaskAncestors(int projectTaskId)
+    {
+        var results = await Context.ProjectTaskInBoardGroups
+            .AsNoTracking()
+            .Where(x => x.ProjectTaskId == projectTaskId)
+            .Select(x => x.BoardGroupId)
+            .ToListAsync();
+
+        return results.Count > 0 ? results.Single() : null;
     }
 }

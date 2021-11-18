@@ -6,26 +6,25 @@ using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Core.Services
+namespace Netptune.Core.Services;
+
+public interface IBoardService
 {
-    public interface IBoardService
-    {
-        Task<List<BoardViewModel>> GetBoards(int projectId);
+    Task<List<BoardViewModel>> GetBoards(int projectId);
 
-        Task<List<BoardViewModel>> GetBoardsInProject(int projectId);
+    Task<List<BoardViewModel>> GetBoardsInProject(int projectId);
 
-        Task<BoardViewModel> GetBoard(int id);
+    Task<BoardViewModel> GetBoard(int id);
 
-        Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null);
+    Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null);
 
-        Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request);
+    Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request);
 
-        Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request);
+    Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request);
 
-        Task<ClientResponse> Delete(int id);
+    Task<ClientResponse> Delete(int id);
 
-        Task<List<BoardsViewModel>> GetBoardsInWorkspace();
+    Task<List<BoardsViewModel>> GetBoardsInWorkspace();
 
-        Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier);
-    }
+    Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier);
 }

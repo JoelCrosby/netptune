@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Models.Messaging;
 
-namespace Netptune.Core.Messaging
+namespace Netptune.Core.Messaging;
+
+public interface IEmailRenderService
 {
-    public interface IEmailRenderService
-    {
-        Task<string> Render(SendEmailModel model);
-    }
+    Task<string> Render(SendEmailModel model);
 }

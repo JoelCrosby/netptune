@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Netptune.Core.Requests
+namespace Netptune.Core.Requests;
+
+public class MoveTasksToGroupRequest
 {
-    public class MoveTasksToGroupRequest
-    {
-        public string BoardId { get; set; }
+    public string BoardId { get; set; }
 
-        public List<int> TaskIds { get; set; }
+    public List<int> TaskIds { get; set; }
 
-        public int NewGroupId { get; set; }
-    }
+    public int NewGroupId { get; set; }
 }

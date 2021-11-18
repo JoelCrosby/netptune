@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Netptune.Services.Authorization.Requirements
+namespace Netptune.Services.Authorization.Requirements;
+
+public class WorkspaceRequirement : IAuthorizationRequirement
 {
-    public class WorkspaceRequirement : IAuthorizationRequirement
-    {
-    }
 }

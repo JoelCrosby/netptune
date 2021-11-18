@@ -2,19 +2,18 @@ using System.ComponentModel.DataAnnotations;
 
 using Netptune.Core.Meta;
 
-namespace Netptune.Core.Requests
+namespace Netptune.Core.Requests;
+
+public class AddWorkspaceRequest
 {
-    public class AddWorkspaceRequest
-    {
-        [Required]
-        public string Name { get; set; }
+    [Required]
+    public string Name { get; set; }
 
-        public string Description { get; set; }
+    public string Description { get; set; }
 
-        [Required]
-        public string Slug { get; set; }
+    [Required]
+    public string Slug { get; set; }
 
-        [Required]
-        public WorkspaceMeta MetaInfo { get; set; }
-    }
+    [Required]
+    public WorkspaceMeta MetaInfo { get; set; }
 }

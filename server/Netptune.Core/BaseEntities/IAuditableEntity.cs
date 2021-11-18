@@ -2,38 +2,37 @@
 
 using Netptune.Core.Entities;
 
-namespace Netptune.Core.BaseEntities
+namespace Netptune.Core.BaseEntities;
+
+public interface IAuditableEntity<TValue> : IKeyedEntity<TValue>
 {
-    public interface IAuditableEntity<TValue> : IKeyedEntity<TValue>
-    {
-        bool IsDeleted { get; set; }
+    bool IsDeleted { get; set; }
 
-        DateTime CreatedAt { get; set; }
+    DateTime CreatedAt { get; set; }
 
-        DateTime? UpdatedAt { get; set; }
+    DateTime? UpdatedAt { get; set; }
 
-        #region ForeignKeys
+    #region ForeignKeys
 
-        string CreatedByUserId { get; set; }
+    string CreatedByUserId { get; set; }
 
-        string ModifiedByUserId { get; set; }
+    string ModifiedByUserId { get; set; }
 
-        string DeletedByUserId { get; set; }
+    string DeletedByUserId { get; set; }
 
-        string OwnerId { get; set; }
+    string OwnerId { get; set; }
 
-        #endregion
+    #endregion
 
-        #region NavigationProperties
+    #region NavigationProperties
 
-        AppUser CreatedByUser { get; set; }
+    AppUser CreatedByUser { get; set; }
 
-        AppUser ModifiedByUser { get; set; }
+    AppUser ModifiedByUser { get; set; }
 
-        AppUser DeletedByUser { get; set; }
+    AppUser DeletedByUser { get; set; }
 
-        AppUser Owner { get; set; }
+    AppUser Owner { get; set; }
 
-        #endregion
-    }
+    #endregion
 }
