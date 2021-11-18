@@ -1,12 +1,11 @@
 ﻿using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Repository
+namespace Netptune.UnitTests.Netptune.Repository;
+
+public class TaskRepositoryTests
 {
-    public class TaskRepositoryTests
+    [Fact]
+    public void GetTaskAsync_ShouldReturnRepoResult()
     {
-        [Fact]
-        public void GetTaskAsync_ShouldReturnRepoResult()
-        {
-        }
     }
 }

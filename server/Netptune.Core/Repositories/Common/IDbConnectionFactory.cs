@@ -1,9 +1,8 @@
 ﻿using System.Data;
 
-namespace Netptune.Core.Repositories.Common
+namespace Netptune.Core.Repositories.Common;
+
+public interface IDbConnectionFactory
 {
-    public interface IDbConnectionFactory
-    {
-        IDbConnection StartConnection();
-    }
+    IDbConnection StartConnection();
 }

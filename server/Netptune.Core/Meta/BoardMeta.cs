@@ -1,7 +1,6 @@
-namespace Netptune.Core.Meta
+namespace Netptune.Core.Meta;
+
+public class BoardMeta
 {
-    public class BoardMeta
-    {
-        public string Color { get; set; }
-    }
+    public string Color { get; set; }
 }

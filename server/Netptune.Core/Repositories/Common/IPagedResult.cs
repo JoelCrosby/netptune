@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace Netptune.Core.Repositories.Common
+namespace Netptune.Core.Repositories.Common;
+
+public interface IPagedResult<T>
 {
-    public interface IPagedResult<T>
-    {
-        int CurrentPage { get; set; }
+    int CurrentPage { get; set; }
 
-        int PageCount { get; set; }
+    int PageCount { get; set; }
 
-        int PageSize { get; set; }
+    int PageSize { get; set; }
 
-        int RowCount { get; set; }
+    int RowCount { get; set; }
 
-        IList<T> Results { get; set; }
-    }
+    IList<T> Results { get; set; }
 }

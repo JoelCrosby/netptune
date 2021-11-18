@@ -1,34 +1,33 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Core.Requests
+namespace Netptune.Core.Requests;
+
+public class AddTagRequest
 {
-    public class AddTagRequest
-    {
-        [Required]
-        [DenyPipes(ErrorMessage = "Characters are not allowed.")]
-        public string Tag { get; set; }
-    }
+    [Required]
+    [DenyPipes(ErrorMessage = "Characters are not allowed.")]
+    public string Tag { get; set; }
+}
 
-    public class AddTagToTaskRequest : AddTagRequest
-    {
-        [Required]
-        public string SystemId { get; set; }
-    }
+public class AddTagToTaskRequest : AddTagRequest
+{
+    [Required]
+    public string SystemId { get; set; }
+}
 
-    [AttributeUsage(AttributeTargets.Property)]
-    public class DenyPipesAttribute : ValidationAttribute
+[AttributeUsage(AttributeTargets.Property)]
+public class DenyPipesAttribute : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        if (value is string stringValue)
         {
-            if (value is string stringValue)
-            {
-                return stringValue.Contains("|")
-                    ? new ValidationResult(ErrorMessage)
-                    : ValidationResult.Success;
-            }
-
-            return new ValidationResult(ErrorMessage);
+            return stringValue.Contains("|")
+                ? new ValidationResult(ErrorMessage)
+                : ValidationResult.Success;
         }
+
+        return new ValidationResult(ErrorMessage);
     }
 }

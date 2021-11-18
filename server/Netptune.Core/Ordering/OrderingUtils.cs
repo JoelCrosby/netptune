@@ -1,26 +1,25 @@
-﻿namespace Netptune.Core.Ordering
+﻿namespace Netptune.Core.Ordering;
+
+public static class OrderingUtils
 {
-    public static class OrderingUtils
+    public static double GetNewSortOrder(double? preOrder, double? nextOrder)
     {
-        public static double GetNewSortOrder(double? preOrder, double? nextOrder)
+        if (!nextOrder.HasValue && preOrder.HasValue)
         {
-            if (!nextOrder.HasValue && preOrder.HasValue)
-            {
-                return preOrder.Value + 1;
-            }
-
-            if (nextOrder.HasValue && !preOrder.HasValue)
-            {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                return nextOrder.Value == 0 ? -1 : nextOrder.Value * 0.9;
-            }
-
-            if (nextOrder.HasValue)
-            {
-                return (preOrder.Value + nextOrder.Value) / 2;
-            }
-
-            return 1;
+            return preOrder.Value + 1;
         }
+
+        if (nextOrder.HasValue && !preOrder.HasValue)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            return nextOrder.Value == 0 ? -1 : nextOrder.Value * 0.9;
+        }
+
+        if (nextOrder.HasValue)
+        {
+            return (preOrder.Value + nextOrder.Value) / 2;
+        }
+
+        return 1;
     }
 }

@@ -1,20 +1,19 @@
 using Hangfire.Dashboard;
 
-namespace Netptune.JobServer.Auth
+namespace Netptune.JobServer.Auth;
+
+public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {
-    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+    public bool Authorize(DashboardContext context)
     {
-        public bool Authorize(DashboardContext context)
-        {
-            var httpContext = context.GetHttpContext();
+        var httpContext = context.GetHttpContext();
 
-            var isAuthenticated = httpContext.User.Identity?.IsAuthenticated ?? false;
+        var isAuthenticated = httpContext.User.Identity?.IsAuthenticated ?? false;
 
-            if (isAuthenticated) return true;
+        if (isAuthenticated) return true;
 
-            httpContext.Response.Redirect("/account/login");
+        httpContext.Response.Redirect("/account/login");
 
-            return true;
-        }
+        return true;
     }
 }

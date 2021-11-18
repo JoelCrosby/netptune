@@ -10,30 +10,29 @@ using Netptune.Core.Enums;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Activity;
 
-namespace Netptune.App.Controllers
+namespace Netptune.App.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(Policy = NetptunePolicies.Workspace)]
+public class ActivityController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize(Policy = NetptunePolicies.Workspace)]
-    public class ActivityController : ControllerBase
+    private readonly IActivityService ActivityService;
+
+    public ActivityController(IActivityService activityService)
     {
-        private readonly IActivityService ActivityService;
+        ActivityService = activityService;
+    }
 
-        public ActivityController(IActivityService activityService)
-        {
-            ActivityService = activityService;
-        }
+    [AllowAnonymous]
+    [HttpGet("{entityType}/{entityId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Produces("application/json", Type = typeof(List<ActivityViewModel>))]
+    public async Task<IActionResult> Get(EntityType entityType, int entityId)
+    {
+        var result = await ActivityService.GetActivities(entityType, entityId);
 
-        [AllowAnonymous]
-        [HttpGet("{entityType}/{entityId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(List<ActivityViewModel>))]
-        public async Task<IActionResult> Get(EntityType entityType, int entityId)
-        {
-            var result = await ActivityService.GetActivities(entityType, entityId);
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

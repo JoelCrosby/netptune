@@ -2,10 +2,9 @@ using System.Threading.Tasks;
 
 using Netptune.Core.Models.Activity;
 
-namespace Netptune.Core.Events
+namespace Netptune.Core.Events;
+
+public interface IAncestorService
 {
-    public interface IAncestorService
-    {
-        Task<ActivityAncestors> GetTaskAncestors(int entityId);
-    }
+    Task<ActivityAncestors> GetTaskAncestors(int entityId);
 }

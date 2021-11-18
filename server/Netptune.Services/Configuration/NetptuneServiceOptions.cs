@@ -2,11 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 using Netptune.Core.Models.Hosting;
 
-namespace Netptune.Services.Configuration
+namespace Netptune.Services.Configuration;
+
+public class NetptuneServiceOptions
 {
-    public class NetptuneServiceOptions
-    {
-        [Required]
-        public HostingOptions HostingOptions { get; set; }
-    }
+    [Required]
+    public HostingOptions HostingOptions { get; set; }
 }

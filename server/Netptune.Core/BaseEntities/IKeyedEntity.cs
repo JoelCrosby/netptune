@@ -1,7 +1,6 @@
-﻿namespace Netptune.Core.BaseEntities
+﻿namespace Netptune.Core.BaseEntities;
+
+public interface IKeyedEntity<TValue>
 {
-    public interface IKeyedEntity<TValue>
-    {
-        TValue Id { get; set; }
-    }
+    TValue Id { get; set; }
 }

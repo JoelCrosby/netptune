@@ -1,7 +1,6 @@
-﻿namespace Netptune.Core.Repositories.Common
+﻿namespace Netptune.Core.Repositories.Common;
+
+public interface ISortable
 {
-    public interface ISortable
-    {
-        public double SortOrder { get; set; }
-    }
+    public double SortOrder { get; set; }
 }

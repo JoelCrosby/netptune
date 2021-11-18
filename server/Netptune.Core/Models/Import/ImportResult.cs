@@ -1,7 +1,6 @@
-namespace Netptune.Core.Models.Import
+namespace Netptune.Core.Models.Import;
+
+public class ImportResult
 {
-    public class ImportResult
-    {
-        public HeaderValidationResult HeaderValidationResult { get; set; }
-    }
+    public HeaderValidationResult HeaderValidationResult { get; set; }
 }

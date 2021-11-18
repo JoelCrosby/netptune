@@ -5,18 +5,17 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.Core.Services
+namespace Netptune.Core.Services;
+
+public interface IProjectService
 {
-    public interface IProjectService
-    {
-        Task<List<ProjectViewModel>> GetProjects();
+    Task<List<ProjectViewModel>> GetProjects();
 
-        Task<ProjectViewModel> GetProject(string key);
+    Task<ProjectViewModel> GetProject(string key);
 
-        Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project);
+    Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project);
 
-        Task<ProjectViewModel> AddProject(AddProjectRequest request);
+    Task<ProjectViewModel> AddProject(AddProjectRequest request);
 
-        Task<ClientResponse> Delete(int id);
-    }
+    Task<ClientResponse> Delete(int id);
 }

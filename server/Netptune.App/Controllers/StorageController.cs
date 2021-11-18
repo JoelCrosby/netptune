@@ -10,75 +10,74 @@ using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.Utilities;
 
-namespace Netptune.App.Controllers
+namespace Netptune.App.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class StorageController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class StorageController : ControllerBase
+    private readonly IStorageService StorageService;
+    private readonly IIdentityService Identity;
+    private readonly IUserService UserService;
+
+    public StorageController(IStorageService storageService, IIdentityService identity, IUserService userService)
     {
-        private readonly IStorageService StorageService;
-        private readonly IIdentityService Identity;
-        private readonly IUserService UserService;
+        StorageService = storageService;
+        Identity = identity;
+        UserService = userService;
+    }
 
-        public StorageController(IStorageService storageService, IIdentityService identity, IUserService userService)
+    [HttpPost]
+    [Route("profile-picture")]
+    [DisableFormValueModelBinding]
+    public async Task<IActionResult> UploadProfilePicture()
+    {
+        var file = Request.Form.Files[0];
+
+        if (file.Length > 50 * 1024 * 1024)
         {
-            StorageService = storageService;
-            Identity = identity;
-            UserService = userService;
+            return BadRequest("Request file size exceeds maximum of 50MB.");
         }
 
-        [HttpPost]
-        [Route("profile-picture")]
-        [DisableFormValueModelBinding]
-        public async Task<IActionResult> UploadProfilePicture()
+        var userId = await Identity.GetCurrentUserId();
+        var extension = Path.GetExtension(file.FileName);
+        var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
+
+        var fileStream = file.OpenReadStream();
+
+        var result = await StorageService.UploadFileAsync(fileStream, key);
+
+        var user = await Identity.GetCurrentUser();
+
+        user.PictureUrl = result.Payload?.Uri;
+
+        await UserService.Update(user);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("media")]
+    [Authorize(Policy = NetptunePolicies.Workspace)]
+    [DisableFormValueModelBinding]
+    public async Task<IActionResult> UploadMedia()
+    {
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var file = Request.Form.Files[0];
+
+        if (file.Length > 50 * 1024 * 1024)
         {
-            var file = Request.Form.Files[0];
-
-            if (file.Length > 50 * 1024 * 1024)
-            {
-                return BadRequest("Request file size exceeds maximum of 50MB.");
-            }
-
-            var userId = await Identity.GetCurrentUserId();
-            var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
-
-            var fileStream = file.OpenReadStream();
-
-            var result = await StorageService.UploadFileAsync(fileStream, key);
-
-            var user = await Identity.GetCurrentUser();
-
-            user.PictureUrl = result.Payload?.Uri;
-
-            await UserService.Update(user);
-
-            return Ok(result);
+            return BadRequest("Request file size exceeds maximum of 50MB.");
         }
 
-        [HttpPost]
-        [Route("media")]
-        [Authorize(Policy = NetptunePolicies.Workspace)]
-        [DisableFormValueModelBinding]
-        public async Task<IActionResult> UploadMedia()
-        {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var file = Request.Form.Files[0];
+        var userId = await Identity.GetCurrentUserId();
+        var extension = Path.GetExtension(file.FileName);
+        var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueIdBuilder.Generate(userId)}{extension}");
 
-            if (file.Length > 50 * 1024 * 1024)
-            {
-                return BadRequest("Request file size exceeds maximum of 50MB.");
-            }
+        var fileStream = file.OpenReadStream();
 
-            var userId = await Identity.GetCurrentUserId();
-            var extension = Path.GetExtension(file.FileName);
-            var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueIdBuilder.Generate(userId)}{extension}");
+        var result = await StorageService.UploadFileAsync(fileStream, key);
 
-            var fileStream = file.OpenReadStream();
-
-            var result = await StorageService.UploadFileAsync(fileStream, key);
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

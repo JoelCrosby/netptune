@@ -1,11 +1,10 @@
 ﻿using Netptune.Repositories.Common;
 
-namespace Netptune.Repositories.ConnectionFactories
+namespace Netptune.Repositories.ConnectionFactories;
+
+public class NetptuneConnectionFactory : DbConnectionFactory
 {
-    public class NetptuneConnectionFactory : DbConnectionFactory
+    public NetptuneConnectionFactory(string connectionString) : base(connectionString)
     {
-        public NetptuneConnectionFactory(string connectionString) : base(connectionString)
-        {
-        }
     }
 }

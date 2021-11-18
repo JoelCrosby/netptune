@@ -7,36 +7,35 @@ using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Core.Hubs
+namespace Netptune.Core.Hubs;
+
+public interface IBoardHub
 {
-    public interface IBoardHub
-    {
-        Task JoinBoard(UserConnection connection);
+    Task JoinBoard(UserConnection connection);
 
-        Task LeaveBoard(UserConnection connection);
+    Task LeaveBoard(UserConnection connection);
 
-        Task MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
+    Task MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
-        Task Create(TaskViewModel request);
+    Task Create(TaskViewModel request);
 
-        Task Delete(ClientResponse response, int id);
+    Task Delete(ClientResponse response, int id);
 
-        Task DeleteMultiple(ClientResponse response, IEnumerable<int> ids);
+    Task DeleteMultiple(ClientResponse response, IEnumerable<int> ids);
 
-        Task Update(TaskViewModel request);
+    Task Update(TaskViewModel request);
 
-        Task UpdateGroup(BoardGroupViewModel request);
+    Task UpdateGroup(BoardGroupViewModel request);
 
-        Task AddTagToTask(TagViewModel response);
+    Task AddTagToTask(TagViewModel response);
 
-        Task DeleteTagFromTask(ClientResponse response);
+    Task DeleteTagFromTask(ClientResponse response);
 
-        Task AddBoardGroup(ClientResponse response);
+    Task AddBoardGroup(ClientResponse response);
 
-        Task DeleteBoardGroup(ClientResponse response);
+    Task DeleteBoardGroup(ClientResponse response);
 
-        Task MoveTasksToGroup(ClientResponse response);
+    Task MoveTasksToGroup(ClientResponse response);
 
-        Task ReassignTasks(ClientResponse response);
-    }
+    Task ReassignTasks(ClientResponse response);
 }

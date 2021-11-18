@@ -10,81 +10,80 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.App.Controllers
+namespace Netptune.App.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize(Policy = NetptunePolicies.Workspace)]
+public class ProjectsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize(Policy = NetptunePolicies.Workspace)]
-    public class ProjectsController : ControllerBase
+    private readonly IProjectService ProjectService;
+
+    public ProjectsController(IProjectService projectService)
     {
-        private readonly IProjectService ProjectService;
+        ProjectService = projectService;
+    }
 
-        public ProjectsController(IProjectService projectService)
-        {
-            ProjectService = projectService;
-        }
+    // GET: api/projects/5
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Produces("application/json", Type = typeof(List<ProjectViewModel>))]
+    public async Task<IActionResult> GetProjects()
+    {
+        var result = await ProjectService.GetProjects();
 
-        // GET: api/projects/5
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(List<ProjectViewModel>))]
-        public async Task<IActionResult> GetProjects()
-        {
-            var result = await ProjectService.GetProjects();
+        return Ok(result);
+    }
 
-            return Ok(result);
-        }
+    // GET: api/projects/5
+    [HttpGet("{key}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Produces("application/json", Type = typeof(ProjectViewModel))]
+    public async Task<IActionResult> GetProject([FromRoute] string key)
+    {
+        var result = await ProjectService.GetProject(key);
 
-        // GET: api/projects/5
-        [HttpGet("{key}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json", Type = typeof(ProjectViewModel))]
-        public async Task<IActionResult> GetProject([FromRoute] string key)
-        {
-            var result = await ProjectService.GetProject(key);
+        if (result is null) return NotFound();
 
-            if (result is null) return NotFound();
+        return Ok(result);
+    }
 
-            return Ok(result);
-        }
+    // PUT: api/projects
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Produces("application/json", Type = typeof(ProjectViewModel))]
+    public async Task<IActionResult> PutProject([FromBody] UpdateProjectRequest project)
+    {
+        var result = await ProjectService.UpdateProject(project);
 
-        // PUT: api/projects
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json", Type = typeof(ProjectViewModel))]
-        public async Task<IActionResult> PutProject([FromBody] UpdateProjectRequest project)
-        {
-            var result = await ProjectService.UpdateProject(project);
+        if (result is null) return NotFound();
 
-            if (result is null) return NotFound();
+        return Ok(result);
+    }
 
-            return Ok(result);
-        }
+    // POST: api/projects
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Produces("application/json", Type = typeof(ProjectViewModel))]
+    public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
+    {
+        var result = await ProjectService.AddProject(request);
 
-        // POST: api/projects
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Produces("application/json", Type = typeof(ProjectViewModel))]
-        public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
-        {
-            var result = await ProjectService.AddProject(request);
+        return Ok(result);
+    }
 
-            return Ok(result);
-        }
+    // DELETE: api/projects/5
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteProject([FromRoute] int id)
+    {
+        var result = await ProjectService.Delete(id);
 
-        // DELETE: api/projects/5
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteProject([FromRoute] int id)
-        {
-            var result = await ProjectService.Delete(id);
+        if (result is null) return NotFound();
 
-            if (result is null) return NotFound();
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

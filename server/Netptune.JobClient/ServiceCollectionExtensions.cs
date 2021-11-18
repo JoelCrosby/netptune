@@ -8,31 +8,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Constants;
 using Netptune.Core.Jobs;
 
-namespace Netptune.JobClient
+namespace Netptune.JobClient;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static void AddNetptuneJobClient(this IServiceCollection services, Action<JobClientOptions> action)
     {
-        public static void AddNetptuneJobClient(this IServiceCollection services, Action<JobClientOptions> action)
+        if (action is null) throw new ArgumentNullException(nameof(action));
+
+        var clientOptions = new JobClientOptions();
+        action(clientOptions);
+
+        services.AddHangfire(options =>
         {
-            if (action is null) throw new ArgumentNullException(nameof(action));
+            options.UseSimpleAssemblyNameTypeSerializer();
+            options.UseRecommendedSerializerSettings();
+        });
 
-            var clientOptions = new JobClientOptions();
-            action(clientOptions);
-
-            services.AddHangfire(options =>
+        GlobalConfiguration.Configuration.UseRedisStorage(clientOptions.ConnectionString,
+            new RedisStorageOptions
             {
-                options.UseSimpleAssemblyNameTypeSerializer();
-                options.UseRecommendedSerializerSettings();
+                Prefix = NetptuneJobConstants.RedisPrefix,
             });
 
-            GlobalConfiguration.Configuration.UseRedisStorage(clientOptions.ConnectionString,
-                new RedisStorageOptions
-                {
-                    Prefix = NetptuneJobConstants.RedisPrefix,
-                });
-
-            services.Configure(action);
-            services.AddTransient<IJobClient, JobClientService>();
-        }
+        services.Configure(action);
+        services.AddTransient<IJobClient, JobClientService>();
     }
 }

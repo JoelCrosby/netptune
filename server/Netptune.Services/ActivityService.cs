@@ -9,59 +9,58 @@ using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Activity;
 
-namespace Netptune.Services
+namespace Netptune.Services;
+
+public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
 {
-    public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IIdentityService Identity;
+
+    public ActivityService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
     {
-        private readonly INetptuneUnitOfWork UnitOfWork;
-        private readonly IIdentityService Identity;
+        UnitOfWork = unitOfWork;
+        Identity = identity;
+    }
 
-        public ActivityService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public async Task<ClientResponse<List<ActivityViewModel>>> GetActivities(EntityType entityType, int entityId)
+    {
+        var activities = await UnitOfWork.ActivityLogs.GetActivities(entityType, entityId);
+
+        var workspaceId = await Identity.GetWorkspaceId();
+        var assigneeIds = GetAssigneeIds(activities).ToHashSet();
+        var avatars = await UnitOfWork.Users.GetUserAvatars(assigneeIds, workspaceId);
+        var avatarMap = avatars.ToDictionary(k => k.Id, v => v);
+
+        foreach (var activity in activities.Where(activity => activity.Meta is not null))
         {
-            UnitOfWork = unitOfWork;
-            Identity = identity;
-        }
-
-        public async Task<ClientResponse<List<ActivityViewModel>>> GetActivities(EntityType entityType, int entityId)
-        {
-            var activities = await UnitOfWork.ActivityLogs.GetActivities(entityType, entityId);
-
-            var workspaceId = await Identity.GetWorkspaceId();
-            var assigneeIds = GetAssigneeIds(activities).ToHashSet();
-            var avatars = await UnitOfWork.Users.GetUserAvatars(assigneeIds, workspaceId);
-            var avatarMap = avatars.ToDictionary(k => k.Id, v => v);
-
-            foreach (var activity in activities.Where(activity => activity.Meta is not null))
+            if (!activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
             {
-                if (!activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
-                {
-                    continue;
-                }
-
-                var assigneeId = element.GetString();
-
-                if (assigneeId is {} && avatarMap.TryGetValue(assigneeId, out var avatar))
-                {
-                    activity.Assignee = avatar;
-                }
+                continue;
             }
 
-            return Success(activities);
+            var assigneeId = element.GetString();
+
+            if (assigneeId is {} && avatarMap.TryGetValue(assigneeId, out var avatar))
+            {
+                activity.Assignee = avatar;
+            }
         }
 
-        private static IEnumerable<string> GetAssigneeIds(IEnumerable<ActivityViewModel> activities)
-        {
-            foreach (var activity in activities)
-            {
-                if (activity.Meta?.RootElement is null)
-                {
-                    continue;
-                }
+        return Success(activities);
+    }
 
-                if (activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
-                {
-                    yield return element.GetString();
-                }
+    private static IEnumerable<string> GetAssigneeIds(IEnumerable<ActivityViewModel> activities)
+    {
+        foreach (var activity in activities)
+        {
+            if (activity.Meta?.RootElement is null)
+            {
+                continue;
+            }
+
+            if (activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
+            {
+                yield return element.GetString();
             }
         }
     }

@@ -1,9 +1,8 @@
-namespace Netptune.Core.Authentication.Models
-{
-    public class TokenRequest
-    {
-        public string Email { get; set; }
+namespace Netptune.Core.Authentication.Models;
 
-        public string Password { get; set; }
-    }
+public class TokenRequest
+{
+    public string Email { get; set; }
+
+    public string Password { get; set; }
 }

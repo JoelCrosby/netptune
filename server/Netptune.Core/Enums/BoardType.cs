@@ -1,8 +1,7 @@
-﻿namespace Netptune.Core.Enums
+﻿namespace Netptune.Core.Enums;
+
+public enum BoardType
 {
-    public enum BoardType
-    {
-        UserDefined = 0,
-        Default = 1,
-    }
+    UserDefined = 0,
+    Default = 1,
 }

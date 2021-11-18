@@ -6,10 +6,9 @@ using Netptune.Core.Enums;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Activity;
 
-namespace Netptune.Core.Repositories
+namespace Netptune.Core.Repositories;
+
+public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
 {
-    public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
-    {
-        Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId);
-    }
+    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId);
 }

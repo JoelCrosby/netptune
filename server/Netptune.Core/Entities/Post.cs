@@ -3,28 +3,27 @@ using System.Text.Json.Serialization;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 
-namespace Netptune.Core.Entities
+namespace Netptune.Core.Entities;
+
+public class Post : WorkspaceEntity<int>
 {
-    public class Post : WorkspaceEntity<int>
-    {
-        public string Title { get; set; }
+    public string Title { get; set; }
 
-        public string Body { get; set; }
+    public string Body { get; set; }
 
-        public PostType Type { get; set; }
+    public PostType Type { get; set; }
 
-        #region ForeignKeys
+    #region ForeignKeys
 
-        public int ProjectId { get; set; }
+    public int ProjectId { get; set; }
 
-        #endregion
+    #endregion
 
-        #region NavigationProperties
+    #region NavigationProperties
 
-        [JsonIgnore]
-        public virtual Project Project { get; set; }
+    [JsonIgnore]
+    public virtual Project Project { get; set; }
 
-        #endregion
+    #endregion
 
-    }
 }

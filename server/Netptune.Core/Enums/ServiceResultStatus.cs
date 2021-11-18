@@ -1,15 +1,14 @@
-﻿namespace Netptune.Core.Enums
+﻿namespace Netptune.Core.Enums;
+
+public enum ServiceResultStatus
 {
-    public enum ServiceResultStatus
-    {
-        Ok = 0,
+    Ok = 0,
 
-        NotFound = 1,
+    NotFound = 1,
 
-        BadRequest = 2,
+    BadRequest = 2,
 
-        Unauthorized = 3,
+    Unauthorized = 3,
 
-        NoContent = 4,
-    }
+    NoContent = 4,
 }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace Netptune.Core.Models.Import
+namespace Netptune.Core.Models.Import;
+
+public class TaskImportResult : ImportResult
 {
-    public class TaskImportResult : ImportResult
-    {
-        public IEnumerable<string> MissingEmails { get; set; }
-    }
+    public IEnumerable<string> MissingEmails { get; set; }
 }

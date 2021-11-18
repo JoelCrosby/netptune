@@ -15,256 +15,255 @@ using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.App.Hubs
+namespace Netptune.App.Hubs;
+
+[Authorize]
+public class BoardHub : Hub<IBoardHub>
 {
-    [Authorize]
-    public class BoardHub : Hub<IBoardHub>
+    public const string Path = "/hubs/board-hub";
+
+    private readonly IUserConnectionService UserConnection;
+    private readonly IHttpContextAccessor ContextAccessor;
+    private readonly ITaskService TaskService;
+    private readonly IBoardGroupService BoardGroupService;
+    private readonly ITagService TagService;
+
+    public BoardHub(
+        IUserConnectionService userConnection,
+        IHttpContextAccessor contextAccessor,
+        ITaskService taskService,
+        IBoardGroupService boardGroupService,
+        ITagService tagsService)
     {
-        public const string Path = "/hubs/board-hub";
+        UserConnection = userConnection;
+        ContextAccessor = contextAccessor;
+        TaskService = taskService;
+        BoardGroupService = boardGroupService;
+        TagService = tagsService;
+    }
 
-        private readonly IUserConnectionService UserConnection;
-        private readonly IHttpContextAccessor ContextAccessor;
-        private readonly ITaskService TaskService;
-        private readonly IBoardGroupService BoardGroupService;
-        private readonly ITagService TagService;
+    public override async Task OnConnectedAsync()
+    {
+        await UserConnection.Add(Context.ConnectionId);
+        await base.OnConnectedAsync();
+    }
 
-        public BoardHub(
-            IUserConnectionService userConnection,
-            IHttpContextAccessor contextAccessor,
-            ITaskService taskService,
-            IBoardGroupService boardGroupService,
-            ITagService tagsService)
-        {
-            UserConnection = userConnection;
-            ContextAccessor = contextAccessor;
-            TaskService = taskService;
-            BoardGroupService = boardGroupService;
-            TagService = tagsService;
-        }
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+        await UserConnection.Remove(Context.ConnectionId);
+        await base.OnDisconnectedAsync(exception);
+    }
 
-        public override async Task OnConnectedAsync()
-        {
-            await UserConnection.Add(Context.ConnectionId);
-            await base.OnConnectedAsync();
-        }
+    public async Task AddToGroup(HubRequest request)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, request.Group);
 
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await UserConnection.Remove(Context.ConnectionId);
-            await base.OnDisconnectedAsync(exception);
-        }
+        var userConnection = await UserConnection.Get(Context.ConnectionId);
 
-        public async Task AddToGroup(HubRequest request)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, request.Group);
+        await Clients
+            .OthersInGroup(request.Group)
+            .JoinBoard(userConnection);
+    }
 
-            var userConnection = await UserConnection.Get(Context.ConnectionId);
+    public async Task RemoveFromGroup(HubRequest request)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.Group);
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .JoinBoard(userConnection);
-        }
+        var userConnection = await UserConnection.Get(Context.ConnectionId);
 
-        public async Task RemoveFromGroup(HubRequest request)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.Group);
+        await Clients
+            .OthersInGroup(request.Group)
+            .LeaveBoard(userConnection);
+    }
 
-            var userConnection = await UserConnection.Get(Context.ConnectionId);
+    public async Task<ClientResponse> MoveTaskInBoardGroup(HubRequest<MoveTaskInGroupRequest> request)
+    {
+        SetupHttpContext(request);
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .LeaveBoard(userConnection);
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
 
-        public async Task<ClientResponse> MoveTaskInBoardGroup(HubRequest<MoveTaskInGroupRequest> request)
-        {
-            SetupHttpContext(request);
+        var result = await TaskService.MoveTaskInBoardGroup(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+        await Clients
+            .OthersInGroup(request.Group)
+            .MoveTaskInBoardGroup(request.Payload);
 
-            var result = await TaskService.MoveTaskInBoardGroup(request.Payload);
+        return result;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .MoveTaskInBoardGroup(request.Payload);
+    public async Task<ClientResponse<TaskViewModel>> Create(HubRequest<AddProjectTaskRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return result;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
 
-        public async Task<ClientResponse<TaskViewModel>> Create(HubRequest<AddProjectTaskRequest> request)
-        {
-            SetupHttpContext(request);
+        var result = await TaskService.Create(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+        if (!result.IsSuccess) return result;
 
-            var result = await TaskService.Create(request.Payload);
+        await Clients
+            .OthersInGroup(request.Group)
+            .Create(result.Payload);
 
-            if (!result.IsSuccess) return result;
+        return result;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .Create(result.Payload);
+    public async Task<ClientResponse> Delete(HubRequest<int> request)
+    {
+        SetupHttpContext(request);
 
-            return result;
-        }
+        var response = await TaskService.Delete(request.Payload);
 
-        public async Task<ClientResponse> Delete(HubRequest<int> request)
-        {
-            SetupHttpContext(request);
+        await Clients
+            .OthersInGroup(request.Group)
+            .Delete(response, request.Payload);
 
-            var response = await TaskService.Delete(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .Delete(response, request.Payload);
+    public async Task<ClientResponse> DeleteMultiple(HubRequest<List<int>> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        var response = await TaskService.Delete(request.Payload);
 
-        public async Task<ClientResponse> DeleteMultiple(HubRequest<List<int>> request)
-        {
-            SetupHttpContext(request);
+        await Clients
+            .OthersInGroup(request.Group)
+            .DeleteMultiple(response, request.Payload);
 
-            var response = await TaskService.Delete(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .DeleteMultiple(response, request.Payload);
+    public async Task<ClientResponse<TaskViewModel>> Update(HubRequest<UpdateProjectTaskRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
 
-        public async Task<ClientResponse<TaskViewModel>> Update(HubRequest<UpdateProjectTaskRequest> request)
-        {
-            SetupHttpContext(request);
+        var result = await TaskService.Update(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+        if (!result.IsSuccess) return result;
 
-            var result = await TaskService.Update(request.Payload);
+        await Clients
+            .OthersInGroup(request.Group)
+            .Update(result.Payload);
 
-            if (!result.IsSuccess) return result;
+        return result;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .Update(result.Payload);
+    public async Task<ClientResponse<BoardGroupViewModel>> UpdateGroup(HubRequest<UpdateBoardGroupRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return result;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
 
-        public async Task<ClientResponse<BoardGroupViewModel>> UpdateGroup(HubRequest<UpdateBoardGroupRequest> request)
-        {
-            SetupHttpContext(request);
+        var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
+        if (!result.IsSuccess) return result;
 
-            var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
+        await Clients
+            .OthersInGroup(request.Group)
+            .UpdateGroup(result.Payload);
 
-            if (!result.IsSuccess) return result;
+        return result;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .UpdateGroup(result.Payload);
+    public async Task<ClientResponse<TagViewModel>> AddTagToTask(HubRequest<AddTagToTaskRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return result;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse<TagViewModel>.Failed();
 
-        public async Task<ClientResponse<TagViewModel>> AddTagToTask(HubRequest<AddTagToTaskRequest> request)
-        {
-            SetupHttpContext(request);
+        var result = await TagService.AddTagToTask(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<TagViewModel>.Failed();
+        if (!result.IsSuccess) return result;
 
-            var result = await TagService.AddTagToTask(request.Payload);
+        await Clients
+            .OthersInGroup(request.Group)
+            .AddTagToTask(result.Payload);
 
-            if (!result.IsSuccess) return result;
+        return result;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .AddTagToTask(result.Payload);
+    public async Task<ClientResponse> DeleteTagFromTask(HubRequest<DeleteTagFromTaskRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return result;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
 
-        public async Task<ClientResponse> DeleteTagFromTask(HubRequest<DeleteTagFromTaskRequest> request)
-        {
-            SetupHttpContext(request);
+        var response = await TagService.DeleteFromTask(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+        await Clients
+            .OthersInGroup(request.Group)
+            .DeleteTagFromTask(response);
 
-            var response = await TagService.DeleteFromTask(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .DeleteTagFromTask(response);
+    public async Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(HubRequest<AddBoardGroupRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
 
-        public async Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(HubRequest<AddBoardGroupRequest> request)
-        {
-            SetupHttpContext(request);
+        var response = await BoardGroupService.AddBoardGroup(request.Payload);
 
-            if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
+        await Clients
+            .OthersInGroup(request.Group)
+            .AddBoardGroup(response);
 
-            var response = await BoardGroupService.AddBoardGroup(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .AddBoardGroup(response);
+    public async Task<ClientResponse> DeleteBoardGroup(HubRequest<int> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        var response = await BoardGroupService.Delete(request.Payload);
 
-        public async Task<ClientResponse> DeleteBoardGroup(HubRequest<int> request)
-        {
-            SetupHttpContext(request);
+        await Clients
+            .OthersInGroup(request.Group)
+            .DeleteBoardGroup(response);
 
-            var response = await BoardGroupService.Delete(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .DeleteBoardGroup(response);
+    public async Task<ClientResponse> MoveTasksToGroup(HubRequest<MoveTasksToGroupRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        var response = await TaskService.MoveTasksToGroup(request.Payload);
 
-        public async Task<ClientResponse> MoveTasksToGroup(HubRequest<MoveTasksToGroupRequest> request)
-        {
-            SetupHttpContext(request);
+        await Clients
+            .OthersInGroup(request.Group)
+            .MoveTasksToGroup(response);
 
-            var response = await TaskService.MoveTasksToGroup(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .MoveTasksToGroup(response);
+    public async Task<ClientResponse> ReassignTasks(HubRequest<ReassignTasksRequest> request)
+    {
+        SetupHttpContext(request);
 
-            return response;
-        }
+        var response = await TaskService.ReassignTasks(request.Payload);
 
-        public async Task<ClientResponse> ReassignTasks(HubRequest<ReassignTasksRequest> request)
-        {
-            SetupHttpContext(request);
+        await Clients
+            .OthersInGroup(request.Group)
+            .ReassignTasks(response);
 
-            var response = await TaskService.ReassignTasks(request.Payload);
+        return response;
+    }
 
-            await Clients
-                .OthersInGroup(request.Group)
-                .ReassignTasks(response);
+    private static bool IsInValidRequest(object target)
+    {
+        var context = new ValidationContext(target, null, null);
+        var validationResults = new List<ValidationResult>();
 
-            return response;
-        }
+        return !Validator.TryValidateObject(target, context, validationResults, true);
+    }
 
-        private static bool IsInValidRequest(object target)
-        {
-            var context = new ValidationContext(target, null, null);
-            var validationResults = new List<ValidationResult>();
-
-            return !Validator.TryValidateObject(target, context, validationResults, true);
-        }
-
-        private void SetupHttpContext<T>(HubRequest<T> request)
-        {
-            ContextAccessor.HttpContext?.Request.Headers.TryAdd("workspace", request.WorkspaceKey);
-        }
+    private void SetupHttpContext<T>(HubRequest<T> request)
+    {
+        ContextAccessor.HttpContext?.Request.Headers.TryAdd("workspace", request.WorkspaceKey);
     }
 }

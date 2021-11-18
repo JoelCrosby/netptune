@@ -1,9 +1,8 @@
 
 using Netptune.Core.Responses.Common;
 
-namespace Netptune.Core.Responses
+namespace Netptune.Core.Responses;
+
+public class InviteUserResponse : ClientResponse
 {
-    public class InviteUserResponse : ClientResponse
-    {
-    }
 }

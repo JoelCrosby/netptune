@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace Netptune.Core.Events
+namespace Netptune.Core.Events;
+
+public interface IActivityObservable : IObservable<IEnumerable<ActivityEvent>>
 {
-    public interface IActivityObservable : IObservable<IEnumerable<ActivityEvent>>
-    {
-        void Track(IEnumerable<ActivityEvent> activityEvents);
-    }
+    void Track(IEnumerable<ActivityEvent> activityEvents);
 }

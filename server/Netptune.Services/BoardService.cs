@@ -14,192 +14,191 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services
+namespace Netptune.Services;
+
+public class BoardService : IBoardService
 {
-    public class BoardService : IBoardService
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IIdentityService IdentityService;
+    private readonly IBoardRepository Boards;
+
+    public BoardService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
     {
-        private readonly INetptuneUnitOfWork UnitOfWork;
-        private readonly IIdentityService IdentityService;
-        private readonly IBoardRepository Boards;
+        UnitOfWork = unitOfWork;
+        IdentityService = identityService;
+        Boards = unitOfWork.Boards;
+    }
 
-        public BoardService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+    public async Task<List<BoardViewModel>> GetBoards(int projectId)
+    {
+        var results = await Boards.GetBoardsInProject(projectId, true);
+
+        return results.ConvertAll(result => result.ToViewModel());
+    }
+
+    public async Task<BoardViewModel> GetBoard(int id)
+    {
+        var result = await Boards.GetAsync(id, true);
+
+        return result.ToViewModel();
+    }
+
+    public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
+    {
+        var workspaceId = await IdentityService.GetWorkspaceId();
+        var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier, workspaceId);
+
+        if (!nullableBoardId.HasValue) return null;
+
+        var boardId = nullableBoardId.Value;
+
+        var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId, filter?.Term);
+        var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
+
+        var includeUserFilter = filter?.Users?.Any() ?? false;
+        var includeTagFilter = filter?.Tags?.Any() ?? false;
+        var includeFlaggedFilter = filter?.Flagged ?? false;
+
+        var userIds = groups
+            .SelectMany(group => group.Tasks)
+            .Select(task => task.AssigneeId)
+            .Distinct()
+            .ToList();
+
+        foreach (var group in groups)
         {
-            UnitOfWork = unitOfWork;
-            IdentityService = identityService;
-            Boards = unitOfWork.Boards;
-        }
-
-        public async Task<List<BoardViewModel>> GetBoards(int projectId)
-        {
-            var results = await Boards.GetBoardsInProject(projectId, true);
-
-            return results.ConvertAll(result => result.ToViewModel());
-        }
-
-        public async Task<BoardViewModel> GetBoard(int id)
-        {
-            var result = await Boards.GetAsync(id, true);
-
-            return result.ToViewModel();
-        }
-
-        public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
-        {
-            var workspaceId = await IdentityService.GetWorkspaceId();
-            var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier, workspaceId);
-
-            if (!nullableBoardId.HasValue) return null;
-
-            var boardId = nullableBoardId.Value;
-
-            var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId, filter?.Term);
-            var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
-
-            var includeUserFilter = filter?.Users?.Any() ?? false;
-            var includeTagFilter = filter?.Tags?.Any() ?? false;
-            var includeFlaggedFilter = filter?.Flagged ?? false;
-
-            var userIds = groups
-                .SelectMany(group => group.Tasks)
-                .Select(task => task.AssigneeId)
-                .Distinct()
+            group.Tasks = group.Tasks
+                .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
+                .Where(task => !includeFlaggedFilter || task.IsFlagged)
+                .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
                 .ToList();
-
-            foreach (var group in groups)
-            {
-                group.Tasks = group.Tasks
-                    .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
-                    .Where(task => !includeFlaggedFilter || task.IsFlagged)
-                    .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
-                    .ToList();
-            }
-
-            var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
-            var users = userEntities.Select(user => user.ToViewModel());
-
-            return new BoardView
-            {
-                Groups = groups,
-                Board = board,
-                Users = users,
-            };
         }
 
-        public async Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request)
+        var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
+        var users = userEntities.Select(user => user.ToViewModel());
+
+        return new BoardView
         {
-            if (!request.Id.HasValue)
-            {
-                throw new Exception($"{nameof(request.Id)} is required");
-            }
+            Groups = groups,
+            Board = board,
+            Users = users,
+        };
+    }
 
-            var result = await Boards.GetAsync(request.Id.Value);
-
-            if (result is null) return null;
-
-            result.Name = request.Name ?? result.Name;
-            result.Identifier = request.Identifier?.ToUrlSlug() ?? result.Identifier;
-
-            await UnitOfWork.CompleteAsync();
-
-            var payload = result.ToViewModel();
-
-            return ClientResponse<BoardViewModel>.Success(payload);
-        }
-
-        public async Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request)
+    public async Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request)
+    {
+        if (!request.Id.HasValue)
         {
-            if (!request.ProjectId.HasValue)
-            {
-                throw new Exception($"{nameof(request.ProjectId)} is required");
-            }
-
-            var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true);
-            var workspaceId = project.WorkspaceId;
-
-            var board = new Board
-            {
-                Name = request.Name,
-                Identifier = request.Identifier.ToUrlSlug(),
-                ProjectId = request.ProjectId.Value,
-                MetaInfo = request.Meta,
-                WorkspaceId = workspaceId,
-            };
-
-            board.BoardGroups.Add(new BoardGroup
-            {
-                Name = "Backlog",
-                Type = BoardGroupType.Backlog,
-                SortOrder = 1D,
-                WorkspaceId = workspaceId,
-            });
-
-            board.BoardGroups.Add(new BoardGroup
-            {
-                Name = "Todo",
-                Type = BoardGroupType.Todo,
-                SortOrder = 1.1D,
-                WorkspaceId = workspaceId,
-            });
-
-            board.BoardGroups.Add(new BoardGroup
-            {
-                Name = "Done",
-                Type = BoardGroupType.Done,
-                SortOrder = 1.2D,
-                WorkspaceId = workspaceId,
-            });
-
-            var result = await Boards.AddAsync(board);
-
-            await UnitOfWork.CompleteAsync();
-
-            var payload = result.ToViewModel();
-
-            return ClientResponse<BoardViewModel>.Success(payload);
+            throw new Exception($"{nameof(request.Id)} is required");
         }
 
-        public async Task<ClientResponse> Delete(int id)
+        var result = await Boards.GetAsync(request.Id.Value);
+
+        if (result is null) return null;
+
+        result.Name = request.Name ?? result.Name;
+        result.Identifier = request.Identifier?.ToUrlSlug() ?? result.Identifier;
+
+        await UnitOfWork.CompleteAsync();
+
+        var payload = result.ToViewModel();
+
+        return ClientResponse<BoardViewModel>.Success(payload);
+    }
+
+    public async Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request)
+    {
+        if (!request.ProjectId.HasValue)
         {
-            var board = await Boards.GetAsync(id);
-            var userId = await IdentityService.GetCurrentUserId();
-
-            if (board is null || userId is null) return null;
-
-            board.Delete(userId);
-
-            await UnitOfWork.CompleteAsync();
-
-            return ClientResponse.Success();
+            throw new Exception($"{nameof(request.ProjectId)} is required");
         }
 
-        public async Task<List<BoardsViewModel>> GetBoardsInWorkspace()
+        var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true);
+        var workspaceId = project.WorkspaceId;
+
+        var board = new Board
         {
-            var workspaceId = IdentityService.GetWorkspaceKey();
-            var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceId);
+            Name = request.Name,
+            Identifier = request.Identifier.ToUrlSlug(),
+            ProjectId = request.ProjectId.Value,
+            MetaInfo = request.Meta,
+            WorkspaceId = workspaceId,
+        };
 
-            if (!workspaceExists) return null;
-
-            return await Boards.GetBoardViewModels(workspaceId);
-        }
-
-        public async Task<List<BoardViewModel>> GetBoardsInProject(int projectId)
+        board.BoardGroups.Add(new BoardGroup
         {
-            var results = await Boards.GetBoardsInProject(projectId, true);
+            Name = "Backlog",
+            Type = BoardGroupType.Backlog,
+            SortOrder = 1D,
+            WorkspaceId = workspaceId,
+        });
 
-            return results.ConvertAll(result => result.ToViewModel());
-        }
-
-        public async Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier)
+        board.BoardGroups.Add(new BoardGroup
         {
-            var slugLower = identifier.ToUrlSlug();
-            var exists = await Boards.Exists(slugLower);
+            Name = "Todo",
+            Type = BoardGroupType.Todo,
+            SortOrder = 1.1D,
+            WorkspaceId = workspaceId,
+        });
 
-            return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
-            {
-                Request = identifier,
-                Slug = slugLower,
-                IsUnique = !exists,
-            });
-        }
+        board.BoardGroups.Add(new BoardGroup
+        {
+            Name = "Done",
+            Type = BoardGroupType.Done,
+            SortOrder = 1.2D,
+            WorkspaceId = workspaceId,
+        });
+
+        var result = await Boards.AddAsync(board);
+
+        await UnitOfWork.CompleteAsync();
+
+        var payload = result.ToViewModel();
+
+        return ClientResponse<BoardViewModel>.Success(payload);
+    }
+
+    public async Task<ClientResponse> Delete(int id)
+    {
+        var board = await Boards.GetAsync(id);
+        var userId = await IdentityService.GetCurrentUserId();
+
+        if (board is null || userId is null) return null;
+
+        board.Delete(userId);
+
+        await UnitOfWork.CompleteAsync();
+
+        return ClientResponse.Success();
+    }
+
+    public async Task<List<BoardsViewModel>> GetBoardsInWorkspace()
+    {
+        var workspaceId = IdentityService.GetWorkspaceKey();
+        var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceId);
+
+        if (!workspaceExists) return null;
+
+        return await Boards.GetBoardViewModels(workspaceId);
+    }
+
+    public async Task<List<BoardViewModel>> GetBoardsInProject(int projectId)
+    {
+        var results = await Boards.GetBoardsInProject(projectId, true);
+
+        return results.ConvertAll(result => result.ToViewModel());
+    }
+
+    public async Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier)
+    {
+        var slugLower = identifier.ToUrlSlug();
+        var exists = await Boards.Exists(slugLower);
+
+        return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+        {
+            Request = identifier,
+            Slug = slugLower,
+            IsUnique = !exists,
+        });
     }
 }

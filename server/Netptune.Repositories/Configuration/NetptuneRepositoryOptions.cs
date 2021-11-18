@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Repositories.Configuration
+namespace Netptune.Repositories.Configuration;
+
+public class NetptuneRepositoryOptions
 {
-    public class NetptuneRepositoryOptions
-    {
-        [Required]
-        public string ConnectionString { get; set; }
-    }
+    [Required]
+    public string ConnectionString { get; set; }
 }

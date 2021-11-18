@@ -1,6 +1,5 @@
-namespace Netptune.Core.Events
+namespace Netptune.Core.Events;
+
+public interface IActivityMetaData
 {
-    public interface IActivityMetaData
-    {
-    }
 }
