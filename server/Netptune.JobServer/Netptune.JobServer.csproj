@@ -13,13 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire" Version="1.7.25" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.25" />
-    <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.4" />
+    <PackageReference Include="Hangfire" Version="1.7.27" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.27" />
+    <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
