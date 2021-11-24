@@ -31,7 +31,7 @@ public class IdentityService : IIdentityService
 
     public string GetUserName()
     {
-        if (GetClaimValue("urn:github:name") is var githubUserName && githubUserName is {})
+        if (GetClaimValue("urn:github:name") is {} githubUserName)
         {
             return githubUserName;
         }
