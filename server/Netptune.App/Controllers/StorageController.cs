@@ -45,7 +45,7 @@ public class StorageController : ControllerBase
 
         var fileStream = file.OpenReadStream();
 
-        var result = await StorageService.UploadFileAsync(fileStream, key);
+        var result = await StorageService.UploadFileAsync(fileStream, key, key);
 
         var user = await Identity.GetCurrentUser();
 
@@ -76,7 +76,7 @@ public class StorageController : ControllerBase
 
         var fileStream = file.OpenReadStream();
 
-        var result = await StorageService.UploadFileAsync(fileStream, key);
+        var result = await StorageService.UploadFileAsync(fileStream, file.FileName, key);
 
         return Ok(result);
     }

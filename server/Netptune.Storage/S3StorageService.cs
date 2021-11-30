@@ -36,7 +36,7 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
         );
     }
 
-    public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, string key = null)
+    public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, string name, string key = null)
     {
         var fileTransferUtility = new TransferUtility(S3Client);
 
@@ -58,6 +58,7 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
 
             return Success(new UploadResponse
             {
+                Name = name,
                 Key = key,
                 Path = key,
                 Uri = uri,

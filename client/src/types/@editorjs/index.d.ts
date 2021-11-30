@@ -9,3 +9,4 @@ declare module '@editorjs/link';
 declare module '@editorjs/list';
 declare module '@editorjs/marker';
 declare module '@editorjs/underline';
+declare module '@editorjs/attaches';
