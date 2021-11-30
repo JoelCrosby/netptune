@@ -1,3 +1,4 @@
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,6 +25,7 @@ import Link from '@editorjs/link';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
+import Attaches from '@editorjs/attaches';
 import { environment } from '@env/environment';
 
 @Component({
@@ -58,7 +60,9 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   }
 
   writeValue(obj: string) {
-    const intialValue = obj && JSON.parse(obj);
+    obj ??= '';
+
+    const intialValue = JSON.parse(obj) as OutputData;
     this.createEditor(intialValue);
   }
 
@@ -127,6 +131,14 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
             endpoint: '/api/meta/uri-meta-info',
           },
         },
+        Attaches: {
+          class: Attaches,
+          config: {
+            uploader: {
+              uploadByFile: this.uploadFile.bind(this),
+            },
+          },
+        },
       },
       data: initialValue || undefined,
       onReady: () => this.loaded.emit(),
@@ -139,11 +151,34 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   }
 
   async uploadFile(data: File) {
-    const response = await this.storage.uploadMedia(data).toPromise();
+    const response = await this.storage
+      .uploadMedia(data)
+      .pipe(unwrapClientReposne())
+      .toPromise()
+      .catch(() => null);
+
+    if (!response) {
+      return { success: 0 };
+    }
+
+    // TODO: have to force an on change as the attaches
+    // editorjs module does not emit an on change event
+
+    setTimeout(
+      () =>
+        void this.editor.save().then((value) => {
+          this.onChange(JSON.stringify(value));
+        }),
+      0
+    );
+
     return {
       success: 1,
       file: {
-        url: response.payload?.uri,
+        url: response.uri,
+        name: response.name,
+        title: response.name,
+        size: response.size,
       },
     };
   }
