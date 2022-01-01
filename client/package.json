@@ -37,7 +37,7 @@
     "@editorjs/underline": "^1.0.0",
     "@mdi/font": "^6.5.95",
     "@microsoft/signalr": "^5.0.9",
-    "@ngneat/until-destroy": "^8.1.4",
+    "@ngneat/until-destroy": "^9.0.0",
     "@ngrx/component": "^13.0.2",
     "@ngrx/effects": "13.0.2",
     "@ngrx/entity": "13.0.2",
