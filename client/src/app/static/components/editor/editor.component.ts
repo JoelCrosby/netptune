@@ -60,9 +60,9 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   }
 
   writeValue(obj: string) {
-    obj ??= '';
+    const parsed = obj ? JSON.parse(obj) : null;
+    const intialValue = parsed as OutputData;
 
-    const intialValue = JSON.parse(obj) as OutputData;
     this.createEditor(intialValue);
   }
 
