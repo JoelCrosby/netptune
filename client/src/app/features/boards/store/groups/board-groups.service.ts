@@ -6,7 +6,11 @@ import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
+import { FileResponse } from '@core/types/file-response';
+import { extractFilenameFromHeaders } from '@core/util/header-utils';
 import { environment } from '@env/environment';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class BoardGroupsService {
@@ -46,5 +50,28 @@ export class BoardGroupsService {
       environment.apiEndpoint + 'api/boardgroups',
       boardGorup
     );
+  }
+
+  export(boardId: string): Observable<FileResponse> {
+    return this.http
+      .get(
+        environment.apiEndpoint + `api/export/tasks/export-board/${boardId}`,
+        {
+          observe: 'response',
+          responseType: 'blob',
+        }
+      )
+      .pipe(
+        switchMap((response) => {
+          if (response.body === null) {
+            return throwError('repsone body was null');
+          }
+
+          return of({
+            file: response.body,
+            filename: extractFilenameFromHeaders(response.headers),
+          });
+        })
+      );
   }
 }

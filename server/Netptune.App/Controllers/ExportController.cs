@@ -43,7 +43,7 @@ public class ExportController : ControllerBase
     [Produces("application/json", Type = typeof(TaskViewModel))]
     public async Task<IActionResult> ExportBoardTasks([FromRoute] string boardId)
     {
-        var result = await TaskExportService.ExportWorkspaceTasks();
+        var result = await TaskExportService.ExportBoardTasks(boardId);
 
         return File(result.Stream, result.ContentType, result.Filename);
     }

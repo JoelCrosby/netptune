@@ -10,6 +10,7 @@ import { selectSelectedTags } from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -48,7 +49,7 @@ export class BoardGroupsEffects {
         this.route.queryParams
       ),
       switchMap(([_, id, paramMap, params]) =>
-        this.boardGroupsService.get(id, params).pipe(
+        this.boardGroupsService.get(id as string, params).pipe(
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,
@@ -350,6 +351,24 @@ export class BoardGroupsEffects {
             map(() => actions.reassignTasksSuccess()),
             catchError((error) => of(actions.reassignTasksFail({ error })))
           );
+      })
+    )
+  );
+
+  exportTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.exportBoardTasks),
+      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      switchMap(([_, boardId]) => {
+        if (boardId === undefined) {
+          return throwError('board identifier is undefined');
+        }
+
+        return this.boardGroupsService.export(boardId).pipe(
+          tap((res) => void downloadFile(res.file, res.filename)),
+          map((reponse) => actions.exportBoardTasksSuccess({ reponse })),
+          catchError((error) => of(actions.exportBoardTasksFail({ error })))
+        );
       })
     )
   );
