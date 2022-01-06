@@ -7,6 +7,7 @@ import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-grou
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { FileResponse } from '@core/types/file-response';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[BoardGroups] Clear State');
@@ -248,4 +249,20 @@ export const reassignTasksFail = createAction(
 export const setInlineTaskContent = createAction(
   '[BoardGroups] Set Inline Task Content',
   props<{ content: string }>()
+);
+
+// Export Board Tasks
+
+export const exportBoardTasks = createAction(
+  '[BoardGroups] Export Board Tasks'
+);
+
+export const exportBoardTasksSuccess = createAction(
+  '[BoardGroups] Export Board Tasks Success ',
+  props<{ reponse: FileResponse }>()
+);
+
+export const exportBoardTasksFail = createAction(
+  '[BoardGroups] Export Board Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
 );

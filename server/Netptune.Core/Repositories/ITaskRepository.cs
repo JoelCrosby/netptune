@@ -26,6 +26,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey);
 
+    Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier);
+
     Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
 
     Task<ActivityAncestors> GetAncestors(int taskId);

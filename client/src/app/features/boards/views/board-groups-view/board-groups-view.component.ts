@@ -44,7 +44,13 @@ export class BoardGroupsViewComponent
     {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
-      icon: 'publish',
+      icon: 'file_upload',
+      iconClass: 'material-icons-outlined',
+    },
+    {
+      label: 'Export Board Tasks',
+      click: () => this.onExportTasksClicked(),
+      icon: 'file_download',
       iconClass: 'material-icons-outlined',
     },
     {
@@ -153,7 +159,7 @@ export class BoardGroupsViewComponent
       return;
     }
 
-    this.moveBoardGroup(data, order);
+    this.moveBoardGroup(data as BoardViewGroup, order);
   }
 
   moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
@@ -191,6 +197,10 @@ export class BoardGroupsViewComponent
 
     this.importTasksInput.nativeElement.value = null;
     this.importTasksInput.nativeElement.click();
+  }
+
+  onExportTasksClicked() {
+    this.store.dispatch(GroupActions.exportBoardTasks());
   }
 
   onDeleteBoardClicked() {

@@ -184,6 +184,64 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             workspaceKey,
         });
 
+        return RowsToExportList(rows);
+    }
+
+    public async Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var rows = await connection.QueryAsync<TasksViewRowMap>(@"
+                SELECT w.slug              AS workspace_key
+                     , p.name              AS project_name
+                     , p.key               AS project_key
+                     , b.name              AS board_name
+                     , b.identifier        AS board_identifier
+                     , pt.id               AS task_id
+                     , pt.name             AS task_name
+                     , pt.description      AS task_description
+                     , pt.is_flagged       AS task_is_flagged
+                     , pt.project_scope_id AS project_scope_id
+                     , pt.status           AS task_status
+                     , pt.created_at       AS task_created_at
+                     , pt.updated_at       AS task_updated_at
+                     , ptibg.sort_order    AS task_sort_order
+                     , bg.name             AS board_group_name
+                     , bg.type             AS board_group_type
+                     , bg.sort_order       AS board_group_sort_order
+                     , a.firstname         AS assignee_firstname
+                     , a.lastname          AS assignee_lastname
+                     , a.email             AS assignee_email
+                     , o.firstname         AS owner_firstname
+                     , o.lastname          AS owner_lastname
+                     , o.email             AS owner_email
+                     , t.name              AS tag
+
+                FROM workspaces w
+                         LEFT JOIN projects p on p.workspace_id = w.id
+                         LEFT JOIN boards b on b.project_id = p.id AND b.identifier = @boardIdentifier
+                         LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
+                         LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
+                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                         INNER JOIN users a on pt.assignee_id = a.id
+                         INNER JOIN users o on pt.owner_id = o.id
+                         LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
+                         LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+
+                WHERE w.slug = @workspaceKey
+
+                ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
+            ", new
+        {
+            workspaceKey,
+            boardIdentifier,
+        });
+
+        return RowsToExportList(rows);
+    }
+
+    private List<ExportTaskViewModel> RowsToExportList(IEnumerable<TasksViewRowMap> rows)
+    {
         return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
         {
             var lastTask = result.LastOrDefault();

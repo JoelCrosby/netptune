@@ -34,4 +34,18 @@ public class TaskExportService : ITaskExportService
             Filename = $"Netptune-Task-Export_{workspaceKey}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
         };
     }
+
+    public async Task<FileResponse> ExportBoardTasks(string boardIdentifier)
+    {
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var tasks = await TaskRepository.GetBoardExportTasksAsync(workspaceKey, boardIdentifier);
+        var stream = await tasks.ToCsvStream();
+
+        return new FileResponse
+        {
+            Stream = stream,
+            ContentType = "application/octet-stream",
+            Filename = $"Netptune-Task-Export_{workspaceKey}-{boardIdentifier}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
+        };
+    }
 }
