@@ -15,8 +15,14 @@
     align-items: center;
     justify-content: center;
 
+    &::before {
+      background-color: mat.get-color-from-palette($primary, .6);
+      background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, mat.get-color-from-palette($background, background) 1px);
+    }
+
     form {
-      border: 1px solid mat.get-color-from-palette($background, border);
+      box-shadow: 0 4px 32px 0 rgb(10 14 29 / 2%), 0 8px 64px 0 rgb(10 14 29 / 8%);
+      background-color: mat.get-color-from-palette($background, background);
     }
   }
 
