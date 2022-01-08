@@ -16,73 +16,62 @@
 
     <h3 class="auth-title">Create new Account</h3>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Firstname</mat-label>
-      <input
-        matInput
-        name="firstname"
-        formControlName="firstname"
-        autocomplete="givenname"
-      />
-      <mat-error
-        *ngIf="firstname.hasError('firstname') && !firstname.hasError('required')"
-      >
-        Please enter a valid Firstname
-      </mat-error>
-    </mat-form-field>
+    <app-form-input
+      formControlName="firstname"
+      label="Firstname"
+      maxLength="1024"
+      id="firstname"
+      name="firstname"
+      autocomplete="givenname"
+    >
+    </app-form-input>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Lastname</mat-label>
-      <input
-        matInput
-        name="lastname"
-        formControlName="lastname"
-        autocomplete="familyname"
-      />
-      <mat-error
-        *ngIf="lastname.hasError('lastname') && !lastname.hasError('required')"
-      >
-        Please enter a valid Lastname
-      </mat-error>
-    </mat-form-field>
+    <app-form-input
+      formControlName="lastname"
+      label="Lastname"
+      maxLength="1024"
+      id="lastname"
+      name="lastname"
+      autocomplete="familyname"
+    >
+    </app-form-input>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Email Address</mat-label>
-      <input
-        matInput
-        name="email"
-        formControlName="email"
-        autocomplete="username"
-      />
-      <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
-        Please enter a valid email address
-      </mat-error>
-    </mat-form-field>
+    <app-form-input
+      formControlName="email"
+      label="Email"
+      maxLength="1024"
+      id="email"
+      name="email"
+      type="email"
+      autocomplete="username"
+    >
+    </app-form-input>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        name="new-password"
-        formControlName="password0"
-        autocomplete="new-password"
-      />
-    </mat-form-field>
+    <app-form-input
+      formControlName="password0"
+      label="Password"
+      maxLength="1024"
+      id="new-password"
+      name="new-password"
+      autocomplete="new-password"
+      type="password"
+    >
+    </app-form-input>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Confirm Password</mat-label>
-      <input
-        matInput
-        type="password"
-        name="confirm-new-password"
-        formControlName="password1"
-        autocomplete="new-password"
-      />
-      <mat-error *ngIf="password1.hasError('noMatch')">
-        Passwords do not macth!
-      </mat-error>
-    </mat-form-field>
+    <app-form-input
+      formControlName="password1"
+      label="Confirm Password"
+      maxLength="1024"
+      id="confirm-new-password"
+      name="confirm-new-password"
+      autocomplete="new-password"
+      type="password"
+    >
+    </app-form-input>
+
+    <mat-error *ngIf="password1.hasError('noMatch')">
+      Passwords do not macth!
+    </mat-error>
 
     <div class="button-container">
       <a
