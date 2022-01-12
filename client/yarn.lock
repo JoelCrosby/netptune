@@ -1818,12 +1818,12 @@
     node-fetch "^2.6.0"
     ws "^6.0.0"
 
-"@ngneat/until-destroy@^8.1.4":
-  version "8.1.4"
-  resolved "https://registry.yarnpkg.com/@ngneat/until-destroy/-/until-destroy-8.1.4.tgz#00be5396f4c1417987d09aff227c15031f5473a8"
-  integrity sha512-Bk+jS0ZyCKvW2wLJPMJ8jr6lhYlDVVbE2/WbQ5L3eBcwmem82649o6s7G68tDNA+5UeHtfW7fbpK4Bhj8r+B9g==
+"@ngneat/until-destroy@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ngneat/until-destroy/-/until-destroy-9.0.0.tgz#62f478beb625a051bb72ddb677e90593da575bbc"
+  integrity sha512-6NJNJJIIr9qo3fTDI6yeLAKmyvbS1gV0PynIT0ofktq5L4BehlGGxCextcfh2uIltx+fhj9TYpC7ndwnD/3RPA==
   dependencies:
-    tslib "^2.2.0"
+    tslib "^2.3.0"
 
 "@ngrx/component@^13.0.2":
   version "13.0.2"
@@ -7802,7 +7802,7 @@ ts-node@~8.3.0:
     source-map-support "^0.5.6"
     yn "^3.0.0"
 
-tslib@2.3.1, tslib@^2.0.0, tslib@^2.2.0, tslib@^2.3.0:
+tslib@2.3.1, tslib@^2.0.0, tslib@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
