@@ -60,11 +60,7 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired();
 
         builder
-            .HasIndex(task => new
-            {
-                task.Name,
-                task.Description,
-            })
+            .HasIndex(task => task.Name)
             .IsTsVectorExpressionIndex("english");
     }
 }
