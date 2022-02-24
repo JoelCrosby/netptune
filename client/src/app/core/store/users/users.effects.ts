@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -18,7 +19,9 @@ export class UsersEffects {
       switchMap(() =>
         this.usersService.getUsersInWorkspace().pipe(
           map((users) => actions.loadUsersSuccess({ users })),
-          catchError((error) => of(actions.loadUsersFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadUsersFail({ error }))
+          )
         )
       )
     )

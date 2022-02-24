@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -80,7 +81,9 @@ export class AuthEffects implements OnInitEffects {
         switchMap(() =>
           this.authService.currentUser().pipe(
             map((user) => actions.currentUserSuccess({ user })),
-            catchError((error) => of(actions.currentUserFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.currentUserFail({ error }))
+            )
           )
         )
       )
@@ -125,7 +128,9 @@ export class AuthEffects implements OnInitEffects {
           this.authService.register(action.request).pipe(
             map((token) => actions.registerSuccess({ token })),
             tap(() => void this.router.navigate(['/workspaces'])),
-            catchError((error) => of(actions.registerFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.registerFail({ error }))
+            )
           )
         )
       )
@@ -141,7 +146,9 @@ export class AuthEffects implements OnInitEffects {
             map((token) => actions.confirmEmailSuccess({ token })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Email confirmed successfully')),
-            catchError((error) => of(actions.confirmEmailFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.confirmEmailFail({ error }))
+            )
           )
         )
       )
@@ -189,7 +196,9 @@ export class AuthEffects implements OnInitEffects {
             map((token) => actions.resetPasswordSuccess({ token })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Password has been reset')),
-            catchError((error) => of(actions.resetPasswordFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.resetPasswordFail({ error }))
+            )
           )
         )
       )

@@ -6,6 +6,7 @@ import { asyncScheduler, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import * as actions from './activity.actions';
 import { ActivityService } from './activity.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class ActivityEffects {
@@ -18,7 +19,9 @@ export class ActivityEffects {
           this.activityService.get(entityType, entityId).pipe(
             unwrapClientReposne(),
             map((activities) => actions.loadActivitySuccess({ activities })),
-            catchError((error) => of(actions.loadActivityFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadActivityFail({ error }))
+            )
           )
         )
       )

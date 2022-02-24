@@ -25,9 +25,11 @@ export class ActivityPipe implements PipeTransform {
 }
 
 const getMeta = (value: ActivityViewModel) => {
+  const meta = value.meta as { group: string };
+
   switch (value.type) {
     case ActivityType.move:
-      return `to ${value.meta?.group ?? ''} group`;
+      return `to ${meta?.group ?? ''} group`;
     case ActivityType.assign:
       return `to ${value.assignee?.displayName ?? '(removed user)'}`;
     default:

@@ -151,7 +151,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
 
   validate(control: AbstractControl) {
     this.isUniqueLoading$.next(true);
-    return this.boardsService.isIdentifierUnique(control.value).pipe(
+    return this.boardsService.isIdentifierUnique(control.value as string).pipe(
       observeOn(animationFrameScheduler),
       debounceTime(240),
       map((val) => {

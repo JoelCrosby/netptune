@@ -165,7 +165,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   validate(control: AbstractControl) {
     this.isUniqueLoadingSubject$.next(true);
-    return this.workspaceServcie.isSlugUnique(control.value).pipe(
+    return this.workspaceServcie.isSlugUnique(control.value as string).pipe(
       debounceTime(640),
       map((val) => {
         this.isUniqueLoadingSubject$.next(false);

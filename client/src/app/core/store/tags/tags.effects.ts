@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -30,7 +31,9 @@ export class TagsEffects {
       switchMap(() =>
         this.tagsService.get().pipe(
           map((tags) => actions.loadTagsSuccess({ tags })),
-          catchError((error) => of(actions.loadTagsFail(error)))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadTagsFail(error))
+          )
         )
       )
     )
@@ -43,7 +46,9 @@ export class TagsEffects {
         this.tagsService.post({ tag: action.name }).pipe(
           unwrapClientReposne(),
           map((tag) => actions.addTagSuccess({ tag })),
-          catchError((error) => of(actions.addTagFail(error)))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.addTagFail(error))
+          )
         )
       )
     )
@@ -56,7 +61,9 @@ export class TagsEffects {
         this.tagsService.postToTask(action.request).pipe(
           unwrapClientReposne(),
           map((tag) => actions.addTagToTaskSuccess({ tag })),
-          catchError((error) => of(actions.addTagToTaskFail(error)))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.addTagToTaskFail(error))
+          )
         )
       )
     )
@@ -73,7 +80,9 @@ export class TagsEffects {
             return this.tagsService.delete({ tags: action.tags }).pipe(
               unwrapClientReposne(),
               map(() => actions.deleteTagsSuccess()),
-              catchError((error) => of(actions.deleteTagsFail(error)))
+              catchError((error: HttpErrorResponse) =>
+                of(actions.deleteTagsFail(error))
+              )
             );
           })
         )
@@ -88,7 +97,9 @@ export class TagsEffects {
         this.tagsService.deleteFromTask({ systemId, tag }).pipe(
           unwrapClientReposne(),
           map(() => actions.deleteTagFromTaskSuccess()),
-          catchError((error) => of(actions.deleteTagFromTaskFail(error)))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.deleteTagFromTaskFail(error))
+          )
         )
       )
     )
@@ -101,7 +112,9 @@ export class TagsEffects {
         this.tagsService.patch({ currentValue, newValue }).pipe(
           unwrapClientReposne(),
           map((tag) => actions.editTagSuccess({ tag })),
-          catchError((error) => of(actions.deleteTagFromTaskFail(error)))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.deleteTagFromTaskFail(error))
+          )
         )
       )
     )

@@ -9,7 +9,7 @@ const colorIndex = {
 };
 
 export const getColourForKey = (key: string) => {
-  if (colorDictionary.hasOwnProperty(key)) {
+  if (Object.prototype.hasOwnProperty.call(colorDictionary, key)) {
     return colorDictionary[key];
   }
 

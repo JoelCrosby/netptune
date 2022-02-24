@@ -38,6 +38,10 @@ export class ProjectTasksService {
   }
 
   delete(task: ProjectTask) {
+    if (task.id === undefined || task.id === null) {
+      throw new Error('task id undefined');
+    }
+
     return this.http.delete<ClientResponse>(
       environment.apiEndpoint + `api/tasks/${task.id}`
     );

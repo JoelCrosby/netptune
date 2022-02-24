@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -28,7 +29,9 @@ export class BoardsEffects {
       switchMap(() =>
         this.boardsService.getByWorkspace().pipe(
           map((boards) => actions.loadBoardsSuccess({ boards })),
-          catchError((error) => of(actions.loadBoardsFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadBoardsFail({ error }))
+          )
         )
       )
     )
@@ -41,7 +44,9 @@ export class BoardsEffects {
         this.boardsService.post(action.request).pipe(
           unwrapClientReposne(),
           map((response) => actions.createBoardSuccess({ response })),
-          catchError((error) => of(actions.createBoardFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.createBoardFail({ error }))
+          )
         )
       )
     )
@@ -54,7 +59,9 @@ export class BoardsEffects {
         this.boardsService.put(action.request).pipe(
           unwrapClientReposne(),
           map((response) => actions.updateBoardSuccess({ response })),
-          catchError((error) => of(actions.updateBoardFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.updateBoardFail({ error }))
+          )
         )
       )
     )
@@ -76,7 +83,9 @@ export class BoardsEffects {
                   boardId: action.boardId,
                 })
               ),
-              catchError((error) => of(actions.deleteBoardFail({ error })))
+              catchError((error: HttpErrorResponse) =>
+                of(actions.deleteBoardFail({ error }))
+              )
             );
           })
         )

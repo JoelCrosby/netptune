@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
@@ -49,7 +50,9 @@ export class WorkspacesEffects {
         switchMap(() =>
           this.workspacesService.get().pipe(
             map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
-            catchError((error) => of(actions.loadWorkspacesFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadWorkspacesFail({ error }))
+            )
           )
         )
       )
@@ -61,7 +64,9 @@ export class WorkspacesEffects {
       switchMap((action) =>
         this.workspacesService.post(action.workspace).pipe(
           map((workspace) => actions.createWorkspaceSuccess({ workspace })),
-          catchError((error) => of(actions.createWorkspaceFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.createWorkspaceFail({ error }))
+          )
         )
       )
     )
@@ -78,7 +83,9 @@ export class WorkspacesEffects {
             return this.workspacesService.delete(workspace).pipe(
               tap(() => this.snackbar.open('Workspace deleted')),
               map(() => actions.deleteWorkspaceSuccess({ workspace })),
-              catchError((error) => of(actions.deleteWorkspaceFail({ error })))
+              catchError((error: HttpErrorResponse) =>
+                of(actions.deleteWorkspaceFail({ error }))
+              )
             );
           })
         )
@@ -92,7 +99,9 @@ export class WorkspacesEffects {
       switchMap((action) =>
         this.workspacesService.put(action.workspace).pipe(
           map((workspace) => actions.editWorkspaceSuccess({ workspace })),
-          catchError((error) => of(actions.editWorkspaceFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.editWorkspaceFail({ error }))
+          )
         )
       )
     )
@@ -105,7 +114,9 @@ export class WorkspacesEffects {
         this.workspacesService.isSlugUnique(action.slug).pipe(
           unwrapClientReposne(),
           map((response) => actions.isSlugUniueSuccess({ response })),
-          catchError((error) => of(actions.isSlugUniueFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.isSlugUniueFail({ error }))
+          )
         )
       )
     )

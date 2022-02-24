@@ -54,7 +54,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
-    const value = this.formControl.value;
+    const value: string = this.formControl.value;
     this.submitted.emit(value);
   }
 

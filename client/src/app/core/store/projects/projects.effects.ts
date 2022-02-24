@@ -22,6 +22,7 @@ import { selectWorkspace } from '../workspaces/workspaces.actions';
 import { selectCurrentWorkspaceIdentifier } from '../workspaces/workspaces.selectors';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class ProjectsEffects {
@@ -33,7 +34,9 @@ export class ProjectsEffects {
         switchMap((action) =>
           this.projectsService.getProjectDetail(action.projectKey).pipe(
             map((project) => actions.loadProjectDetailSuccess({ project })),
-            catchError((error) => of(actions.loadProjectDetailFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadProjectDetailFail({ error }))
+            )
           )
         )
       )
@@ -60,7 +63,9 @@ export class ProjectsEffects {
         switchMap(() =>
           this.projectsService.get().pipe(
             map((projects) => actions.loadProjectsSuccess({ projects })),
-            catchError((error) => of(actions.loadProjectsFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadProjectsFail({ error }))
+            )
           )
         )
       )
@@ -85,7 +90,9 @@ export class ProjectsEffects {
       switchMap((action) =>
         this.projectsService.post(action.project).pipe(
           map((project) => actions.createProjectSuccess({ project })),
-          catchError((error) => of(actions.createProjectFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.createProjectFail({ error }))
+          )
         )
       )
     )
@@ -109,7 +116,9 @@ export class ProjectsEffects {
                     projectId: project.id,
                   })
                 ),
-                catchError((error) => of(actions.deleteProjectFail({ error })))
+                catchError((error: HttpErrorResponse) =>
+                  of(actions.deleteProjectFail({ error }))
+                )
               );
             })
           )
@@ -126,7 +135,9 @@ export class ProjectsEffects {
           this.projectsService.put(action.project).pipe(
             tap(() => this.snackbar.open('Project updated')),
             map((project) => actions.updateProjectSuccess({ project })),
-            catchError((error) => of(actions.updateProjectFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.updateProjectFail({ error }))
+            )
           )
         )
       )
@@ -138,7 +149,9 @@ export class ProjectsEffects {
       switchMap((action) =>
         this.projectsService.getProjectBoards(action.projectId).pipe(
           map((boards) => actions.getProjectBoardsSuccess({ boards })),
-          catchError((error) => of(actions.getProjectBoardsFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.getProjectBoardsFail({ error }))
+          )
         )
       )
     )
