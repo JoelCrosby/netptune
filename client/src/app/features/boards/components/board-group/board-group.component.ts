@@ -45,7 +45,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('container') container!: ElementRef;
 
   focusedSubject = new BehaviorSubject<boolean>(false);
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   focused$!: Observable<boolean>;
   isDragging$!: Observable<boolean>;

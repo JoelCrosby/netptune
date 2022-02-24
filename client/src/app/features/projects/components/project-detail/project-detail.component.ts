@@ -36,7 +36,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   project$!: Observable<ProjectViewModel | null | undefined>;
   boards$!: Observable<BoardViewModel[]>;
   updateDisabled$!: Observable<boolean>;
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   formGroup!: FormGroup;
 

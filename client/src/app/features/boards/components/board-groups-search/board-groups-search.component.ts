@@ -20,7 +20,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 })
 export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
   term$!: Observable<string>;
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   termFormControl = new FormControl('', [
     Validators.required,

@@ -19,7 +19,7 @@ import { AppState } from '@core/core.state';
 export class LoginComponent implements OnDestroy {
   authLoading$: Observable<boolean>;
   showLoginError$: Observable<boolean>;
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   hidePassword = true;
 

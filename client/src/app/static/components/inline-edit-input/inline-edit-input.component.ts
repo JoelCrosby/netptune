@@ -40,7 +40,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
     tap((value) => (this.editActiveClass = value))
   );
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   constructor(
     private elementRef: ElementRef,

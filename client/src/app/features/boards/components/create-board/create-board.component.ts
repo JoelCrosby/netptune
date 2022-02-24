@@ -47,7 +47,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   projects$!: Observable<ProjectViewModel[]>;
   identifierIcon$!: Observable<string | null>;
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   formGroup!: FormGroup;
 

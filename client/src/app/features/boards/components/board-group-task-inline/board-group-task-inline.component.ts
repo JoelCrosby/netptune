@@ -57,7 +57,7 @@ export class BoardGroupTaskInlineComponent
     Validators.maxLength(256),
   ]);
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   currentWorkspace$!: Observable<Workspace | undefined>;
   currentProjectId$!: Observable<number | undefined>;

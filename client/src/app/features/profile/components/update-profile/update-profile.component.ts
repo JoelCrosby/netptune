@@ -27,7 +27,7 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup;
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
   loadingUpdate$!: Observable<boolean>;
   editProfilePicture$ = new Subject<boolean>();
 

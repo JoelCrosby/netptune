@@ -65,7 +65,7 @@ export class TaskDetailDialogComponent
   selectedTypeValue!: number;
   entityType = EntityType.task;
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
   onEditorLoadedSubject = new Subject<boolean>();
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 

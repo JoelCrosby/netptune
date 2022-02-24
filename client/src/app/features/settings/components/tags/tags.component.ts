@@ -22,7 +22,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 })
 export class TagsComponent implements OnInit, OnDestroy {
   tag$ = this.store.select(selectTags);
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   addTagActive = false;
   editTagIndex: number | null = null;
