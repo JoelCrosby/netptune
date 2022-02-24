@@ -56,7 +56,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
     this.control.valueChanges
       .pipe(
         takeUntil(this.onDestroy$),
-        tap((value) => this.onSubmit(value))
+        tap((value: string) => this.onSubmit(value))
       )
       .subscribe();
   }

@@ -35,7 +35,7 @@ export class InviteDialogComponent {
       return;
     }
 
-    const user = this.email.value;
+    const user: string = this.email.value;
 
     if (this.users.includes(user)) {
       this.email.reset();

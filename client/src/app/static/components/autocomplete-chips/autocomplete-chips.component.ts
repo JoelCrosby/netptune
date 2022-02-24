@@ -59,7 +59,7 @@ export class AutocompleteChipsComponent implements OnInit {
 
   ngOnInit() {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
-      startWith(''),
+      startWith<string>(''),
       map((option: string | null) => this.filter(option)),
       map((values) => values.filter((value) => !this.selected?.includes(value)))
     );

@@ -83,7 +83,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const el = this.container.nativeElement;
+    const el: HTMLDivElement = this.container.nativeElement;
 
     fromEvent(el, 'mouseenter', { passive: true })
       .pipe(takeUntil(this.onDestroy$))

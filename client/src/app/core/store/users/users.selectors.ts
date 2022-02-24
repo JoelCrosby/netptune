@@ -2,9 +2,7 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { adapter, UsersState } from './users.model';
 
-export const selectUsersFeature = createFeatureSelector< UsersState>(
-  'users'
-);
+export const selectUsersFeature = createFeatureSelector<UsersState>('users');
 
 const { selectAll } = adapter.getSelectors();
 

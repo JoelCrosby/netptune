@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
@@ -16,7 +17,9 @@ export class MetaEffects {
         switchMap(() =>
           this.metaService.getBuildInfo().pipe(
             map((buildInfo) => actions.loadBuildInfoSuccess({ buildInfo })),
-            catchError((error) => of(actions.loadBuildInfoFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadBuildInfoFail({ error }))
+            )
           )
         )
       )

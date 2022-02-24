@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { currentUser } from '@core/auth/store/auth.actions';
@@ -30,7 +31,9 @@ export class ProfileEffects {
 
         return this.profileService.get(user.userId).pipe(
           map((profile) => actions.loadProfileSuccess({ profile })),
-          catchError((error) => of(actions.loadProfileFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadProfileFail({ error }))
+          )
         );
       })
     )
@@ -50,7 +53,9 @@ export class ProfileEffects {
           map((response) =>
             actions.updateProfileSuccess({ profile: response })
           ),
-          catchError((error) => of(actions.updateProfileFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.updateProfileFail({ error }))
+          )
         );
       })
     )
@@ -86,7 +91,9 @@ export class ProfileEffects {
         this.profileService.uloadProfilePicture(action.data).pipe(
           unwrapClientReposne(),
           map((response) => actions.uploadProfilePictureSuccess({ response })),
-          catchError((error) => of(actions.uploadProfilePictureFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.uploadProfilePictureFail({ error }))
+          )
         )
       )
     )

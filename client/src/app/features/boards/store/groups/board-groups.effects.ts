@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -58,7 +59,9 @@ export class BoardGroupsEffects {
               searchTerm: paramMap.get('term'),
             })
           ),
-          catchError((error) => of(actions.loadBoardGroupsFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadBoardGroupsFail({ error }))
+          )
         )
       )
     )
@@ -91,7 +94,9 @@ export class BoardGroupsEffects {
             map((boardGroup) =>
               actions.createBoardGroupSuccess({ boardGroup })
             ),
-            catchError((error) => of(actions.createBoardGroupFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.createBoardGroupFail({ error }))
+            )
           )
       )
     )
@@ -115,7 +120,9 @@ export class BoardGroupsEffects {
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Task created')),
             map((task) => actions.createProjectTasksSuccess({ task })),
-            catchError((error) => of(actions.createProjectTasksFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.createProjectTasksFail({ error }))
+            )
           );
       })
     )
@@ -190,7 +197,9 @@ export class BoardGroupsEffects {
         return this.tasksHubService.putGroup(identifier, action.request).pipe(
           unwrapClientReposne(),
           map((boardGroup) => actions.editBoardGroupSuccess({ boardGroup })),
-          catchError((error) => of(actions.editBoardGroupFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.editBoardGroupFail({ error }))
+          )
         );
       })
     )
@@ -248,7 +257,9 @@ export class BoardGroupsEffects {
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks Deleted')),
           map(() => actions.deleteTasksMultipleSuccess()),
-          catchError((error) => of(actions.deleteTasksMultipleFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.deleteTasksMultipleFail({ error }))
+          )
         );
       })
     )
@@ -283,7 +294,9 @@ export class BoardGroupsEffects {
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Moved')),
             map(() => actions.moveSelectedTasksSuccess()),
-            catchError((error) => of(actions.moveSelectedTasksFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.moveSelectedTasksFail({ error }))
+            )
           );
       })
     )
@@ -349,7 +362,9 @@ export class BoardGroupsEffects {
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Re-assigned')),
             map(() => actions.reassignTasksSuccess()),
-            catchError((error) => of(actions.reassignTasksFail({ error })))
+            catchError((error: HttpErrorResponse) =>
+              of(actions.reassignTasksFail({ error }))
+            )
           );
       })
     )
@@ -367,7 +382,9 @@ export class BoardGroupsEffects {
         return this.boardGroupsService.export(boardId).pipe(
           tap((res) => void downloadFile(res.file, res.filename)),
           map((reponse) => actions.exportBoardTasksSuccess({ reponse })),
-          catchError((error) => of(actions.exportBoardTasksFail({ error })))
+          catchError((error: HttpErrorResponse) =>
+            of(actions.exportBoardTasksFail({ error }))
+          )
         );
       })
     )

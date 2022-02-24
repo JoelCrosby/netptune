@@ -81,12 +81,15 @@ export class HubConnectionService {
     try {
       await connection.start();
 
-      Logger.log(
-        `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
-        'color: lime'
-      );
+      connection.connectionId &&
+        Logger.log(
+          `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
+          'color: lime'
+        );
     } catch (err) {
-      return console.error(`[SIGNAL-R][ERROR] ${err}`);
+      if (typeof err === 'string') {
+        return console.error(`[SIGNAL-R][ERROR] ${err}`);
+      }
     }
   }
 
@@ -100,9 +103,10 @@ export class HubConnectionService {
 
     await connection.stop();
 
-    Logger.log(
-      `%c[SIGNAL-R][Disconnected] id: ${connectionId}`,
-      'color: orange'
-    );
+    connectionId &&
+      Logger.log(
+        `%c[SIGNAL-R][Disconnected] id: ${connectionId}`,
+        'color: orange'
+      );
   }
 }

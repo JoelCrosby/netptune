@@ -50,7 +50,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), untilDestroyed(this))
-      .subscribe((term) => this.search(term));
+      .subscribe((term: string) => this.search(term));
 
     fromEvent(document, 'mousedown', {
       passive: true,

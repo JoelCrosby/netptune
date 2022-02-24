@@ -31,7 +31,7 @@ export class CommentsListComponent {
   }
 
   get value() {
-    return this.comment.value;
+    return this.comment.value as string;
   }
 
   submit() {

@@ -88,7 +88,7 @@ export class InlineTextAreaComponent
     this.control.valueChanges
       .pipe(
         takeUntil(this.onDestroy$),
-        tap((value) => this.change(value))
+        tap((value: string) => this.change(value))
       )
       .subscribe();
   }
