@@ -27,7 +27,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() submitted = new EventEmitter<string>();
   @Output() canceled = new EventEmitter();
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
   formControl!: FormControl;
 
   ngOnInit() {

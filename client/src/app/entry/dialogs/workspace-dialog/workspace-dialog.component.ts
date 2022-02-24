@@ -56,7 +56,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   isUniqueLoading$ = this.isUniqueLoadingSubject$.pipe(debounceTime(640));
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   formGroup!: FormGroup;
 

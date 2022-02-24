@@ -68,7 +68,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     taskName: new FormControl(),
   });
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   get taskName() {
     return this.taskGroup.get('taskName') as FormControl;

@@ -12,7 +12,7 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
   leftShadowEl!: Element;
   rightShadowEl!: Element;
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   get element() {
     return this.elementRef.nativeElement as Element;

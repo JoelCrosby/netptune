@@ -32,7 +32,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup;
   loadingPasswordChange$!: Observable<boolean>;
   matcher = new FormErrorStateMatcher();
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
   errorMessage$ = new BehaviorSubject<string>('');
 
   get currentPassword() {

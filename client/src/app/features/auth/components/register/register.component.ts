@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   authLoading$: Observable<boolean>;
   request$!: Observable<WorkspaceInvite | null>;
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   registerGroup = new FormGroup({
     firstname: new FormControl('', [

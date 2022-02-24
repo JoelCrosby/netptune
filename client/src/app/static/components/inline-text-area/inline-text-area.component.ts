@@ -71,7 +71,7 @@ export class InlineTextAreaComponent
     tap((value) => (this.editActiveClass = value))
   );
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   constructor(
     private elementRef: ElementRef,

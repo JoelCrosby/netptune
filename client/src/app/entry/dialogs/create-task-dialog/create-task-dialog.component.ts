@@ -36,7 +36,7 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   selectedTypeValue!: number;
   formGroup!: FormGroup;
 
-  onDestroy$ = new Subject();
+  onDestroy$ = new Subject<void>();
 
   get name() {
     return this.formGroup.get('name') as FormControl;
