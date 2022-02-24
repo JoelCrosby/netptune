@@ -31,14 +31,18 @@
     "**/dist": true,
     "**/.DS_Store": true,
     "**/StyleCop.Cache": true,
-    "**/*.csproj.user": true
+    "**/*.csproj.user": true,
+    "**/.cache/**": true,
+    "**/.angular/**": true
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
     "**/node_modules/**": true,
     "**/bazel-out/**": true,
-    "**/dist/**": true
+    "**/dist/**": true,
+    "**/.cache/**": true,
+    "**/.angular/**": true
   },
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.importModuleSpecifier": "shortest",

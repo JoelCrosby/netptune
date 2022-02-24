@@ -7,6 +7,7 @@
 *.log
 node_modules
 .cache/
+.angular/
 
 # Include when developing application packages.
 pubspec.lock
