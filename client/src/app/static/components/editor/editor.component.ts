@@ -83,10 +83,12 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
       return;
     }
 
+    const logLevel: LogLevels = environment.production
+      ? ('ERROR' as LogLevels)
+      : ('WARN' as LogLevels);
+
     this.editor = new EditorJS({
-      logLevel: environment.production
-        ? ('ERROR' as LogLevels)
-        : ('WARN' as LogLevels),
+      logLevel: logLevel,
       placeholder: this.placeholder,
       holder: this.el.nativeElement,
       minHeight: 100,
@@ -131,7 +133,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
             endpoint: '/api/meta/uri-meta-info',
           },
         },
-        Attaches: {
+        attaches: {
           class: Attaches,
           config: {
             uploader: {

@@ -85,7 +85,7 @@
     border-radius: 3px;
     background-color: $tooltip-background-color;
     color: mat.get-color-from-palette($foreground, text, .6);
-    box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .13);
+    box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .42);
   }
 
   .ce-toolbox {
