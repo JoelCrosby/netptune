@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -15,6 +16,8 @@ public static class EnumerableExtensions
         var memoryStream = new MemoryStream();
         var writer = new StreamWriter(memoryStream, System.Text.Encoding.UTF8);
         var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+        csv.AddDateFormatting();
 
         await csv.WriteRecordsAsync(enumerable);
         await writer.FlushAsync();

@@ -97,11 +97,11 @@ public class DataContext : IdentityDbContext<AppUser>
     {
         var entities = ChangeTracker
             .Entries<IAuditableEntity<int>>()
-            .Where(entry => entry.State == EntityState.Added || entry.State == EntityState.Modified);
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified);
 
         var entitiesString = ChangeTracker
             .Entries<IAuditableEntity<string>>()
-            .Where(entry => entry.State == EntityState.Added || entry.State == EntityState.Modified);
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified);
 
         AddTimeStamps(entities);
         AddTimeStamps(entitiesString);
@@ -114,6 +114,11 @@ public class DataContext : IdentityDbContext<AppUser>
             if (entity.State == EntityState.Added && entity.Entity.CreatedAt == default)
             {
                 entity.Entity.CreatedAt = DateTime.UtcNow;
+            }
+
+            if (entity.State == EntityState.Added && entity.Entity.UpdatedAt != null)
+            {
+                continue;
             }
 
             entity.Entity.UpdatedAt = DateTime.UtcNow;

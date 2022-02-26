@@ -1,3 +1,5 @@
+using System;
+
 namespace Netptune.Core.Models.Import;
 
 public class TaskImportRow
@@ -10,9 +12,9 @@ public class TaskImportRow
 
     public string IsFlagged { get; set; }
 
-    public string CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public string UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public string Assignee { get; set; }
 
