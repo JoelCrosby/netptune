@@ -10,6 +10,7 @@ using CsvHelper.Configuration;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Extensions;
 using Netptune.Core.Import;
 using Netptune.Core.Models.Import;
 using Netptune.Core.Relationships;
@@ -52,6 +53,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             },
         });
 
+        csv.AddDateFormatting();
         csv.Context.RegisterClassMap<TaskImportRowMap>();
 
         // Read csv rows into PCO
@@ -217,15 +219,6 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var userList = users.ToList();
 
-        static DateTime? ParseDateTime(string input)
-        {
-            var isValid = DateTime.TryParse(input, out var result);
-
-            if  (isValid) return result;
-
-            return null;
-        }
-
         string FindUserId(string email)
         {
             var target = email.Normalize();
@@ -259,8 +252,8 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             WorkspaceId = workspaceId,
             ProjectId = project.Id,
             IsFlagged = ParseBool(row.IsFlagged),
-            CreatedAt = ParseDateTime(row.CreatedAt) ?? DateTime.UtcNow,
-            UpdatedAt = ParseDateTime(row.UpdatedAt),
+            CreatedAt = row.CreatedAt,
+            UpdatedAt = row.UpdatedAt,
             Status = ParseStatus(row.Status),
             AssigneeId = FindUserId(row.Assignee),
             OwnerId = FindUserId(row.Owner),
