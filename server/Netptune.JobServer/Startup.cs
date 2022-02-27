@@ -158,7 +158,7 @@ public class Startup
     private string GetConnectionString()
     {
         var appSettingsConString = Configuration.GetConnectionString("netptune");
-        var envVar = Configuration["ConnectionStringEnvironmentVariable"];
+        var envVar = Configuration["NetptuneConnectionStringEnvironmentVariable"];
 
         if (envVar is null) return appSettingsConString;
 
