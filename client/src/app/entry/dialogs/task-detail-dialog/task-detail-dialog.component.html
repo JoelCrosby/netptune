@@ -52,7 +52,7 @@
         <div class="detail-list-item">
           <h4>Assignee</h4>
 
-          <div
+          <!-- <div
             class="user-item clickable"
             matRipple
             [matMenuTriggerFor]="assigneeMenu"
@@ -66,7 +66,7 @@
             </app-avatar>
 
             <small> {{ task.assigneeUsername }} </small>
-          </div>
+          </div> -->
 
           <mat-menu #assigneeMenu="matMenu">
             <small>Change Assignee</small>
@@ -87,6 +87,14 @@
             </button>
           </mat-menu>
         </div>
+
+        <div class="detail-list-item">
+          <app-user-select
+            [value]="task.assignees"
+            [options]="users$ | async"
+          ></app-user-select>
+        </div>
+
         <div class="detail-list-item">
           <h4>Reporter</h4>
 
@@ -99,7 +107,7 @@
             >
             </app-avatar>
 
-            <small> {{ task.assigneeUsername }} </small>
+            <small> {{ task.ownerUsername }} </small>
           </div>
         </div>
         <div class="detail-list-item">
