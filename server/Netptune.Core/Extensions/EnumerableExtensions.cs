@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using CsvHelper;
+
+using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Extensions;
 
@@ -16,6 +17,8 @@ public static class EnumerableExtensions
         var memoryStream = new MemoryStream();
         var writer = new StreamWriter(memoryStream, System.Text.Encoding.UTF8);
         var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+        csv.Context.RegisterClassMap<ExportTaskViewModelMap>();
 
         csv.AddDateFormatting();
 

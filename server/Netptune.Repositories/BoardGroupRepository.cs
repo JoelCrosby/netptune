@@ -10,6 +10,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
@@ -67,7 +68,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , u.id                AS assignee_id
                      , u.firstname         AS assignee_firstname
                      , u.lastname          AS assignee_lastname
-                     , u.picture_url       as assignee_picture_url
+                     , u.picture_url       AS assignee_picture_url
                      , t.name              AS tag
                      , pt.workspace_id     AS workspace_id
                      , pt.project_id       AS project_id
@@ -78,13 +79,14 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
                          LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
                             {searchQuery}
-                         LEFT JOIN users u on pt.assignee_id = u.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
+                         LEFT JOIN users u on ptau.user_id = u.id
 
                 WHERE b.id = @boardId
 
-                ORDER BY bg.sort_order, ptibg.sort_order, t.name;
+                ORDER BY bg.sort_order, ptibg.sort_order, t.name, u.id;
 
                 SELECT w.slug AS workspace_identifier
                      , p.key  AS project_key
@@ -104,30 +106,48 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         {
             var lastGroup = result.LastOrDefault();
             var lastTask = lastGroup?.Tasks.LastOrDefault();
+            var lastAssignee = lastTask?.Assignees.FirstOrDefault();
 
             if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
             {
                 lastTask.Tags.Add(row.Tag);
+
+                if (lastAssignee?.Id != row.Assignee_Id)
+                {
+                    lastTask.Assignees.Add(new()
+                    {
+                        Id = row.Assignee_Id,
+                        Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                        PictureUrl = row.Assignee_Picture_Url,
+                    });
+                }
+
                 return result;
             }
 
             if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
             {
-                lastGroup?.Tasks.Add(new BoardViewTask
+                lastGroup.Tasks.Add(new BoardViewTask
                 {
                     Id = row.Task_Id.Value,
                     Name = row.Task_Name,
                     Status = row.Task_Status,
                     SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                    AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                    AssigneePictureUrl = row.Assignee_Picture_Url,
-                    AssigneeId = row.Assignee_Id,
                     Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
                     IsFlagged = row.Task_Is_Flagged,
                     SortOrder = row.Task_Sort_Order,
                     ProjectId = row.Project_Id,
                     WorkspaceId = row.Workspace_Id,
                     WorkspaceKey = meta.Workspace_Identifier,
+                    Assignees = new List<AssigneeViewModel>
+                    {
+                        new ()
+                        {
+                            Id = row.Assignee_Id,
+                            Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                            PictureUrl = row.Assignee_Picture_Url,
+                        },
+                    },
                 });
 
                 return result;
@@ -152,15 +172,21 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                         Name = row.Task_Name,
                         Status = row.Task_Status,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                        AssigneeUsername = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                        AssigneePictureUrl = row.Assignee_Picture_Url,
-                        AssigneeId = row.Assignee_Id,
                         Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
                         IsFlagged = row.Task_Is_Flagged,
                         SortOrder = row.Task_Sort_Order,
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
                         WorkspaceKey = meta.Workspace_Identifier,
+                        Assignees = new List<AssigneeViewModel>
+                        {
+                            new ()
+                            {
+                                Id = row.Assignee_Id,
+                                Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                                PictureUrl = row.Assignee_Picture_Url,
+                            },
+                        },
                     },
                 },
             });

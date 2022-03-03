@@ -255,9 +255,15 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             CreatedAt = row.CreatedAt,
             UpdatedAt = row.UpdatedAt,
             Status = ParseStatus(row.Status),
-            AssigneeId = FindUserId(row.Assignee),
             OwnerId = FindUserId(row.Owner),
             ProjectScopeId = initialScopeId + i,
+            ProjectTaskAppUsers = new List<ProjectTaskAppUser>
+            {
+                new ()
+                {
+                    UserId = FindUserId(row.Assignee),
+                },
+            },
         };
     }
 

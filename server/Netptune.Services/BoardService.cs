@@ -61,14 +61,15 @@ public class BoardService : IBoardService
 
         var userIds = groups
             .SelectMany(group => group.Tasks)
-            .Select(task => task.AssigneeId)
+            .SelectMany(task => task.Assignees)
+                .Select(rel => rel.Id)
             .Distinct()
             .ToList();
 
         foreach (var group in groups)
         {
             group.Tasks = group.Tasks
-                .Where(task => !includeUserFilter || (filter?.Users.Contains(task.AssigneeId) ?? true))
+                .Where(task => !includeUserFilter || (filter?.Users.Any(u => task.Assignees.Select(a => a.Id).Contains(u)) ?? true))
                 .Where(task => !includeFlaggedFilter || task.IsFlagged)
                 .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
                 .ToList();

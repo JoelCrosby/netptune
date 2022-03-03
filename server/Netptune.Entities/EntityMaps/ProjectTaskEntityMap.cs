@@ -38,13 +38,6 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired();
 
         builder
-            .HasOne(task => task.Assignee)
-            .WithMany(user => user.Tasks)
-            .HasForeignKey(task => task.AssigneeId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
-
-        builder
             .HasMany(task => task.Tags)
             .WithMany(tag => tag.Tasks)
             .UsingEntity<ProjectTaskTag>(

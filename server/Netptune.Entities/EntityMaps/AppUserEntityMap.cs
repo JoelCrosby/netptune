@@ -28,11 +28,5 @@ public class AppUserEntityMap : IEntityTypeConfiguration<AppUser>
             .Property(user => user.AuthenticationProvider)
             .HasDefaultValue(AuthenticationProvider.Netptune)
             .IsRequired();
-
-        builder
-            .HasMany(user => user.Tasks)
-            .WithOne(task => task.Assignee)
-            .HasForeignKey(task => task.AssigneeId)
-            .IsRequired();
     }
 }

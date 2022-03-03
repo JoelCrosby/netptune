@@ -42,7 +42,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/Workspaces/key
+    // GET: api/workspaces/key
     [HttpGet("{key}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -59,7 +59,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // PUT: api/Workspaces/5
+    // PUT: api/workspaces/5
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,7 +86,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // DELETE: api/Workspaces/key
+    // DELETE: api/workspaces/key
     [HttpDelete("{key}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -103,7 +103,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // DELETE: api/Workspaces/key
+    // DELETE: api/workspaces/key
     [HttpDelete("permanent/{key}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -120,7 +120,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/Workspaces/all
+    // GET: api/workspaces/all
     [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json", Type = typeof(List<Workspace>))]
@@ -131,7 +131,7 @@ public class WorkspacesController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/Workspaces/is-unique
+    // GET: api/workspaces/is-unique
     [HttpGet("is-unique/{slug}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json", Type = typeof(List<Workspace>))]

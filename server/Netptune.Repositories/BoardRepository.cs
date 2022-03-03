@@ -112,7 +112,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
 
                 if (last?.ProjectId == board.ProjectId)
                 {
-                    last?.Boards.Add(board);
+                    last.Boards.Add(board);
 
                     return prev;
                 }
