@@ -117,7 +117,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     lastTask.Assignees.Add(new()
                     {
                         Id = row.Assignee_Id,
-                        Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                        DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
                         PictureUrl = row.Assignee_Picture_Url,
                     });
                 }
@@ -144,7 +144,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                         new ()
                         {
                             Id = row.Assignee_Id,
-                            Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                            DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
                             PictureUrl = row.Assignee_Picture_Url,
                         },
                     },
@@ -183,7 +183,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                             new ()
                             {
                                 Id = row.Assignee_Id,
-                                Username = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+                                DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
                                 PictureUrl = row.Assignee_Picture_Url,
                             },
                         },

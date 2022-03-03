@@ -34,6 +34,6 @@ export interface BoardViewTask {
 
 export interface AssigneeViewModel {
   id: string;
-  username: string;
+  displayName: string;
   pictureUrl: string;
 }
