@@ -29,7 +29,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceKey);
 
-        return result.Users.ToList();
+        return result?.Users.ToList();
     }
 
     public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)

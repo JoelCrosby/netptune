@@ -22,7 +22,7 @@ public class UpdateProjectTaskRequest
 
     public string OwnerId { get; set; }
 
-    public string AssigneeId { get; set; }
+    public List<string> AssigneeIds { get; set; }
 
     public List<string> Tags { get; set; }
 }

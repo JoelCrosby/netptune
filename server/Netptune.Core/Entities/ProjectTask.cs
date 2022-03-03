@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
+using Netptune.Core.ViewModels.Users;
+
 namespace Netptune.Core.Entities;
 
 public class ProjectTask : WorkspaceEntity<int>
@@ -23,8 +25,6 @@ public class ProjectTask : WorkspaceEntity<int>
 
     #region ForeignKeys
 
-    public string AssigneeId { get; set; }
-
     public int? ProjectId { get; set; }
 
     #endregion
@@ -32,7 +32,7 @@ public class ProjectTask : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public AppUser Assignee { get; set; }
+    public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();
 
     [JsonIgnore]
     public Project Project { get; set; }
@@ -52,10 +52,11 @@ public class ProjectTask : WorkspaceEntity<int>
 
     public TaskViewModel ToViewModel()
     {
+        // TODO: Implement Assignee View models
+
         return new()
         {
             Id = Id,
-            AssigneeId = Assignee?.Id ?? string.Empty,
             OwnerId = OwnerId,
             Name = Name,
             Description = Description,
@@ -68,17 +69,26 @@ public class ProjectTask : WorkspaceEntity<int>
             WorkspaceKey = Workspace?.Slug,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt,
-            AssigneeUsername = Assignee?.DisplayName ?? string.Empty,
-            AssigneePictureUrl = Assignee?.PictureUrl ?? string.Empty,
             OwnerUsername = Owner?.DisplayName ?? string.Empty,
             OwnerPictureUrl = Owner?.PictureUrl ?? string.Empty,
             ProjectName = Project?.Name ?? string.Empty,
             Tags = Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
+            Assignees = ProjectTaskAppUsers
+                .Select(u => u.User)
+                .Select(u => new AssigneeViewModel
+                {
+                    Id = u.Id,
+                    Username = $"{u.Firstname} {u.Lastname}",
+                    PictureUrl = u.PictureUrl,
+                })
+                .ToList(),
         };
     }
 
     public ExportTaskViewModel ToExportViewModel()
     {
+        // TODO: Implement Assignee View models
+
         return new()
         {
             Name = Name,
@@ -89,10 +99,13 @@ public class ProjectTask : WorkspaceEntity<int>
             Board = Workspace.Slug,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt,
-            Assignee = Assignee?.Email ?? string.Empty,
             Owner = Owner?.Email ?? string.Empty,
             Project = Project?.Name ?? string.Empty,
             Group = ProjectTaskInBoardGroups.FirstOrDefault()?.BoardGroup?.Name,
+            Assignees = ProjectTaskAppUsers
+                .Select(u => u.User)
+                .Select(u => u.Email)
+                .ToList(),
         };
     }
 

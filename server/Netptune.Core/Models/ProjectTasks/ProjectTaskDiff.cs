@@ -14,15 +14,15 @@ public record ValueDiff<T>
 
 public record ProjectTaskDiff
 {
-    public ValueDiff<string> Name;
+    private ValueDiff<string> Name;
 
-    public ValueDiff<string> Description;
+    private ValueDiff<string> Description;
 
-    public ValueDiff<bool> Flagged;
+    private ValueDiff<bool> Flagged;
 
-    public ValueDiff<ProjectTaskStatus> Status;
+    private ValueDiff<ProjectTaskStatus> Status;
 
-    public ValueDiff<string> Assignee;
+    private ValueDiff<string> Assignee;
 
     public static ProjectTaskDiff Create(TaskViewModel old, TaskViewModel updated)
     {
@@ -38,8 +38,10 @@ public record ProjectTaskDiff
         var statusChanged = updated.Status != old.Status;
         var statusValue = updated.Status;
 
-        var assigneeChanged = updated.AssigneeId != old.AssigneeId && !string.IsNullOrEmpty(old.AssigneeId);
-        var assigneeValue = updated.AssigneeId;
+        // TODO: Implement change detection for multiple assignees
+
+        var assigneeChanged = false; // updated.AssigneeId != old.AssigneeId && !string.IsNullOrEmpty(old.AssigneeId);
+        var assigneeValue = string.Empty; // updated.AssigneeId;
 
         return new ProjectTaskDiff
         {

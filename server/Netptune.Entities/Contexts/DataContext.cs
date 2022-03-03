@@ -36,6 +36,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ProjectUser> ProjectUsers { get; set; }
     public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; }
     public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; }
+    public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; }
 
     public DataContext() { }
 

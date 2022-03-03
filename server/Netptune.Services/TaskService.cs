@@ -50,6 +50,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         if (workspace is null) return null;
 
         var user = await IdentityService.GetCurrentUser();
+        var userId = request.AssigneeId ?? user.Id;
 
         var task = new ProjectTask
         {
@@ -57,9 +58,15 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             Description = request.Description,
             Status = request.Status ?? ProjectTaskStatus.New,
             ProjectId = request.ProjectId,
-            AssigneeId = request.AssigneeId ?? user.Id,
             OwnerId = user.Id,
             WorkspaceId = workspace.Id,
+            ProjectTaskAppUsers = new List<ProjectTaskAppUser>
+            {
+                new ()
+                {
+                    UserId = userId,
+                },
+            },
         };
 
         var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == request.ProjectId);
@@ -185,7 +192,10 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             result.Status = request.Status ?? result.Status;
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
             result.OwnerId = request.OwnerId;
-            result.AssigneeId = request.AssigneeId;
+
+            // TODO: Allow changing assignees
+
+            // result.AssigneeId = request.AssigneeId;
 
             await UnitOfWork.CompleteAsync();
         });
@@ -249,8 +259,13 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         foreach (var task in tasks)
         {
-            task.AssigneeId = request.AssigneeId;
+            // TODO: Allow changing assignees
+
             task.UpdatedAt = DateTime.UtcNow;
+            task.ProjectTaskAppUsers.Add(new ProjectTaskAppUser
+            {
+                UserId = request.AssigneeId,
+            });
         }
 
         await UnitOfWork.CompleteAsync();

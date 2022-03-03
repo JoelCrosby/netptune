@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.ProjectTasks;
 
@@ -9,7 +10,7 @@ public class TaskViewModel : ICloneable
 {
     public int Id { get; set; }
 
-    public string AssigneeId { get; set; }
+    public List<AssigneeViewModel> Assignees { get; set; }
 
     public string OwnerId { get; set; }
 
@@ -38,10 +39,6 @@ public class TaskViewModel : ICloneable
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset? UpdatedAt { get; set; }
-
-    public string AssigneeUsername { get; set; }
-
-    public string AssigneePictureUrl { get; set; }
 
     public string OwnerUsername { get; set; }
 

@@ -28,7 +28,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     public override Task<ProjectTask> GetAsync(int id, bool isReadonly = false)
     {
         return Entities
-            .Include(x => x.Assignee)
+            .Include(x => x.ProjectTaskAppUsers)
+                .ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
@@ -41,7 +42,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return Entities
             .Where(x => x.Id == taskId)
             .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.Assignee)
+            .Include(x => x.ProjectTaskAppUsers)
+                .ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
@@ -113,7 +115,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var queryable = Entities
             .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
             .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.Assignee)
+            .Include(x => x.ProjectTaskAppUsers)
+                .ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
@@ -127,7 +130,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return Entities
             .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
             .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.Assignee)
+            .Include(x => x.ProjectTaskAppUsers)
+                .ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
@@ -157,9 +161,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , bg.name             AS board_group_name
                      , bg.type             AS board_group_type
                      , bg.sort_order       AS board_group_sort_order
-                     , a.firstname         AS assignee_firstname
-                     , a.lastname          AS assignee_lastname
-                     , a.email             AS assignee_email
+                     , u.firstname         AS assignee_firstname
+                     , u.lastname          AS assignee_lastname
+                     , u.email             AS assignee_email
                      , o.firstname         AS owner_firstname
                      , o.lastname          AS owner_lastname
                      , o.email             AS owner_email
@@ -171,10 +175,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
                          LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
-                         INNER JOIN users a on pt.assignee_id = a.id
                          INNER JOIN users o on pt.owner_id = o.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
+                         LEFT JOIN users u on ptau.user_id = u.id
 
                 WHERE w.slug = @workspaceKey
 
@@ -209,9 +214,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , bg.name             AS board_group_name
                      , bg.type             AS board_group_type
                      , bg.sort_order       AS board_group_sort_order
-                     , a.firstname         AS assignee_firstname
-                     , a.lastname          AS assignee_lastname
-                     , a.email             AS assignee_email
+                     , u.firstname         AS assignee_firstname
+                     , u.lastname          AS assignee_lastname
+                     , u.email             AS assignee_email
                      , o.firstname         AS owner_firstname
                      , o.lastname          AS owner_lastname
                      , o.email             AS owner_email
@@ -223,10 +228,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
                          LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
-                         INNER JOIN users a on pt.assignee_id = a.id
                          INNER JOIN users o on pt.owner_id = o.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
+                         LEFT JOIN users u on ptau.user_id = u.id
 
                 WHERE w.slug = @workspaceKey
 
@@ -245,11 +251,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
         {
             var lastTask = result.LastOrDefault();
+            var lastAssignee = lastTask?.Assignees.FirstOrDefault();
             var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
 
             if (lastTask?.SystemId is { } && systemId == lastTask.SystemId)
             {
                 lastTask.Tags = $"{lastTask.Tags} | {row.Tag}";
+
+                if (lastAssignee != row.Assignee_Email)
+                {
+                    lastTask.Assignees.Add(row.Assignee_Email);
+                }
+
                 return result;
             }
 
@@ -264,7 +277,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Board = row.Board_Identifier,
                 CreatedAt = row.Task_Created_At,
                 UpdatedAt = row.Task_Updated_At,
-                Assignee = row.Assignee_Email,
+                Assignees = new List<string> { row.Assignee_Email },
                 Owner = row.Owner_Email,
                 Project = row.Project_Name,
                 Group = row.Board_Group_Name,

@@ -33,7 +33,7 @@ public class BoardViewTask
 {
     public int Id { get; set; }
 
-    public string AssigneeId { get; set; }
+    public List<AssigneeViewModel> Assignees { get; set; }
 
     public string Name { get; set; }
 
@@ -52,8 +52,4 @@ public class BoardViewTask
     public int WorkspaceId { get; set; }
 
     public string WorkspaceKey { get; set; }
-
-    public string AssigneeUsername { get; set; }
-
-    public string AssigneePictureUrl { get; set; }
 }

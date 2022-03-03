@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+using CsvHelper.Configuration;
 
 namespace Netptune.Core.ViewModels.ProjectTasks;
 
@@ -20,7 +24,7 @@ public class ExportTaskViewModel
 
     public DateTime? UpdatedAt { get; set; }
 
-    public string Assignee { get; set; }
+    public List<string> Assignees { get; set; }
 
     public string Owner { get; set; }
 
@@ -31,4 +35,13 @@ public class ExportTaskViewModel
     public string Project { get; set; }
 
     public string Board { get; set; }
+}
+
+public sealed class ExportTaskViewModelMap : ClassMap<ExportTaskViewModel>
+{
+    public ExportTaskViewModelMap()
+    {
+        AutoMap(CultureInfo.InvariantCulture);
+        Map(m => m.Assignees).Convert(value => string.Join(" | ", value.Assignees));
+    }
 }
