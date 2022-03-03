@@ -22,10 +22,11 @@
   <mat-icon class="task-complete" *ngIf="task.status === 1"> done </mat-icon>
 
   <app-avatar
+    *ngFor="let assignee of task.assignees"
     size="24"
     class="task-card-user-chip"
-    [name]="task.assigneeUsername"
-    [imageUrl]="task.assigneePictureUrl"
+    [name]="assignee.displayName"
+    [imageUrl]="assignee.pictureUrl"
   >
   </app-avatar>
 </div>
