@@ -1,0 +1,59 @@
+@use '@angular/material' as mat;
+@use 'sass:color';
+
+@import '@angular/material/theming';
+
+@mixin user-select-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  $is-dark-theme: map-get($theme, is-dark);
+
+  .user-select {
+
+    .label-input {
+      color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .label-input {
+      $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
+      $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -10%);
+      background-color: if($is-dark-theme, $dark-bg, $light-bg);
+    }
+
+    .select-trigger {
+      color: mat.get-color-from-palette($foreground, text);
+      background-color: transparent;
+
+      &:hover {
+        background-color: mat.get-color-from-palette($foreground, text, .08);
+      }
+    }
+
+    .select-menu-inner {
+      background-color: mat.get-color-from-palette($background, card);
+    }
+
+    .select-item {
+      &:hover {
+        $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
+        $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -6%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
+
+      &.active {
+        $dark-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: 20%);
+        $light-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: -10%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
+    }
+
+    .app-user-link-inner {
+      color: #fff;
+    }
+  }
+}

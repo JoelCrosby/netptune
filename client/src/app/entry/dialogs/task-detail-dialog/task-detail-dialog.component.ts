@@ -263,23 +263,27 @@ export class TaskDetailDialogComponent
   }
 
   selectAssignee(user: AppUser) {
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        tap((task) => {
-          if (!task) return;
+    // TODO: fix assignee change
 
-          const updated: TaskViewModel = {
-            ...task,
-            assigneeId: user.id,
-            assigneePictureUrl: user.pictureUrl,
-            assigneeUsername: user.userName,
-          };
+    console.log({ user });
 
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
+    // this.getTaskObservable()
+    //   .pipe(
+    //     first(),
+    //     tap((task) => {
+    //       if (!task) return;
+
+    //       const updated: TaskViewModel = {
+    //         ...task,
+    //         assigneeId: user.id,
+    //         assigneePictureUrl: user.pictureUrl,
+    //         assigneeUsername: user.userName,
+    //       };
+
+    //       this.updateTask(updated);
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   deleteClicked() {

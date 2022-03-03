@@ -36,6 +36,7 @@ import { CardHeaderImageComponent } from './components/card/card-header-image/ca
 import { CardGroupComponent } from './components/card/card-group/card-group.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { ActivityPipe } from './pipes/activity.pipe';
+import { UserSelectComponent } from './components/user-select/user-select.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { ActivityPipe } from './pipes/activity.pipe';
     CardHeaderComponent,
     CardHeaderImageComponent,
     CardGroupComponent,
+    UserSelectComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -110,6 +112,7 @@ import { ActivityPipe } from './pipes/activity.pipe';
     CardHeaderComponent,
     CardHeaderImageComponent,
     CardGroupComponent,
+    UserSelectComponent,
   ],
   providers: [FromNowPipe],
 })
