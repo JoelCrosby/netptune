@@ -78,7 +78,7 @@ public class ProjectTask : WorkspaceEntity<int>
                 .Select(u => new AssigneeViewModel
                 {
                     Id = u.Id,
-                    Username = $"{u.Firstname} {u.Lastname}",
+                    DisplayName = $"{u.Firstname} {u.Lastname}",
                     PictureUrl = u.PictureUrl,
                 })
                 .ToList(),
