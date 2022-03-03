@@ -20,7 +20,7 @@ export interface BoardViewGroup {
 
 export interface BoardViewTask {
   id: number;
-  assigneeId: string;
+  assignees: AssigneeViewModel[];
   name: string;
   systemId: string;
   tags: string[];
@@ -30,6 +30,10 @@ export interface BoardViewTask {
   projectId: number;
   workspaceId: number;
   workspaceKey: string;
-  assigneeUsername: string;
-  assigneePictureUrl: string;
+}
+
+export interface AssigneeViewModel {
+  id: string;
+  username: string;
+  pictureUrl: string;
 }
