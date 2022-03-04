@@ -193,9 +193,14 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
             result.OwnerId = request.OwnerId;
 
-            // TODO: Allow changing assignees
-
-            // result.AssigneeId = request.AssigneeId;
+            if (request.AssigneeIds is { })
+            {
+                result.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
+                        result.Id,
+                        result.ProjectTaskAppUsers,
+                        request.AssigneeIds)
+                    .ToList();
+            }
 
             await UnitOfWork.CompleteAsync();
         });

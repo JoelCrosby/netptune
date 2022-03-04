@@ -51,47 +51,10 @@
       <div class="detail-list">
         <div class="detail-list-item">
           <h4>Assignee</h4>
-
-          <!-- <div
-            class="user-item clickable"
-            matRipple
-            [matMenuTriggerFor]="assigneeMenu"
-          >
-            <app-avatar
-              size="24"
-              class="task-card-user-chip"
-              [name]="task.assigneeUsername"
-              [imageUrl]="task.assigneePictureUrl"
-            >
-            </app-avatar>
-
-            <small> {{ task.assigneeUsername }} </small>
-          </div> -->
-
-          <mat-menu #assigneeMenu="matMenu">
-            <small>Change Assignee</small>
-            <button
-              mat-menu-item
-              *ngFor="let user of users$ | async"
-              (click)="selectAssignee(user)"
-            >
-              <div class="user-menu-item">
-                <app-avatar
-                  [imageUrl]="user.pictureUrl"
-                  [name]="user.displayName"
-                  size="24"
-                >
-                </app-avatar>
-                <span> {{ user.displayName }} </span>
-              </div>
-            </button>
-          </mat-menu>
-        </div>
-
-        <div class="detail-list-item">
           <app-user-select
             [value]="task.assignees"
             [options]="users$ | async"
+            (selectChange)="selectAssignee($event)"
           ></app-user-select>
         </div>
 

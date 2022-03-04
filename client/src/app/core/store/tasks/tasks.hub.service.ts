@@ -1,3 +1,4 @@
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { Injectable } from '@angular/core';
 import * as groupsActions from '@boards/store/groups/board-groups.actions';
 import { AppState } from '@core/core.state';
@@ -82,6 +83,8 @@ export class ProjectTasksHubService {
   }
 
   reloadRequiredViews() {
+    console.log('reloadRequiredViews');
+
     this.store
       .select(selectIsWorkspaceGroup)
       .pipe(
@@ -128,7 +131,10 @@ export class ProjectTasksHubService {
     );
   }
 
-  put(groupId: string, task: ProjectTask | BoardViewTask) {
+  put(
+    groupId: string,
+    task: ProjectTask | BoardViewTask | UpdateProjectTaskRequest
+  ) {
     return this.hub.invoke<ClientResponse<TaskViewModel>>(
       'update',
       groupId,

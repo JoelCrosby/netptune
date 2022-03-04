@@ -16,8 +16,6 @@
 
   <div #selectmenu class="select-menu">
     <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">
-      <div *ngIf="!options?.length" class="no-results-item">{{noResults}}</div>
-
       <input
         *ngIf="options?.length"
         appAutofocus
@@ -28,6 +26,10 @@
       />
 
       <div class="select-menu-inner-options custom-scroll">
+        <div *ngIf="!options?.length" class="no-results-item">
+          {{noResults}}
+        </div>
+
         <div
           *ngFor="let option of options$ | async"
           class="select-item"

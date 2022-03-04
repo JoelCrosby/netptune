@@ -8,6 +8,7 @@ import { FileResponse } from '@core/types/file-response';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -50,7 +51,7 @@ export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
   props<{
     identifier: string;
-    task: BoardViewTask | TaskViewModel;
+    task: BoardViewTask | TaskViewModel | UpdateProjectTaskRequest;
     silent?: boolean;
   }>()
 );
