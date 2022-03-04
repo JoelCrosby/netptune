@@ -17,6 +17,7 @@ import { CommentViewModel } from '@core/models/comment';
 import { EntityType } from '@core/models/entity-type';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ActivityActions from '@core/store/activity/activity.actions';
@@ -105,9 +106,13 @@ export class TaskDetailDialogComponent
     this.user$ = this.store.select(selectCurrentUser);
     this.users$ = this.store.select(UsersSelectors.selectAllUsers).pipe(
       withLatestFrom(this.getTaskObservable()),
-      map(([users, task]) =>
-        task ? users.filter((u) => u.id !== task.assigneeId) : users
-      )
+      map(([users, task]) => {
+        if (!task) return users;
+
+        const assigneeSet = new Set<string>(task.assignees.map((a) => a.id));
+
+        return users.filter((u) => !assigneeSet.has(u.id));
+      })
     );
   }
 
@@ -142,7 +147,7 @@ export class TaskDetailDialogComponent
         takeUntil(this.onDestroy$),
         debounceTime(300),
         tap((name) => {
-          const updated: TaskViewModel = {
+          const updated: UpdateProjectTaskRequest = {
             ...task,
             name,
           };
@@ -157,7 +162,7 @@ export class TaskDetailDialogComponent
         takeUntil(this.onDestroy$),
         debounceTime(300),
         tap((description) => {
-          const updated: TaskViewModel = {
+          const updated: UpdateProjectTaskRequest = {
             ...task,
             description,
           };
@@ -196,7 +201,7 @@ export class TaskDetailDialogComponent
       .subscribe();
   }
 
-  updateTask(task: TaskViewModel) {
+  updateTask(task: UpdateProjectTaskRequest) {
     this.store
       .select(selectCurrentHubGroupId)
       .pipe(
@@ -233,7 +238,7 @@ export class TaskDetailDialogComponent
         tap((task) => {
           if (!task) return;
 
-          const updated: TaskViewModel = {
+          const updated: UpdateProjectTaskRequest = {
             ...task,
             isFlagged: !task.isFlagged,
           };
@@ -251,7 +256,7 @@ export class TaskDetailDialogComponent
         tap((task) => {
           if (!task) return;
 
-          const updated: TaskViewModel = {
+          const updated: UpdateProjectTaskRequest = {
             ...task,
             projectId,
           };
@@ -263,27 +268,30 @@ export class TaskDetailDialogComponent
   }
 
   selectAssignee(user: AppUser) {
-    // TODO: fix assignee change
+    this.getTaskObservable()
+      .pipe(
+        first(),
+        tap((task) => {
+          if (!task) return;
 
-    console.log({ user });
+          const assigneeSet = new Set(task.assignees.map((u) => u.id));
 
-    // this.getTaskObservable()
-    //   .pipe(
-    //     first(),
-    //     tap((task) => {
-    //       if (!task) return;
+          if (assigneeSet.has(user.id)) {
+            assigneeSet.delete(user.id);
+          } else {
+            assigneeSet.add(user.id);
+          }
 
-    //       const updated: TaskViewModel = {
-    //         ...task,
-    //         assigneeId: user.id,
-    //         assigneePictureUrl: user.pictureUrl,
-    //         assigneeUsername: user.userName,
-    //       };
+          const assigneeIds = Array.from(assigneeSet);
+          const updated: UpdateProjectTaskRequest = {
+            ...task,
+            assigneeIds,
+          };
 
-    //       this.updateTask(updated);
-    //     })
-    //   )
-    //   .subscribe();
+          this.updateTask(updated);
+        })
+      )
+      .subscribe();
   }
 
   deleteClicked() {

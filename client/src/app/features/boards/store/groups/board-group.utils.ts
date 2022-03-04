@@ -1,3 +1,4 @@
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import {
@@ -66,7 +67,7 @@ export const moveTaskInBoardGroup = (
 
 export const updateTask = (
   state: BoardGroupsState,
-  task: BoardViewTask | TaskViewModel
+  task: BoardViewTask | TaskViewModel | UpdateProjectTaskRequest
 ) => {
   const getGroupWithTask = (): BoardViewGroup | undefined => {
     for (const g of Object.values(state.entities)) {

@@ -11,13 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { logout } from '@core/auth/store/auth.actions';
-import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
 
@@ -46,8 +43,6 @@ export class UserSelectComponent implements OnInit, OnChanges {
   selected: AppUser | null = null;
 
   options$ = new BehaviorSubject<AppUser[]>([]);
-
-  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.searchControl.valueChanges
@@ -80,8 +75,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
       if (this.value && this.options) {
-        // const option = this.options.find((opt) => opt.id === this.value);
-        // this.select(option);
+        this.options$.next(this.options);
       }
     }
   }
@@ -155,7 +149,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
     } else {
       dropdown.style.width = `${origin.offsetWidth}px`;
       dropdown.style.left = '0';
-      dropdown.style.top = '55px';
+      dropdown.style.top = '42px';
     }
   }
 
@@ -170,7 +164,6 @@ export class UserSelectComponent implements OnInit, OnChanges {
 
     if (this.isOpen && this.selected) {
       this.selectChange.emit(this.selected);
-      this.close();
     }
 
     this.selected = null;
@@ -192,10 +185,5 @@ export class UserSelectComponent implements OnInit, OnChanges {
       this.options$.next(filterObjectArray(this.options, 'displayName', value));
       this.selectNextOptiom();
     }
-  }
-
-  onlogOutClicked() {
-    this.close();
-    this.store.dispatch(logout());
   }
 }

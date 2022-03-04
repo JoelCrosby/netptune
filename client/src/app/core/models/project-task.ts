@@ -19,9 +19,6 @@ export interface ProjectTask extends Basemodel {
   workspace: Workspace;
   workspaceId: number;
 
-  assignee: AppUser;
-  assigneeId: string;
-
   owner: AppUser;
   ownerId: string;
 }

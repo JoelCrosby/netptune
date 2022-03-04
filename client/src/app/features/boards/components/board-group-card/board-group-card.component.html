@@ -15,7 +15,7 @@
     <div class="bottom-right">
       <mat-icon *ngIf="task.isFlagged" color="warn"> flag </mat-icon>
       <app-avatar
-        *ngFor="let assignee of task.assignees"
+        *ngFor="let assignee of task.assignees; trackBy: trackById"
         size="24"
         class="task-card-user-chip"
         [name]="assignee.displayName"

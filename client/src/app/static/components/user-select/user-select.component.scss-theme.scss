@@ -21,7 +21,7 @@
 
     .label-input {
       $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
-      $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -10%);
+      $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -4%);
       background-color: if($is-dark-theme, $dark-bg, $light-bg);
     }
 

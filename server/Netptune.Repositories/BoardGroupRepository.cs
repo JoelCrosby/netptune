@@ -106,13 +106,16 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         {
             var lastGroup = result.LastOrDefault();
             var lastTask = lastGroup?.Tasks.LastOrDefault();
-            var lastAssignee = lastTask?.Assignees.FirstOrDefault();
+            var lastTag = lastTask?.Tags.LastOrDefault();
+            var lastAssignee = lastTask?.Assignees.LastOrDefault();
 
             if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
             {
-                lastTask.Tags.Add(row.Tag);
-
-                if (lastAssignee?.Id != row.Assignee_Id)
+                if (lastTag != row.Tag)
+                {
+                    lastTask.Tags.Add(row.Tag);
+                }
+                else if (lastAssignee?.Id != row.Assignee_Id)
                 {
                     lastTask.Assignees.Add(new()
                     {
