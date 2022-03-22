@@ -1,12 +1,15 @@
 <div class="user-select" [class.user-select-compact]="compact" #dropdown>
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    <app-avatar
-      *ngFor="let user of value"
-      [imageUrl]="user.pictureUrl"
-      [name]="user.displayName"
-      size="24"
-    >
-    </app-avatar>
+    <div *ngFor="let user of value" class="user-item">
+      <app-avatar
+        [imageUrl]="user.pictureUrl"
+        [name]="user.displayName"
+        size="24"
+      >
+      </app-avatar>
+
+      <small> {{ user.displayName }} </small>
+    </div>
 
     <ng-template #elseTemplate>
       <div class="app-user-link-inner"></div>

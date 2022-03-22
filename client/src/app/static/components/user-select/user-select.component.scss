@@ -25,7 +25,9 @@
 }
 
 .select-trigger {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: .4rem;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
@@ -155,6 +157,8 @@ input {
   .select-trigger {
     margin: 0 auto;
     width: initial;
+    display: flex;
+    flex-direction: column;
   }
 
   .select-trigger .app-user-link-inner {
@@ -162,4 +166,21 @@ input {
   }
 }
 
+.user-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: .2rem;
+  transition: background-color .14s ease-in-out;
 
+  small {
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: .125px;
+    margin-left: .4rem;
+  }
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
