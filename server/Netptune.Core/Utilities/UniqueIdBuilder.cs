@@ -9,12 +9,7 @@ namespace Netptune.Core.Utilities;
 
 public static class UniqueIdBuilder
 {
-    private static readonly GenerationOptions ShortIdOptions = new()
-    {
-        UseNumbers = true,
-        UseSpecialCharacters = false,
-        Length = 12,
-    };
+    private static readonly GenerationOptions ShortIdOptions = new(true, false, 12);
 
     public static string Generate(GenerationOptions options = null)
     {
