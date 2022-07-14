@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
@@ -37,7 +37,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   @Output() selectChange = new EventEmitter<Workspace>();
   @Output() closed = new EventEmitter();
 
-  searchControl = new FormControl();
+  searchControl = new UntypedFormControl();
 
   isOpen = false;
   currentWorkspace: Workspace | null = null;

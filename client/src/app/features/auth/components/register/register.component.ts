@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
@@ -26,48 +26,48 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onDestroy$ = new Subject<void>();
 
-  registerGroup = new FormGroup({
-    firstname: new FormControl('', [
+  registerGroup = new UntypedFormGroup({
+    firstname: new UntypedFormControl('', [
       Validators.required,
       Validators.maxLength(128),
     ]),
-    lastname: new FormControl('', [
+    lastname: new UntypedFormControl('', [
       Validators.required,
       Validators.maxLength(128),
     ]),
-    email: new FormControl('', [
+    email: new UntypedFormControl('', [
       Validators.required,
       Validators.email,
       Validators.maxLength(128),
     ]),
-    password0: new FormControl('', [
+    password0: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-    password1: new FormControl('', [
+    password1: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
   });
 
   get firstname() {
-    return this.registerGroup.get('firstname') as FormControl;
+    return this.registerGroup.get('firstname') as UntypedFormControl;
   }
 
   get lastname() {
-    return this.registerGroup.get('lastname') as FormControl;
+    return this.registerGroup.get('lastname') as UntypedFormControl;
   }
 
   get email() {
-    return this.registerGroup.get('email') as FormControl;
+    return this.registerGroup.get('email') as UntypedFormControl;
   }
 
   get password0() {
-    return this.registerGroup.get('password0') as FormControl;
+    return this.registerGroup.get('password0') as UntypedFormControl;
   }
 
   get password1() {
-    return this.registerGroup.get('password1') as FormControl;
+    return this.registerGroup.get('password1') as UntypedFormControl;
   }
 
   constructor(

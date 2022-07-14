@@ -11,7 +11,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { UserResponse } from '@core/auth/store/auth.models';
@@ -52,7 +52,7 @@ export class BoardGroupTaskInlineComponent
   @Input() boardGroupId!: number;
   @Output() canceled = new EventEmitter();
 
-  taskInputControl = new FormControl(null, [
+  taskInputControl = new UntypedFormControl(null, [
     Validators.required,
     Validators.maxLength(256),
   ]);

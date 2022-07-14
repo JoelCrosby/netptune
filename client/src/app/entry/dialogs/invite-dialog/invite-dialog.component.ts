@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -12,11 +12,11 @@ export class InviteDialogComponent {
   users: string[] = [];
 
   get email() {
-    return this.formGroup.get('email') as FormControl;
+    return this.formGroup.get('email') as UntypedFormControl;
   }
 
-  formGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+  formGroup = new UntypedFormGroup({
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
   });
 
   constructor(private dialogRef: MatDialogRef<InviteDialogComponent>) {}

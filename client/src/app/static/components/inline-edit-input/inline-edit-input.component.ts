@@ -11,7 +11,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   @HostBinding('class.edit-active') editActiveClass!: boolean;
   @Output() submitted = new EventEmitter<string>();
 
-  control = new FormControl('', {
+  control = new UntypedFormControl('', {
     updateOn: 'blur',
   });
 

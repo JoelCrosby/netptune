@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -58,24 +58,24 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   onDestroy$ = new Subject<void>();
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   colors = colorDictionary();
 
   get name() {
-    return this.formGroup.get('name') as FormControl;
+    return this.formGroup.get('name') as UntypedFormControl;
   }
 
   get identifier() {
-    return this.formGroup.get('identifier') as FormControl;
+    return this.formGroup.get('identifier') as UntypedFormControl;
   }
 
   get description() {
-    return this.formGroup.get('description') as FormControl;
+    return this.formGroup.get('description') as UntypedFormControl;
   }
 
   get color() {
-    return this.formGroup.get('color') as FormControl;
+    return this.formGroup.get('color') as UntypedFormControl;
   }
 
   get selectedColor() {
@@ -88,7 +88,7 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef,
     private workspaceServcie: WorkspacesService,
     public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
@@ -98,17 +98,17 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formGroup = this.fb.group(
       {
-        name: new FormControl('', {
+        name: new UntypedFormControl('', {
           validators: [Validators.required],
           updateOn: 'change',
         }),
-        identifier: new FormControl('', {
+        identifier: new UntypedFormControl('', {
           validators: [Validators.required],
           asyncValidators: this.data ? null : this.validate.bind(this),
           updateOn: 'change',
         }),
-        description: new FormControl(''),
-        color: new FormControl('#673AB7'),
+        description: new UntypedFormControl(''),
+        color: new UntypedFormControl('#673AB7'),
       },
       { updateOn: 'blur' }
     );

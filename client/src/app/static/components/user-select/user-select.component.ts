@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
@@ -37,7 +37,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   @Output() selectChange = new EventEmitter<AppUser>();
   @Output() closed = new EventEmitter();
 
-  searchControl = new FormControl();
+  searchControl = new UntypedFormControl();
 
   isOpen = false;
   selected: AppUser | null = null;

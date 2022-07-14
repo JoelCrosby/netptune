@@ -5,10 +5,10 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
-  FormControl,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
@@ -34,22 +34,22 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   currentWorkspace$!: Observable<Workspace | undefined>;
 
   selectedTypeValue!: number;
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   onDestroy$ = new Subject<void>();
 
   get name() {
-    return this.formGroup.get('name') as FormControl;
+    return this.formGroup.get('name') as UntypedFormControl;
   }
   get description() {
-    return this.formGroup.get('description') as FormControl;
+    return this.formGroup.get('description') as UntypedFormControl;
   }
   get project() {
-    return this.formGroup.get('project') as FormControl;
+    return this.formGroup.get('project') as UntypedFormControl;
   }
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private store: Store<AppState>,
     public dialogRef: MatDialogRef<CreateTaskDialogComponent>
   ) {}

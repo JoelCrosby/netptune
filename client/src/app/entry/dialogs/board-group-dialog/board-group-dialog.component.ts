@@ -4,7 +4,7 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { AppState } from '@core/core.state';
@@ -22,7 +22,7 @@ export interface BoardGroupDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupDialogComponent implements OnInit {
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   get group() {
     return this.formGroup.get('group');
@@ -30,7 +30,7 @@ export class BoardGroupDialogComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData
   ) {}

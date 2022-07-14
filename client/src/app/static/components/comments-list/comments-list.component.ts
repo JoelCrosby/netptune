@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
@@ -22,12 +22,12 @@ export class CommentsListComponent {
   @Output() deleteComment = new EventEmitter<CommentViewModel>();
   @Output() commentSubmit = new EventEmitter<string>();
 
-  formGroup = new FormGroup({
-    comment: new FormControl(),
+  formGroup = new UntypedFormGroup({
+    comment: new UntypedFormControl(),
   });
 
   get comment() {
-    return this.formGroup.get('comment') as FormControl;
+    return this.formGroup.get('comment') as UntypedFormControl;
   }
 
   get value() {
