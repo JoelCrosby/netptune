@@ -38,7 +38,6 @@ import {
   debounceTime,
   filter,
   first,
-  map,
   share,
   takeUntil,
   tap,
@@ -104,16 +103,7 @@ export class TaskDetailDialogComponent
     this.tags$ = this.store.select(TagsSelectors.selectTagNames);
 
     this.user$ = this.store.select(selectCurrentUser);
-    this.users$ = this.store.select(UsersSelectors.selectAllUsers).pipe(
-      withLatestFrom(this.getTaskObservable()),
-      map(([users, task]) => {
-        if (!task) return users;
-
-        const assigneeSet = new Set<string>(task.assignees.map((a) => a.id));
-
-        return users.filter((u) => !assigneeSet.has(u.id));
-      })
-    );
+    this.users$ = this.store.select(UsersSelectors.selectAllUsers);
   }
 
   ngAfterViewInit() {

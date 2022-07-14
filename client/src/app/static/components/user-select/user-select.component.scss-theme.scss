@@ -50,6 +50,12 @@
         $light-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: -10%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
+
+      &.selected {
+        $dark-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: 20%);
+        $light-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: -10%);
+        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+      }
     }
 
     .app-user-link-inner {
