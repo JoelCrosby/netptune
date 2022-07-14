@@ -9,7 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -53,7 +53,7 @@ export class AutocompleteChipsComponent implements OnInit {
 
   separatorKeysCodes = [ENTER, COMMA];
 
-  formCtrl = new FormControl();
+  formCtrl = new UntypedFormControl();
 
   filteredOptions!: Observable<string[]>;
 

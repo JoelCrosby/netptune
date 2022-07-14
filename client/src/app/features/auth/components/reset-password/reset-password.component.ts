@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
@@ -20,23 +20,23 @@ export class ResetPasswordComponent {
 
   request?: ResetPasswordRequest;
 
-  passwordResetGroup = new FormGroup({
-    password0: new FormControl('', [
+  passwordResetGroup = new UntypedFormGroup({
+    password0: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-    password1: new FormControl('', [
+    password1: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
   });
 
   get password0() {
-    return this.passwordResetGroup.get('password0') as FormControl;
+    return this.passwordResetGroup.get('password0') as UntypedFormControl;
   }
 
   get password1() {
-    return this.passwordResetGroup.get('password1') as FormControl;
+    return this.passwordResetGroup.get('password1') as UntypedFormControl;
   }
 
   constructor(

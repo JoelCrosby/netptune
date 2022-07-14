@@ -4,7 +4,7 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
@@ -22,7 +22,7 @@ export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
   term$!: Observable<string>;
   onDestroy$ = new Subject<void>();
 
-  termFormControl = new FormControl('', [
+  termFormControl = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(2),
     Validators.maxLength(64),

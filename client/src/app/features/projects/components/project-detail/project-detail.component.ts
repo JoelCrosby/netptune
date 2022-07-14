@@ -5,10 +5,10 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
-  FormControl,
+  UntypedFormControl,
 } from '@angular/forms';
 import { AppState } from '@core/core.state';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
@@ -38,29 +38,29 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   updateDisabled$!: Observable<boolean>;
   onDestroy$ = new Subject<void>();
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   get id() {
-    return this.formGroup.get('id') as FormControl;
+    return this.formGroup.get('id') as UntypedFormControl;
   }
 
   get name() {
-    return this.formGroup.get('name') as FormControl;
+    return this.formGroup.get('name') as UntypedFormControl;
   }
 
   get description() {
-    return this.formGroup.get('description') as FormControl;
+    return this.formGroup.get('description') as UntypedFormControl;
   }
 
   get repositoryUrl() {
-    return this.formGroup.get('repositoryUrl') as FormControl;
+    return this.formGroup.get('repositoryUrl') as UntypedFormControl;
   }
 
   get key() {
-    return this.formGroup.get('key') as FormControl;
+    return this.formGroup.get('key') as UntypedFormControl;
   }
 
-  constructor(private store: Store<AppState>, private fb: FormBuilder) {}
+  constructor(private store: Store<AppState>, private fb: UntypedFormBuilder) {}
 
   ngOnInit() {
     this.project$ = this.store.select(selectProjectDetail).pipe(

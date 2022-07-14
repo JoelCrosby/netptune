@@ -6,10 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
-  FormControl,
+  UntypedFormControl,
 } from '@angular/forms';
 import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
@@ -29,25 +29,25 @@ import { AppState } from '@core/core.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
   loadingPasswordChange$!: Observable<boolean>;
   matcher = new FormErrorStateMatcher();
   onDestroy$ = new Subject<void>();
   errorMessage$ = new BehaviorSubject<string>('');
 
   get currentPassword() {
-    return this.formGroup.get('currentPassword') as FormControl;
+    return this.formGroup.get('currentPassword') as UntypedFormControl;
   }
   get newPassword() {
-    return this.formGroup.get('newPassword') as FormControl;
+    return this.formGroup.get('newPassword') as UntypedFormControl;
   }
   get confirmPassword() {
-    return this.formGroup?.get('confirmPassword') as FormControl;
+    return this.formGroup?.get('confirmPassword') as UntypedFormControl;
   }
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private actions$: Actions,
     private cd: ChangeDetectorRef
   ) {}
@@ -96,9 +96,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  checkPasswords(group: FormGroup) {
-    const pass = group.get('newPassword') as FormControl;
-    const confirmPass = group.get('confirmPassword') as FormControl;
+  checkPasswords(group: UntypedFormGroup) {
+    const pass = group.get('newPassword') as UntypedFormControl;
+    const confirmPass = group.get('confirmPassword') as UntypedFormControl;
 
     return pass.value === confirmPass.value ? null : { notSame: true };
   }

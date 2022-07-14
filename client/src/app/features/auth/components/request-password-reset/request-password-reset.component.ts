@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { requestPasswordReset } from '@core/auth/store/auth.actions';
 import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
@@ -16,12 +16,12 @@ import { tap } from 'rxjs/operators';
 export class RequestPasswordResetComponent implements OnInit {
   authLoading$!: Observable<boolean>;
 
-  requestPasswordResetGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+  requestPasswordResetGroup = new UntypedFormGroup({
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
   });
 
   get email() {
-    return this.requestPasswordResetGroup.get('email') as FormControl;
+    return this.requestPasswordResetGroup.get('email') as UntypedFormControl;
   }
 
   constructor(private store: Store<AppState>) {}

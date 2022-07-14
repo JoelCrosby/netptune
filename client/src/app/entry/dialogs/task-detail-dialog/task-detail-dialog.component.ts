@@ -7,7 +7,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
@@ -69,7 +69,7 @@ export class TaskDetailDialogComponent
   onEditorLoadedSubject = new Subject<boolean>();
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
-  projectFromGroup!: FormGroup;
+  projectFromGroup!: UntypedFormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
@@ -79,11 +79,11 @@ export class TaskDetailDialogComponent
   ) {}
 
   get name() {
-    return this.projectFromGroup.get('name') as FormControl;
+    return this.projectFromGroup.get('name') as UntypedFormControl;
   }
 
   get description() {
-    return this.projectFromGroup.get('description') as FormControl;
+    return this.projectFromGroup.get('description') as UntypedFormControl;
   }
 
   ngOnInit() {
@@ -117,12 +117,12 @@ export class TaskDetailDialogComponent
   }
 
   buildForm(task: TaskViewModel) {
-    this.projectFromGroup = new FormGroup({
-      name: new FormControl(task?.name, {
+    this.projectFromGroup = new UntypedFormGroup({
+      name: new UntypedFormControl(task?.name, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(4)],
       }),
-      description: new FormControl(task?.description, {
+      description: new UntypedFormControl(task?.description, {
         updateOn: 'change',
         validators: [],
       }),

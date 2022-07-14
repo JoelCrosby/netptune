@@ -6,10 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
-  FormControl,
+  UntypedFormControl,
 } from '@angular/forms';
 import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
@@ -26,7 +26,7 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
   onDestroy$ = new Subject<void>();
   loadingUpdate$!: Observable<boolean>;
   editProfilePicture$ = new Subject<boolean>();
@@ -34,21 +34,21 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
   data?: FormData;
 
   get firstname() {
-    return this.formGroup.get('firstname') as FormControl;
+    return this.formGroup.get('firstname') as UntypedFormControl;
   }
   get lastname() {
-    return this.formGroup.get('lastname') as FormControl;
+    return this.formGroup.get('lastname') as UntypedFormControl;
   }
   get email() {
-    return this.formGroup.get('email') as FormControl;
+    return this.formGroup.get('email') as UntypedFormControl;
   }
   get pictureUrl() {
-    return this.formGroup.get('pictureUrl') as FormControl;
+    return this.formGroup.get('pictureUrl') as UntypedFormControl;
   }
 
   constructor(
     private store: Store<AppState>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef
   ) {}
 
