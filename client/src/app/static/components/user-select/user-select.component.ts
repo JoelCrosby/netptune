@@ -43,6 +43,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   selected: AppUser | null = null;
 
   options$ = new BehaviorSubject<AppUser[]>([]);
+  valueIdSet = new Set<string>();
 
   ngOnInit() {
     this.searchControl.valueChanges
@@ -76,6 +77,12 @@ export class UserSelectComponent implements OnInit, OnChanges {
     if (changes.value || changes.options) {
       if (this.value && this.options) {
         this.options$.next(this.options);
+
+        this.valueIdSet.clear();
+
+        for (const user of this.value) {
+          user && this.valueIdSet.add(user.id);
+        }
       }
     }
   }
@@ -174,6 +181,10 @@ export class UserSelectComponent implements OnInit, OnChanges {
       return false;
     }
     return option.id === this.selected.id;
+  }
+
+  isSelected(option: AppUser) {
+    return this.valueIdSet.has(option.id);
   }
 
   search(value: string) {

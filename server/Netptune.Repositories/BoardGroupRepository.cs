@@ -88,6 +88,8 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
                 ORDER BY bg.sort_order, ptibg.sort_order, t.name, u.id;
 
+                -- Select board
+
                 SELECT w.slug AS workspace_identifier
                      , p.key  AS project_key
                 FROM boards b
