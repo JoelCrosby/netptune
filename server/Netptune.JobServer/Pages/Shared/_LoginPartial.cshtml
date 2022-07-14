@@ -1,12 +1,11 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
 
 <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-sm-center">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item p-2 text-primary fw-bold mr-5">
-      @User.Identity.Name
+      @User.Identity?.Name
     </li>
     <li class="nav-item">
       <a class="nav-link text-dark" asp-page="/account/register">
