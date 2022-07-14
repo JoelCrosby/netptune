@@ -15,6 +15,7 @@ import { StaticModule } from '@static/static.module';
 import { ConfirmViewComponent } from './views/confirm-view/confirm-view.component';
 import { RequestPasswordResetComponent } from './components/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AuthProviderComponent } from './components/auth-provider/auth-provider.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     ConfirmViewComponent,
     RequestPasswordResetComponent,
     ResetPasswordComponent,
+    AuthProviderComponent,
   ],
   imports: [
     CommonModule,
