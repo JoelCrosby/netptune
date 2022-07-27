@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
 import { AddProjectRequest } from '@core/models/project';
@@ -18,25 +18,25 @@ export class ProjectDialogComponent implements OnDestroy {
   currentWorkspace$ = this.store.select(selectCurrentWorkspace);
   subs = new Subscription();
 
-  projectFromGroup = new UntypedFormGroup({
-    name: new UntypedFormControl('', [Validators.required, Validators.minLength(4)]),
-    repositoryUrl: new UntypedFormControl(),
-    description: new UntypedFormControl(),
-    workspace: new UntypedFormControl(),
-    color: new UntypedFormControl('#673AB7'),
+  projectFromGroup = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    repositoryUrl: new FormControl(),
+    description: new FormControl(),
+    workspace: new FormControl(),
+    color: new FormControl('#673AB7'),
   });
 
   get name() {
-    return this.projectFromGroup.get('name') as UntypedFormControl;
+    return this.projectFromGroup.get('name') as FormControl;
   }
   get description() {
-    return this.projectFromGroup.get('description') as UntypedFormControl;
+    return this.projectFromGroup.get('description') as FormControl;
   }
   get repositoryUrl() {
-    return this.projectFromGroup.get('repositoryUrl') as UntypedFormControl;
+    return this.projectFromGroup.get('repositoryUrl') as FormControl;
   }
   get color() {
-    return this.projectFromGroup.get('color') as UntypedFormControl;
+    return this.projectFromGroup.get('color') as FormControl;
   }
 
   constructor(
