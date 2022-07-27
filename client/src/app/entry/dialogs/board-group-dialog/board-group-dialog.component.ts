@@ -1,10 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnInit,
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { AppState } from '@core/core.state';
@@ -21,28 +16,20 @@ export interface BoardGroupDialogData {
   styleUrls: ['./board-group-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardGroupDialogComponent implements OnInit {
-  formGroup!: UntypedFormGroup;
-
-  get group() {
-    return this.formGroup.get('group');
-  }
+export class BoardGroupDialogComponent {
+  form = this.fb.nonNullable.group({
+    group: '',
+  });
 
   constructor(
     private store: Store<AppState>,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData
   ) {}
 
-  ngOnInit() {
-    this.formGroup = this.fb.group({
-      group: [],
-    });
-  }
-
   onSubmit() {
-    const name = this.group?.value;
+    const name = this.form.getRawValue().group;
     const identifier = this.data.identifier;
 
     this.store.dispatch(
