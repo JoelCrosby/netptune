@@ -5,12 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-  UntypedFormControl,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
@@ -26,7 +21,13 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
-  formGroup!: UntypedFormGroup;
+  formGroup = new FormGroup({
+    firstname: new FormControl('', [Validators.required]),
+    lastname: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
+    pictureUrl: new FormControl(''),
+  });
+
   onDestroy$ = new Subject<void>();
   loadingUpdate$!: Observable<boolean>;
   editProfilePicture$ = new Subject<boolean>();
@@ -34,23 +35,22 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
   data?: FormData;
 
   get firstname() {
-    return this.formGroup.get('firstname') as UntypedFormControl;
+    return this.formGroup.controls.firstname;
   }
   get lastname() {
-    return this.formGroup.get('lastname') as UntypedFormControl;
+    return this.formGroup.controls.lastname;
   }
   get email() {
-    return this.formGroup.get('email') as UntypedFormControl;
+    return this.formGroup.controls.email;
   }
   get pictureUrl() {
-    return this.formGroup.get('pictureUrl') as UntypedFormControl;
+    return this.formGroup.controls.pictureUrl;
+  }
+  get pictureUrlValue() {
+    return this.pictureUrl.value as string;
   }
 
-  constructor(
-    private store: Store<AppState>,
-    private fb: UntypedFormBuilder,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(
@@ -62,23 +62,20 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
       shareReplay()
     );
 
-    this.formGroup = this.fb.group({
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      email: ['', Validators.required],
-      pictureUrl: [''],
-    });
-
     this.store
       .select(ProfileSelectors.selectProfile)
       .pipe(
         filter((profile) => !!profile),
         first(),
         tap((profile) => {
-          this.firstname.setValue(profile?.firstname, { emitEvent: false });
-          this.lastname.setValue(profile?.lastname, { emitEvent: false });
-          this.email.setValue(profile?.email, { emitEvent: false });
-          this.pictureUrl.setValue(profile?.pictureUrl, { emitEvent: false });
+          const value = profile as AppUser;
+
+          this.firstname.setValue(value.firstname, { emitEvent: false });
+          this.lastname.setValue(value.lastname, { emitEvent: false });
+          this.email.setValue(value.email, { emitEvent: false });
+          this.pictureUrl.setValue(value.pictureUrl as string, {
+            emitEvent: false,
+          });
 
           this.cd.markForCheck();
         })
@@ -102,11 +99,11 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
             return;
           }
 
-          const profile = {
+          const profile: AppUser = {
             ...currentProfile,
-            firstname: this.firstname.value,
-            lastname: this.lastname.value,
-            email: this.email.value,
+            firstname: this.firstname.value as string,
+            lastname: this.lastname.value as string,
+            email: this.email.value as string,
           };
 
           this.store.dispatch(updateProfile({ profile }));

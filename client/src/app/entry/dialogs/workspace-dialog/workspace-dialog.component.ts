@@ -9,9 +9,8 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -58,24 +57,40 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   onDestroy$ = new Subject<void>();
 
-  formGroup!: UntypedFormGroup;
+  formGroup = new FormGroup(
+    {
+      name: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'change',
+        nonNullable: true,
+      }),
+      identifier: new FormControl('', {
+        validators: [Validators.required],
+        asyncValidators: this.data ? null : this.validate.bind(this),
+        updateOn: 'change',
+      }),
+      description: new FormControl(''),
+      color: new FormControl('#673AB7'),
+    },
+    { updateOn: 'blur' }
+  );
 
   colors = colorDictionary();
 
   get name() {
-    return this.formGroup.get('name') as UntypedFormControl;
+    return this.formGroup.controls.name;
   }
 
   get identifier() {
-    return this.formGroup.get('identifier') as UntypedFormControl;
+    return this.formGroup.controls.identifier;
   }
 
   get description() {
-    return this.formGroup.get('description') as UntypedFormControl;
+    return this.formGroup.controls.description;
   }
 
   get color() {
-    return this.formGroup.get('color') as UntypedFormControl;
+    return this.formGroup.controls.color;
   }
 
   get selectedColor() {
@@ -88,7 +103,6 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef,
     private workspaceServcie: WorkspacesService,
     public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
@@ -96,23 +110,6 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.formGroup = this.fb.group(
-      {
-        name: new UntypedFormControl('', {
-          validators: [Validators.required],
-          updateOn: 'change',
-        }),
-        identifier: new UntypedFormControl('', {
-          validators: [Validators.required],
-          asyncValidators: this.data ? null : this.validate.bind(this),
-          updateOn: 'change',
-        }),
-        description: new UntypedFormControl(''),
-        color: new UntypedFormControl('#673AB7'),
-      },
-      { updateOn: 'blur' }
-    );
-
     this.identifierIcon$ = combineLatest([
       this.isUniqueLoading$.pipe(),
       this.identifier.statusChanges,
@@ -128,13 +125,15 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    if (this.data) {
-      const workspace = this.data;
+    if (this.data && this.data.slug) {
+      const workspace = this.data as Required<Workspace>;
 
       this.name.setValue(workspace.name, { emitEvent: false });
       this.identifier.setValue(workspace.slug, { emitEvent: false });
       this.description.setValue(workspace.description, { emitEvent: false });
-      this.color.setValue(workspace.metaInfo?.color, { emitEvent: false });
+      this.color.setValue(workspace.metaInfo?.color ?? null, {
+        emitEvent: false,
+      });
 
       this.identifier.disable({ emitEvent: false });
     } else {
@@ -194,10 +193,10 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
     const workspace: Workspace = {
       ...this.data,
       name: this.name.value,
-      slug: this.identifier.value,
-      description: this.description.value,
+      slug: this.identifier.value as string,
+      description: this.description.value as string,
       metaInfo: {
-        color: this.selectedColor,
+        color: this.selectedColor as string,
       },
       users: [],
       projects: [],

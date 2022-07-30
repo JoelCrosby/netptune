@@ -5,22 +5,17 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-  UntypedFormControl,
-} from '@angular/forms';
-import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
+import { AppState } from '@core/core.state';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
+import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import * as ProfileActions from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { first, shareReplay, takeUntil, tap } from 'rxjs/operators';
-import { AppState } from '@core/core.state';
 
 @Component({
   selector: 'app-change-password',
@@ -29,25 +24,29 @@ import { AppState } from '@core/core.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
-  formGroup!: UntypedFormGroup;
+  formGroup = new FormGroup({
+    currentPassword: new FormControl('', [Validators.required]),
+    newPassword: new FormControl('', [Validators.required]),
+    confirmPassword: new FormControl('', [Validators.required]),
+  });
+
   loadingPasswordChange$!: Observable<boolean>;
   matcher = new FormErrorStateMatcher();
   onDestroy$ = new Subject<void>();
   errorMessage$ = new BehaviorSubject<string>('');
 
   get currentPassword() {
-    return this.formGroup.get('currentPassword') as UntypedFormControl;
+    return this.formGroup.controls.currentPassword;
   }
   get newPassword() {
-    return this.formGroup.get('newPassword') as UntypedFormControl;
+    return this.formGroup.controls.newPassword;
   }
   get confirmPassword() {
-    return this.formGroup?.get('confirmPassword') as UntypedFormControl;
+    return this.formGroup?.controls.confirmPassword;
   }
 
   constructor(
     private store: Store<AppState>,
-    private fb: UntypedFormBuilder,
     private actions$: Actions,
     private cd: ChangeDetectorRef
   ) {}
@@ -61,12 +60,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       ),
       shareReplay()
     );
-
-    this.formGroup = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-    });
 
     this.actions$
       .pipe(
@@ -96,9 +89,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  checkPasswords(group: UntypedFormGroup) {
-    const pass = group.get('newPassword') as UntypedFormControl;
-    const confirmPass = group.get('confirmPassword') as UntypedFormControl;
+  checkPasswords(group: FormGroup) {
+    const pass = group.controls.newPassword;
+    const confirmPass = group.controls.confirmPassword;
 
     return pass.value === confirmPass.value ? null : { notSame: true };
   }
@@ -125,8 +118,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
           const request: ChangePasswordRequest = {
             userId,
-            currentPassword: this.currentPassword.value,
-            newPassword: this.newPassword.value,
+            currentPassword: this.currentPassword.value as string,
+            newPassword: this.newPassword.value as string,
           };
 
           this.store.dispatch(ProfileActions.changePassword({ request }));

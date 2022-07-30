@@ -26,7 +26,7 @@
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
         <app-image-cropper
           [size]="180"
-          [src]="pictureUrl.value"
+          [src]="pictureUrlValue"
           (cropped)="onCropped($event)"
           (canceled)="onCropperCanceled()"
           (cleared)="onCropperCleared()"

@@ -27,16 +27,16 @@ export class ProjectDialogComponent implements OnDestroy {
   });
 
   get name() {
-    return this.projectFromGroup.get('name') as FormControl;
+    return this.projectFromGroup.controls.name;
   }
   get description() {
-    return this.projectFromGroup.get('description') as FormControl;
+    return this.projectFromGroup.controls.description;
   }
   get repositoryUrl() {
-    return this.projectFromGroup.get('repositoryUrl') as FormControl;
+    return this.projectFromGroup.controls.repositoryUrl;
   }
   get color() {
-    return this.projectFromGroup.get('color') as FormControl;
+    return this.projectFromGroup.controls.color;
   }
 
   constructor(
@@ -58,12 +58,12 @@ export class ProjectDialogComponent implements OnDestroy {
         if (!workspace?.slug) return;
 
         const project: AddProjectRequest = {
-          name: this.name.value,
+          name: this.name.value as string,
           description: this.description.value,
           repositoryUrl: this.repositoryUrl.value,
           workspace: workspace.slug,
           metaInfo: {
-            color: this.color.value,
+            color: this.color.value as string,
           },
         };
 

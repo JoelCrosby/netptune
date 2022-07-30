@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppState } from '@core/core.state';
@@ -64,14 +64,14 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
 
   inlineEditActive$!: Observable<boolean>;
 
-  taskGroup = new UntypedFormGroup({
-    taskName: new UntypedFormControl(),
+  taskGroup = new FormGroup({
+    taskName: new FormControl(''),
   });
 
   onDestroy$ = new Subject<void>();
 
   get taskName() {
-    return this.taskGroup.get('taskName') as UntypedFormControl;
+    return this.taskGroup.controls.taskName;
   }
 
   constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}

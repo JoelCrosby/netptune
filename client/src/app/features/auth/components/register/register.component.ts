@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
@@ -26,48 +26,48 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onDestroy$ = new Subject<void>();
 
-  registerGroup = new UntypedFormGroup({
-    firstname: new UntypedFormControl('', [
+  formGroup = new FormGroup({
+    firstname: new FormControl('', [
       Validators.required,
       Validators.maxLength(128),
     ]),
-    lastname: new UntypedFormControl('', [
+    lastname: new FormControl('', [
       Validators.required,
       Validators.maxLength(128),
     ]),
-    email: new UntypedFormControl('', [
+    email: new FormControl('', [
       Validators.required,
       Validators.email,
       Validators.maxLength(128),
     ]),
-    password0: new UntypedFormControl('', [
+    password0: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-    password1: new UntypedFormControl('', [
+    password1: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
   });
 
   get firstname() {
-    return this.registerGroup.get('firstname') as UntypedFormControl;
+    return this.formGroup.controls.firstname;
   }
 
   get lastname() {
-    return this.registerGroup.get('lastname') as UntypedFormControl;
+    return this.formGroup.controls.lastname;
   }
 
   get email() {
-    return this.registerGroup.get('email') as UntypedFormControl;
+    return this.formGroup.controls.email;
   }
 
   get password0() {
-    return this.registerGroup.get('password0') as UntypedFormControl;
+    return this.formGroup.controls.password0;
   }
 
   get password1() {
-    return this.registerGroup.get('password1') as UntypedFormControl;
+    return this.formGroup.controls.password1;
   }
 
   constructor(
@@ -76,8 +76,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ) {
     this.authLoading$ = this.store.select(selectRegisterLoading).pipe(
       tap((loading) => {
-        if (loading) return this.registerGroup.disable();
-        return this.registerGroup.enable();
+        if (loading) return this.formGroup.disable();
+        return this.formGroup.enable();
       })
     );
   }
@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         return invite.success ? invite : null;
       }),
       tap((invite) => {
-        if (invite) {
+        if (invite?.email) {
           this.email.setValue(invite.email, { emitEvent: false });
           this.email.disable({ emitEvent: false });
         }
@@ -107,20 +107,25 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    const firstname: string = this.firstname.value;
-    const lastname: string = this.lastname.value;
-    const email: string = this.email.value;
-    const password: string = this.password0.value;
-    const passwordConfirm: string = this.password1.value;
+    const firstname = this.firstname.value;
+    const lastname = this.lastname.value;
+    const email = this.email.value;
+    const password = this.password0.value;
+    const passwordConfirm = this.password1.value;
+
+    if (!firstname || !lastname) {
+      this.formGroup.markAsDirty();
+      return;
+    }
 
     if (password !== passwordConfirm) {
       this.password1.setErrors({ noMatch: true });
-      this.registerGroup.markAsDirty();
+      this.formGroup.markAsDirty();
       return;
     }
 
     if (!email || !password) {
-      this.registerGroup.markAsDirty();
+      this.formGroup.markAsDirty();
       return;
     }
 

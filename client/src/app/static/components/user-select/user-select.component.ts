@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
@@ -37,7 +37,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   @Output() selectChange = new EventEmitter<AppUser>();
   @Output() closed = new EventEmitter();
 
-  searchControl = new UntypedFormControl();
+  searchControl = new FormControl('');
 
   isOpen = false;
   selected: AppUser | null = null;
@@ -48,7 +48,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), untilDestroyed(this))
-      .subscribe((term: string) => this.search(term));
+      .subscribe((term) => this.search(term));
 
     fromEvent(document, 'mousedown', {
       passive: true,
@@ -187,7 +187,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
     return this.valueIdSet.has(option.id);
   }
 
-  search(value: string) {
+  search(value?: string | null) {
     if (!this.options) return;
 
     if (!value) {

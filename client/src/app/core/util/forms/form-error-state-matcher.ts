@@ -1,14 +1,9 @@
-import {
-  UntypedFormControl,
-  FormGroupDirective,
-  NgForm,
-  FormControl,
-} from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export class FormErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: UntypedFormControl | FormControl | null,
+    control: FormControl | null,
     _: FormGroupDirective | NgForm | null
   ): boolean {
     if (control === null) {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import {
   selectLoginLoading,
@@ -23,17 +23,17 @@ export class LoginComponent implements OnDestroy {
 
   hidePassword = true;
 
-  loginGroup = new UntypedFormGroup({
-    email: new UntypedFormControl('', [Validators.required, Validators.email]),
-    password: new UntypedFormControl('', [Validators.required]),
+  loginGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
   });
 
   get email() {
-    return this.loginGroup.get('email') as UntypedFormControl;
+    return this.loginGroup.controls.email;
   }
 
   get password() {
-    return this.loginGroup.get('password') as UntypedFormControl;
+    return this.loginGroup.controls.password;
   }
 
   constructor(private store: Store<AppState>) {
