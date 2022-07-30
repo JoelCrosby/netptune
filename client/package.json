@@ -74,8 +74,5 @@
     "ts-node": "~10.9.1",
     "typescript": "4.7.4",
     "webpack-bundle-analyzer": "^4.5.0"
-  },
-  "resolutions": {
-    "codex-tooltip": "1.0.2"
   }
 }
