@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
@@ -20,23 +20,23 @@ export class ResetPasswordComponent {
 
   request?: ResetPasswordRequest;
 
-  passwordResetGroup = new UntypedFormGroup({
-    password0: new UntypedFormControl('', [
+  formGroup = new FormGroup({
+    password0: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
-    password1: new UntypedFormControl('', [
+    password1: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
     ]),
   });
 
   get password0() {
-    return this.passwordResetGroup.get('password0') as UntypedFormControl;
+    return this.formGroup.controls.password0;
   }
 
   get password1() {
-    return this.passwordResetGroup.get('password1') as UntypedFormControl;
+    return this.formGroup.controls.password1;
   }
 
   constructor(
@@ -54,8 +54,8 @@ export class ResetPasswordComponent {
 
     this.authLoading$ = this.store.select(selectResetPasswordLoading).pipe(
       tap((loading) => {
-        if (loading) return this.passwordResetGroup.disable();
-        return this.passwordResetGroup.enable();
+        if (loading) return this.formGroup.disable();
+        return this.formGroup.enable();
       })
     );
   }
@@ -63,7 +63,11 @@ export class ResetPasswordComponent {
   resetPassword() {
     if (!this.request) return;
 
-    if (this.password0.invalid || this.password1.invalid) {
+    if (
+      !this.password0.value ||
+      this.password0.invalid ||
+      this.password1.invalid
+    ) {
       this.password0.markAllAsTouched();
       return;
     }

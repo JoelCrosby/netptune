@@ -12,7 +12,7 @@ export class InviteDialogComponent {
   users: string[] = [];
 
   get email() {
-    return this.formGroup.get('email') as FormControl;
+    return this.formGroup.controls.email;
   }
 
   formGroup = new FormGroup({
@@ -35,7 +35,7 @@ export class InviteDialogComponent {
       return;
     }
 
-    const user: string = this.email.value;
+    const user = this.email.value as string;
 
     if (this.users.includes(user)) {
       this.email.reset();

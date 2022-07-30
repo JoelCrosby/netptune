@@ -153,7 +153,7 @@ export const toggleOnlyFlagged = createAction(
 
 export const setSearchTerm = createAction(
   '[BoardGroups] Set Search Term',
-  props<{ term: string | null }>()
+  props<{ term?: string | null }>()
 );
 
 // Select Task
@@ -248,7 +248,7 @@ export const reassignTasksFail = createAction(
 
 export const setInlineTaskContent = createAction(
   '[BoardGroups] Set Inline Task Content',
-  props<{ content: string }>()
+  props<{ content: string | undefined | null }>()
 );
 
 // Export Board Tasks

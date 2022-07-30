@@ -16,7 +16,7 @@ import {
 import {
   ControlContainer,
   ControlValueAccessor,
-  UntypedFormControl,
+  FormControl,
   FormControlDirective,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
@@ -42,7 +42,7 @@ export class InlineTextAreaComponent
 {
   @Input() value!: string;
   @Input() formControlName!: string;
-  @Input() formControl!: UntypedFormControl;
+  @Input() formControl!: FormControl;
   @Input() activeBorder!: boolean | string;
 
   @Input() minRows = 1;
@@ -59,10 +59,10 @@ export class InlineTextAreaComponent
   onChange!: (value: string) => void;
   onTouched!: () => void;
 
-  get control(): UntypedFormControl {
+  get control(): FormControl {
     return (
       this.formControl ||
-      (this.controlContainer.control?.get(this.formControlName) as UntypedFormControl)
+      (this.controlContainer.control?.get(this.formControlName) as FormControl)
     );
   }
 

@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormBuilder,
+  FormControl,
+  FormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -49,24 +49,24 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
 
   onDestroy$ = new Subject<void>();
 
-  formGroup!: UntypedFormGroup;
+  formGroup!: FormGroup;
 
   colors = colorDictionary();
 
   get name() {
-    return this.formGroup.get('name') as UntypedFormControl;
+    return this.formGroup.controls.name;
   }
 
   get identifier() {
-    return this.formGroup.get('identifier') as UntypedFormControl;
+    return this.formGroup.controls.identifier;
   }
 
   get color() {
-    return this.formGroup.get('color') as UntypedFormControl;
+    return this.formGroup.controls.color;
   }
 
   get projectId() {
-    return this.formGroup.get('projectId') as UntypedFormControl;
+    return this.formGroup.controls.projectId;
   }
 
   get selectedColor() {
@@ -79,7 +79,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private store: Store<AppState>,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private boardsService: BoardsService,
     public dialogRef: MatDialogRef<CreateBoardComponent>,
@@ -90,17 +90,17 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
     this.projects$ = this.store.select(selectAllProjects);
     this.formGroup = this.fb.group(
       {
-        name: new UntypedFormControl('', {
+        name: new FormControl('', {
           validators: [Validators.required],
           updateOn: 'change',
         }),
-        identifier: new UntypedFormControl('', {
+        identifier: new FormControl('', {
           validators: [Validators.required],
           asyncValidators: this.data ? null : this.validate.bind(this),
           updateOn: 'change',
         }),
-        color: new UntypedFormControl('#673AB7'),
-        projectId: new UntypedFormControl(null, {
+        color: new FormControl('#673AB7'),
+        projectId: new FormControl(null, {
           validators: [Validators.required],
         }),
       },

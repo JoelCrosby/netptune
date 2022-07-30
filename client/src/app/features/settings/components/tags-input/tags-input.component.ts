@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 
@@ -28,11 +28,9 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() canceled = new EventEmitter();
 
   onDestroy$ = new Subject<void>();
-  formControl!: UntypedFormControl;
+  formControl = new FormControl(this.value);
 
   ngOnInit() {
-    this.formControl = new UntypedFormControl(this.value);
-
     fromEvent(document, 'mousedown', {
       passive: true,
     })
@@ -54,7 +52,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
-    const value: string = this.formControl.value;
+    const value = this.formControl.value as string;
     this.submitted.emit(value);
   }
 

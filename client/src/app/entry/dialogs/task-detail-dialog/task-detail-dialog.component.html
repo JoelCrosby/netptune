@@ -1,7 +1,7 @@
 <ng-container *ngIf="task$ | async as task; else loading">
   <mat-dialog-content class="task-detail-dialog">
     <div class="detail-form">
-      <form [formGroup]="projectFromGroup">
+      <form [formGroup]="formGroup">
         <app-inline-text-area
           class="w-100"
           class="form-control task-detail-title"

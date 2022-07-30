@@ -4,12 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-  UntypedFormControl,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppState } from '@core/core.state';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
@@ -38,48 +33,54 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   updateDisabled$!: Observable<boolean>;
   onDestroy$ = new Subject<void>();
 
-  formGroup!: UntypedFormGroup;
+  formGroup = new FormGroup(
+    {
+      id: new FormControl<number | null>(null, [Validators.required]),
+      key: new FormControl('', [Validators.required, Validators.maxLength(6)]),
+      name: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(128),
+      ]),
+      description: new FormControl('', [Validators.maxLength(4096)]),
+      repositoryUrl: new FormControl('', [Validators.maxLength(1024)]),
+    },
+    { updateOn: 'change' }
+  );
 
   get id() {
-    return this.formGroup.get('id') as UntypedFormControl;
+    return this.formGroup.controls.id;
   }
 
   get name() {
-    return this.formGroup.get('name') as UntypedFormControl;
+    return this.formGroup.controls.name;
   }
 
   get description() {
-    return this.formGroup.get('description') as UntypedFormControl;
+    return this.formGroup.controls.description;
   }
 
   get repositoryUrl() {
-    return this.formGroup.get('repositoryUrl') as UntypedFormControl;
+    return this.formGroup.controls.repositoryUrl;
   }
 
   get key() {
-    return this.formGroup.get('key') as UntypedFormControl;
+    return this.formGroup.controls.key;
   }
 
-  constructor(private store: Store<AppState>, private fb: UntypedFormBuilder) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.project$ = this.store.select(selectProjectDetail).pipe(
       tap((project) => {
         if (!project) return;
 
-        this.formGroup = this.fb.group(
-          {
-            id: [project.id, Validators.required],
-            key: [project.key, [Validators.required, Validators.maxLength(6)]],
-            name: [
-              project.name,
-              [Validators.required, Validators.maxLength(128)],
-            ],
-            description: [project.description, Validators.maxLength(4096)],
-            repositoryUrl: [project.repositoryUrl, Validators.maxLength(1024)],
-          },
-          { updateOn: 'change' }
-        );
+        this.formGroup.setValue({
+          id: project.id,
+          key: project.key,
+          name: project.name,
+          description: project.description,
+          repositoryUrl: project.repositoryUrl,
+        });
 
         this.updateDisabled$ = combineLatest([
           this.formGroup.valueChanges,
@@ -124,11 +125,11 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.formGroup.markAsPristine();
 
     const project: UpdateProjectRequest = {
-      id: this.id.value,
-      name: this.name.value,
-      description: this.description.value,
-      repositoryUrl: this.repositoryUrl.value,
-      key: this.key.value,
+      id: this.id.value as number,
+      name: this.name.value as string,
+      description: this.description.value as string,
+      repositoryUrl: this.repositoryUrl.value as string,
+      key: this.key.value as string,
     };
 
     this.store.dispatch(updateProject({ project }));

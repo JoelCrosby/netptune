@@ -39,13 +39,13 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   onDestroy$ = new Subject<void>();
 
   get name() {
-    return this.formGroup.get('name') as FormControl;
+    return this.formGroup.controls.name;
   }
   get description() {
-    return this.formGroup.get('description') as FormControl;
+    return this.formGroup.controls.description;
   }
   get project() {
-    return this.formGroup.get('project') as FormControl;
+    return this.formGroup.controls.project;
   }
 
   constructor(
@@ -77,10 +77,14 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
 
   saveClicked() {
     this.currentWorkspace$.pipe(first()).subscribe((workspace) => {
+      if (this.project.value === undefined || this.project.value === null) {
+        throw new Error('project id is undefined');
+      }
+
       const task: AddProjectTaskRequest = {
         name: (this.name.value as string).trim(),
         description: (this.description.value as string)?.trim(),
-        projectId: +this.project.value,
+        projectId: this.project.value,
         status: TaskStatus.new,
       };
 

@@ -69,7 +69,7 @@ export class TaskDetailDialogComponent
   onEditorLoadedSubject = new Subject<boolean>();
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
-  projectFromGroup!: FormGroup;
+  formGroup!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
@@ -79,11 +79,11 @@ export class TaskDetailDialogComponent
   ) {}
 
   get name() {
-    return this.projectFromGroup.get('name') as FormControl;
+    return this.formGroup.controls.name;
   }
 
   get description() {
-    return this.projectFromGroup.get('description') as FormControl;
+    return this.formGroup.controls.description;
   }
 
   ngOnInit() {
@@ -117,7 +117,7 @@ export class TaskDetailDialogComponent
   }
 
   buildForm(task: TaskViewModel) {
-    this.projectFromGroup = new FormGroup({
+    this.formGroup = new FormGroup({
       name: new FormControl(task?.name, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(4)],
