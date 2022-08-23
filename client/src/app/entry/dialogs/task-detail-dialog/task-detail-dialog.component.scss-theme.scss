@@ -70,9 +70,8 @@
   }
 
   .inline-text-area {
-    $inline-backgroud: if($is-dark-theme, #282828, #fff);
+    $inline-backgroud: if($is-dark-theme, #2c2c2c, #fff);
     background-color: $inline-backgroud;
-    box-shadow: 0 0 6px 4px $inline-backgroud;
   }
 
   .detail-form .inline-text-area {

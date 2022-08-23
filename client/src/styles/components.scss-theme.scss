@@ -13,7 +13,7 @@
 
   .mat-card:not([class*='mat-elevation-z']) {
     background-color: mat.get-color-from-palette($background, card) !important;
-    box-shadow: 1px 2px 4px rgba(0, 0, 0, .1) !important;
+    box-shadow: 1px 2px 4px if($is-dark-theme, 1px 6px -1px rgb(0 0 0 / 42%), rgba(0, 0, 0, .1)) !important;
     transition: background-color .2s ease-in, color .2s ease-in;
   }
 
@@ -171,6 +171,6 @@
   // Dialogs
 
   .mat-dialog-container {
-    background: if($is-dark-theme, #282828, #fff);
+    background: if($is-dark-theme, #2c2c2c, #fff);
   }
 }
