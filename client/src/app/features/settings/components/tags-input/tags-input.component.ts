@@ -28,7 +28,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() canceled = new EventEmitter();
 
   onDestroy$ = new Subject<void>();
-  formControl = new FormControl(this.value);
+  formControl = new FormControl<string | null>(null);
 
   ngOnInit() {
     fromEvent(document, 'mousedown', {
@@ -40,6 +40,8 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
         tap(this.handleDocumentClick.bind(this))
       )
       .subscribe();
+
+    this.formControl.setValue(this.value, { emitEvent: false });
   }
 
   ngAfterViewInit() {
