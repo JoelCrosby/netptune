@@ -96,6 +96,10 @@
     color: mat.get-color-from-palette($primary, .8);
   }
 
+  .ce-block__content, .ce-toolbar__content {
+    max-width: 100%;
+  }
+
   .ce-block--selected
   .ce-block__content {
     background-color: color.scale(mat.get-color-from-palette($primary), $lightness: 88%);

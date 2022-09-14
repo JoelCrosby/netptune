@@ -7,6 +7,23 @@ import { TaskStatus } from '@core/enums/project-task-status';
 })
 export class TaskStatusPipe implements PipeTransform {
   transform(value: TaskStatus): string {
-    return TaskStatus[value];
+    switch (value) {
+      case TaskStatus.new:
+        return 'New';
+      case TaskStatus.complete:
+        return 'Complete';
+      case TaskStatus.inProgress:
+        return 'InProgress';
+      case TaskStatus.onHold:
+        return 'OnHold';
+      case TaskStatus.unAssigned:
+        return 'Un-assigned';
+      case TaskStatus.awaitingClassification:
+        return 'Awaiting Classification';
+      case TaskStatus.inActive:
+        return 'Inactive';
+      default:
+        return 'unknown';
+    }
   }
 }

@@ -9,6 +9,7 @@
   $background: map-get($theme, background);
 
   $is-dark-theme: map-get($theme, is-dark);
+  $inline-backgroud: if($is-dark-theme, #2c2c2c, #fff);
 
   .task-scope-id {
     background-color: mat.get-color-from-palette($primary, .2);
@@ -67,16 +68,28 @@
       background-color: mat.get-color-from-palette($background, card);
       z-index: 2;
     }
+
+    .mat-dialog-actions {
+      min-height: 32px;
+    }
+
+    .detail-title-input {
+      .task-detail-title {
+        background-color: $inline-backgroud;
+      }
+    }
+
+    .detail-title {
+      background-color: $inline-backgroud;
+    }
+
   }
 
   .inline-text-area {
-    $inline-backgroud: if($is-dark-theme, #2c2c2c, #fff);
     background-color: $inline-backgroud;
   }
 
   .detail-form .inline-text-area {
-    position: sticky;
-    top: 0;
     z-index: 9999;
   }
 }
