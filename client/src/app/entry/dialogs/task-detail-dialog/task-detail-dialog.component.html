@@ -1,7 +1,17 @@
 <ng-container *ngIf="task$ | async as task; else loading">
   <mat-dialog-content class="task-detail-dialog">
-    <div class="detail-form">
-      <form [formGroup]="formGroup">
+    <form [formGroup]="formGroup">
+      <div class="detail-title">
+        <mat-icon class="task-complete" *ngIf="task.status === 1">
+          done
+        </mat-icon>
+
+        <div class="task-scope-id">{{ task.systemId }}</div>
+        <app-activity-menu [entityType]="entityType" [entityId]="task.id">
+        </app-activity-menu>
+      </div>
+
+      <div class="detail-column detail-title-input">
         <app-inline-text-area
           class="w-100"
           class="form-control task-detail-title"
@@ -12,6 +22,120 @@
           [maxRows]="5"
           activeBorder="true"
         ></app-inline-text-area>
+      </div>
+
+      <div class="detail-column">
+        <div class="detail-list">
+          <div class="detail-list-item">
+            <h4>Assignees</h4>
+            <app-user-select
+              [value]="task.assignees"
+              [options]="users$ | async"
+              (selectChange)="selectAssignee($event)"
+            ></app-user-select>
+          </div>
+
+          <div class="detail-list-item">
+            <h4>Reporter</h4>
+
+            <div class="user-item">
+              <app-avatar
+                size="24"
+                class="task-card-user-chip"
+                [name]="task.ownerUsername"
+                [imageUrl]="task.ownerPictureUrl"
+              >
+              </app-avatar>
+
+              <small> {{ task.ownerUsername }} </small>
+            </div>
+          </div>
+
+          <div class="detail-list-item">
+            <h4>Status</h4>
+            <mat-chip-list>
+              <mat-chip>{{ task.status | taskStatus }} </mat-chip>
+            </mat-chip-list>
+          </div>
+
+          <div class="detail-list-item">
+            <h4>Project</h4>
+            <mat-chip-list>
+              <mat-chip [matMenuTriggerFor]="projectsMenu">
+                {{ task.projectName }}
+              </mat-chip>
+            </mat-chip-list>
+
+            <mat-menu #projectsMenu="matMenu">
+              <small>Change Project</small>
+              <button
+                mat-menu-item
+                *ngFor="let project of projects$ | async"
+                (click)="selectProject(project.id)"
+              >
+                {{ project.name }}
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+
+        <div class="detail-list-item bottom-row">
+          <h4>Actions</h4>
+
+          <div class="actions-row">
+            <button
+              mat-icon-button
+              mat-stroked-button
+              aria-label="Delete Task"
+              matTooltip="Delete Task"
+              (click)="deleteClicked()"
+            >
+              <mat-icon class="material-icons-outlined"> delete </mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              mat-stroked-button
+              aria-label="Flag Task"
+              matTooltip="Flag Task"
+              color="warn"
+              (click)="onFlagClicked()"
+            >
+              <mat-icon [class.material-icons-outlined]="!task.isFlagged">
+                flag
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-list">
+          <div class="detail-list-item">
+            <h4>Tags</h4>
+
+            <app-autocomplete-chips
+              class="tags-autocomplete"
+              placeholder="Add a Tag..."
+              [options]="tags$ | async"
+              [selected]="task.tags"
+              [appearance]="'outline'"
+              (selectionChanged)="onTagsSelectionChanged($event)"
+            >
+            </app-autocomplete-chips>
+          </div>
+
+          <div class="detail-list-item comments">
+            <h4>Comments</h4>
+
+            <ng-container *ngIf="onEditorLoaded$ | async">
+              <app-comments-list
+                [user]="user$ | async"
+                [comments]="comments$ | async"
+                (commentSubmit)="onCommentSubmit($event)"
+                (deleteComment)="onDeleteCommentClicked($event)"
+              >
+              </app-comments-list>
+            </ng-container>
+          </div>
+        </div>
 
         <label class="detail-label" for="description"> Description </label>
 
@@ -23,127 +147,8 @@
           (loaded)="onEditorLoaded()"
         >
         </app-editor>
-      </form>
-
-      <ng-container *ngIf="onEditorLoaded$ | async">
-        <app-comments-list
-          [user]="user$ | async"
-          [comments]="comments$ | async"
-          (commentSubmit)="onCommentSubmit($event)"
-          (deleteComment)="onDeleteCommentClicked($event)"
-        >
-        </app-comments-list>
-      </ng-container>
-    </div>
-
-    <div class="detail-column">
-      <div class="detail-title">
-        <mat-icon class="task-complete" *ngIf="task.status === 1">
-          done
-        </mat-icon>
-
-        <app-activity-menu [entityType]="entityType" [entityId]="task.id">
-        </app-activity-menu>
-
-        <div class="task-scope-id">{{ task.systemId }}</div>
       </div>
-
-      <div class="detail-list">
-        <div class="detail-list-item">
-          <h4>Assignees</h4>
-          <app-user-select
-            [value]="task.assignees"
-            [options]="users$ | async"
-            (selectChange)="selectAssignee($event)"
-          ></app-user-select>
-        </div>
-
-        <div class="detail-list-item">
-          <h4>Reporter</h4>
-
-          <div class="user-item">
-            <app-avatar
-              size="24"
-              class="task-card-user-chip"
-              [name]="task.ownerUsername"
-              [imageUrl]="task.ownerPictureUrl"
-            >
-            </app-avatar>
-
-            <small> {{ task.ownerUsername }} </small>
-          </div>
-        </div>
-        <div class="detail-list-item">
-          <h4>Status</h4>
-          <mat-chip-list>
-            <mat-chip>{{ task.status | taskStatus }} </mat-chip>
-          </mat-chip-list>
-        </div>
-        <div class="detail-list-item">
-          <h4>Project</h4>
-          <mat-chip-list>
-            <mat-chip [matMenuTriggerFor]="projectsMenu">
-              {{ task.projectName }}
-            </mat-chip>
-          </mat-chip-list>
-
-          <mat-menu #projectsMenu="matMenu">
-            <small>Change Project</small>
-            <button
-              mat-menu-item
-              *ngFor="let project of projects$ | async"
-              (click)="selectProject(project.id)"
-            >
-              {{ project.name }}
-            </button>
-          </mat-menu>
-        </div>
-      </div>
-
-      <div class="bottom-row">
-        <h4>Actions</h4>
-
-        <div class="actions-row">
-          <button
-            mat-icon-button
-            mat-stroked-button
-            aria-label="Delete Task"
-            matTooltip="Delete Task"
-            (click)="deleteClicked()"
-          >
-            <mat-icon class="material-icons-outlined"> delete </mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            mat-stroked-button
-            aria-label="Flag Task"
-            matTooltip="Flag Task"
-            color="warn"
-            (click)="onFlagClicked()"
-          >
-            <mat-icon [class.material-icons-outlined]="!task.isFlagged">
-              flag
-            </mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <div class="detail-list">
-        <div class="detail-list-item">
-          <h4>Tags</h4>
-
-          <app-autocomplete-chips
-            class="tags-autocomplete"
-            placeholder="Add a Tag..."
-            [options]="tags$ | async"
-            [selected]="task.tags"
-            [appearance]="'outline'"
-            (selectionChanged)="onTagsSelectionChanged($event)"
-          >
-          </app-autocomplete-chips>
-        </div>
-      </div>
-    </div>
+    </form>
   </mat-dialog-content>
 
   <div mat-dialog-actions align="end">
@@ -157,7 +162,6 @@
         <span>{{ task.updatedAt | fromNow }}</span>
       </div>
     </div>
-    <button mat-stroked-button (click)="close()">Close</button>
   </div>
 </ng-container>
 

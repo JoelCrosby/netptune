@@ -3,7 +3,6 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 1.6rem;
 
   * {
     margin: 0 .6rem 0 0;
@@ -30,7 +29,7 @@
 mat-dialog-content {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   .detail-form  {
     flex: 1;
@@ -38,13 +37,6 @@ mat-dialog-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-
-  .detail-column {
-    position: sticky;
-    top: 0;
-    margin-left: 1.6rem;
-    flex: 0 0 240px;
   }
 }
 
@@ -106,12 +98,17 @@ mat-dialog-content {
   }
 }
 
-.task-detail-title {
-  font-size: 1.3rem;
+.detail-title-input {
+  .task-detail-title {
+    font-size: 1.6rem;
+    font-weight: 500;
+    width: 100%;
+  }
+}
 
+.detail-title {
   position: sticky;
   top: 0;
-  background-color: #fff;
   z-index: 2;
 }
 
@@ -182,7 +179,6 @@ mat-dialog-content {
 
 .detail-label {
   border-radius: 4px;
-  padding: 0 1em;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: .125px;
@@ -190,4 +186,16 @@ mat-dialog-content {
 
 .tags-autocomplete {
   font-size: 14px;
+}
+
+.detail-column {
+  padding: 0 3rem;
+}
+
+.comments {
+  margin: 0 0 .4rem;
+
+  h4 {
+    margin-bottom: .6rem !important;
+  }
 }

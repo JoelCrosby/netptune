@@ -25,9 +25,9 @@
 }
 
 .select-trigger {
-  display: grid;
-  grid-template-columns: 1fr;
-  row-gap: .4rem;
+  display: flex;
+  flex-direction: row;
+  gap: .8rem;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
