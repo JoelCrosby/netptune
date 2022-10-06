@@ -55,5 +55,7 @@ public class TaskServiceTests
         var result = await Service.Create(request);
 
         result.Should().NotBeNull();
+
+        await UnitOfWork.Received(1).CompleteAsync();
     }
 }

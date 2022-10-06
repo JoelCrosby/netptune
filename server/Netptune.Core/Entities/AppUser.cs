@@ -73,16 +73,16 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
     public DateTime? RegistrationDate { get; set; }
 
     [JsonIgnore]
-    public ICollection<WorkspaceAppUser> WorkspaceUsers { get; } = new HashSet<WorkspaceAppUser>();
+    public ICollection<WorkspaceAppUser> WorkspaceUsers { get; init; } = new HashSet<WorkspaceAppUser>();
 
     [JsonIgnore]
-    public ICollection<ProjectUser> ProjectUsers { get; } = new HashSet<ProjectUser>();
+    public ICollection<ProjectUser> ProjectUsers { get; init; } = new HashSet<ProjectUser>();
 
     [JsonIgnore]
-    public ICollection<ProjectTask> Tasks { get; } = new HashSet<ProjectTask>();
+    public ICollection<ProjectTask> Tasks { get; init; } = new HashSet<ProjectTask>();
 
     [JsonIgnore]
-    public ICollection<Workspace> Workspaces { get; } = new HashSet<Workspace>();
+    public ICollection<Workspace> Workspaces { get; init; } = new HashSet<Workspace>();
 
     [JsonIgnore]
     public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();
