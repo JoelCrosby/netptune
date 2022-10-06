@@ -28,28 +28,28 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 {
     private readonly ITaskRepository TaskRepository;
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService IdentityService;
+    private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
 
     public TaskService(
         INetptuneUnitOfWork unitOfWork,
-        IIdentityService identityService,
+        IIdentityService identity,
         IActivityLogger activity)
     {
         TaskRepository = unitOfWork.Tasks;
         UnitOfWork = unitOfWork;
-        IdentityService = identityService;
+        Identity = identity;
         Activity = activity;
     }
 
     public async Task<ClientResponse<TaskViewModel>> Create(AddProjectTaskRequest request)
     {
-        var workspaceKey = IdentityService.GetWorkspaceKey();
+        var workspaceKey = Identity.GetWorkspaceKey();
         var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true);
 
         if (workspace is null) return null;
 
-        var user = await IdentityService.GetCurrentUser();
+        var user = await Identity.GetCurrentUser();
         var userId = request.AssigneeId ?? user.Id;
 
         var task = new ProjectTask
@@ -117,7 +117,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
     public async Task<ClientResponse> Delete(int id)
     {
         var task = await TaskRepository.GetAsync(id);
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = await Identity.GetCurrentUserId();
 
         if (task is null || userId is null) return null;
 
@@ -160,13 +160,13 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
     public Task<TaskViewModel> GetTaskDetail(string systemId)
     {
-        var workspaceKey = IdentityService.GetWorkspaceKey();
+        var workspaceKey = Identity.GetWorkspaceKey();
         return TaskRepository.GetTaskViewModel(systemId, workspaceKey);
     }
 
     public Task<List<TaskViewModel>> GetTasks()
     {
-        var workspaceKey = IdentityService.GetWorkspaceKey();
+        var workspaceKey = Identity.GetWorkspaceKey();
         return TaskRepository.GetTasksAsync(workspaceKey);
     }
 
