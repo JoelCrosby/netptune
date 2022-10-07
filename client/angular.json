@@ -134,6 +134,9 @@
     }
   },
   "schematics": {
+    "@schematics/angular:application": {
+      "strict": true
+    },
     "@schematics/angular:component": {
       "prefix": "app",
       "style": "scss",
