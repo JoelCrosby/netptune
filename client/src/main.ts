@@ -10,7 +10,7 @@ if (environment.production) {
 }
 
 // Using Profile
-// Execute the following in the devtools conclearsole:
+// Execute the following in the devtools console:
 // > ng.profiler.timeChangeDetection()
 
 const addProfiling = (module: NgModuleRef<AppModule>): void => {

@@ -11,10 +11,7 @@
 
   .inline-edit-input.active-border {
     width: 320px;
-
-    &:focus {
-      padding: 4px !important;
-      border: 2px solid mat.get-color-from-palette($primary, .6) !important;
-    }
+    border: 2px solid mat.get-color-from-palette($primary, .6) !important;
+    border-radius: 4px;
   }
 }
