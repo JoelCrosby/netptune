@@ -42,6 +42,6 @@ public sealed class ExportTaskViewModelMap : ClassMap<ExportTaskViewModel>
     public ExportTaskViewModelMap()
     {
         AutoMap(CultureInfo.InvariantCulture);
-        Map(m => m.Assignees).Convert(value => string.Join(" | ", value.Assignees));
+        Map(m => m.Assignees).Convert(m => string.Join(" | ", m.Value.Assignees));
     }
 }

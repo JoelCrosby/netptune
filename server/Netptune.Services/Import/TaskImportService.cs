@@ -42,14 +42,17 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         using var reader = new StreamReader(stream);
         using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            PrepareHeaderForMatch = (header, _) => header.ToLower(),
-            MissingFieldFound = (headerNames, index, _) =>
+            PrepareHeaderForMatch = args => args.Header.ToLower(),
+            MissingFieldFound = args =>
             {
-                headerValidator.AddMissingField(headerNames[index]);
+                if (args.HeaderNames is not null)
+                {
+                    headerValidator.AddMissingField(args.HeaderNames[args.Index]);
+                }
             },
-            HeaderValidated = (invalidHeaders, _) =>
+            HeaderValidated = args =>
             {
-                headerValidator.ValidateHeaderRow(invalidHeaders);
+                headerValidator.ValidateHeaderRow(args.InvalidHeaders);
             },
         });
 
@@ -143,7 +146,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             var orderDict = existingGroups.Select(group => new
                 {
                     GroupId = group.Id,
-                    BaseOrder = group.TasksInGroups.OrderByDescending(task => task.SortOrder).FirstOrDefault()?.SortOrder,
+                    BaseOrder = group.TasksInGroups.MaxBy(task => task.SortOrder)?.SortOrder,
                 })
                 .ToDictionary(group => group.GroupId, group => group.BaseOrder);
 
@@ -177,7 +180,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                 };
             });
 
-            ICollection<Tag> ParseTags(string tagRow)
+            IEnumerable<Tag> ParseTags(string tagRow)
             {
                 var names = ParseTagString(tagRow);
                 return names.Select(name => allTags[name]).ToList();
@@ -245,7 +248,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             return isValid && status is {} ? (ProjectTaskStatus)status : ProjectTaskStatus.New;
         }
 
-        return (row, i) => new ProjectTask
+        return (row, i) => new ()
         {
             Name = row.Name,
             Description = row.Description,
@@ -309,11 +312,11 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             return Array.Empty<string>();
         }
 
-        if (!tagString.Contains("|"))
+        if (!tagString.Contains('|'))
         {
             return new[] { tagString.Trim() };
         }
 
-        return tagString.Split("|", StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim());
+        return tagString.Split('|', StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim());
     }
 }
