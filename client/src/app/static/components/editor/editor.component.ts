@@ -56,7 +56,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   constructor(private storage: StorageService) {}
 
   ngOnDestroy() {
-    this.editor?.destroy();
+    this.editor?.destroy?.();
   }
 
   writeValue(obj: string) {
