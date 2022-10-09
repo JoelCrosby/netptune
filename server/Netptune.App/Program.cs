@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 using Serilog;
-using Serilog.Events;
 
 namespace Netptune.App;
 
@@ -20,14 +19,6 @@ public static class Program
 
         Log.Logger = new LoggerConfiguration()
             .Enrich.WithProperty("App Name", "Netptune.App")
-#if DEBUG
-            .MinimumLevel.Information()
-            .MinimumLevel.Override("Otis", LogEventLevel.Debug)
-#else
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-
-#endif
             .WriteTo.Console()
             .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, shared: true)
             .CreateLogger();
