@@ -14,11 +14,10 @@ public static class AutoFixtures
 
     private static Fixture CreateFixture()
     {
-        var fixture = new Fixture();
-        return fixture;
+        return new();
     }
 
-    public static readonly AppUser AppUser = Fixture
+    public static AppUser AppUser => Fixture
         .Build<AppUser>()
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.WorkspaceUsers)
@@ -28,7 +27,7 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskAppUsers)
         .Create();
 
-    public static readonly Project Project = Fixture
+    public static Project Project => Fixture
         .Build<Project>()
         .Without(p => p.ProjectUsers)
         .Without(p => p.ProjectTasks)
@@ -37,7 +36,7 @@ public static class AutoFixtures
         .WithoutWorkspace()
         .Create();
 
-    public static readonly ProjectTask ProjectTask = Fixture
+    public static ProjectTask ProjectTask => Fixture
         .Build<ProjectTask>()
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.Project)
@@ -47,7 +46,7 @@ public static class AutoFixtures
         .WithoutWorkspace()
         .Create();
 
-    public static readonly BoardGroup BoardGroup = Fixture
+    public static BoardGroup BoardGroup => Fixture
         .Build<BoardGroup>()
         .Without(p => p.Board)
         .Without(p => p.Tasks)
@@ -72,11 +71,11 @@ public static class AutoFixtures
         return boardGroup;
     }
 
-    public static readonly TaskViewModel TaskViewModel = Fixture
+    public static TaskViewModel TaskViewModel => Fixture
         .Build<TaskViewModel>()
         .Create();
 
-    public static readonly Workspace Workspace = Fixture
+    public static Workspace Workspace => Fixture
         .Build<Workspace>()
         .Without(p => p.Projects)
         .Without(p => p.WorkspaceUsers)

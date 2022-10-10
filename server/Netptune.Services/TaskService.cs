@@ -47,7 +47,10 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true);
 
-        if (workspace is null) return null;
+        if (workspace is null)
+        {
+            return Failed($"workspace with key {workspaceKey} not found");
+        }
 
         var user = await Identity.GetCurrentUser();
         var userId = request.AssigneeId ?? user.Id;
@@ -71,7 +74,10 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == request.ProjectId);
 
-        if (project is null) throw new Exception("ProjectId cannot be null.");
+        if (project is null)
+        {
+            return Failed($"Project with Id {request.ProjectId} not found");
+        }
 
         if (request.BoardGroupId.HasValue)
         {
@@ -88,7 +94,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         if (!scopeIdRef.HasValue)
         {
-            throw new Exception($"Unable to get scope id for project with id {project.Id}.");
+            return Failed($"Unable to get scope id for project with id {project.Id}");
         }
 
         var scopeId = scopeIdRef.Value;
