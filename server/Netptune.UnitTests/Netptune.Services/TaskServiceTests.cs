@@ -9,6 +9,7 @@ using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Services;
 
 using NSubstitute;
@@ -35,6 +36,13 @@ public class TaskServiceTests
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
+        var request = Fixture
+            .Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .Create();
+
+        var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description, };
+
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
@@ -44,17 +52,16 @@ public class TaskServiceTests
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(AutoFixtures.TaskViewModel);
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
-
-        var request = Fixture
-            .Build<AddProjectTaskRequest>()
-            .With(p => p.ProjectId, 1)
-            .Create();
 
         var result = await Service.Create(request);
 
         result.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Name.Should().Be(request.Name);
+        result.Payload.Description.Should().Be(request.Description);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
