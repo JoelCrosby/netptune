@@ -65,4 +65,57 @@ public class TaskServiceTests
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
+    {
+        var request = Fixture
+            .Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .Create();
+
+        var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.Workspaces
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
+            .ReturnsForAnyArgs(AutoFixtures.Workspace);
+
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+
+        var result = await Service.Create(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenScopeIdNotFound()
+    {
+        var request = Fixture
+            .Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .Create();
+
+        var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.Workspaces
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
+            .ReturnsForAnyArgs(AutoFixtures.Workspace);
+
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+
+        var result = await Service.Create(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
 }
