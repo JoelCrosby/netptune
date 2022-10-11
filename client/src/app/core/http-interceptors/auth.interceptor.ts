@@ -1,21 +1,23 @@
 import {
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppState } from '@core/core.state';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
+import { first, switchMap, tap } from 'rxjs/operators';
 import { selectAuthToken } from '../auth/store/auth.selectors';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private router: Router) {}
 
   intercept<T>(
     req: HttpRequest<T>,
@@ -27,7 +29,11 @@ export class AuthInterceptor implements HttpInterceptor {
     ]).pipe(
       first(),
       switchMap(([token, workspace]) => {
-        if (this.isApiRequest(req) && token) {
+        if (!this.isApiRequest(req)) {
+          return next.handle(req);
+        }
+
+        if (token) {
           req = req.clone({
             headers: req.headers.set('Authorization', 'Bearer ' + token),
           });
@@ -38,7 +44,20 @@ export class AuthInterceptor implements HttpInterceptor {
             });
           }
         }
-        return next.handle(req);
+
+        return next.handle(req).pipe(
+          tap({
+            error: (err: unknown) => {
+              if (err instanceof HttpErrorResponse) {
+                if (err.status !== 401) {
+                  return;
+                }
+
+                void this.router.navigate(['/auth/login']);
+              }
+            },
+          })
+        );
       })
     );
   }
