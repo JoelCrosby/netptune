@@ -6,7 +6,7 @@
   "printWidth": 80,
   "parser": "typescript",
   "useTabs": false,
-  "endOfLine": "lf",
+  "endOfLine": "auto",
   "arrowParens": "always",
   "bracketSpacing": true,
   "overrides": [
