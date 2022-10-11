@@ -49,7 +49,7 @@ export class AuthInterceptor implements HttpInterceptor {
           tap({
             error: (err: unknown) => {
               if (err instanceof HttpErrorResponse) {
-                if (err.status !== 401) {
+                if (err.status !== 403) {
                   return;
                 }
 
