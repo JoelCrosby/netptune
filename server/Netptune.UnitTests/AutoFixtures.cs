@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using AutoFixture;
+﻿using AutoFixture;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
