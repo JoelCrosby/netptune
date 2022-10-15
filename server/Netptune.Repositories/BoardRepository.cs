@@ -38,7 +38,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
         return query.Include(board => board.BoardGroups).ToListAsync();
     }
 
-    public Task<Board> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
+    public Task<Board?> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
     {
         var query = Entities
             .Where(board => board.ProjectId == projectId)
@@ -103,7 +103,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 BoardType = board.Board_Type,
                 CreatedAt = board.Created_At,
                 UpdatedAt = board.Updated_At,
-                MetaInfo = JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info),
+                MetaInfo = JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new BoardMeta(),
                 OwnerUsername = $"{board.Firstname} {board.Lastname}",
             })
             .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
@@ -146,7 +146,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
         return null;
     }
 
-    public Task<Board> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false)
+    public Task<Board?> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false)
     {
         return Entities
             .Where(b => !b.IsDeleted && b.Identifier == identifier && b.WorkspaceId == workspaceId)
@@ -154,7 +154,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .FirstOrDefaultAsync();
     }
 
-    public async Task<BoardViewModel> GetViewModel(int id, bool isReadonly = false)
+    public async Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false)
     {
         var result = await Entities
             .IsReadonly(isReadonly)

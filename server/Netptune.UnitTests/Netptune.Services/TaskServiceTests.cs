@@ -46,7 +46,7 @@ public class TaskServiceTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(default, default)
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
             .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);

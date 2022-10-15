@@ -22,7 +22,7 @@ public class ProjectViewModel
 
     public DateTime CreatedAt { get; set; }
 
-    public string DefaultBoardIdentifier { get; set; }
+    public string? DefaultBoardIdentifier { get; set; }
 
     public string Color { get; set; }
 }

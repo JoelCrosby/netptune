@@ -10,9 +10,9 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 {
     Task<int?> GetIdBySlug(string slug);
 
-    Task<Workspace> GetBySlug(string slug, bool isReadonly = false);
+    Task<Workspace?> GetBySlug(string slug, bool isReadonly = false);
 
-    Task<Workspace> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false);
+    Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false);
 
     Task<List<Workspace>> GetUserWorkspaces(string userId);
 

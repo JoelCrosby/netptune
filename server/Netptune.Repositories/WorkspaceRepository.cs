@@ -33,14 +33,14 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         return null;
     }
 
-    public Task<Workspace> GetBySlug(string slug, bool isReadonly = false)
+    public Task<Workspace?> GetBySlug(string slug, bool isReadonly = false)
     {
         return Entities
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
     }
 
-    public Task<Workspace> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false)
+    public Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false)
     {
         if (includeRelated)
         {

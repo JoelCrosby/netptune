@@ -15,9 +15,9 @@ public interface ITagRepository : IWorkspaceEntityRepository<Tag, int>
 
     Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId);
 
-    Task<TagViewModel> GetViewModel(int id);
+    Task<TagViewModel?> GetViewModel(int id);
 
-    Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false);
+    Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false);
 
     Task<bool> Exists(string value, int workspaceId);
 

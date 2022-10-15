@@ -24,7 +24,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     {
     }
 
-    public Task<BoardGroup> GetWithTasksInGroups(int id)
+    public Task<BoardGroup?> GetWithTasksInGroups(int id)
     {
         return Entities
             .Include(group => group.TasksInGroups)
@@ -41,7 +41,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .ToReadonlyListAsync(isReadonly);
     }
 
-    public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string searchTerm = null)
+    public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string? searchTerm = null)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -57,7 +57,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , b.identifier        AS board_identifier
                      , pt.id               AS task_id
                      , pt.name             AS task_name
-                     , pt.is_flagged       as task_is_flagged
+                     , pt.is_flagged       AS task_is_flagged
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
                      , ptibg.sort_order    AS task_sort_order

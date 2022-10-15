@@ -25,7 +25,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     {
         var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceKey);
 
-        if (workspace is null) return new List<ProjectViewModel>();
+        if (workspace is null) return new ();
 
         var workspaceId = workspace.Id;
 
@@ -41,7 +41,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .ToListAsync();
     }
 
-    public Task<ProjectViewModel> GetProjectViewModel(int id)
+    public Task<ProjectViewModel?> GetProjectViewModel(int id)
     {
         Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
@@ -55,7 +55,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .FirstOrDefaultAsync();
     }
 
-    public Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId)
+    public Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId)
     {
         Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
 
@@ -79,10 +79,10 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
 
     private static ProjectViewModel GetViewModel(Project project)
     {
-        var defaultBoard = project.ProjectBoards?.FirstOrDefault(board => board.BoardType == BoardType.Default);
+        var defaultBoard = project.ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
         var identifier = defaultBoard?.Identifier;
 
-        return new ProjectViewModel
+        return new ()
         {
             Id = project.Id,
             Key = project.Key,

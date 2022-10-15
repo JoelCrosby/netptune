@@ -39,7 +39,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
         return comments.ConvertAll(comment => comment.ToViewModel());
     }
 
-    public async Task<CommentViewModel> GetCommentViewModel(int id)
+    public async Task<CommentViewModel?> GetCommentViewModel(int id)
     {
         var comment = await Entities
             .Include(x => x.CreatedByUser)
@@ -48,6 +48,6 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return comment.ToViewModel();
+        return comment?.ToViewModel();
     }
 }
