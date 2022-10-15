@@ -2,15 +2,15 @@ namespace Netptune.Core.Responses.Common;
 
 public class ClientResponse
 {
+    public bool IsSuccess { get; protected init; }
+
+    public string? Message { get; protected init; }
+
     protected ClientResponse()
     {
     }
 
-    public bool IsSuccess { get; protected init; }
-
-    public string Message { get; protected init; }
-
-    public static ClientResponse Success(string message = null)
+    public static ClientResponse Success(string? message = null)
     {
         return new()
         {
@@ -19,7 +19,7 @@ public class ClientResponse
         };
     }
 
-    public static ClientResponse Failed(string message = null)
+    public static ClientResponse Failed(string? message = null)
     {
         return new()
         {
@@ -31,13 +31,14 @@ public class ClientResponse
 
 public class ClientResponse<TPayload> : ClientResponse
 {
+    public TPayload? Payload { get; protected init; }
+
+
     protected ClientResponse()
     {
     }
 
-    public TPayload Payload { get; protected init; }
-
-    public static new ClientResponse<TPayload> Success(string message = null)
+    public static new ClientResponse<TPayload> Success(string? message = null)
     {
         return new()
         {
@@ -46,7 +47,7 @@ public class ClientResponse<TPayload> : ClientResponse
         };
     }
 
-    public static new ClientResponse<TPayload> Failed(string message = null)
+    public static new ClientResponse<TPayload> Failed(string? message = null)
     {
         return new()
         {
@@ -55,7 +56,7 @@ public class ClientResponse<TPayload> : ClientResponse
         };
     }
 
-    public static ClientResponse<TPayload> Success(TPayload payload, string message = null)
+    public static ClientResponse<TPayload> Success(TPayload payload, string? message = null)
     {
         return new()
         {
@@ -65,7 +66,7 @@ public class ClientResponse<TPayload> : ClientResponse
         };
     }
 
-    public static ClientResponse<TPayload> Failed(TPayload payload, string message = null)
+    public static ClientResponse<TPayload> Failed(TPayload payload, string? message = null)
     {
         return new()
         {

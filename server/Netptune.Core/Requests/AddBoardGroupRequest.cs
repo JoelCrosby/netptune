@@ -7,7 +7,7 @@ namespace Netptune.Core.Requests;
 public class AddBoardGroupRequest
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Required]
     public int? BoardId { get; set; }

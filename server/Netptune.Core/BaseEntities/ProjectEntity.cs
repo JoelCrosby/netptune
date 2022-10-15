@@ -9,5 +9,5 @@ public abstract class ProjectEntity<TEntity> : WorkspaceEntity<TEntity>, IProjec
     public int ProjectId  { get; set; }
 
     [JsonIgnore]
-    public virtual Project Project { get; set; }
+    public virtual Project Project { get; set; } = null!;
 }

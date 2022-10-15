@@ -10,11 +10,11 @@ public class BoardViewModel
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Identifier { get; set; }
+    public string Identifier { get; set; } = null!;
 
-    public string ProjectName { get; set; }
+    public string ProjectName { get; set; } = null!;
 
     public int ProjectId { get; set; }
 
@@ -24,16 +24,16 @@ public class BoardViewModel
 
     public DateTimeOffset? UpdatedAt { get; set; }
 
-    public string OwnerUsername { get; set; }
+    public string OwnerUsername { get; set; } = null!;
 
-    public BoardMeta MetaInfo { get; set; }
+    public BoardMeta MetaInfo { get; set; } = null!;
 }
 
 public class BoardsViewModel
 {
     public int ProjectId { get; set; }
 
-    public string ProjectName { get; set; }
+    public string ProjectName { get; set; } = null!;
 
-    public List<BoardViewModel> Boards { get; set; }
+    public List<BoardViewModel> Boards { get; set; } = null!;
 }

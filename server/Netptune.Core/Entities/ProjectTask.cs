@@ -13,9 +13,9 @@ namespace Netptune.Core.Entities;
 
 public class ProjectTask : WorkspaceEntity<int>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Description { get; set; }
+    public string Description { get; set; }  = null!;
 
     public ProjectTaskStatus Status { get; set; }
 
@@ -35,7 +35,7 @@ public class ProjectTask : WorkspaceEntity<int>
     public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();
 
     [JsonIgnore]
-    public Project Project { get; set; }
+    public Project? Project { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
@@ -62,11 +62,11 @@ public class ProjectTask : WorkspaceEntity<int>
             Description = Description,
             Status = Status,
             ProjectScopeId = ProjectScopeId,
-            SystemId = Project is null ? null : $"{Project.Key}-{ProjectScopeId}",
+            SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
             IsFlagged = IsFlagged,
             ProjectId = ProjectId,
             WorkspaceId = WorkspaceId,
-            WorkspaceKey = Workspace?.Slug,
+            WorkspaceKey = Workspace.Slug,
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt,
             OwnerUsername = Owner?.DisplayName ?? string.Empty,
@@ -94,7 +94,7 @@ public class ProjectTask : WorkspaceEntity<int>
             Name = Name,
             Description = Description,
             Status = Status.ToString(),
-            SystemId = Project is null ? null : $"{Project.Key}-{ProjectScopeId}",
+            SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
             IsFlagged = IsFlagged,
             Board = Workspace.Slug,
             CreatedAt = CreatedAt,

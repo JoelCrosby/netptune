@@ -17,7 +17,7 @@ public static class UrlSlugger
     // multiple hyphens
     private static readonly Regex MultipleHyphens = new("-{2,}", RegexOptions.Compiled);
 
-    public static string ToUrlSlug(this string value, bool appendUniqueId = false)
+    public static string? ToUrlSlug(this string? value, bool appendUniqueId = false)
     {
         if (value is null) return null;
 

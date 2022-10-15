@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
 public class MoveTasksToGroupRequest
 {
-    public string BoardId { get; set; }
+    [Required]
+    public string BoardId { get; set; } = null!;
 
-    public List<int> TaskIds { get; set; }
+    [Required]
+    public List<int> TaskIds { get; set; } = null!;
 
-    public int NewGroupId { get; set; }
+    [Required]
+    public int? NewGroupId { get; set; }
 }

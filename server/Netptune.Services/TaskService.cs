@@ -222,7 +222,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
     public async Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request)
     {
-        var boardGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
+        var boardGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value);
 
         if (boardGroup is null) return ClientResponse.Failed();
 

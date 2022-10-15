@@ -9,5 +9,5 @@ public abstract class WorkspaceEntity<TEntity> : AuditableEntity<TEntity>, IWork
     public int WorkspaceId  { get; set; }
 
     [JsonIgnore]
-    public virtual Workspace Workspace { get; set; }
+    public virtual Workspace Workspace { get; set; } = null!;
 }

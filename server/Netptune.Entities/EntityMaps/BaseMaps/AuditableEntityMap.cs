@@ -28,6 +28,19 @@ public class AuditableEntityMap<TEntity, TId> : KeyedEntityMap<TEntity, TId>
         builder
             .HasIndex(entity => entity.IsDeleted);
 
+        builder
+            .Property(entity => entity.ModifiedByUserId)
+            .IsRequired(false);
+
+        builder
+            .Property(entity => entity.DeletedByUserId)
+            .IsRequired(false);
+
+
+        builder
+            .Property(entity => entity.OwnerId)
+            .IsRequired(false);
+
         // Entity > AppUser
 
         builder

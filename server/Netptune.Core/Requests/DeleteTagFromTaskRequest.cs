@@ -5,8 +5,8 @@ namespace Netptune.Core.Requests;
 public class DeleteTagFromTaskRequest
 {
     [Required]
-    public string SystemId { get; set; }
+    public string SystemId { get; set; } = null!;
 
     [Required]
-    public string Tag { get; set; }
+    public string Tag { get; set; } = null!;
 }

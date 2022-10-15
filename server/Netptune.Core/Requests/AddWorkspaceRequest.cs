@@ -7,13 +7,13 @@ namespace Netptune.Core.Requests;
 public class AddWorkspaceRequest
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Description { get; set; }
-
-    [Required]
-    public string Slug { get; set; }
+    public string? Description { get; set; }
 
     [Required]
-    public WorkspaceMeta MetaInfo { get; set; }
+    public string Slug { get; set; }= null!;
+
+    [Required]
+    public WorkspaceMeta MetaInfo { get; set; } = null!;
 }
