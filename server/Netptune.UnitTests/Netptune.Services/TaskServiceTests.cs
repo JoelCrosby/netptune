@@ -11,6 +11,7 @@ using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Services;
 
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
@@ -111,6 +112,23 @@ public class TaskServiceTests
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+
+        var result = await Service.Create(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        var request = Fixture
+            .Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .Create();
+
+        UnitOfWork.Workspaces
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
+            .ReturnsNull();
 
         var result = await Service.Create(request);
 
