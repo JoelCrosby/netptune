@@ -9,15 +9,15 @@ public class ProjectUser : KeyedEntity<int>
 {
     public int ProjectId { get; set; }
 
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
     #region NavigationProperties
 
     [JsonIgnore]
-    public Project Project { get; set; }
+    public Project Project { get; set; } = null!;
 
     [JsonIgnore]
-    public AppUser User { get; set; }
+    public AppUser User { get; set; } = null!;
 
     #endregion
 }

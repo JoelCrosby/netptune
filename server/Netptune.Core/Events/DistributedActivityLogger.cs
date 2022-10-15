@@ -88,7 +88,7 @@ public class DistributedActivityLogger : IActivityLogger
         Client.Enqueue<IActivityObservable>(service => service.Track(activities));
     }
 
-    public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options)
+    public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
     {
         var userId = Identity.GetUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
@@ -125,7 +125,7 @@ public class DistributedActivityLogger : IActivityLogger
         Client.Enqueue<IActivityObservable>(service => service.Track(new []{ activity }));
     }
 
-    public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options)
+    public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
     {
         var userId = Identity.GetUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();

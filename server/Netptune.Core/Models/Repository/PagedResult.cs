@@ -6,7 +6,7 @@ namespace Netptune.Core.Models.Repository;
 
 public class PagedResult<T> : IPagedResult<T>
 {
-    public IList<T> Results { get; set; }
+    public IList<T> Results { get; set; } = null!;
 
     public int CurrentPage { get; set; }
 

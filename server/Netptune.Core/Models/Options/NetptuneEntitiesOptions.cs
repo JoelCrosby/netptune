@@ -5,5 +5,5 @@ namespace Netptune.Core.Models.Options;
 public class NetptuneEntitiesOptions
 {
     [Required]
-    public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = null!;
 }

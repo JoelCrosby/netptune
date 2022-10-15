@@ -59,7 +59,7 @@ public class TaskServiceTests
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
-        result.Payload.Name.Should().Be(request.Name);
+        result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
 
         await UnitOfWork.Received(1).CompleteAsync();

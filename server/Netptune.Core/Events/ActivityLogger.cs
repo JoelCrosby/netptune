@@ -70,7 +70,7 @@ public class ActivityLogger : IActivityLogger
         Observable.Track(activities);
     }
 
-    public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options)
+    public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
     {
         var activityOptions = new ActivityOptions<TMeta>();
 
@@ -100,7 +100,7 @@ public class ActivityLogger : IActivityLogger
         Observable.Track(new [] { activity });
     }
 
-    public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options)
+    public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
     {
         var activityOptions = new ActivityMultipleOptions<TMeta>();
 

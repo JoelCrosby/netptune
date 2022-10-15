@@ -30,7 +30,7 @@ public static class EnumerableExtensions
         return memoryStream;
     }
 
-    public static List<string> ToLowercase(this IEnumerable<string> enumerable, CultureInfo cultureInfo = null)
+    public static List<string> ToLowercase(this IEnumerable<string> enumerable, CultureInfo? cultureInfo = null)
     {
         var culture = cultureInfo ?? CultureInfo.InvariantCulture;
 

@@ -12,7 +12,7 @@ namespace Netptune.Core.Entities;
 
 public class BoardGroup : WorkspaceEntity<int>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public int BoardId { get; set; }
 
@@ -23,7 +23,7 @@ public class BoardGroup : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public Board Board { get; set; }
+    public Board? Board { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTaskInBoardGroup> TasksInGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();

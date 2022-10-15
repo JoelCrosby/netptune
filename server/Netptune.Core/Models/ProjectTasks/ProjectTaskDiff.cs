@@ -9,20 +9,20 @@ public record ValueDiff<T>
 {
     public bool Modified;
 
-    public T NewValue;
+    public T? NewValue;
 }
 
 public record ProjectTaskDiff
 {
-    private ValueDiff<string> Name;
+    private ValueDiff<string> Name = null!;
 
-    private ValueDiff<string> Description;
+    private ValueDiff<string> Description = null!;
 
-    private ValueDiff<bool> Flagged;
+    private ValueDiff<bool> Flagged = null!;
 
-    private ValueDiff<ProjectTaskStatus> Status;
+    private ValueDiff<ProjectTaskStatus> Status = null!;
 
-    private ValueDiff<string> Assignee;
+    private ValueDiff<string> Assignee = null!;
 
     public static ProjectTaskDiff Create(TaskViewModel old, TaskViewModel updated)
     {

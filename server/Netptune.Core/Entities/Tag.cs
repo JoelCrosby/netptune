@@ -9,7 +9,7 @@ namespace Netptune.Core.Entities;
 
 public class Tag : WorkspaceEntity<int>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     #region NavigationProperties
 
@@ -27,8 +27,8 @@ public class Tag : WorkspaceEntity<int>
         {
             Id = Id,
             Name = Name,
-            OwnerId = OwnerId,
-            OwnerName = Owner?.DisplayName,
+            OwnerId = OwnerId!,
+            OwnerName = Owner!.DisplayName,
         };
     }
 }

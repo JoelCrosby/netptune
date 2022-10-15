@@ -4,9 +4,9 @@ namespace Netptune.Core.Models.Files;
 
 public class FileResponse
 {
-    public Stream Stream { get; set; }
+    public Stream Stream { get; init; } = null!;
 
-    public string ContentType { get; set; }
+    public string ContentType { get; init; } = null!;
 
-    public string Filename { get; set; }
+    public string Filename { get; init; } = null!;
 }

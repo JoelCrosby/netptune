@@ -22,7 +22,7 @@ public class ActivityViewModel
 
     public DateTime Time { get; set; }
 
-    public JsonDocument Meta { get; set; } = null!;
+    public JsonDocument? Meta { get; set; } = null!;
 
     public UserAvatar Assignee { get; set; } = null!;
 }

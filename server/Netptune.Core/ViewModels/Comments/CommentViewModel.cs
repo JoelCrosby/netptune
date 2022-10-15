@@ -12,7 +12,7 @@ public class CommentViewModel
 
     public string UserDisplayName { get; set; } = null!;
 
-    public string UserDisplayImage { get; set; } = null!;
+    public string? UserDisplayImage { get; set; }
 
     public string UserId { get; set; } = null!;
 

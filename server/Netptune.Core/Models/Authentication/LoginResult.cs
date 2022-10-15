@@ -6,11 +6,11 @@ public class LoginResult
 {
     public bool IsSuccess { get; }
 
-    public AuthenticationTicket Ticket { get; }
+    public AuthenticationTicket? Ticket { get; }
 
-    public string Message { get; }
+    public string? Message { get; }
 
-    private LoginResult(bool success, AuthenticationTicket ticket, string message = null)
+    private LoginResult(bool success, AuthenticationTicket? ticket, string? message = null)
     {
         IsSuccess = success;
         Ticket = ticket;
@@ -22,7 +22,7 @@ public class LoginResult
         return new(true, ticket);
     }
 
-    public static LoginResult Failed(string message = null)
+    public static LoginResult Failed(string? message = null)
     {
         return new(false, null, message);
     }

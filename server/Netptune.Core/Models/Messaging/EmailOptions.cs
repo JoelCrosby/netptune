@@ -5,8 +5,8 @@ namespace Netptune.Core.Models.Messaging;
 public class EmailOptions
 {
     [Required]
-    public string DefaultFromAddress { get; set; }
+    public string DefaultFromAddress { get; set; } = null!;
 
     [Required]
-    public string DefaultFromDisplayName { get; set; }
+    public string DefaultFromDisplayName { get; set; } = null!;
 }

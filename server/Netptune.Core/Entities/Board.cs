@@ -10,15 +10,15 @@ namespace Netptune.Core.Entities;
 
 public class Board : WorkspaceEntity<int>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Identifier { get; set; }
+    public string Identifier { get; set; } = null!;
 
     public int ProjectId { get; set; }
 
     public BoardType BoardType { get; set; }
 
-    public BoardMeta MetaInfo { get; set; }
+    public BoardMeta? MetaInfo { get; set; }
 
     #region NavigationProperties
 
@@ -26,7 +26,7 @@ public class Board : WorkspaceEntity<int>
     public ICollection<BoardGroup> BoardGroups { get; set; } = new HashSet<BoardGroup>();
 
     [JsonIgnore]
-    public Project Project { get; set; }
+    public Project? Project { get; set; }
 
     #endregion
 

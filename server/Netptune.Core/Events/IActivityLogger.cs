@@ -10,7 +10,7 @@ public interface IActivityLogger
 
     void LogMany(Action<ActivityMultipleOptions> options);
 
-    void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options);
+    void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class;
 
-    void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options);
+    void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class;
 }

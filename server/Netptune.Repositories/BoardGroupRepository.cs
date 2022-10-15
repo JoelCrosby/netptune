@@ -113,7 +113,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
             if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
             {
-                if (lastTag != row.Tag)
+                if (lastTag != row.Tag && row.Tag is not null)
                 {
                     lastTask.Tags.Add(row.Tag);
                 }
@@ -218,7 +218,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     {
         var query = Context.ProjectTaskInBoardGroups
             .Where(item => item.BoardGroupId == groupId)
-            .Select(item => item.ProjectTask);
+            .Select(item => item.ProjectTask!);
 
         return query.ToReadonlyListAsync(isReadonly);
     }

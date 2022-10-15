@@ -17,21 +17,21 @@ public class ActivityOptions
     public EntityType EntityType { get; set; }
 
     [Required]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
     [Required]
     public ActivityType Type { get; set; }
 }
 
-public class ActivityOptions<TMeta> : ActivityOptions
+public class ActivityOptions<TMeta> : ActivityOptions where TMeta : class
 {
-    public TMeta Meta { get; set; }
+    public TMeta Meta { get; set; } = null!;
 }
 
 public class ActivityMultipleOptions
 {
     [Required]
-    public IEnumerable<int> EntityIds { get; set; }
+    public IEnumerable<int> EntityIds { get; set; } = null!;
 
     [Required]
     public int? WorkspaceId { get; set; }
@@ -40,13 +40,13 @@ public class ActivityMultipleOptions
     public EntityType EntityType { get; set; }
 
     [Required]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
     [Required]
     public ActivityType Type { get; set; }
 }
 
-public class ActivityMultipleOptions<TMeta> : ActivityMultipleOptions
+public class ActivityMultipleOptions<TMeta> : ActivityMultipleOptions where TMeta : class
 {
-    public TMeta Meta { get; set; }
+    public TMeta Meta { get; set; } = null!;
 }

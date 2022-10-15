@@ -10,7 +10,7 @@ namespace Netptune.Core.Entities;
 
 public class Comment : WorkspaceEntity<int>
 {
-    public string Body { get; set; }
+    public string Body { get; set; } = null!;
 
     public int EntityId { get; set; }
 
@@ -28,7 +28,7 @@ public class Comment : WorkspaceEntity<int>
         return new()
         {
             Id = Id,
-            UserDisplayName = Owner.DisplayName,
+            UserDisplayName = Owner!.DisplayName,
             UserDisplayImage= Owner.PictureUrl,
             UserId = OwnerId,
             Body = Body,

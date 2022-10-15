@@ -2,9 +2,9 @@ namespace Netptune.Core.Responses;
 
 public class IsSlugUniqueResponse
 {
-    public string Request { get; set; }
+    public string Request { get; set; } = null!;
 
-    public string Slug { get; set; }
+    public string Slug { get; set; }= null!;
 
     public bool IsUnique { get; set; }
 }

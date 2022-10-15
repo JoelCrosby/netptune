@@ -9,30 +9,30 @@ namespace Netptune.Core.Entities;
 
 public class ActivityLog : WorkspaceEntity<int>, IDisposable
 {
-    public EntityType EntityType { get; set; }
+    public EntityType EntityType { get; init; }
 
-    public string UserId { get; set; }
+    public string UserId { get; init; } = null!;
 
-    public ActivityType Type { get; set; }
+    public ActivityType Type { get; init; }
 
-    public int? EntityId { get; set; }
+    public int? EntityId { get; init; }
 
-    public DateTime Time { get; set; }
+    public DateTime Time { get; init; }
 
-    public int? ProjectId { get; set; }
+    public int? ProjectId { get; init; }
 
-    public int? BoardId { get; set; }
+    public int? BoardId { get; init; }
 
-    public int? BoardGroupId { get; set; }
+    public int? BoardGroupId { get; init; }
 
-    public int? TaskId { get; set; }
+    public int? TaskId { get; init; }
 
-    public JsonDocument Meta { get; set; }
+    public JsonDocument? Meta { get; init; }
 
     #region NavigationProperties
 
     [JsonIgnore]
-    public AppUser User { get; set; }
+    public AppUser User { get; set; } = null!;
 
     #endregion
 

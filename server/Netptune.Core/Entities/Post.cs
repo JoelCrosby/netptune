@@ -7,9 +7,9 @@ namespace Netptune.Core.Entities;
 
 public class Post : WorkspaceEntity<int>
 {
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
 
-    public string Body { get; set; }
+    public string Body { get; set; } = null!;
 
     public PostType Type { get; set; }
 
@@ -22,7 +22,7 @@ public class Post : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual Project Project { get; set; }
+    public virtual Project? Project { get; set; }
 
     #endregion
 

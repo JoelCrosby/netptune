@@ -2,7 +2,7 @@ namespace Netptune.Core.Models.Authentication;
 
 public class WorkspaceInvite
 {
-    public string Email { get; set; }
+    public string Email { get; init; } = null!;
 
-    public int WorkspaceId { get; set; }
+    public int WorkspaceId { get; init; }
 }

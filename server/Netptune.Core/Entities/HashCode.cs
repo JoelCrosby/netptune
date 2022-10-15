@@ -6,9 +6,9 @@ namespace Netptune.Core.Entities;
 
 public class HashCode : WorkspaceEntity<int>
 {
-    public string Salt { get; set; }
+    public string Salt { get; set; } = null!;
 
-    public string Code { get; set; }
+    public string Code { get; set; } = null!;
 
     public DateTime Expires { get; set; }
 }

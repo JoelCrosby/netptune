@@ -6,9 +6,9 @@ public interface IPageQuery
 
     int PageSize { get; }
 
-    string Query { get; }
+    string? Query { get; }
 
-    string Sort { get; set; }
+    string? Sort { get; set; }
 
     bool SortDescending { get; set; }
 }

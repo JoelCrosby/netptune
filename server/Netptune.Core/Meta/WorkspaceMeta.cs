@@ -2,5 +2,5 @@
 
 public class WorkspaceMeta
 {
-    public string Color { get; set; }
+    public string? Color { get; set; }
 }
