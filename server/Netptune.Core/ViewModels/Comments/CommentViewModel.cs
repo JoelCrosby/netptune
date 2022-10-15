@@ -10,19 +10,19 @@ public class CommentViewModel
 {
     public int Id { get; set; }
 
-    public string UserDisplayName { get; set; }
+    public string UserDisplayName { get; set; } = null!;
 
-    public string UserDisplayImage { get; set; }
+    public string UserDisplayImage { get; set; } = null!;
 
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
-    public string Body { get; set; }
+    public string Body { get; set; } = null!;
 
     public int EntityId { get; set; }
 
     public EntityType EntityType { get; set; }
 
-    public List<Reaction> Reactions { get; set; }
+    public List<Reaction> Reactions { get; set; } = new();
 
     public DateTime CreatedAt { get; set; }
 
