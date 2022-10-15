@@ -15,7 +15,7 @@ public static class OrderingUtils
             return nextOrder.Value == 0 ? -1 : nextOrder.Value * 0.9;
         }
 
-        if (nextOrder.HasValue)
+        if (nextOrder.HasValue && preOrder.HasValue)
         {
             return (preOrder.Value + nextOrder.Value) / 2;
         }

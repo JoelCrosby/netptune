@@ -35,7 +35,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
     public async Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request)
     {
-        var result = await BoardGroups.GetAsync(request.BoardGroupId);
+        var result = await BoardGroups.GetAsync(request.BoardGroupId!.Value);
 
         if (result is null) return null;
 

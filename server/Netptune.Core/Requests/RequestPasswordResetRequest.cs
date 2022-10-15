@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Netptune.Core.Requests;
 
 public class RequestPasswordResetRequest
 {
-    public string Email { get; set; }
+    [Required]
+    public string Email { get; set; } = null!;
 }

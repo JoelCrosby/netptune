@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
 public class ReassignTasksRequest
 {
-    public string BoardId { get; set; }
+    [Required]
+    public string BoardId { get; set; } = null!;
 
-    public List<int> TaskIds { get; set; }
+    [Required]
+    public List<int> TaskIds { get; set; } = null!;
 
-    public string AssigneeId { get; set; }
+    [Required]
+    public string AssigneeId { get; set; } = null!;
 }

@@ -2,9 +2,9 @@ namespace Netptune.Core.ViewModels.Users;
 
 public class AssigneeViewModel
 {
-    public string Id { get; set; } = null!;
+    public string Id { get; init; } = null!;
 
-    public string DisplayName { get; set; } = null!;
+    public string DisplayName { get; init; } = null!;
 
-    public string? PictureUrl { get; set; }
+    public string? PictureUrl { get; init; }
 }

@@ -29,7 +29,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
 
         var workspaceId = workspace.Id;
 
-        Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
+        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
 
         return await Entities
             .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
@@ -43,7 +43,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
 
     public Task<ProjectViewModel?> GetProjectViewModel(int id)
     {
-        Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
+        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
 
         return Entities
             .Where(project => project.Id == id && !project.IsDeleted)
@@ -57,7 +57,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
 
     public Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId)
     {
-        Entities.Include(task => task.Owner).ThenInclude(x => x.UserName);
+        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
 
         return Entities
             .Where(project =>  !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
@@ -91,7 +91,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             RepositoryUrl = project.RepositoryUrl,
             Color = project.MetaInfo.Color,
             WorkspaceId = project.WorkspaceId,
-            OwnerDisplayName = project.Owner.DisplayName,
+            OwnerDisplayName = project.Owner!.DisplayName,
             UpdatedAt = project.UpdatedAt,
             CreatedAt = project.CreatedAt,
             DefaultBoardIdentifier = identifier,

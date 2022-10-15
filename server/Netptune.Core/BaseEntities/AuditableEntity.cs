@@ -15,29 +15,29 @@ public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableE
 
     #region ForeignKeys
 
-    public string CreatedByUserId { get; set; }
+    public string CreatedByUserId { get; set; } = null!;
 
-    public string ModifiedByUserId { get; set; }
+    public string? ModifiedByUserId { get; set; }
 
-    public string DeletedByUserId { get; set; }
+    public string? DeletedByUserId { get; set; }
 
-    public string OwnerId { get; set; }
+    public string? OwnerId { get; set; }
 
     #endregion
 
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual AppUser CreatedByUser { get; set; }
+    public virtual AppUser CreatedByUser { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual AppUser ModifiedByUser { get; set; }
+    public virtual AppUser? ModifiedByUser { get; set; }
 
     [JsonIgnore]
-    public virtual AppUser DeletedByUser { get; set; }
+    public virtual AppUser? DeletedByUser { get; set; }
 
     [JsonIgnore]
-    public virtual AppUser Owner { get; set; }
+    public virtual AppUser? Owner { get; set; }
 
     #endregion
 

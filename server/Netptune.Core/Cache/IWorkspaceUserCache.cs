@@ -5,9 +5,9 @@ namespace Netptune.Core.Cache;
 
 public class WorkspaceUserKey
 {
-    public string WorkspaceKey { get; set; }
+    public string WorkspaceKey { get; init; } = null!;
 
-    public string UserId { get; set; }
+    public string UserId { get; init; } = null!;
 }
 
 public interface IWorkspaceUserCache : IEntityCache<bool, WorkspaceUserKey>

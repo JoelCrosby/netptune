@@ -36,14 +36,19 @@ public class BoardService : IBoardService
         return results.ConvertAll(result => result.ToViewModel());
     }
 
-    public async Task<BoardViewModel> GetBoard(int id)
+    public async Task<ClientResponse<BoardViewModel>> GetBoard(int id)
     {
         var result = await Boards.GetAsync(id, true);
 
-        return result.ToViewModel();
+        if (result is null)
+        {
+            return ClientResponse<BoardViewModel>.Failed();
+        }
+
+        return ClientResponse<BoardViewModel>.Success(result.ToViewModel());
     }
 
-    public async Task<BoardView> GetBoardView(string boardIdentifier, BoardGroupsFilter filter = null)
+    public async Task<ClientResponse<BoardView>> GetBoardView(string boardIdentifier, BoardGroupsFilter? filter = null)
     {
         var workspaceId = await IdentityService.GetWorkspaceId();
         var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier, workspaceId);
@@ -54,6 +59,11 @@ public class BoardService : IBoardService
 
         var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId, filter?.Term);
         var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
+
+        if (groups is null || board is null)
+        {
+            return ClientResponse<BoardView>.Failed();
+        }
 
         var includeUserFilter = filter?.Users?.Any() ?? false;
         var includeTagFilter = filter?.Tags?.Any() ?? false;
@@ -78,12 +88,14 @@ public class BoardService : IBoardService
         var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
         var users = userEntities.Select(user => user.ToViewModel());
 
-        return new BoardView
+        var result = new BoardView
         {
             Groups = groups,
             Board = board,
             Users = users,
         };
+
+        return ClientResponse<BoardView>.Success(result);
     }
 
     public async Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request)

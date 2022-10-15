@@ -5,11 +5,11 @@ namespace Netptune.Core.Requests;
 public class ResetPasswordRequest
 {
     [Required]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
     [Required]
-    public string Code { get; set; }
+    public string Code { get; set; } = null!;
 
     [Required]
-    public string Password { get; set; }
+    public string Password { get; set; }  = null!;
 }

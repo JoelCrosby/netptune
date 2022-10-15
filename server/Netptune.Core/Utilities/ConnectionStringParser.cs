@@ -4,7 +4,7 @@ namespace Netptune.Core.Utilities;
 
 public static class ConnectionStringParser
 {
-    public static string ParseConnectionString(string value, string databaseName = null)
+    public static string ParseConnectionString(string value, string? databaseName = null)
     {
         var conn = value
             .Replace("//", "")

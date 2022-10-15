@@ -4,26 +4,26 @@ namespace Netptune.Core.ViewModels.Users;
 
 public class UserViewModel
 {
-    public string Id { get; set; }
+    public string Id { get; init; } = null!;
 
-    public string Firstname { get; set; }
+    public string Firstname { get; init; } = null!;
 
-    public string Lastname { get; set; }
+    public string Lastname { get; init; } = null!;
 
-    public string PictureUrl { get; set; }
+    public string? PictureUrl { get; init; }
 
-    public string DisplayName { get; set; }
+    public string DisplayName { get; init; } = null!;
 
-    public string Email { get; set; }
+    public string Email { get; init; } = null!;
 
-    public string UserName { get; set; }
+    public string UserName { get; init; } = null!;
 
-    public DateTime? LastLoginTime { get; set; }
+    public DateTime? LastLoginTime { get; init; }
 
-    public DateTime? RegistrationDate { get; set; }
+    public DateTime? RegistrationDate { get; init; }
 }
 
 public class WorkspaceUserViewModel : UserViewModel
 {
-    public bool IsWorkspaceOwner { get; set; }
+    public bool IsWorkspaceOwner { get; init; }
 }

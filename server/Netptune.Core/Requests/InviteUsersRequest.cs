@@ -6,5 +6,5 @@ namespace Netptune.Core.Requests;
 public class InviteUsersRequest
 {
     [Required]
-    public List<string> EmailAddresses { get; set; }
+    public List<string> EmailAddresses { get; set; } = null!;
 }

@@ -5,8 +5,8 @@ namespace Netptune.Core.Requests;
 public class AddCommentRequest
 {
     [Required]
-    public string Comment { get; set; }
+    public string Comment { get; set; } = null!;
 
     [Required]
-    public string SystemId { get; set; }
+    public string SystemId { get; set; } = null!;
 }

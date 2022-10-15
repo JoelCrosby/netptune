@@ -8,10 +8,10 @@ public class AddProjectTaskRequest
 {
     [Required]
     [MaxLength(256)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [MaxLength(4096)]
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
     public ProjectTaskStatus? Status { get; set; }
 
@@ -24,5 +24,5 @@ public class AddProjectTaskRequest
 
     public double? SortOrder { get; set; }
 
-    public string AssigneeId { get; set; }
+    public string? AssigneeId { get; set; }
 }
