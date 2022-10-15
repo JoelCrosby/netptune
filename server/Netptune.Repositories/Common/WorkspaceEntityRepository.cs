@@ -9,13 +9,6 @@ using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Repositories.Common;
 
-/// <summary>
-/// Base Repository compatible with entity framework core and micro ORMs like Dapper
-/// Designed to do complex read queries with Dapper and write operations with EF Core
-/// </summary>
-/// <typeparam name="TContext"></typeparam>
-/// <typeparam name="TEntity"></typeparam>
-/// <typeparam name="TId"></typeparam>
 public abstract class WorkspaceEntityRepository<TContext, TEntity, TId>
     : AuditableRepository<TContext, TEntity, TId>, IWorkspaceEntityRepository<TEntity, TId>
     where TContext : DbContext

@@ -11,9 +11,9 @@ public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
 {
     Task<List<ProjectViewModel>> GetProjects(string workspaceKey);
 
-    Task<ProjectViewModel> GetProjectViewModel(int id);
+    Task<ProjectViewModel?> GetProjectViewModel(int id);
 
-    Task<ProjectViewModel> GetProjectViewModel(string key, int workspaceId);
+    Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId);
 
     Task<bool> IsProjectKeyAvailable(string key, int workspaceId);
 

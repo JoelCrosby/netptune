@@ -5,5 +5,5 @@ namespace Netptune.Repositories.Configuration;
 public class NetptuneRepositoryOptions
 {
     [Required]
-    public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = null!;
 }

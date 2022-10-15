@@ -40,7 +40,7 @@ public class BoardViewRowMap
 
     public string Assignee_Id { get; set; }
 
-    public string Tag { get; set; }
+    public string? Tag { get; set; }
 }
 
 public class BoardViewMetaRowMap

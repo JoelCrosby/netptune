@@ -25,7 +25,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
     }
 
-    public override Task<ProjectTask> GetAsync(int id, bool isReadonly = false)
+    public override Task<ProjectTask?> GetAsync(int id, bool isReadonly = false)
     {
         return Entities
             .Include(x => x.ProjectTaskAppUsers)
@@ -37,7 +37,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(EqualsPredicate(id));
     }
 
-    public Task<TaskViewModel> GetTaskViewModel(int taskId)
+    public Task<TaskViewModel?> GetTaskViewModel(int taskId)
     {
         return Entities
             .Where(x => x.Id == taskId)
@@ -64,23 +64,27 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return task?.Id;
     }
 
-    public async Task<ProjectTask> GetTask(string systemId, string workspaceKey)
+    public async Task<ProjectTask?> GetTask(string systemId, string workspaceKey)
     {
         var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+
+        if (entity is null) return null;
 
         return await entity.FirstOrDefaultAsync();
     }
 
-    public async Task<TaskViewModel> GetTaskViewModel(string systemId, string workspaceKey)
+    public async Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey)
     {
         var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+
+        if (entity is null) return null;
 
         return await entity
             .Select(task => task.ToViewModel())
             .FirstOrDefaultAsync();
     }
 
-    private async Task<IQueryable<ProjectTask>> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
+    private async Task<IQueryable<ProjectTask>?> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
     {
         var parts = systemId.Split("-");
 
@@ -246,7 +250,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return RowsToExportList(rows);
     }
 
-    private List<ExportTaskViewModel> RowsToExportList(IEnumerable<TasksViewRowMap> rows)
+    private static List<ExportTaskViewModel> RowsToExportList(IEnumerable<TasksViewRowMap> rows)
     {
         return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
         {

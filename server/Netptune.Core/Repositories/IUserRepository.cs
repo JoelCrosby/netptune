@@ -10,9 +10,9 @@ namespace Netptune.Core.Repositories;
 
 public interface IUserRepository : IRepository<AppUser, string>
 {
-    Task<AppUser> GetByEmail(string email, bool isReadonly = false);
+    Task<AppUser?> GetByEmail(string email, bool isReadonly = false);
 
-    Task<string> GetUserIdByEmail(string email, bool isReadonly = false);
+    Task<string?> GetUserIdByEmail(string email, bool isReadonly = false);
 
     Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false);
 

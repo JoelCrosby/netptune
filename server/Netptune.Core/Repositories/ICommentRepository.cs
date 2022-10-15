@@ -13,5 +13,5 @@ public interface ICommentRepository : IWorkspaceEntityRepository<Comment, int>
 
     Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId);
 
-    Task<CommentViewModel> GetCommentViewModel(int id);
+    Task<CommentViewModel?> GetCommentViewModel(int id);
 }

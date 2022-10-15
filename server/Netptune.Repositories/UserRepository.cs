@@ -29,7 +29,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceKey);
 
-        return result?.Users.ToList();
+        return result?.Users.ToList() ?? new List<AppUser>();
     }
 
     public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
@@ -71,7 +71,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         return toRemove;
     }
 
-    public Task<AppUser> GetByEmail(string email, bool isReadonly = false)
+    public Task<AppUser?> GetByEmail(string email, bool isReadonly = false)
     {
         if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
@@ -90,7 +90,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .ToListAsync();
     }
 
-    public Task<string> GetUserIdByEmail(string email, bool isReadonly = false)
+    public Task<string?> GetUserIdByEmail(string email, bool isReadonly = false)
     {
         if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 

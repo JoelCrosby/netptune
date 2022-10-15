@@ -8,11 +8,11 @@ namespace Netptune.Core.Repositories;
 
 public interface ITaskInGroupRepository : IRepository<ProjectTaskInBoardGroup, int>
 {
-    Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId, int groupId);
+    Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId, int groupId);
 
     Task<List<ProjectTaskInBoardGroup>> GetProjectTasksInGroup(int groupId);
 
-    Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId);
+    Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId);
 
     Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds);
 }

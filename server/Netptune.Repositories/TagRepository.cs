@@ -57,7 +57,7 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
             .ToListAsync();
     }
 
-    public async Task<TagViewModel> GetViewModel(int id)
+    public async Task<TagViewModel?> GetViewModel(int id)
     {
         var result = await Entities
             .Include(tag => tag.Owner)
@@ -65,7 +65,7 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
 
         if (result is null) return null;
 
-        return new TagViewModel
+        return new ()
         {
             Id = id,
             Name = result.Name,
@@ -92,7 +92,7 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
             .ToListAsync();
     }
 
-    public Task<Tag> GetByValue(string value, int workspaceId, bool isReadonly = false)
+    public Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false)
     {
         var trimmed = value.Trim();
 

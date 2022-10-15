@@ -19,7 +19,7 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
     {
     }
 
-    public Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId, int groupId)
+    public Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId, int groupId)
     {
         return Entities.FirstOrDefaultAsync(entity =>
             entity.ProjectTaskId == taskId
@@ -34,7 +34,7 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ToListAsync();
     }
 
-    public Task<ProjectTaskInBoardGroup> GetProjectTaskInGroup(int taskId)
+    public Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId)
     {
         return Entities
             .Where(entity => entity.ProjectTaskId == taskId)
