@@ -57,7 +57,7 @@ public class ProjectTask : WorkspaceEntity<int>
         return new()
         {
             Id = Id,
-            OwnerId = OwnerId,
+            OwnerId = OwnerId!,
             Name = Name,
             Description = Description,
             Status = Status,

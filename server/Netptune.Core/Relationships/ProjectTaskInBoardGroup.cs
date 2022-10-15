@@ -16,10 +16,10 @@ public class ProjectTaskInBoardGroup : KeyedEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public ProjectTask ProjectTask { get; set; }
+    public ProjectTask? ProjectTask { get; set; }
 
     [JsonIgnore]
-    public BoardGroup BoardGroup { get; set; }
+    public BoardGroup? BoardGroup { get; set; }
 
     #endregion
 }

@@ -17,7 +17,7 @@ public class ActivityWriterService : IActivityWriterService, IHostedService
     private readonly IActivityObservable ActivityObservable;
     private readonly IServiceProvider ServiceProvider;
 
-    private IDisposable Subscription { get; set; }
+    private IDisposable? Subscription { get; set; }
 
     public ActivityWriterService(IActivityObservable activityObservable, IServiceProvider serviceProvider)
     {
@@ -84,7 +84,7 @@ public class ActivityWriterService : IActivityWriterService, IHostedService
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        Subscription.Dispose();
+        Subscription?.Dispose();
 
         return Task.CompletedTask;
     }

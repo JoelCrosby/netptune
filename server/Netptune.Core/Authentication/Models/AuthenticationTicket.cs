@@ -4,7 +4,7 @@ namespace Netptune.Core.Authentication.Models;
 
 public class AuthenticationTicket : CurrentUserResponse
 {
-    public object Token { get; set; }
+    public object Token { get; set; } = null!;
 
     public DateTime Issued { get; set; }
 

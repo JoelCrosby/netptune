@@ -33,8 +33,6 @@ public static class StringExtensions
 
     public static string Capitalize(this string input)
     {
-        if (string.IsNullOrEmpty(input)) return null;
-
         if (input.Length == 1) return input.ToUpper();
 
         return $"{input.FirstOrDefault().ToString().ToUpper()}{input[1..]}";
@@ -42,11 +40,6 @@ public static class StringExtensions
 
     public static string Truncate(this string str, int length)
     {
-        if (string.IsNullOrEmpty(str))
-        {
-            return string.Empty;
-        }
-
         var output = new StringBuilder();
 
         for (var i = 0; i < length; i++)

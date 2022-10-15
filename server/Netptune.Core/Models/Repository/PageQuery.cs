@@ -8,9 +8,9 @@ public class PageQuery : IPageQuery
 
     public int PageSize { get; set; }
 
-    public string Query { get; set; }
+    public string? Query { get; set; }
 
-    public string Sort { get; set; }
+    public string? Sort { get; set; }
 
     public bool SortDescending { get; set; }
 

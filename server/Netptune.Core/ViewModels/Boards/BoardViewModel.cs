@@ -26,7 +26,7 @@ public class BoardViewModel
 
     public string OwnerUsername { get; set; } = null!;
 
-    public BoardMeta MetaInfo { get; set; } = null!;
+    public BoardMeta? MetaInfo { get; set; } = null!;
 }
 
 public class BoardsViewModel

@@ -4,49 +4,49 @@ namespace Netptune.Core.Models.Messaging;
 
 public class SendEmailModel
 {
-    public SendTo SendTo { get; set; }
+    public SendTo SendTo { get; init; } = null!;
 
-    public string Name { get; set; }
+    public string Name { get; init; } = null!;
 
-    public string Subject { get; set; }
+    public string Subject { get; init; } = null!;
 
-    public string PreHeader { get; set; }
+    public string PreHeader { get; init; } = null!;
 
-    public string Message { get; set; }
+    public string Message { get; init; } = null!;
 
-    public string Link { get; set; }
+    public string? Link { get; init; }
 
-    public string Action { get; set; }
+    public string? Action { get; init; }
 
-    public string RawTextContent { get; set; }
+    public string RawTextContent { get; init; } = null!;
 
-    public string Reason { get; set; }
+    public string Reason { get; init; } = null!;
 }
 
 public class SendEmailModelMultiple
 {
-    public List<string> ToAddress { get; set; }
+    public List<string> ToAddress { get; init; } = null!;
 
-    public string ToDisplayName { get; set; }
+    public string ToDisplayName { get; init; } = null!;
 
-    public string Name { get; set; }
+    public string Name { get; init; } = null!;
 
-    public string Subject { get; set; }
+    public string Subject { get; init; } = null!;
 
-    public string PreHeader { get; set; }
+    public string PreHeader { get; init; } = null!;
 
-    public string Message { get; set; }
+    public string Message { get; init; } = null!;
 
-    public string Link { get; set; }
+    public string? Link { get; init; }
 
-    public string Action { get; set; }
+    public string? Action { get; init; }
 
-    public string RawTextContent { get; set; }
+    public string? RawTextContent { get; init; }
 }
 
 public class SendTo
 {
-    public string Address { get; set; }
+    public string Address { get; init; } = null!;
 
-    public string DisplayName { get; set; }
+    public string DisplayName { get; init; }  = null!;
 }

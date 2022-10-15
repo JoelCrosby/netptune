@@ -13,11 +13,11 @@ namespace Netptune.Core.Entities;
 
 public class AppUser : IdentityUser, IKeyedEntity<string>
 {
-    public string Firstname { get; set; }
+    public string Firstname { get; set; } = null!;
 
-    public string Lastname { get; set; }
+    public string Lastname { get; set; } = null!;
 
-    public string PictureUrl { get; set; }
+    public string? PictureUrl { get; set; }
 
     public string DisplayName => GetDisplayName();
 

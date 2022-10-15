@@ -6,7 +6,7 @@ namespace Netptune.Core.Entities;
 
 public class Reaction : WorkspaceEntity<int>
 {
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 
     #region ForeignKeys
 
@@ -17,7 +17,7 @@ public class Reaction : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual Comment Comment { get; set; }
+    public virtual Comment? Comment { get; set; }
 
     #endregion
 }

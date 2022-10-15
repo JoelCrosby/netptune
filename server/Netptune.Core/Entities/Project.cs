@@ -13,15 +13,15 @@ namespace Netptune.Core.Entities;
 
 public class Project : WorkspaceEntity<int>
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
-    public string RepositoryUrl { get; set; }
+    public string? RepositoryUrl { get; set; }
 
-    public string Key { get; set; }
+    public string Key { get; set; }= null!;
 
-    public ProjectMeta MetaInfo { get; set; }
+    public ProjectMeta? MetaInfo { get; set; }
 
     #region NavigationProperties
 
@@ -43,7 +43,7 @@ public class Project : WorkspaceEntity<int>
 
     public ProjectViewModel ToViewModel()
     {
-        var defaultBoard = ProjectBoards?.FirstOrDefault(board => board.BoardType == BoardType.Default);
+        var defaultBoard = ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
         var identifier = defaultBoard?.Identifier;
 
         return new ProjectViewModel
@@ -54,11 +54,11 @@ public class Project : WorkspaceEntity<int>
             Description = Description,
             RepositoryUrl = RepositoryUrl,
             WorkspaceId = WorkspaceId,
-            OwnerDisplayName = Owner.DisplayName,
+            OwnerDisplayName = Owner!.DisplayName,
             UpdatedAt = UpdatedAt,
             CreatedAt = CreatedAt,
             DefaultBoardIdentifier = identifier,
-            Color = MetaInfo.Color,
+            Color = MetaInfo?.Color,
         };
     }
 
@@ -95,7 +95,7 @@ public class Project : WorkspaceEntity<int>
             OwnerId = project.OwnerId,
             MetaInfo = new BoardMeta
             {
-                Color = project.MetaInfo.Color,
+                Color = project.MetaInfo?.Color,
             },
             BoardType = BoardType.Default,
             WorkspaceId = workspaceId,
@@ -136,17 +136,17 @@ public class Project : WorkspaceEntity<int>
 
 public class CreateProjectOptions
 {
-    public string Name { get; set; }
+    public string Name { get; init; } = null!;
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string RepositoryUrl { get; set; }
+    public string? RepositoryUrl { get; init; }
 
-    public string Key { get; set; }
+    public string Key { get; init; } = null!;
 
-    public string UserId { get; set; }
+    public string UserId { get; init; } = null!;
 
-    public int WorkspaceId { get; set; }
+    public int WorkspaceId { get; init; }
 
-    public ProjectMeta MetaInfo { get; set; }
+    public ProjectMeta? MetaInfo { get; init; }
 }

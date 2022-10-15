@@ -8,7 +8,7 @@ public class ActivityEvent : IActivityEvent
 {
     public EntityType EntityType { get; init; }
 
-    public string UserId { get; init; }
+    public string UserId { get; init; } = null!;
 
     public ActivityType Type { get; init; }
 
@@ -18,5 +18,5 @@ public class ActivityEvent : IActivityEvent
 
     public DateTime Time { get; init; }
 
-    public string Meta { get; init; }
+    public string? Meta { get; init; }
 }

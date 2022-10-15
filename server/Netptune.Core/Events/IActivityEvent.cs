@@ -18,5 +18,5 @@ public interface IActivityEvent
 
     DateTime Time { get; }
 
-    string Meta { get; }
+    string? Meta { get; }
 }

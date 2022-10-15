@@ -69,8 +69,8 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
         {
             Id = id,
             Name = result.Name,
-            OwnerName = result.Owner.DisplayName,
-            OwnerId = result.OwnerId,
+            OwnerName = result.Owner!.DisplayName,
+            OwnerId = result.OwnerId!,
         };
     }
 
