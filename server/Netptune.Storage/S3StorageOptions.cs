@@ -2,11 +2,11 @@
 
 public class S3StorageOptions
 {
-    public string BucketName { get; set; }
+    public string BucketName { get; set; } = null!;
 
-    public string Region { get; set; }
+    public string Region { get; set; } = null!;
 
-    public string AccessKeyID { get; set; }
+    public string AccessKeyID { get; set; } = null!;
 
-    public string SecretAccessKey { get; set; }
+    public string SecretAccessKey { get; set; } = null!;
 }

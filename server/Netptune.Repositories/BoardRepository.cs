@@ -93,6 +93,13 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
 
         var rows = results.Read<BoardViewModelRowMap>();
 
+        static BoardMeta GetMetaInfo(BoardViewModelRowMap board)
+        {
+            return !string.IsNullOrEmpty(board.Meta_Info)
+                ? JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new ()
+                : new ();
+        }
+
         return rows.Select(board => new BoardViewModel
             {
                 Id = board.Id,
@@ -103,7 +110,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 BoardType = board.Board_Type,
                 CreatedAt = board.Created_At,
                 UpdatedAt = board.Updated_At,
-                MetaInfo = JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new BoardMeta(),
+                MetaInfo = GetMetaInfo(board),
                 OwnerUsername = $"{board.Firstname} {board.Lastname}",
             })
             .Aggregate(new List<BoardsViewModel>(), (prev, board) =>

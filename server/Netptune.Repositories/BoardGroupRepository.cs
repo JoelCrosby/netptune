@@ -41,7 +41,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .ToReadonlyListAsync(isReadonly);
     }
 
-    public async Task<List<BoardViewGroup>> GetBoardView(int boardId, string? searchTerm = null)
+    public async Task<List<BoardViewGroup>?> GetBoardView(int boardId, string? searchTerm = null)
     {
         using var connection = ConnectionFactory.StartConnection();
 
