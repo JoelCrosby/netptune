@@ -30,7 +30,7 @@ public class Comment : WorkspaceEntity<int>
             Id = Id,
             UserDisplayName = Owner!.DisplayName,
             UserDisplayImage= Owner.PictureUrl,
-            UserId = OwnerId,
+            UserId = OwnerId!,
             Body = Body,
             EntityId = EntityId,
             EntityType = EntityType,
