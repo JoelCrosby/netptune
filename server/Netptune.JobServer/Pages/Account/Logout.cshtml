@@ -9,7 +9,7 @@
     <h1 class="text-center mb-4">@ViewData["Title"]</h1>
     <section>
       @{
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity?.IsAuthenticated ?? false)
         {
           <form class="d-grid form-inline" asp-page="/account/Logout" asp-route-returnUrl="@Url.Page("/account/login")" method="post">
             <button type="submit" class="btn btn-primary btn-block">Click here to Logout</button>

@@ -71,9 +71,9 @@ public class Startup
         {
             options.Issuer = Configuration["Tokens:Issuer"];
             options.Audience = Configuration["Tokens:Audience"];
-            options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
-            options.GitHubClientId = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
-            options.GitHubSecret = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
+            options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY")!;
+            options.GitHubClientId = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID")!;
+            options.GitHubSecret = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET")!;
         });
 
         services.AddNetptuneRedis(options =>
@@ -92,17 +92,17 @@ public class Startup
 
         services.AddSendGridEmailService(options =>
         {
-            options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
+            options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY")!;
             options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
             options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
         });
 
         services.AddS3StorageService(options =>
         {
-            options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
-            options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION");
-            options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
-            options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
+            options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME")!;
+            options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION")!;
+            options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID")!;
+            options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY")!;
         });
 
         services.AddActivityLogger();

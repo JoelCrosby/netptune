@@ -5,7 +5,7 @@ namespace Netptune.JobServer.Util;
 
 public class SlugifyParameterTransformer : IOutboundParameterTransformer
 {
-    public string TransformOutbound(object value)
+    public string? TransformOutbound(object? value)
     {
         var route = value?.ToString();
 

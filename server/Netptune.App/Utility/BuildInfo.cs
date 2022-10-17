@@ -6,49 +6,25 @@ namespace Netptune.App.Utility;
 
 public class BuildInfo
 {
-    private string GitHash;
-    private string GitHashShort;
-    private string GitHubRef;
-    private string BuildNumber;
-    private string RunId;
-
-    private BuildInfoViewModel BuildInfoViewModel;
+    private BuildInfoViewModel? CachedBuildInfo;
 
     public BuildInfoViewModel GetBuildInfo()
     {
-        if (BuildInfoViewModel is {})
+        if (CachedBuildInfo is {})
         {
-            return BuildInfoViewModel;
+            return CachedBuildInfo;
         }
 
-        GetGitHash();
-        GetShortGitHash();
-
-        var info = new BuildInfoViewModel
-        {
-            GitHash = GitHash,
-            GitHashShort = GitHashShort,
-            GitHubRef = GitHubRef,
-            BuildNumber = BuildNumber,
-            RunId = RunId,
-        };
-
-        BuildInfoViewModel = info;
-
-        return BuildInfoViewModel;
+        CachedBuildInfo = CreateBuildInfoModel();
+        return CachedBuildInfo;
     }
 
-    public string GetGitHash()
+    private static  BuildInfoViewModel CreateBuildInfoModel()
     {
-        if (!string.IsNullOrEmpty(GitHash))
-        {
-            return GitHash;
-        }
-
         var version = $"1.0.0+LOCAL+REF+{DateTime.UtcNow:yyyyMMdd}.0+LOCAL_BUILD";
         var infoVerAttr = GetInfoVerAttr();
 
-        if (infoVerAttr is { } && infoVerAttr.InformationalVersion.Length > 6)
+        if (infoVerAttr is {} && infoVerAttr.InformationalVersion.Length > 6)
         {
             // Hash is embedded in the version after a '+' symbol
             // e.g. 1.0.0+a34a913742f8845d3da5309b7b17242222d41a21
@@ -58,45 +34,44 @@ public class BuildInfo
 
         var values = version.Split("+");
 
-        GitHash = values.ElementAtOrDefault(1);
-        GitHubRef = values.ElementAtOrDefault(2);
-        BuildNumber = values.ElementAtOrDefault(3);
-        RunId = values.ElementAtOrDefault(4);
+        var gitHash = values.ElementAtOrDefault(1);
+        var gitHubRef = values.ElementAtOrDefault(2);
+        var buildNumber = values.ElementAtOrDefault(3);
+        var runId = values.ElementAtOrDefault(4);
 
-        return GitHash;
-    }
-
-    public string GetShortGitHash()
-    {
-        if (string.IsNullOrEmpty(GitHashShort))
+        return new BuildInfoViewModel
         {
-            GitHashShort = GitHash.Length < 6
-                ? GitHash
-                : GitHash.Substring(GitHash.Length - 6, 6);
-        }
-
-        return GitHashShort;
+            BuildNumber = buildNumber,
+            RunId = runId,
+            GitHash = gitHash,
+            GitHubRef = gitHubRef,
+            GitHashShort = GetShortGitHash(gitHash),
+        };
     }
 
-    private static AssemblyInformationalVersionAttribute GetInfoVerAttr()
+    private static string? GetShortGitHash(string? hash)
+    {
+        if (string.IsNullOrEmpty(hash)) return null;
+        return hash.Length < 6 ? hash : hash.Substring(hash.Length - 6, 6);
+    }
+
+    private static AssemblyInformationalVersionAttribute? GetInfoVerAttr()
     {
         var appAssembly = typeof(BuildInfo).Assembly;
-
-        return (AssemblyInformationalVersionAttribute)appAssembly
-            .GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute))
-            .FirstOrDefault();
+        var versionAttr = appAssembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute));
+        return versionAttr as AssemblyInformationalVersionAttribute;
     }
 }
 
 public class BuildInfoViewModel
 {
-    public string GitHash { get; set; }
+    public string? GitHash { get; set; }
 
-    public string GitHashShort { get; set; }
+    public string? GitHashShort { get; set; }
 
-    public string GitHubRef { get; set; }
+    public string? GitHubRef { get; set; }
 
-    public string BuildNumber { get; set; }
+    public string? BuildNumber { get; set; }
 
-    public string RunId { get; set; }
+    public string? RunId { get; set; }
 }

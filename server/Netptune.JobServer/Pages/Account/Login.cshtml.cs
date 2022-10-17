@@ -20,28 +20,28 @@ public class LoginModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
     [TempData]
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public class InputModel
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; init; }
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; init; }
 
         [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
+        public bool RememberMe { get; init; }
     }
 
-    public async Task OnGetAsync(string returnUrl = null)
+    public async Task OnGetAsync(string? returnUrl = null)
     {
         if (!string.IsNullOrEmpty(ErrorMessage))
         {
@@ -56,7 +56,7 @@ public class LoginModel : PageModel
         ReturnUrl = returnUrl;
     }
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
         returnUrl ??= Url.Content("~/");
 

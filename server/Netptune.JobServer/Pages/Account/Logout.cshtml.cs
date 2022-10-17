@@ -21,7 +21,7 @@ public class LogoutModel : PageModel
     {
     }
 
-    public async Task<IActionResult> OnPost(string returnUrl = null)
+    public async Task<IActionResult> OnPost(string? returnUrl = null)
     {
         await SignInManager.SignOutAsync();
 

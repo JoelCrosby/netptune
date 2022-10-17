@@ -9,6 +9,7 @@
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <Nullable>enable</Nullable>
 
   </PropertyGroup>
 
