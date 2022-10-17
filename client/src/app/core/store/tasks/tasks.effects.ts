@@ -157,6 +157,7 @@ export class ProjectTasksEffects {
       ofType(actions.addComment),
       switchMap((action) =>
         this.projectTasksService.postComment(action.request).pipe(
+          unwrapClientReposne(),
           map((comment) => actions.addCommentSuccess({ comment })),
           catchError((error: HttpErrorResponse) =>
             of(actions.addCommentFail({ error }))

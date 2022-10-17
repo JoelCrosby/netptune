@@ -16,15 +16,8 @@ export class ProfileService {
     );
   }
 
-  post(user: AppUser) {
-    return this.http.post<AppUser>(
-      environment.apiEndpoint + `api/users/${user.id}`,
-      user
-    );
-  }
-
   put(user: Partial<AppUser> & { id: string }) {
-    return this.http.put<AppUser>(
+    return this.http.put<ClientResponse<AppUser>>(
       environment.apiEndpoint + `api/users/${user.id}`,
       user
     );

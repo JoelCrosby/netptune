@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppUser, WorkspaceAppUser } from '@core/models/appuser';
+import { WorkspaceAppUser } from '@core/models/appuser';
+import { ClientResponse } from '@core/models/client-response';
 import { environment } from '@env/environment';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class UsersService {
   }
 
   inviteUsersToWorkspace(emailAddresses: string[]) {
-    return this.http.post<AppUser[]>(
+    return this.http.post<ClientResponse>(
       environment.apiEndpoint + `api/users/invite`,
       {
         emailAddresses,
@@ -25,7 +26,7 @@ export class UsersService {
   }
 
   removeUsersFromWorkspace(emailAddresses: string[]) {
-    return this.http.post<AppUser[]>(
+    return this.http.post<ClientResponse>(
       environment.apiEndpoint + `api/users/remove`,
       {
         emailAddresses,

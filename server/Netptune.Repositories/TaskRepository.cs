@@ -240,7 +240,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
                 WHERE w.slug = @workspaceKey
 
-                ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
+                ORDER BY bg.sort_order, ptibg.sort_order, t.name, u.id;;
             ", new
         {
             workspaceKey,
@@ -255,19 +255,27 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
         {
             var lastTask = result.LastOrDefault();
+            var lastTag = lastTask?.Tags.LastOrDefault();
             var lastAssignee = lastTask?.Assignees.FirstOrDefault();
             var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
 
-            if (lastTask?.SystemId is { } && systemId == lastTask.SystemId)
+            if (lastTask?.SystemId is {} && systemId == lastTask.SystemId)
             {
-                lastTask.Tags = $"{lastTask.Tags} | {row.Tag}";
-
-                if (lastAssignee != row.Assignee_Email)
+                if (lastTag != row.Tag && row.Tag is not null)
+                {
+                    lastTask.Tags.Add(row.Tag);
+                }
+                else if (lastAssignee != row.Assignee_Email && row.Assignee_Email is not null)
                 {
                     lastTask.Assignees.Add(row.Assignee_Email);
                 }
 
                 return result;
+            }
+
+            static HashSet<string> Set(string? initialValue)
+            {
+                return initialValue is null ? new HashSet<string>() : new HashSet<string> { initialValue };
             }
 
             result.Add(new ExportTaskViewModel
@@ -281,11 +289,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Board = row.Board_Identifier,
                 CreatedAt = row.Task_Created_At,
                 UpdatedAt = row.Task_Updated_At,
-                Assignees = new List<string> { row.Assignee_Email },
+                Assignees = Set(row.Assignee_Email),
                 Owner = row.Owner_Email,
                 Project = row.Project_Name,
                 Group = row.Board_Group_Name,
-                Tags = row.Tag,
+                Tags = Set(row.Tag),
             });
 
             return result;

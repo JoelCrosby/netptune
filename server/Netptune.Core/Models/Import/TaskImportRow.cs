@@ -16,7 +16,7 @@ public class TaskImportRow
 
     public DateTime? UpdatedAt { get; set; }
 
-    public string? Assignee { get; set; }
+    public string? Assignees { get; set; }
 
     public string? Owner { get; set; }
 

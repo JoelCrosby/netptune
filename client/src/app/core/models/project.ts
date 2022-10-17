@@ -14,10 +14,9 @@ export interface Project extends Basemodel {
 
 export interface AddProjectRequest {
   name: string;
-  description: string;
-  repositoryUrl: string;
-  metaInfo: ProjectMetaInfo;
-  workspace: string;
+  description?: string;
+  repositoryUrl?: string;
+  metaInfo?: ProjectMetaInfo;
 }
 
 export interface ProjectMetaInfo {

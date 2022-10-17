@@ -9,11 +9,9 @@ public class AddProjectRequest
     [Required]
     public string Name { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; }
 
-    public string RepositoryUrl { get; set; } = null!;
-
-    public string Key { get; set; } = null!;
+    public string? RepositoryUrl { get; set; }
 
     [Required]
     public ProjectMeta MetaInfo { get; set; } = null!;

@@ -59,7 +59,7 @@ export class ProjectTasksService {
   }
 
   postComment(request: AddCommentRequest) {
-    return this.http.post<CommentViewModel>(
+    return this.http.post<ClientResponse<CommentViewModel>>(
       environment.apiEndpoint + 'api/comments/task',
       request
     );
@@ -86,7 +86,7 @@ export class ProjectTasksService {
       .pipe(
         switchMap((response) => {
           if (response.body === null) {
-            return throwError('repsone body was null');
+            return throwError(() => new Error('repsone body was null'));
           }
 
           return of({

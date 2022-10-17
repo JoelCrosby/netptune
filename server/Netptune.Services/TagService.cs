@@ -54,7 +54,9 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         await Tags.AddAsync(tag);
         await UnitOfWork.CompleteAsync();
 
-        return Success(tag.ToViewModel());
+        var result = await UnitOfWork.Tags.GetViewModel(tag.Id);
+
+        return Success(result!);
     }
 
     public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request)
