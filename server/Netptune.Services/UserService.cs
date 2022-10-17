@@ -47,27 +47,30 @@ public class UserService : IUserService
         WorkspaceRepository = unitOfWork.Workspaces;
     }
 
-    public async Task<UserViewModel> Get(string userId)
+    public async Task<UserViewModel?> Get(string userId)
     {
         var user = await UserRepository.GetAsync(userId, true);
 
         return user?.ToViewModel();
     }
 
-    public async Task<UserViewModel> GetByEmail(string email)
+    public async Task<UserViewModel?> GetByEmail(string email)
     {
         var user = await UserRepository.GetByEmail(email, true);
 
         return user?.ToViewModel();
     }
 
-    public async Task<List<WorkspaceUserViewModel>> GetWorkspaceUsers()
+    public async Task<List<WorkspaceUserViewModel>?> GetWorkspaceUsers()
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey);
+
+        if (workspace is null) return null;
+
         var users = await UserRepository.GetWorkspaceUsers(workspaceKey, true);
 
-        return MapWorkspaceUsers(users, workspace.OwnerId);
+        return MapWorkspaceUsers(users, workspace.OwnerId!);
     }
 
     public async Task<List<UserViewModel>> GetAll()
@@ -144,7 +147,7 @@ public class UserService : IUserService
         var users = await UserRepository.GetByEmailRange(emailList, true);
         var userIds = users.ConvertAll(user => user.Id);
 
-        if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId))
+        if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId!))
         {
             return ClientResponse.Failed("cannot remove thew owner of the workspace");
         }
@@ -167,11 +170,11 @@ public class UserService : IUserService
         return ClientResponse.Success();
     }
 
-    public async Task<UserViewModel> Update(AppUser user)
+    public async Task<ClientResponse<UserViewModel>> Update(AppUser user)
     {
         var updatedUser = await UserRepository.GetAsync(user.Id);
 
-        if (updatedUser is null) return null;
+        if (updatedUser is null) return ClientResponse<UserViewModel>.NotFound;
 
         updatedUser.PhoneNumber = user.PhoneNumber;
         updatedUser.Firstname = user.Firstname;
@@ -180,7 +183,9 @@ public class UserService : IUserService
 
         await UnitOfWork.CompleteAsync();
 
-        return updatedUser.ToViewModel();
+        var result = updatedUser.ToViewModel();
+
+        return ClientResponse<UserViewModel>.Success(result);
     }
 
     private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)

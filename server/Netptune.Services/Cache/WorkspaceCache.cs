@@ -24,7 +24,7 @@ public class WorkspaceCache : EntityCache<Workspace, string>, IWorkspaceCache
         UnitOfWork = unitOfWork;
     }
 
-    protected override Task<Workspace> GetEntity(string key)
+    protected override Task<Workspace?> GetEntity(string key)
     {
         return UnitOfWork.Workspaces.GetBySlug(key);
     }

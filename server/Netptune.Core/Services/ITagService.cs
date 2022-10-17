@@ -13,9 +13,9 @@ public interface ITagService
 
     Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request);
 
-    Task<List<TagViewModel>> GetTagsForTask(string systemId);
+    Task<List<TagViewModel>?> GetTagsForTask(string systemId);
 
-    Task<List<TagViewModel>> GetTagsForWorkspace();
+    Task<List<TagViewModel>?> GetTagsForWorkspace();
 
     Task<ClientResponse> Delete(DeleteTagsRequest request);
 

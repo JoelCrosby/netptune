@@ -15,7 +15,7 @@ public class ProjectTask : WorkspaceEntity<int>
 {
     public string Name { get; set; } = null!;
 
-    public string Description { get; set; }  = null!;
+    public string? Description { get; set; }
 
     public ProjectTaskStatus Status { get; set; }
 

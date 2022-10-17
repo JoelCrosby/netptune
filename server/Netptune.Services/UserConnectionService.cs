@@ -20,12 +20,12 @@ public class UserConnectionService : IUserConnectionService
         Identity = identity;
     }
 
-    public Task<UserConnection> Get(string connectionId)
+    public Task<UserConnection?> Get(string connectionId)
     {
         return Cache.GetValueAsync<UserConnection>(connectionId);
     }
 
-    public async Task<UserConnection> Add(string connectionId)
+    public async Task<UserConnection?> Add(string connectionId)
     {
         if (Cache.TryGetValue<UserConnection>(connectionId, out var result))
         {
@@ -33,8 +33,6 @@ public class UserConnectionService : IUserConnectionService
         }
 
         var user = await Identity.GetCurrentUser();
-
-        if (user is null) return null;
 
         return Cache.GetOrCreate(connectionId, () => new UserConnection
         {

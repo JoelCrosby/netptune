@@ -72,7 +72,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             });
         }
 
-        var groups = rows.Select(row => row.Group.Trim().ToLowerInvariant()).Distinct();
+        var groups = rows.Select(row => row.Group?.Trim().ToLowerInvariant()).Distinct();
         var workspaceId = await IdentityService.GetWorkspaceId();
         var board = await UnitOfWork.Boards.GetByIdentifier(boardId, workspaceId, true);
 
@@ -96,17 +96,23 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         }
 
         var project = await UnitOfWork.Projects.GetAsync(board.ProjectId, true);
+
+        if (project is null)
+        {
+            return Failed($"project with id '{board.ProjectId}' does not exist.");
+        }
+
         var existingGroups = await UnitOfWork.BoardGroups.GetBoardGroupsInBoard(board.Id, true);
         var existingGroupNames = existingGroups.ConvertAll(group => group.Name.Trim().ToLowerInvariant());
         var nextGroupOrder = existingGroups.MaxBy(group => group.SortOrder)?.SortOrder + 1 ?? 0;
 
-        var newGroups = groups.Where(group => !existingGroupNames.Contains(group));
+        var newGroups = groups.Where(group => !string.IsNullOrEmpty(group) && !existingGroupNames.Contains(group));
 
         var initialScopeId = await UnitOfWork.Tasks.GetNextScopeId(project.Id);
 
         if (initialScopeId is null)
         {
-            return Failed("Failed to generate next project scope Id");
+            return Failed("failed to generate next project scope Id");
         }
 
         var tags = ParseUniqueTags(rows);
@@ -130,7 +136,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             SortOrder = nextGroupOrder + index,
             OwnerId = userId,
             BoardId = board.Id,
-            Name = group,
+            Name = group!,
             Type = BoardGroupType.Basic,
             WorkspaceId = workspaceId,
         }).ToList();
@@ -180,7 +186,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                 };
             });
 
-            IEnumerable<Tag> ParseTags(string tagRow)
+            IEnumerable<Tag> ParseTags(string? tagRow)
             {
                 var names = ParseTagString(tagRow);
                 return names.Select(name => allTags[name]).ToList();
@@ -198,7 +204,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                     return acc;
                 }
 
-                var aggregateTags = ParseTags(rows[taskTagIndex].Tags);
+                var aggregateTags = ParseTags(rows[taskTagIndex]?.Tags);
                 var newTaskTags = aggregateTags.Select(tag => new ProjectTaskTag
                 {
                     ProjectTaskId = task.Id,
@@ -222,9 +228,9 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var userList = users.ToList();
 
-        string FindUserId(string email)
+        string? FindUserId(string? email)
         {
-            var target = email.Normalize();
+            var target = email?.Normalize();
 
             var result = userList.FirstOrDefault(user => string.Equals(
                     user.NormalizedEmail,
@@ -236,19 +242,19 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             return result?.Id;
         }
 
-        static bool ParseBool(string input)
+        static bool ParseBool(string? input)
         {
-            return string.Equals(input.Trim(), "true", StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(input?.Trim(), "true", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        static ProjectTaskStatus ParseStatus(string input)
+        static ProjectTaskStatus ParseStatus(string? input)
         {
             var isValid = Enum.TryParse(typeof(ProjectTaskStatus), input, true, out var status);
 
             return isValid && status is {} ? (ProjectTaskStatus)status : ProjectTaskStatus.New;
         }
 
-        return (row, i) => new ()
+        return (row, i) => new ProjectTask
         {
             Name = row.Name,
             Description = row.Description,
@@ -264,7 +270,8 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             {
                 new ()
                 {
-                    UserId = FindUserId(row.Assignee),
+                    // TODO: handle null user id appropriately
+                    UserId = FindUserId(row.Assignee)!,
                 },
             },
         };
@@ -305,7 +312,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         });
     }
 
-    private static IEnumerable<string> ParseTagString(string tagString)
+    private static IEnumerable<string> ParseTagString(string? tagString)
     {
         if (string.IsNullOrWhiteSpace(tagString))
         {

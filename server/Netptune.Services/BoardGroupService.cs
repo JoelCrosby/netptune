@@ -28,7 +28,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
         BoardGroups = unitOfWork.BoardGroups;
     }
 
-    public Task<BoardGroup> GetBoardGroup(int id)
+    public Task<BoardGroup?> GetBoardGroup(int id)
     {
         return BoardGroups.GetAsync(id, true);
     }
@@ -37,7 +37,10 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
     {
         var result = await BoardGroups.GetAsync(request.BoardGroupId!.Value);
 
-        if (result is null) return null;
+        if (result is null)
+        {
+            return ClientResponse<BoardGroupViewModel>.NotFound;
+        }
 
         if (request.Name is { })
         {
@@ -60,7 +63,10 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
         var board = await Boards.GetAsync(boardId);
 
-        if (board is null) return null;
+        if (board is null)
+        {
+            return ClientResponse<BoardGroupViewModel>.NotFound;
+        }
 
         var sortOrder = request.SortOrder ?? await BoardGroups.GetBoardGroupDefaultSortOrder(boardId);
 
@@ -84,7 +90,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
         var boardGroup = await BoardGroups.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (boardGroup is null || userId is null) return null;
+        if (boardGroup is null) return ClientResponse.NotFound;
 
         boardGroup.Delete(userId);
 

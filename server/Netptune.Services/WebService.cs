@@ -112,7 +112,7 @@ public class WebService : IWebService
         return Path.Join(baseUrl, tag);
     }
 
-    private static string GetTagContent(string value, IAttr tagContent)
+    private static string GetTagContent(string? value, IAttr tagContent)
     {
         return string.IsNullOrEmpty(value) ? tagContent.Value : value;
     }

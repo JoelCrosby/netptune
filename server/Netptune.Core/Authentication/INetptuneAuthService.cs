@@ -26,7 +26,7 @@ public interface INetptuneAuthService
 
     Task<ClientResponse> ChangePassword(ChangePasswordRequest request);
 
-    Task<CurrentUserResponse> CurrentUser();
+    Task<CurrentUserResponse?> CurrentUser();
 
-    Task<WorkspaceInvite> ValidateInviteCode(string code);
+    Task<WorkspaceInvite?> ValidateInviteCode(string code);
 }

@@ -98,7 +98,7 @@ public class WorkspacesController : ControllerBase
 
         var result = await WorkspaceService.Delete(key);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -115,7 +115,7 @@ public class WorkspacesController : ControllerBase
 
         var result = await WorkspaceService.DeletePermanent(key);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

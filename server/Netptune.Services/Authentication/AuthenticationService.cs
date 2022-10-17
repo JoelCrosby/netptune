@@ -40,10 +40,10 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IWorkspaceService WorkspaceService;
 
-    protected readonly string Issuer;
-    protected readonly string SecurityKey;
-    protected readonly string ExpireDays;
-    protected readonly string Origin;
+    private readonly string Issuer;
+    private readonly string SecurityKey;
+    private readonly string ExpireDays;
+    private readonly string Origin;
 
     public NetptuneAuthService(
         IConfiguration configuration,
@@ -70,7 +70,7 @@ public class NetptuneAuthService : INetptuneAuthService
         ExpireDays = configuration["Tokens:ExpireDays"];
         Origin = configuration["Origin"];
 
-        SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
+        SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY")!;
     }
 
     public async Task<LoginResult> LogIn(TokenRequest model)
@@ -103,8 +103,8 @@ public class NetptuneAuthService : INetptuneAuthService
             var registerRequest = new RegisterRequest
             {
                 Email = email,
-                Firstname = Identity.GetUserName().Split(" ").FirstOrDefault(),
-                Lastname = Identity.GetUserName().Split(" ").LastOrDefault(),
+                Firstname = Identity.GetUserName().Split(" ").FirstOrDefault()!,
+                Lastname = Identity.GetUserName().Split(" ").LastOrDefault()!,
                 PictureUrl = Identity.GetPictureUrl(),
                 Password = null,
                 AuthenticationProvider = AuthenticationProvider.GitHub,
@@ -123,7 +123,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
     public async Task<RegisterResult> Register(RegisterRequest model)
     {
-        async Task<WorkspaceInvite> GetWorkspaceInvite()
+        async Task<WorkspaceInvite?> GetWorkspaceInvite()
         {
             if (model.InviteCode is null) return null;
 
@@ -277,7 +277,7 @@ public class NetptuneAuthService : INetptuneAuthService
         return ClientResponse.Success("Password Changed");
     }
 
-    public async Task<CurrentUserResponse> CurrentUser()
+    public async Task<CurrentUserResponse?> CurrentUser()
     {
         var principle = ContextAccessor.HttpContext?.User;
         var user = await UserManager.GetUserAsync(principle);
@@ -385,7 +385,7 @@ public class NetptuneAuthService : INetptuneAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public Task<WorkspaceInvite> ValidateInviteCode(string code)
+    public Task<WorkspaceInvite?> ValidateInviteCode(string code)
     {
         return InviteCache.Get(code);
     }

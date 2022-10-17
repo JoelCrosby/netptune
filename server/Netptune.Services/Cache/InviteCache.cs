@@ -14,17 +14,17 @@ public class InviteCache : ValueCache<WorkspaceInvite>, IInviteCache
     {
     }
 
-    public override Task<WorkspaceInvite> Get(string key)
+    public override Task<WorkspaceInvite?> Get(string? key)
     {
         return base.Get($"workspace-invite:{key}");
     }
 
-    public override Task Create(string key, WorkspaceInvite value)
+    public override Task Create(string? key, WorkspaceInvite value)
     {
         return base.Create($"workspace-invite:{key}", value);
     }
 
-    public override void Remove(string key)
+    public override void Remove(string? key)
     {
         base.Remove($"workspace-invite:{key}");
     }

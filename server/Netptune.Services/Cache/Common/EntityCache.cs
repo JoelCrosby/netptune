@@ -13,7 +13,7 @@ public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
 {
     protected readonly ICacheProvider Cache;
 
-    protected abstract Task<TEntity> GetEntity(TKey key);
+    protected abstract Task<TEntity?> GetEntity(TKey key);
     protected abstract string GetCacheKey(TKey key);
 
     private readonly TimeSpan TimeToLive;
@@ -26,7 +26,7 @@ public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
         Logger = logger;
     }
 
-    public Task<TEntity> Get(TKey key)
+    public Task<TEntity?> Get(TKey key)
     {
         return GetOrCreateAsync(GetCacheKey(key), () => GetEntity(key));
     }
@@ -36,7 +36,7 @@ public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
         Cache.Remove(GetCacheKey(key));
     }
 
-    private async Task<TEntity> GetOrCreateAsync(string key, Func<Task<TEntity>> factory)
+    private async Task<TEntity?> GetOrCreateAsync(string key, Func<Task<TEntity?>> factory)
     {
         var watch = Stopwatch.StartNew();
 

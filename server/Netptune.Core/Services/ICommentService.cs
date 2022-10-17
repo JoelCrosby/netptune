@@ -9,9 +9,9 @@ namespace Netptune.Core.Services;
 
 public interface ICommentService
 {
-    Task<CommentViewModel> AddCommentToTask(AddCommentRequest request);
+    Task<ClientResponse<CommentViewModel>> AddCommentToTask(AddCommentRequest request);
 
-    Task<List<CommentViewModel>> GetCommentsForTask(string systemId);
+    Task<List<CommentViewModel>?> GetCommentsForTask(string systemId);
 
     Task<ClientResponse> Delete(int id);
 }

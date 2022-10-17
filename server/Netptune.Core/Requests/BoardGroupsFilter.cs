@@ -4,9 +4,9 @@ namespace Netptune.Core.Requests;
 
 public class BoardGroupsFilter
 {
-    public List<string>? Users { get; set; }
+    public List<string> Users { get; set; } = new();
 
-    public List<string>? Tags { get; set; }
+    public List<string> Tags { get; set; } = new();
 
     public bool Flagged { get; set; }
 

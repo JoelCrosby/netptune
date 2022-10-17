@@ -10,9 +10,9 @@ namespace Netptune.Core.Services;
 
 public interface IWorkspaceService
 {
-    Task<Workspace> GetWorkspace(int id);
+    Task<Workspace?> GetWorkspace(int id);
 
-    Task<Workspace> GetWorkspace(string slug);
+    Task<Workspace?> GetWorkspace(string slug);
 
     Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug);
 
@@ -20,7 +20,7 @@ public interface IWorkspaceService
 
     Task<List<Workspace>> GetAll();
 
-    Task<Workspace> UpdateWorkspace(Workspace workspace);
+    Task<ClientResponse<Workspace>> UpdateWorkspace(Workspace workspace);
 
     Task<Workspace> AddWorkspace(AddWorkspaceRequest request);
 

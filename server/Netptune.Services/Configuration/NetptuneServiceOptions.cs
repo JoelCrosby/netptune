@@ -7,5 +7,5 @@ namespace Netptune.Services.Configuration;
 public class NetptuneServiceOptions
 {
     [Required]
-    public HostingOptions HostingOptions { get; set; }
+    public HostingOptions HostingOptions { get; set; } = null!;
 }

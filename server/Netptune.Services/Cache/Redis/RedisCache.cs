@@ -19,7 +19,7 @@ public class RedisCache : ICacheProvider
 
     public RedisCache(IOptions<RedisCacheOptions> options)
     {
-        if (options?.Value is null)
+        if (options.Value is null)
         {
             throw new Exception($"{nameof(RedisCache)} was instantiated without options provided");
         }
@@ -27,12 +27,12 @@ public class RedisCache : ICacheProvider
         Redis = ConnectionMultiplexer.Connect(options.Value.Connection);
     }
 
-    public string GetString(string key)
+    public string? GetString(string key)
     {
         return Db.StringGet(key);
     }
 
-    public TValue GetValue<TValue>(string key)
+    public TValue? GetValue<TValue>(string? key)
     {
         if (key is null) return default;
 
@@ -43,7 +43,7 @@ public class RedisCache : ICacheProvider
         return JsonSerializer.Deserialize<TValue>(json);
     }
 
-    public bool TryGetString(string key, out string value)
+    public bool TryGetString(string? key, out string? value)
     {
         if (key is null)
         {
@@ -61,7 +61,7 @@ public class RedisCache : ICacheProvider
         return false;
     }
 
-    public bool TryGetValue<TValue>(string key, out TValue value)
+    public bool TryGetValue<TValue>(string? key, out TValue? value)
     {
         if (key is null)
         {
@@ -77,11 +77,11 @@ public class RedisCache : ICacheProvider
             return false;
         }
 
-        value = JsonSerializer.Deserialize<TValue>(result);
+        value = JsonSerializer.Deserialize<TValue>(result!);
         return true;
     }
 
-    public async Task<(bool, TValue)> TryGetValueAsync<TValue>(string key)
+    public async Task<(bool, TValue?)> TryGetValueAsync<TValue>(string? key)
     {
         if (key is null)
         {
@@ -95,20 +95,20 @@ public class RedisCache : ICacheProvider
             return (false, default);
         }
 
-        var value = JsonSerializer.Deserialize<TValue>(result);
+        var value = JsonSerializer.Deserialize<TValue>(result!);
         return (true, value);
     }
 
-    public async Task<string> GetStringAsync(string key)
+    public async Task<string?> GetStringAsync(string? key)
     {
         if (key is null) return null;
 
-        string result = await Db.StringGetAsync(key);
+        string? result = await Db.StringGetAsync(key);
 
         return result;
     }
 
-    public async Task<TValue> GetValueAsync<TValue>(string key)
+    public async Task<TValue?> GetValueAsync<TValue>(string? key)
     {
         if (key is null) return default;
 
@@ -118,7 +118,7 @@ public class RedisCache : ICacheProvider
         return JsonSerializer.Deserialize<TValue>(json);
     }
 
-    public TValue GetOrCreate<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+    public TValue? GetOrCreate<TValue>(string? key, Func<TValue> factory, DistributedCacheEntryOptions options)
     {
         var value = GetValue<TValue>(key);
 
@@ -132,7 +132,7 @@ public class RedisCache : ICacheProvider
         return value;
     }
 
-    public async Task<TValue> GetOrCreateAsync<TValue>(string key, Func<TValue> factory, DistributedCacheEntryOptions options)
+    public async Task<TValue?> GetOrCreateAsync<TValue>(string? key, Func<TValue> factory, DistributedCacheEntryOptions options)
     {
         var value = await GetValueAsync<TValue>(key);
 
@@ -146,31 +146,31 @@ public class RedisCache : ICacheProvider
         return value;
     }
 
-    public void Remove(string key)
+    public void Remove(string? key)
     {
         if (key is null) return;
 
         Db.KeyDelete(key);
     }
 
-    public Task RemoveAsync(string key)
+    public Task RemoveAsync(string? key)
     {
         if (key is null) return Task.CompletedTask;
 
         return Db.KeyDeleteAsync(key);
     }
 
-    public void Set(string key, string value, DistributedCacheEntryOptions options)
+    public void Set(string? key, string value, DistributedCacheEntryOptions options)
     {
         Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow);
     }
 
-    public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options)
+    public Task SetAsync(string? key, byte[] value, DistributedCacheEntryOptions options)
     {
         return Db.StringSetAsync(key, value, options.AbsoluteExpirationRelativeToNow);
     }
 
-    public void Set<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
+    public void Set<TValue>(string? key, TValue value, DistributedCacheEntryOptions options)
     {
         if (key is null) return;
 
@@ -178,7 +178,7 @@ public class RedisCache : ICacheProvider
         Db.StringSet(key, json, options.AbsoluteExpirationRelativeToNow);
     }
 
-    public Task SetAsync<TValue>(string key, TValue value, DistributedCacheEntryOptions options)
+    public Task SetAsync<TValue>(string? key, TValue value, DistributedCacheEntryOptions options)
     {
         if (key is null) return Task.CompletedTask;
 

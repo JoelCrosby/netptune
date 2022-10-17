@@ -75,7 +75,7 @@ public class BoardsController : ControllerBase
     {
         var result = await BoardService.GetBoardView(identifier, filter);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -89,7 +89,7 @@ public class BoardsController : ControllerBase
     {
         var result = await BoardService.GetBoard(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -127,7 +127,7 @@ public class BoardsController : ControllerBase
     {
         var result = await BoardService.Delete(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

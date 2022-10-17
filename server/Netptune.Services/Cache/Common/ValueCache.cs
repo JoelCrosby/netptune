@@ -19,17 +19,17 @@ public abstract class ValueCache<TValue> : IValueCache<TValue>
         TimeToLive = timeToLive;
     }
 
-    public virtual Task<TValue> Get(string key)
+    public virtual Task<TValue?> Get(string? key)
     {
         return Cache.GetValueAsync<TValue>(key);
     }
 
-    public virtual void Remove(string key)
+    public virtual void Remove(string? key)
     {
         Cache.Remove(key);
     }
 
-    public virtual Task Create(string key, TValue value)
+    public virtual Task Create(string? key, TValue value)
     {
         return Cache.SetAsync(key, value, new DistributedCacheEntryOptions
         {

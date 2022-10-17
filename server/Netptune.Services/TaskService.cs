@@ -117,15 +117,14 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             options.Type = ActivityType.Create;
         });
 
-        return Success(response);
+        return Success(response!);
     }
 
     public async Task<ClientResponse> Delete(int id)
     {
         var task = await TaskRepository.GetAsync(id);
-        var userId = await Identity.GetCurrentUserId();
 
-        if (task is null || userId is null) return null;
+        if (task is null) return ClientResponse.NotFound;
 
         await TaskRepository.DeletePermanent(task.Id);
         await UnitOfWork.CompleteAsync();
@@ -159,12 +158,12 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         return TaskRepository.GetProjectTaskCount(projectId);
     }
 
-    public Task<TaskViewModel> GetTask(int id)
+    public Task<TaskViewModel?> GetTask(int id)
     {
         return TaskRepository.GetTaskViewModel(id);
     }
 
-    public Task<TaskViewModel> GetTaskDetail(string systemId)
+    public Task<TaskViewModel?> GetTaskDetail(string systemId)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         return TaskRepository.GetTaskViewModel(systemId, workspaceKey);
@@ -178,13 +177,19 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
     public async Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request)
     {
-        if (request?.Id is null) throw new ArgumentNullException(nameof(request));
+        if (request.Id is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
 
         var result = await TaskRepository.GetAsync(request.Id.Value);
 
-        if (result is null) return null;
+        if (result is null)
+        {
+            return ClientResponse<TaskViewModel>.NotFound;
+        }
 
-        var old = result.ToViewModel().Clone() as TaskViewModel;
+        var old = result.ToViewModel() with {};
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -193,8 +198,8 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
                 await PutTaskInBoardGroup(request.Status.Value, result);
             }
 
-            result.Name = request.Name;
-            result.Description = request.Description;
+            result.Name = request.Name ?? result.Name;
+            result.Description = request.Description ?? result.Description;
             result.Status = request.Status ?? result.Status;
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
             result.OwnerId = request.OwnerId;
@@ -212,6 +217,10 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         });
 
         var response = await TaskRepository.GetTaskViewModel(result.Id);
+        if (response is null)
+        {
+            return ClientResponse<TaskViewModel>.NotFound;
+        }
 
         ProjectTaskDiff
             .Create(old, response)
@@ -384,9 +393,15 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
         var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
+
+        if (boardGroup is null)
+        {
+            throw new Exception($"Board '{defaultBoard.Name}' With Id {defaultBoard.Id} does not have a group of type {boardGroupType}.");
+        }
+
         var sortOrder = GetNextTaskInGroupSortOrder(boardGroup);
 
-        boardGroup?.TasksInGroups.Add(new ProjectTaskInBoardGroup
+        boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
         {
             SortOrder = sortOrder,
             BoardGroup = boardGroup,
@@ -418,6 +433,11 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
             var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
 
+            if (newGroup is null || task is null)
+            {
+                return null;
+            }
+
             task.Status = newGroup.Type.GetTaskStatusFromGroupType();
 
             var newRelational = new ProjectTaskInBoardGroup
@@ -434,6 +454,8 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             return newGroup;
         });
 
+
+
         var taskInBoardGroup = await UnitOfWork
             .ProjectTasksInGroups
             .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
@@ -444,6 +466,11 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             request.PreviousIndex,
             request.CurrentIndex,
             true);
+
+        if (boardGroup is null || taskInBoardGroup is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         taskInBoardGroup.SortOrder = sortOrder;
 
@@ -470,7 +497,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             .ProjectTasksInGroups
             .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
 
-        if (item is null) return null;
+        if (item is null) return ClientResponse.NotFound;
 
         item.SortOrder = await GetTaskInGroupSortOrder(
             request.NewGroupId,
