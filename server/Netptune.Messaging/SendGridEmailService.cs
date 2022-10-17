@@ -82,9 +82,9 @@ public class SendGridEmailService : IEmailService
         var substitutions = modelList.ConvertAll(model => new Dictionary<string, string>
         {
             {"-name-", model.Name},
-            {"-action-", model.Action},
-            {"-pre-header-", model.PreHeader},
-            {"-link-", model.Link},
+            {"-action-", model.Action ?? String.Empty},
+            {"-pre-header-", model.PreHeader ?? String.Empty},
+            {"-link-", model.Link ?? String.Empty},
         });
 
         var plainTextContent = firstEmail.RawTextContent;

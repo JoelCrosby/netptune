@@ -21,6 +21,7 @@
 
     <!-- Docker -->
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Nullable>enable</Nullable>
 
   </PropertyGroup>
 

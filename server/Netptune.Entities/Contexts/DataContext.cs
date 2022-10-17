@@ -18,25 +18,25 @@ namespace Netptune.Entities.Contexts;
 public class DataContext : IdentityDbContext<AppUser>
 {
     // Core data models
-    public DbSet<Project> Projects { get; set; }
-    public DbSet<Workspace> Workspaces { get; set; }
-    public DbSet<Flag> Flags { get; set; }
-    public DbSet<ProjectTask> ProjectTasks { get; set; }
-    public DbSet<AppUser> AppUsers { get; set; }
-    public DbSet<Post> Posts { get; set; }
-    public DbSet<Board> Boards { get; set; }
-    public DbSet<BoardGroup> BoardGroups { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Reaction> Reactions { get; set; }
-    public DbSet<Tag> Tags { get; set; }
-    public DbSet<ActivityLog> ActivityLogs { get; set; }
+    public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<Workspace> Workspaces { get; set; } = null!;
+    public DbSet<Flag> Flags { get; set; } = null!;
+    public DbSet<ProjectTask> ProjectTasks { get; set; } = null!;
+    public DbSet<AppUser> AppUsers { get; set; } = null!;
+    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<Board> Boards { get; set; } = null!;
+    public DbSet<BoardGroup> BoardGroups { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Reaction> Reactions { get; set; } = null!;
+    public DbSet<Tag> Tags { get; set; } = null!;
+    public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
 
     // relational data models
-    public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; }
-    public DbSet<ProjectUser> ProjectUsers { get; set; }
-    public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; }
-    public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; }
-    public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; }
+    public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; } = null!;
+    public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;
+    public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = null!;
+    public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; } = null!;
+    public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = null!;
 
     public DataContext() { }
 

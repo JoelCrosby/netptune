@@ -82,7 +82,7 @@ public class AuthController : ControllerBase
 
         var result = await AuthenticationService.ConfirmEmail(userId, decodedCode);
 
-        if (result is null) return Unauthorized();
+        if (!result.IsSuccess) return Unauthorized();
 
         return Ok(result.Ticket);
     }
@@ -138,7 +138,7 @@ public class AuthController : ControllerBase
             Password = password,
         });
 
-        if (result?.IsSuccess != true) return Unauthorized();
+        if (result.IsSuccess != true) return Unauthorized();
 
         return Ok(result.Ticket);
     }
@@ -154,7 +154,7 @@ public class AuthController : ControllerBase
     {
         var result = await AuthenticationService.ChangePassword(request);
 
-        if (result?.IsSuccess != true) return Unauthorized();
+        if (result.IsSuccess != true) return Unauthorized();
 
         return Ok(result);
     }
@@ -221,13 +221,13 @@ public class AuthController : ControllerBase
 
         var redirect = "/auth/auth-provider-login".SetQueryParams(new
         {
-            expires = result.Ticket.Expires,
-            issued = result.Ticket.Issued,
-            token = result.Ticket.Token,
-            displayName = result.Ticket.DisplayName,
-            email = result.Ticket.EmailAddress,
-            pictureUrl = result.Ticket.PictureUrl,
-            userId = result.Ticket.UserId,
+            expires = result.Ticket?.Expires,
+            issued = result.Ticket?.Issued,
+            token = result.Ticket?.Token,
+            displayName = result.Ticket?.DisplayName,
+            email = result.Ticket?.EmailAddress,
+            pictureUrl = result.Ticket?.PictureUrl,
+            userId = result.Ticket?.UserId,
         }).ToString();
 
         return Redirect(redirect);

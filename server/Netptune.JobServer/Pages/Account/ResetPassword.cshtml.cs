@@ -21,28 +21,28 @@ public class ResetPasswordModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
     public class InputModel
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; init; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; init; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; init; }
 
-        public string Code { get; set; }
+        public string? Code { get; init; }
     }
 
-    public IActionResult OnGet(string code = null)
+    public IActionResult OnGet(string? code = null)
     {
         if (code == null)
         {

@@ -29,7 +29,7 @@ public class ImportController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json", Type = typeof(TaskViewModel))]
-    public async Task<IActionResult> ImportWorkspaceTasks([FromRoute] string boardId, List<IFormFile> files)
+    public async Task<IActionResult> ImportWorkspaceTasks([FromRoute] string boardId, List<IFormFile>? files)
     {
         if (files is null || files.Count != 1)
         {

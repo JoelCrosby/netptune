@@ -5,5 +5,5 @@ namespace Netptune.JobClient;
 public class JobClientOptions
 {
     [Required]
-    public string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = null!;
 }

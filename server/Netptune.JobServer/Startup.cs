@@ -31,8 +31,8 @@ namespace Netptune.JobServer;
 
 public class Startup
 {
-    private static ConnectionMultiplexer Redis;
-    private static string RedisConnectionString;
+    private readonly ConnectionMultiplexer Redis = ConnectRedis();
+    private static string RedisConnectionString = string.Empty;
 
     private IConfiguration Configuration { get; }
     private IWebHostEnvironment WebHostEnvironment { get; }
@@ -45,11 +45,10 @@ public class Startup
         ConnectRedis();
     }
 
-    private static void ConnectRedis()
+    private static ConnectionMultiplexer ConnectRedis()
     {
-        RedisConnectionString = ConnectionStringParser.ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL"));
-
-        Redis = ConnectionMultiplexer.Connect(RedisConnectionString);
+        RedisConnectionString = ConnectionStringParser.ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL")!);
+        return ConnectionMultiplexer.Connect(RedisConnectionString);
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -88,17 +87,17 @@ public class Startup
 
         services.AddSendGridEmailService(options =>
         {
-            options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
+            options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY")!;
             options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
             options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
         });
 
         services.AddS3StorageService(options =>
         {
-            options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
-            options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION");
-            options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
-            options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
+            options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME")!;
+            options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION")!;
+            options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID")!;
+            options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY")!;
         });
 
         services.AddActivitySink();

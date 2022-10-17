@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -48,7 +49,7 @@ public class BoardHub : Hub<IBoardHub>
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await UserConnection.Remove(Context.ConnectionId);
         await base.OnDisconnectedAsync(exception);
@@ -80,7 +81,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse.Failed();
+        }
 
         var result = await TaskService.MoveTaskInBoardGroup(request.Payload);
 
@@ -95,7 +99,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<TaskViewModel>.Failed();
+        }
 
         var result = await TaskService.Create(request.Payload);
 
@@ -103,7 +110,7 @@ public class BoardHub : Hub<IBoardHub>
 
         await Clients
             .OthersInGroup(request.Group)
-            .Create(result.Payload);
+            .Create(result.Payload!);
 
         return result;
     }
@@ -125,6 +132,11 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<TaskViewModel>.Failed();
+        }
+
         var response = await TaskService.Delete(request.Payload);
 
         await Clients
@@ -138,7 +150,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse<TaskViewModel>.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<TaskViewModel>.Failed();
+        }
 
         var result = await TaskService.Update(request.Payload);
 
@@ -146,7 +161,7 @@ public class BoardHub : Hub<IBoardHub>
 
         await Clients
             .OthersInGroup(request.Group)
-            .Update(result.Payload);
+            .Update(result.Payload!);
 
         return result;
     }
@@ -155,7 +170,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<BoardGroupViewModel>.Failed();
+        }
 
         var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
 
@@ -163,7 +181,7 @@ public class BoardHub : Hub<IBoardHub>
 
         await Clients
             .OthersInGroup(request.Group)
-            .UpdateGroup(result.Payload);
+            .UpdateGroup(result.Payload!);
 
         return result;
     }
@@ -172,7 +190,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse<TagViewModel>.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<TagViewModel>.Failed();
+        }
 
         var result = await TagService.AddTagToTask(request.Payload);
 
@@ -180,7 +201,7 @@ public class BoardHub : Hub<IBoardHub>
 
         await Clients
             .OthersInGroup(request.Group)
-            .AddTagToTask(result.Payload);
+            .AddTagToTask(result.Payload!);
 
         return result;
     }
@@ -189,7 +210,7 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse.Failed();
+        if (IsInvalidRequest(request.Payload)) return ClientResponse.Failed();
 
         var response = await TagService.DeleteFromTask(request.Payload);
 
@@ -204,7 +225,10 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
-        if (IsInValidRequest(request.Payload)) return ClientResponse<BoardGroupViewModel>.Failed();
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse<BoardGroupViewModel>.Failed();
+        }
 
         var response = await BoardGroupService.AddBoardGroup(request.Payload);
 
@@ -232,6 +256,11 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse.Failed();
+        }
+
         var response = await TaskService.MoveTasksToGroup(request.Payload);
 
         await Clients
@@ -245,6 +274,11 @@ public class BoardHub : Hub<IBoardHub>
     {
         SetupHttpContext(request);
 
+        if (IsInvalidRequest(request.Payload))
+        {
+            return ClientResponse.Failed();
+        }
+
         var response = await TaskService.ReassignTasks(request.Payload);
 
         await Clients
@@ -254,8 +288,10 @@ public class BoardHub : Hub<IBoardHub>
         return response;
     }
 
-    private static bool IsInValidRequest(object target)
+    private static bool IsInvalidRequest<TRequest>([NotNullWhen(false)] TRequest? target) where TRequest : class
     {
+        if (target is null) return true;
+
         var context = new ValidationContext(target, null, null);
         var validationResults = new List<ValidationResult>();
 
