@@ -6,9 +6,9 @@ namespace Netptune.Core.Services;
 
 public interface IUserConnectionService
 {
-    Task<UserConnection> Add(string connectionId);
+    Task<UserConnection?> Add(string connectionId);
 
-    Task<UserConnection> Get(string connectionId);
+    Task<UserConnection?> Get(string connectionId);
 
     Task Remove(string connectionId);
 }

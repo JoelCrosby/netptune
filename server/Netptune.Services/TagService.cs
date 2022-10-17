@@ -33,7 +33,10 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
-        if (!workspaceId.HasValue) return null;
+        if (!workspaceId.HasValue)
+        {
+            return ClientResponse<TagViewModel>.NotFound;
+        }
 
         var trimmedTag = request.Tag.Trim().Capitalize();
         var alreadyExists = await Tags.Exists(trimmedTag, workspaceId.Value);
@@ -62,7 +65,10 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
-        if (taskId is null || !workspaceId.HasValue) return null;
+        if (taskId is null || !workspaceId.HasValue)
+        {
+            return ClientResponse<TagViewModel>.NotFound;
+        }
 
         return await UnitOfWork.Transaction(async () =>
         {
@@ -100,11 +106,11 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
             var response = await Tags.GetViewModel(tag.Id);
 
-            return Success(response);
+            return Success(response!);
         });
     }
 
-    public async Task<List<TagViewModel>> GetTagsForTask(string systemId)
+    public async Task<List<TagViewModel>?> GetTagsForTask(string systemId)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceKey);
@@ -114,7 +120,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         return await Tags.GetViewModelsForTask(taskId.Value, true);
     }
 
-    public async Task<List<TagViewModel>> GetTagsForWorkspace()
+    public async Task<List<TagViewModel>?> GetTagsForWorkspace()
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
@@ -145,7 +151,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         var workspaceKey = Identity.GetWorkspaceKey();
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
 
-        if (!taskId.HasValue) return null;
+        if (!taskId.HasValue) return ClientResponse.NotFound;
 
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
@@ -173,7 +179,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         var tag = await UnitOfWork.Tags.GetByValue(request.CurrentValue, workspaceId.Value);
 
-        if (tag is null) return null;
+        if (tag is null) return ClientResponse<TagViewModel>.NotFound;
 
         tag.Name = request.NewValue.Trim();
 

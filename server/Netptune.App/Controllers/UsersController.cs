@@ -34,6 +34,8 @@ public class UsersController : ControllerBase
     {
         var result = await UserService.GetWorkspaceUsers();
 
+        if (result is null) return NotFound();
+
         return Ok(result);
     }
 
@@ -59,7 +61,7 @@ public class UsersController : ControllerBase
     {
         var result = await UserService.Update(user);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

@@ -4,9 +4,9 @@ namespace Netptune.Core.Cache.Common;
 
 public interface IValueCache<TValue>
 {
-    Task<TValue> Get(string key);
+    Task<TValue?> Get(string key);
 
-    void Remove(string key);
+    void Remove(string? key);
 
-    Task Create(string key, TValue value);
+    Task Create(string? key, TValue value);
 }

@@ -46,7 +46,7 @@ public class IdentityService : IIdentityService
 
     public Task<AppUser> GetCurrentUser()
     {
-        return UserCache.Get(GetUserId());
+        return UserCache.Get(GetUserId())!;
     }
 
     public async Task<string> GetCurrentUserEmail()

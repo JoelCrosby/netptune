@@ -58,7 +58,7 @@ public class ProjectsController : ControllerBase
     {
         var result = await ProjectService.UpdateProject(project);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -82,7 +82,7 @@ public class ProjectsController : ControllerBase
     {
         var result = await ProjectService.Delete(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

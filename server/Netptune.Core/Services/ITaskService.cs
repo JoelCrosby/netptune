@@ -11,9 +11,9 @@ public interface ITaskService
 {
     Task<List<TaskViewModel>> GetTasks();
 
-    Task<TaskViewModel> GetTask(int id);
+    Task<TaskViewModel?> GetTask(int id);
 
-    Task<TaskViewModel> GetTaskDetail(string systemId);
+    Task<TaskViewModel?> GetTaskDetail(string systemId);
 
     Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request);
 

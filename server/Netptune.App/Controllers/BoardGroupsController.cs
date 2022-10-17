@@ -48,7 +48,7 @@ public class BoardGroupsController : ControllerBase
     {
         var result = await BoardGroupService.UpdateBoardGroup(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -74,7 +74,7 @@ public class BoardGroupsController : ControllerBase
     {
         var result = await BoardGroupService.Delete(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

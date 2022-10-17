@@ -19,7 +19,7 @@ public class WorkspaceResourceAuthorizationHandler : AuthorizationHandler<Worksp
         Cache = cache;
     }
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WorkspaceRequirement requirement, string workspaceKey)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WorkspaceRequirement requirement, string? workspaceKey)
     {
         if (workspaceKey is null)
         {

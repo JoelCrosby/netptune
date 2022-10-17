@@ -25,14 +25,17 @@ public class CommentService : ICommentService
         Comments = unitOfWork.Comments;
     }
 
-    public async Task<CommentViewModel> AddCommentToTask(AddCommentRequest request)
+    public async Task<ClientResponse<CommentViewModel>> AddCommentToTask(AddCommentRequest request)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var userId = await Identity.GetCurrentUserId();
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
-        if (taskId is null || !workspaceId.HasValue) return null;
+        if (taskId is null || !workspaceId.HasValue)
+        {
+            return ClientResponse<CommentViewModel>.NotFound;
+        }
 
         var comment = new Comment
         {
@@ -44,18 +47,22 @@ public class CommentService : ICommentService
         };
 
         await Comments.AddAsync(comment);
-
         await UnitOfWork.CompleteAsync();
 
-        return await Comments.GetCommentViewModel(comment.Id);
+        var result = await Comments.GetCommentViewModel(comment.Id);
+
+        return ClientResponse<CommentViewModel>.Success(result!);
     }
 
-    public async Task<List<CommentViewModel>> GetCommentsForTask(string systemId)
+    public async Task<List<CommentViewModel>?> GetCommentsForTask(string systemId)
     {
         var workspaceId = Identity.GetWorkspaceKey();
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(systemId, workspaceId);
 
-        if (taskId is null) return null;
+        if (taskId is null)
+        {
+            return null;
+        }
 
         return await Comments.GetCommentViewModelsForTask(taskId.Value);
     }
@@ -64,7 +71,10 @@ public class CommentService : ICommentService
     {
         var comment = await Comments.GetAsync(id);
 
-        if (comment is null) return null;
+        if (comment is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         await Comments.DeletePermanent(comment.Id);
         await UnitOfWork.CompleteAsync();

@@ -6,6 +6,10 @@ public class ClientResponse
 
     public string? Message { get; protected init; }
 
+    public ResponseType ResponseType { get; protected init; } = ResponseType.Default;
+
+    public bool IsNotFound => ResponseType == ResponseType.NotFound;
+
     protected ClientResponse()
     {
     }
@@ -27,6 +31,12 @@ public class ClientResponse
             Message = message,
         };
     }
+
+    public static readonly ClientResponse NotFound = new()
+    {
+        IsSuccess = false,
+        ResponseType = ResponseType.NotFound,
+    };
 }
 
 public class ClientResponse<TPayload> : ClientResponse
@@ -75,4 +85,10 @@ public class ClientResponse<TPayload> : ClientResponse
             Payload = payload,
         };
     }
+
+    public static readonly new ClientResponse<TPayload> NotFound = new()
+    {
+        IsSuccess = false,
+        ResponseType = ResponseType.NotFound,
+    };
 }

@@ -11,11 +11,11 @@ public interface IProjectService
 {
     Task<List<ProjectViewModel>> GetProjects();
 
-    Task<ProjectViewModel> GetProject(string key);
+    Task<ProjectViewModel?> GetProject(string key);
 
-    Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project);
+    Task<ClientResponse<ProjectViewModel>> UpdateProject(UpdateProjectRequest request);
 
-    Task<ProjectViewModel> AddProject(AddProjectRequest request);
+    Task<ClientResponse<ProjectViewModel>> AddProject(AddProjectRequest request);
 
     Task<ClientResponse> Delete(int id);
 }

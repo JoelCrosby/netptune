@@ -34,7 +34,7 @@ public class CommentsController : ControllerBase
     {
         var result = await CommentService.AddCommentToTask(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -62,7 +62,7 @@ public class CommentsController : ControllerBase
     {
         var result = await CommentService.Delete(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

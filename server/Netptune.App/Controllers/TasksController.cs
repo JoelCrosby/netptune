@@ -74,7 +74,7 @@ public class TasksController : ControllerBase
     {
         var result = await TaskService.Update(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -100,7 +100,7 @@ public class TasksController : ControllerBase
     {
         var result = await TaskService.Delete(ids);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -114,7 +114,7 @@ public class TasksController : ControllerBase
     {
         var result = await TaskService.Delete(id);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -141,7 +141,7 @@ public class TasksController : ControllerBase
     {
         var result = await TaskService.MoveTaskInBoardGroup(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -156,7 +156,7 @@ public class TasksController : ControllerBase
     {
         var result = await TaskService.MoveTasksToGroup(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

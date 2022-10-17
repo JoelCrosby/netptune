@@ -12,7 +12,7 @@ public interface IBoardService
 {
     Task<List<BoardViewModel>> GetBoards(int projectId);
 
-    Task<List<BoardViewModel>> GetBoardsInProject(int projectId);
+    Task<List<BoardViewModel>?> GetBoardsInProject(int projectId);
 
     Task<ClientResponse<BoardViewModel>> GetBoard(int id);
 
@@ -24,7 +24,7 @@ public interface IBoardService
 
     Task<ClientResponse> Delete(int id);
 
-    Task<List<BoardsViewModel>> GetBoardsInWorkspace();
+    Task<List<BoardsViewModel>?> GetBoardsInWorkspace();
 
     Task<ClientResponse<IsSlugUniqueResponse>> IsIdentifierUnique(string identifier);
 }

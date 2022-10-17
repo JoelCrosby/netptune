@@ -53,7 +53,10 @@ public class BoardService : IBoardService
         var workspaceId = await IdentityService.GetWorkspaceId();
         var nullableBoardId = await Boards.GetIdByIdentifier(boardIdentifier, workspaceId);
 
-        if (!nullableBoardId.HasValue) return null;
+        if (!nullableBoardId.HasValue)
+        {
+            return ClientResponse<BoardView>.NotFound;
+        }
 
         var boardId = nullableBoardId.Value;
 
@@ -65,8 +68,8 @@ public class BoardService : IBoardService
             return ClientResponse<BoardView>.Failed();
         }
 
-        var includeUserFilter = filter?.Users?.Any() ?? false;
-        var includeTagFilter = filter?.Tags?.Any() ?? false;
+        var includeUserFilter = filter?.Users.Any() ?? false;
+        var includeTagFilter = filter?.Tags.Any() ?? false;
         var includeFlaggedFilter = filter?.Flagged ?? false;
 
         var userIds = groups
@@ -107,7 +110,10 @@ public class BoardService : IBoardService
 
         var result = await Boards.GetAsync(request.Id.Value);
 
-        if (result is null) return null;
+        if (result is null)
+        {
+            return ClientResponse<BoardViewModel>.NotFound;
+        }
 
         result.Name = request.Name ?? result.Name;
         result.Identifier = request.Identifier?.ToUrlSlug() ?? result.Identifier;
@@ -127,6 +133,12 @@ public class BoardService : IBoardService
         }
 
         var project = await UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true);
+
+        if (project is null)
+        {
+            return ClientResponse<BoardViewModel>.NotFound;
+        }
+
         var workspaceId = project.WorkspaceId;
 
         var board = new Board
@@ -176,7 +188,7 @@ public class BoardService : IBoardService
         var board = await Boards.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (board is null || userId is null) return null;
+        if (board is null) return ClientResponse.NotFound;
 
         board.Delete(userId);
 
@@ -185,7 +197,7 @@ public class BoardService : IBoardService
         return ClientResponse.Success();
     }
 
-    public async Task<List<BoardsViewModel>> GetBoardsInWorkspace()
+    public async Task<List<BoardsViewModel>?> GetBoardsInWorkspace()
     {
         var workspaceId = IdentityService.GetWorkspaceKey();
         var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceId);
@@ -195,7 +207,7 @@ public class BoardService : IBoardService
         return await Boards.GetBoardViewModels(workspaceId);
     }
 
-    public async Task<List<BoardViewModel>> GetBoardsInProject(int projectId)
+    public async Task<List<BoardViewModel>?> GetBoardsInProject(int projectId)
     {
         var results = await Boards.GetBoardsInProject(projectId, true);
 

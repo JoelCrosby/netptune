@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,9 +24,9 @@ public class ProjectService : IProjectService
         IdentityService = identityService;
     }
 
-    public Task<ProjectViewModel> AddProject(AddProjectRequest request)
+    public async Task<ClientResponse<ProjectViewModel>> AddProject(AddProjectRequest request)
     {
-        return UnitOfWork.Transaction(async () =>
+        var result = await UnitOfWork.Transaction(async () =>
         {
             var workspaceId = IdentityService.GetWorkspaceKey();
             var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceId);
@@ -55,6 +54,13 @@ public class ProjectService : IProjectService
 
             return await ProjectRepository.GetProjectViewModel(project.Id);
         });
+
+        if (result is null)
+        {
+            return ClientResponse<ProjectViewModel>.NotFound;
+        }
+
+        return ClientResponse<ProjectViewModel>.Success(result);
     }
 
     public async Task<ClientResponse> Delete(int id)
@@ -62,7 +68,10 @@ public class ProjectService : IProjectService
         var project = await ProjectRepository.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (project is null || userId is null) return null;
+        if (project is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         project.Delete(userId);
 
@@ -71,7 +80,7 @@ public class ProjectService : IProjectService
         return ClientResponse.Success();
     }
 
-    public async Task<ProjectViewModel> GetProject(string projectKey)
+    public async Task<ProjectViewModel?> GetProject(string projectKey)
     {
         var workspaceKey = IdentityService.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
@@ -87,26 +96,26 @@ public class ProjectService : IProjectService
         return ProjectRepository.GetProjects(workspaceId);
     }
 
-    public async Task<ProjectViewModel> UpdateProject(UpdateProjectRequest project)
+    public async Task<ClientResponse<ProjectViewModel>> UpdateProject(UpdateProjectRequest request)
     {
-        if (project.Id is null)
-        {
-            throw new Exception("project.Id cannot be null");
-        }
-
-        var result = await ProjectRepository.GetAsync(project.Id.Value);
+        var project = await ProjectRepository.GetAsync(request.Id!.Value);
         var user = await IdentityService.GetCurrentUser();
 
-        if (result is null) return null;
+        if (project is null)
+        {
+            return ClientResponse<ProjectViewModel>.NotFound;
+        }
 
-        result.Name = project.Name;
-        result.Description = project.Description;
-        result.RepositoryUrl = project.RepositoryUrl;
-        result.Key = project.Key ?? result.Key;
-        result.ModifiedByUserId = user.Id;
+        project.Name = request.Name ?? project.Name;
+        project.Description = request.Description ?? project.Description;
+        project.RepositoryUrl = request.RepositoryUrl ?? project.RepositoryUrl;
+        project.Key = request.Key ?? project.Key;
+        project.ModifiedByUserId = user.Id;
 
         await UnitOfWork.CompleteAsync();
 
-        return await ProjectRepository.GetProjectViewModel(result.Id);
+        var result = await ProjectRepository.GetProjectViewModel(project.Id);
+
+        return ClientResponse<ProjectViewModel>.Success(result!);
     }
 }

@@ -24,7 +24,7 @@ public class UserCache : EntityCache<AppUser, string>, IUserCache
         UnitOfWork = unitOfWork;
     }
 
-    protected override Task<AppUser> GetEntity(string key)
+    protected override Task<AppUser?> GetEntity(string key)
     {
         return UnitOfWork.Users.GetAsync(key);
     }

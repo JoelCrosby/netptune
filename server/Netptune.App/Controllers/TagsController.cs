@@ -34,7 +34,7 @@ public class TagsController : ControllerBase
     {
         var result = await TagService.AddTag(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -49,7 +49,7 @@ public class TagsController : ControllerBase
     {
         var result = await TagService.AddTagToTask(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -103,7 +103,7 @@ public class TagsController : ControllerBase
     {
         var result = await TagService.DeleteFromTask(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }
@@ -117,7 +117,7 @@ public class TagsController : ControllerBase
     {
         var result = await TagService.Update(request);
 
-        if (result is null) return NotFound();
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

@@ -6,7 +6,7 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.ProjectTasks;
 
-public class TaskViewModel : ICloneable
+public record TaskViewModel
 {
     public int Id { get; set; }
 
@@ -45,9 +45,4 @@ public class TaskViewModel : ICloneable
     public string? OwnerPictureUrl { get; set; }
 
     public string? ProjectName { get; set; }
-
-    public object Clone()
-    {
-        return this.MemberwiseClone();
-    }
 }

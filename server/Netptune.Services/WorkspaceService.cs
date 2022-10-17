@@ -89,7 +89,10 @@ public class WorkspaceService : IWorkspaceService
     {
         var workspace = await WorkspaceRepository.GetBySlug(key);
 
-        if (workspace is null) return null;
+        if (workspace is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         return await Delete(workspace.Id);
     }
@@ -99,7 +102,10 @@ public class WorkspaceService : IWorkspaceService
         var workspace = await WorkspaceRepository.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (workspace is null || userId is null) return null;
+        if (workspace is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         Cache.Remove(new WorkspaceUserKey
         {
@@ -118,7 +124,10 @@ public class WorkspaceService : IWorkspaceService
     {
         var workspace = await WorkspaceRepository.GetBySlug(key);
 
-        if (workspace is null) return null;
+        if (workspace is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         return await DeletePermanent(workspace.Id);
     }
@@ -128,7 +137,10 @@ public class WorkspaceService : IWorkspaceService
         var workspace = await WorkspaceRepository.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (workspace is null || userId is null) return null;
+        if (workspace is null)
+        {
+            return ClientResponse.NotFound;
+        }
 
         Cache.Remove(new WorkspaceUserKey
         {
@@ -160,12 +172,12 @@ public class WorkspaceService : IWorkspaceService
         return ClientResponse.Success();
     }
 
-    public Task<Workspace> GetWorkspace(int id)
+    public Task<Workspace?> GetWorkspace(int id)
     {
         return WorkspaceRepository.GetAsync(id, true);
     }
 
-    public Task<Workspace> GetWorkspace(string slug)
+    public Task<Workspace?> GetWorkspace(string slug)
     {
         return WorkspaceRepository.GetBySlug(slug);
     }
@@ -182,7 +194,7 @@ public class WorkspaceService : IWorkspaceService
         return WorkspaceRepository.GetAllAsync();
     }
 
-    public async Task<Workspace> UpdateWorkspace(Workspace workspace)
+    public async Task<ClientResponse<Workspace>> UpdateWorkspace(Workspace workspace)
     {
         var user = await IdentityService.GetCurrentUser();
 
@@ -190,7 +202,10 @@ public class WorkspaceService : IWorkspaceService
 
         var result = await WorkspaceRepository.GetAsync(workspace.Id);
 
-        if (result is null) return null;
+        if (result is null)
+        {
+            return ClientResponse<Workspace>.NotFound;
+        }
 
         result.Name = workspace.Name;
         result.Description = workspace.Description;
@@ -206,7 +221,7 @@ public class WorkspaceService : IWorkspaceService
 
         await UnitOfWork.CompleteAsync();
 
-        return result;
+        return ClientResponse<Workspace>.Success(result);
     }
 
     public async Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug)

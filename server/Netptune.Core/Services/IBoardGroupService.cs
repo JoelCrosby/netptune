@@ -9,7 +9,7 @@ namespace Netptune.Core.Services;
 
 public interface IBoardGroupService
 {
-    Task<BoardGroup> GetBoardGroup(int id);
+    Task<BoardGroup?> GetBoardGroup(int id);
 
     Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request);
 

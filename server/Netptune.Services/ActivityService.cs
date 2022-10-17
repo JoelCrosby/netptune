@@ -33,7 +33,7 @@ public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
 
         foreach (var activity in activities.Where(activity => activity.Meta is not null))
         {
-            if (!activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
+            if (!activity.Meta!.RootElement.TryGetProperty("assigneeId", out var element))
             {
                 continue;
             }
@@ -60,7 +60,7 @@ public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
 
             if (activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
             {
-                yield return element.GetString();
+                yield return element.GetString()!;
             }
         }
     }
