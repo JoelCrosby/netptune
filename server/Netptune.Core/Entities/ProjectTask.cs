@@ -85,29 +85,5 @@ public class ProjectTask : WorkspaceEntity<int>
         };
     }
 
-    public ExportTaskViewModel ToExportViewModel()
-    {
-        // TODO: Implement Assignee View models
-
-        return new()
-        {
-            Name = Name,
-            Description = Description,
-            Status = Status.ToString(),
-            SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
-            IsFlagged = IsFlagged,
-            Board = Workspace.Slug,
-            CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt,
-            Owner = Owner?.Email ?? string.Empty,
-            Project = Project?.Name ?? string.Empty,
-            Group = ProjectTaskInBoardGroups.FirstOrDefault()?.BoardGroup?.Name,
-            Assignees = ProjectTaskAppUsers
-                .Select(u => u.User)
-                .Select(u => u.Email)
-                .ToList(),
-        };
-    }
-
     #endregion
 }

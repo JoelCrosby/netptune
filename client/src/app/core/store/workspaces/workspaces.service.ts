@@ -17,14 +17,14 @@ export class WorkspacesService {
   }
 
   post(workspace: Workspace) {
-    return this.http.post<Workspace>(
+    return this.http.post<ClientResponse<Workspace>>(
       environment.apiEndpoint + 'api/workspaces',
       workspace
     );
   }
 
   put(workspace: Workspace) {
-    return this.http.put<Workspace>(
+    return this.http.put<ClientResponse<Workspace>>(
       environment.apiEndpoint + 'api/workspaces',
       workspace
     );
@@ -33,7 +33,7 @@ export class WorkspacesService {
   delete(workspace: Workspace) {
     if (!workspace?.slug) return throwError('workspace slug empty');
 
-    return this.http.delete<Workspace>(
+    return this.http.delete<ClientResponse>(
       environment.apiEndpoint + 'api/workspaces/' + workspace.slug
     );
   }

@@ -17,7 +17,7 @@ export class BoardGroupsService {
   constructor(private http: HttpClient) {}
 
   get(boardId: string, params: Params) {
-    return this.http.get<BoardView>(
+    return this.http.get<ClientResponse<BoardView>>(
       environment.apiEndpoint + `api/boards/view/${boardId}`,
       {
         params,
@@ -26,7 +26,7 @@ export class BoardGroupsService {
   }
 
   post(request: AddBoardGroupRequest) {
-    return this.http.post<BoardGroupViewModel>(
+    return this.http.post<ClientResponse<BoardGroupViewModel>>(
       environment.apiEndpoint + 'api/boardgroups',
       request
     );
@@ -46,7 +46,7 @@ export class BoardGroupsService {
   }
 
   put(boardGorup: BoardGroupViewModel | BoardViewGroup) {
-    return this.http.put<BoardGroupViewModel>(
+    return this.http.put<ClientResponse<BoardGroupViewModel>>(
       environment.apiEndpoint + 'api/boardgroups',
       boardGorup
     );

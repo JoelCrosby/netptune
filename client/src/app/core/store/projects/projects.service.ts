@@ -30,14 +30,14 @@ export class ProjectsService {
   }
 
   post(project: AddProjectRequest) {
-    return this.http.post<ProjectViewModel>(
+    return this.http.post<ClientResponse<ProjectViewModel>>(
       environment.apiEndpoint + 'api/projects',
       project
     );
   }
 
   put(project: UpdateProjectRequest) {
-    return this.http.put<ProjectViewModel>(
+    return this.http.put<ClientResponse<ProjectViewModel>>(
       environment.apiEndpoint + 'api/projects',
       project
     );

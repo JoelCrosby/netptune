@@ -86,12 +86,12 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         if (users.Count != emailAddresses.Count)
         {
-            var existingUserEmails = users.Select(user => user.Email);
+            var existingUserEmails = users.Select(user => user.NormalizedEmail);
             var missingUserEmails = emailAddresses.Except(existingUserEmails);
 
             return Failed("Import File contained email addresses that do not belong to users in Netptune", new TaskImportResult
             {
-                MissingEmails = missingUserEmails,
+                MissingEmails = missingUserEmails.Select(email => email.ToLowerInvariant()),
             });
         }
 
@@ -228,19 +228,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var userList = users.ToList();
 
-        string? FindUserId(string? email)
-        {
-            var target = email?.Normalize();
 
-            var result = userList.FirstOrDefault(user => string.Equals(
-                    user.NormalizedEmail,
-                    target,
-                    StringComparison.InvariantCultureIgnoreCase
-                )
-            );
-
-            return result?.Id;
-        }
 
         static bool ParseBool(string? input)
         {
@@ -264,39 +252,65 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             CreatedAt = row.CreatedAt,
             UpdatedAt = row.UpdatedAt,
             Status = ParseStatus(row.Status),
-            OwnerId = FindUserId(row.Owner),
+            OwnerId = FindUserId(userList, row.Owner),
             ProjectScopeId = initialScopeId + i,
-            ProjectTaskAppUsers = new List<ProjectTaskAppUser>
-            {
-                new ()
-                {
-                    // TODO: handle null user id appropriately
-                    UserId = FindUserId(row.Assignee)!,
-                },
-            },
+            ProjectTaskAppUsers = GetUsersFromArrayCell(userList, row.Assignees),
         };
+    }
+
+    private static string? FindUserId(List<AppUser> users, string? email)
+    {
+        var target = email?.Normalize();
+
+        var result = users.FirstOrDefault(user => string.Equals(
+                user.NormalizedEmail,
+                target,
+                StringComparison.InvariantCultureIgnoreCase
+            )
+        );
+
+        return result?.Id;
+    }
+
+    private static List<ProjectTaskAppUser> GetUsersFromArrayCell(List<AppUser> users, string? cell)
+    {
+        var items = ParseCellArray(cell);
+        var results = new List<ProjectTaskAppUser>();
+
+        foreach (var item in items)
+        {
+            var userId = FindUserId(users, item);
+            if (userId is null) continue;
+
+            results.Add(new ProjectTaskAppUser
+            {
+                UserId = userId,
+            });
+        }
+
+        return results;
     }
 
     private static List<string> GetEmailAddresses(IEnumerable<TaskImportRow> rows)
     {
         return rows
-            .Select(row => new { AssigneeEmail = row.Assignee, OwnerEmail = row.Owner })
-            .Aggregate(new List<string>(), (result, current) =>
+            .Aggregate(new HashSet<string>(), (result, current) =>
             {
-                if (!string.IsNullOrEmpty(current.OwnerEmail))
+                foreach (var email in ParseCellArray(current.Assignees))
                 {
-                    result.Add(current.OwnerEmail);
-                }
-
-                if (!string.IsNullOrEmpty(current.AssigneeEmail))
-                {
-                    result.Add(current.AssigneeEmail);
+                    result.Add(email.Trim().ToUpper().Normalize());
                 }
 
                 return result;
             })
-            .Distinct()
             .ToList();
+    }
+
+    private static List<string> ParseCellArray(string? cell)
+    {
+        if (string.IsNullOrWhiteSpace(cell)) return new List<string>();
+
+        return cell.Split('|', StringSplitOptions.RemoveEmptyEntries).ToHashSet().ToList();
     }
 
     private static IEnumerable<string> ParseUniqueTags(IEnumerable<TaskImportRow> rows)
@@ -324,6 +338,9 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             return new[] { tagString.Trim() };
         }
 
-        return tagString.Split('|', StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim());
+        return tagString
+            .Split('|', StringSplitOptions.RemoveEmptyEntries)
+            .Select(tag => tag.Trim())
+            .ToHashSet();
     }
 }

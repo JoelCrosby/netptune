@@ -15,7 +15,7 @@ public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableE
 
     #region ForeignKeys
 
-    public string CreatedByUserId { get; set; } = null!;
+    public string? CreatedByUserId { get; set; }
 
     public string? ModifiedByUserId { get; set; }
 
@@ -28,7 +28,7 @@ public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableE
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual AppUser CreatedByUser { get; set; } = null!;
+    public virtual AppUser? CreatedByUser { get; set; }
 
     [JsonIgnore]
     public virtual AppUser? ModifiedByUser { get; set; }

@@ -51,6 +51,7 @@ export class BoardGroupsEffects {
       ),
       switchMap(([_, id, paramMap, params]) =>
         this.boardGroupsService.get(id as string, params).pipe(
+          unwrapClientReposne(),
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,

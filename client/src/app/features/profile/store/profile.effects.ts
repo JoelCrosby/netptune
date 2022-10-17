@@ -46,6 +46,7 @@ export class ProfileEffects {
         if (!profile || !data) return of({ type: 'noop' });
 
         return this.profileService.put(profile).pipe(
+          unwrapClientReposne(),
           tap(() => this.snackbar.open('Profile Updated')),
           tap(() =>
             this.store.dispatch(actions.uploadProfilePicture({ data }))

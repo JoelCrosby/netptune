@@ -24,13 +24,13 @@ public class ExportTaskViewModel
 
     public DateTime? UpdatedAt { get; init; }
 
-    public List<string> Assignees { get; init; } = new();
+    public HashSet<string> Assignees { get; init; } = new();
 
     public string Owner { get; init; }= null!;
 
     public string? Group { get; init; }
 
-    public string? Tags { get; set; }
+    public HashSet<string> Tags { get; set; } = new();
 
     public string? Project { get; init; }
 
@@ -43,5 +43,6 @@ public sealed class ExportTaskViewModelMap : ClassMap<ExportTaskViewModel>
     {
         AutoMap(CultureInfo.InvariantCulture);
         Map(m => m.Assignees).Convert(m => string.Join(" | ", m.Value.Assignees));
+        Map(m => m.Tags).Convert(m => string.Join(" | ", m.Value.Tags));
     }
 }

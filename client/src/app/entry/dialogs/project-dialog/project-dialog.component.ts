@@ -61,7 +61,6 @@ export class ProjectDialogComponent implements OnDestroy {
           name: this.name.value as string,
           description: this.description.value,
           repositoryUrl: this.repositoryUrl.value,
-          workspace: workspace.slug,
           metaInfo: {
             color: this.color.value as string,
           },

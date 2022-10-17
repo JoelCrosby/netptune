@@ -12,7 +12,7 @@ public interface IAuditableEntity
 
     DateTime? UpdatedAt { get; set; }
 
-    string CreatedByUserId { get; set; }
+    string? CreatedByUserId { get; set; }
 
     string? ModifiedByUserId { get; set; }
 
@@ -20,7 +20,7 @@ public interface IAuditableEntity
 
     string? OwnerId { get; set; }
 
-    AppUser CreatedByUser { get; set; }
+    AppUser? CreatedByUser { get; set; }
 
     AppUser? ModifiedByUser { get; set; }
 

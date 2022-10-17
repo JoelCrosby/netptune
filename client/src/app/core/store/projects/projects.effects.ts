@@ -89,6 +89,7 @@ export class ProjectsEffects {
       ofType(actions.createProject),
       switchMap((action) =>
         this.projectsService.post(action.project).pipe(
+          unwrapClientReposne(),
           map((project) => actions.createProjectSuccess({ project })),
           catchError((error: HttpErrorResponse) =>
             of(actions.createProjectFail({ error }))
@@ -133,6 +134,7 @@ export class ProjectsEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.projectsService.put(action.project).pipe(
+            unwrapClientReposne(),
             tap(() => this.snackbar.open('Project updated')),
             map((project) => actions.updateProjectSuccess({ project })),
             catchError((error: HttpErrorResponse) =>
