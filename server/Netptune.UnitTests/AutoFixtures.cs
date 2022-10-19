@@ -41,7 +41,8 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskInBoardGroups)
         .Without(p => p.ProjectTaskTags)
         .Without(p => p.Tags)
-        .WithoutWorkspace()
+        .With(p => p.Workspace, Workspace)
+        .WithoutAuditable()
         .Create();
 
     public static BoardGroup BoardGroup => Fixture
@@ -51,6 +52,15 @@ public static class AutoFixtures
         .Without(p => p.TasksInGroups)
         .WithoutWorkspace()
         .Create();
+
+    public static Board Board => Fixture
+        .Build<Board>()
+        .Without(p => p.Project)
+        .Without(p => p.BoardGroups)
+        .WithoutWorkspace()
+        .Create();
+
+    public static List<BoardGroup> BoardGroups => new() { BoardGroup.WithTasks() };
 
     public static BoardGroup WithTasks(this BoardGroup boardGroup)
     {
