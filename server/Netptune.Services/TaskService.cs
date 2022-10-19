@@ -305,7 +305,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         var tasks = await TaskRepository.GetAllByIdAsync(ids);
         var taskIds = tasks.ConvertAll(task => task.Id);
 
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
+        await RemoveTaskFromGroups(taskIds);
         await TaskRepository.DeletePermanent(taskIds);
         await UnitOfWork.CompleteAsync();
 
@@ -560,9 +560,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
     private async Task RemoveTaskFromGroups(IEnumerable<int> taskIds)
     {
-        var taskInGroupsToDelete = await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
-
-        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
-        await UnitOfWork.CompleteAsync();
+        var ids = await UnitOfWork.ProjectTasksInGroups.GetAllByTaskId(taskIds);
+        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(ids);
     }
 }

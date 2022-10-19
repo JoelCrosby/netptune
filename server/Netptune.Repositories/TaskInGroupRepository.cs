@@ -42,7 +42,16 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds)
+    public async Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds)
+    {
+        var taskIdList = taskIds.ToList();
+        return await Entities
+            .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
+            .Select(entity => entity.Id)
+            .ToListAsync();
+    }
+
+    public async Task DeleteAllByTaskId(IEnumerable<int> taskIds)
     {
         var taskIdList = taskIds.ToList();
         var ids = await Entities
@@ -51,7 +60,5 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ToListAsync();
 
         await DeletePermanent(ids);
-
-        return ids;
     }
 }
