@@ -120,39 +120,6 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         return Success(response!);
     }
 
-    public async Task<ClientResponse> Delete(int id)
-    {
-        var task = await TaskRepository.GetAsync(id);
-
-        if (task is null) return ClientResponse.NotFound;
-
-        await TaskRepository.DeletePermanent(task.Id);
-        await UnitOfWork.CompleteAsync();
-
-        Activity.Log(options =>
-        {
-            options.EntityId = task.Id;
-            options.EntityType = EntityType.Task;
-            options.Type = ActivityType.Delete;
-        });
-
-        return ClientResponse.Success();
-    }
-
-    public async Task<ClientResponse> Delete(IEnumerable<int> ids)
-    {
-        if (ids is null) throw new ArgumentNullException(nameof(ids));
-
-        var tasks = await TaskRepository.GetAllByIdAsync(ids);
-        var taskIds = tasks.ConvertAll(task => task.Id);
-
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
-        await TaskRepository.DeletePermanent(taskIds);
-        await UnitOfWork.CompleteAsync();
-
-        return ClientResponse.Success();
-    }
-
     public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
     {
         return TaskRepository.GetProjectTaskCount(projectId);
@@ -312,6 +279,44 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         }
 
         return TransferTaskInGroups(request);
+    }
+
+    public async Task<ClientResponse> Delete(int id)
+    {
+        var task = await TaskRepository.GetAsync(id);
+
+        if (task is null) return ClientResponse.NotFound;
+
+        await TaskRepository.DeletePermanent(task.Id);
+        await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = task.Id;
+            options.EntityType = EntityType.Task;
+            options.Type = ActivityType.Delete;
+        });
+
+        return ClientResponse.Success();
+    }
+
+    public async Task<ClientResponse> Delete(IEnumerable<int> ids)
+    {
+        var tasks = await TaskRepository.GetAllByIdAsync(ids);
+        var taskIds = tasks.ConvertAll(task => task.Id);
+
+        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
+        await TaskRepository.DeletePermanent(taskIds);
+        await UnitOfWork.CompleteAsync();
+
+        Activity.LogMany(options =>
+        {
+            options.EntityIds = taskIds;
+            options.EntityType = EntityType.Task;
+            options.Type = ActivityType.Delete;
+        });
+
+        return ClientResponse.Success();
     }
 
     private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
