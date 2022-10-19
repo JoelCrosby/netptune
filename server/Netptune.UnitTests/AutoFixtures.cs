@@ -45,6 +45,16 @@ public static class AutoFixtures
         .WithoutAuditable()
         .Create();
 
+    public static List<ProjectTask> ProjectTasks => new() { ProjectTask };
+
+    public static ProjectTaskInBoardGroup ProjectTaskInBoardGroup => Fixture
+        .Build<ProjectTaskInBoardGroup>()
+        .Without(p => p.ProjectTask)
+        .Without(p => p.BoardGroup)
+        .Create();
+
+    public static List<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups => new() { ProjectTaskInBoardGroup };
+
     public static BoardGroup BoardGroup => Fixture
         .Build<BoardGroup>()
         .Without(p => p.Board)

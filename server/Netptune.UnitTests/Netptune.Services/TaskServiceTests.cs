@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -492,5 +493,155 @@ public class TaskServiceTests
         await Service.Update(request);
 
         await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>());
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<MoveTasksToGroupRequest>()
+            .Create();
+
+        var group = AutoFixtures.BoardGroup;
+
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(group);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+
+        var result = await Service.MoveTasksToGroup(request);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldCallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<MoveTasksToGroupRequest>()
+            .Create();
+
+        var group = AutoFixtures.BoardGroup;
+
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(group);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+
+        await Service.MoveTasksToGroup(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldLogActivity_WhenValidId()
+    {
+        var request = Fixture
+            .Build<MoveTasksToGroupRequest>()
+            .Create();
+
+        var group = AutoFixtures.BoardGroup;
+
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(group);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+
+        await Service.MoveTasksToGroup(request);
+
+        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<MoveTaskActivityMeta>>>());
+    }
+
+    [Fact]
+    public async Task ReassignTasks_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<ReassignTasksRequest>()
+            .Create();
+
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+
+        var result = await Service.ReassignTasks(request);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ReassignTasks_ShouldCallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<ReassignTasksRequest>()
+            .Create();
+
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+
+        await Service.ReassignTasks(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task ReassignTasks_ShouldLogActivity_WhenValidId()
+    {
+        var request = Fixture
+            .Build<ReassignTasksRequest>()
+            .Create();
+
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+
+        await Service.ReassignTasks(request);
+
+        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<AssignActivityMeta>>>());
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<MoveTaskInGroupRequest>()
+            .Create();
+
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
+
+        var result = await Service.MoveTaskInBoardGroup(request);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldCallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<MoveTaskInGroupRequest>()
+            .Create();
+
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
+
+        await Service.MoveTaskInBoardGroup(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldLogActivity_WhenValidId()
+    {
+        var request = Fixture
+            .Build<MoveTaskInGroupRequest>()
+            .Create();
+
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
+
+        await Service.MoveTaskInBoardGroup(request);
+
+        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<AssignActivityMeta>>>());
     }
 }

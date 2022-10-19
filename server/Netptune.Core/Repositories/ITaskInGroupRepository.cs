@@ -14,5 +14,7 @@ public interface ITaskInGroupRepository : IRepository<ProjectTaskInBoardGroup, i
 
     Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId);
 
-    Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds);
+    Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds);
+
+    Task DeleteAllByTaskId(IEnumerable<int> taskIds);
 }
