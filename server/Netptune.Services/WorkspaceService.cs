@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Meta;
-using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Workspace;
 
 namespace Netptune.Services;
 
@@ -31,14 +30,18 @@ public class WorkspaceService : IWorkspaceService
         WorkspaceRepository = unitOfWork.Workspaces;
     }
 
-    public async Task<Workspace> AddWorkspace(AddWorkspaceRequest request)
+    public async Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request)
     {
         var user = await IdentityService.GetCurrentUser();
-
-        return await AddWorkspace(request, user);
+        return await Create(request, user);
     }
 
-    public Task<Workspace> AddWorkspace(AddWorkspaceRequest request, AppUser user)
+    public Task<ClientResponse<WorkspaceViewModel>> CreateNewUserWorkspace(AddWorkspaceRequest request, AppUser newUser)
+    {
+        return Create(request, newUser);
+    }
+
+    private Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request, AppUser user)
     {
         return UnitOfWork.Transaction(async () =>
         {
@@ -56,7 +59,7 @@ public class WorkspaceService : IWorkspaceService
 
             await UnitOfWork.CompleteAsync();
 
-            workspace.WorkspaceUsers.Add(new WorkspaceAppUser
+            workspace.WorkspaceUsers.Add(new()
             {
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
@@ -64,14 +67,14 @@ public class WorkspaceService : IWorkspaceService
 
             var projectKey = await UnitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);
 
-            var project = Project.Create(new CreateProjectOptions
+            var project = Project.Create(new()
             {
                 Name = request.Name,
                 Description = request.Description,
                 Key = projectKey,
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
-                MetaInfo = new ProjectMeta
+                MetaInfo = new()
                 {
                     Color = request.MetaInfo.Color,
                 },
@@ -81,7 +84,9 @@ public class WorkspaceService : IWorkspaceService
 
             await UnitOfWork.CompleteAsync();
 
-            return workspace;
+            var result = workspace.ToViewModel();
+
+            return ClientResponse<WorkspaceViewModel>.Success(result);
         });
     }
 

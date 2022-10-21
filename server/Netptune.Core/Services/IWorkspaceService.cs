@@ -5,6 +5,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Workspace;
 
 namespace Netptune.Core.Services;
 
@@ -22,9 +23,9 @@ public interface IWorkspaceService
 
     Task<ClientResponse<Workspace>> UpdateWorkspace(Workspace workspace);
 
-    Task<Workspace> AddWorkspace(AddWorkspaceRequest request);
+    Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request);
 
-    Task<Workspace> AddWorkspace(AddWorkspaceRequest request, AppUser user);
+    Task<ClientResponse<WorkspaceViewModel>> CreateNewUserWorkspace(AddWorkspaceRequest request, AppUser newUser);
 
     Task<ClientResponse> Delete(int id);
 
