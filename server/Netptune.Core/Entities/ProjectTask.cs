@@ -11,7 +11,7 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Entities;
 
-public class ProjectTask : WorkspaceEntity<int>
+public record ProjectTask : WorkspaceEntity<int>
 {
     public string Name { get; set; } = null!;
 

@@ -4,7 +4,7 @@ using Netptune.Core.BaseEntities;
 
 namespace Netptune.Core.Entities;
 
-public class HashCode : WorkspaceEntity<int>
+public record HashCode : WorkspaceEntity<int>
 {
     public string Salt { get; set; } = null!;
 

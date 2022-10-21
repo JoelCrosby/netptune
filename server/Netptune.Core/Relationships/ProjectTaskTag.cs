@@ -5,7 +5,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.Relationships;
 
-public class ProjectTaskTag : KeyedEntity<int>
+public record ProjectTaskTag : KeyedEntity<int>
 {
     public int ProjectTaskId { get; set; }
 

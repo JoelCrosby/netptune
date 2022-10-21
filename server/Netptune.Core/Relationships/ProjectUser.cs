@@ -5,7 +5,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.Relationships;
 
-public class ProjectUser : KeyedEntity<int>
+public record ProjectUser : KeyedEntity<int>
 {
     public int ProjectId { get; set; }
 

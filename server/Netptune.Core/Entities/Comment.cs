@@ -8,7 +8,7 @@ using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Core.Entities;
 
-public class Comment : WorkspaceEntity<int>
+public record Comment : WorkspaceEntity<int>
 {
     public string Body { get; set; } = null!;
 

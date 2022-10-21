@@ -4,7 +4,7 @@ using Netptune.Core.BaseEntities;
 
 namespace Netptune.Core.Entities;
 
-public class Reaction : WorkspaceEntity<int>
+public record Reaction : WorkspaceEntity<int>
 {
     public string Value { get; set; } = null!;
 

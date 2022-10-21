@@ -7,7 +7,7 @@ using Netptune.Core.Relationships;
 
 namespace Netptune.Core.Entities;
 
-public class Workspace : AuditableEntity<int>
+public record Workspace : AuditableEntity<int>
 {
     public string Name { get; set; } = null!;
 

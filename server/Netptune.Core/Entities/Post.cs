@@ -5,7 +5,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities;
 
-public class Post : WorkspaceEntity<int>
+public record Post : WorkspaceEntity<int>
 {
     public string Title { get; set; } = null!;
 

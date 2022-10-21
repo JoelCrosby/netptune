@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -594,12 +595,23 @@ public class TaskServiceTests
     [Fact]
     public async Task MoveTaskInBoardGroup_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<MoveTaskInGroupRequest>()
-            .Create();
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 1,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 2,
+        };
 
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
+
+        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
@@ -612,36 +624,87 @@ public class TaskServiceTests
     [Fact]
     public async Task MoveTaskInBoardGroup_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<MoveTaskInGroupRequest>()
-            .Create();
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 1,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 2,
+        };
 
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
+
+        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
 
         await Service.MoveTaskInBoardGroup(request);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(2).CompleteAsync();
     }
 
     [Fact]
     public async Task MoveTaskInBoardGroup_ShouldLogActivity_WhenValidId()
     {
-        var request = Fixture
-            .Build<MoveTaskInGroupRequest>()
-            .Create();
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 1,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 2,
+        };
 
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(AutoFixtures.ProjectTaskInBoardGroup);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(AutoFixtures.ProjectTaskInBoardGroups);
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
+
+        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
 
         await Service.MoveTaskInBoardGroup(request);
 
-        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<AssignActivityMeta>>>());
+        Activity.Received(1).LogWith(Arg.Any<Action<ActivityOptions<MoveTaskActivityMeta>>>());
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_MoveTaskInGroup_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 1,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 1,
+        };
+
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
+
+        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
+        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetAsync(request.TaskId).Returns(AutoFixtures.ProjectTask);
+
+        var result = await Service.MoveTaskInBoardGroup(request);
+
+        result.IsSuccess.Should().BeTrue();
     }
 }

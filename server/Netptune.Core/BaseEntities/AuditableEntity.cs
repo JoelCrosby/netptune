@@ -5,7 +5,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.BaseEntities;
 
-public abstract class AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableEntity<TValue>
+public abstract record AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditableEntity<TValue>
 {
     public bool IsDeleted { get; set; }
 
