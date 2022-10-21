@@ -5,7 +5,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.Relationships;
 
-public class WorkspaceAppUser : KeyedEntity<int>
+public record WorkspaceAppUser : KeyedEntity<int>
 {
     public int WorkspaceId { get; set; }
 

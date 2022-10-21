@@ -4,7 +4,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.BaseEntities;
 
-public abstract class ProjectEntity<TEntity> : WorkspaceEntity<TEntity>, IProjectEntity<TEntity>
+public abstract record ProjectEntity<TEntity> : WorkspaceEntity<TEntity>, IProjectEntity<TEntity>
 {
     public int ProjectId  { get; set; }
 

@@ -10,7 +10,7 @@ using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Entities;
 
-public class BoardGroup : WorkspaceEntity<int>
+public record BoardGroup : WorkspaceEntity<int>
 {
     public string Name { get; set; } = null!;
 

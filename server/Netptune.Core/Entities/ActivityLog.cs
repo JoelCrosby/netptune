@@ -7,7 +7,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities;
 
-public class ActivityLog : WorkspaceEntity<int>, IDisposable
+public record ActivityLog : WorkspaceEntity<int>, IDisposable
 {
     public EntityType EntityType { get; init; }
 

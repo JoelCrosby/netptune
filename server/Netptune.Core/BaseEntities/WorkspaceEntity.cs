@@ -4,7 +4,7 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Core.BaseEntities;
 
-public abstract class WorkspaceEntity<TEntity> : AuditableEntity<TEntity>, IWorkspaceEntity<TEntity>
+public abstract record WorkspaceEntity<TEntity> : AuditableEntity<TEntity>, IWorkspaceEntity<TEntity>
 {
     public int WorkspaceId  { get; set; }
 
