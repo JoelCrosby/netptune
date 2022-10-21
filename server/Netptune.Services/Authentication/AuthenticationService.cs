@@ -154,7 +154,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (invite is {})
         {
-            await UnitOfWork.WorkspaceUsers.AddAsync(new WorkspaceAppUser
+            await UnitOfWork.WorkspaceUsers.AddAsync(new()
             {
                 UserId = user.Id,
                 WorkspaceId = invite.WorkspaceId,
@@ -165,7 +165,7 @@ public class NetptuneAuthService : INetptuneAuthService
             InviteCache.Remove(model.InviteCode);
         }
 
-        await WorkspaceService.AddWorkspace(new AddWorkspaceRequest
+        await WorkspaceService.CreateNewUserWorkspace(new()
         {
             Name = $"{user.Firstname}'s Workspace",
             Description = "Personal Workspace",

@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Workspace;
 
 namespace Netptune.Core.Entities;
 
@@ -30,6 +31,21 @@ public record Workspace : AuditableEntity<int>
 
     [JsonIgnore]
     public ICollection<AppUser> Users { get; set; } = new HashSet<AppUser>();
+
+    #endregion
+
+    #region Methods
+
+    public WorkspaceViewModel ToViewModel()
+    {
+        return new()
+        {
+            Name = Name,
+            Description = Description,
+            Slug = Slug,
+            MetaInfo = MetaInfo,
+        };
+    }
 
     #endregion
 }

@@ -81,7 +81,7 @@ public class WorkspacesController : ControllerBase
     [Produces("application/json", Type = typeof(Workspace))]
     public async Task<IActionResult> PostWorkspace([FromBody] AddWorkspaceRequest request)
     {
-        var result = await WorkspaceService.AddWorkspace(request);
+        var result = await WorkspaceService.Create(request);
 
         return Ok(result);
     }
