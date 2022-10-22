@@ -98,9 +98,12 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Workspaces.GetAsync(1).Returns(AutoFixtures.Workspace);
+        var workspace = AutoFixtures.Workspace;
 
-        var result = await Service.Delete(1);
+        UnitOfWork.Workspaces.GetAsync(workspace.Id).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug("workspace").Returns(workspace);
+
+        var result = await Service.Delete("workspace");
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -108,11 +111,11 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        var toDelete = AutoFixtures.Workspace;
+        var workspace = AutoFixtures.Workspace;
 
-        UnitOfWork.Workspaces.GetAsync(Arg.Any<int>()).Returns(toDelete);
+        UnitOfWork.Workspaces.GetBySlug("workspace").Returns(workspace);
 
-        await Service.Delete(toDelete.Id);
+        await Service.Delete("workspace");
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -120,9 +123,9 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Workspaces.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug("workspace").ReturnsNull();
 
-        var result = await Service.Delete(1);
+        var result = await Service.Delete("workspace");
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -130,9 +133,9 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task Delete_ShouldNotCallDeletePermanent_WhenValidId()
     {
-        UnitOfWork.Workspaces.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug("workspace").ReturnsNull();
 
-        await Service.Delete(1);
+        await Service.Delete("workspace");
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
     }
@@ -140,9 +143,53 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenValidId()
     {
-        UnitOfWork.Workspaces.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug("workspace").ReturnsNull();
 
-        await Service.Delete(1);
+        await Service.Delete("workspace");
+
+        await UnitOfWork.Received(0).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task DeletePermanent_WithSlug_ShouldReturnSuccess_WhenValidId()
+    {
+        var workspace = AutoFixtures.Workspace;
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
+            .Returns(x => x.Arg<Func<Task>>()
+                .Invoke());
+
+        UnitOfWork.Workspaces.GetBySlug("workspace").Returns(workspace);
+
+        var result = await Service.DeletePermanent("workspace");
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeletePermanent_ShouldNotCallDeletePermanent_WhenValidId()
+    {
+        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
+            .Returns(x => x.Arg<Func<Task>>()
+                .Invoke());
+
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+
+        await Service.DeletePermanent("workspace");
+
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
+    }
+
+    [Fact]
+    public async Task DeletePermanent_ShouldNotCallCompleteAsync_WhenValidId()
+    {
+        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
+            .Returns(x => x.Arg<Func<Task>>()
+                .Invoke());
+
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+
+        await Service.DeletePermanent("workspace");
 
         await UnitOfWork.Received(0).CompleteAsync();
     }
