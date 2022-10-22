@@ -11,8 +11,6 @@ namespace Netptune.Core.Services;
 
 public interface IWorkspaceService
 {
-    Task<Workspace?> GetWorkspace(int id);
-
     Task<Workspace?> GetWorkspace(string slug);
 
     Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug);
@@ -27,11 +25,7 @@ public interface IWorkspaceService
 
     Task<ClientResponse<WorkspaceViewModel>> CreateNewUserWorkspace(AddWorkspaceRequest request, AppUser newUser);
 
-    Task<ClientResponse> Delete(int id);
-
     Task<ClientResponse> Delete(string key);
-
-    Task<ClientResponse> DeletePermanent(int id);
 
     Task<ClientResponse> DeletePermanent(string key);
 }

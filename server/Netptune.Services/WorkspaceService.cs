@@ -99,20 +99,9 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        return await Delete(workspace.Id);
-    }
-
-    public async Task<ClientResponse> Delete(int id)
-    {
-        var workspace = await WorkspaceRepository.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (workspace is null)
-        {
-            return ClientResponse.NotFound;
-        }
-
-        Cache.Remove(new WorkspaceUserKey
+        Cache.Remove(new()
         {
             UserId = userId,
             WorkspaceKey = workspace.Slug,
@@ -134,20 +123,9 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        return await DeletePermanent(workspace.Id);
-    }
-
-    public async Task<ClientResponse> DeletePermanent(int id)
-    {
-        var workspace = await WorkspaceRepository.GetAsync(id);
         var userId = await IdentityService.GetCurrentUserId();
 
-        if (workspace is null)
-        {
-            return ClientResponse.NotFound;
-        }
-
-        Cache.Remove(new WorkspaceUserKey
+        Cache.Remove(new()
         {
             UserId = userId,
             WorkspaceKey = workspace.Slug,
@@ -175,11 +153,6 @@ public class WorkspaceService : IWorkspaceService
         });
 
         return ClientResponse.Success();
-    }
-
-    public Task<Workspace?> GetWorkspace(int id)
-    {
-        return WorkspaceRepository.GetAsync(id, true);
     }
 
     public Task<Workspace?> GetWorkspace(string slug)
