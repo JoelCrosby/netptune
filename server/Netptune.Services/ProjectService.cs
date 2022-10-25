@@ -66,7 +66,7 @@ public class ProjectService : IProjectService
     public async Task<ClientResponse> Delete(int id)
     {
         var project = await ProjectRepository.GetAsync(id);
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         if (project is null)
         {

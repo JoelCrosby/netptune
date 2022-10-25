@@ -99,7 +99,7 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         Cache.Remove(new()
         {
@@ -123,7 +123,7 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         Cache.Remove(new()
         {
@@ -160,11 +160,11 @@ public class WorkspaceService : IWorkspaceService
         return WorkspaceRepository.GetBySlug(slug);
     }
 
-    public async Task<List<Workspace>> GetUserWorkspaces()
+    public Task<List<Workspace>> GetUserWorkspaces()
     {
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
-        return await WorkspaceRepository.GetUserWorkspaces(userId);
+        return WorkspaceRepository.GetUserWorkspaces(userId);
     }
 
     public Task<List<Workspace>> GetAll()
@@ -172,29 +172,23 @@ public class WorkspaceService : IWorkspaceService
         return WorkspaceRepository.GetAllAsync();
     }
 
-    public async Task<ClientResponse<Workspace>> UpdateWorkspace(Workspace workspace)
+    public async Task<ClientResponse<Workspace>> Update(UpdateWorkspaceRequest request)
     {
-        var user = await IdentityService.GetCurrentUser();
+        var userId = IdentityService.GetCurrentUserId();
 
-        if (workspace is null) throw new ArgumentNullException(nameof(workspace));
+        if (request.Slug is null) throw new ArgumentNullException(nameof(request));
 
-        var result = await WorkspaceRepository.GetAsync(workspace.Id);
+        var result = await WorkspaceRepository.GetBySlug(request.Slug);
 
         if (result is null)
         {
             return ClientResponse<Workspace>.NotFound;
         }
 
-        result.Name = workspace.Name;
-        result.Description = workspace.Description;
-        result.ModifiedByUserId = user.Id;
-        result.MetaInfo = workspace.MetaInfo;
-
-        if (workspace.IsDeleted)
-        {
-            result.Delete(user.Id);
-        }
-
+        result.Name = request.Name ?? result.Name;
+        result.Description = request.Description ?? result.Description;
+        result.ModifiedByUserId = userId;
+        result.MetaInfo = request.MetaInfo ?? result.MetaInfo;
         result.UpdatedAt = DateTime.UtcNow;
 
         await UnitOfWork.CompleteAsync();
@@ -207,11 +201,13 @@ public class WorkspaceService : IWorkspaceService
         var slugLower = slug.ToUrlSlug();
         var exists = await WorkspaceRepository.Exists(slugLower);
 
-        return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+        var result = new IsSlugUniqueResponse
         {
             Request = slug,
             Slug = slugLower,
             IsUnique = !exists,
-        });
+        };
+
+        return ClientResponse<IsSlugUniqueResponse>.Success(result);
     }
 }

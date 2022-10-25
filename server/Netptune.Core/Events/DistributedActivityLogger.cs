@@ -22,7 +22,7 @@ public class DistributedActivityLogger : IActivityLogger
 
     public void Log(Action<ActivityOptions> options)
     {
-        var userId = Identity.GetUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityOptions
@@ -58,7 +58,7 @@ public class DistributedActivityLogger : IActivityLogger
 
     public void LogMany(Action<ActivityMultipleOptions> options)
     {
-        var userId = Identity.GetUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityMultipleOptions
@@ -90,7 +90,7 @@ public class DistributedActivityLogger : IActivityLogger
 
     public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
     {
-        var userId = Identity.GetUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityOptions<TMeta>
@@ -127,7 +127,7 @@ public class DistributedActivityLogger : IActivityLogger
 
     public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
     {
-        var userId = Identity.GetUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityMultipleOptions<TMeta>

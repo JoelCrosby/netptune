@@ -19,7 +19,7 @@ public interface IWorkspaceService
 
     Task<List<Workspace>> GetAll();
 
-    Task<ClientResponse<Workspace>> UpdateWorkspace(Workspace workspace);
+    Task<ClientResponse<Workspace>> Update(UpdateWorkspaceRequest request);
 
     Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request);
 

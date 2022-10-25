@@ -25,9 +25,9 @@ public class IdentityService : IIdentityService
         ContextAccessor = contextAccessor;
     }
 
-    public string GetUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
+    public string GetCurrentUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
 
-    public string GetUserEmail() => GetClaimValue(ClaimTypes.Email);
+    public string GetCurrentUserEmail() => GetClaimValue(ClaimTypes.Email);
 
     public string GetUserName()
     {
@@ -46,25 +46,7 @@ public class IdentityService : IIdentityService
 
     public Task<AppUser> GetCurrentUser()
     {
-        return UserCache.Get(GetUserId())!;
-    }
-
-    public async Task<string> GetCurrentUserEmail()
-    {
-        var claimEmail = GetUserEmail();
-
-        if (!string.IsNullOrEmpty(claimEmail))
-        {
-            return claimEmail;
-        }
-
-        var user = await GetCurrentUser();
-        return user.Email;
-    }
-
-    public Task<string> GetCurrentUserId()
-    {
-        return Task.FromResult(GetUserId());
+        return UserCache.Get(GetCurrentUserId())!;
     }
 
     public string GetWorkspaceKey()
