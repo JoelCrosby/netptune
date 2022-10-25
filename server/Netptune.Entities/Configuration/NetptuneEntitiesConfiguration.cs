@@ -1,5 +1,6 @@
 using System;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +26,8 @@ public static class NetptuneEntitiesConfiguration
 
         services.Configure(configuration);
 
-        services.AddScoped<DbContext, DataContext>();
+        services.AddHostedService<HostedDatabaseService>();
+
         services.AddDbContext<DataContext>(options =>
         {
             options
@@ -34,5 +36,10 @@ public static class NetptuneEntitiesConfiguration
         });
 
         return services;
+    }
+
+    public static IdentityBuilder AddNetptuneIdentityEntities(this IdentityBuilder builder)
+    {
+        return builder.AddEntityFrameworkStores<DataContext>();
     }
 }
