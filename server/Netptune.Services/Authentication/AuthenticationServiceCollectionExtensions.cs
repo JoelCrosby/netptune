@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,16 +19,18 @@ namespace Netptune.Services.Authentication;
 
 public static class AuthenticationServiceCollectionExtensions
 {
+    public static IdentityBuilder AddNetptuneIdentity(this IServiceCollection services)
+    {
+        return services.AddIdentity<AppUser, IdentityRole>()
+            .AddDefaultTokenProviders();
+    }
+
     public static IServiceCollection AddNeptuneAuthentication(
         this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
     {
         var authenticationOptions = ConfigureServices(services, action);
 
         services.AddHttpContextAccessor();
-
-        services.AddIdentity<AppUser, IdentityRole>()
-            .AddEntityFrameworkStores<DbContext>()
-            .AddDefaultTokenProviders();
 
         services.Configure<IdentityOptions>(options =>
         {
