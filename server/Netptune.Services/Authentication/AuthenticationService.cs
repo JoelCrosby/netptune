@@ -94,7 +94,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
     public async Task<LoginResult> LogInViaProvider()
     {
-        var email = await Identity.GetCurrentUserEmail();
+        var email = Identity.GetCurrentUserEmail();
         var user = await UserManager.FindByEmailAsync(email);
 
         if (user is null)
