@@ -19,9 +19,7 @@ public interface IUserService
 
     Task<ClientResponse<UserViewModel>> Update(AppUser user);
 
-    Task<ClientResponse> InviteUserToWorkspace(string userId);
+    Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emails);
 
-    Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emailAddresses, bool onlyNewUsers = false);
-
-    Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses);
+    Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emails);
 }
