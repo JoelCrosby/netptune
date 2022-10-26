@@ -58,7 +58,7 @@ public class TaskServiceTests
             .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
 
@@ -90,7 +90,7 @@ public class TaskServiceTests
             .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
 
@@ -117,7 +117,7 @@ public class TaskServiceTests
             .ReturnsForAnyArgs(AutoFixtures.Workspace);
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
 
@@ -214,7 +214,7 @@ public class TaskServiceTests
             .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
 
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int?>());
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
 
