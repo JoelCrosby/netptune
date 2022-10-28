@@ -35,7 +35,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
     public async Task<ClientResponse<TaskImportResult>> ImportWorkspaceTasks(string boardId, Stream stream)
     {
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         var headerValidator = new HeaderValidator();
 

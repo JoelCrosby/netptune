@@ -186,7 +186,7 @@ public class BoardService : IBoardService
     public async Task<ClientResponse> Delete(int id)
     {
         var board = await Boards.GetAsync(id);
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         if (board is null) return ClientResponse.NotFound;
 

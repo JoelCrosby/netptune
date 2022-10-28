@@ -1,10 +1,12 @@
-import { throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
+import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
+import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
 import { environment } from '@env/environment';
+import { throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WorkspacesService {
@@ -16,17 +18,17 @@ export class WorkspacesService {
     );
   }
 
-  post(workspace: Workspace) {
+  post(request: AddWorkspaceRequest) {
     return this.http.post<ClientResponse<Workspace>>(
       environment.apiEndpoint + 'api/workspaces',
-      workspace
+      request
     );
   }
 
-  put(workspace: Workspace) {
+  put(request: UpdateWorkspaceRequest) {
     return this.http.put<ClientResponse<Workspace>>(
       environment.apiEndpoint + 'api/workspaces',
-      workspace
+      request
     );
   }
 

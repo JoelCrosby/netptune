@@ -28,7 +28,7 @@ public class CommentService : ICommentService
     public async Task<ClientResponse<CommentViewModel>> AddCommentToTask(AddCommentRequest request)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 

@@ -8,13 +8,9 @@ public interface IIdentityService
 {
     Task<AppUser> GetCurrentUser();
 
-    Task<string> GetCurrentUserEmail();
+    string GetCurrentUserId();
 
-    Task<string> GetCurrentUserId();
-
-    string GetUserId();
-
-    string GetUserEmail();
+    string GetCurrentUserEmail();
 
     string GetUserName();
 

@@ -31,7 +31,7 @@ public class WorkspaceAuthorizationHandler : AuthorizationHandler<WorkspaceRequi
             return;
         }
 
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var memberOfWorkspace = await Cache.IsUserInWorkspace(userId, workspaceKey);
 
         if (!memberOfWorkspace)

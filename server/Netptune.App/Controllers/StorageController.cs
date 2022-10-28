@@ -39,7 +39,7 @@ public class StorageController : ControllerBase
             return BadRequest("Request file size exceeds maximum of 50MB.");
         }
 
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var extension = Path.GetExtension(file.FileName);
         var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
 
@@ -70,7 +70,7 @@ public class StorageController : ControllerBase
             return BadRequest("Request file size exceeds maximum of 50MB.");
         }
 
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var extension = Path.GetExtension(file.FileName);
         var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueIdBuilder.Generate(userId)}{extension}");
 

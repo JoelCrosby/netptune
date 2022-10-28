@@ -29,7 +29,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
     public async Task<ClientResponse<TagViewModel>> AddTag(AddTagRequest request)
     {
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
 
@@ -61,7 +61,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
     public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request)
     {
-        var userId = await Identity.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
 
         var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
