@@ -7,7 +7,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities;
 
-public record ActivityLog : WorkspaceEntity<int>, IDisposable
+public record ActivityLog : WorkspaceEntity<int>
 {
     public EntityType EntityType { get; init; }
 
@@ -35,6 +35,4 @@ public record ActivityLog : WorkspaceEntity<int>, IDisposable
     public AppUser User { get; set; } = null!;
 
     #endregion
-
-    public void Dispose() => Meta?.Dispose();
 }

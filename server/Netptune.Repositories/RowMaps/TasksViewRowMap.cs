@@ -31,11 +31,11 @@ public class TasksViewRowMap
 
     public double Board_Group_Sort_Order { get; set; }
 
-    public string? Assignee_Firstname { get; set; } = null!;
+    public string? Assignee_Firstname { get; set; }
 
-    public string? Assignee_Lastname { get; set; } = null!;
+    public string? Assignee_Lastname { get; set; }
 
-    public string? Assignee_Email { get; set; } = null!;
+    public string? Assignee_Email { get; set; }
 
     public string Owner_Firstname { get; set; } = null!;
 
@@ -43,7 +43,7 @@ public class TasksViewRowMap
 
     public string Owner_Email { get; set; } = null!;
 
-    public string? Tag { get; set; } = null!;
+    public string? Tag { get; set; }
 
     public DateTime Task_Created_At { get; set; }
 

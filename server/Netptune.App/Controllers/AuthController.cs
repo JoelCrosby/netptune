@@ -138,7 +138,7 @@ public class AuthController : ControllerBase
             Password = password,
         });
 
-        if (result.IsSuccess != true) return Unauthorized();
+        if (!result.IsSuccess) return Unauthorized();
 
         return Ok(result.Ticket);
     }
@@ -154,7 +154,7 @@ public class AuthController : ControllerBase
     {
         var result = await AuthenticationService.ChangePassword(request);
 
-        if (result.IsSuccess != true) return Unauthorized();
+        if (!result.IsSuccess) return Unauthorized();
 
         return Ok(result);
     }

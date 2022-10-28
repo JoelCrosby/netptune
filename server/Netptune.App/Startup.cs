@@ -48,7 +48,17 @@ public class Startup
         var connectionString = GetConnectionString();
         var redisConnectionString = GetRedisConnectionString();
 
-        services.AddCors();
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder => builder
+                .WithOrigins(CorsOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition")
+            );
+        });
+
         services.AddControllers();
 
         services.Configure<ForwardedHeadersOptions>(options =>
@@ -167,13 +177,7 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseCors(builder => builder
-            .WithOrigins(CorsOrigins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()
-            .WithExposedHeaders("Content-Disposition")
-        );
+        app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();

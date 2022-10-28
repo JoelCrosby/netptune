@@ -36,7 +36,6 @@ public class AuditableEntityMap<TEntity, TId> : KeyedEntityMap<TEntity, TId>
             .Property(entity => entity.DeletedByUserId)
             .IsRequired(false);
 
-
         builder
             .Property(entity => entity.OwnerId)
             .IsRequired(false);

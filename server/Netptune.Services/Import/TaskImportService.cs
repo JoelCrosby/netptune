@@ -161,7 +161,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
             var tasksInGroups = tasks.Select((task, i) =>
             {
-                var boardGroup = allBoardGroups.FirstOrDefault(group => string.Equals(
+                var boardGroup = allBoardGroups.Find(group => string.Equals(
                         group.Name,
                         rows[i].Group,
                         StringComparison.InvariantCultureIgnoreCase
@@ -228,8 +228,6 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var userList = users.ToList();
 
-
-
         static bool ParseBool(string? input)
         {
             return string.Equals(input?.Trim(), "true", StringComparison.InvariantCultureIgnoreCase);
@@ -262,7 +260,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var target = email?.Normalize();
 
-        var result = users.FirstOrDefault(user => string.Equals(
+        var result = users.Find(user => string.Equals(
                 user.NormalizedEmail,
                 target,
                 StringComparison.InvariantCultureIgnoreCase

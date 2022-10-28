@@ -39,4 +39,3 @@ public class HostedDatabaseService : IHostedService
         return Task.CompletedTask;
     }
 }
-
