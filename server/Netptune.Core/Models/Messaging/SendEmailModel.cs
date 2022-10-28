@@ -10,7 +10,7 @@ public class SendEmailModel
 
     public string Subject { get; init; } = null!;
 
-    public string? PreHeader { get; init; } = null!;
+    public string? PreHeader { get; init; }
 
     public string Message { get; init; } = null!;
 

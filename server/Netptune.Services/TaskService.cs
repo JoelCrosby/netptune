@@ -459,8 +459,6 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             return newGroup;
         });
 
-
-
         var taskInBoardGroup = await UnitOfWork
             .ProjectTasksInGroups
             .GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
@@ -526,7 +524,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         (int groupId, int taskId, int previousIndex, int currentIndex, bool isNewItem = false)
     {
         var tasks = await UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(groupId);
-        var item = tasks.FirstOrDefault(task => task.ProjectTaskId == taskId);
+        var item = tasks.Find(task => task.ProjectTaskId == taskId);
 
         if (item is null)
         {

@@ -2,7 +2,7 @@ using Netptune.Core.Authentication.Models;
 
 namespace Netptune.Core.Models.Authentication;
 
-public class LoginResult
+public sealed class LoginResult
 {
     public bool IsSuccess { get; }
 

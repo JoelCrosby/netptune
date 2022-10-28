@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace Netptune.Core.Repositories.Common;
 
-
 public interface IRepository<TEntity, in TId> where TEntity : class
 {
-
     Task<TEntity?> GetAsync(TId id, bool isReadonly = false);
 
     Task<List<TEntity>> GetAllAsync(bool isReadonly = false);

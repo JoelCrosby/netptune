@@ -4,11 +4,11 @@ public class MetaInfo
 {
     public bool HasData { get; set; }
 
-    public string? SiteName { get; set; } = null!;
+    public string? SiteName { get; set; }
 
     public string Url { get; set; } = null!;
 
-    public string? Title { get; set; } = null!;
+    public string? Title { get; set; }
 
     public string? Description { get; set; }
 

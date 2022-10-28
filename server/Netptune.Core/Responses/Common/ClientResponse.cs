@@ -43,7 +43,6 @@ public class ClientResponse<TPayload> : ClientResponse
 {
     public TPayload? Payload { get; protected init; }
 
-
     protected ClientResponse()
     {
     }
