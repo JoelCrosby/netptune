@@ -62,7 +62,7 @@ export class WorkspacesEffects {
     this.actions$.pipe(
       ofType(actions.createWorkspace),
       switchMap((action) =>
-        this.workspacesService.post(action.workspace).pipe(
+        this.workspacesService.post(action.request).pipe(
           unwrapClientReposne(),
           map((workspace) => actions.createWorkspaceSuccess({ workspace })),
           catchError((error: HttpErrorResponse) =>
@@ -98,7 +98,7 @@ export class WorkspacesEffects {
     this.actions$.pipe(
       ofType(actions.editWorkspace),
       switchMap((action) =>
-        this.workspacesService.put(action.workspace).pipe(
+        this.workspacesService.put(action.request).pipe(
           unwrapClientReposne(),
           map((workspace) => actions.editWorkspaceSuccess({ workspace })),
           catchError((error: HttpErrorResponse) =>

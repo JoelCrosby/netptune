@@ -65,12 +65,12 @@ public class WorkspacesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json", Type = typeof(Workspace))]
-    public async Task<IActionResult> PutWorkspace([FromBody] Workspace workspace)
+    public async Task<IActionResult> PutWorkspace([FromBody] UpdateWorkspaceRequest request)
     {
-        var authorizationResult = await AuthorizeWorkspace(workspace.Slug);
+        var authorizationResult = await AuthorizeWorkspace(request.Slug!);
         if (!authorizationResult.Succeeded) return Forbid();
 
-        var result = await WorkspaceService.UpdateWorkspace(workspace);
+        var result = await WorkspaceService.Update(request);
 
         return Ok(result);
     }

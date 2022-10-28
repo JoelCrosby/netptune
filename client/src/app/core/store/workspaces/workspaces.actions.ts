@@ -1,7 +1,9 @@
-import { createAction, props } from '@ngrx/store';
-import { Workspace } from '@core/models/workspace';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
+import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
+import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
+import { Workspace } from '@core/models/workspace';
+import { createAction, props } from '@ngrx/store';
 
 // Load Workspaces
 
@@ -21,7 +23,7 @@ export const loadWorkspacesFail = createAction(
 
 export const createWorkspace = createAction(
   '[Workspaces] Create Workspace',
-  props<{ workspace: Workspace }>()
+  props<{ request: AddWorkspaceRequest }>()
 );
 
 export const createWorkspaceSuccess = createAction(
@@ -38,7 +40,7 @@ export const createWorkspaceFail = createAction(
 
 export const editWorkspace = createAction(
   '[Workspaces] Edit Workspace',
-  props<{ workspace: Workspace }>()
+  props<{ request: UpdateWorkspaceRequest }>()
 );
 
 export const editWorkspaceSuccess = createAction(

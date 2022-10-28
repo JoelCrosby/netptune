@@ -61,6 +61,13 @@ public class UserService : IUserService
         return user?.ToViewModel();
     }
 
+    public async Task<List<UserViewModel>> GetAll()
+    {
+        var users = await UserRepository.GetAllAsync();
+
+        return MapUsers(users);
+    }
+
     public async Task<List<WorkspaceUserViewModel>?> GetWorkspaceUsers()
     {
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -73,24 +80,11 @@ public class UserService : IUserService
         return MapWorkspaceUsers(users, workspace.OwnerId!);
     }
 
-    public async Task<List<UserViewModel>> GetAll()
-    {
-        var users = await UserRepository.GetAllAsync();
-
-        return MapUsers(users);
-    }
-
-    public Task<ClientResponse> InviteUserToWorkspace(string userId)
-    {
-        return InviteUsersToWorkspace(new[] { userId });
-    }
-
-    public async Task<ClientResponse> InviteUsersToWorkspace(
-        IEnumerable<string> emailAddresses, bool onlyNewUsers = false)
+    public async Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emails)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        var emailList = emailAddresses.Select(email => email.Trim().Normalize()).ToHashSet();
+        var emailList = emails.Select(email => email.Trim().Normalize()).ToHashSet();
         var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
         if (workspace is null)
@@ -127,11 +121,11 @@ public class UserService : IUserService
         return ClientResponse.Success();
     }
 
-    public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emailAddresses)
+    public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emails)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        var emailList = emailAddresses.ToList();
+        var emailList = emails.ToList();
         var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
         if (workspace is null)
@@ -230,16 +224,13 @@ public class UserService : IUserService
         return Email.Send(emailModels);
     }
 
-    private static List<UserViewModel> MapUsers(IEnumerable<AppUser> users)
+    private static List<UserViewModel> MapUsers(List<AppUser> users)
     {
-        return users.Select(user => user.ToViewModel()).ToList();
+        return users.ConvertAll(user => user.ToViewModel());
     }
 
-    private static List<WorkspaceUserViewModel> MapWorkspaceUsers
-        (IEnumerable<AppUser> users, string workspaceOwnerId)
+    private static List<WorkspaceUserViewModel> MapWorkspaceUsers(List<AppUser> users, string workspaceOwnerId)
     {
-        return users
-            .Select(user => user.ToWorkspaceViewModel(workspaceOwnerId))
-            .ToList();
+        return users.ConvertAll(user => user.ToWorkspaceViewModel(workspaceOwnerId));
     }
 }

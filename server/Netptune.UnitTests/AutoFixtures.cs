@@ -25,6 +25,12 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskAppUsers)
         .Create();
 
+    public static WorkspaceAppUser WorkspaceAppUser => Fixture
+        .Build<WorkspaceAppUser>()
+        .Without(p => p.User)
+        .Without(p => p.Workspace)
+        .Create();
+
     public static Project Project => Fixture
         .Build<Project>()
         .Without(p => p.ProjectUsers)

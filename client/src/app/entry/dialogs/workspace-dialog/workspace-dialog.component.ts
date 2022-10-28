@@ -15,6 +15,8 @@ import {
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppState } from '@core/core.state';
+import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
+import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
@@ -190,22 +192,28 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const workspace: Workspace = {
-      ...this.data,
-      name: this.name.value,
-      slug: this.identifier.value as string,
-      description: this.description.value as string,
-      metaInfo: {
-        color: this.selectedColor as string,
-      },
-      users: [],
-      projects: [],
-    };
-
     if (this.isEditMode) {
-      this.store.dispatch(Actions.editWorkspace({ workspace }));
+      const request: UpdateWorkspaceRequest = {
+        name: this.name.value,
+        slug: this.identifier.value as string,
+        description: this.description.value as string,
+        metaInfo: {
+          color: this.selectedColor as string,
+        },
+      };
+
+      this.store.dispatch(Actions.editWorkspace({ request }));
     } else {
-      this.store.dispatch(Actions.createWorkspace({ workspace }));
+      const request: AddWorkspaceRequest = {
+        name: this.name.value,
+        slug: this.identifier.value as string,
+        description: this.description.value as string,
+        metaInfo: {
+          color: this.selectedColor as string,
+        },
+      };
+
+      this.store.dispatch(Actions.createWorkspace({ request }));
     }
 
     this.dialogRef.close();

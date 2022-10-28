@@ -16,7 +16,6 @@ using Netptune.App.Utility;
 using Netptune.Core.Events;
 using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
-using Netptune.Entities.Contexts;
 using Netptune.JobClient;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
@@ -25,8 +24,6 @@ using Netptune.Services.Authorization;
 using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
-
-using Polly;
 
 using Serilog;
 
@@ -66,6 +63,7 @@ public class Startup
             options.EnableDetailedErrors = WebHostEnvironment.IsDevelopment();
         });
 
+        services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
         services.AddNeptuneAuthorization();
         services.AddNeptuneAuthentication(options =>
         {
@@ -116,8 +114,6 @@ public class Startup
         {
             configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
         });
-
-        ConfigureDatabase(services);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -219,18 +215,6 @@ public class Startup
         };
 
         return provider;
-    }
-
-    private static void ConfigureDatabase(IServiceCollection services)
-    {
-        using var serviceScope = services.BuildServiceProvider().CreateScope();
-
-        var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-
-        Policy
-            .Handle<Exception>()
-            .WaitAndRetry(4, _ => TimeSpan.FromSeconds(4))
-            .Execute(() => context.Database.EnsureCreated());
     }
 
     private string GetConnectionString()

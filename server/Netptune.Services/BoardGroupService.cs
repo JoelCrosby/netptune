@@ -88,7 +88,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
     public async Task<ClientResponse> Delete(int id)
     {
         var boardGroup = await BoardGroups.GetAsync(id);
-        var userId = await IdentityService.GetCurrentUserId();
+        var userId = IdentityService.GetCurrentUserId();
 
         if (boardGroup is null) return ClientResponse.NotFound;
 
