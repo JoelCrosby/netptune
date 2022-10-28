@@ -157,13 +157,7 @@ public class Startup
             app.UseExceptionHandler("/error");
             app.UseHsts();
             app.UseHttpsRedirection();
-
-            var spaPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
-
-            app.UseSpaStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(spaPath),
-            });
+            app.UseSpaStaticFiles();
         }
 
         app.UseDefaultFiles();
