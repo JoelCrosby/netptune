@@ -3,7 +3,7 @@ using Netptune.Core.Cache.Common;
 
 namespace Netptune.Core.Cache;
 
-public class WorkspaceUserKey
+public record WorkspaceUserKey
 {
     public string WorkspaceKey { get; init; } = null!;
 

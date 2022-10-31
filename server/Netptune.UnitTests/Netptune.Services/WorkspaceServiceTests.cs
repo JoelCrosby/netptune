@@ -256,7 +256,7 @@ public class WorkspaceServiceTests
     }
 
     [Fact]
-    public async Task Update_CallCompleteAsync_WhenInputValid()
+    public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture
             .Build<UpdateWorkspaceRequest>()

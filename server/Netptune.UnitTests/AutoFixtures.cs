@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
@@ -15,15 +16,16 @@ public static class AutoFixtures
         return new();
     }
 
-    public static AppUser AppUser => Fixture
+    public static IPostprocessComposer<AppUser> AppUserFixture => Fixture
         .Build<AppUser>()
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.WorkspaceUsers)
         .Without(p => p.ProjectUsers)
         .Without(p => p.Tasks)
         .Without(p => p.Workspaces)
-        .Without(p => p.ProjectTaskAppUsers)
-        .Create();
+        .Without(p => p.ProjectTaskAppUsers);
+
+    public static AppUser AppUser => AppUserFixture.Create();
 
     public static WorkspaceAppUser WorkspaceAppUser => Fixture
         .Build<WorkspaceAppUser>()

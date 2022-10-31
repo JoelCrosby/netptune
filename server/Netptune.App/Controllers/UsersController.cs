@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Authorization;
-using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -57,9 +56,9 @@ public class UsersController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json", Type = typeof(UserViewModel))]
-    public async Task<IActionResult> UpdateUser([FromBody] AppUser user)
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        var result = await UserService.Update(user);
+        var result = await UserService.Update(request);
 
         if (result.IsNotFound) return NotFound();
 
