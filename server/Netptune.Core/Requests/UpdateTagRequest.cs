@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class UpdateTagRequest
+public record UpdateTagRequest
 {
     [Required]
     [MinLength(2)]

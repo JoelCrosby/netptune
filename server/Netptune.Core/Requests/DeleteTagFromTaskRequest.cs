@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class DeleteTagFromTaskRequest
+public record DeleteTagFromTaskRequest
 {
     [Required]
     public string SystemId { get; set; } = null!;

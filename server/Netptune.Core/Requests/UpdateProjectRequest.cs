@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class UpdateProjectRequest
+public record UpdateProjectRequest
 {
     [Required]
     public int? Id { get; set; }

@@ -5,7 +5,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
-public class UpdateProjectTaskRequest
+public record UpdateProjectTaskRequest
 {
     [Required]
     public int? Id { get; set; }

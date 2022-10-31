@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class ReassignTasksRequest
+public record ReassignTasksRequest
 {
     [Required]
     public string BoardId { get; set; } = null!;

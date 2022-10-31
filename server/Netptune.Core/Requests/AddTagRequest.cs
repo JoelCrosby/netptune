@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class AddTagRequest
+public record AddTagRequest
 {
     [Required]
     [DenyPipes(ErrorMessage = "Characters are not allowed.")]
     public string Tag { get; set; } = null!;
 }
 
-public class AddTagToTaskRequest : AddTagRequest
+public record AddTagToTaskRequest : AddTagRequest
 {
     [Required]
     public string SystemId { get; set; } = null!;

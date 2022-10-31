@@ -4,7 +4,7 @@ using Netptune.Core.Meta;
 
 namespace Netptune.Core.Requests;
 
-public class AddProjectRequest
+public record AddProjectRequest
 {
     [Required]
     public string Name { get; set; } = null!;

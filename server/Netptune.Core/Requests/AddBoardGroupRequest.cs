@@ -4,7 +4,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
-public class AddBoardGroupRequest
+public record AddBoardGroupRequest
 {
     [Required]
     public string Name { get; set; } = null!;

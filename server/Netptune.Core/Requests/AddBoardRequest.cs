@@ -3,7 +3,7 @@ using Netptune.Core.Meta;
 
 namespace Netptune.Core.Requests;
 
-public class AddBoardRequest
+public record AddBoardRequest
 {
     [Required]
     public string Name { get; set; } = null!;

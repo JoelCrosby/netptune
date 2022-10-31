@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class InviteUsersRequest
+public record InviteUsersRequest
 {
     [Required]
     public List<string> EmailAddresses { get; set; } = null!;
