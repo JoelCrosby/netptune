@@ -27,7 +27,6 @@ public static class NetptuneEntitiesConfiguration
         services.Configure(configuration);
 
         services.AddHostedService<HostedDatabaseService>();
-
         services.AddDbContext<DataContext>(options =>
         {
             options

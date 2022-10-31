@@ -23,8 +23,6 @@ using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
-using Polly;
-
 using StackExchange.Redis;
 
 namespace Netptune.JobServer;
@@ -101,8 +99,6 @@ public class Startup
         });
 
         services.AddActivitySink();
-
-        ConfigureDatabase(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -140,18 +136,6 @@ public class Startup
                     new HangfireAuthorizationFilter(),
                 },
             });
-    }
-
-    private static void ConfigureDatabase(IServiceCollection services)
-    {
-        using var serviceScope = services.BuildServiceProvider().CreateScope();
-
-        var context = serviceScope.ServiceProvider.GetRequiredService<NetptuneJobContext>();
-
-        Policy
-            .Handle<Exception>()
-            .WaitAndRetry(4, _ => TimeSpan.FromSeconds(4))
-            .Execute(() => context.Database.EnsureCreated());
     }
 
     private string GetConnectionString()
