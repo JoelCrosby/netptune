@@ -28,7 +28,7 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<bool> IsUserInWorkspace(string userId, string workspaceKey);
 
-    Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId);
+    Task<List<AppUser>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId);
 
     Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId);
 }

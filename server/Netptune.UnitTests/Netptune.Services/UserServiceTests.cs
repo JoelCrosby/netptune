@@ -1,10 +1,9 @@
-﻿using AutoFixture;
-
-using FluentAssertions;
+﻿using FluentAssertions;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
+using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -20,8 +19,6 @@ namespace Netptune.UnitTests.Netptune.Services;
 
 public class UserServiceTests
 {
-    private readonly Fixture Fixture = new();
-
     private readonly UserService Service;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
@@ -160,15 +157,141 @@ public class UserServiceTests
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(new List<string> { "userId" });
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
         var emails = new List<string> { "user@email.com" };
         var result = await Service.InviteUsersToWorkspace(emails);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ReturnsFailure_WhenWorkspaceNotFound()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
+        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+
+        var emails = new List<string> { "user@email.com" };
+        var result = await Service.InviteUsersToWorkspace(emails);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ReturnsFailure_WhenInputEmpty()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
+        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+
+        var result = await Service.InviteUsersToWorkspace(new List<string>());
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_Failure_WhenInputEmpty()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
+        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+
+        var result = await Service.InviteUsersToWorkspace(new List<string>());
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldSendEmails_WhenInputValid()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspace = AutoFixtures.Workspace;
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
+        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+
+        var emails = new List<string> { "user@email.com" };
+        await Service.InviteUsersToWorkspace(emails);
+
+        await Email.Received(1).Send(Arg.Any<IEnumerable<SendEmailModel>>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldNotInvite_ExistingUsers()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspace = AutoFixtures.Workspace;
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
+        var users = new List<AppUser> { new () { Id = "userId", Email = "user@email.com" }};
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+
+        var emails = new List<string> { "user@email.com", "existinguser@email.com" };
+        var result = await Service.InviteUsersToWorkspace(emails);
+
+        result.Payload?.Emails.Should().Equal(new List<string> { "user@email.com" });
+    }
+
+    [Fact]
+    public async Task RemoveUsersFromWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspace = AutoFixtures.Workspace;
+        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser with { User = AutoFixtures.AppUser } };
+        var users = new List<AppUser> { AutoFixtures.AppUser };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+
+        var emails = new List<string> { "user@email.com" };
+        var result = await Service.RemoveUsersFromWorkspace(emails);
 
         result.IsSuccess.Should().BeTrue();
     }

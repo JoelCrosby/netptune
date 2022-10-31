@@ -8,9 +8,9 @@ using Flurl;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
-using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -80,7 +80,7 @@ public class UserService : IUserService
         return MapWorkspaceUsers(users, workspace.OwnerId!);
     }
 
-    public async Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emails)
+    public async Task<ClientResponse<InviteUserResponse>> InviteUsersToWorkspace(IEnumerable<string> emails)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
@@ -89,39 +89,34 @@ public class UserService : IUserService
 
         if (workspace is null)
         {
-            return ClientResponse.Failed("workspace not found");
+            return ClientResponse<InviteUserResponse>.Failed("workspace not found");
         }
 
         if (emailList.Count == 0)
         {
-            return ClientResponse.Failed("no email addresses provided");
+            return ClientResponse<InviteUserResponse>.Failed("no email addresses provided");
         }
 
-        async Task<HashSet<string>> InviteExistingUsersDirectly()
-        {
-            var users = await UserRepository.GetByEmailRange(emailList, true);
-            var userIds = users.ConvertAll(user => user.Id);
-            var existing = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
-            var newUserIds = userIds.Except(existing).ToList();
+        var users = await UserRepository.GetByEmailRange(emailList, true);
+        var userIds = users.ConvertAll(user => user.Id);
+        var existingUsers = await UserRepository.IsUserInWorkspaceRange(userIds, workspace.Id);
+        var newUserIds = userIds.Except(existingUsers.Select(x => x.Id)).ToHashSet();
 
-            var result = await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
+        await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
+        await UnitOfWork.CompleteAsync();
 
-            if (result is null) throw new Exception();
-
-            await UnitOfWork.CompleteAsync();
-
-            var userEmails = users.Select(user => user.NormalizedEmail);
-            return emailList.Where(email => !userEmails.Contains(email)).ToHashSet();
-        }
-
-        var usersToInvite = await InviteExistingUsersDirectly();
+        var existingUserEmails = existingUsers.Select(user => user.Email.Normalize());
+        var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).ToHashSet();
 
         await SendUserInviteEmails(usersToInvite, workspace);
 
-        return ClientResponse.Success();
+        return ClientResponse<InviteUserResponse>.Success(new InviteUserResponse
+        {
+            Emails = usersToInvite.ToList(),
+        });
     }
 
-    public async Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emails)
+    public async Task<ClientResponse<RemoveUsersWorkspaceResponse>> RemoveUsersFromWorkspace(IEnumerable<string> emails)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
@@ -130,12 +125,12 @@ public class UserService : IUserService
 
         if (workspace is null)
         {
-            return ClientResponse.Failed("workspace not found");
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("workspace not found");
         }
 
         if (emailList.Count == 0)
         {
-            return ClientResponse.Failed("no email addresses provided");
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("no email addresses provided");
         }
 
         var users = await UserRepository.GetByEmailRange(emailList, true);
@@ -143,25 +138,29 @@ public class UserService : IUserService
 
         if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId!))
         {
-            return ClientResponse.Failed("cannot remove thew owner of the workspace");
+            return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("cannot remove thew owner of the workspace");
         }
 
         foreach (var userId in userIds)
         {
             if (userId == workspace.OwnerId) continue;
 
-            WorkspaceUserCache.Remove(new WorkspaceUserKey
+            WorkspaceUserCache.Remove(new ()
             {
                 UserId = userId,
                 WorkspaceKey = workspaceKey,
             });
         }
 
-        await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
+        var removed = await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
+        var removeUserEmails = removed.Select(x => x.User.Email).ToList();
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse<RemoveUsersWorkspaceResponse>.Success(new RemoveUsersWorkspaceResponse
+        {
+            Emails = removeUserEmails,
+        });
     }
 
     public async Task<ClientResponse<UserViewModel>> Update(AppUser user)
@@ -191,12 +190,11 @@ public class UserService : IUserService
                 .Replace("-", "")
                 .ToLowerInvariant();
 
-            InviteCache.Create(key,
-                new WorkspaceInvite
-                {
-                    Email = email,
-                    WorkspaceId = workspace.Id,
-                });
+            InviteCache.Create(key, new()
+            {
+                Email = email,
+                WorkspaceId = workspace.Id,
+            });
 
             var uri = Hosting.ClientOrigin
                 .AppendPathSegments("auth", "register")
@@ -205,7 +203,7 @@ public class UserService : IUserService
 
             return new SendEmailModel
             {
-                SendTo = new SendTo
+                SendTo = new()
                 {
                     Address = email,
                     DisplayName = email,
