@@ -5,8 +5,7 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp\</SpaRoot>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <SpaRoot>ClientApp</SpaRoot>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -26,14 +25,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Don't publish the SPA source files, but do show them in the project files list -->
-    <Compile Remove="App_Data\**" />
-    <Content Remove="$(SpaRoot)**" />
-    <Content Remove="App_Data\**" />
-    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <Compile Remove="$(SpaRoot)\**" />
+    <Content Remove="$(SpaRoot)\**" />
+    <EmbeddedResource Remove="$(SpaRoot)\**" />
+    <None Remove="$(SpaRoot)\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\**" />
+    <Content Remove="App_Data\**" />
     <EmbeddedResource Remove="App_Data\**" />
     <None Remove="App_Data\**" />
   </ItemGroup>
@@ -56,18 +56,5 @@
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
   </ItemGroup>
-
-  <Target Name="PublishRunWebpack" Condition="'$(Configuration)' == 'Release'" AfterTargets="ComputeFilesToPublish">
-
-    <!-- Include the newly-built files in the publish output -->
-    <ItemGroup>
-      <DistFiles Include="wwwroot\dist\**" />
-      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFiles.Identity)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
 
 </Project>
