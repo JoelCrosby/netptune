@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
 
         services.Configure(configuration);
 
-        services.AddScoped<DbContext, NetptuneJobContext>();
+        services.AddHostedService<HostedDatabaseService>();
         services.AddDbContext<NetptuneJobContext>(options =>
         {
             options
