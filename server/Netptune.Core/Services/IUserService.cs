@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Users;
 
@@ -19,7 +20,7 @@ public interface IUserService
 
     Task<ClientResponse<UserViewModel>> Update(AppUser user);
 
-    Task<ClientResponse> InviteUsersToWorkspace(IEnumerable<string> emails);
+    Task<ClientResponse<InviteUserResponse>> InviteUsersToWorkspace(IEnumerable<string> emails);
 
-    Task<ClientResponse> RemoveUsersFromWorkspace(IEnumerable<string> emails);
+    Task<ClientResponse<RemoveUsersWorkspaceResponse>> RemoveUsersFromWorkspace(IEnumerable<string> emails);
 }

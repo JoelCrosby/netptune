@@ -62,13 +62,14 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
 
     public async Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId)
     {
-        var toRemove = await Context.WorkspaceAppUsers
+        var usersToRemove = await Context.WorkspaceAppUsers
+            .Include(item => item.User)
             .Where(item => item.WorkspaceId == workspaceId && userIds.Contains(item.UserId))
             .ToListAsync();
 
-        Context.WorkspaceAppUsers.RemoveRange(toRemove);
+        Context.WorkspaceAppUsers.RemoveRange(usersToRemove);
 
-        return toRemove;
+        return usersToRemove;
     }
 
     public Task<AppUser?> GetByEmail(string email, bool isReadonly = false)
@@ -115,11 +116,12 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .AnyAsync(x => x.UserId == userId && x.Workspace.Slug == workspaceKey);
     }
 
-    public Task<List<string>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId)
+    public Task<List<AppUser>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId)
     {
         return Context.WorkspaceAppUsers
             .Where(x => x.WorkspaceId == workspaceId && userIds.Contains(x.UserId))
-            .Select(x => x.UserId)
+            .Include(x => x.User)
+            .Select(x => x.User)
             .AsNoTracking()
             .ToListAsync();
     }
