@@ -24,20 +24,22 @@ public class ProjectService : IProjectService
         IdentityService = identityService;
     }
 
-    public async Task<ClientResponse<ProjectViewModel>> AddProject(AddProjectRequest request)
+    public Task<ClientResponse<ProjectViewModel>> Create(AddProjectRequest request)
     {
-        var result = await UnitOfWork.Transaction(async () =>
+        return UnitOfWork.Transaction(async () =>
         {
             var workspaceId = IdentityService.GetWorkspaceKey();
             var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceId);
 
-            if (workspace is null) return null;
+            if (workspace is null)
+            {
+                return ClientResponse<ProjectViewModel>.NotFound;
+            }
 
             var user = await IdentityService.GetCurrentUser();
-
             var projectKey = await UnitOfWork.Projects.GenerateProjectKey(request.Name, workspace.Id);
 
-            var project = Project.Create(new CreateProjectOptions
+            var project = Project.Create(new ()
             {
                 Name = request.Name,
                 Description = request.Description,
@@ -52,15 +54,10 @@ public class ProjectService : IProjectService
 
             await UnitOfWork.CompleteAsync();
 
-            return await ProjectRepository.GetProjectViewModel(project.Id);
+            var result = await ProjectRepository.GetProjectViewModel(project.Id);
+
+            return ClientResponse<ProjectViewModel>.Success(result!);
         });
-
-        if (result is null)
-        {
-            return ClientResponse<ProjectViewModel>.NotFound;
-        }
-
-        return ClientResponse<ProjectViewModel>.Success(result);
     }
 
     public async Task<ClientResponse> Delete(int id)

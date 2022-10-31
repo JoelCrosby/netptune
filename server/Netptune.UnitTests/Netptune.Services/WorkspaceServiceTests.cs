@@ -34,7 +34,7 @@ public class WorkspaceServiceTests
     }
 
     [Fact]
-    public async Task AddWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture
             .Build<AddWorkspaceRequest>()
@@ -61,7 +61,7 @@ public class WorkspaceServiceTests
     }
 
     [Fact]
-    public async Task AddWorkspace_CallCompleteAsync_WhenInputValid()
+    public async Task Create_CallCompleteAsync_WhenInputValid()
     {
         var request = Fixture
             .Build<AddWorkspaceRequest>()
