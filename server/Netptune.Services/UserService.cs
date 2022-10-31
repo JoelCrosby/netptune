@@ -10,6 +10,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -163,16 +164,15 @@ public class UserService : IUserService
         });
     }
 
-    public async Task<ClientResponse<UserViewModel>> Update(AppUser user)
+    public async Task<ClientResponse<UserViewModel>> Update(UpdateUserRequest request)
     {
-        var updatedUser = await UserRepository.GetAsync(user.Id);
+        var updatedUser = await UserRepository.GetAsync(request.Id!);
 
         if (updatedUser is null) return ClientResponse<UserViewModel>.NotFound;
 
-        updatedUser.PhoneNumber = user.PhoneNumber;
-        updatedUser.Firstname = user.Firstname;
-        updatedUser.Lastname = user.Lastname;
-        updatedUser.PictureUrl = user.PictureUrl;
+        updatedUser.Firstname = request.Firstname ?? updatedUser.Firstname;
+        updatedUser.Lastname = request.Lastname ?? updatedUser.Lastname;
+        updatedUser.PictureUrl = request.PictureUrl ?? updatedUser.PictureUrl;
 
         await UnitOfWork.CompleteAsync();
 

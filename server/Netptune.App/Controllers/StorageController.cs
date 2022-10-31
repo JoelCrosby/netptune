@@ -47,11 +47,15 @@ public class StorageController : ControllerBase
 
         var result = await StorageService.UploadFileAsync(fileStream, key, key);
 
-        var user = await Identity.GetCurrentUser();
+        if (!result.IsSuccess || result.Payload is null)
+        {
+            return BadRequest();
+        }
 
-        user.PictureUrl = result.Payload?.Uri;
-
-        await UserService.Update(user);
+        await UserService.Update(new ()
+        {
+            PictureUrl = result.Payload.Uri,
+        });
 
         return Ok(result);
     }
