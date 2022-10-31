@@ -15,7 +15,7 @@ public interface IProjectService
 
     Task<ClientResponse<ProjectViewModel>> UpdateProject(UpdateProjectRequest request);
 
-    Task<ClientResponse<ProjectViewModel>> AddProject(AddProjectRequest request);
+    Task<ClientResponse<ProjectViewModel>> Create(AddProjectRequest request);
 
     Task<ClientResponse> Delete(int id);
 }

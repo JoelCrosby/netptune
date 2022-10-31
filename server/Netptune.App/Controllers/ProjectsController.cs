@@ -69,7 +69,7 @@ public class ProjectsController : ControllerBase
     [Produces("application/json", Type = typeof(ProjectViewModel))]
     public async Task<IActionResult> PostProject([FromBody] AddProjectRequest request)
     {
-        var result = await ProjectService.AddProject(request);
+        var result = await ProjectService.Create(request);
 
         return Ok(result);
     }
