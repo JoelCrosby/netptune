@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class ResetPasswordRequest
+public record ResetPasswordRequest
 {
     [Required]
     public string UserId { get; set; } = null!;

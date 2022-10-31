@@ -4,7 +4,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
-public class AddProjectTaskRequest
+public record AddProjectTaskRequest
 {
     [Required]
     [MaxLength(256)]

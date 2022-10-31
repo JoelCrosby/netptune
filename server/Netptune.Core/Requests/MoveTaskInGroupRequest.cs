@@ -1,6 +1,6 @@
 namespace Netptune.Core.Requests;
 
-public class MoveTaskInGroupRequest
+public record MoveTaskInGroupRequest
 {
     public int TaskId { get; set; }
 

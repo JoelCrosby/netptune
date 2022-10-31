@@ -4,7 +4,7 @@ using Netptune.Core.Meta;
 
 namespace Netptune.Core.Requests;
 
-public class AddWorkspaceRequest
+public record AddWorkspaceRequest
 {
     [Required]
     public string Name { get; set; } = null!;

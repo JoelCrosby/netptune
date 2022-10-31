@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class AddCommentRequest
+public record AddCommentRequest
 {
     [Required]
     public string Comment { get; set; } = null!;

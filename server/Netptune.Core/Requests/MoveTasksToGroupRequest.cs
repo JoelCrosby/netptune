@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Netptune.Core.Requests;
 
-public class MoveTasksToGroupRequest
+public record MoveTasksToGroupRequest
 {
     [Required]
     public string BoardId { get; set; } = null!;

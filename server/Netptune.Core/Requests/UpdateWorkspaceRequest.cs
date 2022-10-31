@@ -4,7 +4,7 @@ using Netptune.Core.Meta;
 
 namespace Netptune.Core.Requests;
 
-public class UpdateWorkspaceRequest
+public record UpdateWorkspaceRequest
 {
     [Required]
     public string? Slug { get; init; }
