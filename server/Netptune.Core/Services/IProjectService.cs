@@ -13,7 +13,7 @@ public interface IProjectService
 
     Task<ProjectViewModel?> GetProject(string key);
 
-    Task<ClientResponse<ProjectViewModel>> UpdateProject(UpdateProjectRequest request);
+    Task<ClientResponse<ProjectViewModel>> Update(UpdateProjectRequest request);
 
     Task<ClientResponse<ProjectViewModel>> Create(AddProjectRequest request);
 

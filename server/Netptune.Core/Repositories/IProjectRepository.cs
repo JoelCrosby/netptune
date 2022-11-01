@@ -9,6 +9,8 @@ namespace Netptune.Core.Repositories;
 
 public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
 {
+    Task<Project?> GetWithIncludes(int id);
+
     Task<List<ProjectViewModel>> GetProjects(string workspaceKey);
 
     Task<ProjectViewModel?> GetProjectViewModel(int id);

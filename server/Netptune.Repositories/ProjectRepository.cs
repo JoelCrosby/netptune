@@ -21,6 +21,14 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     {
     }
 
+    public Task<Project?> GetWithIncludes(int id)
+    {
+        return Entities
+            .Include(item => item.Owner)
+            .Include(item => item.ProjectBoards)
+            .FirstOrDefaultAsync(item => item.Id == id);
+    }
+
     public async Task<List<ProjectViewModel>> GetProjects(string workspaceKey)
     {
         var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceKey);

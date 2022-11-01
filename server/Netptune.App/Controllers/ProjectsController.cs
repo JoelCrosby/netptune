@@ -56,7 +56,7 @@ public class ProjectsController : ControllerBase
     [Produces("application/json", Type = typeof(ProjectViewModel))]
     public async Task<IActionResult> PutProject([FromBody] UpdateProjectRequest project)
     {
-        var result = await ProjectService.UpdateProject(project);
+        var result = await ProjectService.Update(project);
 
         if (result.IsNotFound) return NotFound();
 
