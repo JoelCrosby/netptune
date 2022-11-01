@@ -175,10 +175,7 @@ public class WorkspaceService : IWorkspaceService
     public async Task<ClientResponse<Workspace>> Update(UpdateWorkspaceRequest request)
     {
         var userId = IdentityService.GetCurrentUserId();
-
-        if (request.Slug is null) throw new ArgumentNullException(nameof(request));
-
-        var result = await WorkspaceRepository.GetBySlug(request.Slug);
+        var result = await WorkspaceRepository.GetBySlug(request.Slug!);
 
         if (result is null)
         {

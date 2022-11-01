@@ -99,6 +99,35 @@ public class ProjectServiceTests
     }
 
     [Fact]
+    public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        var request = Fixture
+            .Build<AddProjectRequest>()
+            .Create();
+
+        var viewModel = Fixture.Build<ProjectViewModel>()
+            .With(x => x.Name, request.Name)
+            .With(x => x.Description, request.Description)
+            .Create();
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<ProjectViewModel>>>>())
+            .Returns(x => x.Arg<Func<Task<ClientResponse<ProjectViewModel>>>>()
+                .Invoke());
+
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
+        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
+
+        var result = await Service.Create(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
         var project = AutoFixtures.Project;
