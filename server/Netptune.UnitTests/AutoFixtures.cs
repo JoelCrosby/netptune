@@ -3,6 +3,7 @@ using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.UnitTests;
@@ -38,8 +39,13 @@ public static class AutoFixtures
         .Without(p => p.ProjectUsers)
         .Without(p => p.ProjectTasks)
         .Without(p => p.ProjectPosts)
-        .Without(p => p.ProjectBoards)
+        .With(p => p.ProjectBoards, new List<Board> { Board })
         .WithoutWorkspace()
+        .With(p => p.Owner, AppUser)
+        .Create();
+
+    public static ProjectViewModel ProjectViewModel => Fixture
+        .Build<ProjectViewModel>()
         .Create();
 
     public static ProjectTask ProjectTask => Fixture

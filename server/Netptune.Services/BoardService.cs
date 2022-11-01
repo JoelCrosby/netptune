@@ -150,7 +150,7 @@ public class BoardService : IBoardService
             WorkspaceId = workspaceId,
         };
 
-        board.BoardGroups.Add(new BoardGroup
+        board.BoardGroups.Add(new ()
         {
             Name = "Backlog",
             Type = BoardGroupType.Backlog,
@@ -158,7 +158,7 @@ public class BoardService : IBoardService
             WorkspaceId = workspaceId,
         });
 
-        board.BoardGroups.Add(new BoardGroup
+        board.BoardGroups.Add(new ()
         {
             Name = "Todo",
             Type = BoardGroupType.Todo,
@@ -166,7 +166,7 @@ public class BoardService : IBoardService
             WorkspaceId = workspaceId,
         });
 
-        board.BoardGroups.Add(new BoardGroup
+        board.BoardGroups.Add(new ()
         {
             Name = "Done",
             Type = BoardGroupType.Done,

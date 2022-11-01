@@ -46,7 +46,7 @@ public record Project : WorkspaceEntity<int>
         var defaultBoard = ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
         var identifier = defaultBoard?.Identifier;
 
-        return new ProjectViewModel
+        return new ()
         {
             Id = Id,
             Key = Key,

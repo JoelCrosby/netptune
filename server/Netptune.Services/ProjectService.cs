@@ -93,9 +93,9 @@ public class ProjectService : IProjectService
         return ProjectRepository.GetProjects(workspaceId);
     }
 
-    public async Task<ClientResponse<ProjectViewModel>> UpdateProject(UpdateProjectRequest request)
+    public async Task<ClientResponse<ProjectViewModel>> Update(UpdateProjectRequest request)
     {
-        var project = await ProjectRepository.GetAsync(request.Id!.Value);
+        var project = await ProjectRepository.GetWithIncludes(request.Id!.Value);
         var user = await IdentityService.GetCurrentUser();
 
         if (project is null)
@@ -111,8 +111,8 @@ public class ProjectService : IProjectService
 
         await UnitOfWork.CompleteAsync();
 
-        var result = await ProjectRepository.GetProjectViewModel(project.Id);
+        var result = project.ToViewModel();
 
-        return ClientResponse<ProjectViewModel>.Success(result!);
+        return ClientResponse<ProjectViewModel>.Success(result);
     }
 }
