@@ -32,7 +32,7 @@ public class TagsController : ControllerBase
     [Produces("application/json", Type = typeof(TagViewModel))]
     public async Task<IActionResult> PostTag([FromBody] AddTagRequest request)
     {
-        var result = await TagService.AddTag(request);
+        var result = await TagService.Create(request);
 
         if (result.IsNotFound) return NotFound();
 
@@ -47,7 +47,7 @@ public class TagsController : ControllerBase
     [Produces("application/json", Type = typeof(TagViewModel))]
     public async Task<IActionResult> PostTaskTag([FromBody] AddTagToTaskRequest request)
     {
-        var result = await TagService.AddTagToTask(request);
+        var result = await TagService.AddToTask(request);
 
         if (result.IsNotFound) return NotFound();
 

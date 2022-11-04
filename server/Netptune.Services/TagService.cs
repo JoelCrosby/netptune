@@ -27,7 +27,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         Tags = unitOfWork.Tags;
     }
 
-    public async Task<ClientResponse<TagViewModel>> AddTag(AddTagRequest request)
+    public async Task<ClientResponse<TagViewModel>> Create(AddTagRequest request)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -59,7 +59,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         return Success(result!);
     }
 
-    public async Task<ClientResponse<TagViewModel>> AddTagToTask(AddTagToTaskRequest request)
+    public async Task<ClientResponse<TagViewModel>> AddToTask(AddTagToTaskRequest request)
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
@@ -94,9 +94,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
             }
 
             var tag = await GetOrCreateTag();
-
             var taskTag = new ProjectTaskTag {TagId = tag.Id, ProjectTaskId = taskId.Value};
-
             var tagForTaskExists = await Tags.ExistsForTask(tag.Id, taskId.Value);
 
             if (!tagForTaskExists)

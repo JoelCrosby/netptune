@@ -68,7 +68,7 @@ public class ProjectServiceTests
     }
 
     [Fact]
-    public async Task Create_CallCompleteAsync_WhenInputValid()
+    public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture
             .Build<AddProjectRequest>()
