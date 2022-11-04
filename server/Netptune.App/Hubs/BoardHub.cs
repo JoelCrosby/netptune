@@ -195,7 +195,7 @@ public class BoardHub : Hub<IBoardHub>
             return ClientResponse<TagViewModel>.Failed();
         }
 
-        var result = await TagService.AddTagToTask(request.Payload);
+        var result = await TagService.AddToTask(request.Payload);
 
         if (!result.IsSuccess) return result;
 

@@ -84,6 +84,13 @@ public static class AutoFixtures
         .WithoutWorkspace()
         .Create();
 
+    public static Tag Tag => Fixture
+        .Build<Tag>()
+        .Without(p => p.Tasks)
+        .Without(p => p.ProjectTaskTags)
+        .WithoutWorkspace()
+        .Create();
+
     public static List<BoardGroup> BoardGroups => new() { BoardGroup.WithTasks() };
 
     public static BoardGroup WithTasks(this BoardGroup boardGroup)

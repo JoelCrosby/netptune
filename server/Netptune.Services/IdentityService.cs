@@ -63,7 +63,7 @@ public class IdentityService : IIdentityService
             return workspace;
         }
 
-        throw new Exception("Client request did not contain a 'workspace' header.");
+        throw new Exception("request context did not contain a 'workspace' header.");
     }
 
     public async Task<int> GetWorkspaceId()
