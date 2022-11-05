@@ -202,6 +202,7 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
 
+        var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
         var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
@@ -210,7 +211,7 @@ public class UserServiceTests
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
         var result = await Service.InviteUsersToWorkspace(new List<string>());
 

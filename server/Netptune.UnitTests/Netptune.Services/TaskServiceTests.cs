@@ -443,7 +443,7 @@ public class TaskServiceTests
         UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>()).Returns(AutoFixtures.BoardGroups);
         UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task>>()).Returns(x => x.Arg<Func<Task>>().Invoke());
+        UnitOfWork.InvokeTransaction();
 
         var result = await Service.Update(request);
 
@@ -489,7 +489,7 @@ public class TaskServiceTests
         UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>()).Returns(AutoFixtures.BoardGroups);
         UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task>>()).Returns(x => x.Arg<Func<Task>>().Invoke());
+        UnitOfWork.InvokeTransaction();
 
         await Service.Update(request);
 
@@ -609,7 +609,8 @@ public class TaskServiceTests
 
         var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.InvokeTransaction<BoardGroup>();
+
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
         UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
@@ -638,7 +639,8 @@ public class TaskServiceTests
 
         var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.InvokeTransaction<BoardGroup>();
+
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
         UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
@@ -667,7 +669,8 @@ public class TaskServiceTests
 
         var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.InvokeTransaction<BoardGroup>();
+
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
         UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);
@@ -696,7 +699,8 @@ public class TaskServiceTests
 
         var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<BoardGroup?>>>())!.Returns(x => x.Arg<Func<Task<BoardGroup>>>().Invoke());
+        UnitOfWork.InvokeTransaction<BoardGroup>();
+
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId).Returns(taskInGroupA);
         UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>()).Returns(taskInGroups);
         UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId).Returns(AutoFixtures.ProjectTasks);

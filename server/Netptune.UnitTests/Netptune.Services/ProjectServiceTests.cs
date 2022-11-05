@@ -48,9 +48,7 @@ public class ProjectServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<ProjectViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<ProjectViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
 
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
@@ -84,9 +82,7 @@ public class ProjectServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<ProjectViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<ProjectViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
 
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
@@ -113,9 +109,7 @@ public class ProjectServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<ProjectViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<ProjectViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
 
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());

@@ -43,9 +43,7 @@ public class WorkspaceServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<WorkspaceViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<WorkspaceViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();
 
         UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>()).Returns(x => x.Arg<Workspace>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
@@ -70,9 +68,7 @@ public class WorkspaceServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<WorkspaceViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<WorkspaceViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();
 
         UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>()).Returns(x => x.Arg<Workspace>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
@@ -80,6 +76,28 @@ public class WorkspaceServiceTests
         await Service.Create(request);
 
         await UnitOfWork.Received(2).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task CreateNewUserWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<AddWorkspaceRequest>()
+            .Create();
+
+        var user = AutoFixtures.AppUser;
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();
+
+        UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>()).Returns(x => x.Arg<Workspace>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
+
+        var result = await Service.CreateNewUserWorkspace(request, user);
+
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -155,9 +173,7 @@ public class WorkspaceServiceTests
     {
         var workspace = AutoFixtures.Workspace;
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
-            .Returns(x => x.Arg<Func<Task>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction();
 
         UnitOfWork.Workspaces.GetBySlug("workspace").Returns(workspace);
 
@@ -169,9 +185,7 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task DeletePermanent_ShouldNotCallDeletePermanent_WhenValidId()
     {
-        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
-            .Returns(x => x.Arg<Func<Task>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction();
 
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
 
@@ -183,9 +197,7 @@ public class WorkspaceServiceTests
     [Fact]
     public async Task DeletePermanent_ShouldNotCallCompleteAsync_WhenValidId()
     {
-        UnitOfWork.Transaction(Arg.Any<Func<Task>>())
-            .Returns(x => x.Arg<Func<Task>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction();
 
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
 
