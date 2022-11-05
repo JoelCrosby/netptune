@@ -135,14 +135,64 @@ public class TagServiceTests
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
 
-        UnitOfWork.Transaction(Arg.Any<Func<Task<ClientResponse<TagViewModel>>>>())
-            .Returns(x => x.Arg<Func<Task<ClientResponse<TagViewModel>>>>()
-                .Invoke());
+        UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
         var result = await Service.AddToTask(request);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task AddToTask_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        var request = Fixture
+            .Build<AddTagToTaskRequest>()
+            .Create();
+
+        var tag = AutoFixtures.Tag;
+        var viewModel = Fixture.Create<TagViewModel>();
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
+        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).ReturnsNull();
+
+        UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
+
+        var result = await Service.AddToTask(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task AddToTask_ShouldReturnFailure_WhenTaskNotFound()
+    {
+        var request = Fixture
+            .Build<AddTagToTaskRequest>()
+            .Create();
+
+        var tag = AutoFixtures.Tag;
+        var viewModel = Fixture.Create<TagViewModel>();
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
+        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+
+        UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
+
+        var result = await Service.AddToTask(request);
+
+        result.IsSuccess.Should().BeFalse();
     }
 }

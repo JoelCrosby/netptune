@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
 using Netptune.Core.Relationships;
-using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -18,13 +17,11 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
-    private readonly ITagRepository Tags;
 
     public TagService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
-        Tags = unitOfWork.Tags;
     }
 
     public async Task<ClientResponse<TagViewModel>> Create(AddTagRequest request)
@@ -39,7 +36,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         }
 
         var trimmedTag = request.Tag.Trim().Capitalize();
-        var alreadyExists = await Tags.Exists(trimmedTag, workspaceId.Value);
+        var alreadyExists = await UnitOfWork.Tags.Exists(trimmedTag, workspaceId.Value);
 
         if (alreadyExists) return Failed("Tag Name should be unique");
 
@@ -51,7 +48,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
             IsDeleted = false,
         };
 
-        await Tags.AddAsync(tag);
+        await UnitOfWork.Tags.AddAsync(tag);
         await UnitOfWork.CompleteAsync();
 
         var result = await UnitOfWork.Tags.GetViewModel(tag.Id);
@@ -78,7 +75,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
             async Task<Tag> GetOrCreateTag()
             {
-                var existingTag = await Tags.GetByValue(trimmedTag, workspaceId.Value);
+                var existingTag = await UnitOfWork.Tags.GetByValue(trimmedTag, workspaceId.Value);
 
                 if (existingTag is {}) return existingTag;
 
@@ -90,12 +87,12 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
                     IsDeleted = false,
                 };
 
-                return await Tags.AddAsync(entity);
+                return await UnitOfWork.Tags.AddAsync(entity);
             }
 
             var tag = await GetOrCreateTag();
             var taskTag = new ProjectTaskTag {TagId = tag.Id, ProjectTaskId = taskId.Value};
-            var tagForTaskExists = await Tags.ExistsForTask(tag.Id, taskId.Value);
+            var tagForTaskExists = await UnitOfWork.Tags.ExistsForTask(tag.Id, taskId.Value);
 
             if (!tagForTaskExists)
             {
@@ -104,7 +101,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
             await UnitOfWork.CompleteAsync();
 
-            var response = await Tags.GetViewModel(tag.Id);
+            var response = await UnitOfWork.Tags.GetViewModel(tag.Id);
 
             return Success(response!);
         });
@@ -117,7 +114,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         if (taskId is null) return null;
 
-        return await Tags.GetViewModelsForTask(taskId.Value, true);
+        return await UnitOfWork.Tags.GetViewModelsForTask(taskId.Value, true);
     }
 
     public async Task<List<TagViewModel>?> GetTagsForWorkspace()
@@ -127,7 +124,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         if (workspaceId is null) return null;
 
-        return await Tags.GetViewModelsForWorkspace(workspaceId.Value);
+        return await UnitOfWork.Tags.GetViewModelsForWorkspace(workspaceId.Value);
     }
 
     public async Task<ClientResponse> Delete(DeleteTagsRequest request)
@@ -137,10 +134,9 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         if (workspaceId is null) return ClientResponse.Failed();
 
-        var tags = await Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Tags);
+        var tags = await UnitOfWork.Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Tags);
 
-        await Tags.DeletePermanent(tags);
-
+        await UnitOfWork.Tags.DeletePermanent(tags);
         await UnitOfWork.CompleteAsync();
 
         return ClientResponse.Success();
@@ -161,7 +157,6 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         }
 
         await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Tag);
-
         await UnitOfWork.CompleteAsync();
 
         return ClientResponse.Success();
