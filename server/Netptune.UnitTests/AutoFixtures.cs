@@ -89,6 +89,7 @@ public static class AutoFixtures
         .Without(p => p.Tasks)
         .Without(p => p.ProjectTaskTags)
         .WithoutWorkspace()
+        .With(p => p.Owner, AppUser)
         .Create();
 
     public static List<BoardGroup> BoardGroups => new() { BoardGroup.WithTasks() };
