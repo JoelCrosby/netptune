@@ -174,12 +174,17 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         var tag = await UnitOfWork.Tags.GetByValue(request.CurrentValue, workspaceId.Value);
 
-        if (tag is null) return ClientResponse<TagViewModel>.NotFound;
+        if (tag is null)
+        {
+            return NotFound<TagViewModel>();
+        }
 
         tag.Name = request.NewValue.Trim();
 
         await UnitOfWork.CompleteAsync();
 
-        return Success(tag.ToViewModel());
+        var result = tag.ToViewModel();
+
+        return Success(result);
     }
 }

@@ -53,4 +53,9 @@ public abstract class ServiceBase<TResult>
     {
         return ClientResponse<TType>.Failed(message);
     }
+
+    protected virtual ClientResponse<TType> NotFound<TType>()
+    {
+        return ClientResponse<TType>.NotFound;
+    }
 }
