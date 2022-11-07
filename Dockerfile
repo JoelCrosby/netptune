@@ -18,7 +18,10 @@ RUN for file in $(ls *.csproj); do \
     done
 COPY /server .
 WORKDIR "/Netptune.App"
-RUN dotnet publish "Netptune.App.csproj" -c Release -o /app/publish /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
+RUN dotnet publish "Netptune.App.csproj" \
+    -c Release \
+    -o /app/publish \
+    /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 FROM node:18 AS client-build
 WORKDIR /client
