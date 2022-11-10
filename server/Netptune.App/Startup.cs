@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
 using Netptune.Core.Events;
+using Netptune.Core.Extensions;
 using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
 using Netptune.JobClient;
@@ -76,8 +77,8 @@ public class Startup
         services.AddNeptuneAuthorization();
         services.AddNeptuneAuthentication(options =>
         {
-            options.Issuer = Configuration["Tokens:Issuer"];
-            options.Audience = Configuration["Tokens:Audience"];
+            options.Issuer = Configuration.GetRequiredValue("Tokens:Issuer");
+            options.Audience = Configuration.GetRequiredValue("Tokens:Audience");
             options.SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY")!;
             options.GitHubClientId = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID")!;
             options.GitHubSecret = Environment.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET")!;
@@ -93,15 +94,15 @@ public class Startup
 
         services.AddNetptuneServices(options =>
         {
-            options.ClientOrigin = Configuration["Origin"];
+            options.ClientOrigin = Configuration.GetRequiredValue("Origin");
             options.ContentRootPath = WebHostEnvironment.ContentRootPath;
         });
 
         services.AddSendGridEmailService(options =>
         {
             options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY")!;
-            options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
-            options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
+            options.DefaultFromAddress = Configuration.GetRequiredValue("Email:DefaultFromAddress");
+            options.DefaultFromDisplayName = Configuration.GetRequiredValue("Email:DefaultFromDisplayName");
         });
 
         services.AddS3StorageService(options =>
@@ -200,11 +201,11 @@ public class Startup
 
     private string[] GetCorsOrigins()
     {
-        return Configuration.GetSection("CorsOrigins")
+        return Configuration.GetRequiredSection("CorsOrigins")
             .AsEnumerable()
             .Where(pair => pair.Value is { })
             .Select(pair => pair.Value)
-            .ToArray();
+            .ToArray()!;
     }
 
     private static FileExtensionContentTypeProvider GetFileExtensionContentTypeProvider()

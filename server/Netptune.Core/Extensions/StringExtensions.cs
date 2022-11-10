@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Microsoft.Extensions.Configuration;
+
 namespace Netptune.Core.Extensions;
 
 public static class StringExtensions
@@ -61,5 +63,12 @@ public static class StringExtensions
         }
 
         return Regex.Replace(input, @"[^\u0020-\u007E]", string.Empty);
+    }
+
+    public static string GetRequiredValue(this IConfiguration configuration, string key)
+    {
+        var value = configuration[key];
+
+        return value ?? throw new InvalidOperationException($"value for key '{key}' not found in configuration");
     }
 }
