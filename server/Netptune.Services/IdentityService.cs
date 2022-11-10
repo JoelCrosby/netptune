@@ -58,6 +58,7 @@ public class IdentityService : IIdentityService
             throw new Exception("HttpContext was null");
         }
 
+
         if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
             return workspace;

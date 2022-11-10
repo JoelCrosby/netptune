@@ -13,7 +13,7 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false);
 
-    Task<List<BoardViewGroup>?> GetBoardView(int boardId, string? searchTerm = null);
+    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? searchTerm = null);
 
     Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false);
 
