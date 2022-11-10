@@ -3,6 +3,7 @@ using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ProjectTasks;
 
@@ -77,11 +78,19 @@ public static class AutoFixtures
         .WithoutWorkspace()
         .Create();
 
+    public static BoardViewGroup BoardViewGroup => Fixture
+        .Build<BoardViewGroup>()
+        .Create();
+
     public static Board Board => Fixture
         .Build<Board>()
         .Without(p => p.Project)
         .Without(p => p.BoardGroups)
         .WithoutWorkspace()
+        .Create();
+
+    public static BoardViewModel BoardViewModel => Fixture
+        .Build<BoardViewModel>()
         .Create();
 
     public static Tag Tag => Fixture

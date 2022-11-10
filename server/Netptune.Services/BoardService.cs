@@ -60,7 +60,7 @@ public class BoardService : IBoardService
 
         var boardId = nullableBoardId.Value;
 
-        var groups = await UnitOfWork.BoardGroups.GetBoardView(boardId, filter?.Term);
+        var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, filter?.Term);
         var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
 
         if (groups is null || board is null)
