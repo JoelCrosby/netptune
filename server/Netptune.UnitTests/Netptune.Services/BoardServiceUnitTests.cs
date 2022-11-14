@@ -1,5 +1,8 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
 
+using FluentAssertions;
+
+using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -16,6 +19,8 @@ namespace Netptune.UnitTests.Netptune.Services;
 
 public class BoardServiceUnitTests
 {
+    private readonly Fixture Fixture = new();
+
     private readonly BoardService Service;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
@@ -151,6 +156,109 @@ public class BoardServiceUnitTests
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>()).Returns(users);
 
         var result = await Service.GetBoardView(identifier, filter);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<UpdateBoardRequest>()
+            .Create();
+
+        var board = AutoFixtures.Board;
+
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(board);
+
+        var result = await Service.Update(request);
+
+        result.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.Identifier.Should().Be(request.Identifier!.ToUrlSlug());
+    }
+
+    [Fact]
+    public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<UpdateBoardRequest>()
+            .Create();
+
+        var board = AutoFixtures.Board;
+
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(board);
+
+        await Service.Update(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailure_WhenNotFound()
+    {
+        var request = Fixture
+            .Build<UpdateBoardRequest>()
+            .Create();
+
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
+
+        var result = await Service.Update(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<AddBoardRequest>()
+            .Create();
+
+        var project = AutoFixtures.Project;
+
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(project);
+
+        var result = await Service.Create(request);
+
+        result.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.Identifier.Should().Be(request.Identifier.ToUrlSlug());
+    }
+
+    [Fact]
+    public async Task Create_CallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture
+            .Build<AddBoardRequest>()
+            .Create();
+
+        var project = AutoFixtures.Project;
+
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(project);
+
+        await Service.Create(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
+    {
+        var request = Fixture
+            .Build<AddBoardRequest>()
+            .Create();
+
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
+
+        var result = await Service.Create(request);
 
         result.IsSuccess.Should().BeFalse();
     }

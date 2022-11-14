@@ -18,9 +18,9 @@ public interface IBoardService
 
     Task<ClientResponse<BoardView>> GetBoardView(string boardIdentifier, BoardGroupsFilter? filter = null);
 
-    Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request);
+    Task<ClientResponse<BoardViewModel>> Update(UpdateBoardRequest request);
 
-    Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request);
+    Task<ClientResponse<BoardViewModel>> Create(AddBoardRequest request);
 
     Task<ClientResponse> Delete(int id);
 

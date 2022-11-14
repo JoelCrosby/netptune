@@ -101,7 +101,7 @@ public class BoardService : IBoardService
         return ClientResponse<BoardView>.Success(result);
     }
 
-    public async Task<ClientResponse<BoardViewModel>> UpdateBoard(UpdateBoardRequest request)
+    public async Task<ClientResponse<BoardViewModel>> Update(UpdateBoardRequest request)
     {
         if (!request.Id.HasValue)
         {
@@ -125,7 +125,7 @@ public class BoardService : IBoardService
         return ClientResponse<BoardViewModel>.Success(payload);
     }
 
-    public async Task<ClientResponse<BoardViewModel>> AddBoard(AddBoardRequest request)
+    public async Task<ClientResponse<BoardViewModel>> Create(AddBoardRequest request)
     {
         if (!request.ProjectId.HasValue)
         {
