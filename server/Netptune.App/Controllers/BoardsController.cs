@@ -101,7 +101,7 @@ public class BoardsController : ControllerBase
     [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
     public async Task<IActionResult> PutBoard([FromBody] UpdateBoardRequest request)
     {
-        var result = await BoardService.UpdateBoard(request);
+        var result = await BoardService.Update(request);
 
         return Ok(result);
     }
@@ -113,7 +113,7 @@ public class BoardsController : ControllerBase
     [Produces("application/json", Type = typeof(ClientResponse<BoardViewModel>))]
     public async Task<IActionResult> PostBoard([FromBody] AddBoardRequest request)
     {
-        var result = await BoardService.AddBoard(request);
+        var result = await BoardService.Create(request);
 
         return Ok(result);
     }
