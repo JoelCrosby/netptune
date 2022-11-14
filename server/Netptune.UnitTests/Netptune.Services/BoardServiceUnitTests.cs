@@ -262,4 +262,126 @@ public class BoardServiceUnitTests
 
         result.IsSuccess.Should().BeFalse();
     }
+
+    [Fact]
+    public async Task Delete_ShouldReturnSuccess_WhenValidId()
+    {
+        var board = AutoFixtures.Board;
+
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Boards.GetAsync(1).Returns(board);
+
+        var result = await Service.Delete(1);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
+    {
+        var board = AutoFixtures.Board;
+
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Boards.GetAsync(1).Returns(board);
+
+        await Service.Delete(1);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnFailure_WhenInvalidId()
+    {
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+
+        var result = await Service.Delete(1);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldNotCallDeletePermanent_WhenValidId()
+    {
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+
+        await Service.Delete(1);
+
+        await UnitOfWork.Boards.Received(0).DeletePermanent(Arg.Any<int>());
+    }
+
+    [Fact]
+    public async Task Delete_ShouldNotCallCompleteAsync_WhenValidId()
+    {
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+
+        await Service.Delete(1);
+
+        await UnitOfWork.Received(0).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task GetBoardsInWorkspace_ShouldReturnCorrectly_WhenValidId()
+    {
+        var viewModels = new List<BoardsViewModel> { AutoFixtures.BoardsViewModel };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.Exists("key").Returns(true);
+        UnitOfWork.Boards.GetBoardViewModels("key").Returns(viewModels);
+
+        var result = await Service.GetBoardsInWorkspace();
+
+        result.Should().NotBeEmpty();
+        result.Should().BeEquivalentTo(viewModels);
+    }
+
+    [Fact]
+    public async Task GetBoardsInWorkspace_ShouldReturnNull_WhenWorkspaceNotExists()
+    {
+        var viewModels = new List<BoardsViewModel> { AutoFixtures.BoardsViewModel };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.Exists("key").Returns(false);
+        UnitOfWork.Boards.GetBoardViewModels("key").Returns(viewModels);
+
+        var result = await Service.GetBoardsInWorkspace();
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetBoardsInProject_ShouldReturnCorrectly_WhenValidId()
+    {
+        var boards = new List<Board> { AutoFixtures.Board };
+
+        UnitOfWork.Boards.GetBoardsInProject(1, Arg.Any<bool>()).Returns(boards);
+
+        var result = await Service.GetBoardsInProject(1);
+
+        result.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task IsIdentifierUnique_ShouldReturnCorrectly_WhenNotExists()
+    {
+        UnitOfWork.Boards.Exists("identifier").Returns(false);
+
+        var result = await Service.IsIdentifierUnique("identifier");
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.IsUnique.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task IsIdentifierUnique_ShouldReturnCorrectly_WhenExists()
+    {
+        UnitOfWork.Boards.Exists("identifier").Returns(true);
+
+        var result = await Service.IsIdentifierUnique("identifier");
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.IsUnique.Should().BeFalse();
+    }
 }
