@@ -46,7 +46,7 @@ public class BoardGroupsController : ControllerBase
     [Produces("application/json", Type = typeof(BoardGroup))]
     public async Task<IActionResult> PutBoardGroup([FromBody] UpdateBoardGroupRequest request)
     {
-        var result = await BoardGroupService.UpdateBoardGroup(request);
+        var result = await BoardGroupService.Update(request);
 
         if (result.IsNotFound) return NotFound();
 
@@ -60,7 +60,7 @@ public class BoardGroupsController : ControllerBase
     [Produces("application/json", Type = typeof(ClientResponse<BoardGroupViewModel>))]
     public async Task<IActionResult> PostBoardGroup([FromBody] AddBoardGroupRequest request)
     {
-        var result = await BoardGroupService.AddBoardGroup(request);
+        var result = await BoardGroupService.Create(request);
 
         return Ok(result);
     }

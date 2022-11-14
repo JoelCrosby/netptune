@@ -11,9 +11,9 @@ public interface IBoardGroupService
 {
     Task<BoardGroup?> GetBoardGroup(int id);
 
-    Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request);
+    Task<ClientResponse<BoardGroupViewModel>> Update(UpdateBoardGroupRequest request);
 
-    Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(AddBoardGroupRequest boardGroup);
+    Task<ClientResponse<BoardGroupViewModel>> Create(AddBoardGroupRequest boardGroup);
 
     Task<ClientResponse> Delete(int id);
 }
