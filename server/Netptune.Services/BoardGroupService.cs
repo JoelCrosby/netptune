@@ -69,13 +69,14 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
             Type = request.Type ?? BoardGroupType.Basic,
             SortOrder = sortOrder,
             WorkspaceId = board.WorkspaceId,
+            BoardId = board.Id,
         };
 
-        board.BoardGroups.Add(boardGroup);
+        var result = await UnitOfWork.BoardGroups.AddAsync(boardGroup);
 
         await UnitOfWork.CompleteAsync();
 
-        return Success(boardGroup.ToViewModel());
+        return Success(result.ToViewModel());
     }
 
     public async Task<ClientResponse> Delete(int id)
