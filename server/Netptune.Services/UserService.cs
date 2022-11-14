@@ -106,7 +106,7 @@ public class UserService : IUserService
         await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
         await UnitOfWork.CompleteAsync();
 
-        var existingUserEmails = existingUsers.Select(user => user.Email.Normalize());
+        var existingUserEmails = existingUsers.Select(user => user.Email!.Normalize());
         var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).ToHashSet();
 
         await SendUserInviteEmails(usersToInvite, workspace);
@@ -154,7 +154,7 @@ public class UserService : IUserService
         }
 
         var removed = await UserRepository.RemoveUsersFromWorkspace(userIds, workspace.Id);
-        var removeUserEmails = removed.Select(x => x.User.Email).ToList();
+        var removeUserEmails = removed.Select(x => x.User.Email!).ToList();
 
         await UnitOfWork.CompleteAsync();
 

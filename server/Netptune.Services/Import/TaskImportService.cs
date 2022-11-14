@@ -86,7 +86,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         if (users.Count != emailAddresses.Count)
         {
-            var existingUserEmails = users.Select(user => user.NormalizedEmail);
+            var existingUserEmails = users.Select(user => user.NormalizedEmail!);
             var missingUserEmails = emailAddresses.Except(existingUserEmails);
 
             return Failed("Import File contained email addresses that do not belong to users in Netptune", new TaskImportResult

@@ -69,7 +69,7 @@ public static class AuthenticationServiceCollectionExtensions
                             return Task.CompletedTask;
                         }
 
-                        var claims = new[] {new Claim(NetptuneClaims.Workspace, workspace)};
+                        var claims = new[] { new Claim(NetptuneClaims.Workspace, workspace!) };
                         var identity = new ClaimsIdentity(claims);
 
                         context.Principal?.AddIdentity(identity);
