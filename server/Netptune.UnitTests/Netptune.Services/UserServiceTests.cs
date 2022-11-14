@@ -61,8 +61,8 @@ public class UserServiceTests
             Lastname = user.Lastname,
             PictureUrl = user.PictureUrl,
             DisplayName = user.DisplayName,
-            Email = user.Email,
-            UserName = user.UserName,
+            Email = user.Email!,
+            UserName = user.UserName!,
             LastLoginTime = user.LastLoginTime,
             RegistrationDate = user.RegistrationDate,
         });
@@ -94,8 +94,8 @@ public class UserServiceTests
             Lastname = user.Lastname,
             PictureUrl = user.PictureUrl,
             DisplayName = user.DisplayName,
-            Email = user.Email,
-            UserName = user.UserName,
+            Email = user.Email!,
+            UserName = user.UserName!,
             LastLoginTime = user.LastLoginTime,
             RegistrationDate = user.RegistrationDate,
         });

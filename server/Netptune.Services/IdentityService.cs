@@ -61,7 +61,7 @@ public class IdentityService : IIdentityService
 
         if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
-            return workspace;
+            return workspace!;
         }
 
         throw new Exception("request context did not contain a 'workspace' header.");

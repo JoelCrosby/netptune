@@ -26,7 +26,7 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
     private string GetDisplayName()
     {
         if (string.IsNullOrWhiteSpace(Firstname) && string.IsNullOrWhiteSpace(Lastname))
-            return UserName;
+            return UserName!;
 
         return $"{Firstname} {Lastname}";
     }
@@ -40,8 +40,8 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
             Lastname = Lastname,
             PictureUrl = PictureUrl,
             DisplayName = DisplayName,
-            Email = Email,
-            UserName = UserName,
+            Email = Email!,
+            UserName = UserName!,
             LastLoginTime = LastLoginTime,
             RegistrationDate = RegistrationDate,
         };
@@ -56,8 +56,8 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
             Lastname = Lastname,
             PictureUrl = PictureUrl,
             DisplayName = DisplayName,
-            Email = Email,
-            UserName = UserName,
+            Email = Email!,
+            UserName = UserName!,
             LastLoginTime = LastLoginTime,
             RegistrationDate = RegistrationDate,
             IsWorkspaceOwner = workspaceOwnerId == Id,
