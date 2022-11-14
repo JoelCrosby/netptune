@@ -33,7 +33,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
         return BoardGroups.GetAsync(id, true);
     }
 
-    public async Task<ClientResponse<BoardGroupViewModel>> UpdateBoardGroup(UpdateBoardGroupRequest request)
+    public async Task<ClientResponse<BoardGroupViewModel>> Update(UpdateBoardGroupRequest request)
     {
         var result = await BoardGroups.GetAsync(request.BoardGroupId!.Value);
 
@@ -42,22 +42,15 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
             return ClientResponse<BoardGroupViewModel>.NotFound;
         }
 
-        if (request.Name is { })
-        {
-            result.Name = request.Name;
-        }
-
-        if (request.SortOrder.HasValue)
-        {
-            result.SortOrder = request.SortOrder.Value;
-        }
+        result.Name = request.Name ?? result.Name;
+        result.SortOrder = request.SortOrder ?? result.SortOrder;
 
         await UnitOfWork.CompleteAsync();
 
         return Success(result.ToViewModel());
     }
 
-    public async Task<ClientResponse<BoardGroupViewModel>> AddBoardGroup(AddBoardGroupRequest request)
+    public async Task<ClientResponse<BoardGroupViewModel>> Create(AddBoardGroupRequest request)
     {
         var boardId = request.BoardId ?? throw new ArgumentNullException(nameof(request.BoardId));
 

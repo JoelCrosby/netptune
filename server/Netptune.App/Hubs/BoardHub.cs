@@ -175,7 +175,7 @@ public class BoardHub : Hub<IBoardHub>
             return ClientResponse<BoardGroupViewModel>.Failed();
         }
 
-        var result = await BoardGroupService.UpdateBoardGroup(request.Payload);
+        var result = await BoardGroupService.Update(request.Payload);
 
         if (!result.IsSuccess) return result;
 
@@ -230,7 +230,7 @@ public class BoardHub : Hub<IBoardHub>
             return ClientResponse<BoardGroupViewModel>.Failed();
         }
 
-        var response = await BoardGroupService.AddBoardGroup(request.Payload);
+        var response = await BoardGroupService.Create(request.Payload);
 
         await Clients
             .OthersInGroup(request.Group)
