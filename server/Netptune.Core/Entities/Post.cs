@@ -22,7 +22,7 @@ public record Post : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual Project? Project { get; set; }
+    public Project? Project { get; set; }
 
     #endregion
 

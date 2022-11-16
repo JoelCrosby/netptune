@@ -28,16 +28,16 @@ public abstract record AuditableEntity<TValue> : KeyedEntity<TValue>, IAuditable
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual AppUser? CreatedByUser { get; set; }
+    public AppUser? CreatedByUser { get; set; }
 
     [JsonIgnore]
-    public virtual AppUser? ModifiedByUser { get; set; }
+    public AppUser? ModifiedByUser { get; set; }
 
     [JsonIgnore]
-    public virtual AppUser? DeletedByUser { get; set; }
+    public AppUser? DeletedByUser { get; set; }
 
     [JsonIgnore]
-    public virtual AppUser? Owner { get; set; }
+    public AppUser? Owner { get; set; }
 
     #endregion
 

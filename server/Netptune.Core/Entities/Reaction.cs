@@ -17,7 +17,7 @@ public record Reaction : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public virtual Comment? Comment { get; set; }
+    public Comment? Comment { get; set; }
 
     #endregion
 }

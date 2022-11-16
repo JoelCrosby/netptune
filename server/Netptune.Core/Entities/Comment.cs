@@ -34,7 +34,11 @@ public record Comment : WorkspaceEntity<int>
             Body = Body,
             EntityId = EntityId,
             EntityType = EntityType,
-            Reactions = Reactions.ToList(),
+            Reactions = Reactions.Select(e => new ReactionViewModel
+            {
+                Value = e.Value,
+                UserId = e.OwnerId ?? e.CreatedByUserId!,
+            }).ToList(),
             CreatedAt = CreatedAt,
             UpdatedAt = UpdatedAt,
         };
