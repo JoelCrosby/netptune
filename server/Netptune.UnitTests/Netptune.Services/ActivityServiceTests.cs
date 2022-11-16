@@ -1,4 +1,6 @@
-﻿using AutoFixture;
+﻿using System.Text.Json;
+
+using AutoFixture;
 
 using FluentAssertions;
 
@@ -35,7 +37,10 @@ public class ActivityServiceTests
         UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>())
             .Returns(new List<ActivityViewModel>
             {
-                Fixture.Build<ActivityViewModel>().Without(x => x.Meta).Create(),
+                Fixture.Build<ActivityViewModel>()
+                    .Without(x => x.Meta)
+                    .Without(x => x.Assignee)
+                    .Create(),
             });
 
         Identity.GetWorkspaceId().Returns(1);
@@ -48,5 +53,40 @@ public class ActivityServiceTests
         var result = await Service.GetActivities(EntityType.Task, 1);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetActivities_ShouldReturnActivities_WithUserAvatars()
+    {
+        const string userId = "user-id-1";
+
+        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>())
+            .Returns(new List<ActivityViewModel>
+            {
+                Fixture.Build<ActivityViewModel>()
+                    .Without(x => x.Meta)
+                    .Without(x => x.Assignee)
+                    .With(x => x.Meta, JsonSerializer.SerializeToDocument(new
+                    {
+                        assigneeId = userId,
+                    }))
+                    .Create(),
+            });
+
+        Identity.GetWorkspaceId().Returns(1);
+        UnitOfWork.Users.GetUserAvatars(Arg.Any<IEnumerable<string>>(), Arg.Any<int>())
+            .Returns(new List<UserAvatar>
+            {
+                new ()
+                {
+                    Id = userId,
+                    DisplayName = "test",
+                    ProfilePictureUrl = "https://pics.com/profile",
+                },
+            });
+
+        var result = await Service.GetActivities(EntityType.Task, 1);
+
+        result.Payload!.FirstOrDefault()!.Assignee.Should().NotBeNull();
     }
 }
