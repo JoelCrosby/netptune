@@ -11,6 +11,7 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
+import { firstValueFrom } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { HubMethodHandler } from './hub.service';
 
@@ -34,10 +35,10 @@ export class HubConnectionService {
       return this.connections[path];
     }
 
-    const token = await this.store
-      .select(selectAuthToken)
-      .pipe(first())
-      .toPromise();
+    const tokenObservable = this.store.select(selectAuthToken).pipe(first());
+    const token = await firstValueFrom(tokenObservable, {
+      defaultValue: undefined,
+    });
 
     if (token === undefined) {
       throw new Error(
