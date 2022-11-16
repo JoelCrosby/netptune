@@ -10,7 +10,7 @@ public class HostingService : IHostingService
     public string ContentRootPath { get; set; }
     public string ClientOrigin { get; set; }
 
-    public HostingOptions Options { get; set; }
+    private HostingOptions Options { get; set; }
 
     public HostingService(IOptionsMonitor<HostingOptions> options)
     {
