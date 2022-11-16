@@ -6,25 +6,25 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.Comments;
 
-public class CommentViewModel
+public record CommentViewModel
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 
-    public string UserDisplayName { get; set; } = null!;
+    public string UserDisplayName { get; init; } = null!;
 
-    public string? UserDisplayImage { get; set; }
+    public string? UserDisplayImage { get; init; }
 
-    public string UserId { get; set; } = null!;
+    public string UserId { get; init; } = null!;
 
-    public string Body { get; set; } = null!;
+    public string Body { get; init; } = null!;
 
-    public int EntityId { get; set; }
+    public int EntityId { get; init; }
 
-    public EntityType EntityType { get; set; }
+    public EntityType EntityType { get; init; }
 
-    public List<Reaction> Reactions { get; set; } = new();
+    public List<ReactionViewModel> Reactions { get; init; } = new();
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; init; }
 }

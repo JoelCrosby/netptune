@@ -29,6 +29,12 @@ public static class AutoFixtures
 
     public static AppUser AppUser => AppUserFixture.Create();
 
+    public static Comment Comment => Fixture
+        .Build<Comment>()
+        .With(p => p.Reactions, new List<Reaction>())
+        .WithoutWorkspace()
+        .Create();
+
     public static WorkspaceAppUser WorkspaceAppUser => Fixture
         .Build<WorkspaceAppUser>()
         .Without(p => p.User)
