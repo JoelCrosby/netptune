@@ -6,6 +6,8 @@ public static class ConnectionStringParser
 {
     public static string ParseConnectionString(string value, string? databaseName = null)
     {
+        if (!value.Contains("//")) return value;
+
         var conn = value
             .Replace("//", "")
             .Split('/', ':', '@', '?')
@@ -24,6 +26,8 @@ public static class ConnectionStringParser
     public static string ParseRedis(string value)
     {
         if (value is "localhost") return value;
+
+        if (!value.Contains("//")) return value;
 
         var conn = value
             .Replace("//", "")
