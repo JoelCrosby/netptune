@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.Comments;
