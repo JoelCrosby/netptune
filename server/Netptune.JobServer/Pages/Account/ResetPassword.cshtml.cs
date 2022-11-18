@@ -15,13 +15,13 @@ public class ResetPasswordModel : PageModel
 {
     private readonly UserManager<IdentityUser> UserManager;
 
+    [BindProperty]
+    public InputModel Input { get; set; } = null!;
+
     public ResetPasswordModel(UserManager<IdentityUser> userManager)
     {
         UserManager = userManager;
     }
-
-    [BindProperty]
-    public InputModel Input { get; set; } = null!;
 
     public class InputModel
     {
@@ -48,14 +48,13 @@ public class ResetPasswordModel : PageModel
         {
             return BadRequest("A code must be supplied for password reset.");
         }
-        else
+
+        Input = new InputModel
         {
-            Input = new InputModel
-            {
-                Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
-            };
-            return Page();
-        }
+            Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
+        };
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -65,14 +64,13 @@ public class ResetPasswordModel : PageModel
             return Page();
         }
 
-        var user = await UserManager.FindByEmailAsync(Input.Email);
+        var user = await UserManager.FindByEmailAsync(Input.Email!);
         if (user == null)
         {
-            // Don't reveal that the user does not exist
             return RedirectToPage("./ResetPasswordConfirmation");
         }
 
-        var result = await UserManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+        var result = await UserManager.ResetPasswordAsync(user, Input.Code!, Input.Password!);
         if (result.Succeeded)
         {
             return RedirectToPage("./ResetPasswordConfirmation");
@@ -82,6 +80,7 @@ public class ResetPasswordModel : PageModel
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
+
         return Page();
     }
 }

@@ -14,11 +14,6 @@ public class LoginModel : PageModel
 {
     private readonly SignInManager<IdentityUser> SignInManager;
 
-    public LoginModel(SignInManager<IdentityUser> signInManager)
-    {
-        SignInManager = signInManager;
-    }
-
     [BindProperty]
     public InputModel Input { get; set; } = null!;
 
@@ -26,6 +21,11 @@ public class LoginModel : PageModel
 
     [TempData]
     public string? ErrorMessage { get; set; }
+
+    public LoginModel(SignInManager<IdentityUser> signInManager)
+    {
+        SignInManager = signInManager;
+    }
 
     public class InputModel
     {
@@ -50,7 +50,6 @@ public class LoginModel : PageModel
 
         returnUrl ??= Url.Content("~/");
 
-        // Clear the existing external cookie to ensure a clean login process
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
         ReturnUrl = returnUrl;
@@ -65,9 +64,7 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await SignInManager.PasswordSignInAsync(Input.Email!, Input.Password!, Input.RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
         {
@@ -77,7 +74,5 @@ public class LoginModel : PageModel
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 
         return Page();
-
-        // If we got this far, something failed, redisplay form
     }
 }
