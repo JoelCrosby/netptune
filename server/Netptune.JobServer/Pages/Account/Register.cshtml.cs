@@ -14,6 +14,11 @@ public class RegisterModel : PageModel
     private readonly SignInManager<IdentityUser> SignInManager;
     private readonly UserManager<IdentityUser> UserManager;
 
+    [BindProperty]
+    public InputModel Input { get; set; } = null!;
+
+    public string? ReturnUrl { get; set; }
+
     public RegisterModel(
         UserManager<IdentityUser> userManager,
         SignInManager<IdentityUser> signInManager)
@@ -21,11 +26,6 @@ public class RegisterModel : PageModel
         UserManager = userManager;
         SignInManager = signInManager;
     }
-
-    [BindProperty]
-    public InputModel Input { get; set; } = null!;
-
-    public string? ReturnUrl { get; set; }
 
     public class InputModel
     {
@@ -79,7 +79,7 @@ public class RegisterModel : PageModel
             Email = Input.Email,
         };
 
-        var result = await UserManager.CreateAsync(user, Input.Password);
+        var result = await UserManager.CreateAsync(user, Input.Password!);
 
         if (result.Succeeded)
         {

@@ -1,7 +1,4 @@
-using System;
-
 using Hangfire;
-using Hangfire.Redis;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,8 +8,8 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.Core.Constants;
 using Netptune.Core.Events;
+using Netptune.Core.Extensions;
 using Netptune.Core.Jobs;
-using Netptune.Core.Utilities;
 using Netptune.Entities.Configuration;
 using Netptune.JobServer.Auth;
 using Netptune.JobServer.Data;
@@ -23,15 +20,10 @@ using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
-using StackExchange.Redis;
-
 namespace Netptune.JobServer;
 
 public class Startup
 {
-    private readonly ConnectionMultiplexer Redis = ConnectRedis();
-    private static string RedisConnectionString = string.Empty;
-
     private IConfiguration Configuration { get; }
     private IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -39,21 +31,17 @@ public class Startup
     {
         WebHostEnvironment = webHostEnvironment;
         Configuration = configuration;
-
-        ConnectRedis();
-    }
-
-    private static ConnectionMultiplexer ConnectRedis()
-    {
-        RedisConnectionString = ConnectionStringParser.ParseRedis(Environment.GetEnvironmentVariable("REDIS_URL")!);
-        return ConnectionMultiplexer.Connect(RedisConnectionString);
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
+        var connectionString = Configuration.GetNetptuneConnectionString();
+        var jobsConnectionString = Configuration.GetNetptuneJobsConnectionString();
+        var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
+
         services.AddHangfire(configuration =>
         {
-            configuration.UseRedisStorage(Redis, new RedisStorageOptions
+            configuration.UseRedisStorage(redisConnectionString, new ()
             {
                 Prefix = NetptuneJobConstants.RedisPrefix,
             });
@@ -65,11 +53,8 @@ public class Startup
 
         services.AddNetptuneRedis(options =>
         {
-            options.Connection = RedisConnectionString;
+            options.Connection = redisConnectionString;
         });
-
-        var connectionString = GetConnectionString();
-        var jobsConnectionString = GetJobsConnectionString();
 
         services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
         services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
@@ -79,23 +64,23 @@ public class Startup
 
         services.AddNetptuneServices(options =>
         {
-            options.ClientOrigin = Configuration["Origin"];
+            options.ClientOrigin = Configuration.GetRequiredValue("Origin");
             options.ContentRootPath = WebHostEnvironment.ContentRootPath;
         });
 
         services.AddSendGridEmailService(options =>
         {
-            options.SendGridApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY")!;
-            options.DefaultFromAddress = Configuration["Email:DefaultFromAddress"];
-            options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
+            options.SendGridApiKey = Configuration.GetEnvironmentVariable("SEND_GRID_API_KEY");
+            options.DefaultFromAddress = Configuration.GetRequiredValue("Email:DefaultFromAddress");
+            options.DefaultFromDisplayName = Configuration.GetRequiredValue("Email:DefaultFromDisplayName");
         });
 
         services.AddS3StorageService(options =>
         {
-            options.BucketName = Environment.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME")!;
-            options.Region = Environment.GetEnvironmentVariable("NETPTUNE_S3_REGION")!;
-            options.AccessKeyID = Environment.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID")!;
-            options.SecretAccessKey = Environment.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY")!;
+            options.BucketName = Configuration.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
+            options.Region = Configuration.GetEnvironmentVariable("NETPTUNE_S3_REGION");
+            options.AccessKeyID = Configuration.GetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID");
+            options.SecretAccessKey = Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
         });
 
         services.AddActivitySink();
@@ -125,44 +110,15 @@ public class Startup
             endpoints.MapRazorPages();
         });
 
-        app.UseHangfireDashboard("",
-            new DashboardOptions
+        app.UseHangfireDashboard("", new ()
+        {
+            DisplayStorageConnectionString = false,
+            DashboardTitle = "Netptune Jobs",
+            AppPath = "/account/logout",
+            Authorization = new[]
             {
-                DisplayStorageConnectionString = false,
-                DashboardTitle = "Netptune Jobs",
-                AppPath = "/account/logout",
-                Authorization = new[]
-                {
-                    new HangfireAuthorizationFilter(),
-                },
-            });
-    }
-
-    private string GetConnectionString()
-    {
-        var appSettingsConString = Configuration.GetConnectionString("netptune");
-        var envVar = Configuration["NetptuneConnectionStringEnvironmentVariable"];
-
-        if (envVar is null) return appSettingsConString;
-
-        var envConString = Environment.GetEnvironmentVariable(envVar);
-
-        if (envConString is null) return appSettingsConString;
-
-        return ConnectionStringParser.ParseConnectionString(envConString);
-    }
-
-    private string GetJobsConnectionString()
-    {
-        var appSettingsConString = Configuration.GetConnectionString("netptune-jobs");
-        var envVar = Configuration["ConnectionStringEnvironmentVariable"];
-
-        if (envVar is null) return appSettingsConString;
-
-        var envConString = Environment.GetEnvironmentVariable(envVar);
-
-        if (envConString is null) return appSettingsConString;
-
-        return ConnectionStringParser.ParseConnectionString(envConString, "netptune-jobs");
+                new HangfireAuthorizationFilter(),
+            },
+        });
     }
 }
