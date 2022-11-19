@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -31,7 +32,7 @@ public class IdentityService : IIdentityService
 
     public string GetUserName()
     {
-        if (GetClaimValue("urn:github:name") is {} githubUserName)
+        if (TryGetClaimValue("urn:github:name", out var githubUserName))
         {
             return githubUserName;
         }
@@ -58,7 +59,6 @@ public class IdentityService : IIdentityService
             throw new Exception("HttpContext was null");
         }
 
-
         if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
             return workspace!;
@@ -77,6 +77,23 @@ public class IdentityService : IIdentityService
         }
 
         return id.Value;
+    }
+
+    private bool TryGetClaimValue(string type, [MaybeNullWhen(false)] out string value)
+    {
+        var claimsPrincipal = ContextAccessor.HttpContext?.User;
+
+        var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+        var result = claim?.Value;
+
+        if (result is null)
+        {
+            value = default;
+            return false;
+        }
+
+        value = result;
+        return true;
     }
 
     private string GetClaimValue(string type)
