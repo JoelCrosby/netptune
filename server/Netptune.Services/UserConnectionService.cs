@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.Caching.Distributed;
-
 using Netptune.Core.Cache.Common;
 using Netptune.Core.Hubs;
 using Netptune.Core.Services;
@@ -34,12 +32,12 @@ public class UserConnectionService : IUserConnectionService
 
         var user = await Identity.GetCurrentUser();
 
-        return Cache.GetOrCreate(connectionId, () => new UserConnection
+        return await Cache.GetOrCreateAsync(connectionId, () => new UserConnection
         {
             ConnectId = connectionId,
             User = user,
             UserId = user.Id,
-        }, new DistributedCacheEntryOptions
+        }, new ()
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
         });
