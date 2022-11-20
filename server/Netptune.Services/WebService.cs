@@ -2,23 +2,27 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-using AngleSharp;
 using AngleSharp.Dom;
 
 using Netptune.Core.Services;
+using Netptune.Core.Services.Integration;
 using Netptune.Core.ViewModels.Web;
 
 namespace Netptune.Services;
 
 public class WebService : IWebService
 {
+    private readonly IHtmlDocumentService DocumentService;
+
+    public WebService(IHtmlDocumentService documentService)
+    {
+        DocumentService = documentService;
+    }
+
     public async Task<MetaInfo> GetMetaDataFromUrl(string url)
     {
         var formalUrl = GetFormalUrl(url);
-
-        var config = AngleSharp.Configuration.Default.WithDefaultLoader();
-        var context = BrowsingContext.New(config);
-        var document = await context.OpenAsync(formalUrl);
+        var document = await DocumentService.OpenAsync(formalUrl);
 
         var title = document.QuerySelector("title")?.TextContent;
         var metaTags = document.QuerySelectorAll("meta");
