@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netptune.JobClient", "Netpt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CE6A8E6A-0503-4FAF-8E7F-B920B349CDAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netptune.IntegrationTests", "Netptune.IntegrationTests\Netptune.IntegrationTests.csproj", "{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +177,18 @@ Global
 		{A73A8A24-A817-4C1E-94B5-F1D83D5C83A6}.Release|x64.Build.0 = Release|Any CPU
 		{A73A8A24-A817-4C1E-94B5-F1D83D5C83A6}.Release|x86.ActiveCfg = Release|Any CPU
 		{A73A8A24-A817-4C1E-94B5-F1D83D5C83A6}.Release|x86.Build.0 = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|x64.Build.0 = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|x64.Build.0 = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,5 +198,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{047EAC6B-EFF3-4421-A980-26FD8F4171A9} = {CE6A8E6A-0503-4FAF-8E7F-B920B349CDAA}
+		{1CBA6A4C-EDE6-4D38-92F5-7F3F5FF54540} = {CE6A8E6A-0503-4FAF-8E7F-B920B349CDAA}
 	EndGlobalSection
 EndGlobal

@@ -160,15 +160,5 @@ public class Startup
             endpoints.MapControllers();
             endpoints.MapHub<BoardHub>(BoardHub.Path);
         });
-
-        app.UseSpa(spa =>
-        {
-            spa.Options.SourcePath = "ClientApp";
-
-            if (env.IsDevelopment())
-            {
-                spa.UseProxyToSpaDevelopmentServer("http://localhost:6400");
-            }
-        });
     }
 }
