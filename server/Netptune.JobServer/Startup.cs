@@ -35,8 +35,9 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var connectionString = Configuration.GetNetptuneConnectionString();
-        var jobsConnectionString = Configuration.GetNetptuneJobsConnectionString();
+        var connectionString = Configuration.GetNetptuneConnectionString("netptune");
+        var jobsConnectionString = Configuration.GetNetptuneConnectionString("netptune-jobs");
+        
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
 
         services.AddHangfire(configuration =>
