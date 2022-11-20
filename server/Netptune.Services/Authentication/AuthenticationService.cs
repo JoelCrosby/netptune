@@ -18,6 +18,7 @@ using Netptune.Core.Authentication.Models;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
@@ -65,9 +66,9 @@ public class NetptuneAuthService : INetptuneAuthService
         UnitOfWork = unitOfWork;
         WorkspaceService = workspaceService;
 
-        Issuer = configuration["Tokens:Issuer"];
-        ExpireDays = configuration["Tokens:ExpireDays"];
-        Origin = configuration["Origin"];
+        Issuer = configuration.GetRequiredValue("Tokens:Issuer");
+        ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
+        Origin = configuration.GetRequiredValue("Origin");
 
         SecurityKey = Environment.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY")!;
     }
@@ -76,7 +77,7 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var appUser = await UserManager.FindByEmailAsync(model.Email);
 
-        if (appUser is null)
+        if (model.Password is null || appUser is null)
         {
             return LoginResult.Failed("Username or password is incorrect");
         }
@@ -113,6 +114,9 @@ public class NetptuneAuthService : INetptuneAuthService
         }
 
         user = await UserManager.FindByEmailAsync(email);
+
+        if (user is null) throw new InvalidOperationException("user login failed");
+
         user.LastLoginTime = DateTime.UtcNow;
 
         await UserManager.UpdateAsync(user);
@@ -134,6 +138,11 @@ public class NetptuneAuthService : INetptuneAuthService
         if (model.InviteCode is {} && invite is null)
         {
             return RegisterResult.Failed("Invite code is invalid/expired.");
+        }
+
+        if (model.Password is null)
+        {
+            return RegisterResult.Failed("Invalid request.");
         }
 
         var user = new AppUser
@@ -177,15 +186,15 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (!result.Succeeded)
         {
-            if (result.Errors is null)
-            {
-                return RegisterResult.Failed("Registration failed.");
-            }
-
             return RegisterResult.Failed(string.Join(", ", result.Errors));
         }
 
         var appUser = await UserManager.FindByEmailAsync(model.Email);
+
+        if (appUser is null)
+        {
+            throw new InvalidOperationException("Invalid request.");
+        }
 
         await LogNewlyRegisteredUserIn(appUser);
         await SendWelcomeEmail(appUser);
@@ -230,7 +239,7 @@ public class NetptuneAuthService : INetptuneAuthService
         {
             SendTo = new SendTo
             {
-                Address = user.Email,
+                Address = user.Email!,
                 DisplayName = $"{user.Firstname} {user.Lastname}",
             },
             Reason = "password reset",
@@ -279,6 +288,9 @@ public class NetptuneAuthService : INetptuneAuthService
     public async Task<CurrentUserResponse?> CurrentUser()
     {
         var principle = ContextAccessor.HttpContext?.User;
+
+        if (principle is null) return null;
+
         var user = await UserManager.GetUserAsync(principle);
 
         if (user is null) return null;
@@ -286,7 +298,7 @@ public class NetptuneAuthService : INetptuneAuthService
         return new CurrentUserResponse
         {
             DisplayName = user.DisplayName,
-            EmailAddress = user.Email,
+            EmailAddress = user.Email!,
             PictureUrl = user.PictureUrl,
             UserId = user.Id,
         };
@@ -307,7 +319,7 @@ public class NetptuneAuthService : INetptuneAuthService
         {
             SendTo = new SendTo
             {
-                Address = appUser.Email,
+                Address = appUser.Email!,
                 DisplayName = $"{appUser.Firstname} {appUser.Lastname}",
             },
             Reason = "email confirmation",
@@ -353,7 +365,7 @@ public class NetptuneAuthService : INetptuneAuthService
         {
             Token = GenerateJwtToken(appUser, expireDays),
             UserId = appUser.Id,
-            EmailAddress = appUser.Email,
+            EmailAddress = appUser.Email!,
             DisplayName = appUser.DisplayName,
             Issued = DateTime.Now,
             Expires = expireDays,
@@ -365,9 +377,9 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Name, user.UserName!),
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Email, user.Email!),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));

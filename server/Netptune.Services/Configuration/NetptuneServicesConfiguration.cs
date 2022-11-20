@@ -7,9 +7,11 @@ using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
+using Netptune.Core.Services.Integration;
 using Netptune.Services.Cache;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
+using Netptune.Services.Integration;
 
 namespace Netptune.Services.Configuration;
 
@@ -37,6 +39,7 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();
         services.AddTransient<IWebService, WebService>();
+        services.AddTransient<IHtmlDocumentService, HtmlDocumentService>();
 
         services.AddTransient<IUserConnectionService, UserConnectionService>();
 
