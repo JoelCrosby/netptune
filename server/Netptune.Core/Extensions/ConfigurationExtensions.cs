@@ -12,7 +12,7 @@ public static class ConfigurationExtensions
     public static string GetNetptuneConnectionString(this IConfiguration configuration)
     {
         var appSettingsConString = configuration.GetConnectionString("netptune");
-        var envVar = Environment.GetEnvironmentVariable("DATABASE_URL") ?? Environment.GetEnvironmentVariable("NETPTUNE_DATABASE_URL");
+        var envVar = Environment.GetEnvironmentVariable("NETPTUNE_DATABASE_URL");
 
         var connectionString = envVar ?? appSettingsConString;
 
