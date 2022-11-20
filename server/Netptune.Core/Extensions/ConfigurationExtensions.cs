@@ -9,24 +9,9 @@ namespace Netptune.Core.Extensions;
 
 public static class ConfigurationExtensions
 {
-    public static string GetNetptuneConnectionString(this IConfiguration configuration)
+    public static string GetNetptuneConnectionString(this IConfiguration configuration, string database)
     {
-        var appSettingsConString = configuration.GetConnectionString("netptune");
-        var envVar = Environment.GetEnvironmentVariable("NETPTUNE_DATABASE_URL");
-
-        var connectionString = envVar ?? appSettingsConString;
-
-        if (connectionString is null)
-        {
-            throw new Exception("An environment variable with the key of 'DATABASE_URL' not found.");
-        }
-
-        return ConnectionStringParser.ParseConnectionString(connectionString, "netptune");
-    }
-
-    public static string GetNetptuneJobsConnectionString(this IConfiguration configuration)
-    {
-        var appSettingsConString = configuration.GetConnectionString("netptune-jobs");
+        var appSettingsConString = configuration.GetConnectionString(database);
         var envVar = Environment.GetEnvironmentVariable("DATABASE_URL");
 
         var connectionString = envVar ?? appSettingsConString;
@@ -36,7 +21,7 @@ public static class ConfigurationExtensions
             throw new Exception("An environment variable with the key of 'DATABASE_URL' not found.");
         }
 
-        return ConnectionStringParser.ParseConnectionString(connectionString, "netptune-jobs");
+        return ConnectionStringParser.ParseConnectionString(connectionString, database);
     }
 
     public static string GetNetptuneRedisConnectionString(this IConfiguration configuration)

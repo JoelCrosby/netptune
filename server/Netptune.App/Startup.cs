@@ -38,7 +38,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var connectionString = Configuration.GetNetptuneConnectionString();
+        var connectionString = Configuration.GetNetptuneConnectionString("netptune");
+
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
 
         services.AddCors(options =>
