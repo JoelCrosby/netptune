@@ -161,5 +161,7 @@ public class Startup
             endpoints.MapControllers();
             endpoints.MapHub<BoardHub>(BoardHub.Path);
         });
+
+        app.UseSpa(_ => {});
     }
 }
