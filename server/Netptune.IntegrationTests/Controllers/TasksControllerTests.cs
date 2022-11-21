@@ -12,7 +12,7 @@ public class TasksControllerTests : IClassFixture<NetptuneApiFactory>
 
     public TasksControllerTests(NetptuneApiFactory factory)
     {
-        Client = factory.CreateClient();
+        Client = factory.CreateNetptuneClient();
     }
 
     [Fact]
