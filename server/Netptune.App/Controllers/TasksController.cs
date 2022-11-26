@@ -37,7 +37,7 @@ public class TasksController : ControllerBase
     }
 
     // GET: api/tasks/5
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json", Type = typeof(TaskViewModel))]
@@ -106,7 +106,7 @@ public class TasksController : ControllerBase
     }
 
     // DELETE: api/tasks/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces("application/json", Type = typeof(ClientResponse))]

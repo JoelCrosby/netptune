@@ -75,24 +75,15 @@ internal sealed class DataSeedService : IHostedService
         try
         {
             await context.Database.EnsureCreatedAsync(ct);
-
             await context.Database.BeginTransactionAsync(ct);
 
             await context.Users.AddRangeAsync(users, ct);
-            await context.SaveChangesAsync(ct);
-
             await context.Workspaces.AddRangeAsync(workspaces, ct);
-            await context.SaveChangesAsync(ct);
-
             await context.WorkspaceAppUsers.AddRangeAsync(workspaceUsers, ct);
-            await context.SaveChangesAsync(ct);
-
             await context.Projects.AddRangeAsync(projects, ct);
-            await context.SaveChangesAsync(ct);
-
             await context.ProjectTasks.AddRangeAsync(tasks, ct);
-            await context.SaveChangesAsync(ct);
 
+            await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);
         }
         catch
