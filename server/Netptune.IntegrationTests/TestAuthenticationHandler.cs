@@ -2,43 +2,59 @@
 using System.Text.Encodings.Web;
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Authorization;
+using Netptune.Entities.Contexts;
 
 namespace Netptune.IntegrationTests;
 
-public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public sealed class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    private readonly DataContext DataContext;
+
     public const string AuthenticationScheme = "TestScheme";
 
     public TestAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock)
+        ISystemClock clock,
+        DataContext context)
         : base(options, logger, encoder, clock)
     {
+        DataContext = context;
     }
 
-    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        var user = await DataContext.WorkspaceAppUsers
+            .Include(u => u.Workspace)
+            .Include(u => u.User)
+            .Where(u => u.Workspace.Slug == "netptune")
+            .Select(u => u.User)
+            .FirstOrDefaultAsync();
+
+
+        if (user is null)
+        {
+            throw new InvalidOperationException("could not find user");
+        }
+
         var claims = new List<Claim>
         {
-            new (ClaimTypes.Name, "User"),
-            new (ClaimTypes.NameIdentifier, "UserId"),
-            new (ClaimTypes.Email, "testuser@email.com"),
-            new (NetptuneClaims.Workspace, "test-workspace"),
+            new (ClaimTypes.Name, user.DisplayName),
+            new (ClaimTypes.NameIdentifier, user.Id),
+            new (ClaimTypes.Email, user.Email!),
+            new (NetptuneClaims.Workspace, "netptune"),
         };
 
         var identity = new ClaimsIdentity(claims, AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
-        var result = AuthenticateResult.Success(ticket);
-
-        return Task.FromResult(result);
+        return AuthenticateResult.Success(ticket);
     }
 }
