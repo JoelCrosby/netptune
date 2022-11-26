@@ -1,6 +1,5 @@
 # Netptune
 
-A Simple project task tracking application
+A Simple fullstack project task tracking application built with Dotnet, Entity Framework, Postgres, Redis & a client built with Angular
 
-![ci](https://github.com/JoelCrosby/Netptune/workflows/ci/badge.svg)
-[![CodeFactor](https://www.codefactor.io/repository/github/joelcrosby/netptune/badge)](https://www.codefactor.io/repository/github/joelcrosby/netptune)
+[![Build Deploy](https://github.com/joelcrosby/netptune/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-deploy.yml)
