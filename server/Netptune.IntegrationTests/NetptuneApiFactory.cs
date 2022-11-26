@@ -23,7 +23,14 @@ using Xunit;
 
 namespace Netptune.IntegrationTests;
 
-public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
+internal class ContainerConnection
+{
+    public string DdConnection { get; set; } = null!;
+
+    public string RedisConnection { get; set; } = null!;
+}
+
+public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
 {
     private readonly PostgreSqlTestcontainer DbContainer =
         new TestcontainersBuilder<PostgreSqlTestcontainer>()
@@ -51,12 +58,20 @@ public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
             services.RemoveAll(typeof(IDbConnectionFactory));
             services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.ConnectionString));
 
-            services.RemoveAll(typeof(DbContext));
+            // services.RemoveAll(typeof(DbContext));
+            services.RemoveAll(typeof(DataContext));
+            services.RemoveAll(typeof(DbContextOptions<DataContext>));
             services.AddDbContext<DataContext>(options =>
             {
                 options
                     .UseNpgsql(DbContainer.ConnectionString)
                     .UseSnakeCaseNamingConvention();
+            });
+
+            services.AddSingleton(new ContainerConnection
+            {
+                RedisConnection = CacheContainer.Hostname,
+                DdConnection = DbContainer.ConnectionString,
             });
 
             services.AddAuthorization(options =>
@@ -66,7 +81,7 @@ public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
                     .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
                     .Build();
 
-                options.AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
+                options.AddPolicy(NetptunePolicies.Workspace, config => config.RequireAuthenticatedUser()
                     .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
                     .AddRequirements(new WorkspaceRequirement())
                     .Build());
@@ -76,6 +91,8 @@ public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
                 .AddAuthentication(TestAuthenticationHandler.AuthenticationScheme)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
                     TestAuthenticationHandler.AuthenticationScheme, _ => { });
+
+            services.AddHostedService<DataSeedService>();
         });
     }
 
@@ -87,8 +104,8 @@ public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
 
     public new async Task DisposeAsync()
     {
-        await CacheContainer.StopAsync();
-        await DbContainer.StopAsync();
+        await CacheContainer.DisposeAsync();
+        await DbContainer.DisposeAsync();
     }
 
     public HttpClient CreateNetptuneClient()
@@ -96,6 +113,7 @@ public class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
         var client = CreateClient();
 
         client.DefaultRequestHeaders.Authorization = new ("TestScheme");
+        client.DefaultRequestHeaders.Add("workspace", "netptune");
 
         return client;
     }

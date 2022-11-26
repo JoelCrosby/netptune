@@ -33,6 +33,7 @@ public class ProjectEntityMap : WorkspaceEntityMap<Project, int>
         builder
             .HasOne(project => project.Workspace)
             .WithMany(workspace => workspace.Projects)
+            .HasForeignKey(project => project.WorkspaceId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
