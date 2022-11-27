@@ -19,19 +19,24 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-      - name: Setup .NET Core SDK
+      -
+        name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
-        dotnet-version: '7.x'
-      - name: Install dependencies
+          dotnet-version: '7.x'
+      -
+        name: Install dependencies
         run: dotnet restore
-      - name: Build
+      -
+        name: Build
         working-directory: ./server
         run: dotnet build --configuration Release --no-restore
-      - name: Test
+      -
+        name: Test
         working-directory: ./server/Netptune.UnitTests
         run: dotnet test --no-restore --verbosity normal
-      - name: Test
+      -
+        name: Test
         working-directory: ./server/Netptune.IntegrationTests
         run: dotnet test --no-restore --verbosity normal
       -
