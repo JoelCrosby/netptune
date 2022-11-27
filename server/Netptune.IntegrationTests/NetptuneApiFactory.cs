@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 using Netptune.App;
 using Netptune.Core.Authorization;
+using Netptune.Core.Cache.Common;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.ConnectionFactories;
@@ -46,6 +48,10 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
     private readonly RedisTestcontainer CacheContainer =
         new TestcontainersBuilder<RedisTestcontainer>()
             .WithImage("redis:latest")
+            .WithDatabase(new RedisTestcontainerConfiguration
+            {
+                Port = 6379,
+            })
             .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -54,8 +60,8 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(RedisCacheOptions));
-            services.Configure<RedisCacheOptions>(options => options.Connection = CacheContainer.Hostname);
+            services.RemoveAll(typeof(ICacheProvider));
+            services.AddNetptuneRedis(options => options.Connection = CacheContainer.ConnectionString);
 
             services.RemoveAll(typeof(IDbConnectionFactory));
             services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.ConnectionString));
