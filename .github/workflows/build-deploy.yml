@@ -22,7 +22,7 @@ jobs:
       -
         name: Install Deps
         run: |
-          apt -y install docker.io
+          sudo apt -y install docker.io
       -
         name: Build
         env:
