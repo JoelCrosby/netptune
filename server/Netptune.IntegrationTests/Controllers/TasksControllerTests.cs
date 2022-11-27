@@ -138,4 +138,28 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task Create_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = "new name",
+            Description = "new description",
+            Status = ProjectTaskStatus.InProgress,
+            IsFlagged = false,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.Description.Should().Be(request.Description);
+        result.Payload.Status.Should().Be(request.Status);
+        result.Payload.IsFlagged.Should().Be(request.IsFlagged);
+    }
 }
