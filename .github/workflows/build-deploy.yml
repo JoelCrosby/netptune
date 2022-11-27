@@ -22,7 +22,7 @@ jobs:
       -
         name: Install Deps
         run: |
-          sudo apt -y install docker docker-engine docker.io containerd runc
+          sudo apt -y install docker.io containerd runc
       -
         name: Build
         env:
