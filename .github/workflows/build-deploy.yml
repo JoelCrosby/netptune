@@ -20,6 +20,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       -
+        name: Install Deps
+        run: apt -y install docker.io
+      -
         name: Build
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
