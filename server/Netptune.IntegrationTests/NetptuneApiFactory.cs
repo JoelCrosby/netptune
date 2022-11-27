@@ -50,6 +50,8 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        LoadEnvironmentVariables();
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(RedisCacheOptions));
@@ -94,6 +96,18 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
             services.AddHostedService<DataSeedService>();
         });
+    }
+
+    private static void LoadEnvironmentVariables()
+    {
+        Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_SECRET", "test");
+        Environment.SetEnvironmentVariable("SEND_GRID_API_KEY", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_S3_REGION", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY", "test");
     }
 
     public async Task InitializeAsync()

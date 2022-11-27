@@ -40,15 +40,6 @@ jobs:
         name: Run Integration Tests
         working-directory: ./server/Netptune.IntegrationTests
         run: dotnet test --no-restore
-        env:
-          NETPTUNE_SIGNING_KEY: "test"
-          NETPTUNE_GITHUB_CLIENT_ID: "test"
-          NETPTUNE_GITHUB_SECRET: "test"
-          SEND_GRID_API_KEY: "test"
-          NETPTUNE_S3_BUCKET_NAME: "test"
-          NETPTUNE_S3_REGION: "test"
-          NETPTUNE_S3_ACCESS_KEY_ID: "test"
-          NETPTUNE_S3_SECRET_ACCESS_KEY: "test"
       -
         name: Build Image
         env:
