@@ -14,7 +14,7 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
-        name: Add SSH key
+        name: Add ssh key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -33,15 +33,24 @@ jobs:
         working-directory: ./server
         run: dotnet build --configuration Release --no-restore
       -
-        name: Test
+        name: Run Unit Tests
         working-directory: ./server/Netptune.UnitTests
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore
       -
-        name: Test
+        name: Run Integration Tests
         working-directory: ./server/Netptune.IntegrationTests
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore
+        env:
+          NETPTUNE_SIGNING_KEY: "test"
+          NETPTUNE_GITHUB_CLIENT_ID: "test"
+          NETPTUNE_GITHUB_SECRET: "test"
+          SEND_GRID_API_KEY: "test"
+          NETPTUNE_S3_BUCKET_NAME: "test"
+          NETPTUNE_S3_REGION: "test"
+          NETPTUNE_S3_ACCESS_KEY_ID: "test"
+          NETPTUNE_S3_SECRET_ACCESS_KEY: "test"
       -
-        name: Build
+        name: Build Image
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
@@ -54,13 +63,13 @@ jobs:
           -t dokku/netptune:$GITHUB_SHA .
           docker save dokku/netptune:$GITHUB_SHA | bzip2 | ssh $DOKKU_HOST "bunzip2 | docker load"
       -
-        name: Deploy
+        name: Deploy Image
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
           ssh $DOKKU_HOST "dokku git:from-image netptune dokku/netptune:$GITHUB_SHA"
       -
-        name: Build Jobs
+        name: Build Jobs Image
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
@@ -73,7 +82,7 @@ jobs:
           -t dokku/netptune-jobs:$GITHUB_SHA -f Dockerfile.jobs .
           docker save dokku/netptune-jobs:$GITHUB_SHA | bzip2 | ssh $DOKKU_HOST "bunzip2 | docker load"
       -
-        name: Deploy Jobs
+        name: Deploy Jobs Image
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_HOST }}
         run: |
