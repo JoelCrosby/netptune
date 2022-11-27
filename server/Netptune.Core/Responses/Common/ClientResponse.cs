@@ -2,17 +2,13 @@ namespace Netptune.Core.Responses.Common;
 
 public class ClientResponse
 {
-    public bool IsSuccess { get; protected init; }
+    public bool IsSuccess { get; init; }
 
-    public string? Message { get; protected init; }
+    public string? Message { get; init; }
 
-    public ResponseType ResponseType { get; protected init; } = ResponseType.Default;
+    public ResponseType ResponseType { get; init; } = ResponseType.Default;
 
     public bool IsNotFound => ResponseType == ResponseType.NotFound;
-
-    protected ClientResponse()
-    {
-    }
 
     public static ClientResponse Success(string? message = null)
     {
@@ -41,11 +37,7 @@ public class ClientResponse
 
 public class ClientResponse<TPayload> : ClientResponse
 {
-    public TPayload? Payload { get; protected init; }
-
-    protected ClientResponse()
-    {
-    }
+    public TPayload? Payload { get; init; }
 
     public static new ClientResponse<TPayload> Success(string? message = null)
     {
