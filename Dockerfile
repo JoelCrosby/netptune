@@ -24,14 +24,6 @@ RUN dotnet restore
 # copy everything else
 COPY /server .
 
-# run unit tests
-WORKDIR "/Netptune.UnitTests"
-RUN dotnet test -c Release
-
-# run integration tests
-WORKDIR "/Netptune.IntegrationTests"
-RUN dotnet test -c Release
-
 # build app
 WORKDIR "/Netptune.App"
 RUN dotnet publish "Netptune.App.csproj" \
