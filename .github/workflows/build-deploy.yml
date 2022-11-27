@@ -26,6 +26,7 @@ jobs:
           dotnet-version: '7.x'
       -
         name: Install dependencies
+        working-directory: ./server
         run: dotnet restore
       -
         name: Build
