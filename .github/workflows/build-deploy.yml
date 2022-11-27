@@ -23,6 +23,8 @@ jobs:
         name: Install Deps
         run: |
           sudo apt -y install docker.io containerd runc
+      - run: sudo chown runner:docker /var/run/docker.sock
+        if: ${{ env.ACT }}
       -
         name: Build
         env:
