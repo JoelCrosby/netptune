@@ -3,6 +3,9 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Netptune.Core.Enums;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 using Xunit;
@@ -43,6 +46,14 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
     }
 
     [Fact]
+    public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/tasks/1000");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task GetDetail_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks/detail?systemId=kak-3");
@@ -52,5 +63,79 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
         var result = await response.Content.ReadFromJsonAsync<TaskViewModel>();
 
         result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetDetail_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/tasks/detail?systemId=zzz-3");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetDetail_ShouldReturnBadRequest_WhenInputNotValid()
+    {
+        var response = await Client.GetAsync("api/tasks/detail");
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = 1,
+            Name = "updated name",
+            Description = "updated description",
+            Status = ProjectTaskStatus.Complete,
+            IsFlagged = true,
+        };
+
+        var response = await Client.PutAsJsonAsync("api/tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.Description.Should().Be(request.Description);
+        result.Payload.Status.Should().Be(request.Status);
+        result.Payload.IsFlagged.Should().Be(request.IsFlagged.Value);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = -1,
+            Name = "updated name",
+            Description = "updated description",
+            Status = ProjectTaskStatus.Complete,
+            IsFlagged = true,
+        };
+
+        var response = await Client.PutAsJsonAsync("api/tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnBadRequest_WhenInputNotValid()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Name = "updated name",
+            Description = "updated description",
+            Status = ProjectTaskStatus.Complete,
+            IsFlagged = true,
+        };
+
+        var response = await Client.PutAsJsonAsync("api/tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

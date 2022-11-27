@@ -2,6 +2,8 @@
 
 using FluentAssertions;
 
+using Microsoft.Extensions.Logging;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
@@ -29,10 +31,11 @@ public class TaskServiceTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly ILogger<TaskService> Logger = Substitute.For<ILogger<TaskService>>();
 
     public TaskServiceTests()
     {
-        Service = new(UnitOfWork, Identity, Activity);
+        Service = new(UnitOfWork, Identity, Activity, Logger);
     }
 
     [Fact]

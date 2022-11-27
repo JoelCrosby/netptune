@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -30,16 +31,19 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly ILogger<TaskService> Logger;
 
     public TaskService(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        ILogger<TaskService> logger)
     {
         TaskRepository = unitOfWork.Tasks;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        Logger = logger;
     }
 
     public async Task<ClientResponse<TaskViewModel>> Create(AddProjectTaskRequest request)
@@ -169,7 +173,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             result.Description = request.Description ?? result.Description;
             result.Status = request.Status ?? result.Status;
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
-            result.OwnerId = request.OwnerId;
+            result.OwnerId = request.OwnerId ?? result.OwnerId;
 
             if (request.AssigneeIds is { })
             {
@@ -334,7 +338,8 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         if (defaultBoard is null)
         {
-            throw new Exception($"Project With Id {result.ProjectId.Value} does not have a default board.");
+            Logger.LogInformation("Project With Id {ProjectId} does not have a default board.", result.ProjectId.Value);
+            return;
         }
 
         var groupType = status.GetGroupTypeFromTaskStatus();
