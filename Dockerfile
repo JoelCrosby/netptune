@@ -28,6 +28,10 @@ COPY /server .
 WORKDIR "/Netptune.UnitTests"
 RUN dotnet test -c Release
 
+# run integration tests
+WORKDIR "/Netptune.IntegrationTests"
+RUN dotnet test -c Release
+
 # build app
 WORKDIR "/Netptune.App"
 RUN dotnet publish "Netptune.App.csproj" \
