@@ -22,7 +22,7 @@ jobs:
       -
         name: Install Deps
         run: |
-          sudo apt -y install docker.io
+          sudo apt -y install docker.io containerd
       -
         name: Build
         env:
