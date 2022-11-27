@@ -21,7 +21,8 @@ jobs:
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       -
         name: Install Deps
-        run: apt -y install docker.io
+        run: |
+          apt -y install docker.io
       -
         name: Build
         env:
