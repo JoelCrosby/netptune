@@ -61,6 +61,43 @@ internal sealed class DataSeedService : IHostedService
             .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
             .Generate(4);
 
+        var boards = new Faker<Board>()
+            .RuleFor(p => p.Name, f => Projects.ElementAt(f.IndexFaker))
+            .RuleFor(p => p.Identifier, (_, p) => p.Name.ToUrlSlug())
+            .RuleFor(p => p.BoardType, _ => BoardType.Default)
+            .RuleFor(p => p.MetaInfo, _ => new())
+            .RuleFor(p => p.Owner, f => f.PickRandom(users))
+            .RuleFor(p => p.Project, f => projects.ElementAt(f.IndexFaker))
+            .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+            .Generate(4);
+
+        var boardGroups = new []
+        {
+            new Faker<BoardGroup>()
+                .RuleFor(p => p.Name, f => Projects.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Owner, f => f.PickRandom(users))
+                .RuleFor(p => p.Board, f => boards.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+                .RuleFor(p => p.Type, _ => BoardGroupType.Backlog)
+                .Generate(4),
+            new Faker<BoardGroup>()
+                .RuleFor(p => p.Name, f => Projects.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Owner, f => f.PickRandom(users))
+                .RuleFor(p => p.Board, f => boards.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+                .RuleFor(p => p.Type, _ => BoardGroupType.Todo)
+                .Generate(4),
+            new Faker<BoardGroup>()
+                .RuleFor(p => p.Name, f => Projects.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Owner, f => f.PickRandom(users))
+                .RuleFor(p => p.Board, f => boards.ElementAt(f.IndexFaker))
+                .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+                .RuleFor(p => p.Type, _ => BoardGroupType.Done)
+                .Generate(4),
+        }
+            .SelectMany(list => list)
+            .ToList();
+
         var tasks = new Faker<ProjectTask>()
             .RuleFor(p => p.Name, f => f.System.Exception().Message)
             .RuleFor(p => p.Description, f => f.System.Exception().StackTrace)
@@ -80,6 +117,8 @@ internal sealed class DataSeedService : IHostedService
             await context.Users.AddRangeAsync(users, ct);
             await context.Workspaces.AddRangeAsync(workspaces, ct);
             await context.WorkspaceAppUsers.AddRangeAsync(workspaceUsers, ct);
+            await context.Boards.AddRangeAsync(boards, ct);
+            await context.BoardGroups.AddRangeAsync(boardGroups, ct);
             await context.Projects.AddRangeAsync(projects, ct);
             await context.ProjectTasks.AddRangeAsync(tasks, ct);
 
