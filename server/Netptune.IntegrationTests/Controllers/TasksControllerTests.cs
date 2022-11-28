@@ -56,7 +56,7 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
     [Fact]
     public async Task GetDetail_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.GetAsync("api/tasks/detail?systemId=kak-3");
+        var response = await Client.GetAsync("api/tasks/detail?systemId=neo-1");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -147,6 +147,7 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
             Name = "new name",
             Description = "new description",
             Status = ProjectTaskStatus.InProgress,
+            ProjectId = 1,
             IsFlagged = false,
         };
 
@@ -161,5 +162,21 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Status.Should().Be(request.Status);
         result.Payload.IsFlagged.Should().Be(request.IsFlagged);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Description = "new description",
+            Status = ProjectTaskStatus.InProgress,
+            ProjectId = 1,
+            IsFlagged = false,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
