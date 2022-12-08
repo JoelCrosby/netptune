@@ -338,7 +338,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         if (defaultBoard is null)
         {
-            Logger.LogInformation("Project With Id {ProjectId} does not have a default board.", result.ProjectId.Value);
+            Logger.LogInformation("Project With Id {ProjectId} does not have a default board", result.ProjectId.Value);
             return;
         }
 
