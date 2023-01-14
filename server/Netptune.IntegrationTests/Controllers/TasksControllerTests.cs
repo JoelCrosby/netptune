@@ -179,4 +179,49 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var response = await Client.DeleteAsync("api/tasks/3");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/tasks/1000");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task DeleteMany_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var taskIds = new[] { 2, 4 };
+
+        var request = new HttpRequestMessage
+        {
+            RequestUri = new ("api/tasks", UriKind.Relative),
+            Method = HttpMethod.Delete,
+            Content = JsonContent.Create(taskIds),
+        };
+
+        var response = await Client.SendAsync(request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
 }
