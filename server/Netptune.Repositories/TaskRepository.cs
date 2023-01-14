@@ -320,17 +320,17 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
     public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
     {
-        var tasks = await Entities
+        var status = await Entities
             .Where(x => x.ProjectId == projectId && !x.IsDeleted)
-            .AsNoTracking()
+            .Select(x => x.Status)
             .ToListAsync();
 
         return new ProjectTaskCounts
         {
-            AllTasks = tasks.Count,
-            CompletedTasks = tasks.Count(x => x.Status == ProjectTaskStatus.Complete),
-            InProgressTasks = tasks.Count(x => x.Status == ProjectTaskStatus.InProgress),
-            BacklogTasks = tasks.Count(x => x.Status == ProjectTaskStatus.UnAssigned),
+            AllTasks = status.Count,
+            CompletedTasks = status.Count(x => x == ProjectTaskStatus.Complete),
+            InProgressTasks = status.Count(x => x == ProjectTaskStatus.InProgress),
+            BacklogTasks = status.Count(x => x == ProjectTaskStatus.UnAssigned),
         };
     }
 
