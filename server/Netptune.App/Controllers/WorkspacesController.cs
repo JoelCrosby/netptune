@@ -26,9 +26,9 @@ public class WorkspacesController : ControllerBase
         AuthorizationService = authorizationService;
     }
 
-    private async Task<AuthorizationResult> AuthorizeWorkspace(string workspaceKey)
+    private Task<AuthorizationResult> AuthorizeWorkspace(string workspaceKey)
     {
-        return await AuthorizationService.AuthorizeAsync(User, workspaceKey, NetptunePolicies.Workspace);
+        return AuthorizationService.AuthorizeAsync(User, workspaceKey, NetptunePolicies.Workspace);
     }
 
     // GET: api/Workspaces
