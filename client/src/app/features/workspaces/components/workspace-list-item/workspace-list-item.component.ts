@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';

@@ -9,7 +9,7 @@ import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
 import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 

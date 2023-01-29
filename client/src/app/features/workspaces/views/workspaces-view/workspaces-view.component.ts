@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
