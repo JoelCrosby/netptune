@@ -54,6 +54,7 @@ public class StorageController : ControllerBase
 
         await UserService.Update(new ()
         {
+            Id = userId,
             PictureUrl = result.Payload.Uri,
         });
 
