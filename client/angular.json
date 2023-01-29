@@ -159,6 +159,12 @@
     },
     "@schematics/angular:interceptor": {
       "skipTests": true
+    },
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
     }
   },
   "cli": {

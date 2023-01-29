@@ -25,11 +25,11 @@
       (input)="onInputchange($event)"
       (blur)="onTouch()"
     />
-  </div>
 
-  <mat-icon *ngIf="icon" aria-hidden="true" class="material-icons-outlined">
-    {{ icon }}
-  </mat-icon>
+    <mat-icon *ngIf="icon" aria-hidden="true" class="material-icons-outlined">
+      {{ icon }}
+    </mat-icon>
+  </div>
 
   <small *ngIf="hint" class="form-control-hint"> {{ hint }} </small>
 </div>
