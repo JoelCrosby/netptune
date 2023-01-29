@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import * as selectors from '@boards/store/groups/board-groups.selectors';
 import { AppState } from '@core/core.state';
