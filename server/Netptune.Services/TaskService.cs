@@ -124,11 +124,6 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         return Success(response!);
     }
 
-    public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
-    {
-        return TaskRepository.GetProjectTaskCount(projectId);
-    }
-
     public Task<TaskViewModel?> GetTask(int id)
     {
         return TaskRepository.GetTaskViewModel(id);

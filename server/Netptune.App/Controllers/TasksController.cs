@@ -119,18 +119,6 @@ public class TasksController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/tasks/count/5
-    [HttpGet]
-    [Route("count")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [Produces("application/json", Type = typeof(ProjectTaskCounts))]
-    public async Task<IActionResult> GetProjectTaskCount(int projectId)
-    {
-        var result = await TaskService.GetProjectTaskCount(projectId);
-
-        return Ok(result);
-    }
-
     // POST: api/tasks/move-task-in-group
     [HttpPost]
     [Route("move-task-in-group")]
