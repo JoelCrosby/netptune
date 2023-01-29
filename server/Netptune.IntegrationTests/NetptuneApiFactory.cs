@@ -26,9 +26,9 @@ namespace Netptune.IntegrationTests;
 
 internal class ContainerConnection
 {
-    public string DdConnection { get; set; } = null!;
+    public required string DdConnection { get; init; }
 
-    public string RedisConnection { get; set; } = null!;
+    public required string RedisConnection { get; init; }
 }
 
 public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
@@ -65,7 +65,6 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
             services.RemoveAll(typeof(IDbConnectionFactory));
             services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.ConnectionString));
 
-            // services.RemoveAll(typeof(DbContext));
             services.RemoveAll(typeof(DataContext));
             services.RemoveAll(typeof(DbContextOptions<DataContext>));
             services.AddDbContext<DataContext>(options =>
