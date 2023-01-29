@@ -129,7 +129,7 @@
 }
 
 .default-theme {
-  @include mat.all-legacy-component-themes($default-theme);
+  @include mat.all-legacy-component-colors($default-theme);
   @include custom-components-theme($default-theme);
 
   color-scheme: light;
@@ -138,7 +138,7 @@
 }
 
 .dark-theme {
-  @include mat.all-legacy-component-themes($dark-theme);
+  @include mat.all-legacy-component-colors($dark-theme);
   @include custom-components-theme($dark-theme);
 
   color-scheme: dark;

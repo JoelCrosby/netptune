@@ -54,13 +54,23 @@ mat.$light-theme-background-palette: (
   );
 }
 
-$light-app-primary: mat.define-palette(mat.$deep-purple-palette);
-$light-app-accent:  mat.define-palette(mat.$deep-purple-palette, 900);
-$light-app-warn:    mat.define-palette(mat.$red-palette, A200, A100, A400);
+$light-primary: mat.define-palette(mat.$deep-purple-palette);
+$light-accent:  mat.define-palette(mat.$deep-purple-palette, 900);
+$light-warn:    mat.define-palette(mat.$red-palette, A200, A100, A400);
 
 ::selection {
-  background: mat.get-color-from-palette($light-app-primary);
+  background: mat.get-color-from-palette($light-primary);
 }
 
-
-$default-theme: netptune-mat-light-theme($light-app-primary, $light-app-accent, $light-app-warn);
+$default-theme: mat.define-light-theme((
+ color: (
+   primary: $light-primary,
+   accent: $light-accent,
+   warn: $light-warn,
+   is-dark: false,
+   foreground: mat.$light-theme-foreground-palette,
+   background: mat.$light-theme-background-palette,
+ ),
+ typography: mat.define-typography-config(),
+ density: 0,
+));
