@@ -250,6 +250,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return RowsToExportList(rows);
     }
 
+    private static readonly HashSet<string> Empty = new();
+
     private static List<ExportTaskViewModel> RowsToExportList(IEnumerable<TasksViewRowMap> rows)
     {
         return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
@@ -275,7 +277,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
             static HashSet<string> Set(string? initialValue)
             {
-                return initialValue is null ? new HashSet<string>() : new HashSet<string> { initialValue };
+                return initialValue is null ? Empty : new HashSet<string> { initialValue };
             }
 
             result.Add(new ExportTaskViewModel
