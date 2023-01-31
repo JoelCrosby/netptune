@@ -1,15 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
-import { AppState } from '@core/core.state';
-
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
-import { first, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-list-group',
@@ -17,27 +7,11 @@ import { first, tap } from 'rxjs/operators';
   styleUrls: ['./task-list-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListGroupComponent implements OnInit {
+export class TaskListGroupComponent {
   @Input() groupName!: string;
   @Input() tasks!: TaskViewModel[] | null;
   @Input() header!: string;
   @Input() emptyMessage!: string;
-
-  workspaceIdentifier?: string;
-
-  constructor(private store: Store<AppState>) {}
-
-  ngOnInit() {
-    this.store
-      .select(selectCurrentWorkspaceIdentifier)
-      .pipe(
-        first(),
-        tap((identifier) => {
-          this.workspaceIdentifier = identifier;
-        })
-      )
-      .subscribe();
-  }
 
   trackByTask(_: number, task: TaskViewModel) {
     return task.id;

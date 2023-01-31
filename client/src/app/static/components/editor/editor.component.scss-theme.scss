@@ -157,4 +157,8 @@
   .ce-block--selected .ce-block__content {
     background-color: mat.get-color-from-palette($primary, .12);
   }
+
+  .ce-popover__items {
+    @extend .custom-scroll;
+  }
 }
