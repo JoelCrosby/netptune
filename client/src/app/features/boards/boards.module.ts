@@ -21,7 +21,7 @@ import { BoardGroupUsersComponent } from './components/board-group-users/board-g
 import { CreateBoardComponent } from './components/create-board/create-board.component';
 import { BoardGroupTagsComponent } from './components/board-group-tags/board-group-tags.component';
 import { BoardGroupsFlaggedComponent } from './components/board-groups-flagged/board-groups-flagged.component';
-import { ReactiveComponentModule } from '@ngrx/component';
+import { LetModule, PushModule } from '@ngrx/component';
 import { BoardGroupsSelectionComponent } from './components/board-groups-selection/board-groups-selection.component';
 import { MoveTasksDialogComponent } from './components/move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from './components/reassign-tasks-dialog/reassign-tasks-dialog.component';
@@ -48,7 +48,8 @@ import { BoardGroupsSearchComponent } from './components/board-groups-search/boa
   imports: [
     SharedModule,
     StaticModule,
-    ReactiveComponentModule,
+    LetModule,
+    PushModule,
     StoreModule.forFeature('boards', boardsReducer),
     StoreModule.forFeature('boardgroups', boardGroupsReducer),
     EffectsModule.forFeature([BoardsEffects, BoardGroupsEffects]),

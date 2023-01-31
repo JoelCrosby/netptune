@@ -27,6 +27,7 @@ import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
 import Attaches from '@editorjs/attaches';
 import { environment } from '@env/environment';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -83,7 +84,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
       return;
     }
 
-    const logLevel: LogLevels = environment.production
+    const logLevel = environment.production
       ? ('ERROR' as LogLevels)
       : ('WARN' as LogLevels);
 
@@ -153,11 +154,9 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   }
 
   async uploadFile(data: File) {
-    const response = await this.storage
-      .uploadMedia(data)
-      .pipe(unwrapClientReposne())
-      .toPromise()
-      .catch(() => null);
+    const response = await firstValueFrom(
+      this.storage.uploadMedia(data).pipe(unwrapClientReposne())
+    ).catch(() => null);
 
     if (!response) {
       return { success: 0 };
