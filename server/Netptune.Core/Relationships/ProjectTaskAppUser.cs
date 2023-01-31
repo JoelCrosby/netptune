@@ -52,5 +52,10 @@ public record ProjectTaskAppUser : KeyedEntity<int>
         }
     }
 
+    public override int GetHashCode()
+    {
+        return (ProjectTaskId, UserId).GetHashCode();
+    }
+
     #endregion
 }
