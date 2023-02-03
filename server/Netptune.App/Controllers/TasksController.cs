@@ -155,7 +155,7 @@ public class TasksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json", Type = typeof(ClientResponse))]
-    public async Task<IActionResult> MoveTasksToGroup([FromBody] ReassignTasksRequest request)
+    public async Task<IActionResult> ReassignTasks([FromBody] ReassignTasksRequest request)
     {
         var result = await TaskService.ReassignTasks(request);
 

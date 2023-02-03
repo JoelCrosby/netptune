@@ -224,4 +224,64 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
 
         result!.IsSuccess.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldReturnSuccess_WhenInputValid()
+    {
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 0,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 0,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks/move-task-in-group", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldReturnSuccess_WhenInputValid()
+    {
+        var request = new MoveTasksToGroupRequest
+        {
+            TaskIds = new() { 0, 1 },
+            BoardId = "neovim",
+            NewGroupId = 1,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks/move-tasks-to-group", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ReassignTasks_ShouldReturnSuccess_WhenInputValid()
+    {
+        var userId = DataSeedService.UserIds.ElementAt(0);
+        var request = new ReassignTasksRequest
+        {
+            TaskIds = new() { 0, 1 },
+            BoardId = "neovim",
+            AssigneeId = userId,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks/reassign-tasks", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
 }
