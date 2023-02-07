@@ -1332,10 +1332,10 @@
   dependencies:
     "@codexteam/icons" "^0.0.5"
 
-"@editorjs/editorjs@^2.26.4":
-  version "2.26.4"
-  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.26.4.tgz#097e29341501d81cd1721604a74da1530f5ff74f"
-  integrity sha512-yuJ2NM1Y5+8DDNWr4C00tHMVHKy0uCqK1HS4pwFPVcXUawgJnU2Li2vKGvPLuf0Jj2ir7MVgADO6oC1TbYBOYQ==
+"@editorjs/editorjs@^2.26.5":
+  version "2.26.5"
+  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.26.5.tgz#ee0f1dbd3a3c6ba97d3ed30f13ab7d2e7b29dbe4"
+  integrity sha512-imwXZi9NmzxKjNosa1xQf286liJYsTe2J2DWCiV5TwKhvYZ1INg5Y+FietcM2v65QmeLqP7wgBUhoI7wiCB+yQ==
   dependencies:
     "@codexteam/icons" "0.1.0"
     codex-notifier "^1.1.2"
