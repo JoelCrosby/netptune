@@ -20,8 +20,6 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false);
 
-    Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
-
     Task<int?> GetNextScopeId(int projectId, int increment = 0);
 
     Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey);

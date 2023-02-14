@@ -18,6 +18,8 @@ internal sealed class DataSeedService : IHostedService
     private readonly List<string> Workspaces = new () { "Netptune", "Linux" };
     private readonly List<string> Projects = new () { "NeoVim", "VsCode", "Emacs", "Kakoune" };
 
+    public static readonly List<string> UserIds = Enumerable.Range(0, 3).Select(_ => Guid.NewGuid().ToString()).ToList();
+
     public DataSeedService(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
@@ -30,6 +32,7 @@ internal sealed class DataSeedService : IHostedService
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         var users = new Faker<AppUser>()
+            .RuleFor(p => p.Id, f => UserIds.ElementAt(f.IndexFaker))
             .RuleFor(p => p.Firstname, f => f.Person.FirstName)
             .RuleFor(p => p.Lastname, f => f.Person.LastName)
             .RuleFor(p => p.Email, f => f.Person.Email)

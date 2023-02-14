@@ -124,11 +124,6 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
         return Success(response!);
     }
 
-    public Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
-    {
-        return TaskRepository.GetProjectTaskCount(projectId);
-    }
-
     public Task<TaskViewModel?> GetTask(int id)
     {
         return TaskRepository.GetTaskViewModel(id);
@@ -533,7 +528,12 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
         if (item is null)
         {
-            throw new Exception($"Task with id of {taskId} does not exist in group {groupId}.");
+            throw new ($"Task with id of {taskId} does not exist in group {groupId}.");
+        }
+
+        if (currentIndex < 0 || currentIndex > tasks.Count)
+        {
+            throw new ($"Get task in group sort order request '{nameof(currentIndex)}' is outside range of board group");
         }
 
         tasks.RemoveAt(!isNewItem ? previousIndex : 0);
