@@ -371,21 +371,6 @@ public class TaskServiceTests
     }
 
     [Fact]
-    public async Task GetProjectTaskCount_ShouldReturnCorrectly_WhenInputValid()
-    {
-        var counts = new ProjectTaskCounts
-        {
-            AllTasks = 1, BacklogTasks = 2, CompletedTasks = 3, InProgressTasks = 4,
-        };
-
-        UnitOfWork.Tasks.GetProjectTaskCount(1).Returns(counts);
-
-        var result = await Service.GetProjectTaskCount(1);
-
-        result.Should().BeEquivalentTo(counts);
-    }
-
-    [Fact]
     public async Task GetTask_ShouldReturnCorrectly_WhenInputValid()
     {
         var task = AutoFixtures.TaskViewModel;

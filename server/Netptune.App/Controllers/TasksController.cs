@@ -119,18 +119,6 @@ public class TasksController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/tasks/count/5
-    [HttpGet]
-    [Route("count")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [Produces("application/json", Type = typeof(ProjectTaskCounts))]
-    public async Task<IActionResult> GetProjectTaskCount(int projectId)
-    {
-        var result = await TaskService.GetProjectTaskCount(projectId);
-
-        return Ok(result);
-    }
-
     // POST: api/tasks/move-task-in-group
     [HttpPost]
     [Route("move-task-in-group")]
@@ -167,7 +155,7 @@ public class TasksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Produces("application/json", Type = typeof(ClientResponse))]
-    public async Task<IActionResult> MoveTasksToGroup([FromBody] ReassignTasksRequest request)
+    public async Task<IActionResult> ReassignTasks([FromBody] ReassignTasksRequest request)
     {
         var result = await TaskService.ReassignTasks(request);
 

@@ -7,7 +7,6 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -318,22 +317,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             ", new { boardIdentifier });
 
         return results.ToList();
-    }
-
-    public async Task<ProjectTaskCounts> GetProjectTaskCount(int projectId)
-    {
-        var status = await Entities
-            .Where(x => x.ProjectId == projectId && !x.IsDeleted)
-            .Select(x => x.Status)
-            .ToListAsync();
-
-        return new ProjectTaskCounts
-        {
-            AllTasks = status.Count,
-            CompletedTasks = status.Count(x => x == ProjectTaskStatus.Complete),
-            InProgressTasks = status.Count(x => x == ProjectTaskStatus.InProgress),
-            BacklogTasks = status.Count(x => x == ProjectTaskStatus.UnAssigned),
-        };
     }
 
     public async Task<int?> GetNextScopeId(int projectId, int increment = 0)

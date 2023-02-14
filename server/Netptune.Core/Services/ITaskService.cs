@@ -23,8 +23,6 @@ public interface ITaskService
 
     Task<ClientResponse> Delete(IEnumerable<int> ids);
 
-    Task<ProjectTaskCounts> GetProjectTaskCount(int projectId);
-
     Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request);
 
     Task<ClientResponse> MoveTasksToGroup(MoveTasksToGroupRequest request);
