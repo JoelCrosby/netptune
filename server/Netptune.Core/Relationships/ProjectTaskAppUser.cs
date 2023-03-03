@@ -27,7 +27,7 @@ public record ProjectTaskAppUser : KeyedEntity<int>
 
     public static IEnumerable<ProjectTaskAppUser> MergeUsersIds(
         int taskId,
-        ICollection<ProjectTaskAppUser> current,
+        IEnumerable<ProjectTaskAppUser> current,
         IEnumerable<string> selectedIds)
     {
         var selectedIdSet = selectedIds.ToHashSet();
@@ -44,7 +44,7 @@ public record ProjectTaskAppUser : KeyedEntity<int>
 
         foreach (var selected in selectedIdSet)
         {
-            yield return new ProjectTaskAppUser
+            yield return new ()
             {
                 UserId = selected,
                 ProjectTaskId = taskId,

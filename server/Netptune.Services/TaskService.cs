@@ -170,7 +170,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
             result.OwnerId = request.OwnerId ?? result.OwnerId;
 
-            if (request.AssigneeIds is { })
+            if (request.AssigneeIds is {})
             {
                 result.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
                         result.Id,
