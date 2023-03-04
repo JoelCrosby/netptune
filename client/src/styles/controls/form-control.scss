@@ -17,6 +17,10 @@
     max-width: inherit;
   }
 
+  .form-control-content {
+    margin-top: .4rem;
+  }
+
   label {
     display: block;
     margin-bottom: .4rem;
@@ -63,4 +67,10 @@
   textarea {
     line-height: 1.5rem;
   }
+}
+
+.form-error {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .0125px;
 }

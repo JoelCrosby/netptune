@@ -40,4 +40,9 @@
     color: mat.get-color-from-palette($foreground, text, .4) !important;
     background-color: mat.get-color-from-palette($foreground, text, .02) !important;
   }
+
+  .form-error {
+    color: mat.get-color-from-palette($warn);
+  }
+
 }

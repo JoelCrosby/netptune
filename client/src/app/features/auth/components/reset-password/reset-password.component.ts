@@ -12,7 +12,6 @@ import { first, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent {
