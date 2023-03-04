@@ -10,4 +10,10 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <app-form-select [ngModel]="settings.theme">
+    <app-form-select-option *ngFor="let theme of themes" [value]="theme.value">
+      {{ theme.label }}
+    </app-form-select-option>
+  </app-form-select>
 </ng-container>

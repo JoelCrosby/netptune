@@ -26,6 +26,8 @@ import { EditorComponent } from './components/editor/editor.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
 import { FormTextAreaComponent } from './components/form-textarea/form-textarea.component';
 import { FormSelectComponent } from './components/form-select/form-select.component';
+import { FormSelectOptionComponent } from './components/form-select/form-select.component';
+import { FormSelectDropdownComponent } from './components/form-select/form-select.component';
 import { CommentsListComponent } from './components/comments-list/comments-list.component';
 import { ColorSelectComponent } from './components/color-select/color-select.component';
 import { CardComponent } from './components/card/card.component';
@@ -68,6 +70,8 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     FormInputComponent,
     FormTextAreaComponent,
     FormSelectComponent,
+    FormSelectOptionComponent,
+    FormSelectDropdownComponent,
     CommentsListComponent,
     ColorSelectComponent,
     CardComponent,
@@ -106,6 +110,8 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     FormInputComponent,
     FormTextAreaComponent,
     FormSelectComponent,
+    FormSelectOptionComponent,
+    FormSelectDropdownComponent,
     CommentsListComponent,
     ColorSelectComponent,
     CardComponent,
