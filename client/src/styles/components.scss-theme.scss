@@ -173,4 +173,11 @@
   .mat-dialog-container {
     background: if($is-dark-theme, #2c2c2c, #fff);
   }
+
+  // Tooltips
+
+  .mat-tooltip {
+    font-size: 14px;
+    background: if($is-dark-theme, #1d1d1d, #fff);
+  }
 }
