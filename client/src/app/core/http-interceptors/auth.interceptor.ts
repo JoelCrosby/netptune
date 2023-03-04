@@ -33,14 +33,17 @@ export class AuthInterceptor implements HttpInterceptor {
           return next.handle(req);
         }
 
+        const workspaceRoute = this.getWorkspaceRoute();
+        const workspaceHeader = workspace ?? workspaceRoute;
+
         if (token) {
           req = req.clone({
             headers: req.headers.set('Authorization', 'Bearer ' + token),
           });
 
-          if (workspace) {
+          if (workspaceHeader) {
             req = req.clone({
-              headers: req.headers.set('workspace', workspace),
+              headers: req.headers.set('workspace', workspaceHeader),
             });
           }
         }
@@ -64,5 +67,20 @@ export class AuthInterceptor implements HttpInterceptor {
 
   isApiRequest<T>(req: HttpRequest<T>): boolean {
     return req.url.startsWith(environment.apiEndpoint);
+  }
+
+  getWorkspaceRoute(): string | null {
+    const url = window.location.pathname;
+    const parts = url.split('/').filter((p) => !!p);
+
+    if (parts.length === 1) {
+      const workspace = parts[0];
+
+      if (workspace !== 'workspaces') {
+        return workspace;
+      }
+    }
+
+    return null;
   }
 }
