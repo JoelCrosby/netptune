@@ -1,19 +1,15 @@
-import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppState } from './../core.state';
+import { AppState } from '@core/core.state';
 import { selectIsAuthenticated } from './store/auth.selectors';
 
-@Injectable({ providedIn: 'root' })
-export class LoginGuardService implements CanActivate {
-  constructor(private store: Store<AppState>) {}
+export const loginGuard: CanActivateFn = () => {
+  const store = inject(Store<AppState>);
 
-  canActivate(): Observable<boolean> {
-    return this.store.pipe(
-      select(selectIsAuthenticated),
-      map((result) => !result)
-    );
-  }
-}
+  return store.pipe(
+    select(selectIsAuthenticated),
+    map((result) => !result)
+  );
+};

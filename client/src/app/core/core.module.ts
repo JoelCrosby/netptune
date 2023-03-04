@@ -11,7 +11,6 @@ import {
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthEffects } from './auth/store/auth.effects';
 import { metaReducers, reducers } from './core.state';
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';
@@ -65,7 +64,6 @@ import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
     EntryModule,
   ],
   providers: [
-    AuthGuardService,
     CookieService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: RouterStateSerializer, useClass: CustomSerializer },
