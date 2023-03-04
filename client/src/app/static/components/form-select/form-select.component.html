@@ -4,35 +4,32 @@
   </label>
 
   <div
-    class="form-control-input"
+    #dropreference
+    class="form-control-select"
     [class.invalid]="control?.touched && control?.invalid"
     [class.active]="control?.value && control?.pending"
+    (click)="onDropMenuIconClick($event)"
   >
     <div *ngIf="prefix" class="form-control-prefix">{{ prefix }}</div>
 
-    <select
+    <input
       #input
-      [id]="ngControl.name"
-      [value]="value"
+      [placeholder]="placeholder"
       [disabled]="disabled"
-      [class.form-control-disabled]="disabled"
-      [attr.autocomplete]="autocomplete"
-      [attr.placeholder]="placeholder"
-      [attr.maxLength]="maxLength"
-      [attr.minLength]="minLength"
-      [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
-      (input)="onInputchange($event)"
-      (blur)="onTouch()"
-    >
-      <option *ngIf="value === null" [value]="null"></option>
-      <option *ngFor="let option of options" [value]="option[idKey]">
-        {{ option[labelKey] }}
-      </option>
-    </select>
+      readonly
+      (click)="showDropdown()"
+      autocomplete="off"
+    />
+
+    <ng-content></ng-content>
 
     <mat-icon *ngIf="icon" aria-hidden="true" class="material-icons-outlined">
       {{ icon }}
     </mat-icon>
+
+    <app-form-select-dropdown [reference]="dropreference" #dropdownComp>
+      Dummy Text
+    </app-form-select-dropdown>
   </div>
 
   <small *ngIf="hint" class="form-control-hint"> {{ hint }} </small>
