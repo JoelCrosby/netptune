@@ -37,6 +37,7 @@ import { CardGroupComponent } from './components/card/card-group/card-group.comp
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { ActivityPipe } from './pipes/activity.pipe';
 import { UserSelectComponent } from './components/user-select/user-select.component';
+import { FormErrorComponent } from './components/form-error/form-error.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { UserSelectComponent } from './components/user-select/user-select.compon
     CardHeaderImageComponent,
     CardGroupComponent,
     UserSelectComponent,
+    FormErrorComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -113,6 +115,7 @@ import { UserSelectComponent } from './components/user-select/user-select.compon
     CardHeaderImageComponent,
     CardGroupComponent,
     UserSelectComponent,
+    FormErrorComponent,
   ],
   providers: [FromNowPipe],
 })

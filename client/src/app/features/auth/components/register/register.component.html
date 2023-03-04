@@ -67,11 +67,10 @@
       autocomplete="new-password"
       type="password"
     >
+      <app-form-error *ngIf="password1.hasError('noMatch')">
+        Passwords do not macth!
+      </app-form-error>
     </app-form-input>
-
-    <mat-error *ngIf="password1.hasError('noMatch')">
-      Passwords do not macth!
-    </mat-error>
 
     <div class="button-container">
       <a

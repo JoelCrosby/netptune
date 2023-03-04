@@ -15,7 +15,6 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 @Component({
   selector: 'app-form-select',
   templateUrl: './form-select.component.html',
-  styleUrls: ['./form-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectComponent implements OnInit, ControlValueAccessor {

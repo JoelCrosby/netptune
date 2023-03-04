@@ -14,7 +14,6 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 @Component({
   selector: 'app-form-input',
   templateUrl: './form-input.component.html',
-  styleUrls: ['./form-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormInputComponent implements ControlValueAccessor {
