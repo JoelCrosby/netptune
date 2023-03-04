@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginGuardService } from '@core/auth/login-gaurd.service';
+import { loginGuard } from '@core/auth/login-gaurd.service';
 import { AuthProviderComponent } from './components/auth-provider/auth-provider.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RequestPasswordResetComponent } from './components/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { AuthProviderResolver } from './resolvers/auth-provider.resolver';
-import { ConfirmEmailResolver } from './resolvers/confirm-email.resolver';
-import { RegisterInviteResolver } from './resolvers/register-invite.resolver';
-import { ResetPasswordResolver } from './resolvers/reset-password.resolver';
+import { authProvider } from './resolvers/auth-provider.resolver';
+import { confirmEmail } from './resolvers/confirm-email.resolver';
+import { registerInvite } from './resolvers/register-invite.resolver';
+import { resetPassword } from './resolvers/reset-password.resolver';
 import { ConfirmViewComponent } from './views/confirm-view/confirm-view.component';
 
 const routes: Routes = [
@@ -17,39 +17,39 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [LoginGuardService],
+    canActivate: [loginGuard],
   },
   {
     path: 'register',
     component: RegisterComponent,
     resolve: {
-      invite: RegisterInviteResolver,
+      invite: registerInvite,
     },
   },
   {
     path: 'request-password-reset',
     component: RequestPasswordResetComponent,
-    canActivate: [LoginGuardService],
+    canActivate: [loginGuard],
   },
   {
     path: 'reset-password',
     component: ResetPasswordComponent,
     resolve: {
-      resetPassword: ResetPasswordResolver,
+      resetPassword: resetPassword,
     },
   },
   {
     path: 'confirm',
     component: ConfirmViewComponent,
     resolve: {
-      confirmEmail: ConfirmEmailResolver,
+      confirmEmail: confirmEmail,
     },
   },
   {
     path: 'auth-provider-login',
     component: AuthProviderComponent,
     resolve: {
-      authProviderResult: AuthProviderResolver,
+      authProviderResult: authProvider,
     },
   },
   { path: '**', redirectTo: 'login' },

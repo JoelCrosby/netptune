@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { authGuard } from '@core/auth/auth-guard.service';
+import { workspaceResovler } from '@core/resolvers/workspace-resolver';
 import { ShellComponent } from '@workspaces/components/shell/shell.component';
-import { WorkspaceResolver } from '@core/resolvers/workspace-resolver';
-import { AuthGuardService } from '@core/auth/auth-guard.service';
 
 // prettier-ignore
 
@@ -20,19 +20,19 @@ const routes: Routes = [
   {
     path: 'workspaces',
     loadChildren: () => import('./features/workspaces/workspaces.module').then((m) => m.WorkspacesModule),
-    canActivate: [AuthGuardService],
+    canActivate: [authGuard],
     data: { title: 'Workspaces', transparentSidebar: true, },
   },
   {
     path: 'profile',
     loadChildren: () => import('./features/profile/profile.module').then((m) => m.ProfileModule),
-    canActivate: [AuthGuardService],
+    canActivate: [authGuard],
     data: { title: 'Profile', transparentSidebar: true, },
   },
   {
     path: ':workspace',
-    resolve: [WorkspaceResolver],
-    canActivate: [AuthGuardService],
+    resolve: [workspaceResovler],
+    canActivate: [authGuard],
     component: ShellComponent,
     children: [
       {
@@ -43,45 +43,45 @@ const routes: Routes = [
       {
         path: 'projects',
         loadChildren: () => import('./features/projects/projects.module').then((m) => m.ProjectsModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         data: { title: 'Projects' },
       },
       {
         path: 'projects-tasks',
         loadChildren: () => import('./features/project-tasks/project-tasks.module').then((m) => m.ProjectTasksModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         data: { title: 'Tasks' },
       },
       {
         path: 'tasks',
         loadChildren: () => import('./features/project-tasks/project-tasks.module').then((m) => m.ProjectTasksModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         runGuardsAndResolvers: 'always',
         data: { title: 'Tasks' },
       },
       {
         path: 'boards',
         loadChildren: () => import('./features/boards/boards.module').then((m) => m.BoardsModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         runGuardsAndResolvers: 'always',
         data: { title: 'Boards' },
       },
       {
         path: 'users',
         loadChildren: () => import('./features/users/users.module').then((m) => m.UsersModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         data: { title: 'Users' },
       },
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module').then((m) => m.SettingsModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         data: { title: 'Settings' },
       },
       {
         path: 'profile',
         loadChildren: () => import('./features/profile/profile.module').then((m) => m.ProfileModule),
-        canActivate: [AuthGuardService],
+        canActivate: [authGuard],
         data: { title: 'Profile' },
       },
     ],
@@ -95,9 +95,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-    enableTracing: false,
-    preloadingStrategy: PreloadAllModules
-}),
+      enableTracing: false,
+      preloadingStrategy: PreloadAllModules,
+    }),
   ],
   exports: [RouterModule],
 })

@@ -1,28 +1,28 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { clearUserInfo } from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { AppState } from '@core/core.state';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-@Injectable()
-export class RegisterInviteResolver
-  implements Resolve<Observable<WorkspaceInvite>>
-{
-  constructor(private store: Store<AppState>, private http: HttpClient) {}
+export const registerInvite: ResolveFn<WorkspaceInvite> = (
+  route: ActivatedRouteSnapshot
+) => {
+  {
+    const store = inject(Store<AppState>);
+    const http = inject(HttpClient);
 
-  resolve(route: ActivatedRouteSnapshot) {
-    this.store.dispatch(clearUserInfo());
+    store.dispatch(clearUserInfo());
 
     const code = route.queryParamMap.get('code');
 
     if (!code) return of({ success: false });
 
-    return this.http
+    return http
       .get<WorkspaceInvite>(
         environment.apiEndpoint + 'api/auth/validate-workspace-invite',
         {
@@ -36,4 +36,4 @@ export class RegisterInviteResolver
         catchError(() => of({ success: false }))
       );
   }
-}
+};

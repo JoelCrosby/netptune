@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -9,27 +9,19 @@ import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
-export class WorkspaceResolver implements Resolve<Workspace> {
-  constructor(private http: HttpClient, private store: Store<AppState>) {}
+export const workspaceResovler: ResolveFn<Workspace> = (
+  next: ActivatedRouteSnapshot
+): Observable<Workspace> => {
+  const http = inject(HttpClient);
+  const store = inject(Store<AppState>);
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Workspace> {
-    return this.get(route.paramMap.get('workspace'));
+  const workspaceKey = next.paramMap.get('workspace');
+
+  if (!workspaceKey) {
+    return throwError(() => new Error('workspace key null'));
   }
 
-  get(workspaceKey: string | null): Observable<Workspace> {
-    if (!workspaceKey) {
-      return throwError('workspace key null');
-    }
-
-    return this.http
-      .get<Workspace>(
-        environment.apiEndpoint + `api/workspaces/${workspaceKey}`
-      )
-      .pipe(
-        tap((workspace) => {
-          this.store.dispatch(selectWorkspace({ workspace }));
-        })
-      );
-  }
-}
+  return http
+    .get<Workspace>(environment.apiEndpoint + `api/workspaces/${workspaceKey}`)
+    .pipe(tap((workspace) => store.dispatch(selectWorkspace({ workspace }))));
+};
