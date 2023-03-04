@@ -31,8 +31,8 @@ const routes: Routes = [
   },
   {
     path: ':workspace',
-    resolve: [workspaceResovler],
     canActivate: [authGuard],
+    resolve: [workspaceResovler],
     component: ShellComponent,
     children: [
       {
