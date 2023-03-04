@@ -53,7 +53,7 @@ export class FormSelectDropdownComponent {
 
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.portal);
-    this.syncWidth();
+    this.setWidth();
     this.overlayRef.backdropClick().subscribe(() => this.hide());
     this.showing = true;
   }
@@ -65,10 +65,10 @@ export class FormSelectDropdownComponent {
 
   @HostListener('window:resize')
   onWinResize() {
-    this.syncWidth();
+    this.setWidth();
   }
 
-  private syncWidth() {
+  private setWidth() {
     if (!this.overlayRef) {
       return;
     }

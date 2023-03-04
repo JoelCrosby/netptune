@@ -5,16 +5,16 @@
 
   <div
     #dropreference
-    class="form-control-select"
+    class="form-control-input"
     [class.invalid]="control?.touched && control?.invalid"
     [class.active]="control?.value && control?.pending"
-    (click)="onDropMenuIconClick($event)"
+    (click)="showDropdown()"
   >
     <div *ngIf="prefix" class="form-control-prefix">{{ prefix }}</div>
 
     <input
       #input
-      [placeholder]="placeholder"
+      placeholder="{{placeholder}}"
       [disabled]="disabled"
       readonly
       (click)="showDropdown()"
@@ -27,7 +27,7 @@
       {{ icon }}
     </mat-icon>
 
-    <app-form-select-dropdown [reference]="dropreference" #dropdownComp>
+    <app-form-select-dropdown [reference]="dropreference">
       Dummy Text
     </app-form-select-dropdown>
   </div>
