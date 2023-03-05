@@ -14,16 +14,14 @@
   >
   </app-form-input>
 
-  <!-- TODO: use new form slect component -->
-
-  <!-- <app-form-select
-    formControlName="projectId"
-    label="Project"
-    [options]="projects$ | async"
-    labelKey="name"
-    idKey="id"
-  >
-  </app-form-select> -->
+  <app-form-select formControlName="projectId" label="Project">
+    <app-form-select-option
+      *ngFor="let project of projects$ | async"
+      [value]="project.id"
+    >
+      {{ project.name }}
+    </app-form-select-option>
+  </app-form-select>
 
   <app-color-select formControlName="color" label="Color"> </app-color-select>
 </form>

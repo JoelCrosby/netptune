@@ -11,17 +11,14 @@
   >
   </app-form-textarea>
 
-  <!-- TODO: use new form slect component -->
-
-  <!--
-  <app-form-select
-    formControlName="project"
-    label="Project"
-    idKey="id"
-    labelKey="name"
-    [options]="projects$ | async"
-  >
-  </app-form-select> -->
+  <app-form-select formControlName="project" label="Project">
+    <app-form-select-option
+      *ngFor="let project of projects$ | async"
+      [value]="project.id"
+    >
+      {{ project.name }}
+    </app-form-select-option>
+  </app-form-select>
 </form>
 
 <div mat-dialog-actions align="end">
