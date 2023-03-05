@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Drag n drop
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PortalModule } from '@angular/cdk/portal';
 
 // Angular Material Components
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
@@ -76,6 +77,7 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
     MatTooltipModule,
 
     ScrollingModule,
+    PortalModule,
 
     LyImageCropperModule,
   ],

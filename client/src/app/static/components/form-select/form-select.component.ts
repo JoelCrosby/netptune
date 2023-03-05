@@ -1,116 +1,39 @@
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { CdkPortal } from '@angular/cdk/portal';
 import {
+  CdkPortal,
+  CdkPortalOutlet,
+  ComponentPortal,
+  TemplatePortal,
+} from '@angular/cdk/portal';
+import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
-  OnInit,
   Optional,
   Output,
   QueryList,
   Self,
+  TemplateRef,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-
-@Component({
-  selector: 'app-form-select-option',
-  template: `
-    <div class="nept-form-select-option">
-      <ng-content></ng-content>
-    </div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class FormSelectOptionComponent {
-  @Input() value: unknown;
-}
-
-@Component({
-  selector: 'app-form-select-dropdown',
-  template: `
-    <ng-template cdkPortal>
-      <ng-content></ng-content>
-    </ng-template>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class FormSelectDropdownComponent {
-  @Input() reference!: HTMLElement;
-  @ViewChild(CdkPortal) portal!: CdkPortal;
-
-  constructor(private overlay: Overlay) {}
-
-  overlayRef!: OverlayRef;
-  showing = false;
-
-  show() {
-    console.log({ portal: this.portal });
-
-    this.overlayRef = this.overlay.create(this.getOverlayConfig());
-    this.overlayRef.attach(this.portal);
-    this.setWidth();
-    this.overlayRef.backdropClick().subscribe(() => this.hide());
-    this.showing = true;
-  }
-
-  hide() {
-    this.overlayRef.detach();
-    this.showing = false;
-  }
-
-  @HostListener('window:resize')
-  onWinResize() {
-    this.setWidth();
-  }
-
-  private setWidth() {
-    if (!this.overlayRef) {
-      return;
-    }
-
-    const refRect = this.reference.getBoundingClientRect();
-    this.overlayRef.updateSize({ width: refRect.width });
-  }
-
-  private getOverlayConfig(): OverlayConfig {
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.reference)
-      .withPush(false)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-        },
-      ]);
-
-    return new OverlayConfig({
-      positionStrategy: positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-    });
-  }
-}
+import { FormSelectDropdownComponent } from './form-select-dropdown.component';
+import { FormSelectOptionComponent } from './form-select-option.component';
+import { FormSelectService } from './form-select.service';
 
 @Component({
   selector: 'app-form-select',
   templateUrl: './form-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FormSelectService],
 })
-export class FormSelectComponent implements OnInit, ControlValueAccessor {
+export class FormSelectComponent
+  implements AfterViewInit, ControlValueAccessor
+{
   @Input() label!: string;
   @Input() disabled!: boolean;
   @Input() icon!: string;
@@ -126,15 +49,30 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
   @ViewChild(FormSelectDropdownComponent)
   public dropdown!: FormSelectDropdownComponent;
 
+  @ViewChild('placeholderPortal')
+  placeholderPortalContent!: TemplateRef<unknown>;
+
+  placeholderPortal?: TemplatePortal<unknown>;
+
+  @ViewChild(CdkPortalOutlet)
+  portalOutlet?: CdkPortalOutlet;
+
   @ContentChildren(FormSelectOptionComponent, { descendants: true })
-  options!: QueryList<FormSelectOptionComponent>;
+  options?: QueryList<FormSelectOptionComponent>;
 
   @Output() submitted = new EventEmitter<string>();
 
-  value?: string | number;
+  value?: unknown;
+  displayValue: unknown | null = null;
+
+  selectedPortal?: CdkPortal;
 
   onChange!: (value: string) => void;
   onTouch!: (...args: unknown[]) => void;
+
+  selectedOption?: FormSelectOptionComponent | null = null;
+
+  selectTrigger?: ComponentPortal<FormSelectOptionComponent>;
 
   get control() {
     return this.ngControl.control;
@@ -143,15 +81,29 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
   constructor(
     @Self()
     @Optional()
-    public ngControl: NgControl
+    public ngControl: NgControl,
+    private viewContainerRef: ViewContainerRef,
+    private service: FormSelectService
   ) {
+    this.service.register(this);
+
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
   }
 
-  ngOnInit() {
-    console.log('OnInit');
+  ngAfterViewInit() {
+    this.selectTrigger = new ComponentPortal(
+      FormSelectOptionComponent,
+      this.viewContainerRef
+    );
+
+    this.placeholderPortal = new TemplatePortal(
+      this.placeholderPortalContent,
+      this.viewContainerRef
+    );
+
+    this.selectedPortal = this.placeholderPortal;
   }
 
   showDropdown() {
@@ -174,8 +126,36 @@ export class FormSelectComponent implements OnInit, ControlValueAccessor {
     this.onTouch();
   }
 
+  hideDropdown() {
+    this.dropdown.hide();
+  }
+
+  selectOption(option: FormSelectOptionComponent) {
+    this.value = option.value;
+    this.selectedOption = option;
+
+    this.updateTrigger();
+    this.hideDropdown();
+
+    this.input.nativeElement.focus();
+
+    this.selectedPortal?.attach(option);
+  }
+
   writeValue(value: string) {
     this.value = value;
+
+    if (!this.options) {
+      return;
+    }
+
+    this.selectedOption = this.options
+      .toArray()
+      .find((option) => option.value === this.value);
+  }
+
+  updateTrigger() {
+    this.displayValue = this.selectedOption ? this.selectedOption.value : null;
   }
 
   registerOnChange(fn: (...args: unknown[]) => unknown) {

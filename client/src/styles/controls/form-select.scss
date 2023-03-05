@@ -1,0 +1,30 @@
+.netp-form-select {
+  cursor: pointer;
+
+  input {
+    cursor: pointer;
+  }
+}
+
+.nept-form-select-option {
+  cursor: pointer;
+  border-radius: .4rem;
+  padding: .4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+.form-select-dropdown {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 0.4rem;
+  gap: .4rem;
+  padding: .4rem;
+  box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%),
+    0 4px 5px 0 rgb(0 0 0 / 14%),
+    0 1px 10px 0 rgb(0 0 0 / 12%);
+}
