@@ -1,0 +1,46 @@
+@use '@angular/material' as mat;
+@import '@angular/material/theming';
+
+@mixin form-select-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: mat.get-color-from-palette(map-get($theme, background), background);
+
+  $is-dark-theme: map-get($theme, is-dark);
+
+  $dropdown-background: lighten($background, 6);
+  $hover: lighten($background, 12);
+  $selected: mat.get-color-from-palette($primary);
+  $selected-hover: lighten(mat.get-color-from-palette($primary), 6);
+  $disabled-foreground: mat.get-color-from-palette($foreground, .5);
+
+  .form-select-dropdown {
+    background-color: $dropdown-background !important;
+  }
+
+  .netp-form-select > .arrow {
+      color: mat.get-color-from-palette($foreground, text) !important;
+  }
+
+  .nept-form-select-option {
+    &.selected {
+      background-color: $selected;
+
+      &:hover, &.active {
+        background-color: $selected-hover;
+      }
+    }
+
+    &:hover, &.active {
+      outline: none;
+      background-color: $hover;
+    }
+
+    &.disabled {
+      color: $disabled-foreground;
+      cursor: auto;
+    }
+  }
+}

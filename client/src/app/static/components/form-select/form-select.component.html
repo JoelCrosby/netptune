@@ -5,21 +5,33 @@
 
   <div
     #dropreference
-    class="form-control-input"
+    class="form-control-input netp-form-select"
     [class.invalid]="control?.touched && control?.invalid"
     [class.active]="control?.value && control?.pending"
-    (click)="showDropdown()"
+    (click)="onDropMenuIconClick($event)"
   >
     <div *ngIf="prefix" class="form-control-prefix">{{ prefix }}</div>
 
     <input
       #input
       placeholder="{{placeholder}}"
+      [id]="ngControl.name"
+      [value]="displayValue"
       [disabled]="disabled"
+      [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
       readonly
-      (click)="showDropdown()"
+      hidden
+      (click)="$event.stopPropagation(); showDropdown()"
       autocomplete="off"
     />
+
+    <div
+      class="input-template"
+      [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
+    >
+      <ng-template [cdkPortalOutlet]="selectedPortal"></ng-template>
+      <ng-template #placeholderPortal>{{ placeholder }}</ng-template>
+    </div>
 
     <ng-content></ng-content>
 
@@ -27,8 +39,14 @@
       {{ icon }}
     </mat-icon>
 
+    <mat-icon aria-hidden="true" class="material-icons-outlined arrow">
+      arrow_drop_down
+    </mat-icon>
+
     <app-form-select-dropdown [reference]="dropreference">
-      Dummy Text
+      <div class="form-select-dropdown">
+        <ng-content select="app-form-select-option"></ng-content>
+      </div>
     </app-form-select-dropdown>
   </div>
 
