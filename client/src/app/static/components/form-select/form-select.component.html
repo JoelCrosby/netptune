@@ -20,18 +20,15 @@
       [disabled]="disabled"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
       readonly
-      hidden
       (click)="$event.stopPropagation(); showDropdown()"
+      (keydown)="onKeyDown($event)"
       autocomplete="off"
     />
 
     <div
       class="input-template"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
-    >
-      <ng-template [cdkPortalOutlet]="selectedPortal"></ng-template>
-      <ng-template #placeholderPortal>{{ placeholder }}</ng-template>
-    </div>
+    ></div>
 
     <ng-content></ng-content>
 

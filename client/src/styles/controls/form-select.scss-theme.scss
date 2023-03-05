@@ -6,14 +6,15 @@
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
+  $hover-light: mat.get-color-from-palette($foreground, text, .06);
   $background: mat.get-color-from-palette(map-get($theme, background), background);
 
   $is-dark-theme: map-get($theme, is-dark);
 
   $dropdown-background: lighten($background, 6);
-  $hover: lighten($background, 12);
-  $selected: mat.get-color-from-palette($primary);
-  $selected-hover: lighten(mat.get-color-from-palette($primary), 6);
+  $hover: if($is-dark-theme, lighten($background, 12), $hover-light);
+  $selected: mat.get-color-from-palette($primary, .2);
+  $selected-hover: lighten(mat.get-color-from-palette($primary, .3), 6);
   $disabled-foreground: mat.get-color-from-palette($foreground, .5);
 
   .form-select-dropdown {
@@ -21,19 +22,19 @@
   }
 
   .netp-form-select > .arrow {
-      color: mat.get-color-from-palette($foreground, text) !important;
+      color: mat.get-color-from-palette($foreground, text, .6) !important;
   }
 
   .nept-form-select-option {
-    &.selected {
+    &.active {
       background-color: $selected;
 
-      &:hover, &.active {
+      &:hover {
         background-color: $selected-hover;
       }
     }
 
-    &:hover, &.active {
+    &:hover {
       outline: none;
       background-color: $hover;
     }

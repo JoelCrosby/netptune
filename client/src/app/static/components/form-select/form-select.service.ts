@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { FormSelectComponent } from './form-select.component';
 
 @Injectable()
-export class FormSelectService {
-  private select?: FormSelectComponent;
+export class FormSelectService<TValue> {
+  private select?: FormSelectComponent<TValue>;
 
-  register(select: FormSelectComponent) {
+  register(select: FormSelectComponent<TValue>) {
     this.select = select;
   }
 
-  getSelect(): FormSelectComponent | undefined {
+  getSelect(): FormSelectComponent<TValue> | undefined {
     return this.select;
   }
 }

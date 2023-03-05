@@ -1,9 +1,5 @@
-import {
-  CdkPortal,
-  CdkPortalOutlet,
-  ComponentPortal,
-  TemplatePortal,
-} from '@angular/cdk/portal';
+import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
+import { CdkPortal } from '@angular/cdk/portal';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -16,9 +12,7 @@ import {
   Output,
   QueryList,
   Self,
-  TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -31,7 +25,7 @@ import { FormSelectService } from './form-select.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectService],
 })
-export class FormSelectComponent
+export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor
 {
   @Input() label!: string;
@@ -44,35 +38,29 @@ export class FormSelectComponent
   @Input() minLength?: string;
   @Input() maxLength?: string;
 
+  @Output() changed = new EventEmitter<TValue>();
+
   @ViewChild('input') input!: ElementRef;
 
   @ViewChild(FormSelectDropdownComponent)
   public dropdown!: FormSelectDropdownComponent;
 
-  @ViewChild('placeholderPortal')
-  placeholderPortalContent!: TemplateRef<unknown>;
-
-  placeholderPortal?: TemplatePortal<unknown>;
-
-  @ViewChild(CdkPortalOutlet)
-  portalOutlet?: CdkPortalOutlet;
-
   @ContentChildren(FormSelectOptionComponent, { descendants: true })
-  options?: QueryList<FormSelectOptionComponent>;
+  options?: QueryList<FormSelectOptionComponent<TValue>>;
 
   @Output() submitted = new EventEmitter<string>();
 
-  value?: unknown;
+  value?: TValue | null;
   displayValue: unknown | null = null;
 
   selectedPortal?: CdkPortal;
 
-  onChange!: (value: string) => void;
+  onChange!: (value: TValue) => void;
   onTouch!: (...args: unknown[]) => void;
 
-  selectedOption?: FormSelectOptionComponent | null = null;
+  selectedOption?: FormSelectOptionComponent<TValue> | null = null;
 
-  selectTrigger?: ComponentPortal<FormSelectOptionComponent>;
+  keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
   get control() {
     return this.ngControl.control;
@@ -82,8 +70,7 @@ export class FormSelectComponent
     @Self()
     @Optional()
     public ngControl: NgControl,
-    private viewContainerRef: ViewContainerRef,
-    private service: FormSelectService
+    private service: FormSelectService<TValue>
   ) {
     this.service.register(this);
 
@@ -93,21 +80,23 @@ export class FormSelectComponent
   }
 
   ngAfterViewInit() {
-    this.selectTrigger = new ComponentPortal(
-      FormSelectOptionComponent,
-      this.viewContainerRef
-    );
-
-    this.placeholderPortal = new TemplatePortal(
-      this.placeholderPortalContent,
-      this.viewContainerRef
-    );
-
-    this.selectedPortal = this.placeholderPortal;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.keyManager = new ActiveDescendantKeyManager(this.options!)
+      .withHorizontalOrientation('ltr')
+      .withVerticalOrientation()
+      .withWrap();
   }
 
   showDropdown() {
     this.dropdown.show();
+
+    if (!this.options?.length) {
+      return;
+    }
+
+    this.selectedOption
+      ? this.keyManager?.setActiveItem(this.selectedOption)
+      : this.keyManager?.setFirstItemActive();
   }
 
   onDropMenuIconClick(event: UIEvent) {
@@ -116,13 +105,7 @@ export class FormSelectComponent
       this.input.nativeElement.focus();
       this.input.nativeElement.click();
     }, 10);
-  }
 
-  onInputchange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-
-    this.onChange(value);
     this.onTouch();
   }
 
@@ -130,19 +113,29 @@ export class FormSelectComponent
     this.dropdown.hide();
   }
 
-  selectOption(option: FormSelectOptionComponent) {
+  selectOption(option: FormSelectOptionComponent<TValue> | undefined | null) {
+    if (!option) {
+      this.value = null;
+      this.selectedOption = null;
+
+      return;
+    }
+
     this.value = option.value;
     this.selectedOption = option;
+
+    this.keyManager?.setActiveItem(option);
 
     this.updateTrigger();
     this.hideDropdown();
 
-    this.input.nativeElement.focus();
+    this.changed.emit(this.selectedOption?.value);
+    this.onChange(this.selectedOption?.value);
 
-    this.selectedPortal?.attach(option);
+    this.input.nativeElement.focus();
   }
 
-  writeValue(value: string) {
+  writeValue(value: TValue) {
     this.value = value;
 
     if (!this.options) {
@@ -152,10 +145,21 @@ export class FormSelectComponent
     this.selectedOption = this.options
       .toArray()
       .find((option) => option.value === this.value);
+
+    this.updateTrigger();
   }
 
   updateTrigger() {
-    this.displayValue = this.selectedOption ? this.selectedOption.value : null;
+    this.displayValue = this.selectedOption
+      ? this.selectedOption.viewValue
+      : null;
+
+    console.log({
+      selected: this.selectedOption,
+      displayValue: this.displayValue,
+    });
+
+    this.input.nativeElement.value = this.displayValue;
   }
 
   registerOnChange(fn: (...args: unknown[]) => unknown) {
@@ -168,5 +172,45 @@ export class FormSelectComponent
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    const inactiveKeys = ['Enter', ' ', 'ArrowDown', 'Down', 'ArrowUp', 'Up'];
+    const arrowKeys = [
+      'ArrowUp',
+      'Up',
+      'ArrowDown',
+      'Down',
+      'ArrowRight',
+      'Right',
+      'ArrowLeft',
+      'Left',
+    ];
+
+    if (inactiveKeys.includes(event.key)) {
+      if (!this.dropdown.showing) {
+        this.showDropdown();
+        return;
+      }
+
+      if (!this.options?.length) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.selectOption(this.keyManager?.activeItem);
+    } else if (event.key === 'Escape' || event.key === 'Esc') {
+      this.dropdown.showing && this.hideDropdown();
+    } else if (arrowKeys.includes(event.key)) {
+      this.keyManager?.onKeydown(event);
+    } else if (
+      event.key === 'PageUp' ||
+      event.key === 'PageDown' ||
+      event.key === 'Tab'
+    ) {
+      this.dropdown.showing && event.preventDefault();
+    }
   }
 }

@@ -23,7 +23,7 @@ export class FormSelectDropdownComponent {
 
   constructor(private overlay: Overlay) {}
 
-  overlayRef!: OverlayRef;
+  overlayRef?: OverlayRef;
   showing = false;
 
   show() {
@@ -35,7 +35,7 @@ export class FormSelectDropdownComponent {
   }
 
   hide() {
-    this.overlayRef.detach();
+    this.overlayRef?.detach();
     this.showing = false;
   }
 
