@@ -4,11 +4,17 @@
   input {
     cursor: pointer;
   }
+
+  .arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .nept-form-select-option {
   cursor: pointer;
-  border-radius: .4rem;
+  border-radius: .2rem;
   padding: .4rem;
   white-space: nowrap;
   overflow: hidden;

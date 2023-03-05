@@ -1,6 +1,10 @@
+/* eslint-disable @angular-eslint/no-host-metadata-property */
+
+import { Highlightable } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostBinding,
   HostListener,
   Input,
@@ -10,25 +14,48 @@ import { FormSelectService } from './form-select.service';
 
 @Component({
   selector: 'app-form-select-option',
-  template: `
-    <div class="nept-form-select-option">
-      <ng-content></ng-content>
-    </div>
-  `,
+  host: {
+    class: 'nept-form-select-option',
+  },
+  template: ` <ng-content></ng-content> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormSelectOptionComponent {
-  @Input() value: string | unknown;
+export class FormSelectOptionComponent<TValue> implements Highlightable {
+  @Input() value!: TValue;
 
   @HostBinding('class.selected')
   get selected(): boolean {
     return this.select?.selectedOption === this;
   }
 
-  private select?: FormSelectComponent;
+  @HostBinding('class.active')
+  active = false;
 
-  constructor(private service: FormSelectService) {
+  get viewValue(): string {
+    return (this.element?.nativeElement.textContent || '').trim();
+  }
+
+  private select?: FormSelectComponent<TValue>;
+
+  constructor(
+    private service: FormSelectService<TValue>,
+    private element: ElementRef
+  ) {
     this.select = this.service.getSelect();
+  }
+
+  setActiveStyles(): void {
+    this.active = true;
+  }
+
+  setInactiveStyles(): void {
+    this.active = false;
+  }
+
+  disabled?: boolean | undefined;
+
+  getLabel?(): string {
+    return this.viewValue;
   }
 
   @HostListener('click', ['$event'])
