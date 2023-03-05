@@ -51,7 +51,6 @@
 @import './app/app.component.scss-theme';
 
 @import './app/static/components/spinner/spinner.component.scss-theme';
-@import './app/static/components/avatar/avatar.component.scss-theme';
 @import './app/static/components/page-header/page-header.component.scss-theme';
 @import './app/static/components/autocomplete-chips/autocomplete-chips.component.scss-theme';
 @import './app/static/components/image-cropper/image-cropper.component.scss-theme';
@@ -99,7 +98,6 @@
   @include shell-theme($theme);
   @include baords-theme($theme);
   @include spinner-theme($theme);
-  @include avatar-theme($theme);
   @include editor-theme($theme);
   @include page-header-theme($theme);
   @include autocomplete-chips-theme($theme);
