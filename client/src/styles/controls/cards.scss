@@ -17,10 +17,9 @@
 }
 
 .netp-card {
-  display: flex;
-  padding: 16px;
+  display: block;
+  padding: 1.6rem;
   border-radius: 3px;
-  min-height: 96px;
 }
 
 .netp-card-header {
@@ -41,7 +40,9 @@
 }
 
 .netp-card-title {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 12px;
   font-size: 20px;
   font-weight: 500;
@@ -56,4 +57,24 @@
   font-size: 14px;
   margin-right: .6rem;
   margin-top: auto;
+}
+
+.netp-card-content {
+  display: block;
+  margin-bottom: 16px;
+
+  pre {
+    font-family: inherit;
+    white-space: pre-wrap;
+    max-width: 800px;
+    font-size: 1rem;
+  }
+
+  small {
+    font-size: 12px;
+  }
+}
+
+.netp-card-actions {
+  display: block;
 }

@@ -9,22 +9,6 @@
 
   $is-dark-theme: map-get($theme, is-dark);
 
-  // Material Cards
-
-  .mat-card:not([class*='mat-elevation-z']) {
-    background-color: mat.get-color-from-palette($background, card) !important;
-    box-shadow: 1px 2px 4px if($is-dark-theme, 1px 6px -1px rgb(0 0 0 / 42%), rgba(0, 0, 0, .1)) !important;
-    transition: background-color .2s ease-in, color .2s ease-in;
-  }
-
-  .mat-card:not([class*='selected']):hover {
-    background-color: mat.get-color-from-palette($background, hover) !important;
-  }
-
-  .mat-card.flagged:not([class*='mat-elevation-z']):hover {
-    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, board-group), 24%) !important;
-  }
-
   // Custom Scrollbars
 
   .custom-scroll::-webkit-scrollbar {

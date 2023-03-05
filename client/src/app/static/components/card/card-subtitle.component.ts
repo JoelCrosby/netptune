@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-card-subtitle',
-  templateUrl: './card-subtitle.component.html',
-  styleUrls: ['./card-subtitle.component.scss'],
+  template: '<ng-content></ng-content>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardSubtitleComponent {

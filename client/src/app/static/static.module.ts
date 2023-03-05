@@ -31,15 +31,17 @@ import { FormSelectDropdownComponent } from './components/form-select/form-selec
 import { CommentsListComponent } from './components/comments-list/comments-list.component';
 import { ColorSelectComponent } from './components/color-select/color-select.component';
 import { CardComponent } from './components/card/card.component';
-import { CardTitleComponent } from './components/card/card-title/card-title.component';
-import { CardSubtitleComponent } from './components/card/card-subtitle/card-subtitle.component';
-import { CardHeaderComponent } from './components/card/card-header/card-header.component';
-import { CardHeaderImageComponent } from './components/card/card-header-image/card-header-image.component';
-import { CardGroupComponent } from './components/card/card-group/card-group.component';
+import { CardTitleComponent } from './components/card/card-title.component';
+import { CardSubtitleComponent } from './components/card/card-subtitle.component';
+import { CardHeaderComponent } from './components/card/card-header.component';
+import { CardHeaderImageComponent } from './components/card/card-header-image.component';
+import { CardGroupComponent } from './components/card/card-group.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { ActivityPipe } from './pipes/activity.pipe';
 import { UserSelectComponent } from './components/user-select/user-select.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
+import { CardContentComponent } from './components/card/card-content.component';
+import { CardActionsComponent } from './components/card/card-actions.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +84,8 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     CardGroupComponent,
     UserSelectComponent,
     FormErrorComponent,
+    CardContentComponent,
+    CardActionsComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -119,9 +123,11 @@ import { FormErrorComponent } from './components/form-error/form-error.component
     CardSubtitleComponent,
     CardHeaderComponent,
     CardHeaderImageComponent,
+    CardContentComponent,
     CardGroupComponent,
     UserSelectComponent,
     FormErrorComponent,
+    CardActionsComponent,
   ],
   providers: [FromNowPipe],
 })
