@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss'],
+  template: `
+    <ng-content name="app-card-header-image"></ng-content>
+    <ng-content name="app-card-header"></ng-content>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {

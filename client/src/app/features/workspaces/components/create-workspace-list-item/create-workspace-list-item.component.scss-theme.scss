@@ -8,7 +8,7 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .create-workspace-card.mat-card:not([class*='mat-elevation-z']) {
+  .create-workspace-card.netp-card {
     background-color: transparent !important;
     box-shadow: none !important;
   }

@@ -1,16 +1,17 @@
-mat-card-title {
+app-card-title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  font-size: 24px;
 }
 
-mat-card {
+app-card {
   border-radius: .2rem;
   padding: 1.6rem;
   overflow: hidden;
 }
 
-mat-card-actions {
+app-card-actions {
   margin-left: 0 !important;
   padding-left: 0 !important;
 }
@@ -19,12 +20,12 @@ small {
   font-size: 12px;
 }
 
-.mat-card-actions {
+app-card-actions {
   padding: 1.6rem;
   margin-bottom: 2rem;
 }
 
-.mat-card > .mat-card-actions:last-child {
+app-card > app-card-actions:last-child {
   margin-bottom: 0 !important;
   padding-bottom: 0;
 }
@@ -34,7 +35,7 @@ small {
 }
 
 .action-button:first-child,
-.mat-card-actions .mat-raised-button:first-child {
+app-card-actions .mat-raised-button:first-child {
   margin-left: 0;
   margin-right: .8rem !important;
 }

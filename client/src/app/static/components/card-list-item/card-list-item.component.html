@@ -1,19 +1,19 @@
-<mat-card>
-  <mat-card-title>
+<app-card>
+  <app-card-title>
     {{ title }}
     <button mat-button color="primary" type="button" (click)="delete.emit()">
       <mat-icon>close</mat-icon>
     </button>
-  </mat-card-title>
-  <mat-card-content>
+  </app-card-title>
+  <app-card-content>
     <pre>{{ description }}</pre>
 
     <small class="text-muted"> {{ subText }} </small>
 
     <ng-content></ng-content>
-  </mat-card-content>
+  </app-card-content>
 
-  <mat-card-actions>
+  <app-card-actions>
     <ng-container *ngFor="let action of actions; first as isFirst">
       <ng-container *ngIf="action.isLink; else elseTemplate">
         <ng-container *ngIf="isFirst; else elseTemplate">
@@ -74,5 +74,5 @@
         </ng-template>
       </ng-template>
     </ng-container>
-  </mat-card-actions>
-</mat-card>
+  </app-card-actions>
+</app-card>

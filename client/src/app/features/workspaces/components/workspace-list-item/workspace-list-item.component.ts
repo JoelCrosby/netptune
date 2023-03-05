@@ -15,7 +15,6 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-workspace-list-item',
   templateUrl: './workspace-list-item.component.html',
-  styleUrls: ['./workspace-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceListItemComponent implements OnInit {

@@ -9,13 +9,14 @@
 
   $is-dark-theme: map-get($theme, is-dark);
 
-  .netp-card-group {
-    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
-  }
-
   .netp-card {
+    color: mat.get-color-from-palette($foreground, text);
     background-color: mat.get-color-from-palette($background, card);
     box-shadow: 1px 2px 4px if($is-dark-theme, rgba(0, 0, 0, .2), rgba(0, 0, 0, .1));
+  }
+
+  .netp-card-group {
+    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
   }
 
   .netp-card-title {
@@ -25,5 +26,19 @@
   .netp-card-subtitle {
     color: mat.get-color-from-palette($foreground, text, .54);
     background-color: mat.get-color-from-palette($foreground, text, .06);
+  }
+
+  .netp-card {
+    background-color: mat.get-color-from-palette($background, card) !important;
+    box-shadow: 1px 2px 4px if($is-dark-theme, 1px 6px -1px rgb(0 0 0 / 42%), rgba(0, 0, 0, .1)) !important;
+    transition: background-color .2s ease-in, color .2s ease-in;
+  }
+
+  .netp-card:not([class*='selected']):hover {
+    background-color: mat.get-color-from-palette($background, hover) !important;
+  }
+
+  .netp-card.flagged:hover {
+    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, board-group), 24%) !important;
   }
 }

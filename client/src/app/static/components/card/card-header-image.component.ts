@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-card-header-image',
-  templateUrl: './card-header-image.component.html',
-  styleUrls: ['./card-header-image.component.scss'],
+  template: '<ng-content></ng-content>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderImageComponent {

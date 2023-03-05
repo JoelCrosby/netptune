@@ -1,20 +1,20 @@
-mat-card-title {
+netp-card-title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-mat-card {
+netp-card {
   margin-bottom: 2rem;
   padding: 1.6rem;
 }
 
-.mat-card-actions {
+app-card-actions {
   padding: 1.6rem;
   margin-bottom: 2rem;
 }
 
-.mat-card > .mat-card-actions:last-child {
+app-card > app-card-actions:last-child {
   margin-bottom: 0 !important;
   padding-bottom: 0;
 }
@@ -24,7 +24,7 @@ mat-card {
 }
 
 .action-button:first-child,
-.mat-card-actions .mat-raised-button:first-child {
+app-card-actions .mat-raised-button:first-child {
   margin-left: 0;
   margin-right: .8rem !important;
 }

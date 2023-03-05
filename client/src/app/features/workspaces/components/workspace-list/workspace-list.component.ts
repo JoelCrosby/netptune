@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-workspace-list',
   templateUrl: './workspace-list.component.html',
-  styleUrls: ['./workspace-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceListComponent {
