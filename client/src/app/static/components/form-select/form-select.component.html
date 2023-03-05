@@ -22,6 +22,7 @@
       readonly
       (click)="$event.stopPropagation(); showDropdown()"
       (keydown)="onKeyDown($event)"
+      (blur)="onTouch()"
       autocomplete="off"
     />
 
