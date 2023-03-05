@@ -32,11 +32,8 @@ export class FormSelectComponent<TValue>
   @Input() disabled!: boolean;
   @Input() icon!: string;
   @Input() prefix!: string;
-  @Input() autocomplete = 'off';
   @Input() placeholder?: string;
   @Input() hint?: string;
-  @Input() minLength?: string;
-  @Input() maxLength?: string;
 
   @Output() changed = new EventEmitter<TValue>();
 
@@ -153,11 +150,6 @@ export class FormSelectComponent<TValue>
     this.displayValue = this.selectedOption
       ? this.selectedOption.viewValue
       : null;
-
-    console.log({
-      selected: this.selectedOption,
-      displayValue: this.displayValue,
-    });
 
     this.input.nativeElement.value = this.displayValue;
   }
