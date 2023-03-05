@@ -15,7 +15,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-activity-menu',
   templateUrl: './activity-menu.component.html',
-  styleUrls: ['./activity-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActivityMenuComponent implements OnInit {
