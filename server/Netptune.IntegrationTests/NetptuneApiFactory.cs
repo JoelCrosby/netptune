@@ -32,9 +32,12 @@ internal class ContainerConnection
 
 public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder().Build();
+    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder()
+        .Build();
 
-    private readonly RedisContainer CacheContainer = new RedisBuilder().Build();
+    private readonly RedisContainer CacheContainer = new RedisBuilder()
+        .WithPortBinding(6379, true)
+        .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
