@@ -1,6 +1,7 @@
 using System;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Core.Cache.Common;
 
@@ -16,6 +17,6 @@ public static class RedisCacheServiceCollectionExtensions
 
         services.Configure(action);
 
-        services.AddSingleton<ICacheProvider, RedisCache>();
+        services.TryAddSingleton<ICacheProvider, RedisCache>();
     }
 }
