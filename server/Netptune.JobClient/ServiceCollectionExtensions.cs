@@ -1,7 +1,7 @@
 using System;
 
 using Hangfire;
-using Hangfire.Redis;
+using Hangfire.Redis.StackExchange;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,11 +25,10 @@ public static class ServiceCollectionExtensions
             options.UseRecommendedSerializerSettings();
         });
 
-        GlobalConfiguration.Configuration.UseRedisStorage(clientOptions.ConnectionString,
-            new RedisStorageOptions
-            {
-                Prefix = NetptuneJobConstants.RedisPrefix,
-            });
+        GlobalConfiguration.Configuration.UseRedisStorage(clientOptions.ConnectionString, new ()
+        {
+            Prefix = NetptuneJobConstants.RedisPrefix,
+        });
 
         services.Configure(action);
         services.AddTransient<IJobClient, JobClientService>();
