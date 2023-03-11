@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Redis.StackExchange;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,7 +38,7 @@ public class Startup
     {
         var connectionString = Configuration.GetNetptuneConnectionString("netptune");
         var jobsConnectionString = Configuration.GetNetptuneConnectionString("netptune-jobs");
-        
+
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
 
         services.AddHangfire(configuration =>
