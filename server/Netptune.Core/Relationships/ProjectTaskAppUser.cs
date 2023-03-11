@@ -9,9 +9,9 @@ namespace Netptune.Core.Relationships;
 
 public record ProjectTaskAppUser : KeyedEntity<int>
 {
-    public int ProjectTaskId { get; set; }
+    public int ProjectTaskId { get; init; }
 
-    public string UserId { get; set; } = null!;
+    public required string UserId { get; init; }
 
     #region NavigationProperties
 
