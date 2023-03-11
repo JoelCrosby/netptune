@@ -1,7 +1,3 @@
-using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
-using DotNet.Testcontainers.Containers;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +16,9 @@ using Netptune.Repositories.ConnectionFactories;
 using Netptune.Services.Authorization.Requirements;
 using Netptune.Services.Cache.Redis;
 
+using Testcontainers.PostgreSql;
+using Testcontainers.Redis;
+
 using Xunit;
 
 namespace Netptune.IntegrationTests;
@@ -33,51 +32,38 @@ internal class ContainerConnection
 
 public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
 {
-    private readonly PostgreSqlTestcontainer DbContainer =
-        new TestcontainersBuilder<PostgreSqlTestcontainer>()
-            .WithImage("postgres:latest")
-            .WithDatabase(new PostgreSqlTestcontainerConfiguration
-            {
-                Database = "netptune",
-                Username = "netptune",
-                Password = "netptune",
-            })
-            .Build();
+    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder().Build();
 
-    private readonly RedisTestcontainer CacheContainer =
-        new TestcontainersBuilder<RedisTestcontainer>()
-            .WithImage("redis:latest")
-            .WithDatabase(new RedisTestcontainerConfiguration
-            {
-                Port = 6379,
-            })
-            .Build();
+    private readonly RedisContainer CacheContainer = new RedisBuilder().Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         LoadEnvironmentVariables();
 
+        var postgresConnection = DbContainer.GetConnectionString();
+        var redisConnection = CacheContainer.GetConnectionString();
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(ICacheProvider));
-            services.AddNetptuneRedis(options => options.Connection = CacheContainer.ConnectionString);
+            services.AddNetptuneRedis(options => options.Connection = redisConnection);
 
             services.RemoveAll(typeof(IDbConnectionFactory));
-            services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.ConnectionString));
+            services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(postgresConnection));
 
             services.RemoveAll(typeof(DataContext));
             services.RemoveAll(typeof(DbContextOptions<DataContext>));
             services.AddDbContext<DataContext>(options =>
             {
                 options
-                    .UseNpgsql(DbContainer.ConnectionString)
+                    .UseNpgsql(postgresConnection)
                     .UseSnakeCaseNamingConvention();
             });
 
             services.AddSingleton(new ContainerConnection
             {
-                RedisConnection = CacheContainer.Hostname,
-                DdConnection = DbContainer.ConnectionString,
+                DdConnection = postgresConnection,
+                RedisConnection = redisConnection,
             });
 
             services.AddAuthorization(options =>
@@ -116,14 +102,14 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
     public async Task InitializeAsync()
     {
-        await CacheContainer.StartAsync();
-        await DbContainer.StartAsync();
+        await CacheContainer.StartAsync().ConfigureAwait(false);
+        await DbContainer.StartAsync().ConfigureAwait(false);
     }
 
     public new async Task DisposeAsync()
     {
-        await CacheContainer.DisposeAsync();
-        await DbContainer.DisposeAsync();
+        await CacheContainer.DisposeAsync().ConfigureAwait(false);
+        await DbContainer.DisposeAsync().ConfigureAwait(false);
     }
 
     public HttpClient CreateNetptuneClient()
