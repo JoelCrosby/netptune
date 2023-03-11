@@ -36,7 +36,7 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
         .Build();
 
     private readonly RedisContainer CacheContainer = new RedisBuilder()
-        .WithPortBinding(6379, true)
+        .WithExposedPort(6379)
         .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

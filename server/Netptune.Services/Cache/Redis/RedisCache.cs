@@ -21,7 +21,7 @@ public class RedisCache : ICacheProvider
     {
         if (options.Value is null)
         {
-            throw new Exception($"{nameof(RedisCache)} was instantiated without options provided");
+            throw new ($"{nameof(RedisCache)} was instantiated without options provided");
         }
 
         Redis = ConnectionMultiplexer.Connect(options.Value.Connection);
