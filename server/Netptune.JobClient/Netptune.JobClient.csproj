@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.7.33" />
-    <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.6" />
+    <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.7" />
   </ItemGroup>
 
   <ItemGroup>
