@@ -49,6 +49,9 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
         var postgresConnection = DbContainer.GetConnectionString();
         var redisConnection = CacheContainer.GetConnectionString();
 
+        Console.WriteLine("[postgres] {0}", postgresConnection);
+        Console.WriteLine("[redis] {0}", redisConnection);
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(ICacheProvider));
