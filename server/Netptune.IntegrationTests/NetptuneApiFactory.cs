@@ -3,18 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.App;
 using Netptune.Core.Authorization;
-using Netptune.Core.Cache.Common;
-using Netptune.Core.Repositories.Common;
-using Netptune.Entities.Contexts;
-using Netptune.Repositories.ConnectionFactories;
 using Netptune.Services.Authorization.Requirements;
-using Netptune.Services.Cache.Redis;
 
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
@@ -23,58 +16,21 @@ using Xunit;
 
 namespace Netptune.IntegrationTests;
 
-internal class ContainerConnection
-{
-    public required string DdConnection { get; init; }
-
-    public required string RedisConnection { get; init; }
-}
 
 public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
 {
-    private const int RedisPort = 6379;
-
-    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder()
-        .Build();
-
-    private readonly RedisContainer CacheContainer = new RedisBuilder()
-        .WithExposedPort(RedisPort)
-        .WithPortBinding(RedisPort, true)
-        .Build();
+    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder().Build();
+    private readonly RedisContainer CacheContainer = new RedisBuilder().Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         LoadEnvironmentVariables();
 
-        var postgresConnection = DbContainer.GetConnectionString();
-        var redisConnection = CacheContainer.GetConnectionString();
-
-        Console.WriteLine("[postgres] {0}", postgresConnection);
-        Console.WriteLine("[redis] {0}", redisConnection);
+        Environment.SetEnvironmentVariable("DATABASE_URL", DbContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(ICacheProvider));
-            services.AddNetptuneRedis(options => options.Connection = redisConnection);
-
-            services.RemoveAll(typeof(IDbConnectionFactory));
-            services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(postgresConnection));
-
-            services.RemoveAll(typeof(DataContext));
-            services.RemoveAll(typeof(DbContextOptions<DataContext>));
-            services.AddDbContext<DataContext>(options =>
-            {
-                options
-                    .UseNpgsql(postgresConnection)
-                    .UseSnakeCaseNamingConvention();
-            });
-
-            services.AddSingleton(new ContainerConnection
-            {
-                DdConnection = postgresConnection,
-                RedisConnection = redisConnection,
-            });
-
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
