@@ -126,6 +126,20 @@ internal sealed class DataSeedService : IHostedService
             await context.ProjectTasks.AddRangeAsync(tasks, ct);
 
             await context.SaveChangesAsync(ct);
+
+            var activityLogs = new Faker<ActivityLog>()
+                .RuleFor(p => p.EntityType, _ => EntityType.Task)
+                .RuleFor(p => p.TaskId, f => f.PickRandom(tasks).Id)
+                .RuleFor(p => p.EntityId, (_, p) => p.TaskId)
+                .RuleFor(p => p.Time, f => f.Date.Recent())
+                .RuleFor(p => p.Type, f => f.PickRandom<ActivityType>())
+                .RuleFor(p => p.User, f => f.PickRandom(users))
+                .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+                .Generate(32);
+
+            await context.ActivityLogs.AddRangeAsync(activityLogs, ct);
+
+            await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);
         }
         catch

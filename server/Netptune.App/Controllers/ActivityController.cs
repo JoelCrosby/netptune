@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.ViewModels.Activity;
 
@@ -24,11 +25,10 @@ public class ActivityController : ControllerBase
         ActivityService = activityService;
     }
 
-    [AllowAnonymous]
     [HttpGet("{entityType}/{entityId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json", Type = typeof(List<ActivityViewModel>))]
+    [Produces("application/json", Type = typeof(ClientResponse<List<ActivityViewModel>>))]
     public async Task<IActionResult> Get(EntityType entityType, int entityId)
     {
         var result = await ActivityService.GetActivities(entityType, entityId);
