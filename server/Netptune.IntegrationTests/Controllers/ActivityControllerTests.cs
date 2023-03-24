@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Controllers;
 
+[Collection(Collections.Database)]
 public class ActivityControllerTests : IClassFixture<NetptuneApiFactory>
 {
     private readonly HttpClient Client;
