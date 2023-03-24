@@ -1,4 +1,6 @@
-﻿using Bogus;
+﻿using System.Diagnostics;
+
+using Bogus;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +30,8 @@ internal sealed class DataSeedService : IHostedService
 
     public async Task StartAsync(CancellationToken ct)
     {
+        var timer = Stopwatch.StartNew();
+
         using var scope = ServiceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
@@ -147,6 +151,8 @@ internal sealed class DataSeedService : IHostedService
             await context.Database.RollbackTransactionAsync(ct);
             throw;
         }
+
+        Console.WriteLine($"timer elapsed {timer.Elapsed:'hh:ss'}");
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
