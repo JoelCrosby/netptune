@@ -43,7 +43,7 @@ public class BoardGroupsController : ControllerBase
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json", Type = typeof(BoardGroup))]
+    [Produces("application/json", Type = typeof(ClientResponse<BoardGroupsViewModel>))]
     public async Task<IActionResult> PutBoardGroup([FromBody] UpdateBoardGroupRequest request)
     {
         var result = await BoardGroupService.Update(request);
