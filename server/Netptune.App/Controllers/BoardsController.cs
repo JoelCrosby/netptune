@@ -28,17 +28,6 @@ public class BoardsController : ControllerBase
         BoardService = boardService;
     }
 
-    // GET: api/boards
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [Produces("application/json", Type = typeof(List<BoardViewModel>))]
-    public async Task<IActionResult> GetBoards(int projectId)
-    {
-        var result = await BoardService.GetBoards(projectId);
-
-        return Ok(result);
-    }
-
     // GET: api/boards/workspace
     [HttpGet("workspace")]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -29,13 +29,6 @@ public class BoardService : IBoardService
         Boards = unitOfWork.Boards;
     }
 
-    public async Task<List<BoardViewModel>> GetBoards(int projectId)
-    {
-        var results = await Boards.GetBoardsInProject(projectId, true);
-
-        return results.ConvertAll(result => result.ToViewModel());
-    }
-
     public async Task<ClientResponse<BoardViewModel>> GetBoard(int id)
     {
         var result = await Boards.GetAsync(id, true);
