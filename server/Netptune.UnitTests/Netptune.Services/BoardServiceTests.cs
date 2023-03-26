@@ -32,20 +32,6 @@ public class BoardServiceUnitTests
     }
 
     [Fact]
-    public async Task GetBoards_ShouldReturnCorrectly_WhenInputValid()
-    {
-        var boards = new List<Board> { AutoFixtures.Board };
-
-        UnitOfWork.Boards.GetBoardsInProject(Arg.Any<int>(), Arg.Any<bool>()).Returns(boards);
-
-        var result = await Service.GetBoards(1);
-
-        result.Should().NotBeNull();
-        result.Should().NotBeEmpty();
-        result.Count.Should().Be(1);
-    }
-
-    [Fact]
     public async Task GetBoard_ShouldReturnCorrectly_WhenInputValid()
     {
         var board = AutoFixtures.Board;

@@ -10,8 +10,6 @@ namespace Netptune.Core.Services;
 
 public interface IBoardService
 {
-    Task<List<BoardViewModel>> GetBoards(int projectId);
-
     Task<List<BoardViewModel>?> GetBoardsInProject(int projectId);
 
     Task<ClientResponse<BoardViewModel>> GetBoard(int id);
