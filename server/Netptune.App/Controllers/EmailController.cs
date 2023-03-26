@@ -31,7 +31,7 @@ public class EmailController : ControllerBase
             Reason = "Test Hangfire",
             Name = "Joel Crosby",
             Message = "Send Controller Test Message.",
-            SendTo = new SendTo
+            SendTo = new ()
             {
                 Address = "joelcrosby94@gmail.com",
                 DisplayName = "Joel Crosby",

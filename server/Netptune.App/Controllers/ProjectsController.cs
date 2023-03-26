@@ -24,7 +24,7 @@ public class ProjectsController : ControllerBase
         ProjectService = projectService;
     }
 
-    // GET: api/projects/5
+    // GET: api/projects
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json", Type = typeof(List<ProjectViewModel>))]
@@ -35,7 +35,7 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/projects/5
+    // GET: api/projects/key
     [HttpGet("{key}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
