@@ -141,7 +141,16 @@ internal sealed class DataSeedService : IHostedService
                 .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
                 .Generate(32);
 
+            var comments = new Faker<Comment>()
+                .RuleFor(p => p.Body, f => f.System.Exception().Message)
+                .RuleFor(p => p.EntityId, f => f.PickRandom(tasks).Id)
+                .RuleFor(p => p.EntityType, EntityType.Task)
+                .RuleFor(p => p.Owner, f => f.PickRandom(users))
+                .RuleFor(p => p.WorkspaceId, f => f.PickRandom(tasks).WorkspaceId)
+                .Generate(32);
+
             await context.ActivityLogs.AddRangeAsync(activityLogs, ct);
+            await context.Comments.AddRangeAsync(comments, ct);
 
             await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);

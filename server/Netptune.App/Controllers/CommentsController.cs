@@ -24,6 +24,20 @@ public class CommentsController : ControllerBase
         CommentService = commentService;
     }
 
+    // GET: api/comments/taskId
+    [Route("task/{systemId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Produces("application/json", Type = typeof(List<CommentViewModel>))]
+    public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId)
+    {
+        var result = await CommentService.GetCommentsForTask(systemId);
+
+        if (result is null) return NotFound();
+
+        return Ok(result);
+    }
+
     // POST: api/comment/task
     [HttpPost]
     [Route("task")]
@@ -35,20 +49,6 @@ public class CommentsController : ControllerBase
         var result = await CommentService.AddCommentToTask(request);
 
         if (result.IsNotFound) return NotFound();
-
-        return Ok(result);
-    }
-
-    // GET: api/comments/taskId
-    [Route("task/{systemId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Produces("application/json", Type = typeof(List<CommentViewModel>))]
-    public async Task<IActionResult> GetCommentsForTask([FromRoute] string systemId)
-    {
-        var result = await CommentService.GetCommentsForTask(systemId);
-
-        if (result is null) return NotFound();
 
         return Ok(result);
     }
