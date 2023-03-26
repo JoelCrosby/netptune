@@ -119,4 +119,29 @@ public sealed class BoardGroupsControllerTests : IClassFixture<NetptuneApiFactor
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var response = await Client.DeleteAsync("api/boardgroups/3");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/boardgroups/1000");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeFalse();
+    }
+
 }
