@@ -117,6 +117,39 @@ public sealed class TagsControllerTests : IClassFixture<NetptuneApiFactory>
     }
 
     [Fact]
+    public async Task CreateTaskTag_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = new AddTagToTaskRequest
+        {
+            Tag = "New Task Tag",
+            SystemId = "neo-1",
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tags/task", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TagViewModel>>();
+
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Tag);
+    }
+
+    [Fact]
+    public async Task CreateTaskTag_ShouldReturnNotFound_WhenTaskIdInvalid()
+    {
+        var request = new AddTagToTaskRequest
+        {
+            Tag = "New Task Tag",
+            SystemId = "neo-10000",
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tags/task", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task DeleteFromTask_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = new DeleteTagFromTaskRequest
@@ -129,6 +162,28 @@ public sealed class TagsControllerTests : IClassFixture<NetptuneApiFactory>
         {
             Method = HttpMethod.Delete,
             RequestUri = new ("api/tags/task", UriKind.RelativeOrAbsolute),
+            Content = JsonContent.Create(request),
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result!.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteTags_ShouldReturnNotFound_WhenInputDoesNotExist()
+    {
+        var request = new DeleteTagsRequest
+        {
+            Tags = new () { "Python4", "Java6" },
+        };
+
+        var response = await Client.SendAsync(new ()
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new ("api/tags", UriKind.RelativeOrAbsolute),
             Content = JsonContent.Create(request),
         });
 
