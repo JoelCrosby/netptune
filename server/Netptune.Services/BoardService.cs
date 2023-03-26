@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
@@ -35,7 +36,7 @@ public class BoardService : IBoardService
 
         if (result is null)
         {
-            return ClientResponse<BoardViewModel>.Failed();
+            return ClientResponse<BoardViewModel>.NotFound;
         }
 
         return ClientResponse<BoardViewModel>.Success(result.ToViewModel());
@@ -139,7 +140,7 @@ public class BoardService : IBoardService
             Name = request.Name,
             Identifier = request.Identifier.ToUrlSlug(),
             ProjectId = request.ProjectId.Value,
-            MetaInfo = request.Meta,
+            MetaInfo = request.Meta ?? new BoardMeta(),
             WorkspaceId = workspaceId,
         };
 
