@@ -19,6 +19,16 @@ internal sealed class DataSeedService : IHostedService
 
     private readonly List<string> Workspaces = new () { "Netptune", "Linux" };
     private readonly List<string> Projects = new () { "NeoVim", "VsCode", "Emacs", "Kakoune" };
+    private readonly List<string> Tags = new ()
+    {
+        "Typescript",
+        "Python",
+        "Go",
+        "Java",
+        "Kotlin",
+        "C#",
+        "Swift",
+    };
 
     public static readonly List<string> UserIds = Enumerable.Range(0, 3).Select(_ => Guid.NewGuid().ToString()).ToList();
 
@@ -149,8 +159,21 @@ internal sealed class DataSeedService : IHostedService
                 .RuleFor(p => p.WorkspaceId, f => f.PickRandom(tasks).WorkspaceId)
                 .Generate(32);
 
+            var tags = new Faker<Tag>()
+                .RuleFor(p => p.Owner, f => f.PickRandom(users))
+                .RuleFor(p => p.WorkspaceId, f => f.PickRandom(tasks).WorkspaceId)
+                .RuleFor(p => p.Name, (f, p) => f.PickRandom(Tags) + f.IndexFaker)
+                .Generate(32);
+
+            var taskTags = new Faker<ProjectTaskTag>()
+                .RuleFor(p => p.Tag, f => f.PickRandom(tags))
+                .RuleFor(p => p.ProjectTask, f => f.PickRandom(tasks))
+                .Generate(users.Count);
+
             await context.ActivityLogs.AddRangeAsync(activityLogs, ct);
             await context.Comments.AddRangeAsync(comments, ct);
+            await context.Tags.AddRangeAsync(tags, ct);
+            await context.ProjectTaskTags.AddRangeAsync(taskTags, ct);
 
             await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);
