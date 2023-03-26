@@ -28,6 +28,20 @@ public class BoardsController : ControllerBase
         BoardService = boardService;
     }
 
+    // GET: api/boards/5
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Produces("application/json", Type = typeof(Board))]
+    public async Task<IActionResult> GetBoard([FromRoute] int id)
+    {
+        var result = await BoardService.GetBoard(id);
+
+        if (result.IsNotFound) return NotFound();
+
+        return Ok(result);
+    }
+
     // GET: api/boards/workspace
     [HttpGet("workspace")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -69,20 +83,6 @@ public class BoardsController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/boards/5
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Produces("application/json", Type = typeof(Board))]
-    public async Task<IActionResult> GetBoard([FromRoute] int id)
-    {
-        var result = await BoardService.GetBoard(id);
-
-        if (result.IsNotFound) return NotFound();
-
-        return Ok(result);
-    }
-
     // PUT: api/boards/5
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -91,6 +91,8 @@ public class BoardsController : ControllerBase
     public async Task<IActionResult> PutBoard([FromBody] UpdateBoardRequest request)
     {
         var result = await BoardService.Update(request);
+
+        if (result.IsNotFound) return NotFound();
 
         return Ok(result);
     }

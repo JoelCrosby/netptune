@@ -143,5 +143,4 @@ public sealed class BoardGroupsControllerTests : IClassFixture<NetptuneApiFactor
 
         result!.IsSuccess.Should().BeFalse();
     }
-
 }
