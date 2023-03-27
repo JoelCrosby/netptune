@@ -1,3 +1,5 @@
+using System.Net;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -96,11 +98,38 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
     public HttpClient CreateNetptuneClient()
     {
-        var client = CreateClient();
+        var client = CreateDefaultClient(new TestExceptionHttpHandler());
 
         client.DefaultRequestHeaders.Authorization = new ("TestScheme");
         client.DefaultRequestHeaders.Add("workspace", "netptune");
 
         return client;
     }
+}
+
+internal class TestExceptionHttpHandler : DelegatingHandler
+{
+    protected override async Task<HttpResponseMessage>
+        SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        var response = await base.SendAsync(request, cancellationToken);
+
+        if (response.StatusCode is HttpStatusCode.InternalServerError)
+        {
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            InternalServerErrorException.Throw(content);
+        }
+
+        return response;
+    }
+}
+
+internal class InternalServerErrorException : Exception
+{
+    private InternalServerErrorException(string message) : base (message)
+    {
+    }
+
+    public static void Throw(string message) => throw new InternalServerErrorException(message);
 }
