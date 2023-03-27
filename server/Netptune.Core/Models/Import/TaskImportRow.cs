@@ -2,25 +2,25 @@ using System;
 
 namespace Netptune.Core.Models.Import;
 
-public class TaskImportRow
+public record TaskImportRow
 {
-    public string Name { get; set; } = null!;
+    public required string Name { get; init; }
 
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
-    public string? Status { get; set; }
+    public string? Status { get; init; }
 
-    public string? IsFlagged { get; set; }
+    public string? IsFlagged { get; init; }
 
-    public DateTime CreatedAt { get; set; }
+    public required  DateTime CreatedAt { get; init; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; init; }
 
-    public string? Assignees { get; set; }
+    public string? Assignees { get; init; }
 
-    public string Owner { get; set; }
+    public required  string Owner { get; init; }
 
-    public string? Group { get; set; }
+    public string? Group { get; init; }
 
-    public string? Tags { get; set; }
+    public string? Tags { get; init; }
 }
