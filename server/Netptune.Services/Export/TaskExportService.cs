@@ -27,10 +27,10 @@ public class TaskExportService : ITaskExportService
         var tasks = await TaskRepository.GetExportTasksAsync(workspaceKey);
         var stream = await tasks.ToCsvStream();
 
-        return new FileResponse
+        return new ()
         {
             Stream = stream,
-            ContentType = "application/octet-stream",
+            ContentType = "text/csv",
             Filename = $"Netptune-Task-Export_{workspaceKey}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
         };
     }
@@ -41,10 +41,10 @@ public class TaskExportService : ITaskExportService
         var tasks = await TaskRepository.GetBoardExportTasksAsync(workspaceKey, boardIdentifier);
         var stream = await tasks.ToCsvStream();
 
-        return new FileResponse
+        return new ()
         {
             Stream = stream,
-            ContentType = "application/octet-stream",
+            ContentType = "text/csv",
             Filename = $"Netptune-Task-Export_{workspaceKey}-{boardIdentifier}-{DateTime.UtcNow:yy-MMM-dd-HH-mm}.csv",
         };
     }
