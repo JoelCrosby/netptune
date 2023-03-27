@@ -10,7 +10,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.App;
 using Netptune.Core.Authorization;
+using Netptune.Core.Jobs;
 using Netptune.Core.Services;
+using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;
 
 using Testcontainers.PostgreSql;
@@ -47,8 +49,8 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(IStorageService));
-            services.AddSingleton<IStorageService, TestStorageService>();
+            services.Replace<IStorageService, TestStorageService>();
+            services.Replace<IJobClient, TestJobClient>();
 
             services.AddAuthorization(options =>
             {
@@ -132,4 +134,15 @@ internal class InternalServerErrorException : Exception
     }
 
     public static void Throw(string message) => throw new InternalServerErrorException(message);
+}
+
+internal static class ServiceCollectionExtensions
+{
+    public static void Replace<TService, TReplacement>(this IServiceCollection services)
+        where TService : class
+        where TReplacement : class, TService
+    {
+        services.RemoveAll(typeof(TService));
+        services.AddSingleton<TService, TReplacement>();
+    }
 }
