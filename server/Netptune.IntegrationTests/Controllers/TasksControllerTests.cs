@@ -269,12 +269,12 @@ public sealed class TasksControllerTests : IClassFixture<NetptuneApiFactory>
     [Fact]
     public async Task ReassignTasks_ShouldReturnSuccess_WhenInputValid()
     {
-        var userId = DataSeedService.UserIds.ElementAt(0);
+        var user = TestData.Users.ElementAt(0);
         var request = new ReassignTasksRequest
         {
             TaskIds = new() { 0, 1 },
             BoardId = "neovim",
-            AssigneeId = userId,
+            AssigneeId = user.Id,
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks/reassign-tasks", request);

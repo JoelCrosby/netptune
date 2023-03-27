@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,12 @@ public class StorageController : ControllerBase
     [DisableFormValueModelBinding]
     public async Task<IActionResult> UploadProfilePicture()
     {
-        var file = Request.Form.Files[0];
+        var file = Request.Form.Files.FirstOrDefault();
+
+        if (file is null)
+        {
+            return BadRequest("Import File must be provided. Only one file can be uploaded at a time.");
+        }
 
         if (file.Length > 50 * 1024 * 1024)
         {

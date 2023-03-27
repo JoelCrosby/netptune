@@ -18,7 +18,7 @@ public class TaskImportRow
 
     public string? Assignees { get; set; }
 
-    public string? Owner { get; set; }
+    public string Owner { get; set; }
 
     public string? Group { get; set; }
 
