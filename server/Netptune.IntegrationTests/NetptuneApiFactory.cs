@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.App;
 using Netptune.Core.Authorization;
+using Netptune.Core.Services;
 using Netptune.Services.Authorization.Requirements;
 
 using Testcontainers.PostgreSql;
@@ -43,6 +45,9 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
 
         builder.ConfigureTestServices(services =>
         {
+            services.RemoveAll(typeof(IStorageService));
+            services.AddSingleton<IStorageService, TestStorageService>();
+
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
