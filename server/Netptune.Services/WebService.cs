@@ -19,7 +19,7 @@ public class WebService : IWebService
         DocumentService = documentService;
     }
 
-    public async Task<MetaInfo> GetMetaDataFromUrl(string url)
+    public async Task<MetaInfoResponse> GetMetaDataFromUrl(string url)
     {
         var formalUrl = GetFormalUrl(url);
         var document = await DocumentService.OpenAsync(formalUrl);
@@ -93,7 +93,11 @@ public class WebService : IWebService
 
         metaInfo.HasData = matchCount > 0;
 
-        return metaInfo;
+        return new ()
+        {
+            Success = true,
+            Meta = metaInfo,
+        };
     }
 
     private static string GetImageTagContent(string value, IAttr tagContent, string formalUrl)
