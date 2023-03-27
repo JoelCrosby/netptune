@@ -6,5 +6,5 @@ namespace Netptune.Core.Services;
 
 public interface IWebService
 {
-    Task<MetaInfo> GetMetaDataFromUrl(string url);
+    Task<MetaInfoResponse> GetMetaDataFromUrl(string url);
 }

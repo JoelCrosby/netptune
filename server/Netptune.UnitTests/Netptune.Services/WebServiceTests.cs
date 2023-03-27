@@ -50,8 +50,9 @@ public class WebServiceTests
         var result = await Service.GetMetaDataFromUrl("https://github.com");
 
         result.Should().NotBeNull();
+        result.Success.Should().BeTrue();
 
-        result.Title.Should().Be("Document");
-        result.Description.Should().Be("Document description.");
+        result.Meta!.Title.Should().Be("Document");
+        result.Meta.Description.Should().Be("Document description.");
     }
 }

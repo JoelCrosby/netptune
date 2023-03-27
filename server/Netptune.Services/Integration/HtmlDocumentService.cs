@@ -11,7 +11,7 @@ public class HtmlDocumentService : IHtmlDocumentService
 {
     public Task<IDocument> OpenAsync(string url)
     {
-        var config = AngleSharp.Configuration.Default;
+        var config = AngleSharp.Configuration.Default.WithDefaultLoader();
         var context = BrowsingContext.New(config);
 
         return context.OpenAsync(url);

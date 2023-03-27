@@ -34,12 +34,8 @@ public class MetaController : ControllerBase
     [Route("uri-meta-info")]
     public async Task<IActionResult> GetUriMetaInfo([Required] string url)
     {
-        var meta = await WebService.GetMetaDataFromUrl(url);
+        var result = await WebService.GetMetaDataFromUrl(url);
 
-        return Ok(new
-        {
-            Success = 1,
-            Meta = meta,
-        });
+        return Ok(result);
     }
 }

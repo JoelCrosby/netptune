@@ -1,6 +1,13 @@
 namespace Netptune.Core.ViewModels.Web;
 
-public class MetaInfo
+public record MetaInfoResponse
+{
+    public bool Success { get; init; }
+
+    public MetaInfo? Meta { get; init; }
+}
+
+public record MetaInfo
 {
     public bool HasData { get; set; }
 
@@ -17,7 +24,7 @@ public class MetaInfo
     public MetaInfoImage Image { get; set; } = new();
 }
 
-public class MetaInfoImage
+public record MetaInfoImage
 {
     public string Url { get; set; } = null!;
 }
