@@ -12,6 +12,7 @@ using Netptune.Core.Utilities;
 
 namespace Netptune.App.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class StorageController : ControllerBase
