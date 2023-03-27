@@ -28,17 +28,11 @@
       font-family: $monospace;
     }
 
-    .inline-code,
-    .ce-code__textarea.cdx-input {
-      color: $code-color;
-      font-family: $monospace;
-      white-space: pre-wrap;
-    }
-
     .cdx-input.image-tool__caption {
       display: none;
     }
 
+    .inline-code,
     .ce-code__textarea.cdx-input {
       @extend .custom-scroll;
 
@@ -49,6 +43,7 @@
       border-radius: 3px;
       font-size: 14px;
       resize: none;
+      white-space: pre-wrap;
     }
   }
 

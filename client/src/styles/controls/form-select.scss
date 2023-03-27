@@ -5,6 +5,10 @@
     cursor: pointer;
   }
 
+  input::selection {
+    background: transparent;
+  }
+
   .arrow {
     display: flex;
     justify-content: center;
