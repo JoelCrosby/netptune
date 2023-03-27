@@ -178,7 +178,7 @@ internal sealed class DataSeedService : IHostedService
             var tags = new Faker<Tag>()
                 .RuleFor(p => p.Owner, f => f.PickRandom(users))
                 .RuleFor(p => p.WorkspaceId, f => f.PickRandom(tasks).WorkspaceId)
-                .RuleFor(p => p.Name, (f, p) => f.PickRandom(Tags) + f.IndexFaker)
+                .RuleFor(p => p.Name, f => f.PickRandom(Tags) + f.IndexFaker)
                 .Generate(32);
 
             var taskTags = new Faker<ProjectTaskTag>()
