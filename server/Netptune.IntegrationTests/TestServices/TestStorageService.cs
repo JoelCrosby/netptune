@@ -2,7 +2,7 @@
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 
-namespace Netptune.IntegrationTests;
+namespace Netptune.IntegrationTests.TestServices;
 
 public class TestStorageService : IStorageService
 {
