@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -70,5 +71,12 @@ public static class StringExtensions
         var value = configuration[key];
 
         return value ?? throw new InvalidOperationException($"value for key '{key}' not found in configuration");
+    }
+
+    public static MemoryStream ToStream(this string input, System.Text.Encoding? encoding = null)
+    {
+        var bytes = (encoding ?? System.Text.Encoding.UTF8).GetBytes(input);
+
+        return new MemoryStream(bytes);
     }
 }

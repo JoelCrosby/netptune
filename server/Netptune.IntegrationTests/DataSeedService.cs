@@ -13,6 +13,24 @@ using Netptune.Entities.Contexts;
 
 namespace Netptune.IntegrationTests;
 
+internal record TestUser
+{
+    public string Id { get; } = Guid.NewGuid().ToString();
+    public required string Firstname { get; init; }
+    public required string Lastname { get; init; }
+    public required string Email { get; init; }
+}
+
+internal static class TestData
+{
+    internal static readonly List<TestUser> Users = new()
+    {
+        new() { Firstname = "joel", Lastname = "crosby", Email = "joelcrosby@live.co.uk", },
+        new() { Firstname = "admin", Lastname = "user", Email = "admin@netptune.co.uk", },
+        new() { Firstname = "john", Lastname = "smith", Email = "johnsmith@gmail.com", },
+    };
+}
+
 internal sealed class DataSeedService : IHostedService
 {
     private readonly IServiceProvider ServiceProvider;
@@ -30,8 +48,6 @@ internal sealed class DataSeedService : IHostedService
         "Swift",
     };
 
-    public static readonly List<string> UserIds = Enumerable.Range(0, 3).Select(_ => Guid.NewGuid().ToString()).ToList();
-
     public DataSeedService(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
@@ -46,10 +62,10 @@ internal sealed class DataSeedService : IHostedService
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         var users = new Faker<AppUser>()
-            .RuleFor(p => p.Id, f => UserIds.ElementAt(f.IndexFaker))
-            .RuleFor(p => p.Firstname, f => f.Person.FirstName)
-            .RuleFor(p => p.Lastname, f => f.Person.LastName)
-            .RuleFor(p => p.Email, f => f.Person.Email)
+            .RuleFor(p => p.Id, f => TestData.Users.ElementAt(f.IndexFaker).Id)
+            .RuleFor(p => p.Firstname, f => TestData.Users.ElementAt(f.IndexFaker).Firstname)
+            .RuleFor(p => p.Lastname, f => TestData.Users.ElementAt(f.IndexFaker).Lastname)
+            .RuleFor(p => p.Email, f => TestData.Users.ElementAt(f.IndexFaker).Email)
             .RuleFor(p => p.PictureUrl, f => f.Person.Avatar)
             .RuleFor(p => p.UserName, (_, u) => u.Email)
             .RuleFor(p => p.NormalizedEmail, (_, u) => u.Email!.Normalize().ToUpperInvariant())
