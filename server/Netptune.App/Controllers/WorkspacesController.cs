@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 
 namespace Netptune.App.Controllers;
@@ -134,7 +136,7 @@ public class WorkspacesController : ControllerBase
     // GET: api/workspaces/is-unique
     [HttpGet("is-unique/{slug}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [Produces("application/json", Type = typeof(List<Workspace>))]
+    [Produces("application/json", Type = typeof(ClientResponse<IsSlugUniqueResponse>))]
     public async Task<IActionResult> IsSlugUnique([FromRoute] string slug)
     {
         var result = await WorkspaceService.IsSlugUnique(slug);
