@@ -12,7 +12,7 @@ using Netptune.Core.ViewModels.Projects;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class ProjectsControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class ProjectsControllerTests
 {
     private readonly HttpClient Client;
 

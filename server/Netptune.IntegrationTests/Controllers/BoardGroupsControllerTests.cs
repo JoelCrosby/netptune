@@ -14,7 +14,7 @@ using Netptune.Core.ViewModels.Boards;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class BoardGroupsControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class BoardGroupsControllerTests
 {
     private readonly HttpClient Client;
 

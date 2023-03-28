@@ -52,7 +52,7 @@ public class UsersController : ControllerBase
         return Ok(result);
     }
 
-    // GET: api/users/<id>
+    // PUT: api/users
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces("application/json", Type = typeof(UserViewModel))]

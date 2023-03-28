@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.Authorization;
 using Netptune.Entities.Contexts;
 
-namespace Netptune.IntegrationTests;
+namespace Netptune.IntegrationTests.TestServices;
 
 public sealed class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
