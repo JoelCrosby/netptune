@@ -11,8 +11,7 @@ public static class ServiceCollectionExtensions
 
     public static void AddActivitySink(this IServiceCollection services)
     {
-        services.AddSingleton<IActivityObservable, ActivityObservable>();
         services.AddTransient<IActivityLogger, ActivityLogger>();
-        services.AddHostedService<ActivityWriterService>();
+        services.AddTransient<IActivityWriterService, ActivityWriterService>();
     }
 }

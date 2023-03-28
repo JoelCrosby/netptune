@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Options;
 
-using Netptune.Core.Jobs;
+using Netptune.Core.Events;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 
@@ -17,22 +17,22 @@ namespace Netptune.Messaging;
 public class SendGridEmailService : IEmailService
 {
     private readonly IEmailRenderService EmailRenderer;
-    private readonly IJobClient JobClient;
+    private readonly IEventPublisher EventPublisher;
     private readonly SendGridEmailOptions Options;
 
     public SendGridEmailService(
         IOptionsMonitor<SendGridEmailOptions> options,
         IEmailRenderService emailRenderer,
-        IJobClient jobClient)
+        IEventPublisher eventPublisher)
     {
         EmailRenderer = emailRenderer;
-        JobClient = jobClient;
+        EventPublisher = eventPublisher;
         Options = options.CurrentValue;
     }
 
     public Task Send(SendEmailModel model)
     {
-        JobClient.Enqueue<IEmailService>(service => service.EnqueueSend(model));
+        EventPublisher.Dispatch(NetptuneEvent.SendEmail, model);
 
         return Task.CompletedTask;
     }
@@ -61,7 +61,7 @@ public class SendGridEmailService : IEmailService
 
     public Task Send(IEnumerable<SendEmailModel> models)
     {
-        JobClient.Enqueue<IEmailService>(service => service.EnqueueSend(models));
+        EventPublisher.Dispatch(NetptuneEvent.SendEmail, models);
 
         return Task.CompletedTask;
     }

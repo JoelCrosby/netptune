@@ -12,7 +12,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
-using Netptune.JobClient;
+using Netptune.Events;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
@@ -40,6 +40,7 @@ public class Startup
     {
         var connectionString = Configuration.GetNetptuneConnectionString("netptune");
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
+        var rabbitMqConnectionString = Configuration.GetNetptuneRabbitMqConnectionString();
 
         services.AddCors(options =>
         {
@@ -110,14 +111,14 @@ public class Startup
 
         services.AddActivityLogger();
 
-        services.AddNetptuneJobClient(options =>
-        {
-            options.ConnectionString = redisConnectionString;
-        });
-
         services.AddSpaStaticFiles(configuration =>
         {
             configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
+        });
+
+        services.AddNetptuneEvents(options =>
+        {
+            options.ConnectionString = rabbitMqConnectionString;
         });
     }
 

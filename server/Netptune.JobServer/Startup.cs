@@ -1,5 +1,3 @@
-using Hangfire;
-using Hangfire.Redis.StackExchange;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,14 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Netptune.Core.Constants;
 using Netptune.Core.Events;
 using Netptune.Core.Extensions;
-using Netptune.Core.Jobs;
 using Netptune.Entities.Configuration;
-using Netptune.JobServer.Auth;
-using Netptune.JobServer.Data;
-using Netptune.JobServer.Util;
+using Netptune.Events;
+using Netptune.JobServer.Services;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Cache.Redis;
@@ -37,21 +32,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var connectionString = Configuration.GetNetptuneConnectionString("netptune");
-        var jobsConnectionString = Configuration.GetNetptuneConnectionString("netptune-jobs");
-
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
-
-        services.AddHangfire(configuration =>
-        {
-            configuration.UseRedisStorage(redisConnectionString, new ()
-            {
-                Prefix = NetptuneJobConstants.RedisPrefix,
-            });
-        });
-
-        services.AddHangfireServer();
-
-        services.AddTransient<IJobClient, EmptyJobClient>();
+        var rabbitMqConnectionString = Configuration.GetNetptuneRabbitMqConnectionString();
 
         services.AddNetptuneRedis(options =>
         {
@@ -60,9 +42,6 @@ public class Startup
 
         services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
         services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
-
-        services.AddNetptuneJobServerAuth();
-        services.AddNetptuneJobServerEntities(options => options.ConnectionString = jobsConnectionString);
 
         services.AddNetptuneServices(options =>
         {
@@ -86,41 +65,22 @@ public class Startup
         });
 
         services.AddActivitySink();
+        services.AddHostedService<QueueConsumerService>();
+
+        services.AddNetptuneEvents(options =>
+        {
+            options.ConnectionString = rabbitMqConnectionString;
+        });
+
+        services.AddMediatR(options =>
+        {
+            options.Lifetime = ServiceLifetime.Transient;
+            options.RegisterServicesFromAssemblyContaining(typeof(Program));
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-        else
-        {
-            app.UseExceptionHandler("/Error");
-            app.UseHsts();
-        }
 
-        app.UseStaticFiles();
-
-        app.UseRouting();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapRazorPages();
-        });
-
-        app.UseHangfireDashboard("", new ()
-        {
-            DisplayStorageConnectionString = false,
-            DashboardTitle = "Netptune Jobs",
-            AppPath = "/account/logout",
-            Authorization = new[]
-            {
-                new HangfireAuthorizationFilter(),
-            },
-        });
     }
 }
