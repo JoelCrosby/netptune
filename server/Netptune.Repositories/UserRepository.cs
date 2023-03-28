@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Extensions;
 using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
@@ -76,14 +77,14 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
     {
         if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
-        var match = email.Trim().Normalize();
+        var match = email.Trim().IdentityNormalize();
 
         return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(x => x.NormalizedEmail == match);
     }
 
     public Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false)
     {
-        var values = emails.Select(email => email.Trim().ToUpper().Normalize());
+        var values = emails.Select(email => email.Trim().IdentityNormalize());
 
         return Entities
             .Where(x => values.Contains(x.NormalizedEmail))
@@ -95,7 +96,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
     {
         if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
 
-        var match = email.Trim().Normalize();
+        var match = email.Trim().IdentityNormalize();
 
         return Entities
             .Where(user => user.NormalizedEmail == match)
