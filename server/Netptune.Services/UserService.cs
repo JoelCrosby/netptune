@@ -7,6 +7,7 @@ using Flurl;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Repositories;
@@ -85,7 +86,7 @@ public class UserService : IUserService
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        var emailList = emails.Select(email => email.Trim().Normalize()).ToHashSet();
+        var emailList = emails.Select(e => e.Trim().IdentityNormalize()).ToHashSet();
         var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
 
         if (workspace is null)
@@ -106,8 +107,8 @@ public class UserService : IUserService
         await UserRepository.InviteUsersToWorkspace(newUserIds, workspace.Id);
         await UnitOfWork.CompleteAsync();
 
-        var existingUserEmails = existingUsers.Select(user => user.Email!.Normalize());
-        var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).ToHashSet();
+        var existingUserEmails = existingUsers.Select(user => user.Email!.IdentityNormalize()).ToHashSet();
+        var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).Select(e => e.ToLowerInvariant()).ToHashSet();
 
         await SendUserInviteEmails(usersToInvite, workspace);
 

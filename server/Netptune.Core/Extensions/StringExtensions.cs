@@ -79,4 +79,9 @@ public static class StringExtensions
 
         return new MemoryStream(bytes);
     }
+
+    public static string IdentityNormalize(this string input)
+    {
+        return input.Normalize().ToUpperInvariant();
+    }
 }

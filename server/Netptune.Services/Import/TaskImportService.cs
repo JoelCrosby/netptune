@@ -258,7 +258,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
     private static string? FindUserId(List<AppUser> users, string? email)
     {
-        var target = email?.Normalize();
+        var target = email?.IdentityNormalize();
 
         var result = users.Find(user => string.Equals(
                 user.NormalizedEmail,
@@ -296,7 +296,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             {
                 foreach (var email in ParseCellArray(current.Assignees))
                 {
-                    result.Add(email.Trim().ToUpper().Normalize());
+                    result.Add(email.Trim().IdentityNormalize());
                 }
 
                 return result;

@@ -70,8 +70,8 @@ internal sealed class DataSeedService : IHostedService
             .RuleFor(p => p.Email, f => TestData.Users.ElementAt(f.IndexFaker).Email)
             .RuleFor(p => p.PictureUrl, f => f.Person.Avatar)
             .RuleFor(p => p.UserName, (_, u) => u.Email)
-            .RuleFor(p => p.NormalizedEmail, (_, u) => u.Email!.Normalize().ToUpperInvariant())
-            .RuleFor(p => p.NormalizedUserName, (_, u) => u.UserName!.Normalize().ToUpperInvariant())
+            .RuleFor(p => p.NormalizedEmail, (_, u) => u.Email!.ToUpper().Normalize())
+            .RuleFor(p => p.NormalizedUserName, (_, u) => u.UserName!.ToUpper().Normalize())
             .Generate(3);
 
         var workspaces = new Faker<Workspace>()
