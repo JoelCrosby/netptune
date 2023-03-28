@@ -11,7 +11,7 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class MetaControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class MetaControllerTests
 {
     private readonly HttpClient Client;
 

@@ -7,7 +7,7 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class ExportControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class ExportControllerTests
 {
     private readonly HttpClient Client;
 

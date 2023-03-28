@@ -56,6 +56,8 @@ internal sealed class DataSeedService : IHostedService
 
     public async Task StartAsync(CancellationToken ct)
     {
+        Console.WriteLine("{0} starting data seed execution", nameof(DataSeedService));
+
         var timer = Stopwatch.StartNew();
 
         using var scope = ServiceProvider.CreateScope();
@@ -200,7 +202,9 @@ internal sealed class DataSeedService : IHostedService
             throw;
         }
 
-        Console.WriteLine($"timer elapsed {timer.Elapsed:'hh:ss'}");
+        timer.Stop();
+
+        Console.WriteLine("{0} finished execution in {1}", nameof(DataSeedService), $"{timer.ElapsedMilliseconds:N}ms");
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

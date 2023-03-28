@@ -12,7 +12,7 @@ using Netptune.Core.ViewModels.Tags;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class TagsControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class TagsControllerTests
 {
     private readonly HttpClient Client;
 

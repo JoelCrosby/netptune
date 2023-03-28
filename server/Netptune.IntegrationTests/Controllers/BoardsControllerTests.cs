@@ -13,7 +13,7 @@ using Netptune.Core.ViewModels.Boards;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class BoardsControllerTests : IClassFixture<NetptuneApiFactory>
+public sealed class BoardsControllerTests
 {
     private readonly HttpClient Client;
 
