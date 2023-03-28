@@ -1,8 +1,9 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Netptune.Core.Events;
 
-public interface IActivityWriterService : IObserver<IEnumerable<IActivityEvent>>
+public interface IActivityWriterService
 {
+    Task WriteActivity(IEnumerable<IActivityEvent> events);
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.Json;
 
 using Netptune.Core.Encoding;
-using Netptune.Core.Jobs;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services;
 
@@ -11,12 +10,12 @@ namespace Netptune.Core.Events;
 
 public class DistributedActivityLogger : IActivityLogger
 {
-    private readonly IJobClient Client;
+    private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
 
-    public DistributedActivityLogger(IJobClient client, IIdentityService identity)
+    public DistributedActivityLogger(IEventPublisher eventPublisher, IIdentityService identity)
     {
-        Client = client;
+        EventPublisher = eventPublisher;
         Identity = identity;
     }
 
@@ -53,7 +52,7 @@ public class DistributedActivityLogger : IActivityLogger
             Time = DateTime.UtcNow,
         };
 
-        Client.Enqueue<IActivityObservable>(service => service.Track(new []{ activity }));
+        EventPublisher.Dispatch(NetptuneEvent.Activity, new []{ activity });
     }
 
     public void LogMany(Action<ActivityMultipleOptions> options)
@@ -85,7 +84,7 @@ public class DistributedActivityLogger : IActivityLogger
                 Time = DateTime.UtcNow,
             });
 
-        Client.Enqueue<IActivityObservable>(service => service.Track(activities));
+        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
     }
 
     public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
@@ -122,7 +121,7 @@ public class DistributedActivityLogger : IActivityLogger
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
         };
 
-        Client.Enqueue<IActivityObservable>(service => service.Track(new []{ activity }));
+        EventPublisher.Dispatch(NetptuneEvent.Activity, new []{ activity });
     }
 
     public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
@@ -155,6 +154,6 @@ public class DistributedActivityLogger : IActivityLogger
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             });
 
-        Client.Enqueue<IActivityObservable>(service => service.Track(activities));
+        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
     }
 }

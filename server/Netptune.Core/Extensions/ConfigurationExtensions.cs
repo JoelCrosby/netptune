@@ -39,6 +39,21 @@ public static class ConfigurationExtensions
         return ConnectionStringParser.ParseRedis(connectionString);
     }
 
+    public static string GetNetptuneRabbitMqConnectionString(this IConfiguration configuration)
+    {
+        var appSettingsConString = configuration.GetConnectionString("rabbitmq");
+        var envVar = Environment.GetEnvironmentVariable("RABBITMQ_URL");
+
+        var connectionString = envVar ?? appSettingsConString;
+
+        if (connectionString is null)
+        {
+            throw new Exception("An environment variable with the key of 'RABBITMQ_URL' not found.");
+        }
+
+        return connectionString;
+    }
+
     public static string GetEnvironmentVariable(this IConfiguration configuration, string key)
     {
         var result = Environment.GetEnvironmentVariable(key);

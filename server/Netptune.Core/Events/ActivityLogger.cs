@@ -9,11 +9,11 @@ namespace Netptune.Core.Events;
 
 public class ActivityLogger : IActivityLogger
 {
-    private readonly IActivityObservable Observable;
+    private readonly IEventPublisher EventPublisher;
 
-    public ActivityLogger(IActivityObservable observable)
+    public ActivityLogger(IEventPublisher eventPublisher)
     {
-        Observable = observable;
+        EventPublisher = eventPublisher;
     }
 
     public void Log(Action<ActivityOptions> options)
@@ -42,7 +42,7 @@ public class ActivityLogger : IActivityLogger
             Time = DateTime.UtcNow,
         };
 
-        Observable.Track(new [] { activity });
+        EventPublisher.Dispatch(NetptuneEvent.Activity, new [] { activity });
     }
 
     public void LogMany(Action<ActivityMultipleOptions> options)
@@ -67,7 +67,7 @@ public class ActivityLogger : IActivityLogger
                 Time = DateTime.UtcNow,
             });
 
-        Observable.Track(activities);
+        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
     }
 
     public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
@@ -97,7 +97,7 @@ public class ActivityLogger : IActivityLogger
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
         };
 
-        Observable.Track(new [] { activity });
+        EventPublisher.Dispatch(NetptuneEvent.Activity, new [] { activity });
     }
 
     public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
@@ -123,6 +123,6 @@ public class ActivityLogger : IActivityLogger
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             });
 
-        Observable.Track(activities);
+        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
     }
 }
