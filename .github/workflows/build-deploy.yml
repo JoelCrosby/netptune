@@ -33,11 +33,11 @@ jobs:
       -
         name: Run Unit Tests
         working-directory: ./server/Netptune.UnitTests
-        run: dotnet test --no-restore
+        run: dotnet test --configuration Release --no-restore
       -
         name: Run Integration Tests
         working-directory: ./server/Netptune.IntegrationTests
-        run: dotnet test --no-restore
+        run: dotnet test --configuration Release --no-restore
       -
         name: Build Image
         env:
