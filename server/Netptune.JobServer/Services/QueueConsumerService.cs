@@ -29,7 +29,9 @@ public class QueueConsumerService : BackgroundService
 
             foreach (var message in messages)
             {
-                Console.WriteLine("received message: {0} {1}", message.Type, message.Payload);
+                var messageType = Type.GetType($"Netptune.JobServer.{message.Type}");
+
+                Console.WriteLine("received message: {0} {1}", messageType, message.Payload);
             }
 
             await Task.Delay(Interval, stoppingToken);

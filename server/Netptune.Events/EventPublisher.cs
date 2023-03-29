@@ -38,10 +38,7 @@ public class EventPublisher : IEventPublisher
         var body = Encoding.UTF8.GetBytes(json);
         var routingKey = Enum.GetName(type);
 
-        channel.BasicPublish(exchange: string.Empty,
-            routingKey: routingKey,
-            basicProperties: null,
-            body: body);
+        channel.BasicPublish(exchange: string.Empty, routingKey, basicProperties: null, body);
 
         return Task.CompletedTask;
     }
