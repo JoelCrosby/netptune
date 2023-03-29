@@ -14,12 +14,15 @@ public interface IEventConsumer
     Task<IEnumerable<Message>> GetMessages();
 }
 
-public class EventConsumer : IEventConsumer
+public sealed class EventConsumer : IEventConsumer, IDisposable
 {
     private readonly RabbitMqOptions Options;
     private const string Queue = "netptune-events";
 
     private readonly Queue<Message> PendingMessages = new();
+    private IConnection? Connection;
+    private IModel? Channel;
+    private EventingBasicConsumer? Consumer;
 
     public EventConsumer(IOptions<RabbitMqOptions> options)
     {
@@ -36,28 +39,34 @@ public class EventConsumer : IEventConsumer
             Password = "guest",
         };
 
-        using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
+        Connection = factory.CreateConnection();
+        Channel = Connection.CreateModel();
 
-        var consumer = new EventingBasicConsumer(channel);
+        Consumer = new (Channel);
 
-        consumer.Received += (_, message) =>
-        {
-            var content = message.Body.ToArray();
-            var body = Encoding.UTF8.GetString(content);
+        Channel.BasicConsume(queue: Queue, autoAck: true, consumer: Consumer);
 
-            var pendingMessage = new Message
-            {
-                Type = message.RoutingKey,
-                Payload = body,
-            };
+        Consumer.Received += OnConsumerOnReceived;
 
-            PendingMessages.Enqueue(pendingMessage);
-        };
 
-        channel.BasicConsume(queue: Queue, autoAck: true, consumer: consumer);
 
         return Task.CompletedTask;
+    }
+
+    private void OnConsumerOnReceived(object? _, BasicDeliverEventArgs message)
+    {
+        var content = message.Body.ToArray();
+        var body = Encoding.UTF8.GetString(content);
+
+        var pendingMessage = new Message { Type = message.RoutingKey, Payload = body, };
+
+        PendingMessages.Enqueue(pendingMessage);
+    }
+
+    public void Dispose()
+    {
+        Channel?.Close();
+        Connection?.Close();
     }
 
     public Task<IEnumerable<Message>> GetMessages()

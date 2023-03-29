@@ -2,15 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-
-    <!-- This group contains project properties for RazorLight on .NET Core -->
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
-    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <Nullable>enable</Nullable>
-
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,10 +19,6 @@
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot" />
   </ItemGroup>
 
 </Project>
