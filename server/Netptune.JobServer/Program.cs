@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
@@ -47,10 +46,9 @@ builder.Services.AddS3StorageService(options =>
     options.SecretAccessKey = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
-builder.Services.AddActivitySink();
 builder.Services.AddHostedService<QueueConsumerService>();
 
-builder.Services.AddNetptuneEvents(options =>
+builder.Services.AddNetptuneRabbitMq(options =>
 {
     options.ConnectionString = rabbitMqConnectionString;
 });

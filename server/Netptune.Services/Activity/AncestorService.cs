@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Core.Events;
+namespace Netptune.Services.Activity;
 
 public class AncestorService : IAncestorService
 {

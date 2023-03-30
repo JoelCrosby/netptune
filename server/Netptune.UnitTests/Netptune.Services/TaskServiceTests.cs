@@ -5,12 +5,12 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Services;

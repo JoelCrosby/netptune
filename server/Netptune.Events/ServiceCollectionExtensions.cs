@@ -1,19 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Events;
+using Netptune.Core.Services.Activity;
 
 namespace Netptune.Events;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEventPublisher(this IServiceCollection services)
-    {
-        services.AddTransient<IEventPublisher, EventPublisher>();
-
-        return services;
-    }
-
-    public static void AddNetptuneEvents(this IServiceCollection services, Action<RabbitMqOptions> optionsAction)
+    public static void AddNetptuneRabbitMq(this IServiceCollection services, Action<RabbitMqOptions> optionsAction)
     {
         if (optionsAction is null)
             throw new ArgumentNullException(nameof(optionsAction));
@@ -24,7 +18,7 @@ public static class ServiceCollectionExtensions
 
         services.Configure(optionsAction);
 
-        services.AddTransient<IEventPublisher, EventPublisher>();
-        services.AddTransient<IEventConsumer, EventConsumer>();
+        services.AddSingleton<IEventPublisher, EventPublisher>();
+        services.AddSingleton<IEventConsumer, EventConsumer>();
     }
 }

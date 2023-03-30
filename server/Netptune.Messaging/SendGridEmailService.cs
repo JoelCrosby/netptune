@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Options;
 
-using Netptune.Core.Events;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Services.Activity;
 
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -32,7 +32,7 @@ public class SendGridEmailService : IEmailService
 
     public Task Send(SendEmailModel model)
     {
-        EventPublisher.Dispatch(NetptuneEvent.SendEmail, model);
+        EventPublisher.Dispatch(model);
 
         return Task.CompletedTask;
     }
@@ -61,7 +61,7 @@ public class SendGridEmailService : IEmailService
 
     public Task Send(IEnumerable<SendEmailModel> models)
     {
-        EventPublisher.Dispatch(NetptuneEvent.SendEmail, models);
+        EventPublisher.Dispatch(models);
 
         return Task.CompletedTask;
     }
