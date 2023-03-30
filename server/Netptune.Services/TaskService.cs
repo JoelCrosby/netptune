@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Ordering;
@@ -17,6 +16,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;

@@ -3,17 +3,19 @@ using System.Linq;
 using System.Text.Json;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 
-namespace Netptune.Core.Events;
+namespace Netptune.Services.Activity;
 
-public class DistributedActivityLogger : IActivityLogger
+public class ActivityLogger : IActivityLogger
 {
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
 
-    public DistributedActivityLogger(IEventPublisher eventPublisher, IIdentityService identity)
+    public ActivityLogger(IEventPublisher eventPublisher, IIdentityService identity)
     {
         EventPublisher = eventPublisher;
         Identity = identity;
@@ -52,7 +54,7 @@ public class DistributedActivityLogger : IActivityLogger
             Time = DateTime.UtcNow,
         };
 
-        EventPublisher.Dispatch(NetptuneEvent.Activity, new []{ activity });
+        EventPublisher.Dispatch(new ActivityMessage(activity));
     }
 
     public void LogMany(Action<ActivityMultipleOptions> options)
@@ -84,7 +86,7 @@ public class DistributedActivityLogger : IActivityLogger
                 Time = DateTime.UtcNow,
             });
 
-        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
+        EventPublisher.Dispatch(new ActivityMessage(activities));
     }
 
     public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
@@ -121,7 +123,7 @@ public class DistributedActivityLogger : IActivityLogger
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
         };
 
-        EventPublisher.Dispatch(NetptuneEvent.Activity, new []{ activity });
+        EventPublisher.Dispatch(new ActivityMessage(activity));
     }
 
     public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
@@ -154,6 +156,6 @@ public class DistributedActivityLogger : IActivityLogger
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             });
 
-        EventPublisher.Dispatch(NetptuneEvent.Activity, activities);
+        EventPublisher.Dispatch(new ActivityMessage(activities));
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Netptune.Core.Enums;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Models.ProjectTasks;

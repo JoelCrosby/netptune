@@ -9,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
-using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
@@ -109,14 +108,12 @@ public class Startup
             options.SecretAccessKey = Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
         });
 
-        services.AddActivityLogger();
-
         services.AddSpaStaticFiles(configuration =>
         {
             configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
         });
 
-        services.AddNetptuneEvents(options =>
+        services.AddNetptuneRabbitMq(options =>
         {
             options.ConnectionString = rabbitMqConnectionString;
         });
