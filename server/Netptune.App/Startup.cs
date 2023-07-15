@@ -39,7 +39,7 @@ public class Startup
     {
         var connectionString = Configuration.GetNetptuneConnectionString("netptune");
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
-        var rabbitMqConnectionString = Configuration.GetNetptuneRabbitMqConnectionString();
+        var zeroMqConnectionString = Configuration.GetNetptuneZeroMqConnectionString();
 
         services.AddCors(options =>
         {
@@ -113,9 +113,9 @@ public class Startup
             configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
         });
 
-        services.AddNetptuneRabbitMq(options =>
+        services.AddNetptuneMessageQueue(options =>
         {
-            options.ConnectionString = rabbitMqConnectionString;
+            options.ConnectionString = zeroMqConnectionString;
         });
     }
 

@@ -23,7 +23,7 @@ public sealed class QueueConsumerService : BackgroundService
     private readonly IServiceScopeFactory ServiceScopeFactory;
     private readonly ILogger<QueueConsumerService> Logger;
 
-    private Dictionary<string, Type> TypeCache = new();
+    private readonly Dictionary<string, Type> TypeSet = GetTypeMap();
 
     public QueueConsumerService(
         IEventConsumer eventConsumer,
@@ -37,13 +37,9 @@ public sealed class QueueConsumerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await EventConsumer.Connect();
-
         while (!stoppingToken.IsCancellationRequested)
         {
-            var eventMessages = await EventConsumer.GetEventMessages();
-
-            foreach (var eventMessage in eventMessages)
+            await foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken).WithCancellation(stoppingToken))
             {
                 var messageType = GetType(eventMessage.Type);
 
@@ -55,10 +51,14 @@ public sealed class QueueConsumerService : BackgroundService
 
                 var message = (IEventMessage) JsonSerializer.Deserialize(eventMessage.Payload, messageType)!;
 
+                Logger.LogInformation("received message type of {Type} {Payload}", eventMessage.Type, eventMessage.Payload);
+
                 try
                 {
                     using var scope = ServiceScopeFactory.CreateScope();
+
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
                     await mediator.Send(message, stoppingToken);
                 }
                 catch (Exception e)
@@ -73,21 +73,15 @@ public sealed class QueueConsumerService : BackgroundService
 
     private Type? GetType(string name)
     {
-        if (TypeCache.TryGetValue(name, out var cached))
-        {
-            return cached;
-        }
+        return TypeSet.TryGetValue(name, out var cached) ? cached : null;
+    }
 
-        var result = AppDomain.CurrentDomain.GetAssemblies()
+    private static Dictionary<string, Type> GetTypeMap()
+    {
+        return AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => a.FullName?.StartsWith(nameof(Netptune)) ?? false)
             .SelectMany(a => a.GetTypes())
-            .FirstOrDefault(t => t.FullName == name);
-
-        if (result is {})
-        {
-            TypeCache.TryAdd(name, result);
-        }
-
-        return result;
+            .DistinctBy(a => a.FullName)
+            .ToDictionary(k => k.FullName!, v => v);
     }
 }

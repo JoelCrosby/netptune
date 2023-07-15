@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder();
 
 var connectionString = builder.Configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = builder.Configuration.GetNetptuneRedisConnectionString();
-var rabbitMqConnectionString = builder.Configuration.GetNetptuneRabbitMqConnectionString();
+var zeroMqConnectionString = builder.Configuration.GetNetptuneZeroMqConnectionString();
 
 builder.Services.AddNetptuneRedis(options =>
 {
@@ -48,9 +48,9 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddHostedService<QueueConsumerService>();
 
-builder.Services.AddNetptuneRabbitMq(options =>
+builder.Services.AddNetptuneMessageQueue(options =>
 {
-    options.ConnectionString = rabbitMqConnectionString;
+    options.ConnectionString = zeroMqConnectionString;
 });
 
 builder.Services.AddMediatR(options =>

@@ -1,63 +1,43 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using NetMQ;
+using NetMQ.Sockets;
 
 using Netptune.Core.Events;
 using Netptune.Core.Services.Activity;
 
-using RabbitMQ.Client;
-
 namespace Netptune.Events;
 
-public class EventPublisher : IEventPublisher
+public class EventPublisher : IEventPublisher, IDisposable
 {
-    private readonly RabbitMqOptions Options;
+    private readonly ILogger<EventPublisher> Logger;
+    private readonly PublisherSocket Publisher;
 
-    private IModel? Channel;
-    private IConnection? Connection;
-
-    public EventPublisher(IOptions<RabbitMqOptions> options)
+    public EventPublisher(IOptions<MessageQueueOptions> options, ILogger<EventPublisher> logger)
     {
-        Options = options.Value;
+        Publisher = new PublisherSocket(options.Value.ConnectionString);
+        Logger = logger;
     }
 
     public Task Dispatch<TPayload>(TPayload payload) where TPayload : class
     {
-        if (Channel is null)
-        {
-            Connect();
-
-            ArgumentNullException.ThrowIfNull(Channel);
-        }
-
         var json = JsonSerializer.Serialize(payload);
-        var body = Encoding.UTF8.GetBytes(json);
-        var routingKey = typeof(TPayload).Name;
 
-        var props = Channel.CreateBasicProperties();
+        Publisher
+            .SendMoreFrame(MessageKeys.RoutingKey)
+            .SendMoreFrame(typeof(TPayload).FullName ?? "")
+            .SendFrame(json);
 
-        props.Type = typeof(TPayload).FullName;
-
-        Channel.QueueBind(MessageKeys.Queue, MessageKeys.Exchange, MessageKeys.RoutingKey);
-        Channel.BasicPublish(exchange: MessageKeys.Exchange, routingKey, basicProperties: props, body);
+        Logger.LogInformation("event published: {Payload}", json);
 
         return Task.CompletedTask;
     }
 
-    private void Connect()
+    public void Dispose()
     {
-        var factory = new ConnectionFactory
-        {
-            Uri = new Uri(Options.ConnectionString!),
-            VirtualHost = "/",
-            ClientProvidedName = MessageKeys.Client,
-        };
-
-        Connection = factory.CreateConnection();
-        Channel = Connection.CreateModel();
-
-        Channel.ExchangeDeclare(MessageKeys.Exchange, "direct");
-        Channel.QueueDeclare(queue: MessageKeys.Queue, durable: false, exclusive: false, autoDelete: false);
+        Publisher.Dispose();
     }
 }

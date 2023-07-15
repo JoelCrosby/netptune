@@ -7,16 +7,15 @@ namespace Netptune.Events;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddNetptuneRabbitMq(this IServiceCollection services, Action<RabbitMqOptions> optionsAction)
+    public static void AddNetptuneMessageQueue(this IServiceCollection services, Action<MessageQueueOptions> action)
     {
-        if (optionsAction is null)
-            throw new ArgumentNullException(nameof(optionsAction));
+        ArgumentNullException.ThrowIfNull(action);
 
-        var netptuneRepositoryOptions = new RabbitMqOptions();
+        var options = new MessageQueueOptions();
 
-        optionsAction(netptuneRepositoryOptions);
+        action(options);
 
-        services.Configure(optionsAction);
+        services.Configure(action);
 
         services.AddSingleton<IEventPublisher, EventPublisher>();
         services.AddSingleton<IEventConsumer, EventConsumer>();

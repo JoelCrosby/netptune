@@ -48,7 +48,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 BoardId = ancestors.ProjectId,
                 BoardGroupId = ancestors.BoardGroupId,
                 Time = activity.Time,
-                Meta = activity.Meta is {} ? JsonDocument.Parse(activity.Meta) : null,
+                Meta = activity.Meta is not null ? JsonDocument.Parse(activity.Meta) : null,
             });
         }
 
