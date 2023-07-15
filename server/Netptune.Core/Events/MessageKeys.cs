@@ -9,4 +9,6 @@ public static class MessageKeys
     public const string RoutingKey = "netptune";
 
     public const string Client = "netptune-client";
+
+    public const string Consumer = "netptune-consumer";
 }

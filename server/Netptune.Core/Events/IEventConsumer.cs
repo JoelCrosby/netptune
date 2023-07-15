@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Netptune.Core.Events;
 
 public interface IEventConsumer
 {
-    Task Connect();
-
-    Task<IEnumerable<EventMessage>> GetEventMessages();
+    IAsyncEnumerable<EventMessage> GetEventMessages(CancellationToken cancellationToken);
 }
