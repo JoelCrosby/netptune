@@ -8,7 +8,6 @@ import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
 import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
@@ -25,7 +24,7 @@ export class ConfirmViewComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private store: Store<AppState>
+    private store: Store
   ) {
     this.activatedRoute.data
       .pipe(

@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
 import { selectResetPasswordLoading } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
@@ -40,7 +39,7 @@ export class ResetPasswordComponent {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private store: Store<AppState>
+    private store: Store
   ) {
     this.activatedRoute.data
       .pipe(

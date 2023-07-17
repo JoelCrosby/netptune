@@ -4,7 +4,6 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { EntityType } from '@core/models/entity-type';
 import { ActivityViewModel } from '@core/models/view-models/activity-view-model';
 import * as ActivityActions from '@core/store/activity/activity.actions';
@@ -24,7 +23,7 @@ export class ActivityMenuComponent implements OnInit {
   activities$!: Observable<ActivityViewModel[]>;
   loaded$!: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.activities$ = this.store.select(ActivitySelectors.selectActivities);

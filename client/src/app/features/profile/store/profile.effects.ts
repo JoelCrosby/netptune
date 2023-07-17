@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
@@ -103,7 +102,7 @@ export class ProfileEffects {
   constructor(
     private actions$: Actions<Action>,
     private profileService: ProfileService,
-    private store: Store<AppState>,
+    private store: Store,
     private snackbar: MatSnackBar
   ) {}
 }

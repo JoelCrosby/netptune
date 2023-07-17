@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
 import { Actions, ofType } from '@ngrx/effects';
@@ -46,7 +45,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private actions$: Actions,
     private cd: ChangeDetectorRef
   ) {}

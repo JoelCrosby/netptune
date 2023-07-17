@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectsActions from '@core/store/projects/projects.actions';
 import * as ProjectsSelectors from '@core/store/projects/projects.selectors';
@@ -15,7 +14,7 @@ import { Observable } from 'rxjs';
 export class ProjectListComponent implements OnInit {
   projects$!: Observable<ProjectViewModel[]>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.projects$ = this.store.select(ProjectsSelectors.selectAllProjects);

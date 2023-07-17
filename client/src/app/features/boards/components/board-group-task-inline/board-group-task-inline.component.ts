@@ -16,7 +16,6 @@ import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { Workspace } from '@core/models/workspace';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -68,7 +67,7 @@ export class BoardGroupTaskInlineComponent
 
   constructor(
     private cd: ChangeDetectorRef,
-    private store: Store<AppState>,
+    private store: Store,
     private actions$: Actions<Action>
   ) {}
 

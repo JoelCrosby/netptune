@@ -74,5 +74,4 @@ export type AuthErrorKey =
   | 'loginError'
   | 'registerError'
   | 'requestPasswordResetError'
-  | 'requestPasswordResetError'
   | 'resetPasswordError';

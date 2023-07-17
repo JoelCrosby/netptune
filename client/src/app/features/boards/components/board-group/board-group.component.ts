@@ -14,7 +14,6 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
-import { AppState } from '@core/core.state';
 import { Selected } from '@core/models/selected';
 import {
   BoardViewGroup,
@@ -56,7 +55,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   dragging = false;
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private dialog: MatDialog,
     private zone: NgZone
   ) {}

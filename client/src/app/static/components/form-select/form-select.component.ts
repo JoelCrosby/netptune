@@ -48,7 +48,7 @@ export class FormSelectComponent<TValue>
   @Output() submitted = new EventEmitter<string>();
 
   value?: TValue | null;
-  displayValue: unknown | null = null;
+  displayValue: string | null = null;
 
   selectedPortal?: CdkPortal;
 

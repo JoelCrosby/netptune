@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
-import { AppState } from '@core/core.state';
 import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
@@ -395,7 +394,7 @@ export class BoardGroupsEffects {
     private actions$: Actions<Action>,
     private boardGroupsService: BoardGroupsService,
     private tasksHubService: ProjectTasksHubService,
-    private store: Store<AppState>,
+    private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private router: Router,

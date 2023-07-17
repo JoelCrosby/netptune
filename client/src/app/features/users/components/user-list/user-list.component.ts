@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { AppState } from '@core/core.state';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
@@ -20,7 +19,7 @@ export class UserListComponent implements OnInit {
   constructor(
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 
   ngOnInit() {
