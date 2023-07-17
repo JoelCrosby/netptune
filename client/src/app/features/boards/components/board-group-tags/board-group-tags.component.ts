@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
@@ -18,7 +17,7 @@ export class BoardGroupTagsComponent implements OnInit {
   loaded$!: Observable<boolean>;
   selectedCount$!: Observable<number>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.tags$ = this.store.select(TagSelectors.selectTasksWithSelect);

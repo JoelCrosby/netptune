@@ -20,7 +20,6 @@ import {
 } from '@angular/material/legacy-dialog';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
-import { AppState } from '@core/core.state';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -81,7 +80,7 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private boardsService: BoardsService,

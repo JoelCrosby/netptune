@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -49,7 +48,7 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     public dialogRef: MatDialogRef<CreateTaskDialogComponent>
   ) {}
 

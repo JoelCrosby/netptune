@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { environment } from '@env/environment';
@@ -13,7 +12,7 @@ export const workspaceResovler: ResolveFn<Workspace> = (
   next: ActivatedRouteSnapshot
 ): Observable<Workspace> => {
   const http = inject(HttpClient);
-  const store = inject(Store<AppState>);
+  const store = inject(Store);
 
   const workspaceKey = next.paramMap.get('workspace');
 

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { requestPasswordReset } from '@core/auth/store/auth.actions';
 import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -23,7 +22,7 @@ export class RequestPasswordResetComponent implements OnInit {
     return this.formGroup.controls.email;
   }
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.authLoading$ = this.store

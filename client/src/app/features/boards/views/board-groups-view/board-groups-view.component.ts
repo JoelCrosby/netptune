@@ -1,4 +1,3 @@
-import { AppState } from '@core/core.state';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
@@ -64,7 +63,7 @@ export class BoardGroupsViewComponent
   private board?: Board;
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private hubService: ProjectTasksHubService
   ) {}
 

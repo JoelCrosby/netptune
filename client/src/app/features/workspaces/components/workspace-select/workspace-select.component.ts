@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
-import { AppState } from '@core/core.state';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -45,7 +44,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   options$ = new BehaviorSubject<Workspace[]>([]);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.searchControl.valueChanges

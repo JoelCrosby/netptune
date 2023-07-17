@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { Logger } from '@core/util/logger';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
@@ -27,7 +26,7 @@ export class HubService {
 
   constructor(
     private connetionService: HubConnectionService,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 
   connect(path: string, handlers: HubMethodHandler[]): Promise<void> {

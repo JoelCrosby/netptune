@@ -5,7 +5,6 @@ import {
   MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
 } from '@angular/material/legacy-dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 
 export interface BoardGroupDialogData {
@@ -25,7 +24,7 @@ export class BoardGroupDialogComponent {
   });
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData

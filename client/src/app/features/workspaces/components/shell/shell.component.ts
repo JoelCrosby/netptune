@@ -20,7 +20,6 @@ import {
 import { Router } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
-import { AppState } from '@core/core.state';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -52,7 +51,7 @@ export class ShellComponent implements OnInit {
   fixedInViewport$ = of(true);
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private router: Router,
     private storage: LocalStorageService
   ) {
