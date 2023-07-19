@@ -70,7 +70,7 @@ public class BoardServiceUnitTests
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId).Returns(boardId);
         UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>()).Returns(groups);
         UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>()).Returns(boardViewModel);
-        UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
 
         var result = await Service.GetBoardView(identifier, filter);
 
