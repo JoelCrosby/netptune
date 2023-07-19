@@ -1,16 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { selectSideBarTransparent } from '@core/core.route.selectors';
 import * as LayoutSelectors from '@core/store/layout/layout.selectors';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -19,10 +14,13 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   @ViewChild(MatSidenav) sideNav!: MatSidenav;
 
-  sideNavOpen$!: Observable<boolean>;
+  sideNavOpen$ = combineLatest([
+    this.store.select(LayoutSelectors.selectSideNavOpen),
+    this.store.select(AuthSelectors.selectIsAuthenticated),
+  ]).pipe(map(([isNavOpen, isAuth]) => isAuth && isNavOpen));
 
   workspaces$ = this.store.select(selectAllWorkspaces);
   isMobileView$ = this.store.select(LayoutSelectors.selectIsMobileView);
@@ -31,11 +29,4 @@ export class AppComponent implements OnInit {
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
   constructor(private store: Store) {}
-
-  ngOnInit() {
-    this.sideNavOpen$ = combineLatest([
-      this.store.select(LayoutSelectors.selectSideNavOpen),
-      this.store.select(AuthSelectors.selectIsAuthenticated),
-    ]).pipe(map(([isNavOpen, isAuth]) => isAuth && isNavOpen));
-  }
 }

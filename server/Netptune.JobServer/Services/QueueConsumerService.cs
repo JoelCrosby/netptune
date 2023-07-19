@@ -17,8 +17,6 @@ namespace Netptune.JobServer.Services;
 
 public sealed class QueueConsumerService : BackgroundService
 {
-    private static readonly TimeSpan Interval = TimeSpan.FromSeconds(1);
-
     private readonly IEventConsumer EventConsumer;
     private readonly IServiceScopeFactory ServiceScopeFactory;
     private readonly ILogger<QueueConsumerService> Logger;
@@ -37,6 +35,8 @@ public sealed class QueueConsumerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        Logger.LogInformation("[QueueConsumer] service started");
+
         while (!stoppingToken.IsCancellationRequested)
         {
             await foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken).WithCancellation(stoppingToken))
@@ -66,9 +66,9 @@ public sealed class QueueConsumerService : BackgroundService
                     Logger.LogError(e, "[QueueConsumer] processing message of type {Type} failed", messageType.Name);
                 }
             }
-
-            await Task.Delay(Interval, stoppingToken);
         }
+
+        Logger.LogInformation("[QueueConsumer] service ended");
     }
 
     private Type? GetType(string name)
