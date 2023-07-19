@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve --open",
     "build": "ng build --configuration production",
-    "build:stats": "ng build --stats-json",
+    "build:stats": "ng build --configuration stats --stats-json",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "update": "ng update"

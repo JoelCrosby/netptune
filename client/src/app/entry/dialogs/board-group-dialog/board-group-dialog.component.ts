@@ -15,7 +15,6 @@ export interface BoardGroupDialogData {
 @Component({
   selector: 'app-board-group-dialog',
   templateUrl: './board-group-dialog.component.html',
-  styleUrls: ['./board-group-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardGroupDialogComponent {
