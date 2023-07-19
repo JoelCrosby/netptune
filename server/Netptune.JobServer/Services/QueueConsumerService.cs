@@ -45,13 +45,13 @@ public sealed class QueueConsumerService : BackgroundService
 
                 if (messageType is null)
                 {
-                    Logger.LogError("received unknown message type of {Type}", eventMessage.Type);
+                    Logger.LogError("[QueueConsumer] received unknown message type of {Type}", eventMessage.Type);
                     continue;
                 }
 
                 var message = (IEventMessage) JsonSerializer.Deserialize(eventMessage.Payload, messageType)!;
 
-                Logger.LogInformation("received message type of {Type} {Payload}", eventMessage.Type, eventMessage.Payload);
+                Logger.LogInformation("[QueueConsumer] received message type of {Type} {Payload}", eventMessage.Type, eventMessage.Payload);
 
                 try
                 {
@@ -63,7 +63,7 @@ public sealed class QueueConsumerService : BackgroundService
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, "processing message of type {Type} failed", messageType.Name);
+                    Logger.LogError(e, "[QueueConsumer] processing message of type {Type} failed", messageType.Name);
                 }
             }
 
