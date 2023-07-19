@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
-import { AppState } from '@core/core.state';
 
 @Component({
   selector: 'app-board-groups-selection',
@@ -18,7 +17,10 @@ export class BoardGroupsSelectionComponent implements OnInit {
   selected$!: Observable<number[]>;
   count$!: Observable<number>;
 
-  constructor(private store: Store<AppState>, private dialog: MatDialog) {}
+  constructor(
+    private store: Store,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.selected$ = this.store.select(selectors.selectSelectedTasks);

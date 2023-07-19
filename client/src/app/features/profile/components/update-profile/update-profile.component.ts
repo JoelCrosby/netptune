@@ -6,7 +6,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import { updateProfile } from '@profile/store/profile.actions';
@@ -50,7 +49,10 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
     return this.pictureUrl.value as string;
   }
 
-  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
+  constructor(
+    private store: Store,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(

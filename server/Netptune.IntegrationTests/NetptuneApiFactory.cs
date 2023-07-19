@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.App;
 using Netptune.Core.Authorization;
-using Netptune.Core.Jobs;
 using Netptune.Core.Services;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;
@@ -50,7 +49,6 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncL
         builder.ConfigureTestServices(services =>
         {
             services.Replace<IStorageService, TestStorageService>();
-            services.Replace<IJobClient, TestJobClient>();
 
             services.AddAuthorization(options =>
             {

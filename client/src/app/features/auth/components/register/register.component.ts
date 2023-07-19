@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first, map, takeUntil, tap } from 'rxjs/operators';
@@ -70,7 +69,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     private activatedRoute: ActivatedRoute
   ) {
     this.authLoading$ = this.store.select(selectRegisterLoading).pipe(

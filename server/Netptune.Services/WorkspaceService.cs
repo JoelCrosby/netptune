@@ -18,21 +18,21 @@ namespace Netptune.Services;
 public class WorkspaceService : IWorkspaceService
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService IdentityService;
+    private readonly IIdentityService Identity;
     private readonly IWorkspaceUserCache Cache;
     private readonly IWorkspaceRepository WorkspaceRepository;
 
-    public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IWorkspaceUserCache cache)
+    public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IWorkspaceUserCache cache)
     {
         UnitOfWork = unitOfWork;
-        IdentityService = identityService;
+        Identity = identity;
         Cache = cache;
         WorkspaceRepository = unitOfWork.Workspaces;
     }
 
     public async Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request)
     {
-        var user = await IdentityService.GetCurrentUser();
+        var user = await Identity.GetCurrentUser();
         return await Create(request, user);
     }
 
@@ -99,7 +99,7 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        var userId = IdentityService.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
 
         Cache.Remove(new()
         {
@@ -123,7 +123,7 @@ public class WorkspaceService : IWorkspaceService
             return ClientResponse.NotFound;
         }
 
-        var userId = IdentityService.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
 
         Cache.Remove(new()
         {
@@ -162,7 +162,7 @@ public class WorkspaceService : IWorkspaceService
 
     public Task<List<Workspace>> GetUserWorkspaces()
     {
-        var userId = IdentityService.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
 
         return WorkspaceRepository.GetUserWorkspaces(userId);
     }
@@ -174,7 +174,7 @@ public class WorkspaceService : IWorkspaceService
 
     public async Task<ClientResponse<Workspace>> Update(UpdateWorkspaceRequest request)
     {
-        var userId = IdentityService.GetCurrentUserId();
+        var userId = Identity.GetCurrentUserId();
         var result = await WorkspaceRepository.GetBySlug(request.Slug!);
 
         if (result is null)

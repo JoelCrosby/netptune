@@ -14,7 +14,6 @@ import {
 } from '@angular/material/legacy-dialog';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { EntityType } from '@core/models/entity-type';
@@ -77,7 +76,7 @@ export class TaskDetailDialogComponent
   constructor(
     public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
-    private store: Store<AppState>,
+    private store: Store,
     private actions$: Actions<Action>
   ) {}
 

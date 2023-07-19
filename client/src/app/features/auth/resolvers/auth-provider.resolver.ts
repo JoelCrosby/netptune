@@ -2,14 +2,13 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { loginSuccess } from '@core/auth/store/auth.actions';
 import { UserToken } from '@core/auth/store/auth.models';
-import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 
 export const authProvider: ResolveFn<boolean> = (
   route: ActivatedRouteSnapshot
 ) => {
-  const store = inject(Store<AppState>);
+  const store = inject(Store);
 
   route.queryParamMap.get('code');
 

@@ -39,6 +39,21 @@ public static class ConfigurationExtensions
         return ConnectionStringParser.ParseRedis(connectionString);
     }
 
+    public static string GetNetptuneZeroMqConnectionString(this IConfiguration configuration)
+    {
+        var appSettingsConString = configuration.GetConnectionString("zeromq");
+        var envVar = Environment.GetEnvironmentVariable("ZEROMQ_URL");
+
+        var connectionString = envVar ?? appSettingsConString;
+
+        if (connectionString is null)
+        {
+            throw new Exception("An environment variable with the key of 'ZEROMQ_URL' not found.");
+        }
+
+        return connectionString;
+    }
+
     public static string GetEnvironmentVariable(this IConfiguration configuration, string key)
     {
         var result = Environment.GetEnvironmentVariable(key);

@@ -7,7 +7,6 @@ import {
 import { MatSidenav } from '@angular/material/sidenav';
 import * as AuthSelectors from '@core/auth/store/auth.selectors';
 import { selectSideBarTransparent } from '@core/core.route.selectors';
-import { AppState } from '@core/core.state';
 import * as LayoutSelectors from '@core/store/layout/layout.selectors';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
@@ -31,7 +30,7 @@ export class AppComponent implements OnInit {
   sideMenuOpen$ = this.store.select(LayoutSelectors.selectSideMenuOpen);
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.sideNavOpen$ = combineLatest([

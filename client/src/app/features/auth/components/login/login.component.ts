@@ -8,7 +8,6 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AppState } from '@core/core.state';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,7 @@ export class LoginComponent implements OnDestroy {
     return this.loginGroup.controls.password;
   }
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store) {
     this.showLoginError$ = this.store.select(selectShowLoginError);
     this.authLoading$ = this.store.select(selectLoginLoading).pipe(
       tap((loading) => {

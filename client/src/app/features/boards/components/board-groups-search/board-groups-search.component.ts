@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
-import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -28,7 +27,7 @@ export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
     Validators.maxLength(64),
   ]);
 
-  constructor(private store: Store<BoardGroupsState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.store

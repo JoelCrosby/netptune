@@ -4,7 +4,6 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -24,7 +23,7 @@ export class ProjectListItemComponent implements OnInit {
 
   actions$!: Observable<HeaderAction[]>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.actions$ = this.store.select(selectCurrentWorkspaceIdentifier).pipe(

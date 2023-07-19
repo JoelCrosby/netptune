@@ -1,4 +1,3 @@
-import { AppState } from './../../core.state';
 import { Injectable } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Router } from '@angular/router';
@@ -167,7 +166,7 @@ export class ProjectsEffects {
     private actions$: Actions<Action>,
     private projectsService: ProjectsService,
     private confirmation: ConfirmationService,
-    private store: Store<AppState>,
+    private store: Store,
     private router: Router,
     private snackbar: MatSnackBar
   ) {}

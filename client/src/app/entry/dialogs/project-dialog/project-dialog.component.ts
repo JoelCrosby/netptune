@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { AppState } from '@core/core.state';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -40,7 +39,7 @@ export class ProjectDialogComponent implements OnDestroy {
   }
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store,
     public dialogRef: MatDialogRef<ProjectDialogComponent>
   ) {}
 

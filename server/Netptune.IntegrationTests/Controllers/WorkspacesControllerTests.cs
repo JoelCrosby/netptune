@@ -5,6 +5,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Workspace;
 
@@ -151,5 +152,33 @@ public sealed class WorkspacesControllerTests
         var response = await Client.PostAsJsonAsync("api/workspaces", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task IsSlugUnique_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var response = await Client.GetAsync("api/workspaces/is-unique/unique-workspace");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
+
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+        result.Payload!.IsUnique.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task IsSlugUnique_ShouldReturnCorrectly_WhenInputIsNotUnique()
+    {
+        var response = await Client.GetAsync("api/workspaces/is-unique/netptune");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
+
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+        result.Payload!.IsUnique.Should().BeFalse();
     }
 }

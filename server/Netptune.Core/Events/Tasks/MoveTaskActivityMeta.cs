@@ -1,6 +1,6 @@
 namespace Netptune.Core.Events.Tasks;
 
-public class MoveTaskActivityMeta : IActivityMetaData
+public class MoveTaskActivityMeta
 {
     public string Group { get; init; } = null!;
 

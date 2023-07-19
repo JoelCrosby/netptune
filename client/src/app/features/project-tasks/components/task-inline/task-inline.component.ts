@@ -11,7 +11,6 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
-import { AppState } from '@core/core.state';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -74,7 +73,10 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     return this.taskGroup.controls.taskName;
   }
 
-  constructor(private store: Store<AppState>, private cd: ChangeDetectorRef) {}
+  constructor(
+    private store: Store,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);

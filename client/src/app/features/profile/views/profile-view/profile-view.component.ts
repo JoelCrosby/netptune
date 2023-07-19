@@ -5,7 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import * as AuthActions from '@core/auth/store/auth.actions';
-import { AppState } from '@core/core.state';
 import { select, Store } from '@ngrx/store';
 import { loadProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
@@ -20,7 +19,7 @@ export class ProfileViewComponent implements OnInit, AfterViewInit {
   loadingUpdate$!: Observable<boolean>;
   loading$!: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.loading$ = this.store.select(ProfileSelectors.selectProfileLoading);

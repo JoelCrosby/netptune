@@ -69,17 +69,23 @@ public class BoardService : IBoardService
         var userIds = groups
             .SelectMany(group => group.Tasks)
             .SelectMany(task => task.Assignees)
-                .Select(rel => rel.Id)
-            .Distinct()
-            .ToList();
+            .Select(rel => rel.Id)
+            .ToHashSet();
 
         foreach (var group in groups)
         {
-            group.Tasks = group.Tasks
-                .Where(task => !includeUserFilter || (filter?.Users.Any(u => task.Assignees.Select(a => a.Id).Contains(u)) ?? true))
-                .Where(task => !includeFlaggedFilter || task.IsFlagged)
-                .Where(task => !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true))
-                .ToList();
+            group.Tasks = group.Tasks.Where(task =>
+            {
+                var matchUser = !includeUserFilter || (filter?.Users.Any(u => task.Assignees.Any(a => a.Id == u)) ?? true);
+                if (!matchUser) return false;
+
+                var matchFlagged = !includeFlaggedFilter || task.IsFlagged;
+                if (!matchFlagged) return false;
+
+                var matchTag = !includeTagFilter || (filter?.Tags.Intersect(task.Tags).Any() ?? true);
+                return matchTag;
+
+            }).ToList();
         }
 
         var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
