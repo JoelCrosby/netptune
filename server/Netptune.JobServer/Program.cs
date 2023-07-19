@@ -11,7 +11,16 @@ using Netptune.Services.Cache.Redis;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder();
+
+builder.Host.UseSerilog(
+    (context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+);
 
 var connectionString = builder.Configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = builder.Configuration.GetNetptuneRedisConnectionString();

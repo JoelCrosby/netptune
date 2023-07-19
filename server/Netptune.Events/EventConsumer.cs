@@ -28,16 +28,16 @@ public sealed class EventConsumer : IEventConsumer
         while (!cancellationToken.IsCancellationRequested)
         {
             var _ = Subscriber.ReceiveFrameString();
-            var topic = Subscriber.ReceiveFrameString();
+            var type = Subscriber.ReceiveFrameString();
             var message = Subscriber.ReceiveFrameString();
 
             var pendingMessage = new EventMessage
             {
-                Type = topic,
+                Type = type,
                 Payload = message,
             };
 
-            Logger.LogInformation("event consumed: {Payload}", message);
+            Logger.LogInformation("[Event] type {Type} consumed: {Payload}", type, message);
 
             yield return pendingMessage;
 
