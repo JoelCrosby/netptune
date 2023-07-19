@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -12,17 +11,6 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        CreateLogsFolder();
-
-        var currentDir = Directory.GetCurrentDirectory();
-        var logPath = Path.Join(currentDir, "App_Data", "log", "netptune-app-.txt");
-
-        Log.Logger = new LoggerConfiguration()
-            .Enrich.WithProperty("App Name", "Netptune.App")
-            .WriteTo.Console()
-            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, shared: true)
-            .CreateLogger();
-
         try
         {
             CreateHostBuilder(args).Build().Run();
@@ -40,25 +28,13 @@ public static class Program
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
-            .UseSerilog()
-            .ConfigureWebHostDefaults(webBuilder =>
+                .UseSerilog((context, services, configuration) => configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext())
+            .ConfigureWebHostDefaults(builder =>
             {
-                webBuilder.UseStartup<Startup>();
+                builder.UseStartup<Startup>();
             });
-    }
-
-    private static void CreateLogsFolder()
-    {
-        try
-        {
-            var currentDir = Directory.GetCurrentDirectory();
-            var appDataDir = Path.Join(currentDir, "App_Data", "log");
-
-            Directory.CreateDirectory(appDataDir);
-        }
-        catch (Exception)
-        {
-            Log.Error("Unable to create App_Data directory. See inner-exception for details");
-        }
     }
 }

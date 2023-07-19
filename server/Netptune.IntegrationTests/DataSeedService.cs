@@ -4,6 +4,7 @@ using Bogus;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
@@ -34,6 +35,7 @@ internal static class TestData
 internal sealed class DataSeedService : IHostedService
 {
     private readonly IServiceProvider ServiceProvider;
+    private readonly ILogger<DataSeedService> Logger;
 
     private readonly List<string> Workspaces = new () { "Netptune", "Linux" };
     private readonly List<string> Projects = new () { "NeoVim", "VsCode", "Emacs", "Kakoune" };
@@ -48,15 +50,16 @@ internal sealed class DataSeedService : IHostedService
         "Swift",
     };
 
-    public DataSeedService(IServiceProvider serviceProvider)
+    public DataSeedService(IServiceProvider serviceProvider, ILogger<DataSeedService> logger)
     {
         ServiceProvider = serviceProvider;
+        Logger = logger;
         Randomizer.Seed = new (1_000_001);
     }
 
     public async Task StartAsync(CancellationToken ct)
     {
-        Console.WriteLine("{0} starting data seed execution", nameof(DataSeedService));
+        Logger.LogInformation("{Service} starting data seed execution", nameof(DataSeedService));
 
         var timer = Stopwatch.StartNew();
 
@@ -204,7 +207,7 @@ internal sealed class DataSeedService : IHostedService
 
         timer.Stop();
 
-        Console.WriteLine("{0} finished execution in {1}", nameof(DataSeedService), $"{timer.ElapsedMilliseconds:N}ms");
+        Logger.LogInformation("{Service} finished execution in {Elapsed}", nameof(DataSeedService), $"{timer.ElapsedMilliseconds:N}ms");
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

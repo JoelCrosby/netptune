@@ -25,13 +25,16 @@ public class EventPublisher : IEventPublisher, IDisposable
     public Task Dispatch<TPayload>(TPayload payload) where TPayload : class
     {
         var json = JsonSerializer.Serialize(payload);
+        var type = typeof(TPayload).FullName;
+
+        ArgumentException.ThrowIfNullOrEmpty(type);
 
         Publisher
             .SendMoreFrame(MessageKeys.RoutingKey)
-            .SendMoreFrame(typeof(TPayload).FullName ?? "")
+            .SendMoreFrame(type)
             .SendFrame(json);
 
-        Logger.LogInformation("event published: {Payload}", json);
+        Logger.LogInformation("[Event] type {Type} published: {Payload}", type, json);
 
         return Task.CompletedTask;
     }
