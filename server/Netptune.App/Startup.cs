@@ -9,10 +9,9 @@ using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Hubs;
 using Netptune.App.Utility;
-using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
-using Netptune.JobClient;
+using Netptune.Events;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.Services.Authentication;
@@ -40,6 +39,7 @@ public class Startup
     {
         var connectionString = Configuration.GetNetptuneConnectionString("netptune");
         var redisConnectionString = Configuration.GetNetptuneRedisConnectionString();
+        var zeroMqConnectionString = Configuration.GetNetptuneZeroMqConnectionString();
 
         services.AddCors(options =>
         {
@@ -108,16 +108,14 @@ public class Startup
             options.SecretAccessKey = Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
         });
 
-        services.AddActivityLogger();
-
-        services.AddNetptuneJobClient(options =>
-        {
-            options.ConnectionString = redisConnectionString;
-        });
-
         services.AddSpaStaticFiles(configuration =>
         {
             configuration.RootPath = Path.Join(WebHostEnvironment.WebRootPath, "dist");
+        });
+
+        services.AddNetptuneMessageQueue(options =>
+        {
+            options.ConnectionString = zeroMqConnectionString;
         });
     }
 

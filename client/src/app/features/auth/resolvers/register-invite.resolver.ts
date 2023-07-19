@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { clearUserInfo } from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
-import { AppState } from '@core/core.state';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -13,7 +12,7 @@ export const registerInvite: ResolveFn<WorkspaceInvite> = (
   route: ActivatedRouteSnapshot
 ) => {
   {
-    const store = inject(Store<AppState>);
+    const store = inject(Store);
     const http = inject(HttpClient);
 
     store.dispatch(clearUserInfo());

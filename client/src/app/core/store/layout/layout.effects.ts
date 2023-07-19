@@ -5,7 +5,6 @@ import { MediaService, MediaSize } from '@core/services/media.service';
 import { map, withLatestFrom, filter } from 'rxjs/operators';
 import { setIsMobileView, closeSideMenu, openSideMenu } from './layout.actions';
 import { selectIsMobileView } from './layout.selectors';
-import { AppState } from '@core/core.state';
 
 @Injectable()
 export class LayoutEffects implements OnInitEffects {
@@ -42,7 +41,7 @@ export class LayoutEffects implements OnInitEffects {
   constructor(
     private actions$: Actions<Action>,
     private media: MediaService,
-    private store: Store<AppState>
+    private store: Store
   ) {}
 
   ngrxOnInitEffects(): Action {

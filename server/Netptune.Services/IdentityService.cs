@@ -17,13 +17,13 @@ public class IdentityService : IIdentityService
 {
     private readonly IUserCache UserCache;
     private readonly IWorkspaceCache WorkspaceCache;
-    private readonly IHttpContextAccessor ContextAccessor;
+    private readonly IHttpContextAccessor Context;
 
-    public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor contextAccessor)
+    public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor context)
     {
         UserCache = userCache;
         WorkspaceCache = workspaceCache;
-        ContextAccessor = contextAccessor;
+        Context = context;
     }
 
     public string GetCurrentUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
@@ -52,7 +52,7 @@ public class IdentityService : IIdentityService
 
     public string GetWorkspaceKey()
     {
-        var context = ContextAccessor.HttpContext;
+        var context = Context.HttpContext;
 
         if (context is null)
         {
@@ -81,7 +81,7 @@ public class IdentityService : IIdentityService
 
     private bool TryGetClaimValue(string type, [MaybeNullWhen(false)] out string value)
     {
-        var claimsPrincipal = ContextAccessor.HttpContext?.User;
+        var claimsPrincipal = Context.HttpContext?.User;
 
         var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
         var result = claim?.Value;
@@ -98,7 +98,7 @@ public class IdentityService : IIdentityService
 
     private string GetClaimValue(string type)
     {
-        var claimsPrincipal = ContextAccessor.HttpContext?.User;
+        var claimsPrincipal = Context.HttpContext?.User;
 
         var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
         var result = claim?.Value;

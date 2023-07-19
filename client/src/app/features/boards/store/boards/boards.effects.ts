@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Router } from '@angular/router';
-import { AppState } from '@core/core.state';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -120,7 +119,7 @@ export class BoardsEffects {
   constructor(
     private actions$: Actions<Action>,
     private boardsService: BoardsService,
-    private store: Store<AppState>,
+    private store: Store,
     private confirmation: ConfirmationService,
     private snackbar: MatSnackBar,
     private router: Router

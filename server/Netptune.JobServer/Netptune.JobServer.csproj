@@ -2,35 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-
-    <!-- This group contains project properties for RazorLight on .NET Core -->
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
-    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <Nullable>enable</Nullable>
-
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire" Version="1.7.33" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.33" />
-    <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.4" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
-    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="Polly" Version="7.2.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppState } from '@core/core.state';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -67,7 +66,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     return this.formGroup.controls.key;
   }
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.project$ = this.store.select(selectProjectDetail).pipe(

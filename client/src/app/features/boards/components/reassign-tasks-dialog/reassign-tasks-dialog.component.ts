@@ -11,7 +11,6 @@ import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.s
 import { Store } from '@ngrx/store';
 import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
-import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 
 @Component({
   selector: 'app-reassign-tasks-dialog',
@@ -25,7 +24,7 @@ export class ReassignTasksDialogComponent implements OnInit {
   selected: string | null = null;
 
   constructor(
-    private store: Store<BoardGroupsState>,
+    private store: Store,
     private cd: ChangeDetectorRef,
     public dialogRef: MatDialogRef<ReassignTasksDialogComponent>
   ) {}

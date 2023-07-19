@@ -5,7 +5,6 @@ import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.s
 import { Selected } from '@core/models/selected';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 
 @Component({
   selector: 'app-board-group-users',
@@ -16,7 +15,7 @@ import { BoardGroupsState } from '@boards/store/groups/board-groups.model';
 export class BoardGroupUsersComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;
 
-  constructor(private store: Store<BoardGroupsState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.users$ = this.store.select(selectBoardGroupsUsersModel);

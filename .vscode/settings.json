@@ -25,4 +25,5 @@
     "**/bower_components": true,
     "**/*.code-search": true
   },
+  "dotnet.defaultSolution": "server/Netptune.sln",
 }

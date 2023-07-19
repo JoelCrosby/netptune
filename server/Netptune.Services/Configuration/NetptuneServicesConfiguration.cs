@@ -2,12 +2,13 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Cache;
-using Netptune.Core.Events;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
+using Netptune.Services.Activity;
 using Netptune.Services.Cache;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
@@ -49,6 +50,8 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<IInviteCache, InviteCache>();
         services.AddScoped<IWorkspaceCache, WorkspaceCache>();
         services.AddScoped<IAncestorService, AncestorService>();
+
+        services.AddTransient<IActivityLogger, ActivityLogger>();
     }
 
     private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)

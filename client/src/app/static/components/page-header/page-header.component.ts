@@ -5,7 +5,6 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { AppState } from '@core/core.state';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -31,7 +30,7 @@ export class PageHeaderComponent {
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store) {}
 
   onOpenMenu() {
     this.store.dispatch(openSideMenu());
