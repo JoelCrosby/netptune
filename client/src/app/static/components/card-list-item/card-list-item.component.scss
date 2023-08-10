@@ -35,7 +35,7 @@ app-card > app-card-actions:last-child {
 }
 
 .action-button:first-child,
-app-card-actions .mat-raised-button:first-child {
+app-card-actions .mat-mdc-raised-button:first-child {
   margin-left: 0;
   margin-right: .8rem !important;
 }

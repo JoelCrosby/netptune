@@ -1,4 +1,4 @@
-.mat-dialog-actions {
+.mat-mdc-dialog-actions {
   button {
     min-width: 8rem;
   }
@@ -11,7 +11,7 @@
     max-width: 100vw !important;
   }
 
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
     max-height: calc(100vh - 200px) !important;
   }
 }

@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@boards/store/boards/boards.actions';
 import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';

@@ -39,7 +39,7 @@ public sealed class QueueConsumerService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken).WithCancellation(stoppingToken))
+            await foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken))
             {
                 var messageType = GetType(eventMessage.Type);
 

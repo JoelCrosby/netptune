@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+
 // Styles reset
 @import './styles/reset';
 
@@ -25,8 +26,8 @@
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy($netptune-typography);`
-@include mat.all-legacy-component-typographies($netptune-typography);
-@include mat.legacy-core();
+@include mat.all-component-typographies($netptune-typography);
+@include mat.core();
 
 // Themes
 @import './themes/default-theme';
@@ -44,6 +45,7 @@
 @import './styles/controls/form-control.scss-theme';
 @import './styles/controls/form-select.scss';
 @import './styles/controls/form-select.scss-theme.scss';
+@import './styles/controls/form-autocomplete-chips.scss-theme.scss';
 @import './styles/controls/cards';
 @import './styles/controls/cards.scss-theme';
 @import './styles/controls/activity-menu.scss';
@@ -130,7 +132,7 @@
 }
 
 .default-theme {
-  @include mat.all-legacy-component-colors($default-theme);
+  @include mat.all-component-colors($default-theme);
   @include custom-components-theme($default-theme);
 
   color-scheme: light;
@@ -139,10 +141,19 @@
 }
 
 .dark-theme {
-  @include mat.all-legacy-component-colors($dark-theme);
+  @include mat.all-component-colors($dark-theme);
   @include custom-components-theme($dark-theme);
 
   color-scheme: dark;
   color: rgba(255, 255, 255, .8);
   background-color: #272727;
+
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    --mdc-dialog-container-color: #2c2c2c;
+  }
+
+  .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: #1d1d1d;
+  }
 }

@@ -59,7 +59,7 @@ ul {
   display: flex;
 }
 
-.mat-menu-item {
+.mat-mdc-menu-item {
   line-height: 32px !important;
   height: 32px !important;
 }
@@ -68,7 +68,7 @@ ul {
   height: .4rem;
   margin-bottom: .4rem;
 
-  .mat-progress-bar {
+  .mat-mdc-progress-bar {
     border-radius: .4rem !important;
     height: .4rem !important;
   }
@@ -76,7 +76,7 @@ ul {
 
 // Angular Material Modal Class
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
   @extend .custom-scroll
 }
 

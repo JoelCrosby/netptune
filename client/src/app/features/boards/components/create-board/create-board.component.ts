@@ -15,9 +15,9 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  MatLegacyDialogRef as MatDialogRef,
-  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-} from '@angular/material/legacy-dialog';
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
