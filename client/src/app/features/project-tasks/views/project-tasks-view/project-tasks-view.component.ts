@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';

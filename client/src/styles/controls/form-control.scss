@@ -44,14 +44,15 @@
   input,
   textarea,
   select,
-  .input-template {
+  .input-template,
+  mat-autocomplete {
     appearance: none;
     border: 0;
     background-color: transparent;
     color: inherit;
     outline: none;
-    line-height: 2.5rem;
-    font-size: inherit;
+    line-height: 2.5rem !important;
+    font-size: inherit !important;
     font-weight: inherit;
     font-family: inherit;
     width: 100%;

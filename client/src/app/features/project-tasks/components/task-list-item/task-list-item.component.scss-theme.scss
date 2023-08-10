@@ -24,7 +24,7 @@
   .task-item:hover {
     background-color: darken(mat.get-color-from-palette($background, card), 2);
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
   .mat-checkbox-frame {
     border-color: rgba(mat.get-color-from-palette($foreground, icon), .3);
   }

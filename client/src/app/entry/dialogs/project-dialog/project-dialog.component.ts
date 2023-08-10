@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';

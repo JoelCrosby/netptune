@@ -1,45 +1,42 @@
-<mat-form-field
-  class="autocomplete-chips w-100"
-  [appearance]="appearance"
-  *ngIf="filteredOptions | async as filtered"
->
+<div class="nept-form-control" *ngIf="filteredOptions | async as filtered">
   <mat-label> {{ label }} </mat-label>
 
-  <mat-chip-list #chipList>
-    <mat-chip
-      *ngFor="let option of selected"
-      [selectable]="selectable"
-      [removable]="removable"
-      (removed)="remove(option)"
-    >
-      {{ option }}
-      <mat-icon matChipRemove *ngIf="removable"> clear </mat-icon>
-    </mat-chip>
+  <div class="form-control-input autocomplete-chips">
+    <mat-chip-grid #chipList>
+      <mat-chip-row
+        *ngFor="let option of selected"
+        [removable]="removable"
+        (removed)="remove(option)"
+      >
+        {{ option }}
+        <mat-icon matChipRemove *ngIf="removable"> clear </mat-icon>
+      </mat-chip-row>
 
-    <input
-      #input
-      class="form-control"
-      [placeholder]="selected?.length ? '' : placeholder"
-      [formControl]="formCtrl"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="addOnBlur"
-      (matChipInputTokenEnd)="add($event)"
-    />
-  </mat-chip-list>
+      <input
+        #input
+        class="form-control"
+        [placeholder]="selected?.length ? '' : placeholder"
+        [formControl]="formCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="add($event)"
+      />
+    </mat-chip-grid>
 
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    (optionSelected)="onSelected($event)"
-  >
-    <mat-option
-      *ngFor="let option of filtered"
-      [value]="option"
-      class="auto-complete-option"
-      (click)="$event.stopPropagation();"
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="onSelected($event)"
     >
-      {{ option }}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
+      <mat-option
+        *ngFor="let option of filtered"
+        [value]="option"
+        class="auto-complete-option"
+        (click)="$event.stopPropagation();"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+</div>

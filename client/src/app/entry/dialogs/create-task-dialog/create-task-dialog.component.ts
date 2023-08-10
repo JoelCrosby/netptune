@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';

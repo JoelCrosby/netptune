@@ -8,13 +8,13 @@
   $background: map-get($theme, background);
 
   .autocomplete-chips {
-    .mat-chip {
+    .mat-mdc-chip {
       margin: .2rem .2rem .2rem 0;
       border-radius: 4px;
       padding: .2rem .4rem;
       min-height: 24px;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-infix {
       padding: 1em 0 .8em 0;
     }
@@ -24,7 +24,7 @@
     line-height: 32px !important;
     height: 32px  !important;
     padding: 6px 12px;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
     .mat-option-text {
       padding: 0;
       font-size: 14px;

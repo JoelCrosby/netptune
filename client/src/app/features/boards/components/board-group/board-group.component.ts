@@ -10,7 +10,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';

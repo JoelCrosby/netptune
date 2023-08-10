@@ -228,7 +228,7 @@ public class AuthController : ControllerBase
             email = result.Ticket?.EmailAddress,
             pictureUrl = result.Ticket?.PictureUrl,
             userId = result.Ticket?.UserId,
-        }).ToString();
+        });
 
         return Redirect(redirect);
     }

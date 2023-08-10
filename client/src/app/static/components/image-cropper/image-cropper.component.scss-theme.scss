@@ -9,7 +9,7 @@
   $background: map-get($theme, background);
 
   .image-cropper {
-    .mat-button.icon-button {
+    .mat-mdc-button.icon-button {
       min-width: 0;
       width: 42px;
       border-radius: 50%;

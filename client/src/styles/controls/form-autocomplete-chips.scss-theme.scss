@@ -1,0 +1,25 @@
+.nept-form-control {
+
+  .form-control-input.autocomplete-chips {
+    padding: 0px 0.8rem;
+
+    .mat-mdc-chip-set {
+      width: 100%;
+    }
+
+    .mat-mdc-chip {
+      margin: 0.2rem;
+      height: 24px;
+      font-weight: 500;
+      font-size: 12px;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+  }
+}
+
+.mdc-evolution-chip-set__chips {
+  display: flex;
+    flex-direction: row;
+    align-items: center;
+}

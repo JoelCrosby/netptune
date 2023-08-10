@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';

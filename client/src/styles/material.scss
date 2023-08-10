@@ -1,3 +1,8 @@
+body {
+  --mat-menu-item-label-text-tracking: 0.125px;
+  --mat-menu-item-label-text-size: 14px;
+}
+
 // Material icons classes
 .material-icons-outlined,
 .material-icons.material-icons--outlined {
@@ -27,26 +32,44 @@
 
 // Text Area
 
-textarea.mat-input-element {
+textarea.mat-mdc-input-element {
   line-height: 1.5;
 }
 
 
 // Menu
 
-.mat-menu-panel {
+.mat-mdc-menu-panel, .mat-mdc-menu-item, .mat-mdc-option {
   min-height: 32px !important;
 }
 
-.mat-menu-item {
+.mat-mdc-menu-item {
   min-width: 180px;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  white-space: nowrap !important;
 }
 
 // Material Auto Complete
 
-.mat-autocomplete-panel {
+.auto-complete-option {
+  padding: 2px 12px !important;
+}
+
+div.mat-mdc-autocomplete-panel {
   @extend .custom-scroll;
 
   border-radius: 4px;
   margin-top: .4rem;
+}
+
+// Buttons
+
+.mat-mdc-button {
+  padding: 0 16px !important;
+}
+
+.mat-mdc-button > .mat-icon {
+  margin-right: 0 !important;
 }

@@ -39,23 +39,24 @@
   }
 
   // Form Fileds
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-underline {
     display: none;
   }
 
   .mat-form-field-appearance-fill {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-flex {
       border-radius: 4px !important;
     }
-
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-infix {
       padding: .75em 0 !important;
     }
   }
 
   .mat-form-field-appearance-fill.no-floating-label {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-infix {
       border-top: 0 !important;
     }
@@ -64,7 +65,7 @@
 
   // Mat Menus
 
-  .mat-menu-content {
+  .mat-mdc-menu-content {
     small {
       font-weight: 500;
       letter-spacing: .125px;
@@ -150,18 +151,5 @@
     font-size: 14px;
     font-weight: 500;
     color: mat.get-color-from-palette($warn);
-  }
-
-  // Dialogs
-
-  .mat-dialog-container {
-    background: if($is-dark-theme, #2c2c2c, #fff);
-  }
-
-  // Tooltips
-
-  .mat-tooltip {
-    font-size: 14px;
-    background: if($is-dark-theme, #1d1d1d, #fff);
   }
 }

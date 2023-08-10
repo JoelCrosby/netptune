@@ -53,18 +53,18 @@
 
           <div class="detail-list-item">
             <h4>Status</h4>
-            <mat-chip-list>
-              <mat-chip>{{ task.status | taskStatus }} </mat-chip>
-            </mat-chip-list>
+            <mat-chip-listbox>
+              <mat-chip-option>{{ task.status | taskStatus }} </mat-chip-option>
+            </mat-chip-listbox>
           </div>
 
           <div class="detail-list-item">
             <h4>Project</h4>
-            <mat-chip-list>
-              <mat-chip [matMenuTriggerFor]="projectsMenu">
+            <mat-chip-listbox>
+              <mat-chip-option [matMenuTriggerFor]="projectsMenu">
                 {{ task.projectName }}
-              </mat-chip>
-            </mat-chip-list>
+              </mat-chip-option>
+            </mat-chip-listbox>
 
             <mat-menu #projectsMenu="matMenu">
               <small>Change Project</small>
@@ -85,7 +85,6 @@
           <div class="actions-row">
             <button
               mat-icon-button
-              mat-stroked-button
               aria-label="Delete Task"
               matTooltip="Delete Task"
               (click)="deleteClicked()"
@@ -94,7 +93,6 @@
             </button>
             <button
               mat-icon-button
-              mat-stroked-button
               aria-label="Flag Task"
               matTooltip="Flag Task"
               color="warn"
@@ -116,7 +114,6 @@
               placeholder="Add a Tag..."
               [options]="tags$ | async"
               [selected]="task.tags"
-              [appearance]="'outline'"
               (selectionChanged)="onTagsSelectionChanged($event)"
             >
             </app-autocomplete-chips>

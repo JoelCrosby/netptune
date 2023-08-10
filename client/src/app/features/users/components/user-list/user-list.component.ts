@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
