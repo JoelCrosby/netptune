@@ -8,5 +8,5 @@ export class AutofocusDirective {
     setTimeout(() => this.host.nativeElement.focus(), 200);
   }
 
-  constructor(private host: ElementRef<HTMLDListElement>) {}
+  constructor(private host: ElementRef<HTMLElement>) {}
 }

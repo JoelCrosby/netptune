@@ -64,6 +64,11 @@ div.mat-mdc-autocomplete-panel {
   margin-top: .4rem;
 }
 
+.cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+}
+
 // Buttons
 
 .mat-mdc-button {
@@ -72,4 +77,8 @@ div.mat-mdc-autocomplete-panel {
 
 .mat-mdc-button > .mat-icon {
   margin-right: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  font-size: 22px !important;
 }
+
