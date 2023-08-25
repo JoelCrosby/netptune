@@ -9,20 +9,17 @@
   $background: map-get($theme, background);
 
   .tags-menu {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding: .2rem .8rem;
 
-    .mat-mdc-menu-item {
-      display: flex;
-      align-items: center;
-      height: 38px !important;
+    .mdc-form-field, .mdc-label {
+      width: 100%;
     }
+  }
 
-    .tag-checkbox {
-      /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
-      .mat-checkbox-layout .mat-checkbox-label {
-        border-radius: 4px;
-        padding: 0 .4rem;
-        background-color: mat.get-color-from-palette($foreground, text, .06);
-      }
-    }
+  .mat-mdc-menu-panel.mat-mdc-menu-panel {
+    @extend .custom-scroll;
   }
 }

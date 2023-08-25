@@ -17,37 +17,39 @@
   </mat-icon>
 </button>
 
-<mat-menu #tagMenu="matMenu" class="tags-menu">
+<mat-menu #tagMenu="matMenu">
   <ng-template matMenuContent>
-    <ng-container *ngIf="loaded$ | async; else elseTemplate">
-      <ng-container *ngrxLet=" tags$ as tags">
-        <ng-container *ngIf="tags.length; else elseTemplate">
-          <mat-checkbox
-            class="tag-checkbox mat-menu-item"
-            role="menuitemcheckbox"
-            (click)="$event.stopPropagation()"
-            (change)="onOptionClicked(tag)"
-            [checked]="tag.selected ?? false"
-            *ngFor="let tag of tags; trackBy: trackByTag"
-          >
-            {{ tag.name }}
-          </mat-checkbox>
+    <div class="tags-menu">
+      <ng-container *ngIf="loaded$ | async; else elseTemplate">
+        <ng-container *ngrxLet=" tags$ as tags">
+          <ng-container *ngIf="tags.length; else elseTemplate">
+            <mat-checkbox
+              class="tag-checkbox mat-menu-item"
+              role="menuitemcheckbox"
+              (click)="$event.stopPropagation()"
+              (change)="onOptionClicked(tag)"
+              [checked]="tag.selected ?? false"
+              *ngFor="let tag of tags; trackBy: trackByTag"
+            >
+              {{ tag.name }}
+            </mat-checkbox>
+          </ng-container>
+
+          <ng-template #elseTemplate>
+            <div class="no-tags-message">
+              <mat-icon class="material-icons-outlined"> local_offer </mat-icon>
+              <span> There are currently No Tags </span>
+              <p>Tags Assigned to tasks will show here</p>
+            </div>
+          </ng-template>
         </ng-container>
-
-        <ng-template #elseTemplate>
-          <div class="no-tags-message">
-            <mat-icon class="material-icons-outlined"> local_offer </mat-icon>
-            <span> There are currently No Tags </span>
-            <p>Tags Assigned to tasks will show here</p>
-          </div>
-        </ng-template>
       </ng-container>
-    </ng-container>
 
-    <ng-template #elseTemplate>
-      <div class="loading">
-        <mat-spinner diameter="24"></mat-spinner>
-      </div>
-    </ng-template>
+      <ng-template #elseTemplate>
+        <div class="loading">
+          <mat-spinner diameter="24"></mat-spinner>
+        </div>
+      </ng-template>
+    </div>
   </ng-template>
 </mat-menu>
