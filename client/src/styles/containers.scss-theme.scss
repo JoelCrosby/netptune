@@ -8,6 +8,10 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  .app-container {
+    background-color: mat.get-color-from-palette($background, background);
+  }
+
   .auth-page-container {
     height: 100vh;
     display: flex;
