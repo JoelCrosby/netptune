@@ -18,14 +18,6 @@
 // Angular Material Theming core
 @import '@angular/material/theming';
 
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy($netptune-typography);`
 @include mat.all-component-typographies($netptune-typography);
 @include mat.core();
 
@@ -49,8 +41,6 @@
 @import './styles/controls/cards';
 @import './styles/controls/cards.scss-theme';
 @import './styles/controls/activity-menu.scss';
-
-@import './app/app.component.scss-theme';
 
 @import './app/static/components/spinner/spinner.component.scss-theme';
 @import './app/static/components/page-header/page-header.component.scss-theme';
@@ -95,7 +85,6 @@
   @include containers-theme($theme);
   @include colors-theme($theme);
   @include cards-theme($theme);
-  @include component-theme($theme);
   @include lists-theme($theme);
   @include shell-theme($theme);
   @include baords-theme($theme);
