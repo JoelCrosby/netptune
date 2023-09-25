@@ -43,7 +43,7 @@ export class HubService {
     payload: unknown = {}
   ): Observable<TResult> {
     if (!group) {
-      return throwError('group argument must be provided');
+      return throwError(() => new Error('group argument must be provided'));
     }
 
     return this.store.select(selectCurrentWorkspaceIdentifier).pipe(
@@ -59,7 +59,7 @@ export class HubService {
           catchError((err: HubError) => {
             Logger.error(`[SIGNAL-R][HUB-ERROR] ${err.message}`, err.stack);
 
-            return throwError(err.message);
+            return throwError(() => new Error(err.message));
           })
         )
       )
