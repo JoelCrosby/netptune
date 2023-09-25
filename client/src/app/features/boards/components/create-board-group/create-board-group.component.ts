@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { Store } from '@ngrx/store';
@@ -13,7 +13,7 @@ import { first, tap } from 'rxjs/operators';
 })
 export class CreateBoardGroupComponent {
   constructor(
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private store: Store
   ) {}
 

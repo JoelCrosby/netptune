@@ -10,7 +10,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
@@ -56,7 +56,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private store: Store,
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private zone: NgZone
   ) {}
 

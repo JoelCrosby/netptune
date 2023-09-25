@@ -13,7 +13,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
@@ -106,8 +106,8 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
     private store: Store,
     private cd: ChangeDetectorRef,
     private workspaceServcie: WorkspacesService,
-    public dialogRef: MatDialogRef<WorkspaceDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Workspace
+    public dialogRef: DialogRef<WorkspaceDialogComponent>,
+    @Optional() @Inject(DIALOG_DATA) public data: Workspace
   ) {}
 
   ngOnInit() {

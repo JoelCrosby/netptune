@@ -3,7 +3,7 @@ import * as selectors from '@boards/store/groups/board-groups.selectors';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
@@ -19,7 +19,7 @@ export class BoardGroupsSelectionComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private dialog: MatDialog
+    private dialog: Dialog
   ) {}
 
   ngOnInit() {

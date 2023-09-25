@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 
-<div mat-dialog-content *ngIf="data.message || data.confirmationCheckboxLabel">
+<div app-dialog-content *ngIf="data.message || data.confirmationCheckboxLabel">
   <div class="message-icon">
     <mat-icon *ngIf="data.icon" class="material-icons-outlined">
       {{ data.icon }}
@@ -30,7 +30,9 @@
 
 <div mat-dialog-actions align="end">
   <ng-container *ngIf="data.isInfoMessage; else elseTemplate">
-    <button mat-stroked-button cdkFocusInitial mat-dialog-close>Ok</button>
+    <button mat-stroked-button cdkFocusInitial (click)="dialogRef.close(false)">
+      Ok
+    </button>
   </ng-container>
 
   <ng-template #elseTemplate>
@@ -38,7 +40,7 @@
       *ngIf="data.cancelLabel"
       mat-stroked-button
       cdkFocusInitial
-      mat-dialog-close
+      (click)="dialogRef.close(false)"
     >
       {{ data.cancelLabel }}
     </button>
@@ -46,7 +48,7 @@
     <button
       mat-flat-button
       [color]="data.color"
-      [mat-dialog-close]="true"
+      (click)="dialogRef.close(true)"
       [disabled]="data.confirmationCheckboxLabel && !confirmationChecked"
     >
       {{ data.acceptLabel }}

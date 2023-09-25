@@ -14,10 +14,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
@@ -84,8 +81,8 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private boardsService: BoardsService,
-    public dialogRef: MatDialogRef<CreateBoardComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: Board
+    public dialogRef: DialogRef<CreateBoardComponent>,
+    @Optional() @Inject(DIALOG_DATA) public data: Board
   ) {}
 
   ngOnInit() {

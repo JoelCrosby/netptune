@@ -4,7 +4,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import * as selectors from '@boards/store/groups/board-groups.selectors';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
@@ -23,7 +23,7 @@ export class MoveTasksDialogComponent implements OnInit {
   constructor(
     private store: Store,
     private cd: ChangeDetectorRef,
-    public dialogRef: MatDialogRef<MoveTasksDialogComponent>
+    public dialogRef: DialogRef<MoveTasksDialogComponent>
   ) {}
 
   ngOnInit() {

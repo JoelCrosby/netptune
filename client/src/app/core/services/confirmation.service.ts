@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import {
   ConfirmDialogComponent,
   ConfirmDialogOptions,
@@ -16,7 +16,7 @@ const DEFAULT_CONFIG: ConfirmDialogOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmationService {
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: Dialog) {}
 
   open(
     config: ConfirmDialogOptions = DEFAULT_CONFIG,
@@ -28,13 +28,12 @@ export class ConfirmationService {
 
     const dialogRef = this.dialog.open<
       ConfirmDialogComponent,
-      ConfirmDialogOptions,
-      boolean
+      ConfirmDialogOptions
     >(ConfirmDialogComponent, {
       width: '600px',
       data: config,
     });
 
-    return dialogRef.afterClosed().pipe(map((value) => !!value));
+    return dialogRef.closed.pipe(map((value) => !!value?.confirmationChecked));
   }
 }

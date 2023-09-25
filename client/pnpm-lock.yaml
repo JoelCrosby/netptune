@@ -154,6 +154,9 @@ devDependencies:
   '@angular/compiler-cli':
     specifier: ^16.2.6
     version: 16.2.6(@angular/compiler@16.2.6)(typescript@5.1.6)
+  '@schematics/angular':
+    specifier: ^16.2.3
+    version: 16.2.3
   '@types/lodash-es':
     specifier: ^4.17.9
     version: 4.17.9

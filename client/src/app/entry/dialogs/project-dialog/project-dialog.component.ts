@@ -1,6 +1,6 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -40,7 +40,7 @@ export class ProjectDialogComponent implements OnDestroy {
 
   constructor(
     private store: Store,
-    public dialogRef: MatDialogRef<ProjectDialogComponent>
+    public dialogRef: DialogRef<ProjectDialogComponent>
   ) {}
 
   ngOnDestroy() {

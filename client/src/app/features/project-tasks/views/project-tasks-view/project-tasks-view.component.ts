@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
@@ -36,7 +36,7 @@ export class ProjectTasksViewComponent
   ];
 
   constructor(
-    public dialog: MatDialog,
+    public dialog: Dialog,
     private store: Store,
     private hubService: ProjectTasksHubService
   ) {}

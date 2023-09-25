@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ isEditMode ? 'Edit Board' : 'Create Board'}}</h1>
 
-<form mat-dialog-content class="form-auth" [formGroup]="formGroup">
+<form app-dialog-content class="form-auth" [formGroup]="formGroup">
   <app-form-input formControlName="name" label="Board Name" maxLength="1024">
   </app-form-input>
 

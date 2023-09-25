@@ -42,6 +42,8 @@ import { UserSelectComponent } from './components/user-select/user-select.compon
 import { FormErrorComponent } from './components/form-error/form-error.component';
 import { CardContentComponent } from './components/card/card-content.component';
 import { CardActionsComponent } from './components/card/card-actions.component';
+import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import { CardActionsComponent } from './components/card/card-actions.component';
     FormErrorComponent,
     CardContentComponent,
     CardActionsComponent,
+    DialogContentComponent,
+    DialogComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -128,6 +132,8 @@ import { CardActionsComponent } from './components/card/card-actions.component';
     UserSelectComponent,
     FormErrorComponent,
     CardActionsComponent,
+    DialogContentComponent,
+    DialogComponent,
   ],
   providers: [FromNowPipe],
 })

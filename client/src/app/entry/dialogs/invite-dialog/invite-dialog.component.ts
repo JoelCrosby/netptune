@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -19,7 +19,7 @@ export class InviteDialogComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private dialogRef: MatDialogRef<InviteDialogComponent>) {}
+  constructor(private dialogRef: DialogRef<string[], InviteDialogComponent>) {}
 
   close() {
     this.dialogRef.close();

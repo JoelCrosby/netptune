@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ export class TaskListItemComponent {
 
   constructor(
     private store: Store,
-    private dialog: MatDialog
+    private dialog: Dialog
   ) {}
 
   titleClicked() {

@@ -2,7 +2,7 @@
   {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}
 </h1>
 
-<form mat-dialog-content class="form-auth" [formGroup]="formGroup">
+<form app-dialog-content class="form-auth" [formGroup]="formGroup">
   <app-form-input formControlName="name" label="Name" maxLength="1024">
   </app-form-input>
 
