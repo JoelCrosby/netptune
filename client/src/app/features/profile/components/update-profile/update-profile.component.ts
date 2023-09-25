@@ -5,10 +5,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
-import { updateProfile } from '@profile/store/profile.actions';
+import {
+  updateProfile,
+  uploadProfilePicture,
+} from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
@@ -20,11 +23,11 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
-  formGroup = new FormGroup({
-    firstname: new FormControl('', [Validators.required]),
-    lastname: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-    pictureUrl: new FormControl(''),
+  formGroup = this.fb.group({
+    firstname: ['', [Validators.required]],
+    lastname: ['', [Validators.required]],
+    email: ['', [Validators.required]],
+    pictureUrl: [''],
   });
 
   onDestroy$ = new Subject<void>();
@@ -33,24 +36,9 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
 
   data?: FormData;
 
-  get firstname() {
-    return this.formGroup.controls.firstname;
-  }
-  get lastname() {
-    return this.formGroup.controls.lastname;
-  }
-  get email() {
-    return this.formGroup.controls.email;
-  }
-  get pictureUrl() {
-    return this.formGroup.controls.pictureUrl;
-  }
-  get pictureUrlValue() {
-    return this.pictureUrl.value as string;
-  }
-
   constructor(
     private store: Store,
+    private fb: FormBuilder,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -72,12 +60,15 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         tap((profile) => {
           const value = profile as AppUser;
 
-          this.firstname.setValue(value.firstname, { emitEvent: false });
-          this.lastname.setValue(value.lastname, { emitEvent: false });
-          this.email.setValue(value.email, { emitEvent: false });
-          this.pictureUrl.setValue(value.pictureUrl as string, {
-            emitEvent: false,
-          });
+          this.formGroup.setValue(
+            {
+              firstname: value.firstname,
+              lastname: value.lastname,
+              email: value.email,
+              pictureUrl: value.pictureUrl ?? null,
+            },
+            { emitEvent: false }
+          );
 
           this.cd.markForCheck();
         })
@@ -103,9 +94,9 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
 
           const profile: AppUser = {
             ...currentProfile,
-            firstname: this.firstname.value as string,
-            lastname: this.lastname.value as string,
-            email: this.email.value as string,
+            firstname: this.formGroup.controls.firstname.value as string,
+            lastname: this.formGroup.controls.lastname.value as string,
+            email: this.formGroup.controls.email.value as string,
           };
 
           this.store.dispatch(updateProfile({ profile }));
@@ -126,7 +117,7 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
     data.append('file', blob, 'profile-picture.png');
 
     this.editProfilePicture$.next(false);
-    this.pictureUrl.setValue(src);
+    this.formGroup.controls.pictureUrl.setValue(src);
 
     this.store
       .select(ProfileSelectors.selectProfile)
@@ -136,7 +127,8 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
         tap((profile) => {
           if (!profile) return;
 
-          this.store.dispatch(updateProfile({ profile, data }));
+          this.store.dispatch(updateProfile({ profile }));
+          this.store.dispatch(uploadProfilePicture({ data }));
         })
       )
       .subscribe();
@@ -166,7 +158,7 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.pictureUrl.reset();
+    this.formGroup.controls.pictureUrl.reset();
     this.editProfilePicture$.next(false);
   }
 }
