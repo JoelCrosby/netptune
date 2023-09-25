@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -49,7 +49,7 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store,
-    public dialogRef: MatDialogRef<CreateTaskDialogComponent>
+    public dialogRef: DialogRef<CreateTaskDialogComponent>
   ) {}
 
   ngOnInit() {

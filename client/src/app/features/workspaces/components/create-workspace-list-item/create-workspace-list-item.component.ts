@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 
 @Component({
@@ -9,7 +9,7 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateWorkspaceListItemComponent {
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: Dialog) {}
 
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {

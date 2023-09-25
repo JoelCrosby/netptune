@@ -9,7 +9,7 @@ import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
 import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { MatDialogRef } from '@angular/material/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 
 @Component({
@@ -26,7 +26,7 @@ export class ReassignTasksDialogComponent implements OnInit {
   constructor(
     private store: Store,
     private cd: ChangeDetectorRef,
-    public dialogRef: MatDialogRef<ReassignTasksDialogComponent>
+    public dialogRef: DialogRef<ReassignTasksDialogComponent>
   ) {}
 
   ngOnInit() {

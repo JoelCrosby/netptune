@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@boards/store/boards/boards.actions';
 import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
@@ -18,7 +18,7 @@ export class BoardsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectBoardsLoading);
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private store: Store
   ) {}
 

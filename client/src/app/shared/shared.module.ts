@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
-import { MatDialogModule } from '@angular/material/dialog';
+import { DialogModule } from '@angular/cdk/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -50,7 +50,7 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
     MatButtonModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatDialogModule,
+    DialogModule,
     MatDividerModule,
     MatIconModule,
     MatInputModule,

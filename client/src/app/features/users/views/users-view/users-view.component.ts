@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import {
   inviteUsersToWorkspace,
   loadUsers,
@@ -22,7 +22,7 @@ export class UsersViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectUsersLoading);
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private store: Store
   ) {}
 
@@ -31,21 +31,16 @@ export class UsersViewComponent implements AfterViewInit {
   }
 
   onInviteUsers() {
-    const dialogRef = this.dialog.open(InviteDialogComponent, {
+    const dialogRef = this.dialog.open<string[]>(InviteDialogComponent, {
       width: '800px',
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(first())
-      .subscribe({
-        next: (result) => {
-          if (!result?.length) return;
+    dialogRef.closed.pipe(first()).subscribe({
+      next: (result) => {
+        if (!result?.length) return;
 
-          this.store.dispatch(
-            inviteUsersToWorkspace({ emailAddresses: result })
-          );
-        },
-      });
+        this.store.dispatch(inviteUsersToWorkspace({ emailAddresses: result }));
+      },
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
   Component,
   Inject,
@@ -29,8 +29,8 @@ export class ConfirmDialogComponent {
   confirmationChecked = false;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogOptions = {}
+    public dialogRef: DialogRef<boolean, ConfirmDialogComponent>,
+    @Optional() @Inject(DIALOG_DATA) public data: ConfirmDialogOptions = {}
   ) {
     this.data = { color: 'primary', ...this.data };
   }

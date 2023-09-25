@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
@@ -18,7 +18,7 @@ export class UserListComponent implements OnInit {
 
   constructor(
     public snackBar: MatSnackBar,
-    public dialog: MatDialog,
+    public dialog: Dialog,
     private store: Store
   ) {}
 

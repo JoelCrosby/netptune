@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Invite Users to Workspace</h1>
 
-<mat-dialog-content>
+<app-dialog-content>
   <form [formGroup]="formGroup" (ngSubmit)="add()">
     <app-form-input
       formControlName="email"
@@ -22,7 +22,7 @@
       </ng-template>
     </div>
   </form>
-</mat-dialog-content>
+</app-dialog-content>
 
 <div mat-dialog-actions align="end">
   <button mat-stroked-button (click)="close()">Close</button>

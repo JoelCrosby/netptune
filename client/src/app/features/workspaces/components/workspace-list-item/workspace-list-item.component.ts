@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { HeaderAction } from '@core/types/header-action';
@@ -23,7 +23,7 @@ export class WorkspaceListItemComponent implements OnInit {
 
   constructor(
     private store: Store,
-    private dialog: MatDialog
+    private dialog: Dialog
   ) {}
 
   ngOnInit() {

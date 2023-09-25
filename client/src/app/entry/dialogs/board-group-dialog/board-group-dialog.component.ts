@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 
@@ -22,8 +22,8 @@ export class BoardGroupDialogComponent {
   constructor(
     private store: Store,
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<BoardGroupDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: BoardGroupDialogData
+    public dialogRef: DialogRef<BoardGroupDialogComponent>,
+    @Inject(DIALOG_DATA) public data: BoardGroupDialogData
   ) {}
 
   onSubmit() {

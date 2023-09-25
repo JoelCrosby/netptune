@@ -8,7 +8,7 @@ import {
   Optional,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
@@ -71,8 +71,8 @@ export class TaskDetailDialogComponent
   formGroup!: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<TaskDetailDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: TaskViewModel,
+    public dialogRef: DialogRef<TaskDetailDialogComponent>,
+    @Optional() @Inject(DIALOG_DATA) public data: TaskViewModel,
     private store: Store,
     private actions$: Actions<Action>
   ) {}

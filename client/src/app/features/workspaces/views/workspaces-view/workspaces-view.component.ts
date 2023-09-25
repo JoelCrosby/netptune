@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
@@ -16,7 +16,7 @@ export class WorkspacesViewComponent implements OnInit {
   loading$ = this.store.select(selectWorkspacesLoading);
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: Dialog,
     private store: Store
   ) {}
 
