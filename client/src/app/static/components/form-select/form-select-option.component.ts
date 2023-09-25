@@ -17,7 +17,7 @@ import { FormSelectService } from './form-select.service';
   host: {
     class: 'nept-form-select-option',
   },
-  template: `<ng-content></ng-content>`,
+  template: `<ng-content />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {

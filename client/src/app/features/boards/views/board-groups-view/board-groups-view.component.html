@@ -23,23 +23,23 @@
   >
     <div class="board-filter-seperator"></div>
 
-    <app-board-groups-search></app-board-groups-search>
+    <app-board-groups-search />
 
     <div class="board-filter-seperator"></div>
 
-    <app-board-group-users></app-board-group-users>
+    <app-board-group-users />
 
     <div class="board-filter-seperator"></div>
 
-    <app-board-group-tags></app-board-group-tags>
-    <app-board-groups-flagged></app-board-groups-flagged>
+    <app-board-group-tags />
+    <app-board-groups-flagged />
 
-    <app-board-groups-selection></app-board-groups-selection>
+    <app-board-groups-selection />
   </app-page-header>
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">
     <div class="page-loading">
-      <mat-spinner diameter="32"></mat-spinner>
+      <mat-spinner diameter="32" />
     </div>
   </ng-container>
 
@@ -92,7 +92,7 @@
         </span>
       </app-board-group>
 
-      <app-create-board-group class="board-group"></app-create-board-group>
+      <app-create-board-group class="board-group" />
     </div>
   </ng-template>
 </app-page-container>

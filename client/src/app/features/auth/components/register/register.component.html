@@ -1,10 +1,7 @@
 <div class="auth-page-container">
   <form [formGroup]="formGroup" (ngSubmit)="register()">
     <div class="auth-progress-bar">
-      <mat-progress-bar
-        mode="indeterminate"
-        *ngIf="authLoading$ | async"
-      ></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf="authLoading$ | async" />
     </div>
 
     <img

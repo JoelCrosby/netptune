@@ -16,12 +16,12 @@
         >
         </app-task-list-item>
 
-        <app-task-inline [siblings]="tasks"></app-task-inline>
+        <app-task-inline [siblings]="tasks" />
       </cdk-virtual-scroll-viewport>
     </ng-container>
 
     <ng-template #elseTemplate>
-      <app-task-inline></app-task-inline>
+      <app-task-inline />
 
       <div class="list-empty">
         <div class="list-empty-mark">

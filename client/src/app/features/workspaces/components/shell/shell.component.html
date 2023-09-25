@@ -62,7 +62,7 @@
           [size]="24"
           [border]="true"
           [tooltip]="false"
-        ></app-avatar>
+        />
         <p>Profile</p>
       </a>
     </div>
@@ -84,6 +84,6 @@
     [class.app-sidenav-expanded]="sideNavExpanded"
     [class.app-sidenav-open]="sideMenuOpen$ | async"
   >
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
 </div>

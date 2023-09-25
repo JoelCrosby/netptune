@@ -21,7 +21,7 @@
           [minRows]="1"
           [maxRows]="5"
           activeBorder="true"
-        ></app-inline-text-area>
+        />
       </div>
 
       <div class="detail-column">
@@ -32,7 +32,7 @@
               [value]="task.assignees"
               [options]="users$ | async"
               (selectChange)="selectAssignee($event)"
-            ></app-user-select>
+            />
           </div>
 
           <div class="detail-list-item">
@@ -164,6 +164,6 @@
 
 <ng-template #loading>
   <div class="task-detail-loading">
-    <mat-spinner diameter="32"></mat-spinner>
+    <mat-spinner diameter="32" />
   </div>
 </ng-template>

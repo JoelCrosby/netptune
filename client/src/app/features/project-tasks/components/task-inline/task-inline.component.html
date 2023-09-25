@@ -18,7 +18,7 @@
   <ng-template #elseTemplate>
     <div class="inline-task-form" #taskInlineForm>
       <mat-icon>drag_indicator</mat-icon>
-      <mat-checkbox color="primary" disabled></mat-checkbox>
+      <mat-checkbox color="primary" disabled />
       <form [formGroup]="taskGroup" class="task-form" (ngSubmit)="onSubmit()">
         <input
           #taskInput
