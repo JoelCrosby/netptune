@@ -1,13 +1,8 @@
 <form [formGroup]="formGroup" class="px-0">
   <div class="column">
-    <app-form-input formControlName="firstname" label="Firstname">
-    </app-form-input>
-
-    <app-form-input formControlName="lastname" label="Lastname">
-    </app-form-input>
-
-    <app-form-input formControlName="email" label="Email Address">
-    </app-form-input>
+    <app-form-input formControlName="firstname" label="Firstname" />
+    <app-form-input formControlName="lastname" label="Lastname" />
+    <app-form-input formControlName="email" label="Email Address" />
 
     <input type="hidden" formControlName="pictureUrl" />
 
@@ -26,18 +21,20 @@
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
         <app-image-cropper
           [size]="180"
-          [src]="pictureUrlValue"
+          [src]="formGroup.controls.pictureUrl.value ?? ''"
           (cropped)="onCropped($event)"
           (canceled)="onCropperCanceled()"
           (cleared)="onCropperCleared()"
         ></app-image-cropper>
       </ng-container>
       <ng-template #elseTemplate>
-        <ng-container *ngIf="pictureUrl.value; else elseTemplate">
+        <ng-container
+          *ngIf="formGroup.controls.pictureUrl.value; else elseTemplate"
+        >
           <img
             crossorigin="anonymous"
             class="profile-picture"
-            [src]="pictureUrl.value"
+            [src]="formGroup.controls.pictureUrl.value"
             alt="Profile Image"
             height="180"
             width="180"

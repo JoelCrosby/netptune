@@ -41,15 +41,12 @@ export class ProfileEffects {
   updateProfile$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.updateProfile),
-      switchMap(({ profile, data }) => {
-        if (!profile || !data) return of({ type: 'noop' });
+      switchMap(({ profile }) => {
+        if (!profile) return of({ type: 'noop' });
 
         return this.profileService.put(profile).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Profile Updated')),
-          tap(() =>
-            this.store.dispatch(actions.uploadProfilePicture({ data }))
-          ),
           map((response) =>
             actions.updateProfileSuccess({ profile: response })
           ),
