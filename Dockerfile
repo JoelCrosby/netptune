@@ -32,13 +32,16 @@ RUN dotnet publish "Netptune.App.csproj" \
     /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 # client app
-FROM node:18 AS client-build
+FROM node:20-slim AS client-build
 WORKDIR /client
 COPY /client/package*.json ./
-COPY /client/yarn.lock ./
-RUN yarn install --immutable --immutable-cache --check-cache
+COPY /client/pnpm-lock.yaml ./
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY /client .
-RUN yarn build
+RUN pnpm run build
 
 FROM base AS final
 WORKDIR /app
