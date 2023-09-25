@@ -64,7 +64,7 @@ export class BoardGroupsService {
       .pipe(
         switchMap((response) => {
           if (response.body === null) {
-            return throwError('repsone body was null');
+            return throwError(() => new Error('repsone body was null'));
           }
 
           return of({

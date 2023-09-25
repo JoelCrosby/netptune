@@ -33,7 +33,9 @@ export class WorkspacesService {
   }
 
   delete(workspace: Workspace) {
-    if (!workspace?.slug) return throwError('workspace slug empty');
+    if (!workspace?.slug) {
+      return throwError(() => new Error('workspace slug empty'));
+    }
 
     return this.http.delete<ClientResponse>(
       environment.apiEndpoint + 'api/workspaces/' + workspace.slug

@@ -111,7 +111,7 @@ export class BoardGroupsEffects {
       ),
       switchMap(([action, identifier, userId]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService
@@ -163,7 +163,9 @@ export class BoardGroupsEffects {
             if (!result) return of({ type: 'NO_ACTION' });
 
             if (identifier === undefined) {
-              return throwError('board identifier is undefined');
+              return throwError(
+                () => new Error('board identifier is undefined')
+              );
             }
 
             return this.tasksHubService
@@ -191,7 +193,7 @@ export class BoardGroupsEffects {
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService.putGroup(identifier, action.request).pipe(
@@ -211,7 +213,7 @@ export class BoardGroupsEffects {
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService
@@ -250,7 +252,7 @@ export class BoardGroupsEffects {
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
@@ -281,7 +283,7 @@ export class BoardGroupsEffects {
       ),
       switchMap(([action, identifier, taskIds]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService
@@ -349,7 +351,7 @@ export class BoardGroupsEffects {
       ),
       switchMap(([action, identifier, taskIds]) => {
         if (identifier === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService
@@ -376,7 +378,7 @@ export class BoardGroupsEffects {
       withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
       switchMap(([_, boardId]) => {
         if (boardId === undefined) {
-          return throwError('board identifier is undefined');
+          return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.boardGroupsService.export(boardId).pipe(
