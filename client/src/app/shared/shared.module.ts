@@ -22,17 +22,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   MatSnackBarModule,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material/snack-bar';
-import {
-  MatFormFieldModule,
-  MAT_FORM_FIELD_DEFAULT_OPTIONS,
-} from '@angular/material/form-field';
 
 // Alyle UI
 
@@ -57,14 +52,12 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
     MatChipsModule,
     MatDialogModule,
     MatDividerModule,
-    MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRippleModule,
-    MatSidenavModule,
     MatSnackBarModule,
     MatTooltipModule,
 
@@ -79,14 +72,6 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
       useValue: {
         duration: 2500,
         horizontalPosition: 'right',
-      },
-    },
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: {
-        floatLabel: 'always',
-        hideRequiredControl: false,
-        hideRequiredMarker: true,
       },
     },
     StyleRenderer,
