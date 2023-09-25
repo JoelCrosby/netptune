@@ -28,21 +28,6 @@
   }
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
-mat-dialog-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  .detail-form  {
-    flex: 1;
-    line-height: 1.5;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-}
-
 .detail-list {
   display: flex;
   flex-direction: column;
@@ -73,11 +58,6 @@ mat-dialog-content {
       &.clickable {
         cursor: pointer;
       }
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
-    mat-chip {
-      margin: .2rem 0 1rem;
-      min-height: 24px !important;
     }
   }
 }

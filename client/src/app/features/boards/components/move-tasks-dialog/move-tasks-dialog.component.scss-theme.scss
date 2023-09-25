@@ -10,14 +10,6 @@
 
   .group-selection {
     button {
-      /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-      .mat-button-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-
       .pill {
         background-color: mat.get-color-from-palette($foreground, text, .1);
       }
