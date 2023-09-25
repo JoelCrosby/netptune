@@ -1,6 +1,6 @@
 <div class="app-list-item">
   <div class="app-list-item-header">
-    <ng-content></ng-content>
+    <ng-content />
 
     <mat-checkbox class="user-checkbox" color="primary"> </mat-checkbox>
 
@@ -9,7 +9,7 @@
         [imageUrl]="user.pictureUrl"
         [name]="user.displayName"
         [size]="26"
-      ></app-avatar>
+      />
     </div>
 
     <div class="title">{{ user.displayName }}</div>

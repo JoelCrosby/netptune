@@ -12,7 +12,7 @@ import {
   selector: 'app-form-select-dropdown',
   template: `
     <ng-template cdkPortal>
-      <ng-content></ng-content>
+      <ng-content />
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

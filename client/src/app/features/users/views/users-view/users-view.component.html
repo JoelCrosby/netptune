@@ -3,14 +3,14 @@
     title="Users"
     actionTitle="Invite Users"
     (actionClick)="onInviteUsers()"
-  ></app-page-header>
+  />
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">
     <div class="page-loading">
-      <mat-spinner diameter="32"></mat-spinner>
+      <mat-spinner diameter="32" />
     </div>
   </ng-container>
   <ng-template #elseTemplate>
-    <app-user-list></app-user-list>
+    <app-user-list />
   </ng-template>
 </app-page-container>

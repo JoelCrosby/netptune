@@ -8,12 +8,12 @@
 
   <ng-container *ngIf="loading$ | async; else elseTemplate">
     <div class="page-loading">
-      <mat-spinner diameter="32"></mat-spinner>
+      <mat-spinner diameter="32" />
     </div>
   </ng-container>
 
   <ng-template #elseTemplate>
-    <app-workspace-list></app-workspace-list>
+    <app-workspace-list />
 
     <div class="build-info" *ngIf="buildInfo$ | async as buildInfo">
       <a

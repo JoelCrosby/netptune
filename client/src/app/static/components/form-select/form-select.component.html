@@ -31,7 +31,7 @@
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
     ></div>
 
-    <ng-content></ng-content>
+    <ng-content />
 
     <mat-icon *ngIf="icon" aria-hidden="true" class="material-icons-outlined">
       {{ icon }}
@@ -43,7 +43,7 @@
 
     <app-form-select-dropdown [reference]="dropreference">
       <div class="form-select-dropdown menu-scale-in">
-        <ng-content select="app-form-select-option"></ng-content>
+        <ng-content select="app-form-select-option" />
       </div>
     </app-form-select-dropdown>
   </div>

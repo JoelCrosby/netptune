@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="form-error">
-      <ng-content></ng-content>
+      <ng-content />
     </div>
   `,
 })
