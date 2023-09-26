@@ -5,7 +5,6 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Dialog } from '@angular/cdk/dialog';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
@@ -15,6 +14,7 @@ import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/cre
 import { Store } from '@ngrx/store';
 import { from, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
+import { DialogService } from '@core/services/dialog.service';
 
 @Component({
   templateUrl: './project-tasks-view.component.html',
@@ -36,7 +36,7 @@ export class ProjectTasksViewComponent
   ];
 
   constructor(
-    public dialog: Dialog,
+    public dialog: DialogService,
     private store: Store,
     private hubService: ProjectTasksHubService
   ) {}

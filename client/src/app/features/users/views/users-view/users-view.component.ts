@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { Dialog } from '@angular/cdk/dialog';
+import { DialogService } from '@core/services/dialog.service';
 import {
   inviteUsersToWorkspace,
   loadUsers,
@@ -22,7 +22,7 @@ export class UsersViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectUsersLoading);
 
   constructor(
-    private dialog: Dialog,
+    private dialog: DialogService,
     private store: Store
   ) {}
 

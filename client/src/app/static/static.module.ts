@@ -44,6 +44,7 @@ import { CardContentComponent } from './components/card/card-content.component';
 import { CardActionsComponent } from './components/card/card-actions.component';
 import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { DialogCloseDirective } from './directives/dialog-close.directive';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     CardActionsComponent,
     DialogContentComponent,
     DialogComponent,
+    DialogCloseDirective,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -134,6 +136,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     CardActionsComponent,
     DialogContentComponent,
     DialogComponent,
+    DialogCloseDirective,
   ],
   providers: [FromNowPipe],
 })

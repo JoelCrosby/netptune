@@ -8,7 +8,7 @@ import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { environment } from '@env/environment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class BoardsService {
   constructor(private http: HttpClient) {}
 
