@@ -12,7 +12,7 @@ import { environment } from '@env/environment';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class BoardGroupsService {
   constructor(private http: HttpClient) {}
 

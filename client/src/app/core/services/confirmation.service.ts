@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Dialog } from '@angular/cdk/dialog';
 import {
   ConfirmDialogComponent,
   ConfirmDialogOptions,
 } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DialogService } from '@core/services/dialog.service';
 
 const DEFAULT_CONFIG: ConfirmDialogOptions = {
   acceptLabel: 'Accept',
@@ -16,7 +16,7 @@ const DEFAULT_CONFIG: ConfirmDialogOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmationService {
-  constructor(private dialog: Dialog) {}
+  constructor(private dialog: DialogService) {}
 
   open(
     config: ConfirmDialogOptions = DEFAULT_CONFIG,

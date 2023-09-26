@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from '@angular/core';
-import { Dialog } from '@angular/cdk/dialog';
+import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectProjectsLoading } from '@core/store/projects/projects.selectors';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
@@ -19,7 +19,7 @@ export class ProjectsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectProjectsLoading).pipe(debounceTime(200));
 
   constructor(
-    public dialog: Dialog,
+    public dialog: DialogService,
     private store: Store
   ) {}
 
