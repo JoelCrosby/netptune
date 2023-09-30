@@ -41,7 +41,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY /client .
-RUN pnpm run build
+RUN pnpm build
 
 FROM base AS final
 WORKDIR /app
