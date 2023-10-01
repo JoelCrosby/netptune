@@ -2,7 +2,7 @@ import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-dialog',
+  selector: 'app-dialog-container',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
@@ -29,4 +29,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   ],
   template: `<ng-template cdkPortalOutlet></ng-template>`,
 })
-export class DialogComponent extends CdkDialogContainer {}
+export class DialogContainerComponent extends CdkDialogContainer {}

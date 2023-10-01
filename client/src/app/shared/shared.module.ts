@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
-import { DialogModule } from '@angular/cdk/dialog';
+import { DEFAULT_DIALOG_CONFIG, DialogModule } from '@angular/cdk/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -74,6 +74,7 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
         horizontalPosition: 'right',
       },
     },
+    { provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
     StyleRenderer,
     LyTheme2,
     { provide: LY_THEME_NAME, useValue: 'minima-light' },

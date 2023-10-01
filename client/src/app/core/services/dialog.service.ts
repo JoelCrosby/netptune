@@ -1,7 +1,7 @@
 import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
-import { DialogComponent } from '@static/components/dialog/dialog.component';
+import { DialogContainerComponent } from '@static/components/dialog/dialog-container.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
@@ -11,9 +11,14 @@ export class DialogService {
     component: ComponentType<C>,
     config?: DialogConfig<D, DialogRef<R, C>>
   ): DialogRef<R, C> {
-    return this.dialog.open(component, {
+    config ??= new DialogConfig();
+
+    return this.dialog.open<R, D, C>(component, {
       ...config,
-      container: DialogComponent,
+      container: {
+        type: DialogContainerComponent,
+        providers: () => [{ provide: DialogConfig, useValue: config }],
+      },
     });
   }
 }
