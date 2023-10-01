@@ -43,7 +43,7 @@ import { FormErrorComponent } from './components/form-error/form-error.component
 import { CardContentComponent } from './components/card/card-content.component';
 import { CardActionsComponent } from './components/card/card-actions.component';
 import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
-import { DialogComponent } from './components/dialog/dialog.component';
+import { DialogContainerComponent } from './components/dialog/dialog-container.component';
 import { DialogCloseDirective } from './directives/dialog-close.directive';
 
 @NgModule({
@@ -90,7 +90,7 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     CardContentComponent,
     CardActionsComponent,
     DialogContentComponent,
-    DialogComponent,
+    DialogContainerComponent,
     DialogCloseDirective,
   ],
   imports: [CommonModule, SharedModule],
@@ -135,7 +135,7 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     FormErrorComponent,
     CardActionsComponent,
     DialogContentComponent,
-    DialogComponent,
+    DialogContainerComponent,
     DialogCloseDirective,
   ],
   providers: [FromNowPipe],
