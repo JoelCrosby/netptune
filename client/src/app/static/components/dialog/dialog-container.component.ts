@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     `
       :host {
         display: block;
-        background: #2c2c2c;
+        background: var(--background);
         border-radius: 8px;
         padding: 16px;
         box-shadow:
@@ -18,15 +18,21 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         padding: 24px;
         border-radius: 4px;
         box-sizing: border-box;
-        overflow: auto;
         outline: 0;
         width: 100%;
         height: 100%;
         min-height: inherit;
         max-height: inherit;
       }
+
+      .dialog-inner {
+        max-height: 65vh;
+        overflow: auto;
+      }
     `,
   ],
-  template: `<ng-template cdkPortalOutlet></ng-template>`,
+  template: `<div class="dialog-inner custom-scroll">
+    <ng-template cdkPortalOutlet></ng-template>
+  </div>`,
 })
 export class DialogContainerComponent extends CdkDialogContainer {}

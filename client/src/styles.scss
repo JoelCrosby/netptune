@@ -146,3 +146,11 @@
     --mdc-plain-tooltip-container-color: #1d1d1d;
   }
 }
+
+:root {
+ --background: #fff;
+}
+
+.dark-theme :root {
+  --background: #272727;
+}
