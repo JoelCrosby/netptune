@@ -1,8 +1,8 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -106,17 +106,16 @@ public static class AuthenticationServiceCollectionExtensions
                 options.Events.OnCreatingTicket = async context =>
                 {
                     var token = context.AccessToken;
-                    using var client = new HttpClient();
+                    var client = context.HttpContext.RequestServices.GetRequiredService<HttpClient>();
 
                     client.DefaultRequestHeaders.Add("Authorization", $"token {token}");
                     client.DefaultRequestHeaders.Add("User-Agent", "Netptune API");
 
-                    var stream = await client.GetStreamAsync("https://api.github.com/user");
-                    var gitHubUser = await JsonSerializer.DeserializeAsync<GithubUserResponse>(stream);
+                    var user = await client.GetFromJsonAsync<GithubUserResponse>("https://api.github.com/user");
 
-                    if (gitHubUser is null) return;
+                    if (user is null) return;
 
-                    context.Identity?.AddClaim(new Claim("Provider-Picture-Url", gitHubUser.AvatarUrl.ToString()));
+                    context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
                 };
             });
 
