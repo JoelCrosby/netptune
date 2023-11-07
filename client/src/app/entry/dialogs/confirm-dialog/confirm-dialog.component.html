@@ -28,7 +28,7 @@
   </ng-container>
 </div>
 
-<div mat-dialog-actions align="end">
+<div app-dialog-actions align="end">
   <ng-container *ngIf="data.isInfoMessage; else elseTemplate">
     <button mat-stroked-button cdkFocusInitial (click)="dialogRef.close(false)">
       Ok
