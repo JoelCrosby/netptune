@@ -1,0 +1,16 @@
+.dialog-actions {
+  display: flex;
+  gap: .4rem;
+}
+
+.dialog-actions-align-center {
+  justify-content: center;
+}
+
+.dialog-actions-align-end {
+  justify-content: end;
+}
+
+.dialog-actions button {
+  min-width: 8rem;
+}

@@ -45,6 +45,7 @@ import { CardActionsComponent } from './components/card/card-actions.component';
 import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
 import { DialogContainerComponent } from './components/dialog/dialog-container.component';
 import { DialogCloseDirective } from './directives/dialog-close.directive';
+import { DialogActionsDirective } from './directives/dialog-actions.directive';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,
+    DialogActionsDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
@@ -111,6 +113,7 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     ScrollShadowDirective,
     ScrollShadowVericalDirective,
     AutofocusDirective,
+    DialogActionsDirective,
     InlineTextAreaComponent,
     CardListComponent,
     CardListItemComponent,
