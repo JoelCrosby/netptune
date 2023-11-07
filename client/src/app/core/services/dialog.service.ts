@@ -15,6 +15,7 @@ export class DialogService {
 
     return this.dialog.open<R, D, C>(component, {
       ...config,
+      hasBackdrop: true,
       container: {
         type: DialogContainerComponent,
         providers: () => [{ provide: DialogConfig, useValue: config }],
