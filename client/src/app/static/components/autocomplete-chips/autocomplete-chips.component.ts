@@ -64,7 +64,7 @@ export class AutocompleteChipsComponent implements OnInit {
   }
 
   add(event: MatChipInputEvent) {
-    const input = event.input;
+    const input = event.chipInput.inputElement;
     const value = event.value;
 
     if ((value || '').trim()) {
