@@ -60,6 +60,7 @@ import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
       ? []
       : StoreDevtoolsModule.instrument({
           name: 'Netptune',
+          connectInZone: true,
         }),
     EntryModule,
   ],
