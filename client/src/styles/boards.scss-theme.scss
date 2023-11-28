@@ -27,7 +27,7 @@
   }
 
   .board-filter-button:not(.mat-warn) {
-    background-color: darken(mat.get-color-from-palette($background, background), 1);
+    background-color: darken($board-group, 1);
   }
 
   .board-filter-button.mat-warn {

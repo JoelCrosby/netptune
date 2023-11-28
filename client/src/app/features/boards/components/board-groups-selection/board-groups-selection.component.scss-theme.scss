@@ -8,7 +8,7 @@
   $background: map-get($theme, background);
 
   .board-groups-selection {
-    background-color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($background, background), 5%) !important;
+    background-color: mix(mat.get-color-from-palette($primary), $board-group, 5%) !important;
 
     .mat-icon {
       opacity: .3;
@@ -27,7 +27,7 @@
   }
 
   .board-groups-selection-btn {
-    background-color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($background, background), 5%) !important;
+    background-color: mix(mat.get-color-from-palette($primary), $board-group, 5%) !important;
 
     .mat-icon {
       opacity: .6;
@@ -35,12 +35,12 @@
     }
 
     &:hover {
-      background-color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($background, background), 25%) !important;
-      color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($background, background), 95%) !important;
+      background-color: mix(mat.get-color-from-palette($primary), $board-group, 25%) !important;
+      color: mix(mat.get-color-from-palette($primary), $board-group, 95%) !important;
 
       .mat-icon {
         opacity: .9;
-        fill: mix(mat.get-color-from-palette($primary, A700), mat.get-color-from-palette($background, background), 95%) !important;
+        fill: mix(mat.get-color-from-palette($primary, A700), $board-group, 95%) !important;
       }
     }
   }
