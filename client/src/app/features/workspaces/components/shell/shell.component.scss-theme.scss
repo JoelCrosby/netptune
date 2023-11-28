@@ -14,26 +14,26 @@
 
   .app-menu-link:hover {
     color: rgba(255, 255, 255, 1) !important;
-    background-color: lighten(mat.get-color-from-palette($background, background), 8) !important;
+    background-color: lighten($side-bar, 8) !important;
   }
 
   .app-sidenav {
-    background-color: mat.get-color-from-palette($background, background);
+    background-color: $side-bar;
   }
 
   .app-menu-link.router-link-active {
-    background-color: lighten(mat.get-color-from-palette($background, background), 10);
+    background-color: lighten($side-bar, 10);
     color: rgba(255, 255, 255, 1);
   }
 
   .app-menu-link.router-link-active:hover,
   .app-menu-link.router-link-active:focus {
     color: rgba(255, 255, 255, 1) !important;
-    background-color: lighten(mat.get-color-from-palette($background, background), 12) !important;
+    background-color: lighten($side-bar, 12) !important;
   }
 
   .app-menu-collapse {
-    background-color: lighten(mat.get-color-from-palette($background, background), 12) !important;
+    background-color: lighten($side-bar, 12) !important;
 
   }
 

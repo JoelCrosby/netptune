@@ -16,7 +16,6 @@ $default-theme: mat.define-light-theme((
    is-dark: false,
    foreground: mat.$light-theme-foreground-palette,
    background: mat.$light-theme-background-palette,
-   board-group: #f8f8f8,
  ),
  typography: mat.define-typography-config(),
  density: 0,

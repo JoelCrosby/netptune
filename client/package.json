@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --hmr",
+    "start": "ng serve --hmr",
     "build": "ng build --configuration production",
     "build:stats": "ng build --configuration stats --stats-json",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
