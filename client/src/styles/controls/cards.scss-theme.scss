@@ -16,7 +16,7 @@
   }
 
   .netp-card-group {
-    background-color: darken(mat.get-color-from-palette($background, board-group), 1);
+    background-color: darken(mat.get-color-from-palette($background, background), 1);
   }
 
   .netp-card-title {
@@ -39,6 +39,6 @@
   }
 
   .netp-card.flagged:hover {
-    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, board-group), 24%) !important;
+    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, background), 24%) !important;
   }
 }

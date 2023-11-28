@@ -1,58 +1,4 @@
 @use '@angular/material' as mat;
-// Foreground palette for dark themes.
-mat.$dark-theme-foreground-palette: (
-  base:              #fff,
-  divider:           $light-dividers,
-  dividers:          $light-dividers,
-  disabled:          $light-disabled-text,
-  disabled-button:   rgba(#fff, .3),
-  disabled-text:     $light-disabled-text,
-  elevation:         #000,
-  hint-text:         $light-disabled-text,
-  secondary-text:    $light-secondary-text,
-  icon:              rgba(#fff, .6),
-  icons:             #fff,
-  text:              rgba(#fff, .8),
-  slider-min:        #fff,
-  slider-off:        rgba(#fff, .3),
-  slider-off-active: rgba(#fff, .3),
-  empty-list:        rgba(#fff, .14),
-  success:           #75c775,
-);
-
-// Background palette for dark themes.
-mat.$dark-theme-background-palette: (
-  side-bar: #1c1b21,
-  board-group: #3a3a3a,
-  status-bar: #000,
-  app-bar:    #272727,
-  background: #272727,
-  hover:      rgba(#fff, .04), // TODO(kara): check style with Material Design UX
-  card:       #303030,
-  dialog:     map-get(mat.$grey-palette, 800),
-  disabled-button: rgba(#fff, .12),
-  raised-button: map-get(mat.$grey-palette, 800),
-  focused-button: $light-focused,
-  selected-button: map-get(mat.$grey-palette, 900),
-  selected-disabled-button: map-get(mat.$grey-palette, 800),
-  disabled-button-toggle: #000,
-  unselected-chip: map-get(mat.$grey-palette, 700),
-  disabled-list-option: #000,
-  tooltip: rgb(44, 44, 44),
-  border: rgba(255, 255, 255, .12)
-);
-
-// Creates a container object for a dark theme to be given to individual component theme mixins.
-@function netptune-mat-dark-theme($primary, $accent, $warn: mat.define-palette(mat.$red-palette)) {
-  @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: true,
-    foreground: mat.$dark-theme-foreground-palette,
-    background: mat.$dark-theme-background-palette,
-  );
-}
 
 $dark-primary: mat.define-palette(mat.$deep-purple-palette, 200);
 $dark-accent:  mat.define-palette(mat.$deep-purple-palette, 400);
@@ -62,7 +8,6 @@ $dark-warn:    mat.define-palette(mat.$red-palette, A200, A100, A400);
   background: mat.get-color-from-palette($dark-primary, .6);
 }
 
-$dark-theme: netptune-mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 $dark-theme: mat.define-dark-theme((
  color: (
    primary: $dark-primary,
@@ -71,6 +16,7 @@ $dark-theme: mat.define-dark-theme((
    is-dark: false,
    foreground: mat.$dark-theme-foreground-palette,
    background: mat.$dark-theme-background-palette,
+   board-group: #3a3a3a,
  ),
  typography: mat.define-typography-config(),
  density: 0,

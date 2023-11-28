@@ -1,58 +1,4 @@
 @use '@angular/material' as mat;
-// Foreground palette for light themes.
-mat.$light-theme-foreground-palette: (
-  base:              #000,
-  divider:           $dark-dividers,
-  dividers:          $dark-dividers,
-  disabled:          $dark-disabled-text,
-  disabled-button:   rgba(#000, .26),
-  disabled-text:     $dark-disabled-text,
-  elevation:         #000,
-  hint-text:         $dark-disabled-text,
-  secondary-text:    $dark-secondary-text,
-  icon:              rgba(#000, .54),
-  icons:             rgba(#000, .54),
-  text:              rgba(#000, .8),
-  slider-min:        rgba(#000, .8),
-  slider-off:        rgba(#000, .26),
-  slider-off-active: rgba(#000, .38),
-  empty-list:        rgba(#000, .14),
-  success:           green,
-);
-
-// Background palette for light themes.
-mat.$light-theme-background-palette: (
-  side-bar: #29242e,
-  board-group: #f8f8f8,
-  status-bar: #fff,
-  app-bar:    #fff,
-  background: #fff,
-  hover:      rgba(#000, .02),
-  card:       #fff,
-  dialog:     #fff,
-  disabled-button: rgba(#000, .12),
-  raised-button: #fff,
-  focused-button: $dark-focused,
-  selected-button: map-get(mat.$grey-palette, 300),
-  selected-disabled-button: map-get(mat.$grey-palette, 400),
-  disabled-button-toggle: map-get(mat.$grey-palette, 200),
-  unselected-chip: map-get(mat.$grey-palette, 300),
-  disabled-list-option: map-get(mat.$grey-palette, 200),
-  tooltip: rgb(44, 44, 44),
-  border: rgba(0, 0, 0, .08),
-);
-
-// Creates a container object for a light theme to be given to individual component theme mixins.
-@function netptune-mat-light-theme($primary, $accent, $warn: mat.define-palette(mat.$red-palette)) {
-  @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: false,
-    foreground: mat.$light-theme-foreground-palette,
-    background: mat.$light-theme-background-palette,
-  );
-}
 
 $light-primary: mat.define-palette(mat.$deep-purple-palette);
 $light-accent:  mat.define-palette(mat.$deep-purple-palette, 900);
@@ -70,6 +16,7 @@ $default-theme: mat.define-light-theme((
    is-dark: false,
    foreground: mat.$light-theme-foreground-palette,
    background: mat.$light-theme-background-palette,
+   board-group: #f8f8f8,
  ),
  typography: mat.define-typography-config(),
  density: 0,
