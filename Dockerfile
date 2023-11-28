@@ -46,5 +46,5 @@ RUN pnpm build
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY --from=client-build /client/dist ./wwwroot/dist
+COPY --from=client-build /client/dist/browser ./wwwroot/dist
 ENTRYPOINT ["dotnet", "Netptune.App.dll"]
