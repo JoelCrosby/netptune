@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
 
 @mixin task-list-group-theme($theme) {
   $primary: map-get($theme, primary);
@@ -14,7 +13,7 @@
     }
 
     .task-list {
-      background-color: darken(mat.get-color-from-palette($background, board-group), 1);
+      background-color: darken(mat.get-color-from-palette($background, background), 1);
     }
 
 
