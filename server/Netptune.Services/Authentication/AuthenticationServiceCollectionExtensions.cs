@@ -25,12 +25,12 @@ public static class AuthenticationServiceCollectionExtensions
             .AddDefaultTokenProviders();
     }
 
-    public static IServiceCollection AddNeptuneAuthentication(
-        this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
+    public static void AddNeptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
     {
         var authenticationOptions = ConfigureServices(services, action);
 
         services.AddHttpContextAccessor();
+        services.AddHttpClient();
 
         services.Configure<IdentityOptions>(options =>
         {
@@ -42,86 +42,94 @@ public static class AuthenticationServiceCollectionExtensions
         });
 
         services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
 
-            .AddJwtBearer(options =>
+        .AddJwtBearer(options =>
+        {
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = authenticationOptions.Issuer,
+                ValidAudience = authenticationOptions.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey)),
+            };
+            options.Events = new JwtBearerEvents
+            {
+                OnTokenValidated = context =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = authenticationOptions.Issuer,
-                    ValidAudience = authenticationOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationOptions.SecurityKey)),
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
+                    if (!context.Request.Headers.TryGetValue(NetptuneClaims.Workspace, out var workspace))
                     {
-                        if (!context.Request.Headers.TryGetValue(NetptuneClaims.Workspace, out var workspace))
-                        {
-                            return Task.CompletedTask;
-                        }
-
-                        var claims = new[] { new Claim(NetptuneClaims.Workspace, workspace!) };
-                        var identity = new ClaimsIdentity(claims);
-
-                        context.Principal?.AddIdentity(identity);
-
                         return Task.CompletedTask;
-                    },
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
-                        var isHubPath = path.StartsWithSegments("/hubs");
+                    }
 
-                        if (accessTokenNotEmpty && isHubPath)
-                        {
-                            context.Token = accessToken;
-                        }
+                    var claims = new[] { new Claim(NetptuneClaims.Workspace, workspace!) };
+                    var identity = new ClaimsIdentity(claims);
 
-                        return Task.CompletedTask;
-                    },
-                };
-            })
+                    context.Principal?.AddIdentity(identity);
 
-            .AddGitHub(options =>
-            {
-                options.ClientId = authenticationOptions.GitHubClientId;
-                options.ClientSecret = authenticationOptions.GitHubSecret;
-                options.CallbackPath = "/api/auth/github-callback";
-                options.Scope.Add("read:user");
-                options.Scope.Add("urn:github:name");
-                options.Scope.Add("user:email");
-                options.SaveTokens = true;
-                options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Events.OnCreatingTicket = async context =>
+                    return Task.CompletedTask;
+                },
+                OnMessageReceived = context =>
                 {
-                    var token = context.AccessToken;
-                    var client = context.HttpContext.RequestServices.GetRequiredService<HttpClient>();
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+                    var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
+                    var isHubPath = path.StartsWithSegments("/hubs");
 
-                    client.DefaultRequestHeaders.Add("Authorization", $"token {token}");
-                    client.DefaultRequestHeaders.Add("User-Agent", "Netptune API");
+                    if (accessTokenNotEmpty && isHubPath)
+                    {
+                        context.Token = accessToken;
+                    }
 
-                    var user = await client.GetFromJsonAsync<GithubUserResponse>("https://api.github.com/user");
+                    return Task.CompletedTask;
+                },
+            };
+        })
 
-                    if (user is null) return;
+        .AddGitHub(options =>
+        {
+            options.ClientId = authenticationOptions.GitHubClientId;
+            options.ClientSecret = authenticationOptions.GitHubSecret;
+            options.CallbackPath = "/api/auth/github-callback";
+            options.Scope.Add("read:user");
+            options.Scope.Add("urn:github:name");
+            options.Scope.Add("user:email");
+            options.SaveTokens = true;
+            options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Events.OnRedirectToAuthorizationEndpoint = context =>
+            {
+                if (context.RedirectUri.Contains("6400"))
+                {
+                    context.HttpContext.Response.Redirect(context.RedirectUri.Replace("6400", "7401"));
+                }
 
-                    context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
-                };
-            });
+                return Task.CompletedTask;
+            };
+            options.Events.OnCreatingTicket = async context =>
+            {
+                var token = context.AccessToken;
+                var factory = context.HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>();
+                var client = factory.CreateClient();
+
+                client.DefaultRequestHeaders.Add("Authorization", $"token {token}");
+                client.DefaultRequestHeaders.Add("User-Agent", "Netptune API");
+
+                var user = await client.GetFromJsonAsync<GithubUserResponse>("https://api.github.com/user");
+
+                if (user is null) return;
+
+                context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
+            };
+        });
 
         services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
-
-        return services;
     }
 
     private static NetptuneAuthenticationOptions ConfigureServices(
