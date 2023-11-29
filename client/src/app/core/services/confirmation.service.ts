@@ -26,14 +26,11 @@ export class ConfirmationService {
       return of(true);
     }
 
-    const dialogRef = this.dialog.open<
-      ConfirmDialogComponent,
-      ConfirmDialogOptions
-    >(ConfirmDialogComponent, {
+    const dialogRef = this.dialog.open<boolean>(ConfirmDialogComponent, {
       width: '600px',
       data: config,
     });
 
-    return dialogRef.closed.pipe(map((value) => !!value?.confirmationChecked));
+    return dialogRef.closed.pipe(map((value) => !!value));
   }
 }
