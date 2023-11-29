@@ -226,7 +226,7 @@ export class AuthEffects implements OnInitEffects {
             if (!result) return { type: 'NO_ACTION' };
 
             this.cookie.deleteAll();
-            void this.router.navigate(['auth/login']);
+            void this.router.navigate(['/auth/login']);
 
             return actions.logoutSuccess();
           })

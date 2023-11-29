@@ -11,6 +11,7 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 
 using AuthenticationTicket = Netptune.Core.Authentication.Models.AuthenticationTicket;
 
@@ -22,10 +23,12 @@ namespace Netptune.App.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly INetptuneAuthService AuthenticationService;
+    private readonly IHostingService Hosting;
 
-    public AuthController(INetptuneAuthService authenticationService)
+    public AuthController(INetptuneAuthService authenticationService, IHostingService hosting)
     {
         AuthenticationService = authenticationService;
+        Hosting = hosting;
     }
 
     // POST: api/auth/login
@@ -219,16 +222,18 @@ public class AuthController : ControllerBase
 
         if (!result.IsSuccess) return Unauthorized();
 
-        var redirect = "/auth/auth-provider-login".SetQueryParams(new
-        {
-            expires = result.Ticket?.Expires,
-            issued = result.Ticket?.Issued,
-            token = result.Ticket?.Token,
-            displayName = result.Ticket?.DisplayName,
-            email = result.Ticket?.EmailAddress,
-            pictureUrl = result.Ticket?.PictureUrl,
-            userId = result.Ticket?.UserId,
-        });
+        var redirect = Hosting.ClientOrigin
+            .AppendPathSegments("/auth/auth-provider-login")
+            .SetQueryParams(new
+            {
+                expires = result.Ticket?.Expires,
+                issued = result.Ticket?.Issued,
+                token = result.Ticket?.Token,
+                displayName = result.Ticket?.DisplayName,
+                email = result.Ticket?.EmailAddress,
+                pictureUrl = result.Ticket?.PictureUrl,
+                userId = result.Ticket?.UserId,
+            });
 
         return Redirect(redirect);
     }
