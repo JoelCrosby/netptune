@@ -21,9 +21,8 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock,
         DataContext context)
-        : base(options, logger, encoder, clock)
+        : base(options, logger, encoder)
     {
         DataContext = context;
     }

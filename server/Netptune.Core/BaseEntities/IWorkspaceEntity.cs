@@ -9,6 +9,4 @@ public interface IWorkspaceEntity : IAuditableEntity
     public int WorkspaceId  { get; set; }
 }
 
-public interface IWorkspaceEntity<TEntity> : IAuditableEntity<TEntity>, IWorkspaceEntity
-{
-}
+public interface IWorkspaceEntity<TEntity> : IAuditableEntity<TEntity>, IWorkspaceEntity;
