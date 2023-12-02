@@ -1,12 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin board-groups-selection-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .board-groups-selection {
     background-color: mix(mat.get-color-from-palette($primary), $board-group, 5%) !important;
 

@@ -1,18 +1,12 @@
 @use '@angular/material' as mat;
 
 @mixin spinner-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .loader {
     background: linear-gradient(to right, mat.get-color-from-palette($primary) 10%, rgba(129, 55, 241, 0) 42%);
   }
 
   .loader::after {
-    background: mat.get-color-from-palette($background, card);
+    background: $card;
   }
 
   .loader::before {

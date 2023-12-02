@@ -1,11 +1,5 @@
 
 @mixin autocomplete-chips-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .autocomplete-chips {
     .mat-mdc-chip {
       margin: .2rem .2rem .2rem 0;

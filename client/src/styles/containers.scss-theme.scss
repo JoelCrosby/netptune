@@ -1,14 +1,8 @@
 @use '@angular/material' as mat;
 
 @mixin containers-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .app-container {
-    background-color: mat.get-color-from-palette($background, background);
+    background-color: $background
   }
 
   .auth-page-container {
@@ -20,12 +14,12 @@
 
     &::before {
       background-color: mat.get-color-from-palette($primary, .6);
-      background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, mat.get-color-from-palette($background, background) 1px);
+      background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, $background 1px);
     }
 
     form {
       box-shadow: 0 4px 32px 0 rgb(10 14 29 / 2%), 0 8px 64px 0 rgb(10 14 29 / 8%);
-      background-color: mat.get-color-from-palette($background, background);
+      background-color: $background
     }
   }
 

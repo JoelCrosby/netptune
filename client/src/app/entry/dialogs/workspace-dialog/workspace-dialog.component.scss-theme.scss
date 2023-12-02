@@ -2,12 +2,6 @@
 
 @mixin workspace-dialog-theme($theme) {
 
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .identifier-check {
     cursor: default;
     color: mat.get-color-from-palette($foreground, success);

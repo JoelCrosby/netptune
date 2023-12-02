@@ -1,15 +1,9 @@
 @use '@angular/material' as mat;
 
 @mixin create-board-group-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .create-group-button {
-    background-color: mat.get-color-from-palette($background, background);
-    border: 4px dashed mat.get-color-from-palette($background, border, .04);
+    background-color: $background;
+    border: 4px dashed rgba($border, .04);
     color: mat.get-color-from-palette($foreground, text, .4);
   }
 

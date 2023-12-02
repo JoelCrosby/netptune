@@ -138,9 +138,9 @@ public class Startup
             app.UseExceptionHandler("/error");
             app.UseHsts();
             app.UseHttpsRedirection();
-            app.UseSpaStaticFiles();
         }
 
+        app.UseSpaStaticFiles();
         app.UseDefaultFiles();
         app.UseStaticFiles();
 

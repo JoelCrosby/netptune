@@ -1,18 +1,12 @@
 @use '@angular/material' as mat;
 
 @mixin lists-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .app-list {
     background-color: darken($board-group, 1);
   }
 
   .app-list-item {
-    background-color: mat.get-color-from-palette($background, card);
+    background-color: $card;
 
     .description {
       color: mat.get-color-from-palette($foreground, text, .6);

@@ -1,19 +1,13 @@
 @use '@angular/material' as mat;
 
 @mixin board-group-users-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .board-group-user.selected {
     border: 2px solid mat.get-color-from-palette($primary, 400);
     z-index: 99;
   }
 
   .board-group-user {
-    background-color: mat.get-color-from-palette($background, background);
+    background-color: $background;
     border: 2px solid transparent;
 
     &:hover {

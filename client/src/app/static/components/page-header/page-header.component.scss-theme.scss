@@ -2,14 +2,8 @@
 
 @mixin page-header-theme($theme) {
 
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .header-top-row {
-    border-bottom: 2px solid mat.get-color-from-palette($background, border);
+    border-bottom: 2px solid $border;
   }
 
   .header-back-link {

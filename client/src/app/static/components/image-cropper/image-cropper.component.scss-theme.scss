@@ -1,12 +1,6 @@
 
 @mixin image-cropper-theme($theme) {
 
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .image-cropper {
     .mat-mdc-button.icon-button {
       min-width: 0;

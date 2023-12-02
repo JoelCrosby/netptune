@@ -2,14 +2,8 @@
 
 @mixin task-list-item-theme($theme) {
 
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .task-item {
-    background-color: mat.get-color-from-palette($background, card);
+    background-color: $card;
 
     .task-scope-id {
       background-color: mat.get-color-from-palette($foreground, text, .1);
@@ -21,7 +15,7 @@
   }
 
   .task-item:hover {
-    background-color: darken(mat.get-color-from-palette($background, card), 2);
+    background-color: darken($card, 2);
   }
 
   .task-item-selected {
