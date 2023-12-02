@@ -29,6 +29,4 @@ public interface IAuditableEntity
     AppUser? Owner { get; set; }
 }
 
-public interface IAuditableEntity<TValue> : IKeyedEntity<TValue>, IAuditableEntity
-{
-}
+public interface IAuditableEntity<TValue> : IKeyedEntity<TValue>, IAuditableEntity;

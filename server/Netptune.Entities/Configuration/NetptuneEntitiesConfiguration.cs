@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Models.Options;
 using Netptune.Entities.Contexts;
 
+using Npgsql;
+
 namespace Netptune.Entities.Configuration;
 
 public static class NetptuneEntitiesConfiguration
@@ -20,6 +22,10 @@ public static class NetptuneEntitiesConfiguration
         // https://www.npgsql.org/doc/types/datetime.html#timestamps-and-timezones
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        #pragma warning disable CS0618 // Type or member is obsolete
+        NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
+        #pragma warning restore CS0618 // Type or member is obsolete
 
         var netptuneEntitiesOptions = new NetptuneEntitiesOptions();
         configuration(netptuneEntitiesOptions);
