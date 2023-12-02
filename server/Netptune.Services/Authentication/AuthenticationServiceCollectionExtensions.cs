@@ -105,10 +105,10 @@ public static class AuthenticationServiceCollectionExtensions
             options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Events.OnRedirectToAuthorizationEndpoint = context =>
             {
-                if (context.RedirectUri.Contains("6400"))
-                {
-                    context.HttpContext.Response.Redirect(context.RedirectUri.Replace("6400", "7401"));
-                }
+                var original = context.RedirectUri;
+                var redirect = original.Contains("6400") ? context.RedirectUri.Replace("6400", "7401") : original;
+
+                context.Response.Redirect(redirect);
 
                 return Task.CompletedTask;
             };
