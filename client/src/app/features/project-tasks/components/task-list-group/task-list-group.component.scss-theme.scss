@@ -1,12 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin task-list-group-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .tasks-container {
     h4 {
       color: mat.get-color-from-palette($foreground, text, .6);
@@ -15,10 +9,8 @@
     .task-list {
       background-color: darken($board-group, 1);
     }
-
-
     .task-list-item {
-      background-color: mat.get-color-from-palette($background);
+      background-color: $background;
     }
 
     .cdk-virtual-scroll-orientation-vertical

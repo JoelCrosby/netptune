@@ -1,5 +1,17 @@
 $side-bar: null !default;
 $board-group: null !default;
+$border: null !default;
+$status-bar: null !default;
+$app-bar: null !default;
+$background: null !default;
+$hover: null !default;
+$card: null !default;
+$dialog: null !default;
+
+$primary: null !default;
+$accent: null !default;
+$warn: null !default;
+$foreground: null !default;
 
 @use '@angular/material' as mat;
 
@@ -32,6 +44,18 @@ $board-group: null !default;
 .default-theme {
   $side-bar: #29242e !global;
   $board-group: #f8f8f8 !global;
+  $border: rgba(0, 0, 0, .08) !global;
+  $status-bar: #fff !global;
+  $app-bar: #fff !global;
+  $background: #fff !global;
+  $hover: rgba(#000, .02) !global;
+  $card: #fff !global;
+  $dialog: #fff !global;
+
+  $primary: map-get($default-theme, primary) !global;
+  $accent: map-get($default-theme, accent) !global;
+  $warn: map-get($default-theme, warn) !global;
+  $foreground: map-get($default-theme, foreground) !global;
 
   @include mat.core();
   @include mat.all-component-bases($default-theme);
@@ -47,6 +71,17 @@ $board-group: null !default;
 .dark-theme {
   $side-bar: #1c1b21 !global;
   $board-group: #3a3a3a !global;
+  $border: rgba(255, 255, 255, .12) !global;
+  $status-bar: #000 !global;
+  $background: #272727 !global;
+  $app-bar: #272727 !global;
+  $card: #303030 !global;
+  $hover: rgba(#fff, .04) !global;
+
+  $primary: map-get($dark-theme, primary) !global;
+  $accent: map-get($dark-theme, accent) !global;
+  $warn: map-get($dark-theme, warn) !global;
+  $foreground: map-get($dark-theme, foreground) !global;
 
   @include mat.core();
   @include mat.all-component-bases($dark-theme);
@@ -62,8 +97,16 @@ $board-group: null !default;
     --mdc-dialog-container-color: #2c2c2c;
   }
 
+  .mat-mdc-menu-panel {
+    --mat-menu-container-color: #313131;
+  }
+
   .mat-mdc-tooltip {
     --mdc-plain-tooltip-container-color: #1d1d1d;
+  }
+
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+    --mdc-chip-elevated-container-color: #333333;
   }
 }
 

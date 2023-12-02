@@ -1,11 +1,7 @@
 @use '@angular/material' as mat;
 
 @mixin inline-text-area-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
+
   $is-dark-theme: map-get($theme, is-dark);
 
   .inline-text-area-input.active-border {

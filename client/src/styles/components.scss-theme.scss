@@ -1,12 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin components-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   $is-dark-theme: map-get($theme, is-dark);
 
   // Custom Scrollbars
@@ -115,7 +109,7 @@
   // Form Seperator
 
   .form-seperator {
-    border-bottom: 2px solid mat.get-color-from-palette($background, border);
+    border-bottom: 2px solid $border;
     margin: 2rem 0;
   }
 

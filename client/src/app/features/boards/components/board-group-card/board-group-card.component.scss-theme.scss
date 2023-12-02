@@ -1,12 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin board-group-card-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .card-footer {
     .task-scope-id {
       background-color: mat.get-color-from-palette($primary, .2);
@@ -14,11 +8,11 @@
   }
 
   .group-task-card.flagged {
-    background-color: mix(mat.get-color-from-palette($warn), mat.get-color-from-palette($background, background), 15%) !important;
+    background-color: mix(mat.get-color-from-palette($warn), $background, 15%) !important;
   }
 
   .group-task-card.selected {
-    background-color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($background, background), 10%) !important;
+    background-color: mix(mat.get-color-from-palette($primary), $background, 10%) !important;
     color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($foreground, text), 20%) !important;
   }
 

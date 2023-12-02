@@ -1,12 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin project-tasks-list-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .empty-list-img,
   .list-empty-mark {
     color: mat.get-color-from-palette($foreground, empty-list);

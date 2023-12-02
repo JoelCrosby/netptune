@@ -1,14 +1,6 @@
 @use '@angular/material' as mat;
 @use 'sass:color';
-
-
 @mixin user-select-theme($theme) {
-
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
   $is-dark-theme: map-get($theme, is-dark);
 
@@ -19,8 +11,8 @@
     }
 
     .label-input {
-      $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
-      $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -4%);
+      $dark-bg: color.scale($card, $lightness: 10%);
+      $light-bg: color.scale($card, $lightness: -4%);
       background-color: if($is-dark-theme, $dark-bg, $light-bg);
     }
 
@@ -34,13 +26,13 @@
     }
 
     .select-menu-inner {
-      background-color: mat.get-color-from-palette($background, card);
+      background-color: $card;
     }
 
     .select-item {
       &:hover {
-        $dark-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: 10%);
-        $light-bg: color.scale(mat.get-color-from-palette($background, card), $lightness: -6%);
+        $dark-bg: color.scale($card, $lightness: 10%);
+        $light-bg: color.scale($card, $lightness: -6%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
 

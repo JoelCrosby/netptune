@@ -15,7 +15,7 @@ $dark-theme: mat.define-dark-theme((
    warn: $dark-warn,
    is-dark: true,
    foreground: mat.$dark-theme-foreground-palette,
-   background: mat.$dark-theme-background-palette,
+   background: (900: #272727),
  ),
  typography: mat.define-typography-config(),
  density: 0,

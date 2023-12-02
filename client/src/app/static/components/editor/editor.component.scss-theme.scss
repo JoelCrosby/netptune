@@ -2,18 +2,9 @@
 @use 'sass:color';
 
 @mixin editor-theme($theme) {
-
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   $is-dark-theme: map-get($theme, is-dark);
   $fill-background: transparent;
-
-  $background-color: mat.get-color-from-palette($background, background);
-  $tooltip-background-color: color.scale($background-color, $lightness: 10%);
+  $tooltip-background-color: color.scale($background, $lightness: 10%);
   $hover-background-color: if($is-dark-theme, #404040, #ececec);
   $code-color: if($is-dark-theme, #cfbed5, #6e0099);
   $monospace: Cascadia Code, SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
@@ -48,7 +39,7 @@
 
   .ce-popover {
     border: 0;
-    background-color: $background-color;
+    background-color: $background;
 
     @extend  .mat-elevation-z4;
   }

@@ -1,14 +1,6 @@
 @use '@angular/material' as mat;
 @use 'sass:color';
-
-
 @mixin tags-theme($theme) {
-
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
   $item-background: mat.get-color-from-palette($foreground, text, .06);
   $item-background-hover: mat.get-color-from-palette($foreground, text, .1);

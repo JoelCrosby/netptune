@@ -1,19 +1,11 @@
 @use '@angular/material' as mat;
 
 @mixin move-tasks-dialog-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   .group-selection {
     button {
       .pill {
         background-color: mat.get-color-from-palette($foreground, text, .1);
       }
-
-
       &.selected {
         color: invert(mat.get-color-from-palette($foreground, text));
         background-color: mat.get-color-from-palette($primary);

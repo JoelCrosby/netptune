@@ -1,15 +1,10 @@
 @use '@angular/material' as mat;
 
 @mixin spinners-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
 
   @keyframes typing {
     0% {
-      background-color: mat.get-color-from-palette($background, background);
+      background-color: $background;
       box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 mat.get-color-from-palette($primary, .2);
     }
 
@@ -20,7 +15,7 @@
 
     75% {
       background-color: mat.get-color-from-palette($primary, .4);
-      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 mat.get-color-from-palette($background, background);
+      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 $background
     }
   }
 }

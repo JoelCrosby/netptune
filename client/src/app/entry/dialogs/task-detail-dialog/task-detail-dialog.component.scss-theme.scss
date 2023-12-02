@@ -1,14 +1,8 @@
 @use '@angular/material' as mat;
 
 @mixin task-detail-dialog-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
   $is-dark-theme: map-get($theme, is-dark);
-  $inline-backgroud: if($is-dark-theme, #2c2c2c, #fff);
+  $inline-backgroud: if($is-dark-theme, #272727, #fff);
 
   .task-scope-id {
     background-color: mat.get-color-from-palette($primary, .2);
@@ -60,7 +54,7 @@
     .inline-edit {
       position: sticky;
       top: 0;
-      background-color: mat.get-color-from-palette($background, card);
+      background-color: $card;
       z-index: 2;
     }
 
