@@ -26,6 +26,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         return Entities
             .Include(item => item.Owner)
             .Include(item => item.ProjectBoards)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(item => item.Id == id);
     }
 
@@ -44,6 +45,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .Include(project => project.Workspace)
             .Include(project => project.Owner)
             .Include(project => project.ProjectBoards)
+            .AsSplitQuery()
             .AsNoTracking()
             .Select(project => GetViewModel(project))
             .ToListAsync();
@@ -58,6 +60,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .Include(project => project.Workspace)
             .Include(project => project.Owner)
             .Include(project => project.ProjectBoards)
+            .AsSplitQuery()
             .AsNoTracking()
             .Select(project => GetViewModel(project))
             .FirstOrDefaultAsync();
@@ -72,6 +75,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .Include(project => project.Workspace)
             .Include(project => project.Owner)
             .Include(project => project.ProjectBoards)
+            .AsSplitQuery()
             .AsNoTracking()
             .Select(project => GetViewModel(project))
             .FirstOrDefaultAsync();
