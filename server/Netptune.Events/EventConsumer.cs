@@ -27,7 +27,7 @@ public sealed class EventConsumer : IEventConsumer
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            var _ = Subscriber.ReceiveFrameString();
+            _ = Subscriber.ReceiveFrameString();
             var type = Subscriber.ReceiveFrameString();
             var message = Subscriber.ReceiveFrameString();
 
