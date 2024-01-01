@@ -44,6 +44,7 @@ COPY /client .
 RUN pnpm build
 
 FROM base AS final
+EXPOSE 4800/tcp
 WORKDIR /app
 COPY --from=build /app/publish .
 COPY --from=client-build /client/dist/browser ./wwwroot/dist
