@@ -32,6 +32,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
+            .AsSplitQuery()
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(EqualsPredicate(id));
     }
@@ -47,6 +48,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
             .Include(x => x.Tags)
+            .AsSplitQuery()
             .AsNoTracking()
             .Select(task => task.ToViewModel())
             .FirstOrDefaultAsync();
@@ -123,7 +125,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
-            .Include(x => x.Tags);
+            .Include(x => x.Tags)
+            .AsSplitQuery();
 
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
@@ -138,6 +141,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
+            .AsSplitQuery()
             .Select(task => task.ToViewModel())
             .ToReadonlyListAsync(isReadonly);
     }

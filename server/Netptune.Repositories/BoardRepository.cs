@@ -63,6 +63,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 select b)
             .Include(x => x.Owner)
             .Include(x => x.Project)
+            .AsSplitQuery()
             .ToReadonlyListAsync(isReadonly);
     }
 
