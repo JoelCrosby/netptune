@@ -41,7 +41,8 @@
               "src/assets/favicon-32x32.png"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/styles.css"
             ],
             "scripts": []
           },

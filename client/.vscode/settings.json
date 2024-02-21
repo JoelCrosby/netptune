@@ -48,4 +48,9 @@
   "typescript.preferences.importModuleSpecifier": "shortest",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "files.insertFinalNewline": true,
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "skipStyle": true
+    }
+  },
 }
