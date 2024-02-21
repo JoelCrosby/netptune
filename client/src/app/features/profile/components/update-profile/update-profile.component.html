@@ -6,14 +6,14 @@
 
     <input type="hidden" formControlName="pictureUrl" />
 
-    <button
+    <app-button
       class="form-submit-btn"
       mat-stroked-button
       (click)="updateClicked()"
       [disabled]="formGroup.invalid || (loadingUpdate$ | async)"
     >
       Update Profile
-    </button>
+    </app-button>
   </div>
 
   <div class="column-fill">
@@ -40,13 +40,13 @@
             width="180"
           />
 
-          <button
+          <app-button
             class="profile-picture-btn"
             mat-stroked-button
             (click)="onChangePictureClicked()"
           >
             Change Picture
-          </button>
+          </app-button>
         </ng-container>
 
         <ng-template #elseTemplate>
@@ -59,13 +59,13 @@
             width="180"
           />
 
-          <button
+          <app-button
             class="profile-picture-btn"
             mat-stroked-button
             (click)="onChangePictureClicked()"
           >
             Change Picture
-          </button>
+          </app-button>
         </ng-template>
       </ng-template>
     </div>

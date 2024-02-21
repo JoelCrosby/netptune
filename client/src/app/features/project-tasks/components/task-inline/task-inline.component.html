@@ -4,7 +4,7 @@
   #taskInlineContainer
 >
   <ng-container *ngIf="!editActive; else elseTemplate">
-    <button
+    <app-button
       mat-button
       disableRipple="true"
       class="new-task-button"
@@ -12,7 +12,7 @@
     >
       <mat-icon>add</mat-icon>
       <span> Add Task </span>
-    </button>
+    </app-button>
   </ng-container>
 
   <ng-template #elseTemplate>

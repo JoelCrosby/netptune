@@ -24,68 +24,74 @@
   </div>
 
   <div class="cropper-tool-bar" *ngIf="ready">
-    <button
+    <app-button
       class="icon-button"
       (click)="cropper.zoomIn()"
       mat-button
       matTooltip="Zoom In"
     >
       <mat-icon>zoom_in</mat-icon>
-    </button>
-    <button
+    </app-button>
+    <app-button
       class="icon-button"
       (click)="cropper.zoomOut()"
       mat-button
       matTooltip="Zoom Out"
     >
       <mat-icon>zoom_out</mat-icon>
-    </button>
-    <button
+    </app-button>
+    <app-button
       class="icon-button"
       (click)="cropper.center()"
       mat-button
       matTooltip="Center Focus"
     >
       <mat-icon>filter_center_focus</mat-icon>
-    </button>
-    <button
+    </app-button>
+    <app-button
       class="icon-button"
       (click)="cropper.rotate(-90)"
       mat-button
       matTooltip="Rotate"
     >
       <mat-icon>rotate_90_degrees_ccw</mat-icon>
-    </button>
+    </app-button>
 
-    <button (click)="cropper.fit()" mat-button>Fit</button>
-    <button (click)="cropper.fitToScreen()" mat-button>Fit to screen</button>
-    <button (click)="cropper.setScale(1)" mat-button>1:1</button>
-    <button (click)="cropper.clean()" mat-button>Clean</button>
+    <app-button (click)="cropper.fit()" mat-button>Fit</app-button>
+    <app-button (click)="cropper.fitToScreen()" mat-button
+      >Fit to screen</app-button
+    >
+    <app-button (click)="cropper.setScale(1)" mat-button>1:1</app-button>
+    <app-button (click)="cropper.clean()" mat-button>Clean</app-button>
   </div>
 
-  <button mat-stroked-button class="crop-image-btn" (click)="onCancelClicked()">
+  <app-button
+    mat-stroked-button
+    class="crop-image-btn"
+    (click)="onCancelClicked()"
+  >
     Cancel
-  </button>
+  </app-button>
 
-  <button
+  <app-button
     *ngIf="src"
     mat-stroked-button
     class="crop-image-btn"
     (click)="onClearClicked()"
   >
     Remove
-  </button>
+  </app-button>
 
-  <button
+  <app-button
     mat-stroked-button
     class="crop-image-btn select-file"
     (click)="_fileInput.click()"
   >
     <mat-icon>image</mat-icon>
     <span>Upload</span>
-  </button>
+  </app-button>
 
-  <button
+  <app-button
     *ngIf="ready"
     mat-flat-button
     color="primary"
@@ -93,5 +99,5 @@
     (click)="onCropClicked()"
   >
     <mat-icon>crop</mat-icon>Save
-  </button>
+  </app-button>
 </div>

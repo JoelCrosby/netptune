@@ -17,6 +17,7 @@ import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
+import { ButtonComponent } from '../button/button.component';
 
 @UntilDestroy()
 @Component({
@@ -147,14 +148,14 @@ export class UserSelectComponent implements OnInit, OnChanges {
     this.options$.next(options);
   }
 
-  open(dropdown: HTMLElement, origin: HTMLElement) {
+  open(dropdown: HTMLElement, origin: ButtonComponent) {
     this.isOpen = true;
     if (this.compact) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
       dropdown.style.top = '0px';
     } else {
-      dropdown.style.width = `${origin.offsetWidth}px`;
+      dropdown.style.width = `${origin.element.nativeElement.offsetWidth}px`;
       dropdown.style.left = '0';
       dropdown.style.top = '42px';
     }

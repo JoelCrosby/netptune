@@ -3,7 +3,7 @@
   [class.workspace-select-compact]="compact"
   #dropdown
 >
-  <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
+  <app-button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
     <ng-container *ngIf="currentWorkspace; else elseTemplate">
       <div
         class="app-workspace-link-inner"
@@ -18,7 +18,7 @@
       <div class="app-workspace-link-inner"></div>
       <div class="select-label">Select Workspace</div>
     </ng-template>
-  </button>
+  </app-button>
 
   <div #selectmenu class="select-menu">
     <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">

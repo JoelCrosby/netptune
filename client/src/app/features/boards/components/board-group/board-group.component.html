@@ -33,9 +33,9 @@
 
       <ng-container *ngIf="showAddButton$ | async; else elseTemplate">
         <div class="create-task">
-          <button mat-button color="primary" (click)="onAddTaskClicked()">
+          <app-button mat-button color="primary" (click)="onAddTaskClicked()">
             ADD TASK
-          </button>
+          </app-button>
         </div>
       </ng-container>
 

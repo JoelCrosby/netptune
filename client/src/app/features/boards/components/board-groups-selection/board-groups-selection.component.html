@@ -3,7 +3,7 @@
 
   <div class="board-groups-selection">
     <span><b>{{ count + ' '}}</b> tasks selected</span>
-    <button>
+    <app-button>
       <mat-icon
         class="material-icons-outlined close-btn"
         (click)="onClearClicked()"
@@ -11,33 +11,36 @@
       >
         clear_all
       </mat-icon>
-    </button>
+    </app-button>
   </div>
 
-  <button class="board-groups-selection-btn" (click)="onDeleteClicked()">
+  <app-button class="board-groups-selection-btn" (click)="onDeleteClicked()">
     <mat-icon
       class="material-icons-outlined"
       matTooltip="Delete selected tasks"
     >
       delete
     </mat-icon>
-  </button>
+  </app-button>
 
-  <button class="board-groups-selection-btn" (click)="onMoveTasksClicked()">
+  <app-button class="board-groups-selection-btn" (click)="onMoveTasksClicked()">
     <mat-icon
       class="material-icons-outlined"
       matTooltip="Move selected tasks to another group"
     >
       low_priority
     </mat-icon>
-  </button>
+  </app-button>
 
-  <button class="board-groups-selection-btn" (click)="onReassignTasksClicked()">
+  <app-button
+    class="board-groups-selection-btn"
+    (click)="onReassignTasksClicked()"
+  >
     <mat-icon
       class="material-icons-outlined"
       matTooltip="Reassign tasks to user"
     >
       recent_actors
     </mat-icon>
-  </button>
+  </app-button>
 </div>

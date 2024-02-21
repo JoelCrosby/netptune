@@ -30,28 +30,28 @@
 
 <div app-dialog-actions align="end">
   <ng-container *ngIf="data.isInfoMessage; else elseTemplate">
-    <button mat-stroked-button cdkFocusInitial (click)="dialogRef.close(false)">
+    <app-button stroked cdkFocusInitial (click)="dialogRef.close(false)">
       Ok
-    </button>
+    </app-button>
   </ng-container>
 
   <ng-template #elseTemplate>
-    <button
+    <app-button
       *ngIf="data.cancelLabel"
       mat-stroked-button
       cdkFocusInitial
       (click)="dialogRef.close(false)"
     >
       {{ data.cancelLabel }}
-    </button>
+    </app-button>
 
-    <button
+    <app-button
       mat-flat-button
       [color]="data.color"
       (click)="dialogRef.close(true)"
       [disabled]="data.confirmationCheckboxLabel && !confirmationChecked"
     >
       {{ data.acceptLabel }}
-    </button>
+    </app-button>
   </ng-template>
 </div>

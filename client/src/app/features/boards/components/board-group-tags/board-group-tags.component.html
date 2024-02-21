@@ -1,4 +1,4 @@
-<button
+<app-button
   *ngrxLet="selectedCount$ as count"
   mat-button
   matTooltip="Filter by Tag"
@@ -6,7 +6,7 @@
   [matMenuTriggerFor]="tagMenu"
   (click)="onClicked()"
   [matBadge]="!!count ? count : undefined"
-  [color]="!!count ? 'primary' : ''"
+  [color]="!!count ? 'primary' : undefined"
 >
   <mat-icon
     aria-hidden="false"
@@ -15,7 +15,7 @@
   >
     local_offer
   </mat-icon>
-</button>
+</app-button>
 
 <mat-menu #tagMenu="matMenu">
   <ng-template matMenuContent>

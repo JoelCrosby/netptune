@@ -4,10 +4,10 @@
 
 <div app-dialog-content>
   <div class="user-selection">
-    <button
+    <app-button
       [class.selected]="selected === user.id"
       mat-stroked-button
-      [color]="selected === user.id ? 'primary' : ''"
+      [color]="selected === user.id ? 'primary' : undefined"
       *ngFor="let user of users$ | async"
       (click)="onUserClicked(user.id)"
     >
@@ -15,18 +15,18 @@
       </app-avatar>
 
       <label> {{ user.displayName }} </label>
-    </button>
+    </app-button>
   </div>
 </div>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button app-dialog-close>Cancel</button>
-  <button
+  <app-button mat-stroked-button app-dialog-close>Cancel</app-button>
+  <app-button
     mat-flat-button
     color="primary"
     (click)="onReassignTasksClicked()"
     type="button"
   >
     Re-assign Tasks
-  </button>
+  </app-button>
 </div>

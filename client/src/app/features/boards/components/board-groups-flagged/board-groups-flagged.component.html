@@ -1,9 +1,9 @@
-<button
+<app-button
   mat-button
   matTooltip="Filter Flagged tasks"
   class="board-filter-button"
   (click)="onClicked()"
-  [color]="(onyFlagged$ | async) ? 'warn' : ''"
+  [color]="(onyFlagged$ | async) ? 'warn' : undefined"
 >
   <mat-icon
     aria-hidden="false"
@@ -12,4 +12,4 @@
   >
     flag
   </mat-icon>
-</button>
+</app-button>

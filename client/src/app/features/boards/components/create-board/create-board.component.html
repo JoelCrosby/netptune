@@ -27,9 +27,14 @@
 </form>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button app-dialog-close>Close</button>
+  <app-button mat-stroked-button app-dialog-close>Close</app-button>
 
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
+  <app-button
+    mat-flat-button
+    color="primary"
+    (click)="getResult()"
+    type="button"
+  >
     {{ isEditMode ? 'Save Changes' : 'Create Board'}}
-  </button>
+  </app-button>
 </div>

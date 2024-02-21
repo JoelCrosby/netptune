@@ -1,5 +1,5 @@
 <div class="task-item" [class.flagged]="task.isFlagged">
-  <button
+  <app-button
     class="task-action"
     mat-icon-button
     aria-label="more"
@@ -7,7 +7,7 @@
     [matMenuTriggerFor]="menu"
   >
     <mat-icon class="drag"> more_vert </mat-icon>
-  </button>
+  </app-button>
 
   <mat-checkbox class="task-checkbox" color="primary"> </mat-checkbox>
 
@@ -33,21 +33,21 @@
 
 <mat-menu #menu="matMenu">
   <ng-template matMenuContent let-task="task">
-    <button mat-menu-item (click)="markCompleteClicked(task)">
+    <app-button mat-menu-item (click)="markCompleteClicked(task)">
       <mat-icon class="material-icons-outlined"> done </mat-icon>
       <span>Mark Complete</span>
-    </button>
+    </app-button>
 
-    <button mat-menu-item (click)="moveToBacklogClicked(task)">
+    <app-button mat-menu-item (click)="moveToBacklogClicked(task)">
       <mat-icon class="material-icons-outlined">
         assignment_returned_outline
       </mat-icon>
       <span>Move to Backlog</span>
-    </button>
+    </app-button>
 
-    <button mat-menu-item (click)="deleteClicked(task)">
+    <app-button mat-menu-item (click)="deleteClicked(task)">
       <mat-icon class="material-icons-outlined"> delete </mat-icon>
       <span>Delete</span>
-    </button>
+    </app-button>
   </ng-template>
 </mat-menu>

@@ -35,7 +35,7 @@
           <small> {{ comment.createdAt | fromNow }} </small>
 
           <div class="comment-actions">
-            <button
+            <app-button
               class="comment-button"
               mat-icon-button
               aria-label="Comment Actions"
@@ -43,14 +43,14 @@
               [matMenuTriggerData]="{comment: comment}"
             >
               <mat-icon>more_horiz</mat-icon>
-            </button>
+            </app-button>
 
             <mat-menu #commentMenu="matMenu">
               <ng-template matMenuContent let-comment="comment">
-                <button mat-menu-item (click)="deleteComment.emit(comment)">
+                <app-button mat-menu-item (click)="deleteComment.emit(comment)">
                   <mat-icon>delete</mat-icon>
                   <span>Delete Comment</span>
-                </button>
+                </app-button>
               </ng-template>
             </mat-menu>
           </div>

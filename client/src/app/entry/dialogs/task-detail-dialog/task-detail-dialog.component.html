@@ -68,13 +68,13 @@
 
             <mat-menu #projectsMenu="matMenu">
               <small>Change Project</small>
-              <button
+              <app-button
                 mat-menu-item
                 *ngFor="let project of projects$ | async"
                 (click)="selectProject(project.id)"
               >
                 {{ project.name }}
-              </button>
+              </app-button>
             </mat-menu>
           </div>
         </div>
@@ -83,15 +83,15 @@
           <h4>Actions</h4>
 
           <div class="actions-row">
-            <button
+            <app-button
               mat-icon-button
               aria-label="Delete Task"
               matTooltip="Delete Task"
               (click)="deleteClicked()"
             >
               <mat-icon class="material-icons-outlined"> delete </mat-icon>
-            </button>
-            <button
+            </app-button>
+            <app-button
               mat-icon-button
               aria-label="Flag Task"
               matTooltip="Flag Task"
@@ -101,7 +101,7 @@
               <mat-icon [class.material-icons-outlined]="!task.isFlagged">
                 flag
               </mat-icon>
-            </button>
+            </app-button>
           </div>
         </div>
 

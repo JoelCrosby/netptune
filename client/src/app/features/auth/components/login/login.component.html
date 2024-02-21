@@ -51,7 +51,9 @@
         Create Account
       </a>
 
-      <button mat-stroked-button color="primary" type="submit">Sign in</button>
+      <app-button mat-stroked-button color="primary" type="submit"
+        >Sign in</app-button
+      >
     </div>
 
     <div class="button-container auth-footer">
@@ -66,7 +68,7 @@
 
     <mat-divider />
 
-    <button
+    <app-button
       class="signin-github"
       (click)="$event.preventDefault(); onGithubSignInClicked()"
     >
@@ -86,6 +88,6 @@
       </svg>
 
       Continue with GitHub
-    </button>
+    </app-button>
   </form>
 </div>

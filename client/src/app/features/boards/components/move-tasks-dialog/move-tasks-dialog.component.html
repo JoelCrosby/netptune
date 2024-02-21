@@ -4,27 +4,27 @@
 
 <div app-dialog-content>
   <div class="group-selection">
-    <button
+    <app-button
       [class.selected]="selected === group.id"
       mat-stroked-button
-      [color]="selected === group.id ? 'primary' : ''"
+      [color]="selected === group.id ? 'primary' : undefined"
       *ngFor="let group of groups$ | async"
       (click)="onGroupClicked(group.id)"
     >
       <label> {{ group.name }} </label>
       <div class="pill"></div>
-    </button>
+    </app-button>
   </div>
 </div>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button app-dialog-close>Cancel</button>
-  <button
+  <app-button mat-stroked-button app-dialog-close>Cancel</app-button>
+  <app-button
     mat-flat-button
     color="primary"
     (click)="onMoveTasksClicked()"
     type="button"
   >
     Move Tasks
-  </button>
+  </app-button>
 </div>

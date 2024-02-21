@@ -46,6 +46,7 @@ import { DialogContentComponent } from './components/dialog-content/dialog-conte
 import { DialogContainerComponent } from './components/dialog/dialog-container.component';
 import { DialogCloseDirective } from './directives/dialog-close.directive';
 import { DialogActionsDirective } from './directives/dialog-actions.directive';
+import { ButtonComponent } from './components/button/button.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { DialogActionsDirective } from './directives/dialog-actions.directive';
     DialogContentComponent,
     DialogContainerComponent,
     DialogCloseDirective,
+    ButtonComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [
@@ -140,6 +142,7 @@ import { DialogActionsDirective } from './directives/dialog-actions.directive';
     DialogContentComponent,
     DialogContainerComponent,
     DialogCloseDirective,
+    ButtonComponent,
   ],
   providers: [FromNowPipe],
 })

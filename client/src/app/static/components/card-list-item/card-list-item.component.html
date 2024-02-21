@@ -1,9 +1,9 @@
 <app-card>
   <app-card-title>
     {{ title }}
-    <button mat-button color="primary" type="button" (click)="delete.emit()">
+    <app-button color="primary" type="button" (click)="delete.emit()">
       <mat-icon>close</mat-icon>
-    </button>
+    </app-button>
   </app-card-title>
   <app-card-content>
     <pre>{{ description }}</pre>
@@ -17,7 +17,7 @@
     <ng-container *ngFor="let action of actions; first as isFirst">
       <ng-container *ngIf="action.isLink; else elseTemplate">
         <ng-container *ngIf="isFirst; else elseTemplate">
-          <a
+          <app-button
             mat-flat-button
             color="primary"
             class="action-button"
@@ -28,10 +28,10 @@
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
-          </a>
+          </app-button>
         </ng-container>
         <ng-template #elseTemplate>
-          <a
+          <app-button
             mat-button
             color="primary"
             class="action-button"
@@ -42,13 +42,12 @@
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
-          </a>
+          </app-button>
         </ng-template>
       </ng-container>
       <ng-template #elseTemplate>
         <ng-container *ngIf="isFirst; else elseTemplate">
-          <button
-            mat-flat-button
+          <app-button
             color="primary"
             class="action-button"
             (click)="action.click && action.click()"
@@ -57,11 +56,10 @@
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
-          </button>
+          </app-button>
         </ng-container>
         <ng-template #elseTemplate>
-          <button
-            mat-button
+          <app-button
             color="primary"
             class="action-button"
             (click)="action.click && action.click()"
@@ -70,7 +68,7 @@
               {{ action.icon }}
             </mat-icon>
             {{ action.label }}
-          </button>
+          </app-button>
         </ng-template>
       </ng-template>
     </ng-container>

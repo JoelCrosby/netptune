@@ -1,5 +1,5 @@
 <div class="user-select" [class.user-select-compact]="compact" #dropdown>
-  <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
+  <app-button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
     <div *ngFor="let user of value" class="user-item">
       <app-avatar
         [imageUrl]="user.pictureUrl"
@@ -15,7 +15,7 @@
       <div class="app-user-link-inner"></div>
       <div class="select-label">{{ label }}</div>
     </ng-template>
-  </button>
+  </app-button>
 
   <div #selectmenu class="select-menu">
     <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">
