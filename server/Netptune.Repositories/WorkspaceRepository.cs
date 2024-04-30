@@ -65,6 +65,16 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .ToListAsync();
     }
 
+    public Task<Workspace?> GetUserWorkspace(string userId)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(x => x.UserId == userId)
+            .Select(w => w.Workspace)
+            .Where(x => !x.IsDeleted)
+            .OrderBy(w => w.UpdatedAt)
+            .FirstOrDefaultAsync();
+    }
+
     public Task<bool> Exists(string slug)
     {
         return Entities.AnyAsync(workspace => workspace.Slug == slug);

@@ -9,4 +9,6 @@ public class AuthenticationTicket : CurrentUserResponse
     public DateTime Issued { get; set; }
 
     public DateTime Expires { get; set; }
+
+    public string? WorkspaceSlug { get; set; }
 }

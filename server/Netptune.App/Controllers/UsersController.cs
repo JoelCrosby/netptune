@@ -13,6 +13,7 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.App.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase

@@ -90,7 +90,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await UserManager.UpdateAsync(appUser);
 
-        return LoginResult.Success(GenerateToken(appUser));
+        return LoginResult.Success(await GenerateToken(appUser));
     }
 
     public async Task<LoginResult> LogInViaProvider()
@@ -121,7 +121,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await UserManager.UpdateAsync(user);
 
-        return LoginResult.Success(GenerateToken(user));
+        return LoginResult.Success(await GenerateToken(user));
     }
 
     public async Task<RegisterResult> Register(RegisterRequest model)
@@ -199,7 +199,7 @@ public class NetptuneAuthService : INetptuneAuthService
         await LogNewlyRegisteredUserIn(appUser);
         await SendWelcomeEmail(appUser);
 
-        return RegisterResult.Success(GenerateToken(appUser));
+        return RegisterResult.Success(await GenerateToken(appUser));
     }
 
     public async Task<RegisterResult> ConfirmEmail(string userId, string code)
@@ -217,7 +217,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (!result.Succeeded) return RegisterResult.Failed();
 
-        return RegisterResult.Success(GenerateToken(user));
+        return RegisterResult.Success(await GenerateToken(user));
     }
 
     public async Task<ClientResponse> RequestPasswordReset(RequestPasswordResetRequest request)
@@ -267,7 +267,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await LogUserIn(user);
 
-        return LoginResult.Success(GenerateToken(user));
+        return LoginResult.Success(await GenerateToken(user));
     }
 
     public async Task<ClientResponse> ChangePassword(ChangePasswordRequest request)
@@ -357,9 +357,10 @@ public class NetptuneAuthService : INetptuneAuthService
         return DateTime.Now.AddDays(Convert.ToDouble(ExpireDays));
     }
 
-    private AuthenticationTicket GenerateToken(AppUser appUser)
+    private async Task<AuthenticationTicket> GenerateToken(AppUser appUser)
     {
         var expireDays = GetExpireDays();
+        var workspace = await WorkspaceService.GetUserWorkspace(appUser.Id);
 
         return new AuthenticationTicket
         {
@@ -370,6 +371,7 @@ public class NetptuneAuthService : INetptuneAuthService
             Issued = DateTime.Now,
             Expires = expireDays,
             PictureUrl = appUser.PictureUrl,
+            WorkspaceSlug = workspace?.Slug,
         };
     }
 

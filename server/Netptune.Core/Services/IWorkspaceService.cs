@@ -15,7 +15,9 @@ public interface IWorkspaceService
 
     Task<ClientResponse<IsSlugUniqueResponse>> IsSlugUnique(string slug);
 
-    Task<List<Workspace>> GetUserWorkspaces();
+    Task<List<Workspace>> GetUserWorkspaces(string? userId = null);
+
+    Task<Workspace?> GetUserWorkspace(string? userId = null);
 
     Task<List<Workspace>> GetAll();
 

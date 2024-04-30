@@ -160,11 +160,18 @@ public class WorkspaceService : IWorkspaceService
         return WorkspaceRepository.GetBySlug(slug);
     }
 
-    public Task<List<Workspace>> GetUserWorkspaces()
+    public Task<List<Workspace>> GetUserWorkspaces(string? userId = null)
     {
-        var userId = Identity.GetCurrentUserId();
+        userId ??= Identity.GetCurrentUserId();
 
         return WorkspaceRepository.GetUserWorkspaces(userId);
+    }
+
+    public Task<Workspace?> GetUserWorkspace(string? userId)
+    {
+        userId ??= Identity.GetCurrentUserId();
+
+        return WorkspaceRepository.GetUserWorkspace(userId);
     }
 
     public Task<List<Workspace>> GetAll()

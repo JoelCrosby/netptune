@@ -9,10 +9,10 @@ public static class CsvHelperExtensions
 {
     private static readonly TypeConverterOptions ConverterOptions = new ()
     {
-        Formats = new[]
-        {
+        Formats =
+        [
             "dd/MM/yyyy HH:mm:ss",
-        },
+        ],
     };
 
     public static CsvWriter AddDateFormatting(this CsvWriter csv)
