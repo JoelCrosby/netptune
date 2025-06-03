@@ -44,6 +44,7 @@
     "@ngrx/router-store": "17.0.0",
     "@ngrx/store": "17.0.0",
     "@ngrx/store-devtools": "17.0.0",
+    "@typescript-eslint/utils": "^8.33.1",
     "codex-notifier": "^1.1.2",
     "codex-tooltip": "^1.0.5",
     "dayjs": "^1.11.10",
