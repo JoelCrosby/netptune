@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
 
 @Component({
-  selector: 'app-avatar',
-  templateUrl: './avatar.component.html',
-  styleUrls: ['./avatar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-avatar',
+    templateUrl: './avatar.component.html',
+    styleUrls: ['./avatar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AvatarComponent {
   @Input() name?: string | null;

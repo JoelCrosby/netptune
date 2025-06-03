@@ -9,10 +9,11 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
 
 @Component({
-  selector: 'app-color-select',
-  templateUrl: './color-select.component.html',
-  styleUrls: ['./color-select.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-color-select',
+    templateUrl: './color-select.component.html',
+    styleUrls: ['./color-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ColorSelectComponent implements ControlValueAccessor {
   @Input() label!: string;

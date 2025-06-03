@@ -19,9 +19,10 @@ import { Observable, Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './create-task-dialog.component.html',
-  styleUrls: ['./create-task-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './create-task-dialog.component.html',
+    styleUrls: ['./create-task-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   projects$!: Observable<ProjectViewModel[]>;

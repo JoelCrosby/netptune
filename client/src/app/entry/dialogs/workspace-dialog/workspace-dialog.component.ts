@@ -38,10 +38,11 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-workspace-dialog',
-  templateUrl: './workspace-dialog.component.html',
-  styleUrls: ['./workspace-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-workspace-dialog',
+    templateUrl: './workspace-dialog.component.html',
+    styleUrls: ['./workspace-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   isUniqueLoadingSubject$ = new Subject<boolean>();

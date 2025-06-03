@@ -6,7 +6,8 @@ const LEFT_CLASS = 'scroll-shadow-left';
 const RIGHT_CLASS = 'scroll-shadow-right';
 
 @Directive({
-  selector: '[appScrollShadow]',
+    selector: '[appScrollShadow]',
+    standalone: false
 })
 export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
   leftShadowEl!: Element;

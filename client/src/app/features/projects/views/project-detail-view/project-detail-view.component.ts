@@ -10,9 +10,10 @@ import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './project-detail-view.component.html',
-  styleUrls: ['./project-detail-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './project-detail-view.component.html',
+    styleUrls: ['./project-detail-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectDetailViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectProjectDetailLoading);

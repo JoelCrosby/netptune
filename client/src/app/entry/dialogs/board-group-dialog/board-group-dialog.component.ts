@@ -10,9 +10,10 @@ export interface BoardGroupDialogData {
 }
 
 @Component({
-  selector: 'app-board-group-dialog',
-  templateUrl: './board-group-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-group-dialog',
+    templateUrl: './board-group-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupDialogComponent {
   form = this.fb.nonNullable.group({

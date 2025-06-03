@@ -11,9 +11,10 @@ import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable } from 'rxjs';
 
 @Component({
-  templateUrl: './profile-view.component.html',
-  styleUrls: ['./profile-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './profile-view.component.html',
+    styleUrls: ['./profile-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProfileViewComponent implements OnInit, AfterViewInit {
   loadingUpdate$!: Observable<boolean>;

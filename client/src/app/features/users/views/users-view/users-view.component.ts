@@ -14,9 +14,10 @@ import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './users-view.component.html',
-  styleUrls: ['./users-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './users-view.component.html',
+    styleUrls: ['./users-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UsersViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectUsersLoading);

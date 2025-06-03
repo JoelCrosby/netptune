@@ -23,10 +23,11 @@ import { from, Observable, of } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './board-groups-view.component.html',
-  styleUrls: ['./board-groups-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
+    templateUrl: './board-groups-view.component.html',
+    styleUrls: ['./board-groups-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [],
+    standalone: false
 })
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit

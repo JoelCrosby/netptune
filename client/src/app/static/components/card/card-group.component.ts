@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
-  selector: 'app-card-group',
-  template: '<ng-content/>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-card-group',
+    template: '<ng-content/>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CardGroupComponent {
   @HostBinding('class') className = 'netp-card-group';

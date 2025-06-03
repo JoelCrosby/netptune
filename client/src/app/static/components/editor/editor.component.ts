@@ -31,18 +31,19 @@ import { environment } from '@env/environment';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-editor',
-  templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => EditorComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-editor',
+    templateUrl: './editor.component.html',
+    styleUrls: ['./editor.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => EditorComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
   @ViewChild('editorJs', { static: true }) el!: ElementRef;

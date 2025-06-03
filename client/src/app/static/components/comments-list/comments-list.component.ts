@@ -10,10 +10,11 @@ import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
 @Component({
-  selector: 'app-comments-list',
-  templateUrl: './comments-list.component.html',
-  styleUrls: ['./comments-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-comments-list',
+    templateUrl: './comments-list.component.html',
+    styleUrls: ['./comments-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CommentsListComponent {
   @Input() user!: UserResponse | null | undefined;

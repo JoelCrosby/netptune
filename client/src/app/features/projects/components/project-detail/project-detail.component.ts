@@ -21,10 +21,11 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-project-detail',
-  templateUrl: './project-detail.component.html',
-  styleUrls: ['./project-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-project-detail',
+    templateUrl: './project-detail.component.html',
+    styleUrls: ['./project-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   project$!: Observable<ProjectViewModel | null | undefined>;

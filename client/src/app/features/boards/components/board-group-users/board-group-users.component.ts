@@ -7,10 +7,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-board-group-users',
-  templateUrl: './board-group-users.component.html',
-  styleUrls: ['./board-group-users.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-group-users',
+    templateUrl: './board-group-users.component.html',
+    styleUrls: ['./board-group-users.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupUsersComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;

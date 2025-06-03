@@ -6,10 +6,11 @@ import { Store } from '@ngrx/store';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-create-board-group',
-  templateUrl: './create-board-group.component.html',
-  styleUrls: ['./create-board-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-create-board-group',
+    templateUrl: './create-board-group.component.html',
+    styleUrls: ['./create-board-group.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CreateBoardGroupComponent {
   constructor(

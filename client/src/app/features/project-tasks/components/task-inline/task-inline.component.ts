@@ -38,10 +38,11 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-task-inline',
-  templateUrl: './task-inline.component.html',
-  styleUrls: ['./task-inline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-task-inline',
+    templateUrl: './task-inline.component.html',
+    styleUrls: ['./task-inline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.new;

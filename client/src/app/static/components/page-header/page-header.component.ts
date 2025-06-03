@@ -11,10 +11,11 @@ import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-page-header',
-  templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-page-header',
+    templateUrl: './page-header.component.html',
+    styleUrls: ['./page-header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PageHeaderComponent {
   @Input() title?: string | null;

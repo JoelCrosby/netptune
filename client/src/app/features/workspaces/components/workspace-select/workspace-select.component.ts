@@ -21,10 +21,11 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-workspace-select',
-  templateUrl: './workspace-select.component.html',
-  styleUrls: ['./workspace-select.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-workspace-select',
+    templateUrl: './workspace-select.component.html',
+    styleUrls: ['./workspace-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;

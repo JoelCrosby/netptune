@@ -7,8 +7,9 @@ import { activityTypeToString } from '@core/transforms/activity-type';
 import { FromNowPipe } from './from-now.pipe';
 
 @Pipe({
-  name: 'activity',
-  pure: true,
+    name: 'activity',
+    pure: true,
+    standalone: false
 })
 export class ActivityPipe implements PipeTransform {
   constructor(private fromNow: FromNowPipe) {}

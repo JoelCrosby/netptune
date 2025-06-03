@@ -26,10 +26,11 @@ export interface AutocompleteChipsSelectionChanged {
 }
 
 @Component({
-  selector: 'app-autocomplete-chips',
-  templateUrl: './autocomplete-chips.component.html',
-  styleUrls: ['./autocomplete-chips.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-autocomplete-chips',
+    templateUrl: './autocomplete-chips.component.html',
+    styleUrls: ['./autocomplete-chips.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutocompleteChipsComponent implements OnInit {
   @Input() placeholder!: string;

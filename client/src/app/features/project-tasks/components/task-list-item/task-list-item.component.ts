@@ -7,10 +7,11 @@ import { TaskStatus } from '@core/enums/project-task-status';
 import * as actions from '@core/store/tasks/tasks.actions';
 
 @Component({
-  selector: 'app-task-list-item',
-  templateUrl: './task-list-item.component.html',
-  styleUrls: ['./task-list-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-task-list-item',
+    templateUrl: './task-list-item.component.html',
+    styleUrls: ['./task-list-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TaskListItemComponent {
   @Input() task!: TaskViewModel;

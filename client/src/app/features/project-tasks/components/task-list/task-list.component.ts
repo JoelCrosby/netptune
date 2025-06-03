@@ -5,10 +5,11 @@ import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/cre
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-task-list',
-  templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-task-list',
+    templateUrl: './task-list.component.html',
+    styleUrls: ['./task-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TaskListComponent {
   tasks$ = this.store.select(TaskSelectors.selectTasks);

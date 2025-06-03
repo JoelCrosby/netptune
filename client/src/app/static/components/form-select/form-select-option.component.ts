@@ -13,12 +13,13 @@ import { FormSelectComponent } from './form-select.component';
 import { FormSelectService } from './form-select.service';
 
 @Component({
-  selector: 'app-form-select-option',
-  host: {
-    class: 'nept-form-select-option',
-  },
-  template: `<ng-content />`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-form-select-option',
+    host: {
+        class: 'nept-form-select-option',
+    },
+    template: `<ng-content />`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {
   @Input() value!: TValue;

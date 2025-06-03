@@ -31,10 +31,11 @@ import {
 import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-board-group',
-  templateUrl: './board-group.component.html',
-  styleUrls: ['./board-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-group',
+    templateUrl: './board-group.component.html',
+    styleUrls: ['./board-group.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId!: string;

@@ -12,9 +12,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  templateUrl: './move-tasks-dialog.component.html',
-  styleUrls: ['./move-tasks-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './move-tasks-dialog.component.html',
+    styleUrls: ['./move-tasks-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MoveTasksDialogComponent implements OnInit {
   groups$!: Observable<BoardViewGroup[]>;

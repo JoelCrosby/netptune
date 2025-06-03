@@ -13,9 +13,10 @@ import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './confirm-view.component.html',
-  styleUrls: ['./confirm-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './confirm-view.component.html',
+    styleUrls: ['./confirm-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
   loading$!: Observable<boolean>;

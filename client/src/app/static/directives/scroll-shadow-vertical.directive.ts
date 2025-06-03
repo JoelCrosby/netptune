@@ -6,7 +6,8 @@ const TOP_CLASS = 'scroll-shadow-top';
 const BOTTOM_CLASS = 'scroll-shadow-bottom';
 
 @Directive({
-  selector: '[appScrollShadowVertical]',
+    selector: '[appScrollShadowVertical]',
+    standalone: false
 })
 export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
   topShadowEl!: Element;

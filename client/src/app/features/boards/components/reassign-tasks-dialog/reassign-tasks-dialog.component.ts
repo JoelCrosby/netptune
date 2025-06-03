@@ -13,10 +13,11 @@ import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 
 @Component({
-  selector: 'app-reassign-tasks-dialog',
-  templateUrl: './reassign-tasks-dialog.component.html',
-  styleUrls: ['./reassign-tasks-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-reassign-tasks-dialog',
+    templateUrl: './reassign-tasks-dialog.component.html',
+    styleUrls: ['./reassign-tasks-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ReassignTasksDialogComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;

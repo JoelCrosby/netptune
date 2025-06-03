@@ -37,10 +37,11 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-board-group-task-inline',
-  templateUrl: './board-group-task-inline.component.html',
-  styleUrls: ['./board-group-task-inline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-group-task-inline',
+    templateUrl: './board-group-task-inline.component.html',
+    styleUrls: ['./board-group-task-inline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit

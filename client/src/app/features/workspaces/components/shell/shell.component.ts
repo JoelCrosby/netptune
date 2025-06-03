@@ -22,9 +22,10 @@ import { Workspace } from '@core/models/workspace';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 
 @Component({
-  templateUrl: './shell.component.html',
-  styleUrls: ['./shell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './shell.component.html',
+    styleUrls: ['./shell.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav!: MatSidenav;

@@ -44,10 +44,11 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-task-detail-dialog',
-  templateUrl: './task-detail-dialog.component.html',
-  styleUrls: ['./task-detail-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-task-detail-dialog',
+    templateUrl: './task-detail-dialog.component.html',
+    styleUrls: ['./task-detail-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit

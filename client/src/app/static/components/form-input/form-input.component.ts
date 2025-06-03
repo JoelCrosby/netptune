@@ -12,9 +12,10 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-form-input',
-  templateUrl: './form-input.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-form-input',
+    templateUrl: './form-input.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FormInputComponent implements ControlValueAccessor {
   @Input() label!: string;

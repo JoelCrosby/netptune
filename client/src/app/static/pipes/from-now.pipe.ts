@@ -5,8 +5,9 @@ import * as UTC from 'dayjs/plugin/utc';
 import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
 @Pipe({
-  name: 'fromNow',
-  pure: true,
+    name: 'fromNow',
+    pure: true,
+    standalone: false
 })
 @Injectable()
 export class FromNowPipe implements PipeTransform {

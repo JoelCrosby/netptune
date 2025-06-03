@@ -2,10 +2,10 @@ import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-dialog-container',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
+    selector: 'app-dialog-container',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [
+        `
       :host {
         display: block;
         background: var(--background);
@@ -30,9 +30,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         padding-right: 16px;
       }
     `,
-  ],
-  template: `<div class="dialog-inner custom-scroll">
+    ],
+    template: `<div class="dialog-inner custom-scroll">
     <ng-template cdkPortalOutlet></ng-template>
   </div>`,
+    standalone: false
 })
 export class DialogContainerComponent extends CdkDialogContainer {}

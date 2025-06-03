@@ -9,9 +9,10 @@ import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-reset-password',
+    templateUrl: './reset-password.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ResetPasswordComponent {
   authLoading$: Observable<boolean>;

@@ -31,11 +31,12 @@ export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
 };
 
 @Component({
-  selector: 'app-inline-text-area',
-  templateUrl: './inline-text-area.component.html',
-  styleUrls: ['./inline-text-area.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
+    selector: 'app-inline-text-area',
+    templateUrl: './inline-text-area.component.html',
+    styleUrls: ['./inline-text-area.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
+    standalone: false
 })
 export class InlineTextAreaComponent
   implements OnInit, OnDestroy, ControlValueAccessor

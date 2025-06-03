@@ -20,10 +20,11 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-user-select',
-  templateUrl: './user-select.component.html',
-  styleUrls: ['./user-select.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-user-select',
+    templateUrl: './user-select.component.html',
+    styleUrls: ['./user-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;

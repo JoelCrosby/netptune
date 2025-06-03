@@ -35,10 +35,11 @@ import {
 import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-create-board',
-  templateUrl: './create-board.component.html',
-  styleUrls: ['./create-board.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-create-board',
+    templateUrl: './create-board.component.html',
+    styleUrls: ['./create-board.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CreateBoardComponent implements OnInit, AfterViewInit {
   isUniqueLoading$ = new Subject<boolean>();

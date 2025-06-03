@@ -8,10 +8,11 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-project-dialog',
-  templateUrl: './project-dialog.component.html',
-  styleUrls: ['./project-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-project-dialog',
+    templateUrl: './project-dialog.component.html',
+    styleUrls: ['./project-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectDialogComponent implements OnDestroy {
   currentWorkspace$ = this.store.select(selectCurrentWorkspace);
