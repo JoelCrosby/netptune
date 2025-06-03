@@ -4,14 +4,14 @@
   .group-selection {
     button {
       .pill {
-        background-color: mat.get-color-from-palette($foreground, text, .1);
+        background-color: mat.m2-get-color-from-palette($foreground, text, .1);
       }
       &.selected {
-        color: invert(mat.get-color-from-palette($foreground, text));
-        background-color: mat.get-color-from-palette($primary);
+        color: invert(mat.m2-get-color-from-palette($foreground, text));
+        background-color: mat.m2-get-color-from-palette($primary);
 
         .pill {
-          background-color: invert(mat.get-color-from-palette($foreground, text, .4));
+          background-color: invert(mat.m2-get-color-from-palette($foreground, text, .4));
         }
       }
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { EntryModule } from '@entry/entry.module';
 import { environment } from '@env/environment';
@@ -25,51 +25,46 @@ import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 
-@NgModule({
-  imports: [
-    // angular
-    CommonModule,
-    HttpClientModule,
-
-    // ngrx
-    StoreModule.forRoot(reducers, {
-      metaReducers,
-      runtimeChecks: {
-        strictStateImmutability: true,
-        strictActionImmutability: true,
-        strictStateSerializability: false,
-        strictActionSerializability: false,
-        strictActionWithinNgZone: true,
-        strictActionTypeUniqueness: true,
-      },
-    }),
-    StoreRouterConnectingModule.forRoot(),
-    EffectsModule.forRoot([
-      AuthEffects,
-      MetaEffects,
-      ActivityEffects,
-      LayoutEffects,
-      SettingsEffects,
-      WorkspacesEffects,
-      ProjectsEffects,
-      ProjectTasksEffects,
-      UsersEffects,
-      TagsEffects,
-    ]),
-    environment.production
-      ? []
-      : StoreDevtoolsModule.instrument({
-          name: 'Netptune',
-          connectInZone: true,
+@NgModule({ imports: [
+        // angular
+        CommonModule,
+        // ngrx
+        StoreModule.forRoot(reducers, {
+            metaReducers,
+            runtimeChecks: {
+                strictStateImmutability: true,
+                strictActionImmutability: true,
+                strictStateSerializability: false,
+                strictActionSerializability: false,
+                strictActionWithinNgZone: true,
+                strictActionTypeUniqueness: true,
+            },
         }),
-    EntryModule,
-  ],
-  providers: [
-    CookieService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: RouterStateSerializer, useClass: CustomSerializer },
-  ],
-})
+        StoreRouterConnectingModule.forRoot(),
+        EffectsModule.forRoot([
+            AuthEffects,
+            MetaEffects,
+            ActivityEffects,
+            LayoutEffects,
+            SettingsEffects,
+            WorkspacesEffects,
+            ProjectsEffects,
+            ProjectTasksEffects,
+            UsersEffects,
+            TagsEffects,
+        ]),
+        environment.production
+            ? []
+            : StoreDevtoolsModule.instrument({
+                name: 'Netptune',
+                connectInZone: true,
+            }),
+        EntryModule], providers: [
+        CookieService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: RouterStateSerializer, useClass: CustomSerializer },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class CoreModule {
   constructor(
     @Optional()

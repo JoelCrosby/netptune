@@ -13,7 +13,7 @@
     justify-content: center;
 
     &::before {
-      background-color: mat.get-color-from-palette($primary, .6);
+      background-color: mat.m2-get-color-from-palette($primary, .6);
       background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, $background 1px);
     }
 
@@ -29,8 +29,8 @@
 
   .auth-error {
     .auth-error-text {
-      background-color: mat.get-color-from-palette($warn, .06);
-      color: darken(mat.get-color-from-palette($warn), 36);
+      background-color: mat.m2-get-color-from-palette($warn, .06);
+      color: darken(mat.m2-get-color-from-palette($warn), 36);
     }
   }
 }

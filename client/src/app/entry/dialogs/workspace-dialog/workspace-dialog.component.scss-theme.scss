@@ -4,7 +4,7 @@
 
   .identifier-check {
     cursor: default;
-    color: mat.get-color-from-palette($foreground, success);
+    color: mat.m2-get-color-from-palette($foreground, success);
   }
 
   .is-unique-loading {

@@ -5,7 +5,7 @@
   $inline-backgroud: if($is-dark-theme, #272727, #fff);
 
   .task-scope-id {
-    background-color: mat.get-color-from-palette($primary, .2);
+    background-color: mat.m2-get-color-from-palette($primary, .2);
   }
 
   .actions-row {
@@ -17,7 +17,7 @@
 
   .comments-container {
     .material-icons-outlined {
-      color: mat.get-color-from-palette($foreground, icon, .4);
+      color: mat.m2-get-color-from-palette($foreground, icon, .4);
     }
 
     .comment-button .material-icons {
@@ -28,7 +28,7 @@
   }
 
   .clickable:hover {
-    background-color: mat.get-color-from-palette($foreground, text, .06);
+    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
   }
 
   .detail-list-item {

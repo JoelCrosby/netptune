@@ -3,22 +3,22 @@
 @mixin board-group-card-theme($theme) {
   .card-footer {
     .task-scope-id {
-      background-color: mat.get-color-from-palette($primary, .2);
+      background-color: mat.m2-get-color-from-palette($primary, .2);
     }
   }
 
   .group-task-card.flagged {
-    background-color: mix(mat.get-color-from-palette($warn), $background, 15%) !important;
+    background-color: mix(mat.m2-get-color-from-palette($warn), $background, 15%) !important;
   }
 
   .group-task-card.selected {
-    background-color: mix(mat.get-color-from-palette($primary), $background, 10%) !important;
-    color: mix(mat.get-color-from-palette($primary), mat.get-color-from-palette($foreground, text), 20%) !important;
+    background-color: mix(mat.m2-get-color-from-palette($primary), $background, 10%) !important;
+    color: mix(mat.m2-get-color-from-palette($primary), mat.m2-get-color-from-palette($foreground, text), 20%) !important;
   }
 
   .card-tags {
     .card-tag {
-      background-color: mat.get-color-from-palette($foreground, text, .06);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .06);
     }
   }
 

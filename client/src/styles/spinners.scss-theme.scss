@@ -5,17 +5,17 @@
   @keyframes typing {
     0% {
       background-color: $background;
-      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 mat.get-color-from-palette($primary, .2);
+      box-shadow: 12px 0 0 0 mat.m2-get-color-from-palette($primary, .2), 24px 0 0 0 mat.m2-get-color-from-palette($primary, .2);
     }
 
     25% {
-      background-color: mat.get-color-from-palette($primary, .4);
-      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, 2), 24px 0 0 0 mat.get-color-from-palette($primary, .2);
+      background-color: mat.m2-get-color-from-palette($primary, .4);
+      box-shadow: 12px 0 0 0 mat.m2-get-color-from-palette($primary, 2), 24px 0 0 0 mat.m2-get-color-from-palette($primary, .2);
     }
 
     75% {
-      background-color: mat.get-color-from-palette($primary, .4);
-      box-shadow: 12px 0 0 0 mat.get-color-from-palette($primary, .2), 24px 0 0 0 $background
+      background-color: mat.m2-get-color-from-palette($primary, .4);
+      box-shadow: 12px 0 0 0 mat.m2-get-color-from-palette($primary, .2), 24px 0 0 0 $background
     }
   }
 }

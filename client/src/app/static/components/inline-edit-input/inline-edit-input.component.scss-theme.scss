@@ -4,7 +4,7 @@
 
   .inline-edit-input.active-border {
     width: 320px;
-    border: 2px solid mat.get-color-from-palette($primary, .6) !important;
+    border: 2px solid mat.m2-get-color-from-palette($primary, .6) !important;
     border-radius: 4px;
   }
 }

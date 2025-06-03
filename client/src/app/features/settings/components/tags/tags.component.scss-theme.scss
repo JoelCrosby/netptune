@@ -2,12 +2,12 @@
 @use 'sass:color';
 @mixin tags-theme($theme) {
 
-  $item-background: mat.get-color-from-palette($foreground, text, .06);
-  $item-background-hover: mat.get-color-from-palette($foreground, text, .1);
+  $item-background: mat.m2-get-color-from-palette($foreground, text, .06);
+  $item-background-hover: mat.m2-get-color-from-palette($foreground, text, .1);
 
   .tag-item-list {
     .tag-item {
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
       background-color: $item-background;
 
       .tag-item-delete {
@@ -38,19 +38,19 @@
       background-color: transparent;
       border-width: 1px;
       border: 1px solid $item-background;
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
 
       &:hover:not(.edit-tag-item) {
         border-width: 2px;
         background-color: transparent;
-        border: 2px solid mat.get-color-from-palette($foreground, text, 1);
+        border: 2px solid mat.m2-get-color-from-palette($foreground, text, 1);
       }
     }
 
     .edit-tag-item {
-      border: 2px solid mat.get-color-from-palette($primary);
+      border: 2px solid mat.m2-get-color-from-palette($primary);
       background-color: transparent;
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
     }
   }
 }

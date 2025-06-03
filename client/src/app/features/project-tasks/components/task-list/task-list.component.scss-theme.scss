@@ -3,10 +3,10 @@
 @mixin project-tasks-list-theme($theme) {
   .empty-list-img,
   .list-empty-mark {
-    color: mat.get-color-from-palette($foreground, empty-list);
+    color: mat.m2-get-color-from-palette($foreground, empty-list);
 
     .empty-text {
-      color: mat.get-color-from-palette($foreground, disabled-button);
+      color: mat.m2-get-color-from-palette($foreground, disabled-button);
     }
   }
 }
