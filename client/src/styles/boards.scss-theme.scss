@@ -16,7 +16,7 @@
     }
 
     .mat-icon {
-      color: mat.get-color-from-palette($foreground, text, .4);
+      color: mat.m2-get-color-from-palette($foreground, text, .4);
     }
   }
 
@@ -25,16 +25,16 @@
   }
 
   .board-filter-button.mat-warn {
-    background-color: mat.get-color-from-palette($warn, .08);
+    background-color: mat.m2-get-color-from-palette($warn, .08);
   }
 
   .board-filter-button.mat-primary {
-    background-color: mat.get-color-from-palette($primary, .08);
+    background-color: mat.m2-get-color-from-palette($primary, .08);
   }
 
   .board-filter-seperator {
     height: 1.4rem;
     margin: 0 .4rem;
-    border-right: 1px solid mat.get-color-from-palette($foreground, text, .1);
+    border-right: 1px solid mat.m2-get-color-from-palette($foreground, text, .1);
   }
 }

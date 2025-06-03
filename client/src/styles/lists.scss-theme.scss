@@ -9,16 +9,16 @@
     background-color: $card;
 
     .description {
-      color: mat.get-color-from-palette($foreground, text, .6);
+      color: mat.m2-get-color-from-palette($foreground, text, .6);
     }
   }
 
   .app-list-drag-icon {
-    color: rgba(mat.get-color-from-palette($foreground, icon), .3);
+    color: rgba(mat.m2-get-color-from-palette($foreground, icon), .3);
   }
 
   .app-list-item-pill {
-    color: mat.get-color-from-palette($primary);
-    background-color: rgba(mat.get-color-from-palette($primary), .1);
+    color: mat.m2-get-color-from-palette($primary);
+    background-color: rgba(mat.m2-get-color-from-palette($primary), .1);
   }
 }

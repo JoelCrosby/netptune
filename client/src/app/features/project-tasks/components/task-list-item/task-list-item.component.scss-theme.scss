@@ -6,11 +6,11 @@
     background-color: $card;
 
     .task-scope-id {
-      background-color: mat.get-color-from-palette($foreground, text, .1);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .1);
     }
 
     .drag {
-      color: rgba(mat.get-color-from-palette($foreground, icon), .3);
+      color: rgba(mat.m2-get-color-from-palette($foreground, icon), .3);
     }
   }
 
@@ -19,11 +19,11 @@
   }
 
   .task-item-selected {
-    background-color: mat.get-color-from-palette($primary, 400, .1);
+    background-color: mat.m2-get-color-from-palette($primary, 400, .1);
   }
 
   .project-chip {
-    color: mat.get-color-from-palette($foreground, text, .7);
-    background-color: mat.get-color-from-palette($foreground, text, .06);
+    color: mat.m2-get-color-from-palette($foreground, text, .7);
+    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
   }
 }

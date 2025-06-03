@@ -7,7 +7,7 @@
   .workspace-select {
 
     .label-input {
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
     }
 
     .label-input {
@@ -17,11 +17,11 @@
     }
 
     .select-trigger {
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
       background-color: transparent;
 
       &:hover {
-        background-color: mat.get-color-from-palette($foreground, text, .08);
+        background-color: mat.m2-get-color-from-palette($foreground, text, .08);
       }
     }
 
@@ -37,8 +37,8 @@
       }
 
       &.active {
-        $dark-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: 20%);
-        $light-bg: color.scale(mat.get-color-from-palette($primary, .2), $lightness: -10%);
+        $dark-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: 20%);
+        $light-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: -10%);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
     }
@@ -48,12 +48,12 @@
     }
 
     .select-menu-footer {
-      border-top: 1px solid mat.get-color-from-palette($foreground, text, .1);
+      border-top: 1px solid mat.m2-get-color-from-palette($foreground, text, .1);
       background-color: color.scale($card, $lightness: -4%);
     }
 
     .select-menu-footer-item {
-      color: mat.get-color-from-palette($foreground, text);
+      color: mat.m2-get-color-from-palette($foreground, text);
 
       &:hover {
         $dark-bg: color.scale($card, $lightness: 10%);

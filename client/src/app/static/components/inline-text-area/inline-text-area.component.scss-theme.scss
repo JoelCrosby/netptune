@@ -7,7 +7,7 @@
   .inline-text-area-input.active-border {
     &:focus {
       padding: 10px !important;
-      border: 2px solid mat.get-color-from-palette($primary, .6) !important;
+      border: 2px solid mat.m2-get-color-from-palette($primary, .6) !important;
     }
   }
 

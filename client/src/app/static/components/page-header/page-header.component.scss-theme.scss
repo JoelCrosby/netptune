@@ -7,10 +7,10 @@
   }
 
   .header-back-link {
-    color: mat.get-color-from-palette($foreground, text, .5);
+    color: mat.m2-get-color-from-palette($foreground, text, .5);
 
     &:hover {
-      color: mat.get-color-from-palette($primary);
+      color: mat.m2-get-color-from-palette($primary);
     }
   }
 
@@ -19,30 +19,30 @@
     flex-direction: row;
 
     .header-primary-action {
-      background-color: mat.get-color-from-palette($primary);
+      background-color: mat.m2-get-color-from-palette($primary);
       color: #fff;
     }
 
     .header-primary-action:hover {
-      background-color: lighten(mat.get-color-from-palette($primary), 4);
+      background-color: lighten(mat.m2-get-color-from-palette($primary), 4);
     }
 
     .header-secondary-action {
-      background-color: mat.get-color-from-palette($foreground, text, .08);
-      color: mat.get-color-from-palette($foreground, text, .7);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .08);
+      color: mat.m2-get-color-from-palette($foreground, text, .7);
     }
 
     .header-secondary-action:hover {
-      background-color: mat.get-color-from-palette($foreground, text, .2);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .2);
     }
 
     .header-menu-action {
-      background-color: mat.get-color-from-palette($foreground, text, .08);
-      color: mat.get-color-from-palette($foreground, text, .4);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .08);
+      color: mat.m2-get-color-from-palette($foreground, text, .4);
     }
 
     .header-menu-action:hover {
-      background-color: mat.get-color-from-palette($foreground, text, .2);
+      background-color: mat.m2-get-color-from-palette($foreground, text, .2);
     }
   }
 

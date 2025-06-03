@@ -2,7 +2,7 @@
 
 @mixin spinner-theme($theme) {
   .loader {
-    background: linear-gradient(to right, mat.get-color-from-palette($primary) 10%, rgba(129, 55, 241, 0) 42%);
+    background: linear-gradient(to right, mat.m2-get-color-from-palette($primary) 10%, rgba(129, 55, 241, 0) 42%);
   }
 
   .loader::after {
@@ -10,6 +10,6 @@
   }
 
   .loader::before {
-    background: mat.get-color-from-palette($primary);
+    background: mat.m2-get-color-from-palette($primary);
   }
 }

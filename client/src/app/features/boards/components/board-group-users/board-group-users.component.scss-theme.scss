@@ -2,7 +2,7 @@
 
 @mixin board-group-users-theme($theme) {
   .board-group-user.selected {
-    border: 2px solid mat.get-color-from-palette($primary, 400);
+    border: 2px solid mat.m2-get-color-from-palette($primary, 400);
     z-index: 99;
   }
 

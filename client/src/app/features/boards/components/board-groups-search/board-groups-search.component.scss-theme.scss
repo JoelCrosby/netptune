@@ -2,25 +2,25 @@
 
 @mixin board-groups-search-theme($theme) {
   .board-groups-search-input {
-    background-color: mat.get-color-from-palette($foreground, text, .04);
-    border-color: mat.get-color-from-palette($foreground, text, .1) !important;
+    background-color: mat.m2-get-color-from-palette($foreground, text, .04);
+    border-color: mat.m2-get-color-from-palette($foreground, text, .1) !important;
 
     &:focus-within,
     &.active {
       background-color: transparent;
-      border-color: mat.get-color-from-palette($primary) !important;
+      border-color: mat.m2-get-color-from-palette($primary) !important;
     }
 
     &.invalid {
-      border-color: mat.get-color-from-palette($warn) !important;
+      border-color: mat.m2-get-color-from-palette($warn) !important;
     }
 
     mat-icon {
-      color: mat.get-color-from-palette($foreground, text, .1) !important;
+      color: mat.m2-get-color-from-palette($foreground, text, .1) !important;
     }
 
     .clear-search:hover {
-      color: mat.get-color-from-palette($primary) !important;
+      color: mat.m2-get-color-from-palette($primary) !important;
     }
   }
 }

@@ -4,7 +4,7 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   .netp-card {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
     background-color: $card;
     box-shadow: 1px 2px 4px if($is-dark-theme, rgba(0, 0, 0, .2), rgba(0, 0, 0, .1));
   }
@@ -14,12 +14,12 @@
   }
 
   .netp-card-title {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
   }
 
   .netp-card-subtitle {
-    color: mat.get-color-from-palette($foreground, text, .54);
-    background-color: mat.get-color-from-palette($foreground, text, .06);
+    color: mat.m2-get-color-from-palette($foreground, text, .54);
+    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
   }
 
   .netp-card {
@@ -33,6 +33,6 @@
   }
 
   .netp-card.flagged:hover {
-    background-color: mix(mat.get-color-from-palette($warn), $board-group, 24%) !important;
+    background-color: mix(mat.m2-get-color-from-palette($warn), $board-group, 24%) !important;
   }
 }

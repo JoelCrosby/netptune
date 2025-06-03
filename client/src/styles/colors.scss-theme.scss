@@ -2,6 +2,6 @@
 
 @mixin colors-theme($theme) {
   .task-complete {
-    color: mat.get-color-from-palette($foreground, success);
+    color: mat.m2-get-color-from-palette($foreground, success);
   }
 }

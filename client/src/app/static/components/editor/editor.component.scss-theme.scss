@@ -11,7 +11,7 @@
 
   .editor {
     background-color: $fill-background;
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
 
     code {
       color: $code-color;
@@ -29,7 +29,7 @@
       background-color: if($is-dark-theme, #262626, #fbfbfb);
       color: $code-color;
       font-family: $monospace;
-      border: 1px solid mat.get-color-from-palette($foreground, text, .12);
+      border: 1px solid mat.m2-get-color-from-palette($foreground, text, .12);
       border-radius: 3px;
       font-size: 14px;
       resize: none;
@@ -50,18 +50,18 @@
 
   .ce-popover__item--focused:not(.ce-popover__item--no-visible-focus){
     border: 0;
-    background-color: mat.get-color-from-palette($primary, .3) !important;
+    background-color: mat.m2-get-color-from-palette($primary, .3) !important;
     outline: none;
     box-shadow: none;
   }
 
   .ce-toolbar__plus:hover {
-    background-color: mat.get-color-from-palette($primary, .3);
+    background-color: mat.m2-get-color-from-palette($primary, .3);
   }
 
   .ce-popover__item--active {
-    color: mat.get-color-from-palette($primary);
-    background-color: mat.get-color-from-palette($primary, .4);
+    color: mat.m2-get-color-from-palette($primary);
+    background-color: mat.m2-get-color-from-palette($primary, .4);
   }
 
   .cdx-search-field {
@@ -78,15 +78,15 @@
   .cdx-settings-button,
   .ce-settings__button,
   .ce-conversion-tool {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
 
     &:hover {
-      background-color: color.scale(mat.get-color-from-palette($primary, .4), $lightness: 10%);
+      background-color: color.scale(mat.m2-get-color-from-palette($primary, .4), $lightness: 10%);
     }
   }
 
   .ce-paragraph[data-placeholder]:empty::before {
-    color: mat.get-color-from-palette($foreground, text, .6);
+    color: mat.m2-get-color-from-palette($foreground, text, .6);
   }
 
   .ce-inline-toolbar,
@@ -103,7 +103,7 @@
 
   .ce-conversion-tool--focused {
     box-shadow: none;
-    background-color: mat.get-color-from-palette($primary, .1) !important;
+    background-color: mat.m2-get-color-from-palette($primary, .1) !important;
   }
 
   .ce-toolbar__settings-btn,
@@ -113,7 +113,7 @@
   .ce-conversion-tool__icon {
     border-radius: 3px;
     background-color: $tooltip-background-color;
-    color: mat.get-color-from-palette($foreground, text, .6);
+    color: mat.m2-get-color-from-palette($foreground, text, .6);
     box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .42);
   }
 
@@ -122,7 +122,7 @@
   }
 
   .ce-toolbar__plus {
-    color: mat.get-color-from-palette($primary, .8);
+    color: mat.m2-get-color-from-palette($primary, .8);
   }
 
   .ce-block__content, .ce-toolbar__content {
@@ -131,11 +131,11 @@
 
   .ce-block--selected
   .ce-block__content {
-    background-color: color.scale(mat.get-color-from-palette($primary), $lightness: 88%);
+    background-color: color.scale(mat.m2-get-color-from-palette($primary), $lightness: 88%);
   }
 
   .ce-inline-tool-input {
-    color: mat.get-color-from-palette($foreground, text, .6);
+    color: mat.m2-get-color-from-palette($foreground, text, .6);
     background-color: color.scale($fill-background, $lightness: 20%);
   }
 
@@ -147,7 +147,7 @@
 
   .embed-tool__caption[contentEditable=true][data-placeholder]::before,
   .image-tool__caption[contentEditable=true][data-placeholder]::before {
-    color: mat.get-color-from-palette($foreground, text, .6);
+    color: mat.m2-get-color-from-palette($foreground, text, .6);
   }
 
   .codex-editor__loader {
@@ -171,7 +171,7 @@
   }
 
   .link-tool__progress {
-    background-color: mat.get-color-from-palette($primary, .08);
+    background-color: mat.m2-get-color-from-palette($primary, .08);
   }
 
   .link-tool__input {
@@ -180,11 +180,11 @@
 
   .link-tool__input-holder--error
   .link-tool__input {
-    background-color: mat.get-color-from-palette($warn, .08);
+    background-color: mat.m2-get-color-from-palette($warn, .08);
   }
 
   .ce-block--selected .ce-block__content {
-    background-color: mat.get-color-from-palette($primary, .12);
+    background-color: mat.m2-get-color-from-palette($primary, .12);
   }
 
   .ce-popover__items {

@@ -9,21 +9,21 @@
     text-transform: uppercase;
 
     span {
-      color: mat.get-color-from-palette($foreground, text, .3);
+      color: mat.m2-get-color-from-palette($foreground, text, .3);
     }
 
     .title {
-      color: mat.get-color-from-palette($foreground, text, .6);
+      color: mat.m2-get-color-from-palette($foreground, text, .6);
 
       .title-input:hover,
       .title-input.edit-active {
-        background-color: mat.get-color-from-palette($primary, .06);
+        background-color: mat.m2-get-color-from-palette($primary, .06);
       }
     }
 
     .delete-board-group-btn
     .mat-icon {
-      color: mat.get-color-from-palette($foreground, icon, .4);
+      color: mat.m2-get-color-from-palette($foreground, icon, .4);
     }
   }
 }

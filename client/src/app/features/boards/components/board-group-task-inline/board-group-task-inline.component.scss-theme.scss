@@ -2,19 +2,19 @@
 
 @mixin board-group-task-inline-theme($theme) {
   .inline-task-textarea {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
     background-color: $card;
   }
 
   .inline-task-container {
-    border: 4px solid mat.get-color-from-palette($primary, 400, .6);
+    border: 4px solid mat.m2-get-color-from-palette($primary, 400, .6);
     background-color: $card;
-    box-shadow: 1px 2px 4px mat.get-color-from-palette($foreground, text, .1) !important;
+    box-shadow: 1px 2px 4px mat.m2-get-color-from-palette($foreground, text, .1) !important;
   }
 
   .inline-task-info-message {
     border-radius: 50%;
-    background-color: mat.get-color-from-palette($primary);
+    background-color: mat.m2-get-color-from-palette($primary);
     text-align: center;
     height: 24px;
     width: 24px;

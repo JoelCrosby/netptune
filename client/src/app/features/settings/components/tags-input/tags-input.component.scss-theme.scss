@@ -2,10 +2,10 @@
 
 @mixin tags-input-theme($theme) {
 
-  $item-background: mat.get-color-from-palette($foreground, text, .06);
-  $item-background-hover: mat.get-color-from-palette($foreground, text, .1);
+  $item-background: mat.m2-get-color-from-palette($foreground, text, .06);
+  $item-background-hover: mat.m2-get-color-from-palette($foreground, text, .1);
 
   .edit-tag-item {
-    color: mat.get-color-from-palette($foreground, text);
+    color: mat.m2-get-color-from-palette($foreground, text);
   }
 }
