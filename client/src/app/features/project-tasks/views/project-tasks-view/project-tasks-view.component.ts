@@ -17,9 +17,10 @@ import { first, switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 
 @Component({
-  templateUrl: './project-tasks-view.component.html',
-  styleUrls: ['./project-tasks-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './project-tasks-view.component.html',
+    styleUrls: ['./project-tasks-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectTasksViewComponent
   implements OnInit, OnDestroy, AfterViewInit

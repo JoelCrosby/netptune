@@ -35,14 +35,15 @@ function closeDialogVia<R>(
 }
 
 @Directive({
-  selector: '[app-dialog-close], [dialogClose]',
-  exportAs: 'matDialogClose',
-  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
-  host: {
-    '(click)': 'onButtonClick($event)',
-    '[attr.aria-label]': 'ariaLabel || null',
-    '[attr.type]': 'type',
-  },
+    selector: '[app-dialog-close], [dialogClose]',
+    exportAs: 'matDialogClose',
+    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
+    host: {
+        '(click)': 'onButtonClick($event)',
+        '[attr.aria-label]': 'ariaLabel || null',
+        '[attr.type]': 'type',
+    },
+    standalone: false
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   @Input('aria-label') ariaLabel?: string;

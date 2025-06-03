@@ -11,9 +11,10 @@ import { Store } from '@ngrx/store';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
-  templateUrl: './projects-view.component.html',
-  styleUrls: ['./projects-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './projects-view.component.html',
+    styleUrls: ['./projects-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectProjectsLoading).pipe(debounceTime(200));

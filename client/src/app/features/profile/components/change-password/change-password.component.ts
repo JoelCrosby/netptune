@@ -17,10 +17,11 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-change-password',
+    templateUrl: './change-password.component.html',
+    styleUrls: ['./change-password.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
   formGroup = new FormGroup({

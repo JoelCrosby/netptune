@@ -8,10 +8,11 @@ import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
 @Component({
-  selector: 'app-board-groups-selection',
-  templateUrl: './board-groups-selection.component.html',
-  styleUrls: ['./board-groups-selection.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-groups-selection',
+    templateUrl: './board-groups-selection.component.html',
+    styleUrls: ['./board-groups-selection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupsSelectionComponent implements OnInit {
   selected$!: Observable<number[]>;

@@ -13,10 +13,11 @@ import { Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-project-list-item',
-  templateUrl: './project-list-item.component.html',
-  styleUrls: ['./project-list-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-project-list-item',
+    templateUrl: './project-list-item.component.html',
+    styleUrls: ['./project-list-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProjectListItemComponent implements OnInit {
   @Input() project!: ProjectViewModel;

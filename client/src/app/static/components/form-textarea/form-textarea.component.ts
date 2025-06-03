@@ -12,9 +12,10 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-form-textarea',
-  templateUrl: './form-textarea.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-form-textarea',
+    templateUrl: './form-textarea.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FormTextAreaComponent implements ControlValueAccessor {
   @Input() label!: string;

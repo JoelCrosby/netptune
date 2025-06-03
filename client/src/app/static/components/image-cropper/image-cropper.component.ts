@@ -19,10 +19,11 @@ import {
 import { dataURItoBlob } from '@core/util/blob';
 
 @Component({
-  selector: 'app-image-cropper',
-  templateUrl: './image-cropper.component.html',
-  styleUrls: ['./image-cropper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-image-cropper',
+    templateUrl: './image-cropper.component.html',
+    styleUrls: ['./image-cropper.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ImageCropperComponent implements OnInit, AfterViewInit {
   @Input() src!: string;

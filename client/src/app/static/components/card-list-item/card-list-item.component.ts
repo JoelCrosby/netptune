@@ -8,10 +8,11 @@ import {
 import { HeaderAction } from '@core/types/header-action';
 
 @Component({
-  selector: 'app-card-list-item',
-  templateUrl: './card-list-item.component.html',
-  styleUrls: ['./card-list-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-card-list-item',
+    templateUrl: './card-list-item.component.html',
+    styleUrls: ['./card-list-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CardListItemComponent {
   @Input() title!: string;

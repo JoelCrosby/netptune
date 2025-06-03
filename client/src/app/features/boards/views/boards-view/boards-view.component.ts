@@ -10,9 +10,10 @@ import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({
-  templateUrl: './boards-view.component.html',
-  styleUrls: ['./boards-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './boards-view.component.html',
+    styleUrls: ['./boards-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectBoardsLoading);

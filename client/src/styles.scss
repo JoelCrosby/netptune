@@ -57,7 +57,8 @@ $foreground: null !default;
   $warn: map-get($default-theme, warn) !global;
   $foreground: map-get($default-theme, foreground) !global;
 
-  @include mat.core();
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-bases($default-theme);
   @include mat.all-component-colors($default-theme);
   @include mat.all-component-typographies($netptune-typography);
@@ -83,7 +84,8 @@ $foreground: null !default;
   $warn: map-get($dark-theme, warn) !global;
   $foreground: map-get($dark-theme, foreground) !global;
 
-  @include mat.core();
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-bases($dark-theme);
   @include mat.all-component-colors($dark-theme);
   @include mat.all-component-typographies($netptune-typography);

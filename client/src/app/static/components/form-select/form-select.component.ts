@@ -20,10 +20,11 @@ import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectService } from './form-select.service';
 
 @Component({
-  selector: 'app-form-select',
-  templateUrl: './form-select.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FormSelectService],
+    selector: 'app-form-select',
+    templateUrl: './form-select.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [FormSelectService],
+    standalone: false
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor

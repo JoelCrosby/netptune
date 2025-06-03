@@ -5,10 +5,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-boards-grid',
-  templateUrl: './boards-grid.component.html',
-  styleUrls: ['./boards-grid.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-boards-grid',
+    templateUrl: './boards-grid.component.html',
+    styleUrls: ['./boards-grid.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardsGridComponent implements OnInit {
   groups$!: Observable<BoardsViewModel[]>;

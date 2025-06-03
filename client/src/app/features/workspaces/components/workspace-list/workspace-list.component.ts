@@ -4,9 +4,10 @@ import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-workspace-list',
-  templateUrl: './workspace-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-workspace-list',
+    templateUrl: './workspace-list.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WorkspaceListComponent {
   workspaces$ = this.store.select(selectAllWorkspaces);

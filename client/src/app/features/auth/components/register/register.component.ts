@@ -14,9 +14,10 @@ import { Observable, Subject } from 'rxjs';
 import { first, map, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   authLoading$: Observable<boolean>;

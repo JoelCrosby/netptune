@@ -17,10 +17,11 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-inline-edit-input',
-  templateUrl: './inline-edit-input.component.html',
-  styleUrls: ['./inline-edit-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-inline-edit-input',
+    templateUrl: './inline-edit-input.component.html',
+    styleUrls: ['./inline-edit-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
   @Input() value!: string | null | undefined;

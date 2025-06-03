@@ -15,10 +15,11 @@ import { fromEvent, Subject } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tags-input',
-  templateUrl: './tags-input.component.html',
-  styleUrls: ['./tags-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-tags-input',
+    templateUrl: './tags-input.component.html',
+    styleUrls: ['./tags-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() value: string | null = null;

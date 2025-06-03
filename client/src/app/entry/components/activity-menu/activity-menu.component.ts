@@ -12,9 +12,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-activity-menu',
-  templateUrl: './activity-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-activity-menu',
+    templateUrl: './activity-menu.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ActivityMenuComponent implements OnInit {
   @Input() entityType!: EntityType;

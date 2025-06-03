@@ -5,10 +5,11 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-board-groups-flagged',
-  templateUrl: './board-groups-flagged.component.html',
-  styleUrls: ['./board-groups-flagged.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-groups-flagged',
+    templateUrl: './board-groups-flagged.component.html',
+    styleUrls: ['./board-groups-flagged.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupsFlaggedComponent implements OnInit {
   onyFlagged$!: Observable<boolean>;

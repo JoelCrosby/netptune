@@ -5,8 +5,9 @@ import * as UTC from 'dayjs/plugin/utc';
 import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
 @Pipe({
-  name: 'prettyDate',
-  pure: true,
+    name: 'prettyDate',
+    pure: true,
+    standalone: false
 })
 export class PrettyDatePipe implements PipeTransform {
   transform(value: Date | undefined | null): string {

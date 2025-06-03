@@ -12,9 +12,10 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-workspace-list-item',
-  templateUrl: './workspace-list-item.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-workspace-list-item',
+    templateUrl: './workspace-list-item.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WorkspaceListItemComponent implements OnInit {
   @Input() workspace!: Workspace;

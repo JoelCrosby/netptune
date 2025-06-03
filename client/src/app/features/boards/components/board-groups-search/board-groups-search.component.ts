@@ -12,10 +12,11 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-board-groups-search',
-  templateUrl: './board-groups-search.component.html',
-  styleUrls: ['./board-groups-search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-board-groups-search',
+    templateUrl: './board-groups-search.component.html',
+    styleUrls: ['./board-groups-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
   term$!: Observable<string>;

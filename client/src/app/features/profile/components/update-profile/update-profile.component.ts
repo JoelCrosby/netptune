@@ -17,10 +17,11 @@ import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-update-profile',
-  templateUrl: './update-profile.component.html',
-  styleUrls: ['./update-profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-update-profile',
+    templateUrl: './update-profile.component.html',
+    styleUrls: ['./update-profile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
   formGroup = this.fb.group({

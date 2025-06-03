@@ -3,10 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
-  selector: 'app-invite-dialog',
-  templateUrl: './invite-dialog.component.html',
-  styleUrls: ['./invite-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-invite-dialog',
+    templateUrl: './invite-dialog.component.html',
+    styleUrls: ['./invite-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class InviteDialogComponent {
   users: string[] = [];
