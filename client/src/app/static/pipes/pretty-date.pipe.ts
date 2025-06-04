@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as dayjs from 'dayjs';
-import * as RelativeTime from 'dayjs/plugin/relativeTime';
-import * as UTC from 'dayjs/plugin/utc';
-import * as LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import dayjs from 'dayjs';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+import UTC from 'dayjs/plugin/utc';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
 @Pipe({
     name: 'prettyDate',
