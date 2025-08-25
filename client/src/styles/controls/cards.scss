@@ -78,3 +78,44 @@
 .netp-card-actions {
   display: block;
 }
+
+.netp-card {
+  color: var(--foreground);
+  background-color: var(--card);
+  box-shadow: 1px 2px 4px var(--card-shadow);
+}
+
+.netp-card-group {
+  background-color: var(--board-group);
+}
+
+.netp-card-title {
+  color: var(--foreground);
+}
+
+.netp-card-subtitle {
+  color: rgba(var(--foreground-rgb), .54);
+  background-color: rgba(var(--foreground-rgb), .06);
+}
+
+.netp-card {
+  background-color: var(--card) !important;
+  transition: background-color .2s ease-in, color .2s ease-in;
+}
+
+.netp-card:not([class*='selected']):hover {
+  background-color: var(--hover) !important;
+}
+
+.netp-card.flagged {
+  background-color: var(--card-warn) !important;
+}
+
+.netp-card.flagged:hover {
+  background-color: var(--card-warn-hover) !important;
+}
+
+
+.netp-card.selected {
+  background-color: var(--card-selected) !important;
+}

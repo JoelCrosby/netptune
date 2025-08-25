@@ -1,0 +1,36 @@
+.board-filter-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 32px !important;
+
+  &.mat-warn .mat-icon {
+    color: inherit !important;
+  }
+
+  &.mat-primary .mat-icon {
+    color: inherit !important;
+  }
+
+  .mat-icon {
+    color: rgba(var(--foreground-rgb), .4);
+  }
+}
+
+.board-filter-button:not(.mat-warn) {
+  background-color: var(--toolbar-btn-background);
+}
+
+.board-filter-button.mat-warn {
+  background-color: rgba(var(--warn-rgb), .08);
+}
+
+.board-filter-button.mat-primary {
+  background-color: rgba(var(--primary-rgb), .08);
+}
+
+.board-filter-seperator {
+  height: 1.4rem;
+  margin: 0 .4rem;
+  border-right: 1px solid rgba(var(--foreground-rgb), .1);
+}

@@ -117,3 +117,48 @@ main {
     margin-left: 248px;
   }
 }
+
+.app-menu-link {
+  color: rgba(255, 255, 255, 1);
+}
+
+.app-menu-link:hover {
+  color: rgba(255, 255, 255, 1) !important;
+  background-color: rgba(var(--side-bar-active-rgb), .5) !important;
+}
+
+.app-sidenav {
+  background-color: var(--side-bar);
+}
+
+.app-menu-link.router-link-active {
+  background-color: var(--side-bar-active);
+  color: rgba(255, 255, 255, 1);
+}
+
+.app-menu-link.router-link-active:hover,
+.app-menu-link.router-link-active:focus {
+  color: rgba(255, 255, 255, 1) !important;
+  background-color: var(--side-bar-active);
+}
+
+.app-menu-collapse {
+  background-color: var(--side-bar-active);
+
+}
+
+.app-is-mobile {
+  .app-sidenav {
+    width: calc(100vw - 72px - 72px) !important;
+  }
+
+  .app-menu-link {
+    height: 3em !important;
+
+    .mat-mdc-list-item-icon {
+      width: 24px !important;
+      height: 24px !important;
+      font-size: 24px !important;
+    }
+  }
+}

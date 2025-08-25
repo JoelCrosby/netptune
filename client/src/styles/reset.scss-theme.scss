@@ -1,9 +1,0 @@
-@use '@angular/material' as mat;
-@use 'sass:map';
-@use 'variables' as *;
-@mixin reset-theme($theme) {
-  a {
-    color: var(--mat-sys-primary-container);
-    text-decoration: none;
-  }
-}

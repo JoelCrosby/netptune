@@ -187,3 +187,49 @@ input {
     cursor: pointer;
   }
 }
+
+.user-select {
+
+  .label-input {
+    color: var(--foreground);
+  }
+
+  .label-input {
+    $dark-bg: var(--card);
+    $light-bg: var(--card);
+    background-color: var(--background);
+  }
+
+  .select-trigger {
+    color: var(--foreground);
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba(var(--foreground-rgb), .08);
+    }
+  }
+
+  .select-menu-inner {
+    background-color: var(--card);
+  }
+
+  .select-item {
+    &:hover {
+      $dark-bg: var(--card);
+      $light-bg: var(--card);
+      background-color: var(--background);
+    }
+
+    &.active {
+      // Todo: add back colors
+    }
+
+    &.selected {
+      // Todo: add back colors
+    }
+  }
+
+  .app-user-link-inner {
+    color: #fff;
+  }
+}

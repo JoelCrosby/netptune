@@ -11,8 +11,10 @@
       *ngFor="let group of groups$ | async"
       (click)="onGroupClicked(group.id)"
     >
-      <label> {{ group.name }} </label>
-      <div class="pill"></div>
+      <label>
+        <span>{{ group.name }}</span>
+        <div class="pill"></div
+      ></label>
     </button>
   </div>
 </div>

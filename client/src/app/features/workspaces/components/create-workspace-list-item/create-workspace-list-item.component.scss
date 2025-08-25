@@ -32,3 +32,8 @@ app-card-actions .mat-mdc-raised-button:first-child {
 .action-mat-icon {
   margin-right: .6rem;
 }
+
+.create-workspace-card.netp-card {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}

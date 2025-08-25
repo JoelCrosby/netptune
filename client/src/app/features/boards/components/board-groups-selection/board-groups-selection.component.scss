@@ -50,3 +50,41 @@ span {
   margin-left: .4rem;
   cursor: pointer;
 }
+
+.board-groups-selection {
+  background-color: var(--toolbar-btn-background);
+
+  .mat-icon {
+    opacity: .3;
+  }
+
+  span,
+  .mat-icon {
+    opacity: .6;
+    color: var(--primary);
+  }
+
+  .close-btn:hover {
+    color: var(--primary);
+  }
+
+}
+
+.board-groups-selection-btn {
+  background-color: var(--toolbar-btn-background);
+
+  .mat-icon {
+    opacity: .6;
+    color: rgba(var(--foreground-rgb), .6);
+  }
+
+  &:hover {
+    background-color: rgba(var(--primary-rgb), .25) !important;
+    color: rgba(var(--primary-rgb), .25) !important;
+
+    .mat-icon {
+      opacity: .9;
+      fill: rgba(var(--primary-rgb), .25) !important;
+    }
+  }
+}

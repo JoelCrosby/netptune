@@ -14,3 +14,17 @@
     margin-left: -12px;
   }
 }
+
+.board-group-user.selected {
+  border: 2px solid rgba(var(--primary-rgb), 400);
+  z-index: 99;
+}
+
+.board-group-user {
+  background-color: var(--background);
+  border: 2px solid transparent;
+
+  &:hover {
+    z-index: 100;
+  }
+}

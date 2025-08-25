@@ -13,6 +13,9 @@
   padding: .6rem;
   height: 100%;
   border-radius: .3rem;
+  background-color: var(--background);
+  border: 4px dashed rgba(var(--border), .04);
+  color: rgba(var(--foreground-rgb), .4);
 
   span {
     margin-left: .4rem;
@@ -22,4 +25,6 @@
 .create-group-button:hover {
   margin: .4rem;
   border-style: solid;
+  background-color: rgba(var(--primary-rgb), .08);
+  color: rgba(var(--primary-rgb), .8);
 }

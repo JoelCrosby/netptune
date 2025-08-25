@@ -1,3 +1,5 @@
+@use 'scroll';
+
 .loading {
   display: grid;
   place-items: center;
@@ -26,4 +28,19 @@
   p {
     text-align: center;
   }
+}
+
+.tags-menu {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  padding: .2rem .8rem;
+
+  .mdc-form-field, .mdc-label {
+    width: 100%;
+  }
+}
+
+.mat-mdc-menu-panel.mat-mdc-menu-panel {
+  @extend .custom-scroll;
 }

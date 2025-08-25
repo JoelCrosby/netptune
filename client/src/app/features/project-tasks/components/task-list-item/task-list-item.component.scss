@@ -43,3 +43,28 @@
     flex: 0 0 38px;
   }
 }
+
+.task-item {
+  background-color: var(--card);
+
+  .task-scope-id {
+    background-color: rgba(var(--foreground-rgb), .1);
+  }
+
+  .drag {
+    color: rgba(var(--foreground-rgb), .3);
+  }
+}
+
+.task-item:hover {
+  background-color: var(--card);
+}
+
+.task-item-selected {
+  background-color: rgba(var(--primary-rgb), 400, .1);
+}
+
+.project-chip {
+  color: rgba(var(--foreground-rgb), .7);
+  background-color: rgba(var(--foreground-rgb), .06);
+}
