@@ -76,3 +76,38 @@
   font-weight: 500;
   letter-spacing: .0125px;
 }
+
+.form-control-label {
+  color: rgba(var(--foreground-rgb), .6);
+}
+
+.form-control-prefix {
+  opacity: .6;
+}
+
+.form-control-input {
+  background-color: transparent;
+  border-color: rgba(var(--foreground-rgb), .3) !important;
+
+  &:focus-within,
+  &.active {
+    border-color: var(--primary) !important;
+  }
+
+  &.invalid {
+    border-color: var(--warn) !important;
+  }
+
+  mat-icon {
+    color: rgba(var(--foreground-rgb), .1) !important;
+  }
+}
+
+.form-control-disabled {
+  color: rgba(var(--foreground-rgb), .4) !important;
+  background-color: rgba(var(--foreground-rgb), .02) !important;
+}
+
+.form-error {
+  color: var(--warn);
+}

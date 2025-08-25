@@ -6,6 +6,25 @@
   align-items: center;
   padding-right: .4rem;
   transition: background-color .24s ease-out;
+  border-color: rgba(var(--foreground-rgb), .1) !important;
+
+  &:focus-within,
+  &.active {
+    background-color: transparent;
+    border-color: var(--primary) !important;
+  }
+
+  &.invalid {
+    border-color: var(--warn) !important;
+  }
+
+  mat-icon {
+    color: rgba(var(--foreground-rgb), .1) !important;
+  }
+
+  .clear-search:hover {
+    color: var(--primary) !important;
+  }
 }
 
 input {

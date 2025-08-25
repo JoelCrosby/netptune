@@ -15,3 +15,20 @@
   justify-content: center;
   align-items: center;
 }
+
+@keyframes typing {
+  0% {
+    background-color: var(--background);
+    box-shadow: 12px 0 0 0 rgba(var(--primary-rgb), .2), 24px 0 0 0 rgba(var(--primary-rgb), .2);
+  }
+
+  25% {
+    background-color: rgba(var(--primary-rgb), .4);
+    box-shadow: 12px 0 0 0 rgba(var(--primary-rgb), 2), 24px 0 0 0 rgba(var(--primary-rgb), .2);
+  }
+
+  75% {
+    background-color: rgba(var(--primary-rgb), .4);
+    box-shadow: 12px 0 0 0 rgba(var(--primary-rgb), .2), 24px 0 0 0 var(--background)
+  }
+}

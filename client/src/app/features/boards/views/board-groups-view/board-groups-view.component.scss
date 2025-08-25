@@ -111,3 +111,29 @@
     max-height: calc(100vh - 154px);
   }
 }
+
+.board-group-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-transform: uppercase;
+
+  span {
+    color: rgba(var(--foreground-rgb), .3);
+  }
+
+  .title {
+    color: rgba(var(--foreground-rgb), .6);
+
+    .title-input:hover,
+    .title-input.edit-active {
+      background-color: rgba(var(--primary-rgb), .06);
+    }
+  }
+
+  .delete-board-group-btn
+  .mat-icon {
+    color: rgba(var(--foreground-rgb), .4);
+  }
+}

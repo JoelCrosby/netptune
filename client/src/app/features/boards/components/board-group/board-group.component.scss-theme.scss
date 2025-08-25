@@ -1,8 +1,0 @@
-@use '@angular/material' as mat;
-@use 'sass:map';
-@use 'variables' as *;
-@mixin board-group-theme($theme) {
-  .board-group-card {
-    background-color: var(--board-group);
-  }
-}

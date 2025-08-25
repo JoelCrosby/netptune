@@ -1,0 +1,200 @@
+@use 'scroll';
+
+.editor {
+  --monospace: Cascadia Code, SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  --fill-background: transparent;
+
+  background-color: var(fill-background);
+  color: var(--foreground);
+
+  code {
+    color: var(--editor-code-color);
+    font-family: var(--monospace);
+  }
+
+  .cdx-input.image-tool__caption {
+    display: none;
+  }
+
+  .inline-code,
+  .ce-code__textarea.cdx-input {
+    @extend .custom-scroll;
+
+    background-color: var(--editor-code-background);
+    color: var(--editor-code-color);
+    font-family: var(--monospace);
+    border: 1px solid rgba(var(--foreground-rgb), .12);
+    border-radius: 3px;
+    font-size: 14px;
+    resize: none;
+    white-space: pre-wrap;
+  }
+}
+
+.ce-popover {
+  border: 0;
+  background-color: var(--background);
+
+  //@extend  .mat-elevation-z4;
+}
+
+.ce-popover__item:hover:not(.ce-popover__item--no-visible-hover) {
+  background-color: var(--hover)-background-color;
+}
+
+.ce-popover__item--focused:not(.ce-popover__item--no-visible-focus){
+  border: 0;
+  background-color: rgba(var(--primary-rgb), .3) !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.ce-toolbar__plus:hover {
+  background-color: rgba(var(--primary-rgb), .3);
+}
+
+.ce-popover__item--active {
+  color: var(--mat-sys-primary-container);
+  background-color: rgba(var(--primary-rgb), .4);
+}
+
+.cdx-search-field {
+  background-color: var(--hover)-background-color;
+  border: 0;
+}
+
+.ce-popover__item-icon {
+  background-color: transparent;
+}
+
+.ce-inline-tool,
+.ce-inline-toolbar__dropdown,
+.cdx-settings-button,
+.ce-settings__button,
+.ce-conversion-tool {
+  color: var(--foreground);
+
+  &:hover {
+    background-color: rgba(var(--primary-rgb), .6);
+  }
+}
+
+.ce-paragraph[data-placeholder]:empty::before {
+  color: rgba(var(--foreground-rgb), .6);
+}
+
+.ce-inline-toolbar,
+.ce-settings,
+.ce-conversion-tool,
+.ce-conversion-toolbar {
+  border: 0;
+  border-color: var(--background);
+}
+
+.ce-inline-toolbar__dropdown {
+  border-color:  var(--background);
+}
+
+.ce-conversion-tool--focused {
+  box-shadow: none;
+  background-color: rgba(var(--primary-rgb), .1) !important;
+}
+
+.ce-toolbar__settings-btn,
+.ce-settings,
+.ce-inline-toolbar,
+.ce-conversion-toolbar,
+.ce-conversion-tool__icon {
+  border-radius: 3px;
+  background-color: var(--background);
+  color: rgba(var(--foreground-rgb), .6);
+  box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .42);
+}
+
+.ce-toolbox {
+  box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .13);
+}
+
+.ce-toolbar__plus {
+  color: rgba(var(--primary-rgb), .8);
+}
+
+.ce-block__content, .ce-toolbar__content {
+  max-width: 100%;
+}
+
+.ce-block--selected
+.ce-block__content {
+  background-color: rgba(var(--primary-rgb));
+}
+
+.ce-inline-tool-input {
+  color: rgba(var(--foreground-rgb), .6);
+  background-color: rgba(var(--foreground-rgb), .1);
+}
+
+.cdx-input {
+  padding: 4px 8px;
+  box-shadow: none;
+  border-color: rgba(var(--background-rgb), .6);
+}
+
+.embed-tool__caption[contentEditable=true][data-placeholder]::before,
+.image-tool__caption[contentEditable=true][data-placeholder]::before {
+  color: rgba(var(--foreground-rgb), .6);
+}
+
+.codex-editor__loader {
+  height: 137.78px;
+}
+
+.codex-editor--narrow {
+  .link-tool__image {
+    display: block !important;
+  }
+}
+
+.link-tool__content {
+  color: inherit !important;
+}
+
+.link-tool__content--rendered {
+  border: 1px solid var(--editor-link-border);
+  background-color: var(--editor-link-background);
+  box-shadow: none;
+}
+
+.link-tool__progress {
+  background-color: rgba(var(--primary-rgb), .08);
+}
+
+.link-tool__input {
+  background-color: transparent
+}
+
+.link-tool__input-holder--error
+.link-tool__input {
+  background-color: rgba(var(--warn-rgb), .8)
+}
+
+.ce-block--selected .ce-block__content {
+  background-color: rgba(var(--primary-rgb), .12);
+}
+
+.ce-popover__items {
+  @extend .custom-scroll;
+}
+
+.ce-popover__items {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.ce-toolbox {
+  border-radius: 4px;
+}
+
+.ct {
+  z-index: 9999;
+}

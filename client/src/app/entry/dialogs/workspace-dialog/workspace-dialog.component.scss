@@ -30,3 +30,12 @@
 .identifier {
   margin: 1rem 0 1.8rem;
 }
+
+.identifier-check {
+  cursor: default;
+  color: var(--success);
+}
+
+.is-unique-loading {
+  height: 18px;
+}

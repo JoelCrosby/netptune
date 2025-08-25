@@ -1,8 +1,0 @@
-@use '@angular/material' as mat;
-@use 'sass:map';
-@use 'variables' as *;
-@mixin colors-theme($theme) {
-  .task-complete {
-    color: var(--success);
-  }
-}

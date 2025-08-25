@@ -11,10 +11,15 @@
       *ngFor="let user of users$ | async"
       (click)="onUserClicked(user.id)"
     >
-      <app-avatar size="24" [name]="user.userName" [imageUrl]="user.pictureUrl">
-      </app-avatar>
-
-      <label> {{ user.displayName }} </label>
+      <label>
+        <app-avatar
+          size="24"
+          [name]="user.displayName"
+          [imageUrl]="user.pictureUrl"
+        >
+        </app-avatar>
+        <span>{{ user.displayName }}</span>
+      </label>
     </button>
   </div>
 </div>

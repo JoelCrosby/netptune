@@ -35,3 +35,55 @@
     }
   }
 }
+
+.tag-item-list {
+  --item-background: rgba(var(--foreground-rgb), .06);
+  --item-background-hover: rgba(var(--foreground-rgb), .1);
+
+  .tag-item {
+    color: var(--foreground);
+    background-color: var(--item-background);
+
+    .tag-item-delete {
+      font-size: 20px;
+      line-height: 20px;
+      height: 20px;
+      width: 20px;
+      display: none;
+
+      .mat-icon {
+        font-size: 20px;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+    &:hover:not(.edit-tag-item) {
+      background-color: var(--item-background-hover);
+
+      .tag-item-delete {
+        display: block;
+      }
+    }
+  }
+
+  .add-tag-item {
+    background-color: transparent;
+    border-width: 1px;
+    border: 1px solid var(--item-background);
+    color: var(--foreground);
+
+    &:hover:not(.edit-tag-item) {
+      border-width: 2px;
+      background-color: transparent;
+      border: 2px solid rgba(var(--foreground-rgb), 1);
+    }
+  }
+
+  .edit-tag-item {
+    border: 2px solid var(--primary);
+    background-color: transparent;
+    color: var(--foreground);
+  }
+}

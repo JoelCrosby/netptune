@@ -133,3 +133,24 @@
     font-size: 14px;
   }
 }
+
+.app-list {
+  background-color: var(--board-group);
+}
+
+.app-list-item {
+  background-color: var(--card);
+
+  .description {
+    color: rgba(var(--foreground-rgb), .6);
+  }
+}
+
+.app-list-drag-icon {
+  color: rgba(var(--foreground-rgb), .3);
+}
+
+.app-list-item-pill {
+  color: var(--primary);
+  background-color: rgba(var(--primary-rgb), .1);
+}

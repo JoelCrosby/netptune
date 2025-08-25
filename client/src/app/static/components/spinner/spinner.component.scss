@@ -4,6 +4,7 @@
   position: relative;
   animation: load 1.4s infinite linear;
   transform: translateZ(0);
+  background: linear-gradient(to right, var(--primary) 10%, rgba(129, 55, 241, 0) 42%);
 }
 
 .loader::before {
@@ -14,6 +15,7 @@
   top: 0;
   left: 0;
   content: '';
+  background: var(--primary);
 }
 
 .loader::after {
@@ -27,6 +29,7 @@
   left: 0;
   bottom: 0;
   right: 0;
+  background: var(--card);
 }
 
 @keyframes load {

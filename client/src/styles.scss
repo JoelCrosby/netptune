@@ -4,9 +4,6 @@
 
 @use '@angular/material' as mat;
 
-// Themed Component styles
-@use './component-styles';
-
 // Themes
 @use './themes/default-theme';
 @use './themes/dark-theme';
@@ -18,37 +15,63 @@
 @use './styles/material';
 @use './styles/utility';
 @use './styles/components';
-@use './styles/controls/form-control';
-@use './styles/controls/form-select';
-@use './styles/controls/cards';
 @use './styles/lists';
 @use './styles/forms';
+@use './styles/colors';
+@use './styles/boards';
 @use './styles/spinners';
 @use './styles/containers';
 @use './styles/modals';
-@use './styles/editor';
 @use './styles/dialogs';
 @use './styles/animations/menu';
+@use './styles/controls/editor';
+@use './styles/controls/form-control';
+@use './styles/controls/form-select';
+@use './styles/controls/form-autocomplete-chips.scss';
+@use 'styles/controls/activity-menu.scss';
+@use './styles/controls/cards';
 
 .default-theme {
-  --background: #fff;
+  --background-rgb: 255, 255, 255;
+  --background: rgba(--background-rgb);
   --foreground-rgb: 0, 0, 0;
 
-  --side-bar: #29242e;
-  --side-bar-lighter: #362f3c;
-  --board-group: #f8f8f8;
+  --primary-rgb: 179, 157, 219;
+  --primary: rgba(var(--primary-rgb));
+
+  --warn-rgb: 255, 82, 82;
+  --warn: rgba(var(255, 82, 82));
+
+  --side-bar-rgb: 28, 27, 33;
+  --side-bar: rgba(var(--side-bar-rgb));
+
+  --side-bar-active-rgb: 52, 50, 61;
+  --side-bar-active: rgba(var(--side-bar-active-rgb));
+
+  --board-group-rgb: 248, 248, 248;
+  --board-group: rgba(var(--board-group-rgb));
+
   --border: rgba(0, 0, 0, .08);
   --status-bar: #fff;
   --app-bar: #fff;
   --background: #fff;
   --hover: rgba(#000, .02);
 
+  --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
+  --toolbar-btn-background-hover: rgba(var(--board-group-rgb), .8);
+
   --card: #fff;
   --card-warn: #ffe5e5;
   --card-warn-hover: #fad0d0;
   --card-selected: #f0ebf8;
+  --card-shadow: rgba(0, 0, 0, .1);
 
   --dialog: #fff;
+
+  --editor-code-color: #6e0099;
+  --editor-code-background: #fbfbfb;
+  --editor-link-border: #c9c9cc7a;
+  --editor-link-background-color: #fff;
 
   $primary: map.get(default-theme.$theme, primary) !global;
   $accent: map.get(default-theme.$theme, accent) !global;
@@ -62,16 +85,28 @@
   @include mat.all-component-bases(default-theme.$theme);
   @include mat.all-component-colors(default-theme.$theme);
   @include mat.all-component-typographies(typography.$netptune);
-  @include component-styles.custom-components-theme(default-theme.$theme);
-
 }
 
 .dark-theme {
-  --background: #272727;
+  --background-rgb: 39, 39, 39;
+  --background: rgba(--background-rgb);
   --foreground-rgb: 255, 255, 255;
 
-  --side-bar: #1c1b21;
-  --board-group: #3a3a3a;
+  --primary-rgb: 179, 157, 219;
+  --primary: rgba(var(--primary-rgb));
+
+  --warn-rgb: 255, 82, 82;
+  --warn: rgba(var(255, 82, 82));
+
+  --side-bar-rgb: 28, 27, 33;
+  --side-bar: rgba(var(--side-bar-rgb));
+
+  --side-bar-active-rgb: 52, 50, 61;
+  --side-bar-active: rgba(var(--side-bar-active-rgb));
+
+  --board-group-rgb: 58, 58, 58;
+  --board-group: rgba(var(--board-group-rgb));
+
   --border: rgba(255, 255, 255, .12);
   --status-bar: #000;
   --background: #272727;
@@ -81,9 +116,17 @@
   --card-warn: #472d2d;
   --card-warn-hover: #694040;
   --card-selected: #3f3454;
+  --card-shadow: rgba(0, 0, 0, .2);
   --hover: rgba(#fff, .04);
 
-  --primary: map.get(dark-theme.$theme, primary);
+  --editor-code-color: #cfbed5;
+  --editor-code-background: #262626;
+  --editor-link-border: #3e3e3e;
+  --editor-link-background-color: #2f2f2f;
+
+  --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
+
+  $primary: map.get(dark-theme.$theme, primary);
   $accent: map.get(dark-theme.$theme, accent);
   $warn: map.get(dark-theme.$theme, warn);
   $foreground: map.get(dark-theme.$theme, foreground);
@@ -95,7 +138,6 @@
   @include mat.all-component-bases(dark-theme.$theme);
   @include mat.all-component-colors(dark-theme.$theme);
   @include mat.all-component-typographies(typography.$netptune);
-  @include component-styles.custom-components-theme(dark-theme.$theme);
 
   .mat-mdc-dialog-container .mdc-dialog__surface {
     --mdc-dialog-container-color: #2c2c2c;
