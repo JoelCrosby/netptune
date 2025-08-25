@@ -1,15 +1,18 @@
 @use '@angular/material' as mat;
+@use 'variables' as *;
+
+@use 'sass:map';
 
 @mixin spinner-theme($theme) {
   .loader {
-    background: linear-gradient(to right, mat.m2-get-color-from-palette($primary) 10%, rgba(129, 55, 241, 0) 42%);
+    background: linear-gradient(to right, var(--mat-sys-primary-container) 10%, rgba(129, 55, 241, 0) 42%);
   }
 
   .loader::after {
-    background: $card;
+    background: var(--card);
   }
 
   .loader::before {
-    background: mat.m2-get-color-from-palette($primary);
+    background: var(--mat-sys-primary-container);
   }
 }

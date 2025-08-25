@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin board-group-tags-theme($theme) {
   .tags-menu {
     display: flex;

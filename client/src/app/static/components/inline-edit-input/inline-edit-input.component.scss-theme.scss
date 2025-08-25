@@ -1,10 +1,11 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin inline-edit-input-theme($theme) {
 
   .inline-edit-input.active-border {
     width: 320px;
-    border: 2px solid mat.m2-get-color-from-palette($primary, .6) !important;
+    border: 2px solid rgba(var(--mat-sys-primary-container), .6) !important;
     border-radius: 4px;
   }
 }

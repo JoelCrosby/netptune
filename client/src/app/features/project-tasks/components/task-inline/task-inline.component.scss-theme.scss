@@ -1,9 +1,12 @@
 @use '@angular/material' as mat;
+@use 'variables' as *;
+
+@use 'sass:map';
 
 @mixin task-inline-theme($theme) {
 
   .inline-task-input {
-    color: mat.m2-get-color-from-palette($foreground, text);
+    color: var(--foreground);
   }
 
   .inline-task-input:-webkit-autofill,
@@ -15,18 +18,18 @@
 
   .new-task-button span,
   .new-task-button .mat-icon {
-    color: mat.m2-get-color-from-palette($primary, 400);
+    color: var(--mat-sys-primary-container);
   }
 
   .new-task-button:hover {
-    background-color: mat.m2-get-color-from-palette($primary, 400, .1);
+    background-color: rgba(var(--mat-sys-primary-container), .1);
   }
 
   .task-card {
-    background-color: $card;
+    background-color: var(--card);
   }
 
   .inline-task-form .mat-icon {
-    color: rgba(mat.m2-get-color-from-palette($foreground, icon), .1);
+    color: rgba(var(--foreground-rgb), .1);
   }
 }

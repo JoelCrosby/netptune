@@ -1,17 +1,18 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin move-tasks-dialog-theme($theme) {
   .group-selection {
     button {
       .pill {
-        background-color: mat.m2-get-color-from-palette($foreground, text, .1);
+        background-color: rgba(var(--foreground-rgb), .1);
       }
       &.selected {
-        color: invert(mat.m2-get-color-from-palette($foreground, text));
-        background-color: mat.m2-get-color-from-palette($primary);
+        color: invert(var(--foreground));
+        background-color: var(--mat-sys-primary-container);
 
         .pill {
-          background-color: invert(mat.m2-get-color-from-palette($foreground, text, .4));
+          // background-color: invert(rgba(var(--foreground-rgb), .4)); //TODO
         }
       }
     }

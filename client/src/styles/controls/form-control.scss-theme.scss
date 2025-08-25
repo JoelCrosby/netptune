@@ -1,10 +1,12 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
+@use 'variables' as *;
 
 @mixin form-control-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
 
   .form-control-label {
-    color: mat.m2-get-color-from-palette($foreground, text, .6);
+    color: rgba(var(--forgeground), .6);
   }
 
   .form-control-prefix {
@@ -13,28 +15,28 @@
 
   .form-control-input {
     background-color: transparent;
-    border-color: if($is-dark-theme, mat.m2-get-color-from-palette($foreground, text, .3), mat.m2-get-color-from-palette($foreground, text, .1)) !important;
+    border-color: rgba(var(--forgeground), .3) !important;
 
     &:focus-within,
     &.active {
-      border-color: mat.m2-get-color-from-palette($primary) !important;
+      border-color: var(--mat-primary) !important;
     }
 
     &.invalid {
-      border-color: mat.m2-get-color-from-palette($warn) !important;
+      border-color: var(--mat-warn) !important;
     }
 
     mat-icon {
-      color: mat.m2-get-color-from-palette($foreground, text, .1) !important;
+      color: rgba(var(--forgeground), .1) !important;
     }
   }
 
   .form-control-disabled {
-    color: mat.m2-get-color-from-palette($foreground, text, .4) !important;
-    background-color: mat.m2-get-color-from-palette($foreground, text, .02) !important;
+    color: rgba(var(--forgeground), .4) !important;
+    background-color: rgba(var(--forgeground), .02) !important;
   }
 
   .form-error {
-    color: mat.m2-get-color-from-palette($warn);
+    color: var(--mat-warn);
   }
 }

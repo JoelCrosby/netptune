@@ -1,11 +1,12 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin tags-input-theme($theme) {
 
-  $item-background: mat.m2-get-color-from-palette($foreground, text, .06);
-  $item-background-hover: mat.m2-get-color-from-palette($foreground, text, .1);
+  $item-background: rgba(var(--foreground-rgb), .06);
+  $item-background-hover: rgba(var(--foreground-rgb), .1);
 
   .edit-tag-item {
-    color: mat.m2-get-color-from-palette($foreground, text);
+    color: var(--foreground);
   }
 }

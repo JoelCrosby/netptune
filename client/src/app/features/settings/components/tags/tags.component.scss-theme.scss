@@ -1,13 +1,14 @@
 @use '@angular/material' as mat;
-@use 'sass:color';
+@use 'sass:map';
+@use 'variables' as *;@use 'sass:color';
 @mixin tags-theme($theme) {
 
-  $item-background: mat.m2-get-color-from-palette($foreground, text, .06);
-  $item-background-hover: mat.m2-get-color-from-palette($foreground, text, .1);
+  $item-background: rgba(var(--foreground-rgb), .06);
+  $item-background-hover: rgba(var(--foreground-rgb), .1);
 
   .tag-item-list {
     .tag-item {
-      color: mat.m2-get-color-from-palette($foreground, text);
+      color: var(--foreground);
       background-color: $item-background;
 
       .tag-item-delete {
@@ -38,19 +39,19 @@
       background-color: transparent;
       border-width: 1px;
       border: 1px solid $item-background;
-      color: mat.m2-get-color-from-palette($foreground, text);
+      color: var(--foreground);
 
       &:hover:not(.edit-tag-item) {
         border-width: 2px;
         background-color: transparent;
-        border: 2px solid mat.m2-get-color-from-palette($foreground, text, 1);
+        border: 2px solid rgba(var(--foreground-rgb), 1);
       }
     }
 
     .edit-tag-item {
-      border: 2px solid mat.m2-get-color-from-palette($primary);
+      border: 2px solid var(--mat-sys-primary-container);
       background-color: transparent;
-      color: mat.m2-get-color-from-palette($foreground, text);
+      color: var(--foreground);
     }
   }
 }

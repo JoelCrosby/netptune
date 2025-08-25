@@ -1,14 +1,15 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin reassign-tasks-dialog-theme($theme) {
   .user-selection {
     button {
       &.selected {
-        color: invert(mat.m2-get-color-from-palette($foreground, text));
-        background-color: mat.m2-get-color-from-palette($primary);
+        color: invert(var(--foreground));
+        background-color: var(--mat-sys-primary-container);
 
         .pill {
-          background-color: invert(mat.m2-get-color-from-palette($foreground, text, .4));
+          // background-color: invert(rgba(var(--foreground-rgb), .4));// TODO
         }
       }
     }

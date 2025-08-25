@@ -1,26 +1,28 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
+@use 'variables' as *;
 
 @mixin board-groups-search-theme($theme) {
   .board-groups-search-input {
-    background-color: mat.m2-get-color-from-palette($foreground, text, .04);
-    border-color: mat.m2-get-color-from-palette($foreground, text, .1) !important;
+    background-color: rgba(var(--foreground-rgb), .04);
+    border-color: rgba(var(--foreground-rgb), .1) !important;
 
     &:focus-within,
     &.active {
       background-color: transparent;
-      border-color: mat.m2-get-color-from-palette($primary) !important;
+      border-color: var(--mat-sys-primary-container) !important;
     }
 
     &.invalid {
-      border-color: mat.m2-get-color-from-palette($warn) !important;
+      border-color: var(--mat-sys-error-container) !important;
     }
 
     mat-icon {
-      color: mat.m2-get-color-from-palette($foreground, text, .1) !important;
+      color: rgba(var(--foreground-rgb), .1) !important;
     }
 
     .clear-search:hover {
-      color: mat.m2-get-color-from-palette($primary) !important;
+      color: var(--mat-sys-primary-container) !important;
     }
   }
 }

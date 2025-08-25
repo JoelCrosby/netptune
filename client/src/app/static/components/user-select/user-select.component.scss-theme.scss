@@ -1,51 +1,52 @@
 @use '@angular/material' as mat;
-@use 'sass:color';
+@use 'sass:map';
+@use 'variables' as *;@use 'sass:color';
 @mixin user-select-theme($theme) {
 
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
 
   .user-select {
 
     .label-input {
-      color: mat.m2-get-color-from-palette($foreground, text);
+      color: var(--foreground);
     }
 
     .label-input {
-      $dark-bg: color.scale($card, $lightness: 10%);
-      $light-bg: color.scale($card, $lightness: -4%);
+      $dark-bg: var(--card);
+      $light-bg: var(--card);
       background-color: if($is-dark-theme, $dark-bg, $light-bg);
     }
 
     .select-trigger {
-      color: mat.m2-get-color-from-palette($foreground, text);
+      color: var(--foreground);
       background-color: transparent;
 
       &:hover {
-        background-color: mat.m2-get-color-from-palette($foreground, text, .08);
+        background-color: rgba(var(--foreground-rgb), .08);
       }
     }
 
     .select-menu-inner {
-      background-color: $card;
+      background-color: var(--card);
     }
 
     .select-item {
       &:hover {
-        $dark-bg: color.scale($card, $lightness: 10%);
-        $light-bg: color.scale($card, $lightness: -6%);
+        $dark-bg: var(--card);
+        $light-bg: var(--card);
         background-color: if($is-dark-theme, $dark-bg, $light-bg);
       }
 
       &.active {
-        $dark-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: 20%);
-        $light-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: -10%);
-        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+        // $dark-bg: color.scale(rgba(var(--mat-sys-primary-container), .2), $lightness: 20%);
+        // $light-bg: color.scale(rgba(var(--mat-sys-primary-container), .2), $lightness: -10%);
+        // background-color: if($is-dark-theme, $dark-bg, $light-bg); // TODO
       }
 
       &.selected {
-        $dark-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: 20%);
-        $light-bg: color.scale(mat.m2-get-color-from-palette($primary, .2), $lightness: -10%);
-        background-color: if($is-dark-theme, $dark-bg, $light-bg);
+        // $dark-bg: color.scale(rgba(var(--mat-sys-primary-container), .2), $lightness: 20%);
+        // $light-bg: color.scale(rgba(var(--mat-sys-primary-container), .2), $lightness: -10%);
+        // background-color: if($is-dark-theme, $dark-bg, $light-bg); // TODO
       }
     }
 

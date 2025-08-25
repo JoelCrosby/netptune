@@ -1,16 +1,17 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin page-header-theme($theme) {
 
   .header-top-row {
-    border-bottom: 2px solid $border;
+    border-bottom: 2px solid var(--border);
   }
 
   .header-back-link {
-    color: mat.m2-get-color-from-palette($foreground, text, .5);
+    color: rgba(var(--foreground-rgb), .5);
 
     &:hover {
-      color: mat.m2-get-color-from-palette($primary);
+      color: var(--mat-sys-primary-container);
     }
   }
 
@@ -19,30 +20,30 @@
     flex-direction: row;
 
     .header-primary-action {
-      background-color: mat.m2-get-color-from-palette($primary);
+      background-color: var(--mat-sys-primary-container);
       color: #fff;
     }
 
     .header-primary-action:hover {
-      background-color: lighten(mat.m2-get-color-from-palette($primary), 4);
+      // background-color: lighten(mat.m2-get-color-from-palette($primary), 4); //TODO
     }
 
     .header-secondary-action {
-      background-color: mat.m2-get-color-from-palette($foreground, text, .08);
-      color: mat.m2-get-color-from-palette($foreground, text, .7);
+      background-color: rgba(var(--foreground-rgb), .08);
+      color: rgba(var(--foreground-rgb), .7);
     }
 
     .header-secondary-action:hover {
-      background-color: mat.m2-get-color-from-palette($foreground, text, .2);
+      background-color: rgba(var(--foreground-rgb), .2);
     }
 
     .header-menu-action {
-      background-color: mat.m2-get-color-from-palette($foreground, text, .08);
-      color: mat.m2-get-color-from-palette($foreground, text, .4);
+      background-color: rgba(var(--foreground-rgb), .08);
+      color: rgba(var(--foreground-rgb), .4);
     }
 
     .header-menu-action:hover {
-      background-color: mat.m2-get-color-from-palette($foreground, text, .2);
+      background-color: rgba(var(--foreground-rgb), .2);
     }
   }
 

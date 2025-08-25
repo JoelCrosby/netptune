@@ -1,3 +1,5 @@
+@use 'scroll';
+
 .form-control {
   @extend .custom-scroll;
 }
