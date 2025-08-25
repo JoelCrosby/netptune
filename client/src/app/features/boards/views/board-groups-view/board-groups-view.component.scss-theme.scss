@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin board-groups-view-theme($theme) {
   .board-group-header {
     display: flex;
@@ -9,21 +10,21 @@
     text-transform: uppercase;
 
     span {
-      color: mat.m2-get-color-from-palette($foreground, text, .3);
+      color: rgba(var(--foreground-rgb), .3);
     }
 
     .title {
-      color: mat.m2-get-color-from-palette($foreground, text, .6);
+      color: rgba(var(--foreground-rgb), .6);
 
       .title-input:hover,
       .title-input.edit-active {
-        background-color: mat.m2-get-color-from-palette($primary, .06);
+        background-color: rgba(var(--mat-sys-primary-container), .06);
       }
     }
 
     .delete-board-group-btn
     .mat-icon {
-      color: mat.m2-get-color-from-palette($foreground, icon, .4);
+      color: rgba(var(--foreground-rgb), .4);
     }
   }
 }

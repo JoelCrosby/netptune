@@ -1,13 +1,14 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin board-group-users-theme($theme) {
   .board-group-user.selected {
-    border: 2px solid mat.m2-get-color-from-palette($primary, 400);
+    border: 2px solid rgba(var(--mat-sys-primary-container), 400);
     z-index: 99;
   }
 
   .board-group-user {
-    background-color: $background;
+    background-color: var(--background);
     border: 2px solid transparent;
 
     &:hover {

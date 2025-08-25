@@ -1,11 +1,13 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
+@use 'variables' as *;@use 'variables';
 
 @mixin task-detail-dialog-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
   $inline-backgroud: if($is-dark-theme, #272727, #fff);
 
   .task-scope-id {
-    background-color: mat.m2-get-color-from-palette($primary, .2);
+    background-color: rgba(var(--mat-sys-primary-container), .2);
   }
 
   .actions-row {
@@ -17,7 +19,7 @@
 
   .comments-container {
     .material-icons-outlined {
-      color: mat.m2-get-color-from-palette($foreground, icon, .4);
+      color: rgba(var(--foreground-rgb), .4);
     }
 
     .comment-button .material-icons {
@@ -28,7 +30,7 @@
   }
 
   .clickable:hover {
-    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
+    background-color: rgba(var(--foreground-rgb), .06);
   }
 
   .detail-list-item {
@@ -54,7 +56,7 @@
     .inline-edit {
       position: sticky;
       top: 0;
-      background-color: $card;
+      background-color: var(--card);
       z-index: 2;
     }
 

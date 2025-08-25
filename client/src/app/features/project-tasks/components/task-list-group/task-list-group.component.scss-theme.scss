@@ -1,16 +1,17 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin task-list-group-theme($theme) {
   .tasks-container {
     h4 {
-      color: mat.m2-get-color-from-palette($foreground, text, .6);
+      color: rgba(var(--foreground-rgb), .6);
     }
 
     .task-list {
-      background-color: darken($board-group, 1);
+      background-color: var(--board-group);
     }
     .task-list-item {
-      background-color: $background;
+      background-color: var(--background);
     }
 
     .cdk-virtual-scroll-orientation-vertical
@@ -21,10 +22,10 @@
 
   .empty-list-img,
   .list-empty-mark {
-    color: mat.m2-get-color-from-palette($foreground, empty-list);
+    // color: mat.m2-get-color-from-palette($foreground, empty-list); //TODO
   }
 
   .empty-text {
-    color: mat.m2-get-color-from-palette($foreground, disabled-button);
+    // color: mat.m2-get-color-from-palette($foreground, disabled-button); //TODO
   }
 }

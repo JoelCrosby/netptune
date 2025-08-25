@@ -1,29 +1,30 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin task-list-item-theme($theme) {
 
   .task-item {
-    background-color: $card;
+    background-color: var(--card);
 
     .task-scope-id {
-      background-color: mat.m2-get-color-from-palette($foreground, text, .1);
+      background-color: rgba(var(--foreground-rgb), .1);
     }
 
     .drag {
-      color: rgba(mat.m2-get-color-from-palette($foreground, icon), .3);
+      color: rgba(var(--foreground-rgb), .3); //TODO
     }
   }
 
   .task-item:hover {
-    background-color: darken($card, 2);
+    background-color: var(--card);
   }
 
   .task-item-selected {
-    background-color: mat.m2-get-color-from-palette($primary, 400, .1);
+    background-color: rgba(var(--mat-sys-primary-container), 400, .1);
   }
 
   .project-chip {
-    color: mat.m2-get-color-from-palette($foreground, text, .7);
-    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
+    color: rgba(var(--foreground-rgb), .7);
+    background-color: rgba(var(--foreground-rgb), .06);
   }
 }

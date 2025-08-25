@@ -1,20 +1,20 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin inline-text-area-theme($theme) {
 
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
 
   .inline-text-area-input.active-border {
     &:focus {
       padding: 10px !important;
-      border: 2px solid mat.m2-get-color-from-palette($primary, .6) !important;
+      border: 2px solid rgba(var(--mat-sys-primary-container), .6) !important;
     }
   }
 
   .inline-text-area {
     .inline-text-area-label:hover {
-      $hover: if($is-dark-theme, rgba(255, 255, 255, .04), rgba(0, 0, 0, .04));
-      background-color: $hover;
+      background-color: var(--hover);
     }
   }
 

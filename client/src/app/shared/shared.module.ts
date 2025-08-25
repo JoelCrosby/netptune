@@ -29,7 +29,7 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material/snack-bar';
 
-// Alyle UI
+// Alyle UIc
 
 import { LY_THEME, LY_THEME_NAME, StyleRenderer, LyTheme2 } from '@alyle/ui';
 import { MinimaLight, MinimaDeepDark } from '@alyle/ui/themes/minima';

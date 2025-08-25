@@ -1,4 +1,8 @@
 @use '@angular/material' as mat;
+@use 'variables' as *;
+
+@use 'sass:map';
+@use 'sass:color';
 
 @mixin shell-theme($theme) {
 
@@ -8,26 +12,26 @@
 
   .app-menu-link:hover {
     color: rgba(255, 255, 255, 1) !important;
-    background-color: lighten($side-bar, 8) !important;
+    background-color: var(--side-bar-lighter) !important;
   }
 
   .app-sidenav {
-    background-color: $side-bar;
+    background-color: var(--side-bar);
   }
 
   .app-menu-link.router-link-active {
-    background-color: lighten($side-bar, 10);
+    background-color: var(--side-bar-lighter);
     color: rgba(255, 255, 255, 1);
   }
 
   .app-menu-link.router-link-active:hover,
   .app-menu-link.router-link-active:focus {
     color: rgba(255, 255, 255, 1) !important;
-    background-color: lighten($side-bar, 12) !important;
+    background-color: var(--side-bar-lighter);
   }
 
   .app-menu-collapse {
-    background-color: lighten($side-bar, 12) !important;
+    background-color: var(--side-bar-lighter);
 
   }
 

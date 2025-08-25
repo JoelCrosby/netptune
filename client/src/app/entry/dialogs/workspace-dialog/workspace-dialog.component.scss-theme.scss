@@ -1,10 +1,11 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin workspace-dialog-theme($theme) {
 
   .identifier-check {
     cursor: default;
-    color: mat.m2-get-color-from-palette($foreground, success);
+    color: var(--success);
   }
 
   .is-unique-loading {

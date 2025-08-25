@@ -1,17 +1,16 @@
 @use '@angular/material' as mat;
-@use 'sass:color';
+@use 'sass:map';
+@use 'variables' as *;@use 'sass:color';
 
 @mixin editor-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
   $fill-background: transparent;
-  $tooltip-background-color: color.scale($background, $lightness: 10%);
-  $hover-background-color: if($is-dark-theme, #404040, #ececec);
   $code-color: if($is-dark-theme, #cfbed5, #6e0099);
   $monospace: Cascadia Code, SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 
   .editor {
     background-color: $fill-background;
-    color: mat.m2-get-color-from-palette($foreground, text);
+    color: var(--foreground);
 
     code {
       color: $code-color;
@@ -29,7 +28,7 @@
       background-color: if($is-dark-theme, #262626, #fbfbfb);
       color: $code-color;
       font-family: $monospace;
-      border: 1px solid mat.m2-get-color-from-palette($foreground, text, .12);
+      border: 1px solid rgba(var(--foreground-rgb), .12);
       border-radius: 3px;
       font-size: 14px;
       resize: none;
@@ -39,33 +38,33 @@
 
   .ce-popover {
     border: 0;
-    background-color: $background;
+    background-color: var(--background);
 
     @extend  .mat-elevation-z4;
   }
 
   .ce-popover__item:hover:not(.ce-popover__item--no-visible-hover) {
-    background-color: $hover-background-color;
+    background-color: var(--hover)-background-color;
   }
 
   .ce-popover__item--focused:not(.ce-popover__item--no-visible-focus){
     border: 0;
-    background-color: mat.m2-get-color-from-palette($primary, .3) !important;
+    background-color: rgba(var(--mat-sys-primary-container), .3) !important;
     outline: none;
     box-shadow: none;
   }
 
   .ce-toolbar__plus:hover {
-    background-color: mat.m2-get-color-from-palette($primary, .3);
+    background-color: rgba(var(--mat-sys-primary-container), .3);
   }
 
   .ce-popover__item--active {
-    color: mat.m2-get-color-from-palette($primary);
-    background-color: mat.m2-get-color-from-palette($primary, .4);
+    color: var(--mat-sys-primary-container);
+    background-color: rgba(var(--mat-sys-primary-container), .4);
   }
 
   .cdx-search-field {
-    background-color: $hover-background-color;
+    background-color: var(--hover)-background-color;
     border: 0;
   }
 
@@ -78,15 +77,15 @@
   .cdx-settings-button,
   .ce-settings__button,
   .ce-conversion-tool {
-    color: mat.m2-get-color-from-palette($foreground, text);
+    color: var(--foreground);
 
     &:hover {
-      background-color: color.scale(mat.m2-get-color-from-palette($primary, .4), $lightness: 10%);
+      // background-color: color.scale($primary, $lightness: 10%); //TODO
     }
   }
 
   .ce-paragraph[data-placeholder]:empty::before {
-    color: mat.m2-get-color-from-palette($foreground, text, .6);
+    color: rgba(var(--foreground-rgb), .6);
   }
 
   .ce-inline-toolbar,
@@ -94,16 +93,16 @@
   .ce-conversion-tool,
   .ce-conversion-toolbar {
     border: 0;
-    border-color: $tooltip-background-color;
+    border-color: var(--background);
   }
 
   .ce-inline-toolbar__dropdown {
-    border-color:  color.scale($tooltip-background-color, $lightness: 10%);
+    border-color:  var(--background);
   }
 
   .ce-conversion-tool--focused {
     box-shadow: none;
-    background-color: mat.m2-get-color-from-palette($primary, .1) !important;
+    background-color: rgba(var(--mat-sys-primary-container), .1) !important;
   }
 
   .ce-toolbar__settings-btn,
@@ -112,8 +111,8 @@
   .ce-conversion-toolbar,
   .ce-conversion-tool__icon {
     border-radius: 3px;
-    background-color: $tooltip-background-color;
-    color: mat.m2-get-color-from-palette($foreground, text, .6);
+    background-color: var(--background);
+    color: rgba(var(--foreground-rgb), .6);
     box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .42);
   }
 
@@ -122,7 +121,7 @@
   }
 
   .ce-toolbar__plus {
-    color: mat.m2-get-color-from-palette($primary, .8);
+    color: rgba(var(--mat-sys-primary-container), .8);
   }
 
   .ce-block__content, .ce-toolbar__content {
@@ -131,11 +130,11 @@
 
   .ce-block--selected
   .ce-block__content {
-    background-color: color.scale(mat.m2-get-color-from-palette($primary), $lightness: 88%);
+    // background-color: color.scale(mat.m2-get-color-from-palette($primary), $lightness: 88%); //TODO
   }
 
   .ce-inline-tool-input {
-    color: mat.m2-get-color-from-palette($foreground, text, .6);
+    color: rgba(var(--foreground-rgb), .6);
     background-color: color.scale($fill-background, $lightness: 20%);
   }
 
@@ -147,7 +146,7 @@
 
   .embed-tool__caption[contentEditable=true][data-placeholder]::before,
   .image-tool__caption[contentEditable=true][data-placeholder]::before {
-    color: mat.m2-get-color-from-palette($foreground, text, .6);
+    color: rgba(var(--foreground-rgb), .6);
   }
 
   .codex-editor__loader {
@@ -171,7 +170,7 @@
   }
 
   .link-tool__progress {
-    background-color: mat.m2-get-color-from-palette($primary, .08);
+    background-color: rgba(var(--mat-sys-primary-container), .08);
   }
 
   .link-tool__input {
@@ -180,11 +179,11 @@
 
   .link-tool__input-holder--error
   .link-tool__input {
-    background-color: mat.m2-get-color-from-palette($warn, .08);
+    // background-color: mat.m2-get-color-from-palette($warn, .08); //TODO
   }
 
   .ce-block--selected .ce-block__content {
-    background-color: mat.m2-get-color-from-palette($primary, .12);
+    background-color: rgba(var(--mat-sys-primary-container), .12);
   }
 
   .ce-popover__items {

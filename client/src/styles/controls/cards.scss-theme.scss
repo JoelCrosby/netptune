@@ -1,38 +1,48 @@
 @use '@angular/material' as mat;
-
+@use 'sass:map';
+@use 'variables' as *;
 @mixin cards-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
+  $is-dark-theme: map.get($theme, is-dark);
 
   .netp-card {
-    color: mat.m2-get-color-from-palette($foreground, text);
-    background-color: $card;
+    color: var(--foreground);
+    background-color: var(--card);
     box-shadow: 1px 2px 4px if($is-dark-theme, rgba(0, 0, 0, .2), rgba(0, 0, 0, .1));
   }
 
   .netp-card-group {
-    background-color: darken($board-group, 1);
+    background-color: var(--board-group);
   }
 
   .netp-card-title {
-    color: mat.m2-get-color-from-palette($foreground, text);
+    color: var(--foreground);
   }
 
   .netp-card-subtitle {
-    color: mat.m2-get-color-from-palette($foreground, text, .54);
-    background-color: mat.m2-get-color-from-palette($foreground, text, .06);
+    color: rgba(var(--foreground-rgb), .54);
+    background-color: rgba(var(--foreground-rgb), .06);
   }
 
   .netp-card {
-    background-color: $card !important;
+    background-color: var(--card) !important;
     box-shadow: 1px 2px 4px if($is-dark-theme, 1px 6px -1px rgb(0 0 0 / 42%), rgba(0, 0, 0, .1)) !important;
     transition: background-color .2s ease-in, color .2s ease-in;
   }
 
   .netp-card:not([class*='selected']):hover {
-    background-color: $hover !important;
+    background-color: var(--hover) !important;
+  }
+
+  .netp-card.flagged {
+    background-color: var(--card-warn) !important;
   }
 
   .netp-card.flagged:hover {
-    background-color: mix(mat.m2-get-color-from-palette($warn), $board-group, 24%) !important;
+    background-color: var(--card-warn-hover) !important;
+  }
+
+
+  .netp-card.selected {
+    background-color: var(--card-selected) !important;
   }
 }

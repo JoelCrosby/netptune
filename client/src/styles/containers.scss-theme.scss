@@ -1,8 +1,10 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
+@use 'variables' as *;
 
 @mixin containers-theme($theme) {
   .app-container {
-    background-color: $background
+    background-color: var(--background)
   }
 
   .auth-page-container {
@@ -13,24 +15,24 @@
     justify-content: center;
 
     &::before {
-      background-color: mat.m2-get-color-from-palette($primary, .6);
-      background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, $background 1px);
+      background-color: rgba(var(--mat-table-background-color), .6);
+      background-image: radial-gradient(rgba(255, 255, 255, .2) 1px, var(--background) 1px);
     }
 
     form {
       box-shadow: 0 4px 32px 0 rgb(10 14 29 / 2%), 0 8px 64px 0 rgb(10 14 29 / 8%);
-      background-color: $background
+      background-color: var(--background)
     }
   }
 
   .card-group {
-    background-color: darken($board-group, 1);
+    background-color: var(--board-group);
   }
 
   .auth-error {
     .auth-error-text {
-      background-color: mat.m2-get-color-from-palette($warn, .06);
-      color: darken(mat.m2-get-color-from-palette($warn), 36);
+      background-color: rgba(var(--mat-sys-warn-container) .06);
+      color: var(--mat-sys-on-warn-container);
     }
   }
 }

@@ -1,99 +1,101 @@
-$side-bar: null !default;
-$board-group: null !default;
-$border: null !default;
-$status-bar: null !default;
-$app-bar: null !default;
-$background: null !default;
-$hover: null !default;
-$card: null !default;
-$dialog: null !default;
+@use "sass:map";
 
-$primary: null !default;
-$accent: null !default;
-$warn: null !default;
-$foreground: null !default;
+@use './styles/variables';
 
 @use '@angular/material' as mat;
 
 // Themed Component styles
-@import './component.styles';
+@use './component-styles';
 
 // Themes
-@import './themes/default-theme';
-@import './themes/dark-theme';
+@use './themes/default-theme';
+@use './themes/dark-theme';
 
 // Styles reset
-@import './styles/reset';
+@use './styles/reset';
 
-@import './styles/material';
-@import './styles/utility';
-@import './styles/components';
-@import './styles/controls/form-control';
-@import './styles/controls/form-select';
-@import './styles/controls/cards';
-@import './styles/lists';
-@import './styles/forms';
-@import './styles/spinners';
-@import './styles/typography';
-@import './styles/containers';
-@import './styles/modals';
-@import './styles/editor';
-@import './styles/dialogs';
-@import './styles/animations/menu';
+@use './styles/typography';
+@use './styles/material';
+@use './styles/utility';
+@use './styles/components';
+@use './styles/controls/form-control';
+@use './styles/controls/form-select';
+@use './styles/controls/cards';
+@use './styles/lists';
+@use './styles/forms';
+@use './styles/spinners';
+@use './styles/containers';
+@use './styles/modals';
+@use './styles/editor';
+@use './styles/dialogs';
+@use './styles/animations/menu';
 
 .default-theme {
-  $side-bar: #29242e !global;
-  $board-group: #f8f8f8 !global;
-  $border: rgba(0, 0, 0, .08) !global;
-  $status-bar: #fff !global;
-  $app-bar: #fff !global;
-  $background: #fff !global;
-  $hover: rgba(#000, .02) !global;
-  $card: #fff !global;
-  $dialog: #fff !global;
+  --background: #fff;
+  --foreground-rgb: 0, 0, 0;
 
-  $primary: map-get($default-theme, primary) !global;
-  $accent: map-get($default-theme, accent) !global;
-  $warn: map-get($default-theme, warn) !global;
-  $foreground: map-get($default-theme, foreground) !global;
+  --side-bar: #29242e;
+  --side-bar-lighter: #362f3c;
+  --board-group: #f8f8f8;
+  --border: rgba(0, 0, 0, .08);
+  --status-bar: #fff;
+  --app-bar: #fff;
+  --background: #fff;
+  --hover: rgba(#000, .02);
+
+  --card: #fff;
+  --card-warn: #ffe5e5;
+  --card-warn-hover: #fad0d0;
+  --card-selected: #f0ebf8;
+
+  --dialog: #fff;
+
+  $primary: map.get(default-theme.$theme, primary) !global;
+  $accent: map.get(default-theme.$theme, accent) !global;
+  $warn: map.get(default-theme.$theme, warn) !global;
+  $foreground: map.get(default-theme.$theme, foreground) !global;
+
+  color-scheme: light;
 
   @include mat.elevation-classes();
   @include mat.app-background();
-  @include mat.all-component-bases($default-theme);
-  @include mat.all-component-colors($default-theme);
-  @include mat.all-component-typographies($netptune-typography);
-  @include custom-components-theme($default-theme);
+  @include mat.all-component-bases(default-theme.$theme);
+  @include mat.all-component-colors(default-theme.$theme);
+  @include mat.all-component-typographies(typography.$netptune);
+  @include component-styles.custom-components-theme(default-theme.$theme);
 
-  color-scheme: light;
-  color: rgba(0, 0, 0, .8);
-  background-color: #fff;
 }
 
 .dark-theme {
-  $side-bar: #1c1b21 !global;
-  $board-group: #3a3a3a !global;
-  $border: rgba(255, 255, 255, .12) !global;
-  $status-bar: #000 !global;
-  $background: #272727 !global;
-  $app-bar: #272727 !global;
-  $card: #303030 !global;
-  $hover: rgba(#fff, .04) !global;
+  --background: #272727;
+  --foreground-rgb: 255, 255, 255;
 
-  $primary: map-get($dark-theme, primary) !global;
-  $accent: map-get($dark-theme, accent) !global;
-  $warn: map-get($dark-theme, warn) !global;
-  $foreground: map-get($dark-theme, foreground) !global;
+  --side-bar: #1c1b21;
+  --board-group: #3a3a3a;
+  --border: rgba(255, 255, 255, .12);
+  --status-bar: #000;
+  --background: #272727;
+  --app-bar: #272727;
+
+  --card: #303030;
+  --card-warn: #472d2d;
+  --card-warn-hover: #694040;
+  --card-selected: #3f3454;
+  --hover: rgba(#fff, .04);
+
+  --primary: map.get(dark-theme.$theme, primary);
+  $accent: map.get(dark-theme.$theme, accent);
+  $warn: map.get(dark-theme.$theme, warn);
+  $foreground: map.get(dark-theme.$theme, foreground);
+
+  color-scheme: dark;
 
   @include mat.elevation-classes();
   @include mat.app-background();
-  @include mat.all-component-bases($dark-theme);
-  @include mat.all-component-colors($dark-theme);
-  @include mat.all-component-typographies($netptune-typography);
-  @include custom-components-theme($dark-theme);
-
-  color-scheme: dark;
-  color: rgba(255, 255, 255, .8);
-  background-color: #272727;
+  @include mat.all-component-bases(dark-theme.$theme);
+  @include mat.all-component-colors(dark-theme.$theme);
+  @include mat.all-component-typographies(typography.$netptune);
+  @include component-styles.custom-components-theme(dark-theme.$theme);
 
   .mat-mdc-dialog-container .mdc-dialog__surface {
     --mdc-dialog-container-color: #2c2c2c;
@@ -113,7 +115,11 @@ $foreground: null !default;
 }
 
 :root {
- --background: #fff;
+  --background: #fff;
+  --foreground: rgba(var(--foreground-rgb), .8);
+
+  background: var(--background);
+  color: var(--foreground);
 }
 
 .dark-theme {

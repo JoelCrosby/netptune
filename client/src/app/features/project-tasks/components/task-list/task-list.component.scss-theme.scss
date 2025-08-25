@@ -1,12 +1,15 @@
 @use '@angular/material' as mat;
+@use 'variables' as *;
+
+@use 'sass:map';
 
 @mixin project-tasks-list-theme($theme) {
   .empty-list-img,
   .list-empty-mark {
-    color: mat.m2-get-color-from-palette($foreground, empty-list);
+    // color: mat.m2-get-color-from-palette($foreground, empty-list); //TODO
 
     .empty-text {
-      color: mat.m2-get-color-from-palette($foreground, disabled-button);
+      // color: mat.m2-get-color-from-palette($foreground, disabled-button); //TODO
     }
   }
 }
