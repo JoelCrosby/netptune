@@ -1,8 +1,8 @@
 <div class="nept-form-control">
   @if (label) {
-    <label [for]="ngControl.name" class="form-control-label">
-      {{ label }}
-    </label>
+  <label [for]="ngControl?.name" class="form-control-label">
+    {{ label }}
+  </label>
   }
 
   <div
@@ -11,15 +11,15 @@
     [class.invalid]="control?.touched && control?.invalid"
     [class.active]="control?.value && control?.pending"
     (click)="onDropMenuIconClick($event)"
-    >
+  >
     @if (prefix) {
-      <div class="form-control-prefix">{{ prefix }}</div>
+    <div class="form-control-prefix">{{ prefix }}</div>
     }
 
     <input
       #input
       placeholder="{{placeholder}}"
-      [id]="ngControl.name"
+      [id]="ngControl?.name"
       [value]="displayValue"
       [disabled]="disabled"
       [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
@@ -28,7 +28,7 @@
       (keydown)="onKeyDown($event)"
       (blur)="onTouch()"
       autocomplete="off"
-      />
+    />
 
     <div
       class="input-template"
@@ -38,9 +38,9 @@
     <ng-content />
 
     @if (icon) {
-      <mat-icon aria-hidden="true" class="material-icons-outlined">
-        {{ icon }}
-      </mat-icon>
+    <mat-icon aria-hidden="true" class="material-icons-outlined">
+      {{ icon }}
+    </mat-icon>
     }
 
     <mat-icon aria-hidden="true" class="material-icons-outlined arrow">
@@ -55,6 +55,6 @@
   </div>
 
   @if (hint) {
-    <small class="form-control-hint"> {{ hint }} </small>
+  <small class="form-control-hint"> {{ hint }} </small>
   }
 </div>

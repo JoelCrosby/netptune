@@ -1,4 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -87,14 +94,14 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
     AsyncPipe,
     FromNowPipe,
     PrettyDatePipe,
-    TaskStatusPipe
-],
+    TaskStatusPipe,
+  ],
 })
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
-  data = inject<TaskViewModel>(DIALOG_DATA, { optional: true });
+  data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
   private store = inject(Store);
   private actions$ = inject<Actions<Action>>(Actions);
 
@@ -145,9 +152,9 @@ export class TaskDetailDialogComponent
   }
 
   ngAfterViewInit() {
-    this.store.dispatch(
-      TaskActions.loadTaskDetails({ systemId: this.data.systemId })
-    );
+    const systemId: string = this.data?.systemId;
+
+    this.store.dispatch(TaskActions.loadTaskDetails({ systemId }));
 
     this.store.dispatch(ProjectActions.loadProjects());
     this.store.dispatch(UsersActions.loadUsers());

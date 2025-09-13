@@ -1,6 +1,18 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { CdkPortal } from '@angular/cdk/portal';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
@@ -9,11 +21,11 @@ import { FormSelectService } from './form-select.service';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-form-select',
-    templateUrl: './form-select.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [FormSelectService],
-    imports: [MatIcon, FormSelectDropdownComponent]
+  selector: 'app-form-select',
+  templateUrl: './form-select.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FormSelectService],
+  imports: [MatIcon, FormSelectDropdownComponent],
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor
@@ -53,7 +65,7 @@ export class FormSelectComponent<TValue>
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
   get control() {
-    return this.ngControl.control;
+    return this.ngControl?.control;
   }
 
   constructor() {
