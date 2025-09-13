@@ -10,14 +10,14 @@ import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { HeaderAction } from '@core/types/header-action';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
-import { CardListItemComponent } from '../../../../static/components/card-list-item/card-list-item.component';
-import { FromNowPipe } from '../../../../static/pipes/from-now.pipe';
+import { CardListItemComponent } from '@static/components/card-list-item/card-list-item.component';
+import { FromNowPipe } from '@static/pipes/from-now.pipe';
 
 @Component({
-    selector: 'app-workspace-list-item',
-    templateUrl: './workspace-list-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CardListItemComponent, FromNowPipe]
+  selector: 'app-workspace-list-item',
+  templateUrl: './workspace-list-item.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CardListItemComponent, FromNowPipe],
 })
 export class WorkspaceListItemComponent implements OnInit {
   @Input() workspace!: Workspace;

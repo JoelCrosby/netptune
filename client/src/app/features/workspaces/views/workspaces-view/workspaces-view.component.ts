@@ -5,17 +5,24 @@ import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
-import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
-import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { WorkspaceListComponent } from '../../components/workspace-list/workspace-list.component';
+import { WorkspaceListComponent } from '@workspaces/components/workspace-list/workspace-list.component';
 
 @Component({
-    templateUrl: './workspaces-view.component.html',
-    styleUrls: ['./workspaces-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageContainerComponent, PageHeaderComponent, NgIf, MatProgressSpinner, WorkspaceListComponent, AsyncPipe]
+  templateUrl: './workspaces-view.component.html',
+  styleUrls: ['./workspaces-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    PageContainerComponent,
+    PageHeaderComponent,
+    NgIf,
+    MatProgressSpinner,
+    WorkspaceListComponent,
+    AsyncPipe,
+  ],
 })
 export class WorkspacesViewComponent implements OnInit {
   buildInfo$ = this.store.select(selectBuildInfo);

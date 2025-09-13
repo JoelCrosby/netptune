@@ -5,7 +5,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
@@ -15,16 +21,22 @@ import * as ProfileActions from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { first, shareReplay, takeUntil, tap } from 'rxjs/operators';
-import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { MatButton } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-change-password',
-    templateUrl: './change-password.component.html',
-    styleUrls: ['./change-password.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton, AsyncPipe]
+  selector: 'app-change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    FormInputComponent,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
   formGroup = new FormGroup({

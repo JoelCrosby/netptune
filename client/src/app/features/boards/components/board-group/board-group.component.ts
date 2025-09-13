@@ -29,18 +29,28 @@ import {
   Subject,
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { ScrollShadowVericalDirective } from '../../../../static/directives/scroll-shadow-vertical.directive';
+import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
 import { NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
 import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-board-group',
-    templateUrl: './board-group.component.html',
-    styleUrls: ['./board-group.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CdkDropList, ScrollShadowVericalDirective, NgFor, BoardGroupCardComponent, CdkDrag, NgIf, BoardGroupTaskInlineComponent, MatButton, AsyncPipe]
+  selector: 'app-board-group',
+  templateUrl: './board-group.component.html',
+  styleUrls: ['./board-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CdkDropList,
+    ScrollShadowVericalDirective,
+    NgFor,
+    BoardGroupCardComponent,
+    CdkDrag,
+    NgIf,
+    BoardGroupTaskInlineComponent,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId!: string;

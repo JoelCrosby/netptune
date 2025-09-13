@@ -15,17 +15,24 @@ import { Store } from '@ngrx/store';
 import { from, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
-import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
-import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TaskListComponent } from '../../components/task-list/task-list.component';
+import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
 
 @Component({
-    templateUrl: './project-tasks-view.component.html',
-    styleUrls: ['./project-tasks-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageContainerComponent, PageHeaderComponent, NgIf, MatProgressSpinner, TaskListComponent, AsyncPipe]
+  templateUrl: './project-tasks-view.component.html',
+  styleUrls: ['./project-tasks-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    PageContainerComponent,
+    PageHeaderComponent,
+    NgIf,
+    MatProgressSpinner,
+    TaskListComponent,
+    AsyncPipe,
+  ],
 })
 export class ProjectTasksViewComponent
   implements OnInit, OnDestroy, AfterViewInit

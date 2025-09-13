@@ -12,15 +12,15 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
 import { RouterLink } from '@angular/router';
-import { CardListItemComponent } from '../../../../static/components/card-list-item/card-list-item.component';
+import { CardListItemComponent } from '@static/components/card-list-item/card-list-item.component';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-project-list-item',
-    templateUrl: './project-list-item.component.html',
-    styleUrls: ['./project-list-item.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, CardListItemComponent, AsyncPipe]
+  selector: 'app-project-list-item',
+  templateUrl: './project-list-item.component.html',
+  styleUrls: ['./project-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, CardListItemComponent, AsyncPipe],
 })
 export class ProjectListItemComponent implements OnInit {
   @Input() project!: ProjectViewModel;

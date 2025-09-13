@@ -4,16 +4,16 @@ import * as ProjectsActions from '@core/store/projects/projects.actions';
 import * as ProjectsSelectors from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CardListComponent } from '../../../../static/components/card-list/card-list.component';
+import { CardListComponent } from '@static/components/card-list/card-list.component';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { ProjectListItemComponent } from '../project-list-item/project-list-item.component';
 
 @Component({
-    selector: 'app-project-list',
-    templateUrl: './project-list.component.html',
-    styleUrls: ['./project-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CardListComponent, NgFor, ProjectListItemComponent, AsyncPipe]
+  selector: 'app-project-list',
+  templateUrl: './project-list.component.html',
+  styleUrls: ['./project-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CardListComponent, NgFor, ProjectListItemComponent, AsyncPipe],
 })
 export class ProjectListComponent implements OnInit {
   projects$!: Observable<ProjectViewModel[]>;
