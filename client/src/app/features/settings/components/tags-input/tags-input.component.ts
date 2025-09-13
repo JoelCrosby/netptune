@@ -4,11 +4,11 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
   Output,
   ViewChild,
+  input
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { fromEvent, Subject } from 'rxjs';
@@ -22,7 +22,7 @@ import { takeUntil, tap, throttleTime } from 'rxjs/operators';
     imports: [FormsModule, ReactiveFormsModule]
 })
 export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() value: string | null = null;
+  readonly value = input<string | null>(null);
   @ViewChild('input') input!: ElementRef;
 
   @Output() submitted = new EventEmitter<string>();
@@ -42,7 +42,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe();
 
-    this.formControl.setValue(this.value, { emitEvent: false });
+    this.formControl.setValue(this.value(), { emitEvent: false });
   }
 
   ngAfterViewInit() {

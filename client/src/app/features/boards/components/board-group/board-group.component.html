@@ -6,21 +6,21 @@
       cdkDropList
       appScrollShadowVertical
       class="board-task-list custom-scroll"
-      [id]="dragListId"
-      [cdkDropListConnectedTo]="siblingIds"
+      [id]="dragListId()"
+      [cdkDropListConnectedTo]="siblingIds()"
       (cdkDropListDropped)="drop($event)"
-      [cdkDropListData]="group.tasks"
+      [cdkDropListData]="group().tasks"
       >
-      @for (task of group.tasks; track trackGroupTask($index, task)) {
+      @for (task of group().tasks; track trackGroupTask($index, task)) {
         <app-board-group-card
           cdkDrag
           class="board-group-task-card"
           [cdkDragData]="task"
           [task]="task"
-          [groupId]="group.id"
+          [groupId]="group().id"
           (cdkDragStarted)="onDragStarted()"
           (cdkDragReleased)="onDragRelease()"
-          (click)="onTaskClicked($event, task, group.id)"
+          (click)="onTaskClicked($event, task, group().id)"
           >
         </app-board-group-card>
       }
@@ -28,7 +28,7 @@
       @if (isInlineActive$ | async) {
         <app-board-group-task-inline
           (canceled)="onInlineCanceled()"
-          [boardGroupId]="group.id"
+          [boardGroupId]="group().id"
           >
         </app-board-group-task-inline>
       }

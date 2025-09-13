@@ -1,8 +1,8 @@
 <div class="image-cropper" [style.visibility]="ready ? 'visible' : 'hidden'">
   <ly-img-cropper
     class="cropper"
-    [style.max-width]="size"
-    [style.height]="size"
+    [style.max-width]="size()"
+    [style.height]="size()"
     [config]="myConfig"
     [(scale)]="scale"
     (minScale)="minScale = $event"
@@ -70,7 +70,7 @@
     Cancel
   </button>
 
-  @if (src) {
+  @if (src()) {
     <button
       mat-stroked-button
       class="crop-image-btn"

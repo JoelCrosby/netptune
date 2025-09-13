@@ -1,17 +1,17 @@
 <div
   class="page-container"
-  [class.full-height]="fullHeight"
-  [class.center-page]="centerPage"
+  [class.full-height]="fullHeight()"
+  [class.center-page]="centerPage()"
   >
   <div class="page-progress">
-    @if (showProgress) {
+    @if (showProgress()) {
       <mat-progress-bar mode="indeterminate" />
     }
   </div>
   <div
     class="page-content"
-    [class.page-vertical-padding]="verticalPadding"
-    [class.page-margin-bottom]="marginBottom"
+    [class.page-vertical-padding]="verticalPadding()"
+    [class.page-margin-bottom]="marginBottom()"
     >
     <ng-content />
   </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { Workspace } from '@core/models/workspace';
 import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
@@ -18,7 +18,7 @@ export class WorkspaceListItemComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(DialogService);
 
-  @Input() workspace!: Workspace;
+  readonly workspace = input.required<Workspace>();
 
   actions!: HeaderAction[];
 
@@ -27,13 +27,13 @@ export class WorkspaceListItemComponent implements OnInit {
       {
         label: 'Go To Projects',
         isLink: true,
-        routerLink: ['/', this.workspace.slug],
+        routerLink: ['/', this.workspace().slug],
         icon: 'assessment',
       },
       {
         label: 'Manage Users',
         isLink: true,
-        routerLink: ['/', this.workspace.slug, 'users'],
+        routerLink: ['/', this.workspace().slug, 'users'],
       },
       {
         label: 'Edit Workspace',
@@ -44,7 +44,7 @@ export class WorkspaceListItemComponent implements OnInit {
 
   onEditClicked() {
     this.dialog.open(WorkspaceDialogComponent, {
-      data: this.workspace,
+      data: this.workspace(),
       width: '720px',
     });
   }

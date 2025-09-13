@@ -5,7 +5,7 @@
       type="text"
       class="inline-edit-input"
       [formControl]="control"
-      [class.active-border]="activeBorder"
+      [class.active-border]="activeBorder()"
       (keydown.enter)="onSubmit(input.value)"
       />
   } @else {

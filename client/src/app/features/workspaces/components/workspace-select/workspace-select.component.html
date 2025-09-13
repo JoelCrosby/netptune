@@ -1,6 +1,6 @@
 <div
   class="workspace-select"
-  [class.workspace-select-compact]="compact"
+  [class.workspace-select-compact]="compact()"
   #dropdown
   >
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
@@ -22,12 +22,12 @@
   <div #selectmenu class="select-menu">
     @if (isOpen) {
       <div class="select-menu-inner menu-scale-in">
-        @if (!options?.length) {
+        @if (!options()?.length) {
           <div class="no-results-item">
             No results found...
           </div>
         }
-        @if (options?.length) {
+        @if (options()?.length) {
           <input
             appAutofocus
             class="label-input"

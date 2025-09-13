@@ -1,5 +1,5 @@
 import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -45,9 +45,9 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   private dialog = inject(DialogService);
   private zone = inject(NgZone);
 
-  @Input() dragListId!: string;
-  @Input() group!: BoardViewGroup;
-  @Input() siblingIds!: string[];
+  readonly dragListId = input.required<string>();
+  readonly group = input.required<BoardViewGroup>();
+  readonly siblingIds = input.required<string[]>();
 
   @ViewChild('container') container!: ElementRef;
 
@@ -68,7 +68,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isInlineActive$ = this.store.select(
       BoardGroupSelectors.selectIsInlineActive,
-      { groupId: this.group.id }
+      { groupId: this.group().id }
     );
 
     this.showAddButton$ = combineLatest([
@@ -108,7 +108,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onAddTaskClicked() {
     this.store.dispatch(
-      BoardGroupActions.setInlineActive({ groupId: this.group.id })
+      BoardGroupActions.setInlineActive({ groupId: this.group().id })
     );
   }
 

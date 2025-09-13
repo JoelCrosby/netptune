@@ -1,8 +1,8 @@
 <app-card-list-item
-  [title]="workspace.name"
-  [description]="workspace.description"
-  [subText]="'Last updated ' + (workspace.updatedAt | fromNow)"
+  [title]="workspace().name"
+  [description]="workspace().description"
+  [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
   [actions]="actions"
-  (delete)="deleteClicked(workspace)"
+  (delete)="deleteClicked(workspace())"
 >
 </app-card-list-item>

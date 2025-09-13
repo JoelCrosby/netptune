@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-host-metadata-property */
 
 import { Highlightable } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, inject, input } from '@angular/core';
 import { FormSelectComponent } from './form-select.component';
 import { FormSelectService } from './form-select.service';
 
@@ -17,7 +17,7 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
   private element = inject(ElementRef);
 
-  @Input() value!: TValue;
+  readonly value = input.required<TValue>();
 
   @HostBinding('class.selected')
   get selected(): boolean {

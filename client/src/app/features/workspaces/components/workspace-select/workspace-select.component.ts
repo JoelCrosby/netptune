@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -30,9 +30,9 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;
 
-  @Input() options: Workspace[] | null = [];
-  @Input() value?: string | null;
-  @Input() compact = false;
+  readonly options = input<Workspace[] | null>([]);
+  readonly value = input<string | null>();
+  readonly compact = input(false);
 
   @Output() selectChange = new EventEmitter<Workspace>();
   @Output() closed = new EventEmitter();
@@ -70,13 +70,14 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
       )
       .subscribe();
 
-    this.options$.next(this.options ?? []);
+    this.options$.next(this.options() ?? []);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
-      if (this.value && !this.currentWorkspace && this.options) {
-        const option = this.options.find((opt) => opt.slug === this.value);
+      const options = this.options();
+      if (this.value() && !this.currentWorkspace && options) {
+        const option = options.find((opt) => opt.slug === this.value());
         this.select(option);
       }
     }
@@ -125,7 +126,8 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   selectPreviousOption() {
     const options = this.options$.value;
 
-    if (!this.options) return;
+    const optionsValue = this.options();
+    if (!optionsValue) return;
 
     if (!this.selected) {
       this.selected = (options.length && options[0]) || null;
@@ -136,7 +138,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
       if (currentIndex === 0) return;
 
-      this.selected = this.options[currentIndex - 1];
+      this.selected = optionsValue[currentIndex - 1];
     }
 
     this.options$.next(options);
@@ -144,7 +146,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   open(dropdown: HTMLElement, origin: HTMLElement) {
     this.isOpen = true;
-    if (this.compact) {
+    if (this.compact()) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
       dropdown.style.top = '0px';
@@ -181,12 +183,13 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   }
 
   search(value: string) {
-    if (!this.options) return;
+    const options = this.options();
+    if (!options) return;
 
     if (!value) {
-      this.options$.next(this.options);
+      this.options$.next(options);
     } else {
-      this.options$.next(filterObjectArray(this.options, 'name', value));
+      this.options$.next(filterObjectArray(options, 'name', value));
       this.selectNextOptiom();
     }
   }

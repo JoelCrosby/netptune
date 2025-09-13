@@ -1,5 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  inject,
+  input,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
@@ -34,18 +49,25 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-    selector: 'app-task-inline',
-    templateUrl: './task-inline.component.html',
-    styleUrls: ['./task-inline.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButton, MatIcon, MatCheckbox, FormsModule, ReactiveFormsModule, MatInput]
+  selector: 'app-task-inline',
+  templateUrl: './task-inline.component.html',
+  styleUrls: ['./task-inline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatButton,
+    MatIcon,
+    MatCheckbox,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInput,
+  ],
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private cd = inject(ChangeDetectorRef);
 
-  @Input() status: TaskStatus = TaskStatus.new;
-  @Input() siblings!: TaskViewModel[] | null;
+  readonly status = input<TaskStatus>(TaskStatus.new);
+  readonly siblings = input<TaskViewModel[] | null>();
 
   @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
   @ViewChild('taskInlineForm') formElementRef!: ElementRef;
@@ -140,15 +162,15 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     project: ProjectViewModel,
     user: UserResponse
   ) {
-    const lastSibling =
-      this.siblings && this.siblings[this.siblings.length - 1];
+    const siblings = this.siblings();
+    const lastSibling = siblings && siblings[siblings.length - 1];
 
     const order = lastSibling && lastSibling.sortOrder + 1;
 
     const task: AddProjectTaskRequest = {
       name: (this.taskName.value as string).trim(),
       projectId: project.id,
-      status: this.status,
+      status: this.status(),
       sortOrder: order || 1,
       assigneeId: user.userId,
     };

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { EntityType } from '@core/models/entity-type';
 import { ActivityViewModel } from '@core/models/view-models/activity-view-model';
 import * as ActivityActions from '@core/store/activity/activity.actions';
@@ -40,8 +40,8 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
 export class ActivityMenuComponent implements OnInit {
   private store = inject(Store);
 
-  @Input() entityType!: EntityType;
-  @Input() entityId?: number;
+  readonly entityType = input.required<EntityType>();
+  readonly entityId = input<number>();
 
   activities$!: Observable<ActivityViewModel[]>;
   loaded$!: Observable<boolean>;
@@ -56,8 +56,8 @@ export class ActivityMenuComponent implements OnInit {
   }
 
   onClicked() {
-    const entityType = this.entityType;
-    const entityId = this.entityId;
+    const entityType = this.entityType();
+    const entityId = this.entityId();
 
     if (entityId === undefined) return;
 

@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
   inject,
+  input
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -25,11 +26,11 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   @Input() disabled!: boolean;
   @Input() icon!: string;
   @Input() prefix!: string;
-  @Input() placeholder: string | null = null;
+  readonly placeholder = input<string | null>(null);
   @Input() hint: string | null = null;
-  @Input() minLength: string | null = null;
-  @Input() maxLength: string | null = null;
-  @Input() rows = '2';
+  readonly minLength = input<string | null>(null);
+  readonly maxLength = input<string | null>(null);
+  readonly rows = input('2');
 
   @ViewChild('input') input!: ElementRef;
 

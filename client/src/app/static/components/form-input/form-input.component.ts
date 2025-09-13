@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
   inject,
+  input
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -25,13 +26,13 @@ export class FormInputComponent implements ControlValueAccessor {
   @Input() disabled?: boolean;
   @Input() icon?: string | null;
   @Input() prefix?: string | null;
-  @Input() autocomplete = 'off';
-  @Input() placeholder?: string | null;
+  readonly autocomplete = input('off');
+  readonly placeholder = input<string | null>();
   @Input() hint?: string | null;
-  @Input() minLength?: string | null;
-  @Input() maxLength?: string | null;
-  @Input() loading: boolean | null = false;
-  @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
+  readonly minLength = input<string | null>();
+  readonly maxLength = input<string | null>();
+  readonly loading = input<boolean | null>(false);
+  readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
 
   @ViewChild('input') input!: ElementRef;
 

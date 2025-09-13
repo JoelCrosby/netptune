@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 
 import { MatProgressBar } from '@angular/material/progress-bar';
 
@@ -10,9 +10,9 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     imports: [MatProgressBar]
 })
 export class PageContainerComponent {
-  @Input() verticalPadding: boolean | null = false;
-  @Input() showProgress: boolean | null = false;
-  @Input() marginBottom: boolean | null = false;
-  @Input() fullHeight: boolean | null = true;
-  @Input() centerPage: boolean | null = false;
+  readonly verticalPadding = input<boolean | null>(false);
+  readonly showProgress = input<boolean | null>(false);
+  readonly marginBottom = input<boolean | null>(false);
+  readonly fullHeight = input<boolean | null>(true);
+  readonly centerPage = input<boolean | null>(false);
 }

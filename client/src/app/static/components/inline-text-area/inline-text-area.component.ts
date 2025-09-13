@@ -1,6 +1,28 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, Input, NgZone, OnDestroy, OnInit, Provider, ViewChild, inject } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  HostBinding,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Provider,
+  ViewChild,
+  inject,
+  input,
+} from '@angular/core';
+import {
+  ControlContainer,
+  ControlValueAccessor,
+  FormControl,
+  FormControlDirective,
+  NG_VALUE_ACCESSOR,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, takeUntil, tap } from 'rxjs/operators';
@@ -13,12 +35,12 @@ export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
 };
 
 @Component({
-    selector: 'app-inline-text-area',
-    templateUrl: './inline-text-area.component.html',
-    styleUrls: ['./inline-text-area.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
-    imports: [CdkTextareaAutosize, FormsModule, ReactiveFormsModule, AsyncPipe]
+  selector: 'app-inline-text-area',
+  templateUrl: './inline-text-area.component.html',
+  styleUrls: ['./inline-text-area.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
+  imports: [CdkTextareaAutosize, FormsModule, ReactiveFormsModule, AsyncPipe],
 })
 export class InlineTextAreaComponent
   implements OnInit, OnDestroy, ControlValueAccessor
@@ -28,13 +50,13 @@ export class InlineTextAreaComponent
   private cd = inject(ChangeDetectorRef);
   private document = inject(DocumentService);
 
-  @Input() value!: string;
-  @Input() formControlName!: string;
-  @Input() formControl!: FormControl;
-  @Input() activeBorder!: boolean | string;
+  readonly value = input<string>();
+  readonly formControlName = input<string>();
+  readonly formControl = input<FormControl>();
+  readonly activeBorder = input.required<boolean | string>();
 
-  @Input() minRows = 1;
-  @Input() maxRows = 3;
+  readonly minRows = input(1);
+  readonly maxRows = input(3);
 
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
   @ViewChild('textarea', { static: false }) textarea!: ElementRef;
@@ -49,8 +71,10 @@ export class InlineTextAreaComponent
 
   get control(): FormControl {
     return (
-      this.formControl ||
-      (this.controlContainer.control?.get(this.formControlName) as FormControl)
+      this.formControl() ||
+      (this.controlContainer.control?.get(
+        this.formControlName()!
+      ) as FormControl)
     );
   }
 

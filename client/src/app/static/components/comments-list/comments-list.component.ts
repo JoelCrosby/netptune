@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  input
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
@@ -25,7 +26,7 @@ import { FromNowPipe } from '../../pipes/from-now.pipe';
 })
 export class CommentsListComponent {
   @Input() user!: UserResponse | null | undefined;
-  @Input() comments!: CommentViewModel[] | null;
+  readonly comments = input.required<CommentViewModel[] | null>();
 
   @Output() deleteComment = new EventEmitter<CommentViewModel>();
   @Output() commentSubmit = new EventEmitter<string>();

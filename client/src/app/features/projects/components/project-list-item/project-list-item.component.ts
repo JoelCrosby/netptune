@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -20,7 +20,7 @@ import { AsyncPipe } from '@angular/common';
 export class ProjectListItemComponent implements OnInit {
   private store = inject(Store);
 
-  @Input() project!: ProjectViewModel;
+  readonly project = input.required<ProjectViewModel>();
 
   actions$!: Observable<HeaderAction[]>;
 
@@ -37,7 +37,7 @@ export class ProjectListItemComponent implements OnInit {
             '/',
             identifier,
             'boards',
-            this.project.defaultBoardIdentifier,
+            this.project().defaultBoardIdentifier,
           ],
         },
       ])
@@ -45,6 +45,6 @@ export class ProjectListItemComponent implements OnInit {
   }
 
   onDeleteClicked() {
-    this.store.dispatch(deleteProject({ project: this.project }));
+    this.store.dispatch(deleteProject({ project: this.project() }));
   }
 }

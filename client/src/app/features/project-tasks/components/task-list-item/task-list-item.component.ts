@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -37,12 +37,12 @@ export class TaskListItemComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
 
-  @Input() task!: TaskViewModel;
+  readonly task = input.required<TaskViewModel>();
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {
       width: TaskDetailDialogComponent.width,
-      data: this.task,
+      data: this.task(),
       autoFocus: false,
       panelClass: 'app-modal-class',
     });
@@ -51,7 +51,7 @@ export class TaskListItemComponent {
   moveTask(task: TaskViewModel, sortOrder: number) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceKey}`,
+        identifier: `[workspace] ${this.task().workspaceKey}`,
         task: {
           ...task,
           sortOrder,
@@ -63,7 +63,7 @@ export class TaskListItemComponent {
   deleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.deleteProjectTask({
-        identifier: `[workspace] ${this.task.workspaceKey}`,
+        identifier: `[workspace] ${this.task().workspaceKey}`,
         task,
       })
     );
@@ -72,7 +72,7 @@ export class TaskListItemComponent {
   markCompleteClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceKey}`,
+        identifier: `[workspace] ${this.task().workspaceKey}`,
         task: {
           ...task,
           status: TaskStatus.complete,
@@ -84,7 +84,7 @@ export class TaskListItemComponent {
   moveToBacklogClicked(task: TaskViewModel) {
     this.store.dispatch(
       actions.editProjectTask({
-        identifier: `[workspace] ${this.task.workspaceKey}`,
+        identifier: `[workspace] ${this.task().workspaceKey}`,
         task: {
           ...task,
           status: TaskStatus.inActive,

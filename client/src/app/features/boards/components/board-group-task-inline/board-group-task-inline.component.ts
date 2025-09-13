@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -59,7 +59,7 @@ export class BoardGroupTaskInlineComponent
   @ViewChild('taskInput') inputElementRef!: ElementRef;
   @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
 
-  @Input() boardGroupId!: number;
+  readonly boardGroupId = input.required<number>();
   @Output() canceled = new EventEmitter();
 
   taskInputControl = new FormControl<string | null | undefined>(null, [
@@ -162,7 +162,7 @@ export class BoardGroupTaskInlineComponent
       name: (this.taskInputControl.value as string).trim(),
       projectId,
       assigneeId: user.userId,
-      boardGroupId: this.boardGroupId,
+      boardGroupId: this.boardGroupId(),
     };
 
     this.store.dispatch(BoardGroupActions.createProjectTask({ task }));

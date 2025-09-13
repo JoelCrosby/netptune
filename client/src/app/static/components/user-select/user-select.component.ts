@@ -3,12 +3,12 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
   ViewChild,
+  input
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
@@ -32,11 +32,11 @@ import { AutofocusDirective } from '../../directives/autofocus.directive';
 export class UserSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;
 
-  @Input() options: AppUser[] | null = [];
-  @Input() value?: (AssigneeViewModel | AppUser)[] | null = [];
-  @Input() compact = false;
-  @Input() label = 'Select Users';
-  @Input() noResults = 'No results found...';
+  readonly options = input<AppUser[] | null>([]);
+  readonly value = input<((AssigneeViewModel | AppUser)[] | null) | undefined>([]);
+  readonly compact = input(false);
+  readonly label = input('Select Users');
+  readonly noResults = input('No results found...');
 
   @Output() selectChange = new EventEmitter<AppUser>();
   @Output() closed = new EventEmitter();
@@ -74,17 +74,19 @@ export class UserSelectComponent implements OnInit, OnChanges {
       )
       .subscribe();
 
-    this.options$.next(this.options ?? []);
+    this.options$.next(this.options() ?? []);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
-      if (this.value && this.options) {
-        this.options$.next(this.options);
+      const options = this.options();
+      const value = this.value();
+      if (value && options) {
+        this.options$.next(options);
 
         this.valueIdSet.clear();
 
-        for (const user of this.value) {
+        for (const user of value) {
           user && this.valueIdSet.add(user.id);
         }
       }
@@ -134,7 +136,8 @@ export class UserSelectComponent implements OnInit, OnChanges {
   selectPreviousOption() {
     const options = this.options$.value;
 
-    if (!this.options) return;
+    const optionsValue = this.options();
+    if (!optionsValue) return;
 
     if (!this.selected) {
       this.selected = (options.length && options[0]) || null;
@@ -145,7 +148,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
 
       if (currentIndex === 0) return;
 
-      this.selected = this.options[currentIndex - 1];
+      this.selected = optionsValue[currentIndex - 1];
     }
 
     this.options$.next(options);
@@ -153,7 +156,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
 
   open(dropdown: HTMLElement, origin: HTMLElement) {
     this.isOpen = true;
-    if (this.compact) {
+    if (this.compact()) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
       dropdown.style.top = '0px';
@@ -192,12 +195,13 @@ export class UserSelectComponent implements OnInit, OnChanges {
   }
 
   search(value?: string | null) {
-    if (!this.options) return;
+    const options = this.options();
+    if (!options) return;
 
     if (!value) {
-      this.options$.next(this.options);
+      this.options$.next(options);
     } else {
-      this.options$.next(filterObjectArray(this.options, 'displayName', value));
+      this.options$.next(filterObjectArray(options, 'displayName', value));
       this.selectNextOptiom();
     }
   }
