@@ -22,6 +22,7 @@ jobs:
       -
         name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
+        working-directory: ./server
       -
         name: Install dependencies
         working-directory: ./server
