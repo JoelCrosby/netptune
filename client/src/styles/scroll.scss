@@ -9,12 +9,12 @@
 
 .custom-scroll::-webkit-scrollbar-thumb {
   border: 6px solid transparent;
-  background: var(--forgeground, .2);
+  background: var(--scrollbar-foreground);
   border-radius: 10px;
   background-clip: padding-box;
 }
 
 .custom-scroll {
-  scrollbar-color: var(--forgeground, .2) transparent;
+  scrollbar-color: var(--scrollbar-foreground) transparent;
   scrollbar-width: auto;
 }

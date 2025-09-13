@@ -12,7 +12,7 @@ import {
   Provider,
   inject,
   input,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -58,9 +58,9 @@ export class InlineTextAreaComponent
   readonly minRows = input(1);
   readonly maxRows = input(3);
 
-  readonly autosize = viewChild.required<CdkTextareaAutosize>('autosize');
-  readonly textarea = viewChild.required<ElementRef>('textarea');
-  readonly controlDirective = viewChild.required(FormControlDirective);
+  readonly autosize = viewChild<CdkTextareaAutosize>('autosize');
+  readonly textarea = viewChild<ElementRef>('textarea');
+  readonly controlDirective = viewChild(FormControlDirective);
 
   @HostBinding('class.edit-active') editActiveClass!: boolean;
 
@@ -121,7 +121,7 @@ export class InlineTextAreaComponent
 
   focusInput() {
     this.cd.detectChanges();
-    this.autosize().resizeToFitContent(true);
+    this.autosize()?.resizeToFitContent(true);
 
     const textarea = this.textarea();
     if (textarea) {

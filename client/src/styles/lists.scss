@@ -154,3 +154,10 @@
   color: var(--primary);
   background-color: rgba(var(--primary-rgb), .1);
 }
+
+.task-list-group {
+  .cdk-virtual-scroll-content-wrapper {
+    max-width: 100%;
+  }
+}
+
