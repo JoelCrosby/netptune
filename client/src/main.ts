@@ -1,9 +1,21 @@
-import { enableProdMode, NgModuleRef, ApplicationRef } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {
+  ApplicationRef,
+  enableProdMode,
+  importProvidersFrom,
+  NgModuleRef,
+} from '@angular/core';
 
-import { AppModule } from './app/app.module';
+import {
+  bootstrapApplication,
+  BrowserModule,
+  enableDebugTools,
+} from '@angular/platform-browser';
 import { environment } from '@env/environment';
-import { enableDebugTools } from '@angular/platform-browser';
+import { SharedModule } from '@shared/shared.module';
+import { StaticModule } from '@static/static.module';
+import { AppComponent } from './app/app.component';
+import { AppRoutingModule } from './app/app.routing.module';
+import { CoreModule } from './app/core';
 
 if (environment.production) {
   enableProdMode();
@@ -13,13 +25,24 @@ if (environment.production) {
 // Execute the following in the devtools console:
 // > ng.profiler.timeChangeDetection()
 
-const addProfiling = (module: NgModuleRef<AppModule>): void => {
+const addProfiling = (module: ApplicationRef): void => {
   if (environment.production) return;
 
   enableDebugTools(module.injector.get(ApplicationRef).components[0]);
 };
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      BrowserModule,
+      // core & shared
+      CoreModule,
+      StaticModule,
+      SharedModule,
+      // app
+      AppRoutingModule
+    ),
+  ],
+})
   .then((module) => addProfiling(module))
   .catch((err) => console.log(err));
