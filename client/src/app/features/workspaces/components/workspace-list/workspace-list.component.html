@@ -1,9 +1,7 @@
 <app-card-list>
   @for (workspace of workspaces$ | async; track trackById(i, workspace); let i = $index) {
-    <app-workspace-list-item
-      [workspace]="workspace"
-      >
-    </app-workspace-list-item>
+    <app-workspace-list-item [workspace]="workspace"
+       />
   }
 
   <app-create-workspace-list-item />

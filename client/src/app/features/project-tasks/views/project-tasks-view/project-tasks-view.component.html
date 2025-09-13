@@ -1,11 +1,9 @@
 <app-page-container>
-  <app-page-header
-    title="Tasks"
+  <app-page-header title="Tasks"
     actionTitle="Create Task"
     (actionClick)="showAddModal()"
     [overflowActions]="secondaryActions"
-    >
-  </app-page-header>
+     />
 
   @if (loading$ | async) {
     <div class="page-loading">

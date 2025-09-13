@@ -3,12 +3,10 @@
   [verticalPadding]="false"
   [fullHeight]="true"
   >
-  <app-page-header
-    title="Boards"
+  <app-page-header title="Boards"
     actionTitle="Create Board"
     (actionClick)="onCreateBoardClicked()"
-    >
-  </app-page-header>
+     />
 
   @if (loading$ | async) {
     <div class="page-loading">
