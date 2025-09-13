@@ -2,12 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
-  Output,
   ViewChild,
   inject,
-  input
+  input,
+  output
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -36,7 +35,7 @@ export class FormInputComponent implements ControlValueAccessor {
 
   @ViewChild('input') input!: ElementRef;
 
-  @Output() submitted = new EventEmitter<string>();
+  readonly submitted = output<string>();
 
   value: string | number | null | undefined = '';
 

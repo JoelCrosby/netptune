@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -60,7 +60,7 @@ export class BoardGroupTaskInlineComponent
   @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
 
   readonly boardGroupId = input.required<number>();
-  @Output() canceled = new EventEmitter();
+  readonly canceled = output();
 
   taskInputControl = new FormControl<string | null | undefined>(null, [
     Validators.required,
