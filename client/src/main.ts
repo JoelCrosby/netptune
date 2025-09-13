@@ -2,9 +2,7 @@ import {
   ApplicationRef,
   enableProdMode,
   importProvidersFrom,
-  NgModuleRef,
 } from '@angular/core';
-
 import {
   bootstrapApplication,
   BrowserModule,
