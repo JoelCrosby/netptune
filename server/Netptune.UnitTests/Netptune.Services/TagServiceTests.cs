@@ -210,7 +210,7 @@ public class TagServiceTests
         var result = await Service.GetTagsForTask("task-id");
 
         result.Should().NotBeEmpty();
-        result!.Count.Should().Be(1);
+        result.Count.Should().Be(1);
     }
 
     [Fact]
@@ -238,7 +238,7 @@ public class TagServiceTests
         var result = await Service.GetTagsForWorkspace();
 
         result.Should().NotBeEmpty();
-        result!.Count.Should().Be(1);
+        result.Count.Should().Be(1);
     }
 
     [Fact]
