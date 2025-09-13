@@ -1,12 +1,12 @@
 <app-card
   class="group-task-card"
-  [class.flagged]="task.isFlagged"
-  [class.selected]="task.selected"
+  [class.flagged]="task().isFlagged"
+  [class.selected]="task().selected"
   >
-  <div class="task-name-text">{{ task.name }}</div>
+  <div class="task-name-text">{{ task().name }}</div>
 
   <div class="card-tags">
-    @for (tag of task.tags; track trackByTag($index, tag)) {
+    @for (tag of task().tags; track trackByTag($index, tag)) {
       <div class="card-tag">
         {{ tag }}
       </div>
@@ -15,10 +15,10 @@
 
   <div class="card-footer">
     <div class="bottom-right">
-      @if (task.isFlagged) {
+      @if (task().isFlagged) {
         <mat-icon color="warn"> flag </mat-icon>
       }
-      @for (assignee of task.assignees; track trackById($index, assignee)) {
+      @for (assignee of task().assignees; track trackById($index, assignee)) {
         <app-avatar
           size="24"
           class="task-card-user-chip"
@@ -30,9 +30,9 @@
     </div>
 
     <div class="bottom-left">
-      <div class="task-scope-id">{{ task.systemId }}</div>
+      <div class="task-scope-id">{{ task().systemId }}</div>
 
-      @if (task.status === 1) {
+      @if (task().status === 1) {
         <mat-icon class="task-complete">
           done
         </mat-icon>

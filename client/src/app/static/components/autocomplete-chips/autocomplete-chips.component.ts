@@ -8,10 +8,22 @@ import {
   OnInit,
   Output,
   ViewChild,
+  input,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from '@angular/material/chips';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatOption,
+} from '@angular/material/autocomplete';
+import {
+  MatChipInputEvent,
+  MatChipGrid,
+  MatChipRow,
+  MatChipRemove,
+  MatChipInput,
+} from '@angular/material/chips';
 import { filterStringArray } from '@core/util/arrays';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -25,16 +37,29 @@ export interface AutocompleteChipsSelectionChanged {
 }
 
 @Component({
-    selector: 'app-autocomplete-chips',
-    templateUrl: './autocomplete-chips.component.html',
-    styleUrls: ['./autocomplete-chips.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatLabel, MatChipGrid, MatChipRow, MatIcon, MatChipRemove, FormsModule, MatAutocompleteTrigger, MatChipInput, ReactiveFormsModule, MatAutocomplete, MatOption, AsyncPipe]
+  selector: 'app-autocomplete-chips',
+  templateUrl: './autocomplete-chips.component.html',
+  styleUrls: ['./autocomplete-chips.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatLabel,
+    MatChipGrid,
+    MatChipRow,
+    MatIcon,
+    MatChipRemove,
+    FormsModule,
+    MatAutocompleteTrigger,
+    MatChipInput,
+    ReactiveFormsModule,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe,
+  ],
 })
 export class AutocompleteChipsComponent implements OnInit {
-  @Input() placeholder!: string;
-  @Input() label!: string | null;
-  @Input() options!: string[] | null;
+  readonly placeholder = input.required<string>();
+  readonly label = input<string | null>();
+  readonly options = input.required<string[] | null>();
   @Input() selected: string[] | null = [];
 
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
@@ -114,7 +139,7 @@ export class AutocompleteChipsComponent implements OnInit {
       return [];
     }
 
-    return filterStringArray(this.options, name);
+    return filterStringArray(this.options(), name);
   }
 
   onSelected(event: MatAutocompleteSelectedEvent): void {

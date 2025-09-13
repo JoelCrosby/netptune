@@ -1,5 +1,5 @@
 <div class="tasks-container">
-  <h4>{{ header }}</h4>
+  <h4>{{ header() }}</h4>
 
   <div class="task-list">
     @if (tasks?.length) {
@@ -22,7 +22,7 @@
       <div class="list-empty">
         <div class="list-empty-mark">
           <i class="far fa-compass"></i>
-          <h4 class="empty-text">{{ emptyMessage }}</h4>
+          <h4 class="empty-text">{{ emptyMessage() }}</h4>
         </div>
       </div>
     }

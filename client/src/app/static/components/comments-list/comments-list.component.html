@@ -19,7 +19,7 @@
       </form>
     </div>
     <div class="comments-list">
-      @for (comment of comments; track comment) {
+      @for (comment of comments(); track comment) {
         <div class="comments-list-item">
           <app-avatar
             size="24"

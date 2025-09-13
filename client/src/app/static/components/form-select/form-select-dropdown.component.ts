@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
-import { Component, ChangeDetectionStrategy, Input, ViewChild, HostListener, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, HostListener, inject, input } from '@angular/core';
 import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
 @Component({
@@ -16,7 +16,7 @@ import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 export class FormSelectDropdownComponent {
   private overlay = inject(Overlay);
 
-  @Input() reference!: HTMLElement;
+  readonly reference = input.required<HTMLElement>();
   @ViewChild(CdkPortal) portal!: CdkPortal;
 
   overlayRef?: OverlayRef;
@@ -45,14 +45,14 @@ export class FormSelectDropdownComponent {
       return;
     }
 
-    const refRect = this.reference.getBoundingClientRect();
+    const refRect = this.reference().getBoundingClientRect();
     this.overlayRef.updateSize({ width: refRect.width });
   }
 
   private getOverlayConfig(): OverlayConfig {
     const positionStrategy = this.overlay
       .position()
-      .flexibleConnectedTo(this.reference)
+      .flexibleConnectedTo(this.reference())
       .withPush(false)
       .withPositions([
         {

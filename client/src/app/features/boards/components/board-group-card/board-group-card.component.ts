@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import {
   AssigneeViewModel,
@@ -17,8 +17,8 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   imports: [CardComponent, MatIcon, AvatarComponent],
 })
 export class BoardGroupCardComponent {
-  @Input() task!: Selected<BoardViewTask>;
-  @Input() groupId!: number;
+  readonly task = input.required<Selected<BoardViewTask>>();
+  readonly groupId = input.required<number>();
 
   trackByTag(_: number, tag: string) {
     return tag;

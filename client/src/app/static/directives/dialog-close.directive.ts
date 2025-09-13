@@ -8,6 +8,7 @@ import {
   ElementRef,
   SimpleChanges,
   inject,
+  input
 } from '@angular/core';
 
 function getClosestDialog<TResult, TComponent>(
@@ -40,8 +41,8 @@ function closeDialogVia<R>(
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '(click)': 'onButtonClick($event)',
-    '[attr.aria-label]': 'ariaLabel || null',
-    '[attr.type]': 'type',
+    '[attr.aria-label]': 'ariaLabel() || null',
+    '[attr.type]': 'type()',
   },
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
@@ -49,8 +50,8 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _dialog = inject(Dialog);
 
-  @Input('aria-label') ariaLabel?: string;
-  @Input() type: 'submit' | 'button' | 'reset' = 'button';
+  readonly ariaLabel = input<string>(undefined, { alias: "aria-label" });
+  readonly type = input<'submit' | 'button' | 'reset'>('button');
   @Input() dialogResult?: TResult;
 
   ngOnInit() {

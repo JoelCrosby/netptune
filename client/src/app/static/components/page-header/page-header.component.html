@@ -18,22 +18,22 @@
         @if (backLink) {
           <a class="header-back-link" [routerLink]="backLink">
             <mat-icon> arrow_back </mat-icon>
-            <span> {{ backLabel || 'Go back' }} </span>
+            <span> {{ backLabel() || 'Go back' }} </span>
           </a>
         }
       </div>
 
       <div class="header-main">
-        @if (!titleEditable) {
-          <h1 class="page-header-title">{{ title }}</h1>
+        @if (!titleEditable()) {
+          <h1 class="page-header-title">{{ title() }}</h1>
         }
 
-        @if (titleEditable) {
+        @if (titleEditable()) {
           <app-inline-edit-input
             class="page-header-title page-header-title-editable"
             activeBorder="true"
-            [value]="title"
-            [size]="title?.length"
+            [value]="title()"
+            [size]="title()?.length"
             (submitted)="titleSubmitted.emit($event)"
             >
           </app-inline-edit-input>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="header-actions">
-      @for (action of secondaryActions; track action) {
+      @for (action of secondaryActions(); track action) {
         <button
           matRipple
           class="header-secondary-action"
@@ -56,7 +56,7 @@
         </button>
       }
 
-      @if (overflowActions.length) {
+      @if (overflowActions().length) {
         <button
           matRipple
           class="header-menu-action"
@@ -69,7 +69,7 @@
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
         <ng-template matMenuContent>
-          @for (action of overflowActions; track action) {
+          @for (action of overflowActions(); track action) {
             <button
               mat-menu-item
               (click)="action.click && action.click()"

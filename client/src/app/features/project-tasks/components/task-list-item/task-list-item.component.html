@@ -1,9 +1,9 @@
-<div class="task-item" [class.flagged]="task.isFlagged">
+<div class="task-item" [class.flagged]="task().isFlagged">
   <button
     class="task-action"
     mat-icon-button
     aria-label="more"
-    [matMenuTriggerData]="{ task: task }"
+    [matMenuTriggerData]="{ task: task() }"
     [matMenuTriggerFor]="menu"
     >
     <mat-icon class="drag"> more_vert </mat-icon>
@@ -12,20 +12,20 @@
   <mat-checkbox class="task-checkbox" color="primary"> </mat-checkbox>
 
   <div class="task-scope-id-col">
-    <div class="task-scope-id">{{ task.systemId }}</div>
+    <div class="task-scope-id">{{ task().systemId }}</div>
   </div>
 
-  <div class="title" (click)="titleClicked()">{{ task.name }}</div>
+  <div class="title" (click)="titleClicked()">{{ task().name }}</div>
 
-  @if (task.isFlagged) {
+  @if (task().isFlagged) {
     <mat-icon color="warn" class="flag"> flag </mat-icon>
   }
 
-  @if (task.status === 1) {
+  @if (task().status === 1) {
     <mat-icon class="task-complete"> done </mat-icon>
   }
 
-  @for (assignee of task.assignees; track assignee) {
+  @for (assignee of task().assignees; track assignee) {
     <app-avatar
       size="24"
       class="task-card-user-chip"

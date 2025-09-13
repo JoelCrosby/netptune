@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -12,5 +12,5 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   imports: [MatCheckbox, AvatarComponent],
 })
 export class UserListItemComponent {
-  @Input() user!: WorkspaceAppUser;
+  readonly user = input.required<WorkspaceAppUser>();
 }

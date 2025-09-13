@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { CardComponent } from '../card/card.component';
@@ -16,18 +16,29 @@ import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-card-list-item',
-    templateUrl: './card-list-item.component.html',
-    styleUrls: ['./card-list-item.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CardComponent, CardTitleComponent, MatButton, MatIcon, CardContentComponent, CardActionsComponent, NgFor, NgIf, MatAnchor, RouterLink]
+  selector: 'app-card-list-item',
+  templateUrl: './card-list-item.component.html',
+  styleUrls: ['./card-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CardComponent,
+    CardTitleComponent,
+    MatButton,
+    MatIcon,
+    CardContentComponent,
+    CardActionsComponent,
+    NgFor,
+    NgIf,
+    MatAnchor,
+    RouterLink,
+  ],
 })
 export class CardListItemComponent {
-  @Input() title!: string;
-  @Input() description!: string;
-  @Input() subText!: string;
-  @Input() subTextLabel!: string;
-  @Input() actions!: HeaderAction[] | null;
+  readonly title = input.required<string>();
+  readonly description = input.required<string>();
+  readonly subText = input<string>();
+  readonly subTextLabel = input<string>();
+  readonly actions = input.required<HeaderAction[] | null>();
 
   @Output() delete = new EventEmitter();
 }

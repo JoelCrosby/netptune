@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject, input } from '@angular/core';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -21,13 +21,13 @@ import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/m
 export class PageHeaderComponent {
   private store = inject(Store);
 
-  @Input() title?: string | null;
-  @Input() titleEditable = false;
+  readonly title = input<string | null>();
+  readonly titleEditable = input(false);
   @Input() actionTitle?: string | null;
   @Input() backLink?: string[] | number[] | null;
-  @Input() backLabel?: string | null;
-  @Input() secondaryActions: HeaderAction[] = [];
-  @Input() overflowActions: HeaderAction[] = [];
+  readonly backLabel = input<string | null>();
+  readonly secondaryActions = input<HeaderAction[]>([]);
+  readonly overflowActions = input<HeaderAction[]>([]);
 
   @Output() actionClick = new EventEmitter();
   @Output() titleSubmitted = new EventEmitter<string>();

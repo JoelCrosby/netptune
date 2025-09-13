@@ -1,20 +1,20 @@
 <app-card>
   <app-card-title>
-    {{ title }}
+    {{ title() }}
     <button mat-button color="primary" type="button" (click)="delete.emit()">
       <mat-icon>close</mat-icon>
     </button>
   </app-card-title>
   <app-card-content>
-    <pre>{{ description }}</pre>
+    <pre>{{ description() }}</pre>
 
-    <small class="text-muted"> {{ subText }} </small>
+    <small class="text-muted"> {{ subText() }} </small>
 
     <ng-content />
   </app-card-content>
 
   <app-card-actions>
-    <ng-container *ngFor="let action of actions; first as isFirst">
+    <ng-container *ngFor="let action of actions(); first as isFirst">
       <ng-container *ngIf="action.isLink; else elseTemplate">
         <ng-container *ngIf="isFirst; else elseTemplate">
           <a

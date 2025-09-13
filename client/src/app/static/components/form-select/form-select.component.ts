@@ -12,6 +12,7 @@ import {
   QueryList,
   ViewChild,
   inject,
+  input
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -37,7 +38,7 @@ export class FormSelectComponent<TValue>
   @Input() disabled!: boolean;
   @Input() icon!: string;
   @Input() prefix!: string;
-  @Input() placeholder?: string;
+  readonly placeholder = input<string>();
   @Input() hint?: string;
 
   @Output() changed = new EventEmitter<TValue>();
@@ -118,7 +119,7 @@ export class FormSelectComponent<TValue>
       return;
     }
 
-    this.value = option.value;
+    this.value = option.value();
     this.selectedOption = option;
 
     this.keyManager?.setActiveItem(option);
@@ -126,8 +127,9 @@ export class FormSelectComponent<TValue>
     this.updateTrigger();
     this.hideDropdown();
 
-    this.changed.emit(this.selectedOption?.value);
-    this.onChange(this.selectedOption?.value);
+    const value = this.selectedOption?.value();
+    this.changed.emit(value);
+    this.onChange(value);
 
     this.input.nativeElement.focus();
   }
@@ -141,7 +143,7 @@ export class FormSelectComponent<TValue>
 
     this.selectedOption = this.options
       .toArray()
-      .find((option) => option.value === this.value);
+      .find((option) => option.value() === this.value);
 
     this.updateTrigger();
   }

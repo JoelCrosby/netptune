@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -18,8 +18,8 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   private document = inject(DocumentService);
 
   @Input() value!: string | null | undefined;
-  @Input() size: number | undefined;
-  @Input() activeBorder: boolean | string | null | undefined;
+  readonly size = input<number>();
+  readonly activeBorder = input<boolean | string | null>();
 
   @ViewChild('input', { static: false }) input!: ElementRef;
   @HostBinding('class.edit-active') editActiveClass!: boolean;

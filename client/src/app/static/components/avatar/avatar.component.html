@@ -1,25 +1,25 @@
 <div
   class="avatar-container"
-  [style.height]="size | px"
-  [style.width]="size | px"
+  [style.height]="size() | px"
+  [style.width]="size() | px"
   [style.background-color]="imageUrl ? null : backgroundColor"
   [style.color]="color"
-  [style.border-radius]="borderRadius"
-  [class.avatar-border]="border"
-  [matTooltip]="tooltip && name ? name : ''"
-  [style.font-size]="size | avatarFontSize"
+  [style.border-radius]="borderRadius()"
+  [class.avatar-border]="border()"
+  [matTooltip]="tooltip() && name() ? name() : ''"
+  [style.font-size]="size() | avatarFontSize"
   >
   @if (imageUrl) {
     <img
       crossorigin="anonymous"
       class="avatar-image"
-      [width]="size"
-      [height]="size"
+      [width]="size()"
+      [height]="size()"
       [src]="imageUrl"
-      [alt]="name"
+      [alt]="name()"
       />
   } @else {
-    {{ name | avatar }}
+    {{ name() | avatar }}
   }
 
 </div>

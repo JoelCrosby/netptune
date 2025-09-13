@@ -1,6 +1,6 @@
-<div class="user-select" [class.user-select-compact]="compact" #dropdown>
+<div class="user-select" [class.user-select-compact]="compact()" #dropdown>
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    @for (user of value; track user) {
+    @for (user of value(); track user) {
       <div class="user-item">
         <app-avatar
           [imageUrl]="user.pictureUrl"
@@ -14,14 +14,14 @@
 
     <ng-template #elseTemplate>
       <div class="app-user-link-inner"></div>
-      <div class="select-label">{{ label }}</div>
+      <div class="select-label">{{ label() }}</div>
     </ng-template>
   </button>
 
   <div #selectmenu class="select-menu">
     @if (isOpen) {
       <div class="select-menu-inner menu-scale-in">
-        @if (options?.length) {
+        @if (options()?.length) {
           <input
             appAutofocus
             class="label-input"
@@ -31,9 +31,9 @@
             />
         }
         <div class="select-menu-inner-options custom-scroll">
-          @if (!options?.length) {
+          @if (!options()?.length) {
             <div class="no-results-item">
-              {{noResults}}
+              {{noResults()}}
             </div>
           }
           @for (option of options$ | async; track option) {
