@@ -8,7 +8,7 @@ const reducer = createReducer(
     ...state,
     theme,
   })),
-  on(actions.clearSttings, (state) => ({ ...state, theme: 'DEFAULT-THEME' }))
+  on(actions.clearSttings, (state) => ({ ...state, theme: 'LIGHT-THEME' }))
 );
 
 export const settingsReducer = (

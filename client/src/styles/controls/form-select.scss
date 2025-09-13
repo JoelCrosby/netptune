@@ -24,9 +24,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   user-select: none;
+
+  &:hover {
+    background-color: var(--hover);
+  }
 }
 
 .form-select-dropdown {
+  background-color: var(--background);
   cursor: pointer;
   display: flex;
   flex-direction: column;

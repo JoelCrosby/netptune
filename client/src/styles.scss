@@ -3,7 +3,7 @@
 @use '@angular/material' as mat;
 
 // Themes
-@use 'themes/default-theme';
+@use 'themes/light-theme';
 @use 'themes/dark-theme';
 
 // Styles reset
@@ -29,10 +29,12 @@
 @use 'styles/controls/activity-menu.scss';
 @use 'styles/controls/cards';
 
-.default-theme {
+.light-theme {
   --background-rgb: 255, 255, 255;
-  --background: rgba(--background-rgb);
+  --background: rgba(var(--background-rgb));
   --foreground-rgb: 0, 0, 0;
+  --foreground: rgba(var(--foreground-rgb), 0.87);
+  --seconday-background: rgba(var(--foreground-rgb), 0.04);
 
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));
@@ -40,7 +42,7 @@
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(255, 82, 82));
 
-  --side-bar-rgb: 28, 27, 33;
+  --side-bar-rgb: 41, 36, 46;
   --side-bar: rgba(var(--side-bar-rgb));
 
   --side-bar-active-rgb: 52, 50, 61;
@@ -52,7 +54,6 @@
   --border: rgba(0, 0, 0, .08);
   --status-bar: #fff;
   --app-bar: #fff;
-  --background: #fff;
   --hover: rgba(#000, .02);
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
@@ -75,15 +76,16 @@
 
   @include mat.elevation-classes();
   @include mat.app-background();
-  @include mat.all-component-bases(default-theme.$theme);
-  @include mat.all-component-colors(default-theme.$theme);
+  @include mat.all-component-bases(light-theme.$theme);
+  @include mat.all-component-colors(light-theme.$theme);
   @include mat.all-component-typographies(typography.$netptune);
 }
 
 .dark-theme {
   --background-rgb: 39, 39, 39;
-  --background: rgba(--background-rgb);
+  --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
+  --foreground: rgba(var(--foreground-rgb));
 
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));

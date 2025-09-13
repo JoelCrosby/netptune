@@ -6,17 +6,17 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SettingsComponent implements OnInit {
   settings$!: Observable<SettingsState>;
 
   themes = [
-    { value: 'DEFAULT-THEME', label: 'Light' },
+    { value: 'LIGHT-THEME', label: 'Light' },
     { value: 'DARK-THEME', label: 'Dark' },
   ];
 
