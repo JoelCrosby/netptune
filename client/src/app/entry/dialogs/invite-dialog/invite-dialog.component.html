@@ -7,20 +7,17 @@
       label="Invitee Email"
       maxLength="128"
       type="email"
-      >
+    >
     </app-form-input>
 
     <div class="app-list">
-      @if (users?.length) {
-        @for (user of users; track user) {
-          <div class="app-list-item">{{ user }}</div>
-        }
-      } @else {
-        <div class="app-list-message">
-          Email addresses entered below will show here.
-        </div>
+      @if (users.length) { @for (user of users; track user) {
+      <div class="app-list-item">{{ user }}</div>
+      } } @else {
+      <div class="app-list-message">
+        Email addresses entered below will show here.
+      </div>
       }
-
     </div>
   </form>
 </app-dialog-content>

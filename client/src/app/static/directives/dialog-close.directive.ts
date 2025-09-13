@@ -1,6 +1,14 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { DialogRef, Dialog } from '@angular/cdk/dialog';
-import { Directive, OnInit, OnChanges, Input, ElementRef, SimpleChanges, inject } from '@angular/core';
+import {
+  Directive,
+  OnInit,
+  OnChanges,
+  Input,
+  ElementRef,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 
 function getClosestDialog<TResult, TComponent>(
   element: ElementRef<HTMLElement>,
@@ -27,14 +35,14 @@ function closeDialogVia<R>(
 }
 
 @Directive({
-    selector: '[app-dialog-close], [dialogClose]',
-    exportAs: 'matDialogClose',
-    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
-    host: {
-        '(click)': 'onButtonClick($event)',
-        '[attr.aria-label]': 'ariaLabel || null',
-        '[attr.type]': 'type',
-    }
+  selector: '[app-dialog-close], [dialogClose]',
+  exportAs: 'matDialogClose',
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
+  host: {
+    '(click)': 'onButtonClick($event)',
+    '[attr.aria-label]': 'ariaLabel || null',
+    '[attr.type]': 'type',
+  },
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   dialogRef = inject<DialogRef<TResult>>(DialogRef, { optional: true });
@@ -65,6 +73,8 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   }
 
   onButtonClick(event: MouseEvent) {
+    if (!this.dialogRef) return;
+
     closeDialogVia(
       this.dialogRef,
       event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse',

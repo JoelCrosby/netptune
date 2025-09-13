@@ -1,13 +1,22 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-form-textarea',
-    templateUrl: './form-textarea.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIcon]
+  selector: 'app-form-textarea',
+  templateUrl: './form-textarea.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon],
 })
 export class FormTextAreaComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { self: true, optional: true });
@@ -32,7 +41,7 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   onTouch!: () => void;
 
   get control() {
-    return this.ngControl.control;
+    return this.ngControl?.control;
   }
 
   constructor() {

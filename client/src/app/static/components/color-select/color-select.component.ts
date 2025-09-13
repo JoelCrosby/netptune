@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
 
@@ -6,11 +11,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-color-select',
-    templateUrl: './color-select.component.html',
-    styleUrls: ['./color-select.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatTooltip, MatIcon]
+  selector: 'app-color-select',
+  templateUrl: './color-select.component.html',
+  styleUrls: ['./color-select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatTooltip, MatIcon],
 })
 export class ColorSelectComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { self: true, optional: true });
@@ -30,7 +35,7 @@ export class ColorSelectComponent implements ControlValueAccessor {
   value: string | undefined;
 
   get control() {
-    return this.ngControl.control;
+    return this.ngControl?.control;
   }
 
   onChange!: (value: string) => void;
