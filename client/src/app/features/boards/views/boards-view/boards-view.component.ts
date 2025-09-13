@@ -10,7 +10,7 @@ import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 
@@ -21,11 +21,10 @@ import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    NgIf,
     MatProgressSpinner,
     BoardsGridComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectBoardsLoading);

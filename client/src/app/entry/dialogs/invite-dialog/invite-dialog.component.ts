@@ -9,7 +9,7 @@ import {
 import { DialogRef } from '@angular/cdk/dialog';
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { NgIf, NgFor } from '@angular/common';
+
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { MatButton } from '@angular/material/button';
 
@@ -23,11 +23,9 @@ import { MatButton } from '@angular/material/button';
     FormsModule,
     ReactiveFormsModule,
     FormInputComponent,
-    NgIf,
-    NgFor,
     DialogActionsDirective,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class InviteDialogComponent {
   users: string[] = [];

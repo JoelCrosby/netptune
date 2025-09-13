@@ -14,7 +14,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { MatAnchor, MatButton } from '@angular/material/button';
@@ -29,15 +29,14 @@ import { MatDivider } from '@angular/material/divider';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgIf,
     MatProgressBar,
     FormInputComponent,
     MatAnchor,
     RouterLink,
     MatButton,
     MatDivider,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class LoginComponent implements OnDestroy {
   authLoading$: Observable<boolean>;

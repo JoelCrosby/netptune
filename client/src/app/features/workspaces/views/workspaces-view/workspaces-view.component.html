@@ -3,38 +3,38 @@
     title="Workspaces"
     actionTitle="Create Workspace"
     (actionClick)="openWorkspaceDialog()"
-  >
+    >
   </app-page-header>
 
-  <ng-container *ngIf="loading$ | async; else elseTemplate">
+  @if (loading$ | async) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
-  </ng-container>
-
-  <ng-template #elseTemplate>
+  } @else {
     <app-workspace-list />
+    @if (buildInfo$ | async; as buildInfo) {
+      <div class="build-info">
+        <a
+          class="gitHashShort"
+          [href]="'https://github.com/JoelCrosby/Netptune/commit/' + buildInfo.gitHash"
+          target="_blank"
+          rel="noopener noreferrer"
+          >
+          {{ buildInfo.gitHashShort }}
+        </a>
+        <span> | </span>
+        <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
+        <span> | </span>
+        <a
+          class="runId"
+          [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId"
+          target="_blank"
+          rel="noopener noreferrer"
+          >
+          Github Action
+        </a>
+      </div>
+    }
+  }
 
-    <div class="build-info" *ngIf="buildInfo$ | async as buildInfo">
-      <a
-        class="gitHashShort"
-        [href]="'https://github.com/JoelCrosby/Netptune/commit/' + buildInfo.gitHash"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{ buildInfo.gitHashShort }}
-      </a>
-      <span> | </span>
-      <span class="buildNumber"> BUILD {{ buildInfo.buildNumber }} </span>
-      <span> | </span>
-      <a
-        class="runId"
-        [href]="'https://github.com/JoelCrosby/Netptune/actions/runs/' + buildInfo.runId"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Github Action
-      </a>
-    </div>
-  </ng-template>
 </app-page-container>

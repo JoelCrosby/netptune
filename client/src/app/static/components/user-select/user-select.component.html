@@ -1,15 +1,16 @@
 <div class="user-select" [class.user-select-compact]="compact" #dropdown>
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    <div *ngFor="let user of value" class="user-item">
-      <app-avatar
-        [imageUrl]="user.pictureUrl"
-        [name]="user.displayName"
-        size="24"
-      >
-      </app-avatar>
-
-      <small> {{ user.displayName }} </small>
-    </div>
+    @for (user of value; track user) {
+      <div class="user-item">
+        <app-avatar
+          [imageUrl]="user.pictureUrl"
+          [name]="user.displayName"
+          size="24"
+          >
+        </app-avatar>
+        <small> {{ user.displayName }} </small>
+      </div>
+    }
 
     <ng-template #elseTemplate>
       <div class="app-user-link-inner"></div>
@@ -18,38 +19,41 @@
   </button>
 
   <div #selectmenu class="select-menu">
-    <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">
-      <input
-        *ngIf="options?.length"
-        appAutofocus
-        class="label-input"
-        placeholder="Search.."
-        [formControl]="searchControl"
-        (click)="$event.stopPropagation()"
-      />
-
-      <div class="select-menu-inner-options custom-scroll">
-        <div *ngIf="!options?.length" class="no-results-item">
-          {{noResults}}
-        </div>
-
-        <div
-          *ngFor="let option of options$ | async"
-          class="select-item"
-          [class.active]="isActive(option)"
-          [class.selected]="isSelected(option)"
-          (click)="select(option)"
-        >
-          <app-avatar
-            [imageUrl]="option.pictureUrl"
-            [name]="option.displayName"
-            size="24"
-          >
-          </app-avatar>
-
-          <span> {{ option.displayName }} </span>
+    @if (isOpen) {
+      <div class="select-menu-inner menu-scale-in">
+        @if (options?.length) {
+          <input
+            appAutofocus
+            class="label-input"
+            placeholder="Search.."
+            [formControl]="searchControl"
+            (click)="$event.stopPropagation()"
+            />
+        }
+        <div class="select-menu-inner-options custom-scroll">
+          @if (!options?.length) {
+            <div class="no-results-item">
+              {{noResults}}
+            </div>
+          }
+          @for (option of options$ | async; track option) {
+            <div
+              class="select-item"
+              [class.active]="isActive(option)"
+              [class.selected]="isSelected(option)"
+              (click)="select(option)"
+              >
+              <app-avatar
+                [imageUrl]="option.pictureUrl"
+                [name]="option.displayName"
+                size="24"
+                >
+              </app-avatar>
+              <span> {{ option.displayName }} </span>
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>

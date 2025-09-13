@@ -10,38 +10,39 @@
       [cdkDropListConnectedTo]="siblingIds"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListData]="group.tasks"
-    >
-      <app-board-group-card
-        cdkDrag
-        class="board-group-task-card"
-        *ngFor="let task of group.tasks; trackBy:trackGroupTask"
-        [cdkDragData]="task"
-        [task]="task"
-        [groupId]="group.id"
-        (cdkDragStarted)="onDragStarted()"
-        (cdkDragReleased)="onDragRelease()"
-        (click)="onTaskClicked($event, task, group.id)"
       >
-      </app-board-group-card>
+      @for (task of group.tasks; track trackGroupTask($index, task)) {
+        <app-board-group-card
+          cdkDrag
+          class="board-group-task-card"
+          [cdkDragData]="task"
+          [task]="task"
+          [groupId]="group.id"
+          (cdkDragStarted)="onDragStarted()"
+          (cdkDragReleased)="onDragRelease()"
+          (click)="onTaskClicked($event, task, group.id)"
+          >
+        </app-board-group-card>
+      }
 
-      <app-board-group-task-inline
-        *ngIf="isInlineActive$ | async"
-        (canceled)="onInlineCanceled()"
-        [boardGroupId]="group.id"
-      >
-      </app-board-group-task-inline>
+      @if (isInlineActive$ | async) {
+        <app-board-group-task-inline
+          (canceled)="onInlineCanceled()"
+          [boardGroupId]="group.id"
+          >
+        </app-board-group-task-inline>
+      }
 
-      <ng-container *ngIf="showAddButton$ | async; else elseTemplate">
+      @if (showAddButton$ | async) {
         <div class="create-task">
           <button mat-button color="primary" (click)="onAddTaskClicked()">
             ADD TASK
           </button>
         </div>
-      </ng-container>
-
-      <ng-template #elseTemplate>
+      } @else {
         <div class="create-task-spacer">{{ ' ' }}</div>
-      </ng-template>
+      }
+
     </div>
   </div>
 </div>

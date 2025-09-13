@@ -1,5 +1,5 @@
 <div class="inline-edit">
-  <ng-container *ngIf="isEditActive$ | async; else elseTemplate">
+  @if (isEditActive$ | async) {
     <input
       #input
       type="text"
@@ -7,10 +7,9 @@
       [formControl]="control"
       [class.active-border]="activeBorder"
       (keydown.enter)="onSubmit(input.value)"
-    />
-  </ng-container>
-
-  <ng-template #elseTemplate>
+      />
+  } @else {
     <div class="inline-edit-label">{{ value }}</div>
-  </ng-template>
+  }
+
 </div>

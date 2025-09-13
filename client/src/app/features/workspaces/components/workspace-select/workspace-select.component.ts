@@ -18,7 +18,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AutofocusDirective } from '@static/directives/autofocus.directive';
 import { RouterLink } from '@angular/router';
 
@@ -29,14 +29,12 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./workspace-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     AutofocusDirective,
     ReactiveFormsModule,
-    NgFor,
     RouterLink,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;

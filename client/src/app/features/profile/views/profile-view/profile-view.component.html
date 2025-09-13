@@ -2,22 +2,21 @@
   [showProgress]="loadingUpdate$ | async"
   [centerPage]="true"
   [marginBottom]="true"
->
+  >
   <app-page-header
     title="Profile"
     actionTitle="Logout"
     (actionClick)="onLogoutClicked()"
-  >
+    >
   </app-page-header>
 
-  <ng-container *ngIf="loading$ | async; else elseTemplate">
+  @if (loading$ | async) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
-  </ng-container>
-  <ng-template #elseTemplate>
+  } @else {
     <app-update-profile />
     <div class="form-seperator"></div>
     <app-change-password />
-  </ng-template>
+  }
 </app-page-container>

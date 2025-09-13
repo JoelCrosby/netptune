@@ -14,7 +14,7 @@ import {
 } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { NgIf, NgFor } from '@angular/common';
+
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
 @Component({
@@ -27,13 +27,11 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     MatMenuTrigger,
     MatIcon,
     MatCheckbox,
-    NgIf,
-    NgFor,
     AvatarComponent,
     MatMenu,
     MatMenuContent,
-    MatMenuItem,
-  ],
+    MatMenuItem
+],
 })
 export class TaskListItemComponent {
   @Input() task!: TaskViewModel;

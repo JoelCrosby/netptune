@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 
@@ -16,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './color-select.component.html',
     styleUrls: ['./color-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgFor, MatTooltip, MatIcon]
+    imports: [MatTooltip, MatIcon]
 })
 export class ColorSelectComponent implements ControlValueAccessor {
   @Input() label!: string;

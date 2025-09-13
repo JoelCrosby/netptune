@@ -1,30 +1,40 @@
 <div class="nept-form-control">
-  <label *ngIf="label" [for]="ngControl.name" class="form-control-label">
-    {{ label }}
-  </label>
+  @if (label) {
+    <label [for]="ngControl.name" class="form-control-label">
+      {{ label }}
+    </label>
+  }
 
   <div class="color-options">
-    <div
-      class="color-option"
-      *ngFor="let color of colorsRowTop"
-      [matTooltip]="color.name"
-      [style.background-color]="color.color"
-      (click)="onOptionClicked(color)"
-    >
-      <mat-icon *ngIf="value === color.color">done</mat-icon>
-    </div>
+    @for (color of colorsRowTop; track color) {
+      <div
+        class="color-option"
+        [matTooltip]="color.name"
+        [style.background-color]="color.color"
+        (click)="onOptionClicked(color)"
+        >
+        @if (value === color.color) {
+          <mat-icon>done</mat-icon>
+        }
+      </div>
+    }
   </div>
   <div class="color-options">
-    <div
-      class="color-option"
-      *ngFor="let color of colorsRowBottom"
-      [matTooltip]="color.name"
-      [style.background-color]="color.color"
-      (click)="onOptionClicked(color)"
-    >
-      <mat-icon *ngIf="value === color.color">done</mat-icon>
-    </div>
+    @for (color of colorsRowBottom; track color) {
+      <div
+        class="color-option"
+        [matTooltip]="color.name"
+        [style.background-color]="color.color"
+        (click)="onOptionClicked(color)"
+        >
+        @if (value === color.color) {
+          <mat-icon>done</mat-icon>
+        }
+      </div>
+    }
   </div>
 
-  <small *ngIf="hint" class="form-control-hint"> {{ hint }} </small>
+  @if (hint) {
+    <small class="form-control-hint"> {{ hint }} </small>
+  }
 </div>

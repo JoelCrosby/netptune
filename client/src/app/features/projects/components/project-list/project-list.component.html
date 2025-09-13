@@ -1,7 +1,8 @@
 <app-card-list>
-  <app-project-list-item
-    *ngFor="let project of projects$ | async; trackBy: trackById"
-    [project]="project"
-  >
-  </app-project-list-item>
+  @for (project of projects$ | async; track trackById($index, project)) {
+    <app-project-list-item
+      [project]="project"
+      >
+    </app-project-list-item>
+  }
 </app-card-list>

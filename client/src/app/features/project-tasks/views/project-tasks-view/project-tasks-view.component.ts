@@ -17,7 +17,7 @@ import { first, switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
 
@@ -28,11 +28,10 @@ import { TaskListComponent } from '@project-tasks/components/task-list/task-list
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    NgIf,
     MatProgressSpinner,
     TaskListComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProjectTasksViewComponent
   implements OnInit, OnDestroy, AfterViewInit

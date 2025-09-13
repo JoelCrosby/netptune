@@ -2,20 +2,19 @@
   [marginBottom]="false"
   [verticalPadding]="false"
   [fullHeight]="true"
->
+  >
   <app-page-header
     title="Boards"
     actionTitle="Create Board"
     (actionClick)="onCreateBoardClicked()"
-  >
+    >
   </app-page-header>
 
-  <ng-container *ngIf="loading$ | async; else elseTemplate">
+  @if (loading$ | async) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
-  </ng-container>
-  <ng-template #elseTemplate>
+  } @else {
     <app-boards-grid />
-  </ng-template>
+  }
 </app-page-container>

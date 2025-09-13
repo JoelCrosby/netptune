@@ -2,7 +2,7 @@
   class="inline-task-container"
   [class.create-in-progress]="createInProgress$ | async"
   #taskInlineContainer
->
+  >
   <textarea
     class="inline-task-textarea"
     #taskInput
@@ -15,18 +15,21 @@
     (keydown.enter)="onSubmit($event)"
     placeholder="What do you need to get done?"
     maxlength="256"
-  >
+    >
   </textarea>
   <div class="inline-task-footer">
-    <div
-      *ngIf="message$ | async as message"
-      class="inline-task-info-message"
-      [matTooltip]="message"
-    >
-      !
-    </div>
+    @if (message$ | async; as message) {
+      <div
+        class="inline-task-info-message"
+        [matTooltip]="message"
+        >
+        !
+      </div>
+    }
 
-    <app-spinner *ngIf="createInProgress$ | async" diameter="1.4rem">
-    </app-spinner>
+    @if (createInProgress$ | async) {
+      <app-spinner diameter="1.4rem">
+      </app-spinner>
+    }
   </div>
 </div>

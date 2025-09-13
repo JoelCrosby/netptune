@@ -1,49 +1,46 @@
-<div *ngIf="project$ | async as project">
-  <form [formGroup]="formGroup">
-    <app-form-input formControlName="name" label="Name" maxLength="1024">
-    </app-form-input>
-
-    <app-form-textarea
-      formControlName="description"
-      label="Description"
-      maxLength="4096"
-      rows="6"
-    >
-    </app-form-textarea>
-
-    <div class="form-seperator"></div>
-
-    <div class="project-key-row">
-      <app-form-input
-        formControlName="key"
-        label="Project ID"
-        class="project-key-input"
-        maxLength="6"
-      >
+@if (project$ | async; as project) {
+  <div>
+    <form [formGroup]="formGroup">
+      <app-form-input formControlName="name" label="Name" maxLength="1024">
       </app-form-input>
-      <div>
-        <small>
-          The Project ID is displayed as the first part of task's ID
-        </small>
-        <small> max 6 characters. should be unique to workspace </small>
+      <app-form-textarea
+        formControlName="description"
+        label="Description"
+        maxLength="4096"
+        rows="6"
+        >
+      </app-form-textarea>
+      <div class="form-seperator"></div>
+      <div class="project-key-row">
+        <app-form-input
+          formControlName="key"
+          label="Project ID"
+          class="project-key-input"
+          maxLength="6"
+          >
+        </app-form-input>
+        <div>
+          <small>
+            The Project ID is displayed as the first part of task's ID
+          </small>
+          <small> max 6 characters. should be unique to workspace </small>
+        </div>
       </div>
-    </div>
-
-    <app-form-input
-      formControlName="repositoryUrl"
-      label="Repository URL"
-      maxLength="1024"
-    >
-    </app-form-input>
-
-    <button
-      class="form-submit-btn"
-      mat-flat-button
-      color="primary"
-      (click)="updateClicked()"
-      [disabled]="updateDisabled$ | async"
-    >
-      Save Changes
-    </button>
-  </form>
-</div>
+      <app-form-input
+        formControlName="repositoryUrl"
+        label="Repository URL"
+        maxLength="1024"
+        >
+      </app-form-input>
+      <button
+        class="form-submit-btn"
+        mat-flat-button
+        color="primary"
+        (click)="updateClicked()"
+        [disabled]="updateDisabled$ | async"
+        >
+        Save Changes
+      </button>
+    </form>
+  </div>
+}

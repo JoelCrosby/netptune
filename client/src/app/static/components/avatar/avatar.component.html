@@ -8,8 +8,8 @@
   [class.avatar-border]="border"
   [matTooltip]="tooltip && name ? name : ''"
   [style.font-size]="size | avatarFontSize"
->
-  <ng-container *ngIf="imageUrl; else elseTemplate">
+  >
+  @if (imageUrl) {
     <img
       crossorigin="anonymous"
       class="avatar-image"
@@ -17,8 +17,9 @@
       [height]="size"
       [src]="imageUrl"
       [alt]="name"
-    />
-  </ng-container>
+      />
+  } @else {
+    {{ name | avatar }}
+  }
 
-  <ng-template #elseTemplate> {{ name | avatar }} </ng-template>
 </div>

@@ -5,7 +5,7 @@ import {
   BoardViewTask,
 } from '@core/models/view-models/board-view';
 import { CardComponent } from '@static/components/card/card.component';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
@@ -14,7 +14,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   templateUrl: './board-group-card.component.html',
   styleUrls: ['./board-group-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardComponent, NgFor, NgIf, MatIcon, AvatarComponent],
+  imports: [CardComponent, MatIcon, AvatarComponent],
 })
 export class BoardGroupCardComponent {
   @Input() task!: Selected<BoardViewTask>;

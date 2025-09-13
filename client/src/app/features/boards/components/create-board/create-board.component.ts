@@ -37,7 +37,7 @@ import {
 import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
@@ -54,14 +54,13 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     ReactiveFormsModule,
     FormInputComponent,
     FormSelectComponent,
-    NgFor,
     FormSelectOptionComponent,
     ColorSelectComponent,
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class CreateBoardComponent implements OnInit, AfterViewInit {
   isUniqueLoading$ = new Subject<boolean>();

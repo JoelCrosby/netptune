@@ -7,7 +7,7 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { WorkspaceListComponent } from '@workspaces/components/workspace-list/workspace-list.component';
 
@@ -18,11 +18,10 @@ import { WorkspaceListComponent } from '@workspaces/components/workspace-list/wo
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    NgIf,
     MatProgressSpinner,
     WorkspaceListComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class WorkspacesViewComponent implements OnInit {
   buildInfo$ = this.store.select(selectBuildInfo);

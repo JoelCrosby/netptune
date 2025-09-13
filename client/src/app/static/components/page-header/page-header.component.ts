@@ -9,7 +9,7 @@ import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -22,7 +22,7 @@ import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/m
     templateUrl: './page-header.component.html',
     styleUrls: ['./page-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatIconButton, MatIcon, RouterLink, InlineEditInputComponent, NgFor, MatRipple, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
+    imports: [MatIconButton, MatIcon, RouterLink, InlineEditInputComponent, MatRipple, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
 })
 export class PageHeaderComponent {
   @Input() title?: string | null;

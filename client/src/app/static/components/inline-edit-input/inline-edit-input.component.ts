@@ -15,14 +15,14 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-inline-edit-input',
     templateUrl: './inline-edit-input.component.html',
     styleUrls: ['./inline-edit-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, AsyncPipe]
+    imports: [FormsModule, ReactiveFormsModule, AsyncPipe]
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
   @Input() value!: string | null | undefined;

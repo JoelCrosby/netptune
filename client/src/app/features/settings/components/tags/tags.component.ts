@@ -12,7 +12,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TagsInputComponent } from '../tags-input/tags-input.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './tags.component.html',
     styleUrls: ['./tags.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, NgIf, TagsInputComponent, MatTooltip, MatIcon, AsyncPipe]
+    imports: [TagsInputComponent, MatTooltip, MatIcon, AsyncPipe]
 })
 export class TagsComponent implements OnInit, OnDestroy {
   tag$ = this.store.select(selectTags);

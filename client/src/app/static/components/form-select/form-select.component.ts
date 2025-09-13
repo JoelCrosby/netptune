@@ -18,7 +18,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectService } from './form-select.service';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -26,7 +26,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './form-select.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [FormSelectService],
-    imports: [NgIf, MatIcon, FormSelectDropdownComponent]
+    imports: [MatIcon, FormSelectDropdownComponent]
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor

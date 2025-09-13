@@ -1,43 +1,41 @@
-<div class="row" *ngIf="count$ | async as count">
-  <div class="board-filter-seperator"></div>
-
-  <div class="board-groups-selection">
-    <span><b>{{ count + ' '}}</b> tasks selected</span>
-    <button>
+@if (count$ | async; as count) {
+  <div class="row">
+    <div class="board-filter-seperator"></div>
+    <div class="board-groups-selection">
+      <span><b>{{ count + ' '}}</b> tasks selected</span>
+      <button>
+        <mat-icon
+          class="material-icons-outlined close-btn"
+          (click)="onClearClicked()"
+          matTooltip="Clear Task Selection"
+          >
+          clear_all
+        </mat-icon>
+      </button>
+    </div>
+    <button class="board-groups-selection-btn" (click)="onDeleteClicked()">
       <mat-icon
-        class="material-icons-outlined close-btn"
-        (click)="onClearClicked()"
-        matTooltip="Clear Task Selection"
-      >
-        clear_all
+        class="material-icons-outlined"
+        matTooltip="Delete selected tasks"
+        >
+        delete
+      </mat-icon>
+    </button>
+    <button class="board-groups-selection-btn" (click)="onMoveTasksClicked()">
+      <mat-icon
+        class="material-icons-outlined"
+        matTooltip="Move selected tasks to another group"
+        >
+        low_priority
+      </mat-icon>
+    </button>
+    <button class="board-groups-selection-btn" (click)="onReassignTasksClicked()">
+      <mat-icon
+        class="material-icons-outlined"
+        matTooltip="Reassign tasks to user"
+        >
+        recent_actors
       </mat-icon>
     </button>
   </div>
-
-  <button class="board-groups-selection-btn" (click)="onDeleteClicked()">
-    <mat-icon
-      class="material-icons-outlined"
-      matTooltip="Delete selected tasks"
-    >
-      delete
-    </mat-icon>
-  </button>
-
-  <button class="board-groups-selection-btn" (click)="onMoveTasksClicked()">
-    <mat-icon
-      class="material-icons-outlined"
-      matTooltip="Move selected tasks to another group"
-    >
-      low_priority
-    </mat-icon>
-  </button>
-
-  <button class="board-groups-selection-btn" (click)="onReassignTasksClicked()">
-    <mat-icon
-      class="material-icons-outlined"
-      matTooltip="Reassign tasks to user"
-    >
-      recent_actors
-    </mat-icon>
-  </button>
-</div>
+}

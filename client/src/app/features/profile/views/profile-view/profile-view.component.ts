@@ -11,7 +11,7 @@ import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable } from 'rxjs';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
@@ -23,12 +23,11 @@ import { ChangePasswordComponent } from '@profile/components/change-password/cha
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    NgIf,
     MatProgressSpinner,
     UpdateProfileComponent,
     ChangePasswordComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProfileViewComponent implements OnInit, AfterViewInit {
   loadingUpdate$!: Observable<boolean>;

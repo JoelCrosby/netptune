@@ -6,7 +6,7 @@ import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';
 import { MatIconButton } from '@angular/material/button';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
@@ -19,7 +19,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, UserListItemComponent, MatIconButton, CdkDragHandle, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, NgIf, MatMenuItem, AsyncPipe]
+    imports: [UserListItemComponent, MatIconButton, CdkDragHandle, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
 })
 export class UserListComponent implements OnInit {
   users$!: Observable<WorkspaceAppUser[]>;

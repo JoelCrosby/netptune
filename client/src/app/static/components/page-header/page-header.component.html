@@ -1,36 +1,43 @@
 <header class="page-header">
   <div class="header-top-row">
-    <div class="sidenav-toggle" *ngIf="showSideNavToggle$ | async">
-      <button
-        mat-icon-button
-        color="accent"
-        aria-label="Open Menu"
-        (click)="onOpenMenu()"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-    </div>
+    @if (showSideNavToggle$ | async) {
+      <div class="sidenav-toggle">
+        <button
+          mat-icon-button
+          color="accent"
+          aria-label="Open Menu"
+          (click)="onOpenMenu()"
+          >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+    }
 
     <div class="header-top-row-left">
       <div class="header-main-back">
-        <a *ngIf="backLink" class="header-back-link" [routerLink]="backLink">
-          <mat-icon> arrow_back </mat-icon>
-          <span> {{ backLabel || 'Go back' }} </span>
-        </a>
+        @if (backLink) {
+          <a class="header-back-link" [routerLink]="backLink">
+            <mat-icon> arrow_back </mat-icon>
+            <span> {{ backLabel || 'Go back' }} </span>
+          </a>
+        }
       </div>
 
       <div class="header-main">
-        <h1 class="page-header-title" *ngIf="!titleEditable">{{ title }}</h1>
+        @if (!titleEditable) {
+          <h1 class="page-header-title">{{ title }}</h1>
+        }
 
-        <app-inline-edit-input
-          *ngIf="titleEditable"
-          class="page-header-title page-header-title-editable"
-          activeBorder="true"
-          [value]="title"
-          [size]="title?.length"
-          (submitted)="titleSubmitted.emit($event)"
-        >
-        </app-inline-edit-input>
+        @if (titleEditable) {
+          <app-inline-edit-input
+            class="page-header-title page-header-title-editable"
+            activeBorder="true"
+            [value]="title"
+            [size]="title?.length"
+            (submitted)="titleSubmitted.emit($event)"
+            >
+          </app-inline-edit-input>
+        }
 
         <div class="header-tool-bar">
           <ng-content />
@@ -39,48 +46,52 @@
     </div>
 
     <div class="header-actions">
-      <button
-        *ngFor="let action of secondaryActions"
-        matRipple
-        class="header-secondary-action"
-        (click)="action.click && action.click()"
-      >
-        {{ action.label }}
-      </button>
+      @for (action of secondaryActions; track action) {
+        <button
+          matRipple
+          class="header-secondary-action"
+          (click)="action.click && action.click()"
+          >
+          {{ action.label }}
+        </button>
+      }
 
-      <button
-        *ngIf="overflowActions.length"
-        matRipple
-        class="header-menu-action"
-        aria-label="Actions"
-        [matMenuTriggerFor]="overflowMenu"
-      >
-        <mat-icon> more_horiz </mat-icon>
-      </button>
+      @if (overflowActions.length) {
+        <button
+          matRipple
+          class="header-menu-action"
+          aria-label="Actions"
+          [matMenuTriggerFor]="overflowMenu"
+          >
+          <mat-icon> more_horiz </mat-icon>
+        </button>
+      }
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
         <ng-template matMenuContent>
-          <button
-            mat-menu-item
-            *ngFor="let action of overflowActions"
-            (click)="action.click && action.click()"
-          >
-            <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
-              {{ action.icon || 'more_horiz' }}
-            </mat-icon>
-            <span>{{ action.label }}</span>
-          </button>
+          @for (action of overflowActions; track action) {
+            <button
+              mat-menu-item
+              (click)="action.click && action.click()"
+              >
+              <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
+                {{ action.icon || 'more_horiz' }}
+              </mat-icon>
+              <span>{{ action.label }}</span>
+            </button>
+          }
         </ng-template>
       </mat-menu>
 
-      <button
-        matRipple
-        class="header-primary-action"
-        (click)="actionClick.emit()"
-        *ngIf="actionTitle"
-      >
-        {{ actionTitle }}
-      </button>
+      @if (actionTitle) {
+        <button
+          matRipple
+          class="header-primary-action"
+          (click)="actionClick.emit()"
+          >
+          {{ actionTitle }}
+        </button>
+      }
     </div>
   </div>
 </header>

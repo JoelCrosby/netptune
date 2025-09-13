@@ -4,23 +4,24 @@
 
 <div app-dialog-content>
   <div class="user-selection">
-    <button
-      [class.selected]="selected === user.id"
-      mat-stroked-button
-      [color]="selected === user.id ? 'primary' : ''"
-      *ngFor="let user of users$ | async"
-      (click)="onUserClicked(user.id)"
-    >
-      <label>
-        <app-avatar
-          size="24"
-          [name]="user.displayName"
-          [imageUrl]="user.pictureUrl"
+    @for (user of users$ | async; track user) {
+      <button
+        [class.selected]="selected === user.id"
+        mat-stroked-button
+        [color]="selected === user.id ? 'primary' : ''"
+        (click)="onUserClicked(user.id)"
         >
-        </app-avatar>
-        <span>{{ user.displayName }}</span>
-      </label>
-    </button>
+        <label>
+          <app-avatar
+            size="24"
+            [name]="user.displayName"
+            [imageUrl]="user.pictureUrl"
+            >
+          </app-avatar>
+          <span>{{ user.displayName }}</span>
+        </label>
+      </button>
+    }
   </div>
 </div>
 
@@ -31,7 +32,7 @@
     color="primary"
     (click)="onReassignTasksClicked()"
     type="button"
-  >
+    >
     Re-assign Tasks
   </button>
 </div>

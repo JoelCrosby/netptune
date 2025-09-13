@@ -10,14 +10,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-form-textarea',
     templateUrl: './form-textarea.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatIcon]
+    imports: [MatIcon]
 })
 export class FormTextAreaComponent implements ControlValueAccessor {
   @Input() label!: string;

@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { NgIf } from '@angular/common';
+
 import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
@@ -7,7 +7,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     templateUrl: './page-container.component.html',
     styleUrls: ['./page-container.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatProgressBar]
+    imports: [MatProgressBar]
 })
 export class PageContainerComponent {
   @Input() verticalPadding: boolean | null = false;

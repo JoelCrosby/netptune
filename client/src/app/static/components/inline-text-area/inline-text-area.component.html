@@ -1,5 +1,5 @@
 <div class="inline-text-area">
-  <ng-container *ngIf="isEditActive$ | async; else elseTemplate">
+  @if (isEditActive$ | async) {
     <textarea
       #textarea
       #autosize="cdkTextareaAutosize"
@@ -11,9 +11,8 @@
       [cdkAutosizeMaxRows]="maxRows"
       [formControl]="control"
     ></textarea>
-  </ng-container>
-
-  <ng-template #elseTemplate>
+  } @else {
     <div class="inline-text-area-label">{{ control.value }}</div>
-  </ng-template>
+  }
+
 </div>
