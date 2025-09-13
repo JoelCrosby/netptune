@@ -11,16 +11,17 @@
     [icon]="identifierIcon$ | async"
     [loading]="isUniqueLoading$ | async"
     [hint]="identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
-  >
+    >
   </app-form-input>
 
   <app-form-select formControlName="projectId" label="Project">
-    <app-form-select-option
-      *ngFor="let project of projects$ | async"
-      [value]="project.id"
-    >
-      {{ project.name }}
-    </app-form-select-option>
+    @for (project of projects$ | async; track project) {
+      <app-form-select-option
+        [value]="project.id"
+        >
+        {{ project.name }}
+      </app-form-select-option>
+    }
   </app-form-select>
 
   <app-color-select formControlName="color" label="Color"> </app-color-select>

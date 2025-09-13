@@ -3,7 +3,7 @@ import { Workspace } from '@core/models/workspace';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { CardListComponent } from '@static/components/card-list/card-list.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { WorkspaceListItemComponent } from '../workspace-list-item/workspace-list-item.component';
 import { CreateWorkspaceListItemComponent } from '../create-workspace-list-item/create-workspace-list-item.component';
 
@@ -13,11 +13,10 @@ import { CreateWorkspaceListItemComponent } from '../create-workspace-list-item/
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardListComponent,
-    NgFor,
     WorkspaceListItemComponent,
     CreateWorkspaceListItemComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class WorkspaceListComponent {
   workspaces$ = this.store.select(selectAllWorkspaces);

@@ -25,7 +25,7 @@ import {
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil, tap } from 'rxjs/operators';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { MatButton } from '@angular/material/button';
@@ -36,14 +36,13 @@ import { MatButton } from '@angular/material/button';
   styleUrls: ['./project-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     FormInputComponent,
     FormTextAreaComponent,
     MatButton,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   project$!: Observable<ProjectViewModel | null | undefined>;

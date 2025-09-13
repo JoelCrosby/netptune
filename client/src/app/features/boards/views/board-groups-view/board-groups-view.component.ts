@@ -28,7 +28,7 @@ import { select, Store } from '@ngrx/store';
 import { from, Observable, of } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
@@ -51,7 +51,6 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
   providers: [],
   imports: [
     PageContainerComponent,
-    NgIf,
     PageHeaderComponent,
     BoardGroupsSearchComponent,
     BoardGroupUsersComponent,
@@ -61,7 +60,6 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
     MatProgressSpinner,
     CdkDropList,
     ScrollShadowDirective,
-    NgFor,
     BoardGroupComponent,
     CdkDrag,
     CdkDragHandle,
@@ -70,8 +68,8 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
     InlineEditInputComponent,
     MatIconButton,
     CreateBoardGroupComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit

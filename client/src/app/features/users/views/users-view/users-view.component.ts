@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -25,11 +25,10 @@ import { first } from 'rxjs/operators';
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    NgIf,
     MatProgressSpinner,
     UserListComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class UsersViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectUsersLoading);

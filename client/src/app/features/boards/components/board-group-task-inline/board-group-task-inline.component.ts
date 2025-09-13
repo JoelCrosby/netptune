@@ -42,7 +42,7 @@ import {
 } from 'rxjs/operators';
 import { MatInput } from '@angular/material/input';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
@@ -56,11 +56,10 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
     CdkTextareaAutosize,
     FormsModule,
     ReactiveFormsModule,
-    NgIf,
     MatTooltip,
     SpinnerComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit

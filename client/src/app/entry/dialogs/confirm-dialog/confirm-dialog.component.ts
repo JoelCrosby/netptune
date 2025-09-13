@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -31,13 +31,12 @@ export interface ConfirmDialogOptions {
   styleUrls: ['./confirm-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     MatIcon,
     MatCheckbox,
     FormsModule,
     DialogActionsDirective,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class ConfirmDialogComponent {
   confirmationChecked = false;

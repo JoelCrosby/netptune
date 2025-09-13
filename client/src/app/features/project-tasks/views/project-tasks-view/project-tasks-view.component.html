@@ -4,15 +4,14 @@
     actionTitle="Create Task"
     (actionClick)="showAddModal()"
     [overflowActions]="secondaryActions"
-  >
+    >
   </app-page-header>
 
-  <ng-container *ngIf="loading$ | async; else elseTemplate">
+  @if (loading$ | async) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
-  </ng-container>
-  <ng-template #elseTemplate>
+  } @else {
     <app-task-list />
-  </ng-template>
+  }
 </app-page-container>

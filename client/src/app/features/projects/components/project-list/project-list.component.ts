@@ -5,7 +5,7 @@ import * as ProjectsSelectors from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CardListComponent } from '@static/components/card-list/card-list.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ProjectListItemComponent } from '../project-list-item/project-list-item.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { ProjectListItemComponent } from '../project-list-item/project-list-item
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardListComponent, NgFor, ProjectListItemComponent, AsyncPipe],
+  imports: [CardListComponent, ProjectListItemComponent, AsyncPipe],
 })
 export class ProjectListComponent implements OnInit {
   projects$!: Observable<ProjectViewModel[]>;

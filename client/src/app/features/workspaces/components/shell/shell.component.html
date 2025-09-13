@@ -1,89 +1,88 @@
 <div class="app-container">
-  <div
-    class="app-sidenav"
-    [class.app-sidenav-expanded]="sideNavExpanded"
-    *ngIf="sideMenuOpen$ | async"
-  >
-    <div class="app-sidenav-list">
-      <app-workspace-select
-        idKey="id"
-        labelKey="name"
-        [compact]="!sideNavExpanded"
-        [options]="workspaces$ | async"
-        [value]="workspaceId$ | async"
-        (selectChange)="onWorkspaceChange($event)"
-      >
-      </app-workspace-select>
-
-      <a
-        *ngFor="let link of links"
-        [routerLink]="link.value"
-        class="app-menu-link"
-        routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? '' : link.label"
-        matTooltipPosition="right"
-      >
-        <mat-icon mat-list-icon class="material-icons-outline">
-          {{ link.icon }}
-        </mat-icon>
-        <p>{{ link.label }}</p>
-      </a>
-    </div>
-
-    <div class="app-sidenav-spacer"></div>
-
-    <div class="app-sidenav-list">
-      <a
-        *ngFor="let link of bottomLinks"
-        [routerLink]="link.value"
-        class="app-menu-link"
-        routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? '' : link.label"
-        matTooltipPosition="right"
-      >
-        <mat-icon mat-list-icon class="material-icons-outline">
-          {{ link.icon }}
-        </mat-icon>
-        <p>{{ link.label }}</p>
-      </a>
-
-      <a
-        class="app-menu-link profile-nav-btn"
-        *ngIf="user$ | async as user"
-        [routerLink]="['./profile']"
-        routerLinkActive="router-link-active"
-        [matTooltip]="sideNavExpanded ? '' : 'Profile'"
-        matTooltipPosition="right"
-      >
-        <app-avatar
-          class="app-menu-link-profile"
-          [name]="user.displayName"
-          [imageUrl]="user.pictureUrl"
-          [size]="24"
-          [border]="true"
-          [tooltip]="false"
-        />
-        <p>Profile</p>
-      </a>
-    </div>
-
+  @if (sideMenuOpen$ | async) {
     <div
-      class="app-menu-link app-menu-collapse"
-      (click)="onToggleExpandClicked()"
-      [matTooltip]="sideNavExpanded ? '' : 'Expand'"
-      matTooltipPosition="right"
-    >
-      <mat-icon mat-list-icon class="material-icons-round">
-        {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
-      </mat-icon>
-      <p>Collapse</p>
+      class="app-sidenav"
+      [class.app-sidenav-expanded]="sideNavExpanded"
+      >
+      <div class="app-sidenav-list">
+        <app-workspace-select
+          idKey="id"
+          labelKey="name"
+          [compact]="!sideNavExpanded"
+          [options]="workspaces$ | async"
+          [value]="workspaceId$ | async"
+          (selectChange)="onWorkspaceChange($event)"
+          >
+        </app-workspace-select>
+        @for (link of links; track link) {
+          <a
+            [routerLink]="link.value"
+            class="app-menu-link"
+            routerLinkActive="router-link-active"
+            [matTooltip]="sideNavExpanded ? '' : link.label"
+            matTooltipPosition="right"
+            >
+            <mat-icon mat-list-icon class="material-icons-outline">
+              {{ link.icon }}
+            </mat-icon>
+            <p>{{ link.label }}</p>
+          </a>
+        }
+      </div>
+      <div class="app-sidenav-spacer"></div>
+      <div class="app-sidenav-list">
+        @for (link of bottomLinks; track link) {
+          <a
+            [routerLink]="link.value"
+            class="app-menu-link"
+            routerLinkActive="router-link-active"
+            [matTooltip]="sideNavExpanded ? '' : link.label"
+            matTooltipPosition="right"
+            >
+            <mat-icon mat-list-icon class="material-icons-outline">
+              {{ link.icon }}
+            </mat-icon>
+            <p>{{ link.label }}</p>
+          </a>
+        }
+        @if (user$ | async; as user) {
+          <a
+            class="app-menu-link profile-nav-btn"
+            [routerLink]="['./profile']"
+            routerLinkActive="router-link-active"
+            [matTooltip]="sideNavExpanded ? '' : 'Profile'"
+            matTooltipPosition="right"
+            >
+            <app-avatar
+              class="app-menu-link-profile"
+              [name]="user.displayName"
+              [imageUrl]="user.pictureUrl"
+              [size]="24"
+              [border]="true"
+              [tooltip]="false"
+              />
+            <p>Profile</p>
+          </a>
+        }
+      </div>
+      <div
+        class="app-menu-link app-menu-collapse"
+        (click)="onToggleExpandClicked()"
+        [matTooltip]="sideNavExpanded ? '' : 'Expand'"
+        matTooltipPosition="right"
+        >
+        <mat-icon mat-list-icon class="material-icons-round">
+          {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
+        </mat-icon>
+        <p>Collapse</p>
+      </div>
     </div>
-  </div>
+  }
 
   <main
     [class.app-sidenav-expanded]="sideNavExpanded"
     [class.app-sidenav-open]="sideMenuOpen$ | async"
-  >
+    >
     <router-outlet />
   </main>
 </div>

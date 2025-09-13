@@ -3,16 +3,15 @@
     title="Project"
     backLabel="Back to projects"
     [backLink]="['../../projects']"
-  >
+    >
   </app-page-header>
 
-  <ng-container *ngIf="loading$ | async; else elseTemplate">
+  @if (loading$ | async) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
-  </ng-container>
-
-  <ng-template #elseTemplate>
+  } @else {
     <app-project-detail />
-  </ng-template>
+  }
+
 </app-page-container>

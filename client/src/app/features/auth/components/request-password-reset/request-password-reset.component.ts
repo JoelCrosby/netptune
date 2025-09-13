@@ -11,7 +11,7 @@ import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selecto
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormErrorComponent } from '@static/components/form-error/form-error.component';
@@ -25,15 +25,14 @@ import { RouterLink } from '@angular/router';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgIf,
     MatProgressBar,
     FormInputComponent,
     FormErrorComponent,
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class RequestPasswordResetComponent implements OnInit {
   authLoading$!: Observable<boolean>;

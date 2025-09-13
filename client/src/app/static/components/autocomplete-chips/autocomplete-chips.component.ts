@@ -15,7 +15,7 @@ import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput
 import { filterStringArray } from '@core/util/arrays';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 
@@ -29,7 +29,7 @@ export interface AutocompleteChipsSelectionChanged {
     templateUrl: './autocomplete-chips.component.html',
     styleUrls: ['./autocomplete-chips.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatLabel, MatChipGrid, NgFor, MatChipRow, MatIcon, MatChipRemove, FormsModule, MatAutocompleteTrigger, MatChipInput, ReactiveFormsModule, MatAutocomplete, MatOption, AsyncPipe]
+    imports: [MatLabel, MatChipGrid, MatChipRow, MatIcon, MatChipRemove, FormsModule, MatAutocompleteTrigger, MatChipInput, ReactiveFormsModule, MatAutocomplete, MatOption, AsyncPipe]
 })
 export class AutocompleteChipsComponent implements OnInit {
   @Input() placeholder!: string;

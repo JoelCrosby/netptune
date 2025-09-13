@@ -48,7 +48,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
@@ -73,7 +73,6 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
   styleUrls: ['./task-detail-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     MatIcon,
@@ -85,7 +84,6 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
     MatChipOption,
     MatMenuTrigger,
     MatMenu,
-    NgFor,
     MatMenuItem,
     MatIconButton,
     MatTooltip,
@@ -97,8 +95,8 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
     AsyncPipe,
     FromNowPipe,
     PrettyDatePipe,
-    TaskStatusPipe,
-  ],
+    TaskStatusPipe
+],
 })
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit

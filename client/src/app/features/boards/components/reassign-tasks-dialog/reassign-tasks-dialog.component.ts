@@ -11,7 +11,7 @@ import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.s
 import { Store } from '@ngrx/store';
 import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
@@ -23,13 +23,12 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   styleUrls: ['./reassign-tasks-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgFor,
     MatButton,
     AvatarComponent,
     DialogActionsDirective,
     DialogCloseDirective,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ReassignTasksDialogComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;

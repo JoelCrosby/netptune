@@ -26,7 +26,7 @@ import { first } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { MatButton } from '@angular/material/button';
@@ -41,12 +41,11 @@ import { MatButton } from '@angular/material/button';
     FormInputComponent,
     FormTextAreaComponent,
     FormSelectComponent,
-    NgFor,
     FormSelectOptionComponent,
     DialogActionsDirective,
     MatButton,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   projects$!: Observable<ProjectViewModel[]>;

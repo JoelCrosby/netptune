@@ -17,7 +17,7 @@ import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 
@@ -27,7 +27,7 @@ import { AutofocusDirective } from '../../directives/autofocus.directive';
     templateUrl: './user-select.component.html',
     styleUrls: ['./user-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, AvatarComponent, NgIf, FormsModule, AutofocusDirective, ReactiveFormsModule, AsyncPipe]
+    imports: [AvatarComponent, FormsModule, AutofocusDirective, ReactiveFormsModule, AsyncPipe]
 })
 export class UserSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;

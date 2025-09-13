@@ -10,7 +10,7 @@ import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 
@@ -19,7 +19,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     templateUrl: './board-groups-search.component.html',
     styleUrls: ['./board-groups-search.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, MatTooltip]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip]
 })
 export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
   term$!: Observable<string>;

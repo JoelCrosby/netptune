@@ -30,7 +30,7 @@ import {
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
 import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
 import { MatButton } from '@angular/material/button';
@@ -43,14 +43,12 @@ import { MatButton } from '@angular/material/button';
   imports: [
     CdkDropList,
     ScrollShadowVericalDirective,
-    NgFor,
     BoardGroupCardComponent,
     CdkDrag,
-    NgIf,
     BoardGroupTaskInlineComponent,
     MatButton,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId!: string;

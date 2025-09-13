@@ -1,7 +1,9 @@
 <div class="auth-page-container">
   <form [formGroup]="formGroup" (ngSubmit)="register()">
     <div class="auth-progress-bar">
-      <mat-progress-bar mode="indeterminate" *ngIf="authLoading$ | async" />
+      @if (authLoading$ | async) {
+        <mat-progress-bar mode="indeterminate" />
+      }
     </div>
 
     <img
@@ -9,7 +11,7 @@
       alt="Netptune Logo"
       width="72"
       height="72"
-    />
+      />
 
     <h3 class="auth-title">Create new Account</h3>
 
@@ -20,7 +22,7 @@
       id="firstname"
       name="firstname"
       autocomplete="givenname"
-    >
+      >
     </app-form-input>
 
     <app-form-input
@@ -30,7 +32,7 @@
       id="lastname"
       name="lastname"
       autocomplete="familyname"
-    >
+      >
     </app-form-input>
 
     <app-form-input
@@ -41,7 +43,7 @@
       name="email"
       type="email"
       autocomplete="username"
-    >
+      >
     </app-form-input>
 
     <app-form-input
@@ -52,7 +54,7 @@
       name="new-password"
       autocomplete="new-password"
       type="password"
-    >
+      >
     </app-form-input>
 
     <app-form-input
@@ -63,10 +65,12 @@
       name="confirm-new-password"
       autocomplete="new-password"
       type="password"
-    >
-      <app-form-error *ngIf="password1.hasError('noMatch')">
-        Passwords do not macth!
-      </app-form-error>
+      >
+      @if (password1.hasError('noMatch')) {
+        <app-form-error>
+          Passwords do not macth!
+        </app-form-error>
+      }
     </app-form-input>
 
     <div class="button-container">
@@ -76,7 +80,7 @@
         type="button"
         class="form-action-button"
         [routerLink]="['/auth/login']"
-      >
+        >
         Back to Log in
       </a>
 
@@ -85,7 +89,7 @@
         color="primary"
         type="submit"
         class="form-action-button"
-      >
+        >
         Create Account
       </button>
     </div>

@@ -36,7 +36,7 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -47,7 +47,7 @@ import { MatInput } from '@angular/material/input';
     templateUrl: './task-inline.component.html',
     styleUrls: ['./task-inline.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatButton, MatIcon, MatCheckbox, FormsModule, ReactiveFormsModule, MatInput]
+    imports: [MatButton, MatIcon, MatCheckbox, FormsModule, ReactiveFormsModule, MatInput]
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.new;

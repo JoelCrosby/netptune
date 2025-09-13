@@ -1,12 +1,14 @@
-<ng-container *ngIf="settings$ | async as settings">
+@if (settings$ | async; as settings) {
   <app-form-select
     label="Theme"
     placeholder="Select Theme"
     [ngModel]="settings.theme"
     (changed)="onThemeSelect($event)"
-  >
-    <app-form-select-option *ngFor="let theme of themes" [value]="theme.value">
-      {{ theme.label }}
-    </app-form-select-option>
+    >
+    @for (theme of themes; track theme) {
+      <app-form-select-option [value]="theme.value">
+        {{ theme.label }}
+      </app-form-select-option>
+    }
   </app-form-select>
-</ng-container>
+}

@@ -2,65 +2,66 @@
   class="workspace-select"
   [class.workspace-select-compact]="compact"
   #dropdown
->
+  >
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    <ng-container *ngIf="currentWorkspace; else elseTemplate">
+    @if (currentWorkspace) {
       <div
         class="app-workspace-link-inner"
         [style.backgroundColor]="currentWorkspace.metaInfo?.color"
-      >
+        >
         {{ currentWorkspace.name[0] }}
       </div>
       <div class="select-label">{{ currentWorkspace.name }}</div>
-    </ng-container>
-
-    <ng-template #elseTemplate>
+    } @else {
       <div class="app-workspace-link-inner"></div>
       <div class="select-label">Select Workspace</div>
-    </ng-template>
+    }
+
   </button>
 
   <div #selectmenu class="select-menu">
-    <div *ngIf="isOpen" class="select-menu-inner menu-scale-in">
-      <div *ngIf="!options?.length" class="no-results-item">
-        No results found...
-      </div>
-
-      <input
-        *ngIf="options?.length"
-        appAutofocus
-        class="label-input"
-        placeholder="Search.."
-        [formControl]="searchControl"
-        (click)="$event.stopPropagation()"
-      />
-
-      <div class="select-menu-inner-options custom-scroll">
-        <div
-          *ngFor="let option of options$ | async"
-          class="select-item"
-          [class.active]="isActive(option)"
-          (click)="select(option)"
-        >
-          <div
-            class="app-workspace-link-inner"
-            [style.backgroundColor]="option?.metaInfo?.color"
-          >
-            {{ option.name[0] }}
+    @if (isOpen) {
+      <div class="select-menu-inner menu-scale-in">
+        @if (!options?.length) {
+          <div class="no-results-item">
+            No results found...
           </div>
-
-          <span> {{ option.name }} </span>
+        }
+        @if (options?.length) {
+          <input
+            appAutofocus
+            class="label-input"
+            placeholder="Search.."
+            [formControl]="searchControl"
+            (click)="$event.stopPropagation()"
+            />
+        }
+        <div class="select-menu-inner-options custom-scroll">
+          @for (option of options$ | async; track option) {
+            <div
+              class="select-item"
+              [class.active]="isActive(option)"
+              (click)="select(option)"
+              >
+              <div
+                class="app-workspace-link-inner"
+                [style.backgroundColor]="option?.metaInfo?.color"
+                >
+                {{ option.name[0] }}
+              </div>
+              <span> {{ option.name }} </span>
+            </div>
+          }
+        </div>
+        <div class="select-menu-footer">
+          <a class="select-menu-footer-item" [routerLink]="['/workspaces']">
+            Workspaces
+          </a>
+          <div class="select-menu-footer-item" (click)="onlogOutClicked()">
+            Logout
+          </div>
         </div>
       </div>
-
-      <div class="select-menu-footer">
-        <a class="select-menu-footer-item" [routerLink]="['/workspaces']">
-          Workspaces
-        </a>
-        <div class="select-menu-footer-item" (click)="onlogOutClicked()">
-          Logout
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </div>

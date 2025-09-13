@@ -3,7 +3,7 @@ import * as BoardSelectors from '@boards/store/boards/boards.selectors';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { CardGroupComponent } from '@static/components/card/card-group.component';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { CardComponent } from '@static/components/card/card.component';
@@ -19,7 +19,6 @@ import { CardSubtitleComponent } from '@static/components/card/card-subtitle.com
   styleUrls: ['./boards-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgFor,
     CardGroupComponent,
     RouterLinkActive,
     RouterLink,
@@ -29,8 +28,8 @@ import { CardSubtitleComponent } from '@static/components/card/card-subtitle.com
     CardHeaderComponent,
     CardTitleComponent,
     CardSubtitleComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardsGridComponent implements OnInit {
   groups$!: Observable<BoardsViewModel[]>;

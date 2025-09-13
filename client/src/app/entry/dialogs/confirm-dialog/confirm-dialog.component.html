@@ -1,57 +1,59 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 
-<div app-dialog-content *ngIf="data.message || data.confirmationCheckboxLabel">
-  <div class="message-icon">
-    <mat-icon *ngIf="data.icon" class="material-icons-outlined">
-      {{ data.icon }}
-    </mat-icon>
+@if (data.message || data.confirmationCheckboxLabel) {
+  <div app-dialog-content>
+    <div class="message-icon">
+      @if (data.icon) {
+        <mat-icon class="material-icons-outlined">
+          {{ data.icon }}
+        </mat-icon>
+      }
+    </div>
+    @if (data.message) {
+      <p
+        [innerHTML]="data.message"
+        [class.no-margin]="!data.messageExtended && !data.icon"
+        >
+        {{ data.message }}
+      </p>
+      @if (data.messageExtended) {
+        <p>{{ data.messageExtended }}</p>
+      }
+    }
+    @if (data.confirmationCheckboxLabel) {
+      <mat-checkbox
+        [class.indented]="data.message"
+        [(ngModel)]="confirmationChecked"
+        >
+        {{ data.confirmationCheckboxLabel }}
+      </mat-checkbox>
+    }
   </div>
-
-  <ng-container *ngIf="data.message">
-    <p
-      [innerHTML]="data.message"
-      [class.no-margin]="!data.messageExtended && !data.icon"
-    >
-      {{ data.message }}
-    </p>
-
-    <p *ngIf="data.messageExtended">{{ data.messageExtended }}</p>
-  </ng-container>
-
-  <ng-container *ngIf="data.confirmationCheckboxLabel">
-    <mat-checkbox
-      [class.indented]="data.message"
-      [(ngModel)]="confirmationChecked"
-    >
-      {{ data.confirmationCheckboxLabel }}
-    </mat-checkbox>
-  </ng-container>
-</div>
+}
 
 <div app-dialog-actions align="end">
-  <ng-container *ngIf="data.isInfoMessage; else elseTemplate">
+  @if (data.isInfoMessage) {
     <button mat-stroked-button cdkFocusInitial (click)="dialogRef.close(false)">
       Ok
     </button>
-  </ng-container>
-
-  <ng-template #elseTemplate>
-    <button
-      *ngIf="data.cancelLabel"
-      mat-stroked-button
-      cdkFocusInitial
-      (click)="dialogRef.close(false)"
-    >
-      {{ data.cancelLabel }}
-    </button>
-
+  } @else {
+    @if (data.cancelLabel) {
+      <button
+        mat-stroked-button
+        cdkFocusInitial
+        (click)="dialogRef.close(false)"
+        >
+        {{ data.cancelLabel }}
+      </button>
+    }
     <button
       mat-flat-button
       [color]="data.color"
       (click)="dialogRef.close(true)"
       [disabled]="data.confirmationCheckboxLabel && !confirmationChecked"
-    >
+      >
       {{ data.acceptLabel }}
     </button>
-  </ng-template>
+  }
+
 </div>

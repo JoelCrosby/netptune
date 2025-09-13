@@ -1,62 +1,61 @@
-<div class="comments-container" *ngIf="user">
-  <div class="comments-input">
-    <app-avatar
-      size="24"
-      class="task-card-user-chip"
-      [name]="user.displayName"
-      [imageUrl]="user.pictureUrl"
-    >
-    </app-avatar>
-
-    <form [formGroup]="formGroup" (ngSubmit)="submit()">
-      <app-form-input
-        formControlName="comment"
-        placeholder="Add Comment"
-        name="comment"
-        icon="chat_bubble_outline"
-      >
-      </app-form-input>
-    </form>
-  </div>
-
-  <div class="comments-list">
-    <div class="comments-list-item" *ngFor="let comment of comments">
+@if (user) {
+  <div class="comments-container">
+    <div class="comments-input">
       <app-avatar
         size="24"
         class="task-card-user-chip"
-        [name]="comment.userDisplayName"
-        [imageUrl]="comment.userDisplayImage"
-      >
+        [name]="user.displayName"
+        [imageUrl]="user.pictureUrl"
+        >
       </app-avatar>
-      <div class="comment-body">
-        <span class="comment-user-display-name">
-          {{ comment.userDisplayName }}
-
-          <small> {{ comment.createdAt | fromNow }} </small>
-
-          <div class="comment-actions">
-            <button
-              class="comment-button"
-              mat-icon-button
-              aria-label="Comment Actions"
-              [matMenuTriggerFor]="commentMenu"
-              [matMenuTriggerData]="{comment: comment}"
+      <form [formGroup]="formGroup" (ngSubmit)="submit()">
+        <app-form-input
+          formControlName="comment"
+          placeholder="Add Comment"
+          name="comment"
+          icon="chat_bubble_outline"
+          >
+        </app-form-input>
+      </form>
+    </div>
+    <div class="comments-list">
+      @for (comment of comments; track comment) {
+        <div class="comments-list-item">
+          <app-avatar
+            size="24"
+            class="task-card-user-chip"
+            [name]="comment.userDisplayName"
+            [imageUrl]="comment.userDisplayImage"
             >
-              <mat-icon>more_horiz</mat-icon>
-            </button>
-
-            <mat-menu #commentMenu="matMenu">
-              <ng-template matMenuContent let-comment="comment">
-                <button mat-menu-item (click)="deleteComment.emit(comment)">
-                  <mat-icon>delete</mat-icon>
-                  <span>Delete Comment</span>
+          </app-avatar>
+          <div class="comment-body">
+            <span class="comment-user-display-name">
+              {{ comment.userDisplayName }}
+              <small> {{ comment.createdAt | fromNow }} </small>
+              <div class="comment-actions">
+                <button
+                  class="comment-button"
+                  mat-icon-button
+                  aria-label="Comment Actions"
+                  [matMenuTriggerFor]="commentMenu"
+                  [matMenuTriggerData]="{comment: comment}"
+                  >
+                  <mat-icon>more_horiz</mat-icon>
                 </button>
-              </ng-template>
-            </mat-menu>
+                <mat-menu #commentMenu="matMenu">
+                  <ng-template matMenuContent let-comment="comment">
+                    <button mat-menu-item (click)="deleteComment.emit(comment)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete Comment</span>
+                    </button>
+                  </ng-template>
+                </mat-menu>
+              </div>
+            </span>
+            <span class="comment-body-text"> {{ comment.body }} </span>
           </div>
-        </span>
-        <span class="comment-body-text"> {{ comment.body }} </span>
-      </div>
+        </div>
+      }
     </div>
   </div>
-</div>
+}

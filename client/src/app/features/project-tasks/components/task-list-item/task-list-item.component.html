@@ -5,7 +5,7 @@
     aria-label="more"
     [matMenuTriggerData]="{ task: task }"
     [matMenuTriggerFor]="menu"
-  >
+    >
     <mat-icon class="drag"> more_vert </mat-icon>
   </button>
 
@@ -17,18 +17,23 @@
 
   <div class="title" (click)="titleClicked()">{{ task.name }}</div>
 
-  <mat-icon *ngIf="task.isFlagged" color="warn" class="flag"> flag </mat-icon>
+  @if (task.isFlagged) {
+    <mat-icon color="warn" class="flag"> flag </mat-icon>
+  }
 
-  <mat-icon class="task-complete" *ngIf="task.status === 1"> done </mat-icon>
+  @if (task.status === 1) {
+    <mat-icon class="task-complete"> done </mat-icon>
+  }
 
-  <app-avatar
-    *ngFor="let assignee of task.assignees"
-    size="24"
-    class="task-card-user-chip"
-    [name]="assignee.displayName"
-    [imageUrl]="assignee.pictureUrl"
-  >
-  </app-avatar>
+  @for (assignee of task.assignees; track assignee) {
+    <app-avatar
+      size="24"
+      class="task-card-user-chip"
+      [name]="assignee.displayName"
+      [imageUrl]="assignee.pictureUrl"
+      >
+    </app-avatar>
+  }
 </div>
 
 <mat-menu #menu="matMenu">

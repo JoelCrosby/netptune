@@ -7,19 +7,20 @@
       label="Invitee Email"
       maxLength="128"
       type="email"
-    >
+      >
     </app-form-input>
 
     <div class="app-list">
-      <ng-container *ngIf="users?.length; else elseTemplate">
-        <div *ngFor="let user of users" class="app-list-item">{{ user }}</div>
-      </ng-container>
-
-      <ng-template #elseTemplate>
+      @if (users?.length) {
+        @for (user of users; track user) {
+          <div class="app-list-item">{{ user }}</div>
+        }
+      } @else {
         <div class="app-list-message">
           Email addresses entered below will show here.
         </div>
-      </ng-template>
+      }
+
     </div>
   </form>
 </app-dialog-content>
