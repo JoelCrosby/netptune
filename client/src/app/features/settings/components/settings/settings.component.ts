@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { changeTheme } from '@core/store/settings/settings.actions';
 import { SettingsState } from '@core/store/settings/settings.model';
 import { selectSettings } from '@core/store/settings/settings.selectors';
@@ -22,14 +22,14 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 ],
 })
 export class SettingsComponent implements OnInit {
+  private store = inject(Store);
+
   settings$!: Observable<SettingsState>;
 
   themes = [
     { value: 'LIGHT-THEME', label: 'Light' },
     { value: 'DARK-THEME', label: 'Dark' },
   ];
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.settings$ = this.store.select(selectSettings);

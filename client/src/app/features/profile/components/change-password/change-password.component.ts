@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -39,6 +33,10 @@ import { AsyncPipe } from '@angular/common';
   ],
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private actions$ = inject(Actions);
+  private cd = inject(ChangeDetectorRef);
+
   formGroup = new FormGroup({
     currentPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [Validators.required]),
@@ -59,12 +57,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   get confirmPassword() {
     return this.formGroup?.controls.confirmPassword;
   }
-
-  constructor(
-    private store: Store,
-    private actions$: Actions,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit() {
     this.loadingPasswordChange$ = this.store.pipe(

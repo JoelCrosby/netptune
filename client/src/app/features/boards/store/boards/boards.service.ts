@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
@@ -10,7 +10,8 @@ import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BoardsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get(projectId: number) {
     return this.http.get<BoardViewModel[]>(

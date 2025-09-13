@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectsActions from '@core/store/projects/projects.actions';
 import * as ProjectsSelectors from '@core/store/projects/projects.selectors';
@@ -16,9 +16,9 @@ import { ProjectListItemComponent } from '../project-list-item/project-list-item
   imports: [CardListComponent, ProjectListItemComponent, AsyncPipe],
 })
 export class ProjectListComponent implements OnInit {
-  projects$!: Observable<ProjectViewModel[]>;
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  projects$!: Observable<ProjectViewModel[]>;
 
   ngOnInit() {
     this.projects$ = this.store.select(ProjectsSelectors.selectAllProjects);

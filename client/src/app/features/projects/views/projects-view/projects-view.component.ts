@@ -1,8 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectProjectsLoading } from '@core/store/projects/projects.selectors';
@@ -28,12 +24,10 @@ import { ProjectListComponent } from '@projects/components/project-list/project-
 ],
 })
 export class ProjectsViewComponent implements AfterViewInit {
-  loading$ = this.store.select(selectProjectsLoading).pipe(debounceTime(200));
+  dialog = inject(DialogService);
+  private store = inject(Store);
 
-  constructor(
-    public dialog: DialogService,
-    private store: Store
-  ) {}
+  loading$ = this.store.select(selectProjectsLoading).pipe(debounceTime(200));
 
   ngAfterViewInit() {
     this.store.dispatch(loadProjects());

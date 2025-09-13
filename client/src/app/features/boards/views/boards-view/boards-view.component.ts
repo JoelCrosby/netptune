@@ -1,8 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@boards/store/boards/boards.actions';
@@ -27,12 +23,10 @@ import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.
 ],
 })
 export class BoardsViewComponent implements AfterViewInit {
-  loading$ = this.store.select(selectBoardsLoading);
+  private dialog = inject(DialogService);
+  private store = inject(Store);
 
-  constructor(
-    private dialog: DialogService,
-    private store: Store
-  ) {}
+  loading$ = this.store.select(selectBoardsLoading);
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {

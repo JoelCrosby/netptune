@@ -1,15 +1,5 @@
 import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -51,6 +41,10 @@ import { MatButton } from '@angular/material/button';
 ],
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
+  private store = inject(Store);
+  private dialog = inject(DialogService);
+  private zone = inject(NgZone);
+
   @Input() dragListId!: string;
   @Input() group!: BoardViewGroup;
   @Input() siblingIds!: string[];
@@ -67,12 +61,6 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   showAddButton$!: Observable<boolean>;
 
   dragging = false;
-
-  constructor(
-    private store: Store,
-    private dialog: DialogService,
-    private zone: NgZone
-  ) {}
 
   ngOnInit() {
     this.focused$ = this.focusedSubject.pipe();

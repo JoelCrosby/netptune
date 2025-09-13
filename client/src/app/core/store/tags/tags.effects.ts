@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -14,6 +14,11 @@ import { TagsService } from './tags.service';
 
 @Injectable()
 export class TagsEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private route = inject(ActivatedRoute);
+  private tagsService = inject(TagsService);
+  private confirmation = inject(ConfirmationService);
+
   routerNavigated$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ROUTER_NAVIGATED),
@@ -119,13 +124,6 @@ export class TagsEffects {
       )
     )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private route: ActivatedRoute,
-    private tagsService: TagsService,
-    private confirmation: ConfirmationService
-  ) {}
 }
 
 const DELETE_TAG_CONFIRMATION: ConfirmDialogOptions = {

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
@@ -31,6 +31,15 @@ import { BoardGroupsService } from './board-groups.service';
 
 @Injectable()
 export class BoardGroupsEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private boardGroupsService = inject(BoardGroupsService);
+  private tasksHubService = inject(ProjectTasksHubService);
+  private store = inject(Store);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(MatSnackBar);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   loadBoardGroups$ = createEffect(() =>
     this.actions$.pipe(
       ofType(
@@ -391,17 +400,6 @@ export class BoardGroupsEffects {
       })
     )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private boardGroupsService: BoardGroupsService,
-    private tasksHubService: ProjectTasksHubService,
-    private store: Store,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
 }
 
 const DELETE_CONFIRMATION: ConfirmDialogOptions = {

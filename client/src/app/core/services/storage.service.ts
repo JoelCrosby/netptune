@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { UploadResponse } from '@core/models/upload-result';
 import { environment } from '@env/environment';
@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   uploadMedia(file: File): Observable<ClientResponse<UploadResponse>> {
     const formData = new FormData();

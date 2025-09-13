@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -25,6 +25,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class ProjectsEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private projectsService = inject(ProjectsService);
+  private confirmation = inject(ConfirmationService);
+  private store = inject(Store);
+  private router = inject(Router);
+  private snackbar = inject(MatSnackBar);
+
   loadProjectDetail$ = createEffect(
     ({ throttle = 200, scheduler = asyncScheduler } = {}) =>
       this.actions$.pipe(
@@ -161,15 +168,6 @@ export class ProjectsEffects {
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private projectsService: ProjectsService,
-    private confirmation: ConfirmationService,
-    private store: Store,
-    private router: Router,
-    private snackbar: MatSnackBar
-  ) {}
 }
 
 const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {

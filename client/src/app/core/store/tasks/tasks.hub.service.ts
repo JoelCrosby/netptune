@@ -1,5 +1,5 @@
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import * as groupsActions from '@boards/store/groups/board-groups.actions';
 import { HubService } from '@core/hubs/hub.service';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
@@ -26,10 +26,9 @@ import * as actions from './tasks.actions';
   providedIn: 'root',
 })
 export class ProjectTasksHubService {
-  constructor(
-    private hub: HubService,
-    private store: Store
-  ) {}
+  private hub = inject(HubService);
+  private store = inject(Store);
+
 
   async connect() {
     await this.hub.connect('board-hub', [

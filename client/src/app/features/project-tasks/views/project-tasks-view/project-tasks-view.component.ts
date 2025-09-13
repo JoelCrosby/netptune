@@ -4,6 +4,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  inject,
 } from '@angular/core';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
@@ -30,12 +31,16 @@ import { TaskListComponent } from '@project-tasks/components/task-list/task-list
     PageHeaderComponent,
     MatProgressSpinner,
     TaskListComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ProjectTasksViewComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  dialog = inject(DialogService);
+  private store = inject(Store);
+  private hubService = inject(ProjectTasksHubService);
+
   loading$ = this.store.select(selectTasksLoading);
 
   secondaryActions: HeaderAction[] = [
@@ -46,12 +51,6 @@ export class ProjectTasksViewComponent
       iconClass: 'material-icons-round',
     },
   ];
-
-  constructor(
-    public dialog: DialogService,
-    private store: Store,
-    private hubService: ProjectTasksHubService
-  ) {}
 
   ngOnInit() {
     this.store

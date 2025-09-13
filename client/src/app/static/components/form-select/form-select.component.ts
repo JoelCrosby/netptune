@@ -1,19 +1,6 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { CdkPortal } from '@angular/cdk/portal';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Optional,
-  Output,
-  QueryList,
-  Self,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, inject } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
@@ -31,6 +18,9 @@ import { MatIcon } from '@angular/material/icon';
 export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor
 {
+  ngControl = inject(NgControl, { self: true, optional: true });
+  private service = inject<FormSelectService<TValue>>(FormSelectService);
+
   @Input() label!: string;
   @Input() disabled!: boolean;
   @Input() icon!: string;
@@ -66,12 +56,7 @@ export class FormSelectComponent<TValue>
     return this.ngControl.control;
   }
 
-  constructor(
-    @Self()
-    @Optional()
-    public ngControl: NgControl,
-    private service: FormSelectService<TValue>
-  ) {
+  constructor() {
     this.service.register(this);
 
     if (this.ngControl) {

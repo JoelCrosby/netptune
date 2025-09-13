@@ -1,5 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -32,6 +32,9 @@ import { MatButton } from '@angular/material/button';
   ],
 })
 export class ProjectDialogComponent implements OnDestroy {
+  private store = inject(Store);
+  dialogRef = inject<DialogRef<ProjectDialogComponent>>(DialogRef);
+
   currentWorkspace$ = this.store.select(selectCurrentWorkspace);
   subs = new Subscription();
 
@@ -55,11 +58,6 @@ export class ProjectDialogComponent implements OnDestroy {
   get color() {
     return this.projectFromGroup.controls.color;
   }
-
-  constructor(
-    private store: Store,
-    public dialogRef: DialogRef<ProjectDialogComponent>
-  ) {}
 
   ngOnDestroy() {
     this.subs.unsubscribe();

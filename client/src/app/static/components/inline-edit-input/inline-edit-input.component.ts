@@ -1,16 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -25,6 +13,10 @@ import { AsyncPipe } from '@angular/common';
     imports: [FormsModule, ReactiveFormsModule, AsyncPipe]
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+  private cd = inject(ChangeDetectorRef);
+  private document = inject(DocumentService);
+
   @Input() value!: string | null | undefined;
   @Input() size: number | undefined;
   @Input() activeBorder: boolean | string | null | undefined;
@@ -43,12 +35,6 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   );
 
   onDestroy$ = new Subject<void>();
-
-  constructor(
-    private elementRef: ElementRef,
-    private cd: ChangeDetectorRef,
-    private document: DocumentService
-  ) {}
 
   ngOnInit() {
     this.document.documentClicked().subscribe({

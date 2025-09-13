@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { CardComponent } from '@static/components/card/card.component';
@@ -21,7 +21,8 @@ import { MatButton } from '@angular/material/button';
   ],
 })
 export class CreateWorkspaceListItemComponent {
-  constructor(private dialog: DialogService) {}
+  private dialog = inject(DialogService);
+
 
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {

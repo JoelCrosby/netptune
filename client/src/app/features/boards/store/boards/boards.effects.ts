@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -22,6 +22,13 @@ import { BoardsService } from './boards.service';
 
 @Injectable()
 export class BoardsEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private boardsService = inject(BoardsService);
+  private store = inject(Store);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(MatSnackBar);
+  private router = inject(Router);
+
   loadBoards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadBoards),
@@ -115,15 +122,6 @@ export class BoardsEffects {
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private boardsService: BoardsService,
-    private store: Store,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar,
-    private router: Router
-  ) {}
 }
 
 const DELETE_BOARD_CONFIRMATION: ConfirmDialogOptions = {

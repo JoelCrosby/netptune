@@ -1,5 +1,5 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -13,7 +13,8 @@ export enum MediaSize {
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  private breakpointObserver = inject(BreakpointObserver);
+
 
   minWidth(mediaSize: MediaSize): Observable<boolean> {
     return this.breakpointObserver.observe([`(min-width: ${mediaSize})`]).pipe(

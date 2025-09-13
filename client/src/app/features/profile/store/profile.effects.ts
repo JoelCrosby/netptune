@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
@@ -21,6 +21,11 @@ import { ProfileService } from './profile.service';
 
 @Injectable()
 export class ProfileEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private profileService = inject(ProfileService);
+  private store = inject(Store);
+  private snackbar = inject(MatSnackBar);
+
   loadProfile$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadProfile),
@@ -95,11 +100,4 @@ export class ProfileEffects {
       )
     )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private profileService: ProfileService,
-    private store: Store,
-    private snackbar: MatSnackBar
-  ) {}
 }

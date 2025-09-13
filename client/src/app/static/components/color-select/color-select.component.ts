@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  Optional,
-  Self,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
 
@@ -19,6 +13,8 @@ import { MatIcon } from '@angular/material/icon';
     imports: [MatTooltip, MatIcon]
 })
 export class ColorSelectComponent implements ControlValueAccessor {
+  ngControl = inject(NgControl, { self: true, optional: true });
+
   @Input() label!: string;
   @Input() disabled!: boolean;
   @Input() hint: string | null = null;
@@ -40,11 +36,7 @@ export class ColorSelectComponent implements ControlValueAccessor {
   onChange!: (value: string) => void;
   onTouch!: (...args: unknown[]) => void;
 
-  constructor(
-    @Self()
-    @Optional()
-    public ngControl: NgControl
-  ) {
+  constructor() {
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }

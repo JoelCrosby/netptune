@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -39,6 +39,8 @@ import { MatDivider } from '@angular/material/divider';
 ],
 })
 export class LoginComponent implements OnDestroy {
+  private store = inject(Store);
+
   authLoading$: Observable<boolean>;
   showLoginError$: Observable<boolean>;
   onDestroy$ = new Subject<void>();
@@ -58,7 +60,7 @@ export class LoginComponent implements OnDestroy {
     return this.loginGroup.controls.password;
   }
 
-  constructor(private store: Store) {
+  constructor() {
     this.showLoginError$ = this.store.select(selectShowLoginError);
     this.authLoading$ = this.store.select(selectLoginLoading).pipe(
       tap((loading) => {

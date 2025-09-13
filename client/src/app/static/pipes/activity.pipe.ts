@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import {
   ActivityType,
   ActivityViewModel,
@@ -11,7 +11,8 @@ import { FromNowPipe } from './from-now.pipe';
     pure: true
 })
 export class ActivityPipe implements PipeTransform {
-  constructor(private fromNow: FromNowPipe) {}
+  private fromNow = inject(FromNowPipe);
+
 
   transform(value: ActivityViewModel): string {
     const activityType = activityTypeToString(value.type);

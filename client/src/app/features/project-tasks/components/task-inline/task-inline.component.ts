@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
@@ -50,6 +41,9 @@ import { MatInput } from '@angular/material/input';
     imports: [MatButton, MatIcon, MatCheckbox, FormsModule, ReactiveFormsModule, MatInput]
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private cd = inject(ChangeDetectorRef);
+
   @Input() status: TaskStatus = TaskStatus.new;
   @Input() siblings!: TaskViewModel[] | null;
 
@@ -78,11 +72,6 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   get taskName() {
     return this.taskGroup.controls.taskName;
   }
-
-  constructor(
-    private store: Store,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit(): void {
     this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
@@ -24,13 +24,11 @@ import { WorkspaceListComponent } from '@workspaces/components/workspace-list/wo
 ],
 })
 export class WorkspacesViewComponent implements OnInit {
+  private dialog = inject(DialogService);
+  private store = inject(Store);
+
   buildInfo$ = this.store.select(selectBuildInfo);
   loading$ = this.store.select(selectWorkspacesLoading);
-
-  constructor(
-    private dialog: DialogService,
-    private store: Store
-  ) {}
 
   ngOnInit() {
     this.store.dispatch(loadBuildInfo());

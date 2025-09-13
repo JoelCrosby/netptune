@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, OnDestroy, inject } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -7,6 +7,8 @@ const BOTTOM_CLASS = 'scroll-shadow-bottom';
 
 @Directive({ selector: '[appScrollShadowVertical]' })
 export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+
   topShadowEl!: Element;
   bottomShadowEl!: Element;
 
@@ -15,8 +17,6 @@ export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
   get element() {
     return this.elementRef.nativeElement as Element;
   }
-
-  constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     setTimeout(() => {

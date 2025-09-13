@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
@@ -9,6 +9,9 @@ import { MetaService } from './meta.service';
 
 @Injectable()
 export class MetaEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private metaService = inject(MetaService);
+
   loadBuildInfo$ = createEffect(
     ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
       this.actions$.pipe(
@@ -24,9 +27,4 @@ export class MetaEffects {
         )
       )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private metaService: MetaService
-  ) {}
 }

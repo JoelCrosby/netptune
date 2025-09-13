@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { AppUser } from '@core/models/appuser';
 import { toggleUserSelection } from '@boards/store/groups/board-groups.actions';
 import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
@@ -16,9 +16,9 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   imports: [AvatarComponent, AsyncPipe],
 })
 export class BoardGroupUsersComponent implements OnInit {
-  users$!: Observable<Selected<AppUser>[]>;
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  users$!: Observable<Selected<AppUser>[]>;
 
   ngOnInit() {
     this.users$ = this.store.select(selectBoardGroupsUsersModel);

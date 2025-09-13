@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { selectSettingsFeature } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -14,6 +14,10 @@ export const SETTINGS_KEY = 'SETTINGS';
 
 @Injectable()
 export class SettingsEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private store = inject(Store);
+  private localStorageService = inject(LocalStorageService);
+
   persistSettings$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -43,10 +47,4 @@ export class SettingsEffects {
       ),
     { dispatch: false }
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private store: Store,
-    private localStorageService: LocalStorageService
-  ) {}
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
@@ -14,12 +14,10 @@ import { AsyncPipe } from '@angular/common';
     imports: [TaskListGroupComponent, AsyncPipe]
 })
 export class TaskListComponent {
-  tasks$ = this.store.select(TaskSelectors.selectTasks);
+  private dialog = inject(DialogService);
+  private store = inject(Store);
 
-  constructor(
-    private dialog: DialogService,
-    private store: Store
-  ) {}
+  tasks$ = this.store.select(TaskSelectors.selectTasks);
 
   showAddModal() {
     this.dialog.open(CreateTaskDialogComponent, {

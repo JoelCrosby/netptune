@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
@@ -10,7 +10,8 @@ import { throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WorkspacesService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get() {
     return this.http.get<Workspace[]>(

@@ -1,8 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { loadProjectDetail } from '@core/store/projects/projects.actions';
 import { selectProjectDetailLoading } from '@core/store/projects/projects.selectors';
@@ -27,12 +23,10 @@ import { ProjectDetailComponent } from '@projects/components/project-detail/proj
 ],
 })
 export class ProjectDetailViewComponent implements AfterViewInit {
-  loading$ = this.store.select(selectProjectDetailLoading);
+  private store = inject(Store);
+  private route = inject(ActivatedRoute);
 
-  constructor(
-    private store: Store,
-    private route: ActivatedRoute
-  ) {}
+  loading$ = this.store.select(selectProjectDetailLoading);
 
   ngAfterViewInit() {
     this.route.paramMap.pipe(first()).subscribe((params) => {

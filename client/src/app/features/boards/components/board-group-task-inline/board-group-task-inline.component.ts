@@ -1,16 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -64,6 +52,10 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  private cd = inject(ChangeDetectorRef);
+  private store = inject(Store);
+  private actions$ = inject<Actions<Action>>(Actions);
+
   @ViewChild('taskInput') inputElementRef!: ElementRef;
   @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
 
@@ -83,12 +75,6 @@ export class BoardGroupTaskInlineComponent
   message$!: Observable<string | null>;
 
   createInProgress$ = new BehaviorSubject<boolean>(false);
-
-  constructor(
-    private cd: ChangeDetectorRef,
-    private store: Store,
-    private actions$: Actions<Action>
-  ) {}
 
   ngOnInit() {
     fromEvent(document, 'mousedown', {

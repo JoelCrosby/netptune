@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkspaceAppUser } from '@core/models/appuser';
@@ -22,13 +22,11 @@ import { MatIcon } from '@angular/material/icon';
     imports: [UserListItemComponent, MatIconButton, CdkDragHandle, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
 })
 export class UserListComponent implements OnInit {
-  users$!: Observable<WorkspaceAppUser[]>;
+  snackBar = inject(MatSnackBar);
+  dialog = inject(DialogService);
+  private store = inject(Store);
 
-  constructor(
-    public snackBar: MatSnackBar,
-    public dialog: DialogService,
-    private store: Store
-  ) {}
+  users$!: Observable<WorkspaceAppUser[]>;
 
   ngOnInit() {
     this.users$ = this.store.pipe(select(UsersSelectors.selectAllUsers));

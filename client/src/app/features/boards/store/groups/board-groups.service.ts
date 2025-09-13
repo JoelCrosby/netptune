@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Params } from '@angular/router';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
@@ -14,7 +14,8 @@ import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class BoardGroupsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get(boardId: string, params: Params) {
     return this.http.get<ClientResponse<BoardView>>(

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { selectTags } from '@core/store/tags/tags.selectors';
@@ -25,17 +19,15 @@ import { MatIcon } from '@angular/material/icon';
     imports: [TagsInputComponent, MatTooltip, MatIcon, AsyncPipe]
 })
 export class TagsComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private actions$ = inject(Actions);
+  private cd = inject(ChangeDetectorRef);
+
   tag$ = this.store.select(selectTags);
   onDestroy$ = new Subject<void>();
 
   addTagActive = false;
   editTagIndex: number | null = null;
-
-  constructor(
-    private store: Store,
-    private actions$: Actions,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit() {
     this.store.dispatch(actions.loadTags());

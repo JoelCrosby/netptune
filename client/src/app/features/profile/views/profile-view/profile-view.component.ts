@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { select, Store } from '@ngrx/store';
 import { loadProfile } from '@profile/store/profile.actions';
@@ -30,10 +25,10 @@ import { ChangePasswordComponent } from '@profile/components/change-password/cha
 ],
 })
 export class ProfileViewComponent implements OnInit, AfterViewInit {
+  private store = inject(Store);
+
   loadingUpdate$!: Observable<boolean>;
   loading$!: Observable<boolean>;
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.loading$ = this.store.select(ProfileSelectors.selectProfileLoading);

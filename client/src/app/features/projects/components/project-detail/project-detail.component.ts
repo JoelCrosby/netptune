@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -45,6 +40,8 @@ import { MatButton } from '@angular/material/button';
 ],
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+
   project$!: Observable<ProjectViewModel | null | undefined>;
   boards$!: Observable<BoardViewModel[]>;
   updateDisabled$!: Observable<boolean>;
@@ -83,8 +80,6 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   get key() {
     return this.formGroup.controls.key;
   }
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.project$ = this.store.select(selectProjectDetail).pipe(

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Workspace } from '@core/models/workspace';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
@@ -19,9 +19,9 @@ import { CreateWorkspaceListItemComponent } from '../create-workspace-list-item/
 ],
 })
 export class WorkspaceListComponent {
-  workspaces$ = this.store.select(selectAllWorkspaces);
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  workspaces$ = this.store.select(selectAllWorkspaces);
 
   trackById(_: number, workspace: Workspace) {
     return workspace.id;

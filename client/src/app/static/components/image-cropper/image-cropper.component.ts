@@ -5,17 +5,7 @@ import {
   LyImageCropper,
 } from '@alyle/ui/image-cropper';
 import { Platform } from '@angular/cdk/platform';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
 
 import { MatButton } from '@angular/material/button';
@@ -30,6 +20,10 @@ import { MatIcon } from '@angular/material/icon';
     imports: [LyImageCropper, MatButton, MatTooltip, MatIcon]
 })
 export class ImageCropperComponent implements OnInit, AfterViewInit {
+  readonly sRenderer = inject(StyleRenderer);
+  private platform = inject(Platform);
+  private cd = inject(ChangeDetectorRef);
+
   @Input() src!: string;
   @Input() size!: number;
 
@@ -46,12 +40,6 @@ export class ImageCropperComponent implements OnInit, AfterViewInit {
   minScale!: number;
 
   myConfig!: ImgCropperConfig;
-
-  constructor(
-    readonly sRenderer: StyleRenderer,
-    private platform: Platform,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit() {
     this.myConfig = {

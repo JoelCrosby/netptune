@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { EntryModule } from '@entry/entry.module';
 import { environment } from '@env/environment';
 import { EffectsModule } from '@ngrx/effects';
@@ -66,11 +66,9 @@ import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
         provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class CoreModule {
-  constructor(
-    @Optional()
-    @SkipSelf()
-    parentModule: CoreModule
-  ) {
+  constructor() {
+    const parentModule = inject(CoreModule, { optional: true, skipSelf: true });
+
     if (parentModule) {
       throw new Error('CoreModule is already loaded. Import only in AppModule');
     }

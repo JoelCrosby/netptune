@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
@@ -23,11 +23,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [LetDirective, MatButton, MatTooltip, MatMenuTrigger, MatBadge, MatIcon, MatMenu, MatMenuContent, NgIf, NgFor, MatCheckbox, MatProgressSpinner, AsyncPipe]
 })
 export class BoardGroupTagsComponent implements OnInit {
+  private store = inject(Store);
+
   tags$!: Observable<Selected<Tag>[]>;
   loaded$!: Observable<boolean>;
   selectedCount$!: Observable<number>;
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.tags$ = this.store.select(TagSelectors.selectTasksWithSelect);

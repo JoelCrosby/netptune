@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -36,6 +36,9 @@ import { MatAnchor, MatButton } from '@angular/material/button';
 ],
 })
 export class ResetPasswordComponent {
+  private activatedRoute = inject(ActivatedRoute);
+  private store = inject(Store);
+
   authLoading$: Observable<boolean>;
 
   request?: ResetPasswordRequest;
@@ -59,10 +62,7 @@ export class ResetPasswordComponent {
     return this.formGroup.controls.password1;
   }
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private store: Store
-  ) {
+  constructor() {
     this.activatedRoute.data
       .pipe(
         first(),

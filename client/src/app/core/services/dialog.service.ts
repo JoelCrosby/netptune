@@ -1,11 +1,12 @@
 import { Dialog, DialogConfig, DialogRef } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DialogContainerComponent } from '@static/components/dialog/dialog-container.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  constructor(private dialog: Dialog) {}
+  private dialog = inject(Dialog);
+
 
   open<R = unknown, D = unknown, C = unknown>(
     component: ComponentType<C>,
