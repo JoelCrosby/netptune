@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -23,11 +18,11 @@ import { AsyncPipe } from '@angular/common';
   imports: [RouterLink, CardListItemComponent, AsyncPipe],
 })
 export class ProjectListItemComponent implements OnInit {
+  private store = inject(Store);
+
   @Input() project!: ProjectViewModel;
 
   actions$!: Observable<HeaderAction[]>;
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.actions$ = this.store.select(selectCurrentWorkspaceIdentifier).pipe(

@@ -1,5 +1,5 @@
 import { AppUser } from '@core/models/appuser';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
@@ -8,7 +8,8 @@ import { UploadResponse } from '@core/models/upload-result';
 
 @Injectable()
 export class ProfileService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get(userId: string) {
     return this.http.get<AppUser>(

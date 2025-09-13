@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, OnInitEffects, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { MediaService, MediaSize } from '@core/services/media.service';
@@ -8,6 +8,10 @@ import { selectIsMobileView } from './layout.selectors';
 
 @Injectable()
 export class LayoutEffects implements OnInitEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private media = inject(MediaService);
+  private store = inject(Store);
+
   init$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -37,12 +41,6 @@ export class LayoutEffects implements OnInitEffects {
       map(() => closeSideMenu())
     )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private media: MediaService,
-    private store: Store
-  ) {}
 
   ngrxOnInitEffects(): Action {
     return { type: '[Layout]: Init' };

@@ -1,14 +1,6 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { DialogRef, Dialog } from '@angular/cdk/dialog';
-import {
-  Directive,
-  OnInit,
-  OnChanges,
-  Input,
-  Optional,
-  ElementRef,
-  SimpleChanges,
-} from '@angular/core';
+import { Directive, OnInit, OnChanges, Input, ElementRef, SimpleChanges, inject } from '@angular/core';
 
 function getClosestDialog<TResult, TComponent>(
   element: ElementRef<HTMLElement>,
@@ -45,15 +37,13 @@ function closeDialogVia<R>(
     }
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
+  dialogRef = inject<DialogRef<TResult>>(DialogRef, { optional: true });
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dialog = inject(Dialog);
+
   @Input('aria-label') ariaLabel?: string;
   @Input() type: 'submit' | 'button' | 'reset' = 'button';
   @Input() dialogResult?: TResult;
-
-  constructor(
-    @Optional() public dialogRef: DialogRef<TResult>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: Dialog
-  ) {}
 
   ngOnInit() {
     if (!this.dialogRef) {

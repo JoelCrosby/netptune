@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -25,6 +19,8 @@ import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/m
     imports: [MatIconButton, MatIcon, RouterLink, InlineEditInputComponent, MatRipple, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
 })
 export class PageHeaderComponent {
+  private store = inject(Store);
+
   @Input() title?: string | null;
   @Input() titleEditable = false;
   @Input() actionTitle?: string | null;
@@ -37,8 +33,6 @@ export class PageHeaderComponent {
   @Output() titleSubmitted = new EventEmitter<string>();
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);
-
-  constructor(private store: Store) {}
 
   onOpenMenu() {
     this.store.dispatch(openSideMenu());

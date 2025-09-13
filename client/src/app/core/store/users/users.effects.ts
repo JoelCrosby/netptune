@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -13,6 +13,11 @@ import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private usersService = inject(UsersService);
+  private snackbar = inject(MatSnackBar);
+  private confirmation = inject(ConfirmationService);
+
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadUsers),
@@ -69,13 +74,6 @@ export class UsersEffects {
       )
     )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private usersService: UsersService,
-    private snackbar: MatSnackBar,
-    private confirmation: ConfirmationService
-  ) {}
 }
 
 const REMOVE_USERS_CONFIRMATION: ConfirmDialogOptions = {

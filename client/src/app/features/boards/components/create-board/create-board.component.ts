@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -63,6 +55,13 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 ],
 })
 export class CreateBoardComponent implements OnInit, AfterViewInit {
+  private store = inject(Store);
+  private fb = inject(FormBuilder);
+  private cd = inject(ChangeDetectorRef);
+  private boardsService = inject(BoardsService);
+  dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
+  data = inject<Board>(DIALOG_DATA, { optional: true });
+
   isUniqueLoading$ = new Subject<boolean>();
 
   projects$!: Observable<ProjectViewModel[]>;
@@ -97,15 +96,6 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   get isEditMode() {
     return !!this.data;
   }
-
-  constructor(
-    private store: Store,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
-    private boardsService: BoardsService,
-    public dialogRef: DialogRef<CreateBoardComponent>,
-    @Optional() @Inject(DIALOG_DATA) public data: Board
-  ) {}
 
   ngOnInit() {
     this.projects$ = this.store.select(selectAllProjects);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
@@ -27,16 +27,14 @@ export interface BoardGroupDialogData {
   ],
 })
 export class BoardGroupDialogComponent {
+  private store = inject(Store);
+  private fb = inject(FormBuilder);
+  dialogRef = inject<DialogRef<BoardGroupDialogComponent>>(DialogRef);
+  data = inject<BoardGroupDialogData>(DIALOG_DATA);
+
   form = this.fb.nonNullable.group({
     group: '',
   });
-
-  constructor(
-    private store: Store,
-    private fb: FormBuilder,
-    public dialogRef: DialogRef<BoardGroupDialogComponent>,
-    @Inject(DIALOG_DATA) public data: BoardGroupDialogData
-  ) {}
 
   onSubmit() {
     const name = this.form.getRawValue().group;

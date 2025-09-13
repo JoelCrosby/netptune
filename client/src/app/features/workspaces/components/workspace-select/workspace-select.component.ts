@@ -1,15 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -37,6 +26,8 @@ import { RouterLink } from '@angular/router';
 ],
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
+  private store = inject(Store);
+
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;
 
   @Input() options: Workspace[] | null = [];
@@ -53,8 +44,6 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   selected: Workspace | null = null;
 
   options$ = new BehaviorSubject<Workspace[]>([]);
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.searchControl.valueChanges

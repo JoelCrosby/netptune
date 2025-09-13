@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -34,12 +34,10 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 ],
 })
 export class TaskListItemComponent {
-  @Input() task!: TaskViewModel;
+  private store = inject(Store);
+  private dialog = inject(DialogService);
 
-  constructor(
-    private store: Store,
-    private dialog: DialogService
-  ) {}
+  @Input() task!: TaskViewModel;
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {

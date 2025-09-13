@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -41,6 +35,10 @@ import { ImageCropperComponent } from '@static/components/image-cropper/image-cr
   ],
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private fb = inject(FormBuilder);
+  private cd = inject(ChangeDetectorRef);
+
   formGroup = this.fb.group({
     firstname: ['', [Validators.required]],
     lastname: ['', [Validators.required]],
@@ -53,12 +51,6 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
   editProfilePicture$ = new Subject<boolean>();
 
   data?: FormData;
-
-  constructor(
-    private store: Store,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit() {
     this.loadingUpdate$ = this.store.pipe(

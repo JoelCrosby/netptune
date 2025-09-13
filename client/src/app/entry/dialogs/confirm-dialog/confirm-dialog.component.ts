@@ -1,10 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-  Component,
-  Inject,
-  Optional,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 import { MatIcon } from '@angular/material/icon';
@@ -39,12 +34,12 @@ export interface ConfirmDialogOptions {
 ],
 })
 export class ConfirmDialogComponent {
+  dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);
+  data = inject<ConfirmDialogOptions>(DIALOG_DATA, { optional: true }) ?? {};
+
   confirmationChecked = false;
 
-  constructor(
-    public dialogRef: DialogRef<boolean, ConfirmDialogComponent>,
-    @Optional() @Inject(DIALOG_DATA) public data: ConfirmDialogOptions = {}
-  ) {
+  constructor() {
     this.data = { color: 'primary', ...this.data };
   }
 }

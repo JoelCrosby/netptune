@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -41,6 +36,9 @@ import { MatAnchor, MatButton } from '@angular/material/button';
 ],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private activatedRoute = inject(ActivatedRoute);
+
   authLoading$: Observable<boolean>;
   request$!: Observable<WorkspaceInvite | null>;
 
@@ -90,10 +88,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return this.formGroup.controls.password1;
   }
 
-  constructor(
-    private store: Store,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor() {
     this.authLoading$ = this.store.select(selectRegisterLoading).pipe(
       tap((loading) => {
         if (loading) return this.formGroup.disable();

@@ -1,18 +1,5 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  forwardRef,
-  HostBinding,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Provider,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, Input, NgZone, OnDestroy, OnInit, Provider, ViewChild, inject } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -36,6 +23,11 @@ export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
 export class InlineTextAreaComponent
   implements OnInit, OnDestroy, ControlValueAccessor
 {
+  private elementRef = inject(ElementRef);
+  private controlContainer = inject(ControlContainer);
+  private cd = inject(ChangeDetectorRef);
+  private document = inject(DocumentService);
+
   @Input() value!: string;
   @Input() formControlName!: string;
   @Input() formControl!: FormControl;
@@ -68,13 +60,6 @@ export class InlineTextAreaComponent
   );
 
   onDestroy$ = new Subject<void>();
-
-  constructor(
-    private elementRef: ElementRef,
-    private controlContainer: ControlContainer,
-    private cd: ChangeDetectorRef,
-    private document: DocumentService
-  ) {}
 
   ngOnInit() {
     this.document.documentClicked().subscribe({

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
@@ -15,10 +15,9 @@ import { MatIcon } from '@angular/material/icon';
     imports: [MatRipple, MatIcon]
 })
 export class CreateBoardGroupComponent {
-  constructor(
-    private dialog: DialogService,
-    private store: Store
-  ) {}
+  private dialog = inject(DialogService);
+  private store = inject(Store);
+
 
   onClick() {
     this.store

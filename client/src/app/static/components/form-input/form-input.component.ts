@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Optional,
-  Output,
-  Self,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
@@ -20,6 +10,8 @@ import { MatIcon } from '@angular/material/icon';
     imports: [MatIcon]
 })
 export class FormInputComponent implements ControlValueAccessor {
+  ngControl = inject(NgControl, { self: true, optional: true });
+
   @Input() label!: string;
   @Input() disabled?: boolean;
   @Input() icon?: string | null;
@@ -45,11 +37,7 @@ export class FormInputComponent implements ControlValueAccessor {
     return this.ngControl.control;
   }
 
-  constructor(
-    @Self()
-    @Optional()
-    public ngControl: NgControl
-  ) {
+  constructor() {
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }

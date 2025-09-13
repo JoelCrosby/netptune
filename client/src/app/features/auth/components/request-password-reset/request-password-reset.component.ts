@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -35,6 +35,8 @@ import { RouterLink } from '@angular/router';
 ],
 })
 export class RequestPasswordResetComponent implements OnInit {
+  private store = inject(Store);
+
   authLoading$!: Observable<boolean>;
 
   formGroup = new FormGroup({
@@ -44,8 +46,6 @@ export class RequestPasswordResetComponent implements OnInit {
   get email() {
     return this.formGroup.controls.email;
   }
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.authLoading$ = this.store

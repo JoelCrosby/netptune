@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AddTagRequest,
@@ -15,7 +15,8 @@ import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
   providedIn: 'root',
 })
 export class TagsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get() {
     return this.http.get<Tag[]>(environment.apiEndpoint + 'api/tags/workspace');

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import * as selectors from '@boards/store/groups/board-groups.selectors';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
@@ -18,13 +18,11 @@ import { MatTooltip } from '@angular/material/tooltip';
     imports: [MatIcon, MatTooltip, AsyncPipe]
 })
 export class BoardGroupsSelectionComponent implements OnInit {
+  private store = inject(Store);
+  private dialog = inject(DialogService);
+
   selected$!: Observable<number[]>;
   count$!: Observable<number>;
-
-  constructor(
-    private store: Store,
-    private dialog: DialogService
-  ) {}
 
   ngOnInit() {
     this.selected$ = this.store.select(selectors.selectSelectedTasks);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   ConfirmDialogComponent,
   ConfirmDialogOptions,
@@ -16,7 +16,8 @@ const DEFAULT_CONFIG: ConfirmDialogOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmationService {
-  constructor(private dialog: DialogService) {}
+  private dialog = inject(DialogService);
+
 
   open(
     config: ConfirmDialogOptions = DEFAULT_CONFIG,

@@ -1,5 +1,5 @@
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
@@ -10,6 +10,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class ActivityEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private activityService = inject(ActivityService);
+
   loadActivities$ = createEffect(
     ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
       this.actions$.pipe(
@@ -26,9 +29,4 @@ export class ActivityEffects {
         )
       )
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private activityService: ActivityService
-  ) {}
 }

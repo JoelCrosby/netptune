@@ -5,15 +5,7 @@ import {
   CdkDrag,
   CdkDragHandle,
 } from '@angular/cdk/drag-drop';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -74,6 +66,9 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  private store = inject(Store);
+  private hubService = inject(ProjectTasksHubService);
+
   @ViewChild('importTasksInput') importTasksInput!: ElementRef;
 
   groups$!: Observable<BoardViewGroup[]>;
@@ -104,11 +99,6 @@ export class BoardGroupsViewComponent
   ];
 
   private board?: Board;
-
-  constructor(
-    private store: Store,
-    private hubService: ProjectTasksHubService
-  ) {}
 
   ngOnInit() {
     this.groups$ = this.store.select(

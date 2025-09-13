@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, OnDestroy, inject } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -7,6 +7,8 @@ const RIGHT_CLASS = 'scroll-shadow-right';
 
 @Directive({ selector: '[appScrollShadow]' })
 export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+
   leftShadowEl!: Element;
   rightShadowEl!: Element;
 
@@ -15,8 +17,6 @@ export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
   get element() {
     return this.elementRef.nativeElement as Element;
   }
-
-  constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     setTimeout(() => {

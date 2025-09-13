@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import * as selectors from '@boards/store/groups/board-groups.selectors';
@@ -27,14 +22,12 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 ],
 })
 export class MoveTasksDialogComponent implements OnInit {
+  private store = inject(Store);
+  private cd = inject(ChangeDetectorRef);
+  dialogRef = inject<DialogRef<MoveTasksDialogComponent>>(DialogRef);
+
   groups$!: Observable<BoardViewGroup[]>;
   selected: number | null = null;
-
-  constructor(
-    private store: Store,
-    private cd: ChangeDetectorRef,
-    public dialogRef: DialogRef<MoveTasksDialogComponent>
-  ) {}
 
   ngOnInit() {
     this.groups$ = this.store.select(selectors.selectAllBoardGroups);

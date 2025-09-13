@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RegisterRequest } from '@core/models/register-request';
 import { environment } from '@env/environment';
 import { ClientResponse } from '../models/client-response';
@@ -15,7 +15,8 @@ import {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   currentUser() {
     return this.http.get<UserResponse>(

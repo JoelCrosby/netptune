@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
@@ -21,14 +16,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     imports: [MatProgressSpinner, AsyncPipe]
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
+  private activatedRoute = inject(ActivatedRoute);
+  private store = inject(Store);
+
   loading$!: Observable<boolean>;
 
   private request?: AuthCodeRequest;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private store: Store
-  ) {
+  constructor() {
     this.activatedRoute.data
       .pipe(
         first(),

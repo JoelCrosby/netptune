@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import * as BoardSelectors from '@boards/store/boards/boards.selectors';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { Store } from '@ngrx/store';
@@ -32,9 +32,9 @@ import { CardSubtitleComponent } from '@static/components/card/card-subtitle.com
 ],
 })
 export class BoardsGridComponent implements OnInit {
-  groups$!: Observable<BoardsViewModel[]>;
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  groups$!: Observable<BoardsViewModel[]>;
 
   ngOnInit() {
     this.groups$ = this.store.select(BoardSelectors.selectAllBoards);

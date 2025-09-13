@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -64,6 +56,12 @@ import { AsyncPipe } from '@angular/common';
   ],
 })
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private cd = inject(ChangeDetectorRef);
+  private workspaceServcie = inject(WorkspacesService);
+  dialogRef = inject<DialogRef<WorkspaceDialogComponent>>(DialogRef);
+  data = inject<Workspace>(DIALOG_DATA, { optional: true });
+
   isUniqueLoadingSubject$ = new Subject<boolean>();
   showIdentifierCheckSubject$ = new Subject<boolean>();
   identifierIcon$!: Observable<string | null>;
@@ -121,14 +119,6 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   get isEditMode() {
     return !!this.data;
   }
-
-  constructor(
-    private store: Store,
-    private cd: ChangeDetectorRef,
-    private workspaceServcie: WorkspacesService,
-    public dialogRef: DialogRef<WorkspaceDialogComponent>,
-    @Optional() @Inject(DIALOG_DATA) public data: Workspace
-  ) {}
 
   ngOnInit() {
     this.identifierIcon$ = combineLatest([

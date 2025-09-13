@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Logger } from '@core/util/logger';
 import { HubConnection } from '@microsoft/signalr';
 import { Action, Store } from '@ngrx/store';
@@ -22,12 +22,10 @@ export interface HubMethodHandler {
   providedIn: 'root',
 })
 export class HubService {
-  private connection!: HubConnection;
+  private connetionService = inject(HubConnectionService);
+  private store = inject(Store);
 
-  constructor(
-    private connetionService: HubConnectionService,
-    private store: Store
-  ) {}
+  private connection!: HubConnection;
 
   connect(path: string, handlers: HubMethodHandler[]): Promise<void> {
     return this.openConnection(path, handlers);

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
@@ -15,7 +15,8 @@ import { switchMap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ProjectTasksService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get() {
     return this.http.get<TaskViewModel[]>(

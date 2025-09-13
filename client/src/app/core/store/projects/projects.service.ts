@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { AddProjectRequest } from '@core/models/project';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
@@ -9,7 +9,8 @@ import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get() {
     return this.http.get<ProjectViewModel[]>(

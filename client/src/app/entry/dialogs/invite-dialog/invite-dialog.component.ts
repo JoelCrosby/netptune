@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -28,6 +28,8 @@ import { MatButton } from '@angular/material/button';
 ],
 })
 export class InviteDialogComponent {
+  private dialogRef = inject<DialogRef<string[], InviteDialogComponent>>(DialogRef);
+
   users: string[] = [];
 
   get email() {
@@ -37,8 +39,6 @@ export class InviteDialogComponent {
   formGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
   });
-
-  constructor(private dialogRef: DialogRef<string[], InviteDialogComponent>) {}
 
   close() {
     this.dialogRef.close();

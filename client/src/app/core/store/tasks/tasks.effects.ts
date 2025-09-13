@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -16,6 +16,12 @@ import { ProjectTasksService } from './tasks.service';
 
 @Injectable()
 export class ProjectTasksEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private projectTasksService = inject(ProjectTasksService);
+  private projectTasksHubService = inject(ProjectTasksHubService);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(MatSnackBar);
+
   loadProjectTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.loadProjectTasks),
@@ -236,14 +242,6 @@ export class ProjectTasksEffects {
   onWorkspaceSelected$ = createEffect(() =>
     this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private projectTasksService: ProjectTasksService,
-    private projectTasksHubService: ProjectTasksHubService,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar
-  ) {}
 }
 
 const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {

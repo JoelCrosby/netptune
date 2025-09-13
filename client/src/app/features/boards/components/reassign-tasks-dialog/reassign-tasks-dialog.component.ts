@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
@@ -31,15 +26,13 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 ],
 })
 export class ReassignTasksDialogComponent implements OnInit {
+  private store = inject(Store);
+  private cd = inject(ChangeDetectorRef);
+  dialogRef = inject<DialogRef<ReassignTasksDialogComponent>>(DialogRef);
+
   users$!: Observable<Selected<AppUser>[]>;
 
   selected: string | null = null;
-
-  constructor(
-    private store: Store,
-    private cd: ChangeDetectorRef,
-    public dialogRef: DialogRef<ReassignTasksDialogComponent>
-  ) {}
 
   ngOnInit() {
     this.users$ = this.store.select(selectBoardGroupsUsersModel);

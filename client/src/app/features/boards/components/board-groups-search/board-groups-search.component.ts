@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
@@ -22,6 +17,8 @@ import { MatTooltip } from '@angular/material/tooltip';
     imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip]
 })
 export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+
   term$!: Observable<string>;
   onDestroy$ = new Subject<void>();
 
@@ -30,8 +27,6 @@ export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
     Validators.minLength(2),
     Validators.maxLength(64),
   ]);
-
-  constructor(private store: Store) {}
 
   ngOnInit() {
     this.store

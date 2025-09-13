@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -23,6 +23,13 @@ import { WorkspacesService } from './workspaces.service';
 
 @Injectable()
 export class WorkspacesEffects {
+  private store = inject(Store);
+  private actions$ = inject<Actions<Action>>(Actions);
+  private workspacesService = inject(WorkspacesService);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(MatSnackBar);
+  private hubService = inject(ProjectTasksHubService);
+
   init$ = createEffect(() =>
     this.actions$.pipe(
       ofType('[WORKSPACES]: Init'),
@@ -122,15 +129,6 @@ export class WorkspacesEffects {
       )
     )
   );
-
-  constructor(
-    private store: Store,
-    private actions$: Actions<Action>,
-    private workspacesService: WorkspacesService,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar,
-    private hubService: ProjectTasksHubService
-  ) {}
 
   ngrxOnInitEffects(): Action {
     return { type: '[WORKSPACES]: Init' };

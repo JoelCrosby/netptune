@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -101,6 +93,11 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
+  data = inject<TaskViewModel>(DIALOG_DATA, { optional: true });
+  private store = inject(Store);
+  private actions$ = inject<Actions<Action>>(Actions);
+
   static width = '972px';
 
   task$!: Observable<TaskViewModel | undefined>;
@@ -118,13 +115,6 @@ export class TaskDetailDialogComponent
   onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
   formGroup!: FormGroup;
-
-  constructor(
-    public dialogRef: DialogRef<TaskDetailDialogComponent>,
-    @Optional() @Inject(DIALOG_DATA) public data: TaskViewModel,
-    private store: Store,
-    private actions$: Actions<Action>
-  ) {}
 
   get name() {
     return this.formGroup.controls.name;

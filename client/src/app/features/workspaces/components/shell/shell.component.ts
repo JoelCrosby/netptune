@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import {
   selectSideMenuMode,
@@ -47,6 +42,10 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 ],
 })
 export class ShellComponent implements OnInit {
+  private store = inject(Store);
+  private router = inject(Router);
+  private storage = inject(LocalStorageService);
+
   @ViewChild(MatSidenav) sideNav!: MatSidenav;
 
   authenticated$!: Observable<boolean>;
@@ -70,11 +69,7 @@ export class ShellComponent implements OnInit {
   workspaceId$ = this.store.select(selectCurrentWorkspaceIdentifier);
   fixedInViewport$ = of(true);
 
-  constructor(
-    private store: Store,
-    private router: Router,
-    private storage: LocalStorageService
-  ) {
+  constructor() {
     this.sideNavExpanded = this.storage.getItem('side-nav-expanded') ?? true;
   }
 

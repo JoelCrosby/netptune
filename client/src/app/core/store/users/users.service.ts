@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
 import { environment } from '@env/environment';
@@ -8,7 +8,8 @@ import { environment } from '@env/environment';
   providedIn: 'root',
 })
 export class UsersService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   getUsersInWorkspace() {
     return this.http.get<WorkspaceAppUser[]>(

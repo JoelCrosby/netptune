@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { selectAuthToken } from '@core/auth/store/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
@@ -22,9 +22,9 @@ interface ConnectionMap {
   providedIn: 'root',
 })
 export class HubConnectionService {
-  connections: ConnectionMap = {};
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  connections: ConnectionMap = {};
 
   async connect(
     path: string,

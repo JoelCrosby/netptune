@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -48,6 +43,9 @@ import { MatButton } from '@angular/material/button';
 ],
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
+
   projects$!: Observable<ProjectViewModel[]>;
   currentWorkspace$!: Observable<Workspace | undefined>;
 
@@ -70,11 +68,6 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   get project() {
     return this.formGroup.controls.project;
   }
-
-  constructor(
-    private store: Store,
-    public dialogRef: DialogRef<CreateTaskDialogComponent>
-  ) {}
 
   ngOnInit() {
     this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);

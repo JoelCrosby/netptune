@@ -1,12 +1,6 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ViewChild,
-  HostListener,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, HostListener, inject } from '@angular/core';
 import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
 @Component({
@@ -20,10 +14,10 @@ import { ɵɵCdkPortal } from '@angular/cdk/dialog';
     imports: [ɵɵCdkPortal]
 })
 export class FormSelectDropdownComponent {
+  private overlay = inject(Overlay);
+
   @Input() reference!: HTMLElement;
   @ViewChild(CdkPortal) portal!: CdkPortal;
-
-  constructor(private overlay: Overlay) {}
 
   overlayRef?: OverlayRef;
   showing = false;

@@ -1,16 +1,5 @@
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnDestroy,
-  Output,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, forwardRef, Input, OnDestroy, Output, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
 import { Logger } from '@core/util/logger';
@@ -45,6 +34,8 @@ import { firstValueFrom } from 'rxjs';
     ]
 })
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
+  private storage = inject(StorageService);
+
   @ViewChild('editorJs', { static: true }) el!: ElementRef;
 
   @Input() placeholder = '';
@@ -54,8 +45,6 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
 
   onChange!: (value: string) => void;
   onTouch!: () => void;
-
-  constructor(private storage: StorageService) {}
 
   ngOnDestroy() {
     this.editor?.destroy?.();

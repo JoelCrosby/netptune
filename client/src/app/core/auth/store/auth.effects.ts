@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { selectAuthFeature } from '@core/core.state';
@@ -30,6 +30,15 @@ export const AUTH_KEY = 'AUTH';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
+  private actions$ = inject<Actions<Action>>(Actions);
+  private localStorageService = inject(LocalStorageService);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private store = inject(Store);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(MatSnackBar);
+  private cookie = inject(CookieService);
+
   init$ = createEffect(() =>
     this.actions$.pipe(
       ofType('[Auth]: Init'),
@@ -243,17 +252,6 @@ export class AuthEffects implements OnInitEffects {
       ),
     { dispatch: false }
   );
-
-  constructor(
-    private actions$: Actions<Action>,
-    private localStorageService: LocalStorageService,
-    private router: Router,
-    private authService: AuthService,
-    private store: Store,
-    private confirmation: ConfirmationService,
-    private snackbar: MatSnackBar,
-    private cookie: CookieService
-  ) {}
 
   ngrxOnInitEffects(): Action {
     return { type: '[Auth]: Init' };

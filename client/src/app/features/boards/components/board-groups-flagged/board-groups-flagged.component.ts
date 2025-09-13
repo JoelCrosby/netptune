@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { toggleOnlyFlagged } from '@boards/store/groups/board-groups.actions';
 import { selectOnlyFlagged } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
@@ -16,9 +16,9 @@ import { AsyncPipe } from '@angular/common';
     imports: [MatButton, MatTooltip, MatIcon, AsyncPipe]
 })
 export class BoardGroupsFlaggedComponent implements OnInit {
-  onyFlagged$!: Observable<boolean>;
+  private store = inject(Store);
 
-  constructor(private store: Store) {}
+  onyFlagged$!: Observable<boolean>;
 
   ngOnInit() {
     this.onyFlagged$ = this.store.select(selectOnlyFlagged);
