@@ -1,5 +1,5 @@
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, OnDestroy, ViewChild, ViewEncapsulation, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, OnDestroy, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
 import { Logger } from '@core/util/logger';
@@ -36,7 +36,7 @@ import { firstValueFrom } from 'rxjs';
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
   private storage = inject(StorageService);
 
-  @ViewChild('editorJs', { static: true }) el!: ElementRef;
+  readonly el = viewChild.required<ElementRef>('editorJs');
 
   readonly placeholder = input('');
   readonly loaded = output();
@@ -81,7 +81,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
     this.editor = new EditorJS({
       logLevel: logLevel,
       placeholder: this.placeholder(),
-      holder: this.el.nativeElement,
+      holder: this.el().nativeElement,
       minHeight: 100,
       tools: {
         header: Header,

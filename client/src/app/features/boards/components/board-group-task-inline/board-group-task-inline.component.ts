@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -56,8 +56,8 @@ export class BoardGroupTaskInlineComponent
   private store = inject(Store);
   private actions$ = inject<Actions<Action>>(Actions);
 
-  @ViewChild('taskInput') inputElementRef!: ElementRef;
-  @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
+  readonly inputElementRef = viewChild.required<ElementRef>('taskInput');
+  readonly containerElementRef = viewChild.required<ElementRef>('taskInlineContainer');
 
   readonly boardGroupId = input.required<number>();
   readonly canceled = output();
@@ -95,7 +95,7 @@ export class BoardGroupTaskInlineComponent
           this.createInProgress$.next(false);
           this.taskInputControl.reset();
           this.taskInputControl.enable();
-          this.inputElementRef.nativeElement.focus();
+          this.inputElementRef().nativeElement.focus();
         })
       )
       .subscribe();
@@ -119,7 +119,7 @@ export class BoardGroupTaskInlineComponent
   }
 
   ngAfterViewInit() {
-    this.inputElementRef.nativeElement.focus();
+    this.inputElementRef().nativeElement.focus();
 
     this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);
     this.currentProjectId$ = this.store.select(
@@ -137,7 +137,7 @@ export class BoardGroupTaskInlineComponent
   }
 
   handleDocumentClick(event: Event) {
-    if (!this.containerElementRef.nativeElement.contains(event.target)) {
+    if (!this.containerElementRef().nativeElement.contains(event.target)) {
       this.canceled.emit();
       this.cd.detectChanges();
     }

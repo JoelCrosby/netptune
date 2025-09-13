@@ -5,9 +5,9 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   input,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { fromEvent, Subject } from 'rxjs';
@@ -22,7 +22,7 @@ import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 })
 export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly value = input<string | null>(null);
-  @ViewChild('input') input!: ElementRef;
+  readonly input = viewChild.required<ElementRef>('input');
 
   readonly submitted = output<string>();
   readonly canceled = output();
@@ -45,7 +45,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.input.nativeElement.focus();
+    this.input().nativeElement.focus();
   }
 
   ngOnDestroy() {
@@ -59,7 +59,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleDocumentClick(event: Event) {
-    if (!this.input.nativeElement.contains(event.target)) {
+    if (!this.input().nativeElement.contains(event.target)) {
       this.canceled.emit();
     }
   }

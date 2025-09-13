@@ -5,9 +5,9 @@ import {
   ElementRef,
   Input,
   OnInit,
-  ViewChild,
   input,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -61,9 +61,9 @@ export class AutocompleteChipsComponent implements OnInit {
   readonly options = input.required<string[] | null>();
   @Input() selected: string[] | null = [];
 
-  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
-  @ViewChild('input') input!: ElementRef;
-  @ViewChild(MatAutocompleteTrigger) autoTrigger!: MatAutocompleteTrigger;
+  readonly matAutocomplete = viewChild.required<MatAutocomplete>('auto');
+  readonly input = viewChild.required<ElementRef>('input');
+  readonly autoTrigger = viewChild.required(MatAutocompleteTrigger);
 
   readonly selectionChanged = output<AutocompleteChipsSelectionChanged>();
 
@@ -146,7 +146,7 @@ export class AutocompleteChipsComponent implements OnInit {
     const selectedSet = new Set(this.selected);
 
     if (selectedSet.has(newOption)) {
-      this.input.nativeElement.value = '';
+      this.input().nativeElement.value = '';
       this.formCtrl.setValue(null);
       return;
     }
@@ -158,8 +158,8 @@ export class AutocompleteChipsComponent implements OnInit {
       option: newOption,
     });
 
-    this.input.nativeElement.value = '';
+    this.input().nativeElement.value = '';
     this.formCtrl.setValue(null);
-    requestAnimationFrame(() => this.autoTrigger.openPanel());
+    requestAnimationFrame(() => this.autoTrigger().openPanel());
   }
 }

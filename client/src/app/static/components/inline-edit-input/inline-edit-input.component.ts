@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -21,7 +21,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   readonly size = input<number>();
   readonly activeBorder = input<boolean | string | null>();
 
-  @ViewChild('input', { static: false }) input!: ElementRef;
+  readonly input = viewChild.required<ElementRef>('input');
   @HostBinding('class.edit-active') editActiveClass!: boolean;
   readonly submitted = output<string>();
 
@@ -74,9 +74,10 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   focusInput() {
     this.cd.detectChanges();
 
-    if (this.input) {
+    const inputValue = this.input();
+    if (inputValue) {
       this.control.setValue(this.value as string, { emitEvent: false });
-      this.input?.nativeElement.focus();
+      inputValue?.nativeElement.focus();
     }
   }
 

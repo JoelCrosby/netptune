@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   Input,
-  ViewChild,
   inject,
   input,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -33,7 +33,7 @@ export class FormInputComponent implements ControlValueAccessor {
   readonly loading = input<boolean | null>(false);
   readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
 
-  @ViewChild('input') input!: ElementRef;
+  readonly input = viewChild.required<ElementRef>('input');
 
   readonly submitted = output<string>();
 
@@ -63,8 +63,9 @@ export class FormInputComponent implements ControlValueAccessor {
   writeValue(value: string) {
     if (value === null || value === undefined) {
       this.value = '';
-      if (this.input) {
-        this.input.nativeElement.value = '';
+      const inputValue = this.input();
+      if (inputValue) {
+        inputValue.nativeElement.value = '';
       }
     } else {
       this.value = value;
