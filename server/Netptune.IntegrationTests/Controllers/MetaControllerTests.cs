@@ -42,7 +42,7 @@ public sealed class MetaControllerTests
         var result = await response.Content.ReadFromJsonAsync<MetaInfoResponse>();
 
         result!.Should().NotBeNull();
-        result!.Success.Should().BeTrue();
+        result.Success.Should().BeTrue();
         result.Meta.Should().NotBeNull();
     }
 }

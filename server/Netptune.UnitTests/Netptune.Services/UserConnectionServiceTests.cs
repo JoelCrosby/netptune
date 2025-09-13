@@ -70,7 +70,7 @@ public class UserConnectionServiceTests
         var result = await Service.Add("connection-id");
 
         result.Should().NotBeNull();
-        result!.ConnectId.Should().Be("connection-id");
+        result.ConnectId.Should().Be("connection-id");
         result.User.Should().BeEquivalentTo(user);
         result.UserId.Should().BeEquivalentTo(user.Id);
     }

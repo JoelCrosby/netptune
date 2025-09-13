@@ -204,7 +204,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                     return acc;
                 }
 
-                var aggregateTags = ParseTags(rows[taskTagIndex]?.Tags);
+                var aggregateTags = ParseTags(rows.ElementAtOrDefault(taskTagIndex)?.Tags);
                 var newTaskTags = aggregateTags.Select(tag => new ProjectTaskTag
                 {
                     ProjectTaskId = task.Id,

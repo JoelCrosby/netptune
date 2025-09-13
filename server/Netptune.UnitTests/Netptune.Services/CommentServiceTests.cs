@@ -89,7 +89,7 @@ public class CommentServiceTests
         var result = await Service.GetCommentsForTask("task-id");
 
         result.Should().NotBeEmpty();
-        result!.Count.Should().Be(1);
+        result.Count.Should().Be(1);
         result.Should().BeEquivalentTo(viewModels);
     }
 
