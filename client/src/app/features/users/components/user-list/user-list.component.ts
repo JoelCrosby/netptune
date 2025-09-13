@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkspaceAppUser } from '@core/models/appuser';
@@ -11,15 +16,31 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
 import { MatIconButton } from '@angular/material/button';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem,
+} from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-user-list',
-    templateUrl: './user-list.component.html',
-    styleUrls: ['./user-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [UserListItemComponent, MatIconButton, CdkDragHandle, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, MatMenuItem, AsyncPipe]
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    UserListItemComponent,
+    MatIconButton,
+    CdkDragHandle,
+    MatTooltip,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    AsyncPipe,
+  ],
 })
 export class UserListComponent implements OnInit {
   snackBar = inject(MatSnackBar);
@@ -30,10 +51,6 @@ export class UserListComponent implements OnInit {
 
   ngOnInit() {
     this.users$ = this.store.pipe(select(UsersSelectors.selectAllUsers));
-  }
-
-  trackById(_: number, user: WorkspaceAppUser) {
-    return user.id;
   }
 
   onRemoveClicked(user: WorkspaceAppUser) {
