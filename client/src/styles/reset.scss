@@ -43,13 +43,13 @@ label {
 
 .custom-scroll::-webkit-scrollbar-thumb {
   border: 6px solid transparent;
-  background: var(--forgeground, .2);
+  background: var(--foreground, .2);
   border-radius: 10px;
   background-clip: padding-box;
 }
 
 .custom-scroll {
-  scrollbar-color: var(--forgeground, .2) transparent;
+  scrollbar-color: var(--foreground, .2) transparent;
   scrollbar-width: auto;
 }
 

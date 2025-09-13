@@ -29,6 +29,7 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   selectedUsers: AppUser[];
   currentBoardGroup?: BoardGroupViewModel;
   isDragging: boolean;
+  isInlineActive: boolean;
   inlineActive?: number;
   onlyFlagged?: boolean;
   selectedTasks: number[];

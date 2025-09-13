@@ -36,8 +36,12 @@
   --foreground: rgba(var(--foreground-rgb), 0.87);
   --seconday-background: rgba(var(--foreground-rgb), 0.04);
 
+  --scrollbar-foreground: rgba(0, 0, 0, .2);
+
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));
+  --primary-selected: rgba(var(--primary-rgb), 0.6);
+  --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
 
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(255, 82, 82));
@@ -54,7 +58,7 @@
   --border: rgba(0, 0, 0, .08);
   --status-bar: #fff;
   --app-bar: #fff;
-  --hover: rgba(#000, .02);
+  --hover: rgba(0, 0, 0, .06);
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
   --toolbar-btn-background-hover: rgba(var(--board-group-rgb), .8);
@@ -87,8 +91,12 @@
   --foreground-rgb: 255, 255, 255;
   --foreground: rgba(var(--foreground-rgb));
 
+  --scrollbar-foreground: rgba(0, 0, 0, .2);
+
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));
+  --primary-selected: rgba(var(--primary-rgb), 0.6);
+  --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
 
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(255, 82, 82));
@@ -106,13 +114,13 @@
   --status-bar: #000;
   --background: #272727;
   --app-bar: #272727;
+  --hover: rgba(255, 255, 255, .06);
 
   --card: #303030;
   --card-warn: #472d2d;
   --card-warn-hover: #694040;
   --card-selected: #3f3454;
   --card-shadow: rgba(0, 0, 0, .2);
-  --hover: rgba(#fff, .04);
 
   --editor-code-color: #cfbed5;
   --editor-code-background: #262626;
@@ -130,7 +138,7 @@
   @include mat.all-component-typographies(typography.$netptune);
 
   .mat-mdc-dialog-container .mdc-dialog__surface {
-    --mdc-dialog-container-color: #2c2c2c;
+    --mat-dialog-container-color: #2c2c2c;
   }
 
   .mat-mdc-menu-panel {
@@ -138,10 +146,10 @@
   }
 
   .mat-mdc-tooltip {
-    --mdc-plain-tooltip-container-color: #1d1d1d;
+    --mat-tooltip-container-color: #1d1d1d;
   }
 
   .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
-    --mdc-chip-elevated-container-color: #333333;
+    --mat-chip-elevated-container-color: #333333;
   }
 }

@@ -27,6 +27,14 @@
 
   &:hover {
     background-color: var(--hover);
+
+    &.selected {
+      background-color: var(--primary-selected-hover);
+    }
+  }
+
+  &.selected {
+    background-color: var(--primary-selected);
   }
 }
 
