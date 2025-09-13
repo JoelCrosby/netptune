@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -17,7 +24,6 @@ import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { MatButton } from '@angular/material/button';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { ImageCropperComponent } from '@static/components/image-cropper/image-cropper.component';
 
 @Component({
   selector: 'app-update-profile',
@@ -30,7 +36,6 @@ import { ImageCropperComponent } from '@static/components/image-cropper/image-cr
     FormInputComponent,
     MatButton,
     NgIf,
-    ImageCropperComponent,
     AsyncPipe,
   ],
 })

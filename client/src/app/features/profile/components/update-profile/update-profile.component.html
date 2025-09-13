@@ -19,13 +19,7 @@
   <div class="column-fill">
     <div class="profile-image">
       <ng-container *ngIf="editProfilePicture$ | async; else elseTemplate">
-        <app-image-cropper
-          [size]="180"
-          [src]="formGroup.controls.pictureUrl.value ?? ''"
-          (cropped)="onCropped($event)"
-          (canceled)="onCropperCanceled()"
-          (cleared)="onCropperCleared()"
-        />
+        <img [width]="180" [src]="formGroup.controls.pictureUrl.value ?? ''" />
       </ng-container>
       <ng-template #elseTemplate>
         <ng-container

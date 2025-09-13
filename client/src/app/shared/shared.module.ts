@@ -29,12 +29,6 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material/snack-bar';
 
-// Alyle UIc
-
-import { LY_THEME, LY_THEME_NAME, StyleRenderer, LyTheme2 } from '@alyle/ui';
-import { MinimaLight, MinimaDeepDark } from '@alyle/ui/themes/minima';
-import { LyImageCropperModule } from '@alyle/ui/image-cropper';
-
 @NgModule({
   exports: [
     CommonModule,
@@ -63,8 +57,6 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
 
     ScrollingModule,
     PortalModule,
-
-    LyImageCropperModule,
   ],
   providers: [
     {
@@ -75,11 +67,6 @@ import { LyImageCropperModule } from '@alyle/ui/image-cropper';
       },
     },
     { provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
-    StyleRenderer,
-    LyTheme2,
-    { provide: LY_THEME_NAME, useValue: 'minima-light' },
-    { provide: LY_THEME, useClass: MinimaLight, multi: true },
-    { provide: LY_THEME, useClass: MinimaDeepDark, multi: true },
   ],
 })
 export class SharedModule {}
