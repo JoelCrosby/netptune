@@ -136,20 +136,4 @@
   @include mat.all-component-bases(dark-theme.$theme);
   @include mat.all-component-colors(dark-theme.$theme);
   @include mat.all-component-typographies(typography.$netptune);
-
-  .mat-mdc-dialog-container .mdc-dialog__surface {
-    --mat-dialog-container-color: #2c2c2c;
-  }
-
-  .mat-mdc-menu-panel {
-    --mat-menu-container-color: #313131;
-  }
-
-  .mat-mdc-tooltip {
-    --mat-tooltip-container-color: #1d1d1d;
-  }
-
-  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
-    --mat-chip-elevated-container-color: #333333;
-  }
 }
