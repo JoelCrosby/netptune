@@ -4,7 +4,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -17,19 +23,30 @@ import * as WorkspaceSelectors from '@core/store/workspaces/workspaces.selectors
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { FormInputComponent } from '../../../static/components/form-input/form-input.component';
-import { FormTextAreaComponent } from '../../../static/components/form-textarea/form-textarea.component';
-import { FormSelectComponent } from '../../../static/components/form-select/form-select.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { NgFor, AsyncPipe } from '@angular/common';
-import { FormSelectOptionComponent } from '../../../static/components/form-select/form-select-option.component';
-import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    templateUrl: './create-task-dialog.component.html',
-    styleUrls: ['./create-task-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, FormTextAreaComponent, FormSelectComponent, NgFor, FormSelectOptionComponent, DialogActionsDirective, MatButton, AsyncPipe]
+  templateUrl: './create-task-dialog.component.html',
+  styleUrls: ['./create-task-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    FormInputComponent,
+    FormTextAreaComponent,
+    FormSelectComponent,
+    NgFor,
+    FormSelectOptionComponent,
+    DialogActionsDirective,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   projects$!: Observable<ProjectViewModel[]>;

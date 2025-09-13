@@ -8,17 +8,24 @@ import { CreateBoardComponent } from '@boards/components/create-board/create-boa
 import { loadBoards } from '@boards/store/boards/boards.actions';
 import { selectBoardsLoading } from '@boards/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';
-import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
-import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { BoardsGridComponent } from '../../components/boards-grid/boards-grid.component';
+import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 
 @Component({
-    templateUrl: './boards-view.component.html',
-    styleUrls: ['./boards-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageContainerComponent, PageHeaderComponent, NgIf, MatProgressSpinner, BoardsGridComponent, AsyncPipe]
+  templateUrl: './boards-view.component.html',
+  styleUrls: ['./boards-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    PageContainerComponent,
+    PageHeaderComponent,
+    NgIf,
+    MatProgressSpinner,
+    BoardsGridComponent,
+    AsyncPipe,
+  ],
 })
 export class BoardsViewComponent implements AfterViewInit {
   loading$ = this.store.select(selectBoardsLoading);

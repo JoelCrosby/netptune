@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
@@ -9,15 +15,26 @@ import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
-import { FormErrorComponent } from '../../../../static/components/form-error/form-error.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormErrorComponent } from '@static/components/form-error/form-error.component';
 import { MatAnchor, MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-reset-password',
-    templateUrl: './reset-password.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatProgressBar, FormInputComponent, FormErrorComponent, MatAnchor, RouterLink, MatButton, AsyncPipe]
+  selector: 'app-reset-password',
+  templateUrl: './reset-password.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatProgressBar,
+    FormInputComponent,
+    FormErrorComponent,
+    MatAnchor,
+    RouterLink,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class ResetPasswordComponent {
   authLoading$: Observable<boolean>;

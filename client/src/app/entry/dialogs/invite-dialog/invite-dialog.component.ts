@@ -1,18 +1,33 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
-import { DialogContentComponent } from '../../../static/components/dialog-content/dialog-content.component';
-import { FormInputComponent } from '../../../static/components/form-input/form-input.component';
+import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { NgIf, NgFor } from '@angular/common';
-import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-invite-dialog',
-    templateUrl: './invite-dialog.component.html',
-    styleUrls: ['./invite-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DialogContentComponent, FormsModule, ReactiveFormsModule, FormInputComponent, NgIf, NgFor, DialogActionsDirective, MatButton]
+  selector: 'app-invite-dialog',
+  templateUrl: './invite-dialog.component.html',
+  styleUrls: ['./invite-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DialogContentComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    FormInputComponent,
+    NgIf,
+    NgFor,
+    DialogActionsDirective,
+    MatButton,
+  ],
 })
 export class InviteDialogComponent {
   users: string[] = [];

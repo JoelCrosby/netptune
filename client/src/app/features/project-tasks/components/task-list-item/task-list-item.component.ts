@@ -6,18 +6,34 @@ import { Store } from '@ngrx/store';
 import { TaskStatus } from '@core/enums/project-task-status';
 import * as actions from '@core/store/tasks/tasks.actions';
 import { MatIconButton } from '@angular/material/button';
-import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem,
+} from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { NgIf, NgFor } from '@angular/common';
-import { AvatarComponent } from '../../../../static/components/avatar/avatar.component';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
 @Component({
-    selector: 'app-task-list-item',
-    templateUrl: './task-list-item.component.html',
-    styleUrls: ['./task-list-item.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatCheckbox, NgIf, NgFor, AvatarComponent, MatMenu, MatMenuContent, MatMenuItem]
+  selector: 'app-task-list-item',
+  templateUrl: './task-list-item.component.html',
+  styleUrls: ['./task-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatCheckbox,
+    NgIf,
+    NgFor,
+    AvatarComponent,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+  ],
 })
 export class TaskListItemComponent {
   @Input() task!: TaskViewModel;

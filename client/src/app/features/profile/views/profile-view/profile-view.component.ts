@@ -9,18 +9,26 @@ import { select, Store } from '@ngrx/store';
 import { loadProfile } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable } from 'rxjs';
-import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
-import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { UpdateProfileComponent } from '../../components/update-profile/update-profile.component';
-import { ChangePasswordComponent } from '../../components/change-password/change-password.component';
+import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
+import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 
 @Component({
-    templateUrl: './profile-view.component.html',
-    styleUrls: ['./profile-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageContainerComponent, PageHeaderComponent, NgIf, MatProgressSpinner, UpdateProfileComponent, ChangePasswordComponent, AsyncPipe]
+  templateUrl: './profile-view.component.html',
+  styleUrls: ['./profile-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    PageContainerComponent,
+    PageHeaderComponent,
+    NgIf,
+    MatProgressSpinner,
+    UpdateProfileComponent,
+    ChangePasswordComponent,
+    AsyncPipe,
+  ],
 })
 export class ProfileViewComponent implements OnInit, AfterViewInit {
   loadingUpdate$!: Observable<boolean>;

@@ -11,7 +11,12 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { UserResponse } from '@core/auth/store/auth.models';
@@ -39,14 +44,23 @@ import { MatInput } from '@angular/material/input';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
-import { SpinnerComponent } from '../../../../static/components/spinner/spinner.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
-    selector: 'app-board-group-task-inline',
-    templateUrl: './board-group-task-inline.component.html',
-    styleUrls: ['./board-group-task-inline.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatInput, CdkTextareaAutosize, FormsModule, ReactiveFormsModule, NgIf, MatTooltip, SpinnerComponent, AsyncPipe]
+  selector: 'app-board-group-task-inline',
+  templateUrl: './board-group-task-inline.component.html',
+  styleUrls: ['./board-group-task-inline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatInput,
+    CdkTextareaAutosize,
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatTooltip,
+    SpinnerComponent,
+    AsyncPipe,
+  ],
 })
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit

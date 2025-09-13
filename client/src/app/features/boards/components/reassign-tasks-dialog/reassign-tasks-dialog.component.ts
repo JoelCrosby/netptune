@@ -13,16 +13,23 @@ import { DialogRef } from '@angular/cdk/dialog';
 import * as actions from '@boards/store/groups/board-groups.actions';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
-import { AvatarComponent } from '../../../../static/components/avatar/avatar.component';
-import { DialogActionsDirective } from '../../../../static/directives/dialog-actions.directive';
-import { DialogCloseDirective } from '../../../../static/directives/dialog-close.directive';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
-    selector: 'app-reassign-tasks-dialog',
-    templateUrl: './reassign-tasks-dialog.component.html',
-    styleUrls: ['./reassign-tasks-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, MatButton, AvatarComponent, DialogActionsDirective, DialogCloseDirective, AsyncPipe]
+  selector: 'app-reassign-tasks-dialog',
+  templateUrl: './reassign-tasks-dialog.component.html',
+  styleUrls: ['./reassign-tasks-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NgFor,
+    MatButton,
+    AvatarComponent,
+    DialogActionsDirective,
+    DialogCloseDirective,
+    AsyncPipe,
+  ],
 })
 export class ReassignTasksDialogComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;
