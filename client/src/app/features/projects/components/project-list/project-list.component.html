@@ -1,8 +1,6 @@
 <app-card-list>
   @for (project of projects$ | async; track trackById($index, project)) {
-    <app-project-list-item
-      [project]="project"
-      >
-    </app-project-list-item>
+    <app-project-list-item [project]="project"
+       />
   }
 </app-card-list>

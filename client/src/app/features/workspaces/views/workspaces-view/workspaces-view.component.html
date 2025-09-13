@@ -1,10 +1,8 @@
 <app-page-container [marginBottom]="true" [centerPage]="true">
-  <app-page-header
-    title="Workspaces"
+  <app-page-header title="Workspaces"
     actionTitle="Create Workspace"
     (actionClick)="openWorkspaceDialog()"
-    >
-  </app-page-header>
+     />
 
   @if (loading$ | async) {
     <div class="page-loading">

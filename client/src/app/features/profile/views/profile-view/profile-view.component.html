@@ -3,12 +3,10 @@
   [centerPage]="true"
   [marginBottom]="true"
   >
-  <app-page-header
-    title="Profile"
+  <app-page-header title="Profile"
     actionTitle="Logout"
     (actionClick)="onLogoutClicked()"
-    >
-  </app-page-header>
+     />
 
   @if (loading$ | async) {
     <div class="page-loading">
