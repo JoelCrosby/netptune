@@ -3,10 +3,10 @@ ARG GITHUB_REF
 ARG BUILD_NUMBER
 ARG RUN_ID
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS base
 WORKDIR /
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 ARG COMMIT
 ARG GITHUB_REF
 ARG BUILD_NUMBER
@@ -32,7 +32,7 @@ RUN dotnet publish "Netptune.App.csproj" \
     /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 # client app
-FROM node:20-slim AS client-build
+FROM node:22-slim AS client-build
 WORKDIR /client
 COPY /client/package*.json ./
 COPY /client/pnpm-lock.yaml ./
