@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
-  Output,
-  input
+  input,
+  output
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
@@ -28,8 +27,8 @@ export class CommentsListComponent {
   @Input() user!: UserResponse | null | undefined;
   readonly comments = input.required<CommentViewModel[] | null>();
 
-  @Output() deleteComment = new EventEmitter<CommentViewModel>();
-  @Output() commentSubmit = new EventEmitter<string>();
+  readonly deleteComment = output<CommentViewModel>();
+  readonly commentSubmit = output<string>();
 
   formGroup = new FormGroup({
     comment: new FormControl(''),

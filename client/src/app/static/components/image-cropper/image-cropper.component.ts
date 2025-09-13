@@ -5,7 +5,7 @@ import {
   LyImageCropper,
 } from '@alyle/ui/image-cropper';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
 
 import { MatButton } from '@angular/material/button';
@@ -27,9 +27,12 @@ export class ImageCropperComponent implements OnInit, AfterViewInit {
   readonly src = input.required<string>();
   readonly size = input.required<number>();
 
-  @Output() cropped = new EventEmitter<{ blob: Blob; src: string }>();
-  @Output() canceled = new EventEmitter();
-  @Output() cleared = new EventEmitter();
+  readonly cropped = output<{
+    blob: Blob;
+    src: string;
+}>();
+  readonly canceled = output();
+  readonly cleared = output();
 
   @ViewChild(LyImageCropper, { static: true })
   readonly cropper!: LyImageCropper;

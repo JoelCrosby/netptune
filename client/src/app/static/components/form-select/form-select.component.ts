@@ -6,13 +6,12 @@ import {
   Component,
   ContentChildren,
   ElementRef,
-  EventEmitter,
   Input,
-  Output,
   QueryList,
   ViewChild,
   inject,
-  input
+  input,
+  output
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -41,7 +40,7 @@ export class FormSelectComponent<TValue>
   readonly placeholder = input<string>();
   @Input() hint?: string;
 
-  @Output() changed = new EventEmitter<TValue>();
+  readonly changed = output<TValue>();
 
   @ViewChild('input') input!: ElementRef;
 
@@ -51,7 +50,7 @@ export class FormSelectComponent<TValue>
   @ContentChildren(FormSelectOptionComponent, { descendants: true })
   options?: QueryList<FormSelectOptionComponent<TValue>>;
 
-  @Output() submitted = new EventEmitter<string>();
+  readonly submitted = output<string>();
 
   value?: TValue | null;
   displayValue: string | null = null;

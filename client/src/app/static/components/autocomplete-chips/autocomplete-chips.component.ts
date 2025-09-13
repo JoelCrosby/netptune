@@ -3,12 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
   ViewChild,
   input,
+  output
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -66,8 +65,7 @@ export class AutocompleteChipsComponent implements OnInit {
   @ViewChild('input') input!: ElementRef;
   @ViewChild(MatAutocompleteTrigger) autoTrigger!: MatAutocompleteTrigger;
 
-  @Output()
-  selectionChanged = new EventEmitter<AutocompleteChipsSelectionChanged>();
+  readonly selectionChanged = output<AutocompleteChipsSelectionChanged>();
 
   visible = true;
   selectable = true;

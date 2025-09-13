@@ -3,12 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
-  input
+  input,
+  output
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { fromEvent, Subject } from 'rxjs';
@@ -25,8 +24,8 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly value = input<string | null>(null);
   @ViewChild('input') input!: ElementRef;
 
-  @Output() submitted = new EventEmitter<string>();
-  @Output() canceled = new EventEmitter();
+  readonly submitted = output<string>();
+  readonly canceled = output();
 
   onDestroy$ = new Subject<void>();
   formControl = new FormControl<string | null>(null);

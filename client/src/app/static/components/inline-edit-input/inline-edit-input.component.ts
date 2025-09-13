@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -23,7 +23,7 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
 
   @ViewChild('input', { static: false }) input!: ElementRef;
   @HostBinding('class.edit-active') editActiveClass!: boolean;
-  @Output() submitted = new EventEmitter<string>();
+  readonly submitted = output<string>();
 
   control = new FormControl('', {
     updateOn: 'blur',

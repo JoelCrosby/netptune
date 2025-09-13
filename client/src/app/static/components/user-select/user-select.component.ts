@@ -2,13 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
-  input
+  input,
+  output
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
@@ -38,8 +37,8 @@ export class UserSelectComponent implements OnInit, OnChanges {
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
 
-  @Output() selectChange = new EventEmitter<AppUser>();
-  @Output() closed = new EventEmitter();
+  readonly selectChange = output<AppUser>();
+  readonly closed = output();
 
   searchControl = new FormControl('');
 

@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output
 } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { CardComponent } from '../card/card.component';
@@ -40,5 +39,5 @@ export class CardListItemComponent {
   readonly subTextLabel = input<string>();
   readonly actions = input.required<HeaderAction[] | null>();
 
-  @Output() delete = new EventEmitter();
+  readonly delete = output();
 }

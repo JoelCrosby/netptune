@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject, input, output } from '@angular/core';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -29,8 +29,8 @@ export class PageHeaderComponent {
   readonly secondaryActions = input<HeaderAction[]>([]);
   readonly overflowActions = input<HeaderAction[]>([]);
 
-  @Output() actionClick = new EventEmitter();
-  @Output() titleSubmitted = new EventEmitter<string>();
+  readonly actionClick = output();
+  readonly titleSubmitted = output<string>();
 
   showSideNavToggle$ = this.store.select(selectIsMobileView);
 

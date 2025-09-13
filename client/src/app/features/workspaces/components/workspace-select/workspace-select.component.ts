@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -34,8 +34,8 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   readonly value = input<string | null>();
   readonly compact = input(false);
 
-  @Output() selectChange = new EventEmitter<Workspace>();
-  @Output() closed = new EventEmitter();
+  readonly selectChange = output<Workspace>();
+  readonly closed = output();
 
   searchControl = new FormControl();
 
