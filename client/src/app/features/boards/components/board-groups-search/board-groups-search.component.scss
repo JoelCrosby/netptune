@@ -7,6 +7,7 @@
   padding-right: .4rem;
   transition: background-color .24s ease-out;
   border-color: rgba(var(--foreground-rgb), .1) !important;
+  background-color: var(--seconday-background);
 
   &:focus-within,
   &.active {
