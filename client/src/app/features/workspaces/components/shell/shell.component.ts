@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, viewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import {
   selectSideMenuMode,
@@ -46,7 +46,7 @@ export class ShellComponent implements OnInit {
   private router = inject(Router);
   private storage = inject(LocalStorageService);
 
-  @ViewChild(MatSidenav) sideNav!: MatSidenav;
+  readonly sideNav = viewChild.required(MatSidenav);
 
   authenticated$!: Observable<boolean>;
   sideNavExpanded = true;

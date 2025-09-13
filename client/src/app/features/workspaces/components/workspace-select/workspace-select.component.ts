@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnChanges, OnInit, SimpleChanges, inject, input, output, viewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -28,7 +28,7 @@ import { RouterLink } from '@angular/router';
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   private store = inject(Store);
 
-  @ViewChild('dropdown') dropdownElementRef!: ElementRef;
+  readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
   readonly options = input<Workspace[] | null>([]);
   readonly value = input<string | null>();
@@ -84,7 +84,7 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   }
 
   handleDocumentClick(event: Event) {
-    if (!this.dropdownElementRef.nativeElement.contains(event.target)) {
+    if (!this.dropdownElementRef().nativeElement.contains(event.target)) {
       this.close();
     }
   }

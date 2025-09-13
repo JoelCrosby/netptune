@@ -5,9 +5,9 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
   inject,
   input,
+  viewChild
 } from '@angular/core';
 import {
   FormControl,
@@ -69,9 +69,9 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
   readonly status = input<TaskStatus>(TaskStatus.new);
   readonly siblings = input<TaskViewModel[] | null>();
 
-  @ViewChild('taskInlineContainer') containerElementRef!: ElementRef;
-  @ViewChild('taskInlineForm') formElementRef!: ElementRef;
-  @ViewChild('taskInput') inputElementRef!: ElementRef;
+  readonly containerElementRef = viewChild.required<ElementRef>('taskInlineContainer');
+  readonly formElementRef = viewChild.required<ElementRef>('taskInlineForm');
+  readonly inputElementRef = viewChild.required<ElementRef>('taskInput');
 
   outSideClickListener$!: Observable<Event>;
 
@@ -114,8 +114,8 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       tap((event) => {
         if (
           this.editActive &&
-          !this.containerElementRef.nativeElement.contains(event.target) &&
-          !this.formElementRef.nativeElement.contains(event.target)
+          !this.containerElementRef().nativeElement.contains(event.target) &&
+          !this.formElementRef().nativeElement.contains(event.target)
         ) {
           this.editActive = false;
           this.store.dispatch(
@@ -138,7 +138,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     this.store.dispatch(TaskActions.setInlineEditActive({ active: true }));
     this.outsideClickSubscription = this.outSideClickListener$.subscribe();
     this.cd.detectChanges();
-    this.inputElementRef.nativeElement.focus();
+    this.inputElementRef().nativeElement.focus();
   }
 
   onSubmit() {

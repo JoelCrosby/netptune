@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   Input,
-  ViewChild,
   inject,
   input,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -31,7 +31,7 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   readonly maxLength = input<string | null>(null);
   readonly rows = input('2');
 
-  @ViewChild('input') input!: ElementRef;
+  readonly input = viewChild.required<ElementRef>('input');
 
   readonly submitted = output<string>();
 

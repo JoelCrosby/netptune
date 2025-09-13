@@ -4,14 +4,13 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
   ElementRef,
   Input,
-  QueryList,
-  ViewChild,
   inject,
   input,
-  output
+  output,
+  viewChild,
+  contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -42,13 +41,11 @@ export class FormSelectComponent<TValue>
 
   readonly changed = output<TValue>();
 
-  @ViewChild('input') input!: ElementRef;
+  readonly input = viewChild.required<ElementRef>('input');
 
-  @ViewChild(FormSelectDropdownComponent)
-  public dropdown!: FormSelectDropdownComponent;
+  public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
-  @ContentChildren(FormSelectOptionComponent, { descendants: true })
-  options?: QueryList<FormSelectOptionComponent<TValue>>;
+  readonly options = contentChildren(FormSelectOptionComponent, { descendants: true });
 
   readonly submitted = output<string>();
 
@@ -78,16 +75,16 @@ export class FormSelectComponent<TValue>
 
   ngAfterViewInit() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.keyManager = new ActiveDescendantKeyManager(this.options!)
+    this.keyManager = new ActiveDescendantKeyManager(this.options()!)
       .withHorizontalOrientation('ltr')
       .withVerticalOrientation()
       .withWrap();
   }
 
   showDropdown() {
-    this.dropdown.show();
+    this.dropdown().show();
 
-    if (!this.options?.length) {
+    if (!this.options()?.length) {
       return;
     }
 
@@ -99,15 +96,15 @@ export class FormSelectComponent<TValue>
   onDropMenuIconClick(event: UIEvent) {
     event.stopPropagation();
     setTimeout(() => {
-      this.input.nativeElement.focus();
-      this.input.nativeElement.click();
+      this.input().nativeElement.focus();
+      this.input().nativeElement.click();
     }, 10);
 
     this.onTouch();
   }
 
   hideDropdown() {
-    this.dropdown.hide();
+    this.dropdown().hide();
   }
 
   selectOption(option: FormSelectOptionComponent<TValue> | undefined | null) {
@@ -130,18 +127,18 @@ export class FormSelectComponent<TValue>
     this.changed.emit(value);
     this.onChange(value);
 
-    this.input.nativeElement.focus();
+    this.input().nativeElement.focus();
   }
 
   writeValue(value: TValue) {
     this.value = value;
 
-    if (!this.options) {
+    const options = this.options();
+    if (!options) {
       return;
     }
 
-    this.selectedOption = this.options
-      .toArray()
+    this.selectedOption = options
       .find((option) => option.value() === this.value);
 
     this.updateTrigger();
@@ -152,7 +149,7 @@ export class FormSelectComponent<TValue>
       ? this.selectedOption.viewValue
       : null;
 
-    this.input.nativeElement.value = this.displayValue;
+    this.input().nativeElement.value = this.displayValue;
   }
 
   registerOnChange(fn: (...args: unknown[]) => unknown) {
@@ -180,13 +177,14 @@ export class FormSelectComponent<TValue>
       'Left',
     ];
 
+    const dropdown = this.dropdown();
     if (inactiveKeys.includes(event.key)) {
-      if (!this.dropdown.showing) {
+      if (!dropdown.showing) {
         this.showDropdown();
         return;
       }
 
-      if (!this.options?.length) {
+      if (!this.options()?.length) {
         event.preventDefault();
         return;
       }
@@ -195,7 +193,7 @@ export class FormSelectComponent<TValue>
     if (event.key === 'Enter' || event.key === ' ') {
       this.selectOption(this.keyManager?.activeItem);
     } else if (event.key === 'Escape' || event.key === 'Esc') {
-      this.dropdown.showing && this.hideDropdown();
+      dropdown.showing && this.hideDropdown();
     } else if (arrowKeys.includes(event.key)) {
       this.keyManager?.onKeydown(event);
     } else if (
@@ -203,7 +201,7 @@ export class FormSelectComponent<TValue>
       event.key === 'PageDown' ||
       event.key === 'Tab'
     ) {
-      this.dropdown.showing && event.preventDefault();
+      dropdown.showing && event.preventDefault();
     }
   }
 }

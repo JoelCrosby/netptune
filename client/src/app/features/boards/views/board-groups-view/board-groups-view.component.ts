@@ -5,7 +5,7 @@ import {
   CdkDrag,
   CdkDragHandle,
 } from '@angular/cdk/drag-drop';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -69,7 +69,7 @@ export class BoardGroupsViewComponent
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
 
-  @ViewChild('importTasksInput') importTasksInput!: ElementRef;
+  readonly importTasksInput = viewChild.required<ElementRef>('importTasksInput');
 
   groups$!: Observable<BoardViewGroup[]>;
   selectedBoard$!: Observable<Board | undefined>;
@@ -225,10 +225,11 @@ export class BoardGroupsViewComponent
   }
 
   onImportTasksClicked() {
-    if (!this.importTasksInput) return;
+    const importTasksInput = this.importTasksInput();
+    if (!importTasksInput) return;
 
-    this.importTasksInput.nativeElement.value = null;
-    this.importTasksInput.nativeElement.click();
+    importTasksInput.nativeElement.value = null;
+    importTasksInput.nativeElement.click();
   }
 
   onExportTasksClicked() {

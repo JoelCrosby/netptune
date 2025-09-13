@@ -10,9 +10,9 @@ import {
   OnDestroy,
   OnInit,
   Provider,
-  ViewChild,
   inject,
   input,
+  viewChild
 } from '@angular/core';
 import {
   ControlContainer,
@@ -58,10 +58,9 @@ export class InlineTextAreaComponent
   readonly minRows = input(1);
   readonly maxRows = input(3);
 
-  @ViewChild('autosize') autosize!: CdkTextareaAutosize;
-  @ViewChild('textarea', { static: false }) textarea!: ElementRef;
-  @ViewChild(FormControlDirective, { static: false })
-  controlDirective!: FormControlDirective;
+  readonly autosize = viewChild.required<CdkTextareaAutosize>('autosize');
+  readonly textarea = viewChild.required<ElementRef>('textarea');
+  readonly controlDirective = viewChild.required(FormControlDirective);
 
   @HostBinding('class.edit-active') editActiveClass!: boolean;
 
@@ -122,10 +121,11 @@ export class InlineTextAreaComponent
 
   focusInput() {
     this.cd.detectChanges();
-    this.autosize.resizeToFitContent(true);
+    this.autosize().resizeToFitContent(true);
 
-    if (this.textarea) {
-      this.textarea?.nativeElement.focus();
+    const textarea = this.textarea();
+    if (textarea) {
+      textarea?.nativeElement.focus();
     }
   }
 
@@ -136,24 +136,25 @@ export class InlineTextAreaComponent
   /* eslint-disable @typescript-eslint/no-explicit-any */
 
   registerOnTouched(fn: any) {
-    this.controlDirective?.valueAccessor?.registerOnTouched(fn);
+    this.controlDirective()?.valueAccessor?.registerOnTouched(fn);
   }
 
   registerOnChange(fn: any) {
-    this.controlDirective?.valueAccessor?.registerOnChange(fn);
+    this.controlDirective()?.valueAccessor?.registerOnChange(fn);
   }
 
   writeValue(obj: any) {
-    this.controlDirective?.valueAccessor?.writeValue(obj);
+    this.controlDirective()?.valueAccessor?.writeValue(obj);
   }
 
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   setDisabledState(isDisabled: boolean) {
-    if (!this.controlDirective?.valueAccessor?.setDisabledState) {
+    const controlDirective = this.controlDirective();
+    if (!controlDirective?.valueAccessor?.setDisabledState) {
       return;
     }
 
-    this.controlDirective.valueAccessor.setDisabledState(isDisabled);
+    controlDirective.valueAccessor.setDisabledState(isDisabled);
   }
 }

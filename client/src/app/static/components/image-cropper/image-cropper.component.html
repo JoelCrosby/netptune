@@ -19,7 +19,7 @@
     <input
       #_fileInput
       type="file"
-      (change)="cropper.selectInputEvent($event)"
+      (change)="cropper().selectInputEvent($event)"
       accept="image/*"
       hidden
       />
@@ -29,7 +29,7 @@
     <div class="cropper-tool-bar">
       <button
         class="icon-button"
-        (click)="cropper.zoomIn()"
+        (click)="cropper().zoomIn()"
         mat-button
         matTooltip="Zoom In"
         >
@@ -37,7 +37,7 @@
       </button>
       <button
         class="icon-button"
-        (click)="cropper.zoomOut()"
+        (click)="cropper().zoomOut()"
         mat-button
         matTooltip="Zoom Out"
         >
@@ -45,7 +45,7 @@
       </button>
       <button
         class="icon-button"
-        (click)="cropper.center()"
+        (click)="cropper().center()"
         mat-button
         matTooltip="Center Focus"
         >
@@ -53,16 +53,16 @@
       </button>
       <button
         class="icon-button"
-        (click)="cropper.rotate(-90)"
+        (click)="cropper().rotate(-90)"
         mat-button
         matTooltip="Rotate"
         >
         <mat-icon>rotate_90_degrees_ccw</mat-icon>
       </button>
-      <button (click)="cropper.fit()" mat-button>Fit</button>
-      <button (click)="cropper.fitToScreen()" mat-button>Fit to screen</button>
-      <button (click)="cropper.setScale(1)" mat-button>1:1</button>
-      <button (click)="cropper.clean()" mat-button>Clean</button>
+      <button (click)="cropper().fit()" mat-button>Fit</button>
+      <button (click)="cropper().fitToScreen()" mat-button>Fit to screen</button>
+      <button (click)="cropper().setScale(1)" mat-button>1:1</button>
+      <button (click)="cropper().clean()" mat-button>Clean</button>
     </div>
   }
 

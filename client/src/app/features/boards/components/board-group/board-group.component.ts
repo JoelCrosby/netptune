@@ -1,5 +1,5 @@
 import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -49,7 +49,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly group = input.required<BoardViewGroup>();
   readonly siblingIds = input.required<string[]>();
 
-  @ViewChild('container') container!: ElementRef;
+  readonly container = viewChild.required<ElementRef>('container');
 
   focusedSubject = new BehaviorSubject<boolean>(false);
   onDestroy$ = new Subject<void>();
@@ -84,7 +84,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const el: HTMLDivElement = this.container.nativeElement;
+    const el: HTMLDivElement = this.container().nativeElement;
 
     fromEvent(el, 'mouseenter', { passive: true })
       .pipe(takeUntil(this.onDestroy$))

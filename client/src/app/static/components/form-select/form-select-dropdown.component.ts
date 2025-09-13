@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
-import { Component, ChangeDetectionStrategy, ViewChild, HostListener, inject, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, inject, input, viewChild } from '@angular/core';
 import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
 @Component({
@@ -17,14 +17,14 @@ export class FormSelectDropdownComponent {
   private overlay = inject(Overlay);
 
   readonly reference = input.required<HTMLElement>();
-  @ViewChild(CdkPortal) portal!: CdkPortal;
+  readonly portal = viewChild.required(CdkPortal);
 
   overlayRef?: OverlayRef;
   showing = false;
 
   show() {
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
-    this.overlayRef.attach(this.portal);
+    this.overlayRef.attach(this.portal());
     this.setWidth();
     this.overlayRef.backdropClick().subscribe(() => this.hide());
     this.showing = true;

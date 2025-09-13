@@ -5,9 +5,9 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild,
   input,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
@@ -29,7 +29,7 @@ import { AutofocusDirective } from '../../directives/autofocus.directive';
     imports: [AvatarComponent, FormsModule, AutofocusDirective, ReactiveFormsModule, AsyncPipe]
 })
 export class UserSelectComponent implements OnInit, OnChanges {
-  @ViewChild('dropdown') dropdownElementRef!: ElementRef;
+  readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
   readonly options = input<AppUser[] | null>([]);
   readonly value = input<((AssigneeViewModel | AppUser)[] | null) | undefined>([]);
@@ -93,7 +93,7 @@ export class UserSelectComponent implements OnInit, OnChanges {
   }
 
   handleDocumentClick(event: Event) {
-    if (!this.dropdownElementRef.nativeElement.contains(event.target)) {
+    if (!this.dropdownElementRef().nativeElement.contains(event.target)) {
       this.close();
     }
   }
