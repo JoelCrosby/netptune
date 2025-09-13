@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ import { takeUntil, tap, throttleTime } from 'rxjs/operators';
     templateUrl: './tags-input.component.html',
     styleUrls: ['./tags-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule]
 })
 export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() value: string | null = null;

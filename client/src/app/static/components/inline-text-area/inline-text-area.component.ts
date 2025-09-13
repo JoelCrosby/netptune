@@ -13,16 +13,11 @@ import {
   Provider,
   ViewChild,
 } from '@angular/core';
-import {
-  ControlContainer,
-  ControlValueAccessor,
-  FormControl,
-  FormControlDirective,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, first, takeUntil, tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
   provide: NG_VALUE_ACCESSOR,
@@ -36,7 +31,7 @@ export const INLINE_TEXTAREA_VALUE_ACCESSOR: Provider = {
     styleUrls: ['./inline-text-area.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [INLINE_TEXTAREA_VALUE_ACCESSOR],
-    standalone: false
+    imports: [NgIf, CdkTextareaAutosize, FormsModule, ReactiveFormsModule, AsyncPipe]
 })
 export class InlineTextAreaComponent
   implements OnInit, OnDestroy, ControlValueAccessor

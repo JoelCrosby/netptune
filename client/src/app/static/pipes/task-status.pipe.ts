@@ -3,8 +3,7 @@ import { TaskStatus } from '@core/enums/project-task-status';
 
 @Pipe({
     name: 'taskStatus',
-    pure: true,
-    standalone: false
+    pure: true
 })
 export class TaskStatusPipe implements PipeTransform {
   transform(value: TaskStatus): string {

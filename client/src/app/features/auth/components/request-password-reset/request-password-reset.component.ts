@@ -1,16 +1,22 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { requestPasswordReset } from '@core/auth/store/auth.actions';
 import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { FormErrorComponent } from '../../../../static/components/form-error/form-error.component';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-request-password-reset',
     templateUrl: './request-password-reset.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatProgressBar, FormInputComponent, FormErrorComponent, MatAnchor, RouterLink, MatButton, AsyncPipe]
 })
 export class RequestPasswordResetComponent implements OnInit {
   authLoading$!: Observable<boolean>;

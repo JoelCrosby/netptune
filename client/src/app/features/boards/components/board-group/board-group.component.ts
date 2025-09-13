@@ -1,4 +1,4 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -29,13 +29,18 @@ import {
   Subject,
 } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { ScrollShadowVericalDirective } from '../../../../static/directives/scroll-shadow-vertical.directive';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
+import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-board-group',
     templateUrl: './board-group.component.html',
     styleUrls: ['./board-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [CdkDropList, ScrollShadowVericalDirective, NgFor, BoardGroupCardComponent, CdkDrag, NgIf, BoardGroupTaskInlineComponent, MatButton, AsyncPipe]
 })
 export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() dragListId!: string;

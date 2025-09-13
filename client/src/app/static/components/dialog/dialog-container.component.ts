@@ -1,4 +1,4 @@
-import { CdkDialogContainer } from '@angular/cdk/dialog';
+import { CdkDialogContainer, ɵɵCdkPortalOutlet } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
@@ -34,6 +34,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     template: `<div class="dialog-inner custom-scroll">
     <ng-template cdkPortalOutlet></ng-template>
   </div>`,
-    standalone: false
+    imports: [ɵɵCdkPortalOutlet]
 })
 export class DialogContainerComponent extends CdkDialogContainer {}

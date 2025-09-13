@@ -10,12 +10,20 @@ import * as ActivityActions from '@core/store/activity/activity.actions';
 import * as ActivitySelectors from '@core/store/activity/activity.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AvatarComponent } from '../../../static/components/avatar/avatar.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ActivityPipe } from '../../../static/pipes/activity.pipe';
 
 @Component({
     selector: 'app-activity-menu',
     templateUrl: './activity-menu.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatButton, MatTooltip, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, NgIf, NgFor, AvatarComponent, MatProgressSpinner, AsyncPipe, ActivityPipe]
 })
 export class ActivityMenuComponent implements OnInit {
   @Input() entityType!: EntityType;

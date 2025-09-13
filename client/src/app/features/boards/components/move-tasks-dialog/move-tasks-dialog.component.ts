@@ -10,12 +10,16 @@ import * as selectors from '@boards/store/groups/board-groups.selectors';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { DialogActionsDirective } from '../../../../static/directives/dialog-actions.directive';
+import { DialogCloseDirective } from '../../../../static/directives/dialog-close.directive';
 
 @Component({
     templateUrl: './move-tasks-dialog.component.html',
     styleUrls: ['./move-tasks-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgFor, MatButton, DialogActionsDirective, DialogCloseDirective, AsyncPipe]
 })
 export class MoveTasksDialogComponent implements OnInit {
   groups$!: Observable<BoardViewGroup[]>;

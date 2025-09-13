@@ -9,14 +9,11 @@ import { ProjectListItemComponent } from './components/project-list-item/project
 import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 
 @NgModule({
-  declarations: [
-    ProjectsViewComponent,
-    ProjectListComponent,
-    ProjectDetailViewComponent,
-    ProjectListItemComponent,
-    ProjectDetailComponent,
-  ],
-  imports: [SharedModule, StaticModule, ProjectsRoutingModule],
-  providers: [],
+    imports: [SharedModule, StaticModule, ProjectsRoutingModule, ProjectsViewComponent,
+        ProjectListComponent,
+        ProjectDetailViewComponent,
+        ProjectListItemComponent,
+        ProjectDetailComponent],
+    providers: [],
 })
 export class ProjectsModule {}

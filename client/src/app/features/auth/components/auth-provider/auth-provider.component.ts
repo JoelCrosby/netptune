@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
     selector: 'app-auth-provider',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: ``,
-    standalone: false
+    template: ``
 })
 export class AuthProviderComponent {}

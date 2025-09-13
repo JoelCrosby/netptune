@@ -7,7 +7,6 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UsersViewComponent } from './views/users-view/users-view.component';
 
 @NgModule({
-  declarations: [UserListComponent, UserListItemComponent, UsersViewComponent],
-  imports: [SharedModule, StaticModule, UsersRoutingModule],
+    imports: [SharedModule, StaticModule, UsersRoutingModule, UserListComponent, UserListItemComponent, UsersViewComponent],
 })
 export class UsersModule {}

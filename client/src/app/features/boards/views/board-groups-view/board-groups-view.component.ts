@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -21,13 +21,29 @@ import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { select, Store } from '@ngrx/store';
 import { from, Observable, of } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { BoardGroupsSearchComponent } from '../../components/board-groups-search/board-groups-search.component';
+import { BoardGroupUsersComponent } from '../../components/board-group-users/board-group-users.component';
+import { BoardGroupTagsComponent } from '../../components/board-group-tags/board-group-tags.component';
+import { BoardGroupsFlaggedComponent } from '../../components/board-groups-flagged/board-groups-flagged.component';
+import { BoardGroupsSelectionComponent } from '../../components/board-groups-selection/board-groups-selection.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ScrollShadowDirective } from '../../../../static/directives/scroll-shadow.directive';
+import { BoardGroupComponent } from '../../components/board-group/board-group.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { InlineEditInputComponent } from '../../../../static/components/inline-edit-input/inline-edit-input.component';
+import { MatIconButton } from '@angular/material/button';
+import { CreateBoardGroupComponent } from '../../components/create-board-group/create-board-group.component';
 
 @Component({
     templateUrl: './board-groups-view.component.html',
     styleUrls: ['./board-groups-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [],
-    standalone: false
+    imports: [PageContainerComponent, NgIf, PageHeaderComponent, BoardGroupsSearchComponent, BoardGroupUsersComponent, BoardGroupTagsComponent, BoardGroupsFlaggedComponent, BoardGroupsSelectionComponent, MatProgressSpinner, CdkDropList, ScrollShadowDirective, NgFor, BoardGroupComponent, CdkDrag, CdkDragHandle, MatIcon, MatTooltip, InlineEditInputComponent, MatIconButton, CreateBoardGroupComponent, AsyncPipe]
 })
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit

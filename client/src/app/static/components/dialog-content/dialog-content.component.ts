@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <div class="dialog-content">
     <ng-content />
-  </div>`,
-    standalone: false
+  </div>`
 })
 export class DialogContentComponent {}

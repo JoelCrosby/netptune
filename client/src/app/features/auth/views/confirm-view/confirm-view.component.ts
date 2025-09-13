@@ -11,12 +11,14 @@ import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     templateUrl: './confirm-view.component.html',
     styleUrls: ['./confirm-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, MatProgressSpinner, AsyncPipe]
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
   loading$!: Observable<boolean>;

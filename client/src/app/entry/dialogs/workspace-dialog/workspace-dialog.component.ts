@@ -7,12 +7,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
@@ -36,13 +31,20 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { FormInputComponent } from '../../../static/components/form-input/form-input.component';
+import { FormTextAreaComponent } from '../../../static/components/form-textarea/form-textarea.component';
+import { ColorSelectComponent } from '../../../static/components/color-select/color-select.component';
+import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { MatButton } from '@angular/material/button';
+import { DialogCloseDirective } from '../../../static/directives/dialog-close.directive';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-workspace-dialog',
     templateUrl: './workspace-dialog.component.html',
     styleUrls: ['./workspace-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, FormTextAreaComponent, ColorSelectComponent, DialogActionsDirective, MatButton, DialogCloseDirective, AsyncPipe]
 })
 export class WorkspaceDialogComponent implements OnInit, OnDestroy {
   isUniqueLoadingSubject$ = new Subject<boolean>();

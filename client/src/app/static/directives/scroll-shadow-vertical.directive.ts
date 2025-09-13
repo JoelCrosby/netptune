@@ -5,10 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 const TOP_CLASS = 'scroll-shadow-top';
 const BOTTOM_CLASS = 'scroll-shadow-bottom';
 
-@Directive({
-    selector: '[appScrollShadowVertical]',
-    standalone: false
-})
+@Directive({ selector: '[appScrollShadowVertical]' })
 export class ScrollShadowVericalDirective implements AfterViewInit, OnDestroy {
   topShadowEl!: Element;
   bottomShadowEl!: Element;

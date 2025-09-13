@@ -1,18 +1,22 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { FormInputComponent } from '../../../static/components/form-input/form-input.component';
+import { FormTextAreaComponent } from '../../../static/components/form-textarea/form-textarea.component';
+import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-project-dialog',
     templateUrl: './project-dialog.component.html',
     styleUrls: ['./project-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, FormTextAreaComponent, DialogActionsDirective, MatButton]
 })
 export class ProjectDialogComponent implements OnDestroy {
   currentWorkspace$ = this.store.select(selectCurrentWorkspace);

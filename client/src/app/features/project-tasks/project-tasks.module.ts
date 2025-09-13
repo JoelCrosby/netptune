@@ -9,13 +9,10 @@ import { ProjectTasksRoutingModule } from './project-tasks-routing.module';
 import { ProjectTasksViewComponent } from './views/project-tasks-view/project-tasks-view.component';
 
 @NgModule({
-  declarations: [
-    ProjectTasksViewComponent,
-    TaskListGroupComponent,
-    TaskListItemComponent,
-    TaskInlineComponent,
-    TaskListComponent,
-  ],
-  imports: [SharedModule, StaticModule, ProjectTasksRoutingModule],
+    imports: [SharedModule, StaticModule, ProjectTasksRoutingModule, ProjectTasksViewComponent,
+        TaskListGroupComponent,
+        TaskListItemComponent,
+        TaskInlineComponent,
+        TaskListComponent],
 })
 export class ProjectTasksModule {}

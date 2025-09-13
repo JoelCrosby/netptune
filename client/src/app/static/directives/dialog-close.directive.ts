@@ -42,8 +42,7 @@ function closeDialogVia<R>(
         '(click)': 'onButtonClick($event)',
         '[attr.aria-label]': 'ariaLabel || null',
         '[attr.type]': 'type',
-    },
-    standalone: false
+    }
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   @Input('aria-label') ariaLabel?: string;

@@ -8,8 +8,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
     <ng-content />
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardHeaderComponent {
   @HostBinding('class') className = 'netp-card-header';

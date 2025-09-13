@@ -7,7 +7,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
@@ -42,13 +42,31 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { ActivityMenuComponent } from '../../components/activity-menu/activity-menu.component';
+import { InlineTextAreaComponent } from '../../../static/components/inline-text-area/inline-text-area.component';
+import { UserSelectComponent } from '../../../static/components/user-select/user-select.component';
+import { AvatarComponent } from '../../../static/components/avatar/avatar.component';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AutocompleteChipsComponent } from '../../../static/components/autocomplete-chips/autocomplete-chips.component';
+import { CommentsListComponent } from '../../../static/components/comments-list/comments-list.component';
+import { EditorComponent } from '../../../static/components/editor/editor.component';
+import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FromNowPipe } from '../../../static/pipes/from-now.pipe';
+import { PrettyDatePipe } from '../../../static/pipes/pretty-date.pipe';
+import { TaskStatusPipe } from '../../../static/pipes/task-status.pipe';
 
 @Component({
     selector: 'app-task-detail-dialog',
     templateUrl: './task-detail-dialog.component.html',
     styleUrls: ['./task-detail-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, FormsModule, ReactiveFormsModule, MatIcon, ActivityMenuComponent, InlineTextAreaComponent, UserSelectComponent, AvatarComponent, MatChipListbox, MatChipOption, MatMenuTrigger, MatMenu, NgFor, MatMenuItem, MatIconButton, MatTooltip, AutocompleteChipsComponent, CommentsListComponent, EditorComponent, DialogActionsDirective, MatProgressSpinner, AsyncPipe, FromNowPipe, PrettyDatePipe, TaskStatusPipe]
 })
 export class TaskDetailDialogComponent
   implements OnInit, OnDestroy, AfterViewInit

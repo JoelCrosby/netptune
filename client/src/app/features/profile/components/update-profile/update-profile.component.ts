@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { select, Store } from '@ngrx/store';
 import {
@@ -15,13 +15,17 @@ import {
 import * as ProfileSelectors from '@profile/store/profile.selectors';
 import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { ImageCropperComponent } from '../../../../static/components/image-cropper/image-cropper.component';
 
 @Component({
     selector: 'app-update-profile',
     templateUrl: './update-profile.component.html',
     styleUrls: ['./update-profile.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton, NgIf, ImageCropperComponent, AsyncPipe]
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
   formGroup = this.fb.group({

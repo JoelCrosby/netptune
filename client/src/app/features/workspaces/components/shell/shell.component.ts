@@ -17,15 +17,20 @@ import {
   selectAllWorkspaces,
   selectCurrentWorkspaceIdentifier,
 } from '@core/store/workspaces/workspaces.selectors';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { WorkspaceSelectComponent } from '../workspace-select/workspace-select.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { AvatarComponent } from '../../../../static/components/avatar/avatar.component';
 
 @Component({
     templateUrl: './shell.component.html',
     styleUrls: ['./shell.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, WorkspaceSelectComponent, NgFor, RouterLinkActive, RouterLink, MatTooltip, MatIcon, AvatarComponent, RouterOutlet, AsyncPipe]
 })
 export class ShellComponent implements OnInit {
   @ViewChild(MatSidenav) sideNav!: MatSidenav;

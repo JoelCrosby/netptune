@@ -5,16 +5,23 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
+import { NgIf, NgFor } from '@angular/common';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { FormInputComponent } from '../form-input/form-input.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { FromNowPipe } from '../../pipes/from-now.pipe';
 
 @Component({
     selector: 'app-comments-list',
     templateUrl: './comments-list.component.html',
     styleUrls: ['./comments-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, AvatarComponent, FormsModule, ReactiveFormsModule, FormInputComponent, NgFor, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, MatMenuItem, FromNowPipe]
 })
 export class CommentsListComponent {
   @Input() user!: UserResponse | null | undefined;

@@ -17,13 +17,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { dataURItoBlob } from '@core/util/blob';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-image-cropper',
     templateUrl: './image-cropper.component.html',
     styleUrls: ['./image-cropper.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [LyImageCropper, NgIf, MatButton, MatTooltip, MatIcon]
 })
 export class ImageCropperComponent implements OnInit, AfterViewInit {
   @Input() src!: string;

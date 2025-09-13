@@ -10,12 +10,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-form-input',
     templateUrl: './form-input.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, MatIcon]
 })
 export class FormInputComponent implements ControlValueAccessor {
   @Input() label!: string;

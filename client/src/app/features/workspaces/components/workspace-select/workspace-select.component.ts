@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
@@ -18,6 +18,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AutofocusDirective } from '../../../../static/directives/autofocus.directive';
+import { RouterLink } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -25,7 +28,7 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
     templateUrl: './workspace-select.component.html',
     styleUrls: ['./workspace-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, FormsModule, AutofocusDirective, ReactiveFormsModule, NgFor, RouterLink, AsyncPipe]
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;
