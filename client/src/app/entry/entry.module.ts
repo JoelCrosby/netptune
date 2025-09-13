@@ -12,16 +12,13 @@ import { StaticModule } from '@static/static.module';
 import { ActivityMenuComponent } from './components/activity-menu/activity-menu.component';
 
 @NgModule({
-  declarations: [
-    ProjectDialogComponent,
-    ConfirmDialogComponent,
-    CreateTaskDialogComponent,
-    TaskDetailDialogComponent,
-    InviteDialogComponent,
-    WorkspaceDialogComponent,
-    BoardGroupDialogComponent,
-    ActivityMenuComponent,
-  ],
-  imports: [CommonModule, SharedModule, StaticModule],
+    imports: [CommonModule, SharedModule, StaticModule, ProjectDialogComponent,
+        ConfirmDialogComponent,
+        CreateTaskDialogComponent,
+        TaskDetailDialogComponent,
+        InviteDialogComponent,
+        WorkspaceDialogComponent,
+        BoardGroupDialogComponent,
+        ActivityMenuComponent],
 })
 export class EntryModule {}

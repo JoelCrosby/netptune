@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
@@ -36,13 +36,18 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'app-task-inline',
     templateUrl: './task-inline.component.html',
     styleUrls: ['./task-inline.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, MatButton, MatIcon, MatCheckbox, FormsModule, ReactiveFormsModule, MatInput]
 })
 export class TaskInlineComponent implements OnInit, OnDestroy {
   @Input() status: TaskStatus = TaskStatus.new;

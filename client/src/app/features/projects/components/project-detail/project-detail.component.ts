@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -19,13 +19,17 @@ import {
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { FormTextAreaComponent } from '../../../../static/components/form-textarea/form-textarea.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-project-detail',
     templateUrl: './project-detail.component.html',
     styleUrls: ['./project-detail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextAreaComponent, MatButton, AsyncPipe]
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   project$!: Observable<ProjectViewModel | null | undefined>;

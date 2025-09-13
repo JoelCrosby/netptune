@@ -7,7 +7,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <div class="form-error">
       <ng-content />
     </div>
-  `,
-    standalone: false
+  `
 })
 export class FormErrorComponent {}

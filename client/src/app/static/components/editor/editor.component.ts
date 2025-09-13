@@ -42,8 +42,7 @@ import { firstValueFrom } from 'rxjs';
             useExisting: forwardRef(() => EditorComponent),
             multi: true,
         },
-    ],
-    standalone: false
+    ]
 })
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
   @ViewChild('editorJs', { static: true }) el!: ElementRef;

@@ -10,13 +10,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
+import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +27,7 @@ import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
     templateUrl: './user-select.component.html',
     styleUrls: ['./user-select.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgFor, AvatarComponent, NgIf, FormsModule, AutofocusDirective, ReactiveFormsModule, AsyncPipe]
 })
 export class UserSelectComponent implements OnInit, OnChanges {
   @ViewChild('dropdown') dropdownElementRef!: ElementRef;

@@ -6,8 +6,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
     <ng-content name="app-card-header-image"/>
     <ng-content name="app-card-header"/>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent {
   @HostBinding('class') className = 'netp-card';

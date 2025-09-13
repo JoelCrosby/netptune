@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import {
   selectLoginLoading,
@@ -8,13 +8,19 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatProgressBar, FormInputComponent, MatAnchor, RouterLink, MatButton, MatDivider, AsyncPipe]
 })
 export class LoginComponent implements OnDestroy {
   authLoading$: Observable<boolean>;

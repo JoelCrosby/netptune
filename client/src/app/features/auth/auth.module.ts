@@ -14,21 +14,19 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { AuthProviderComponent } from './components/auth-provider/auth-provider.component';
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    RegisterComponent,
-    ConfirmViewComponent,
-    RequestPasswordResetComponent,
-    ResetPasswordComponent,
-    AuthProviderComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
-    StaticModule,
-    AuthRoutingModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule,
+        StaticModule,
+        AuthRoutingModule,
+        LoginComponent,
+        RegisterComponent,
+        ConfirmViewComponent,
+        RequestPasswordResetComponent,
+        ResetPasswordComponent,
+        AuthProviderComponent,
+    ],
 })
 export class AuthModule {}

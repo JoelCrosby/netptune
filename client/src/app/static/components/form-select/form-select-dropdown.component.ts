@@ -7,6 +7,7 @@ import {
   ViewChild,
   HostListener,
 } from '@angular/core';
+import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
 @Component({
     selector: 'app-form-select-dropdown',
@@ -16,7 +17,7 @@ import {
     </ng-template>
   `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [ɵɵCdkPortal]
 })
 export class FormSelectDropdownComponent {
   @Input() reference!: HTMLElement;

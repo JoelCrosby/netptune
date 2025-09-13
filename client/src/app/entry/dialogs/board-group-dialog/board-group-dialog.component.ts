@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
+import { FormInputComponent } from '../../../static/components/form-input/form-input.component';
+import { DialogActionsDirective } from '../../../static/directives/dialog-actions.directive';
+import { MatButton } from '@angular/material/button';
+import { DialogCloseDirective } from '../../../static/directives/dialog-close.directive';
 
 export interface BoardGroupDialogData {
   boardId: number;
@@ -13,7 +17,7 @@ export interface BoardGroupDialogData {
     selector: 'app-board-group-dialog',
     templateUrl: './board-group-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, DialogActionsDirective, MatButton, DialogCloseDirective]
 })
 export class BoardGroupDialogComponent {
   form = this.fb.nonNullable.group({

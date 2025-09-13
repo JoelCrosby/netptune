@@ -4,8 +4,7 @@ import { ActivityType } from '@core/models/view-models/activity-view-model';
 
 @Pipe({
     name: 'activityType',
-    pure: true,
-    standalone: false
+    pure: true
 })
 export class ActivityTypePipe implements PipeTransform {
   transform(value: ActivityType): string {

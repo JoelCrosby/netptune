@@ -5,10 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 const LEFT_CLASS = 'scroll-shadow-left';
 const RIGHT_CLASS = 'scroll-shadow-right';
 
-@Directive({
-    selector: '[appScrollShadow]',
-    standalone: false
-})
+@Directive({ selector: '[appScrollShadow]' })
 export class ScrollShadowDirective implements AfterViewInit, OnDestroy {
   leftShadowEl!: Element;
   rightShadowEl!: Element;

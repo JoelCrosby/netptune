@@ -11,13 +11,16 @@ import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, first, map } from 'rxjs/operators';
+import { RouterLink } from '@angular/router';
+import { CardListItemComponent } from '../../../../static/components/card-list-item/card-list-item.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-project-list-item',
     templateUrl: './project-list-item.component.html',
     styleUrls: ['./project-list-item.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [RouterLink, CardListItemComponent, AsyncPipe]
 })
 export class ProjectListItemComponent implements OnInit {
   @Input() project!: ProjectViewModel;

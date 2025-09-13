@@ -18,8 +18,7 @@ import { FormSelectService } from './form-select.service';
         class: 'nept-form-select-option',
     },
     template: `<ng-content />`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {
   @Input() value!: TValue;

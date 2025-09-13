@@ -4,8 +4,7 @@ import { entityTypeToString } from '@core/transforms/entity-type';
 
 @Pipe({
     name: 'entityType',
-    pure: true,
-    standalone: false
+    pure: true
 })
 export class EntityTypePipe implements PipeTransform {
   transform(value: EntityType): string {

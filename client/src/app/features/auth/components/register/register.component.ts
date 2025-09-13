@@ -4,20 +4,25 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { first, map, takeUntil, tap } from 'rxjs/operators';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { FormErrorComponent } from '../../../../static/components/form-error/form-error.component';
+import { MatAnchor, MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatProgressBar, FormInputComponent, FormErrorComponent, MatAnchor, RouterLink, MatButton, AsyncPipe]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   authLoading$: Observable<boolean>;

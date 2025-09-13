@@ -3,8 +3,7 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 @Component({
     selector: 'app-card-content',
     template: '<ng-content/>',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardContentComponent {
   @HostBinding('class') className = 'netp-card-content';

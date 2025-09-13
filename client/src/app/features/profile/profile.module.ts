@@ -12,18 +12,16 @@ import { ProfileViewComponent } from './views/profile-view/profile-view.componen
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
-  declarations: [
-    UpdateProfileComponent,
-    ProfileViewComponent,
-    ChangePasswordComponent,
-  ],
-  imports: [
-    SharedModule,
-    StaticModule,
-    StoreModule.forFeature('profile', profileReducer),
-    EffectsModule.forFeature([ProfileEffects]),
-    ProfileRoutingModule,
-  ],
-  providers: [ProfileService],
+    imports: [
+        SharedModule,
+        StaticModule,
+        StoreModule.forFeature('profile', profileReducer),
+        EffectsModule.forFeature([ProfileEffects]),
+        ProfileRoutingModule,
+        UpdateProfileComponent,
+        ProfileViewComponent,
+        ChangePasswordComponent,
+    ],
+    providers: [ProfileService],
 })
 export class ProfileModule {}

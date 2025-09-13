@@ -7,13 +7,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import * as Actions from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
@@ -33,13 +27,21 @@ import {
   Subject,
 } from 'rxjs';
 import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
+import { FormInputComponent } from '../../../../static/components/form-input/form-input.component';
+import { FormSelectComponent } from '../../../../static/components/form-select/form-select.component';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { FormSelectOptionComponent } from '../../../../static/components/form-select/form-select-option.component';
+import { ColorSelectComponent } from '../../../../static/components/color-select/color-select.component';
+import { DialogActionsDirective } from '../../../../static/directives/dialog-actions.directive';
+import { MatButton } from '@angular/material/button';
+import { DialogCloseDirective } from '../../../../static/directives/dialog-close.directive';
 
 @Component({
     selector: 'app-create-board',
     templateUrl: './create-board.component.html',
     styleUrls: ['./create-board.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, FormInputComponent, FormSelectComponent, NgFor, FormSelectOptionComponent, ColorSelectComponent, DialogActionsDirective, MatButton, DialogCloseDirective, AsyncPipe]
 })
 export class CreateBoardComponent implements OnInit, AfterViewInit {
   isUniqueLoading$ = new Subject<boolean>();

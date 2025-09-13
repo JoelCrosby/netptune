@@ -4,13 +4,17 @@ import {
   AssigneeViewModel,
   BoardViewTask,
 } from '@core/models/view-models/board-view';
+import { CardComponent } from '../../../../static/components/card/card.component';
+import { NgFor, NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { AvatarComponent } from '../../../../static/components/avatar/avatar.component';
 
 @Component({
     selector: 'app-board-group-card',
     templateUrl: './board-group-card.component.html',
     styleUrls: ['./board-group-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [CardComponent, NgFor, NgIf, MatIcon, AvatarComponent]
 })
 export class BoardGroupCardComponent {
   @Input() task!: Selected<BoardViewTask>;

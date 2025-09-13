@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PageContainerComponent } from '../../../../static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '../../../../static/components/page-header/page-header.component';
+import { SettingsComponent } from '../../components/settings/settings.component';
+import { TagsComponent } from '../../components/tags/tags.component';
 
 @Component({
     templateUrl: './settings-view.component.html',
     styleUrls: ['./settings-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [PageContainerComponent, PageHeaderComponent, SettingsComponent, TagsComponent]
 })
 export class SettingsViewComponent {}

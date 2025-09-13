@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'avatarFontSize',
-    pure: true,
-    standalone: false
+    pure: true
 })
 export class AvatarFontSizePipe implements PipeTransform {
   transform(value: string | number | undefined | null): number {

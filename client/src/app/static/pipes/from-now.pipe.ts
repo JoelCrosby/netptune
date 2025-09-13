@@ -6,8 +6,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
 @Pipe({
     name: 'fromNow',
-    pure: true,
-    standalone: false
+    pure: true
 })
 @Injectable()
 export class FromNowPipe implements PipeTransform {

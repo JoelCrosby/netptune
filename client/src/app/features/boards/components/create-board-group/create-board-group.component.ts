@@ -4,13 +4,15 @@ import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { Store } from '@ngrx/store';
 import { first, tap } from 'rxjs/operators';
+import { MatRipple } from '@angular/material/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-create-board-group',
     templateUrl: './create-board-group.component.html',
     styleUrls: ['./create-board-group.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatRipple, MatIcon]
 })
 export class CreateBoardGroupComponent {
   constructor(

@@ -5,13 +5,15 @@ import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.s
 import { Selected } from '@core/models/selected';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { AvatarComponent } from '../../../../static/components/avatar/avatar.component';
 
 @Component({
     selector: 'app-board-group-users',
     templateUrl: './board-group-users.component.html',
     styleUrls: ['./board-group-users.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgFor, AvatarComponent, AsyncPipe]
 })
 export class BoardGroupUsersComponent implements OnInit {
   users$!: Observable<Selected<AppUser>[]>;

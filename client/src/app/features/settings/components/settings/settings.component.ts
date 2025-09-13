@@ -4,13 +4,24 @@ import { SettingsState } from '@core/store/settings/settings.model';
 import { selectSettings } from '@core/store/settings/settings.selectors';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { FormSelectComponent } from '../../../../static/components/form-select/form-select.component';
+import { FormsModule } from '@angular/forms';
+import { FormSelectOptionComponent } from '../../../../static/components/form-select/form-select-option.component';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgIf,
+        FormSelectComponent,
+        FormsModule,
+        NgFor,
+        FormSelectOptionComponent,
+        AsyncPipe,
+    ],
 })
 export class SettingsComponent implements OnInit {
   settings$!: Observable<SettingsState>;

@@ -11,14 +11,11 @@ import { CreateWorkspaceListItemComponent } from './components/create-workspace-
 import { WorkspaceSelectComponent } from './components/workspace-select/workspace-select.component';
 
 @NgModule({
-  declarations: [
-    WorkspaceListComponent,
-    ShellComponent,
-    WorkspacesViewComponent,
-    WorkspaceListItemComponent,
-    CreateWorkspaceListItemComponent,
-    WorkspaceSelectComponent,
-  ],
-  imports: [SharedModule, StaticModule, WorkspacesRoutingModule],
+    imports: [SharedModule, StaticModule, WorkspacesRoutingModule, WorkspaceListComponent,
+        ShellComponent,
+        WorkspacesViewComponent,
+        WorkspaceListItemComponent,
+        CreateWorkspaceListItemComponent,
+        WorkspaceSelectComponent],
 })
 export class WorkspacesModule {}
