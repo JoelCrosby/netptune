@@ -118,10 +118,6 @@ main {
   }
 }
 
-.app-menu-link {
-  color: rgba(255, 255, 255, 1);
-}
-
 .app-menu-link:hover {
   color: rgba(255, 255, 255, 1) !important;
   background-color: rgba(var(--side-bar-active-rgb), .5) !important;
@@ -129,11 +125,13 @@ main {
 
 .app-sidenav {
   background-color: var(--side-bar);
+  border-right: 1px solid var(--border);
 }
 
 .app-menu-link.router-link-active {
   background-color: var(--side-bar-active);
-  color: rgba(255, 255, 255, 1);
+  color: var(--side-bar-active-foreground);
+  fill: var(--side-bar-active-foreground);
 }
 
 .app-menu-link.router-link-active:hover,
@@ -143,7 +141,7 @@ main {
 }
 
 .app-menu-collapse {
-  background-color: var(--side-bar-active);
+  border-top: 1px solid var(--border);
 
 }
 

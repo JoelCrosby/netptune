@@ -29,12 +29,17 @@
 @use 'styles/controls/activity-menu.scss';
 @use 'styles/controls/cards';
 
+:root {
+  --border-radius: 8px;
+}
+
 .light-theme {
   --background-rgb: 255, 255, 255;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 0, 0, 0;
   --foreground: rgba(var(--foreground-rgb), 0.87);
-  --seconday-background: rgba(var(--foreground-rgb), 0.04);
+  --seconday-background: rgba(255, 255, 255, 1);
+  --dialog-background: rgba(255, 255, 255);
 
   --scrollbar-foreground: rgba(0, 0, 0, .2);
 
@@ -51,6 +56,7 @@
 
   --side-bar-active-rgb: 52, 50, 61;
   --side-bar-active: rgba(var(--side-bar-active-rgb));
+  --side-bar-active-foreground: rgba(255, 255, 255, 1);
 
   --board-group-rgb: 248, 248, 248;
   --board-group: rgba(var(--board-group-rgb));
@@ -86,12 +92,14 @@
 }
 
 .dark-theme {
-  --background-rgb: 39, 39, 39;
+  --background-rgb: 0, 0, 0;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
   --foreground: rgba(var(--foreground-rgb));
+  --seconday-background: rgba(11, 11, 11, 1);
+  --dialog-background: rgba(10, 10, 10, 1);
 
-  --scrollbar-foreground: rgba(0, 0, 0, .2);
+  --scrollbar-foreground: rgba(255, 255, 255, .2);
 
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));
@@ -101,22 +109,22 @@
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(255, 82, 82));
 
-  --side-bar-rgb: 28, 27, 33;
+  --side-bar-rgb: 12, 12, 12;
   --side-bar: rgba(var(--side-bar-rgb));
 
-  --side-bar-active-rgb: 52, 50, 61;
+  --side-bar-active-rgb: 34, 34, 34;
   --side-bar-active: rgba(var(--side-bar-active-rgb));
+  --side-bar-active-foreground: rgba(255, 255, 255, 1);
 
-  --board-group-rgb: 58, 58, 58;
+  --board-group-rgb: 10 10 10;
   --board-group: rgba(var(--board-group-rgb));
 
-  --border: rgba(255, 255, 255, .12);
+  --border: rgba(41, 41, 41, 1);
   --status-bar: #000;
-  --background: #272727;
   --app-bar: #272727;
   --hover: rgba(255, 255, 255, .06);
 
-  --card: #303030;
+  --card: rgb(26, 26, 26);
   --card-warn: #472d2d;
   --card-warn-hover: #694040;
   --card-selected: #3f3454;
