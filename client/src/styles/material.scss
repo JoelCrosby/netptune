@@ -71,6 +71,12 @@ div.mat-mdc-autocomplete-panel {
   border-top-right-radius: 4px !important;
 }
 
+.mat-mdc-menu-panel {
+  background-color: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--border-radius) !important;
+}
+
 // Buttons
 
 .mat-mdc-button {

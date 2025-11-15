@@ -159,8 +159,8 @@
 }
 
 .link-tool__content--rendered {
-  border: 1px solid var(--editor-link-border);
-  background-color: var(--editor-link-background);
+  border: 1px solid var(--editor-link-border) !important;
+  background-color: var(--editor-link-background) !important;
   box-shadow: none;
 }
 

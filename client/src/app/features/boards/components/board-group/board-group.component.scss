@@ -9,10 +9,13 @@
   display: flex;
   flex-direction: column;
   padding: 0;
-  border-radius: .3rem;
+  border-radius: var(--border-radius);
   height: 100%;
   position: relative;
   background-color: var(--board-group);
+  border-color: var(--border);
+  border-width: 1px;
+  border-style: solid;
 }
 
 .create-task {
