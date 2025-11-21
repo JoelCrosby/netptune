@@ -2,6 +2,7 @@ import {
   ApplicationRef,
   enableProdMode,
   importProvidersFrom,
+  provideZoneChangeDetection
 } from '@angular/core';
 import {
   bootstrapApplication,
@@ -31,7 +32,7 @@ const addProfiling = (module: ApplicationRef): void => {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
+    provideZoneChangeDetection(),importProvidersFrom(
       BrowserModule,
       // core & shared
       CoreModule,
