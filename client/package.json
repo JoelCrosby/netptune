@@ -8,7 +8,8 @@
     "build:stats": "ng build --configuration stats --stats-json",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
-    "update": "ng update"
+    "update": "ng update",
+    "prettier": "prettier --write \"src/**/*.{ts,html,scss}\""
   },
   "private": true,
   "dependencies": {
@@ -70,7 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",
-    "eslint-config-prettier": "^9.1.2",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
     "typescript": "5.9.2"
