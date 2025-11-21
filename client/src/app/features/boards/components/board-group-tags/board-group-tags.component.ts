@@ -20,7 +20,7 @@ import {
 } from '@angular/material/menu';
 import { MatBadge } from '@angular/material/badge';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
@@ -38,12 +38,10 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatIcon,
     MatMenu,
     MatMenuContent,
-    NgIf,
-    NgFor,
     MatCheckbox,
     MatProgressSpinner,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class BoardGroupTagsComponent implements OnInit {
   private store = inject(Store);

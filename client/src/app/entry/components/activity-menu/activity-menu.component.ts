@@ -13,7 +13,7 @@ import {
   MatMenuContent,
 } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
@@ -29,13 +29,11 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     MatIcon,
     MatMenu,
     MatMenuContent,
-    NgIf,
-    NgFor,
     AvatarComponent,
     MatProgressSpinner,
     AsyncPipe,
-    ActivityPipe,
-  ],
+    ActivityPipe
+],
 })
 export class ActivityMenuComponent implements OnInit {
   private store = inject(Store);

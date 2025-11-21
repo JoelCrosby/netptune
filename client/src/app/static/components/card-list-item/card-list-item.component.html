@@ -14,65 +14,70 @@
   </app-card-content>
 
   <app-card-actions>
-    <ng-container *ngFor="let action of actions(); first as isFirst">
-      <ng-container *ngIf="action.isLink; else elseTemplate">
-        <ng-container *ngIf="isFirst; else elseTemplate">
+    @for (action of actions(); track action; let isFirst = $first) {
+      @if (action.isLink) {
+        @if (isFirst) {
           <a
             mat-flat-button
             color="primary"
             class="action-button"
             type="button"
             [routerLink]="action.routerLink"
-          >
-            <mat-icon *ngIf="action.icon" class="action-mat-icon">
-              {{ action.icon }}
-            </mat-icon>
+            >
+            @if (action.icon) {
+              <mat-icon class="action-mat-icon">
+                {{ action.icon }}
+              </mat-icon>
+            }
             {{ action.label }}
           </a>
-        </ng-container>
-        <ng-template #elseTemplate>
+        } @else {
           <a
             mat-button
             color="primary"
             class="action-button"
             type="button"
             [routerLink]="action.routerLink"
-          >
-            <mat-icon *ngIf="action.icon" class="action-mat-icon">
-              {{ action.icon }}
-            </mat-icon>
+            >
+            @if (action.icon) {
+              <mat-icon class="action-mat-icon">
+                {{ action.icon }}
+              </mat-icon>
+            }
             {{ action.label }}
           </a>
-        </ng-template>
-      </ng-container>
-      <ng-template #elseTemplate>
-        <ng-container *ngIf="isFirst; else elseTemplate">
+        }
+      } @else {
+        @if (isFirst) {
           <button
             mat-flat-button
             color="primary"
             class="action-button"
             (click)="action.click && action.click()"
-          >
-            <mat-icon *ngIf="action.icon" class="action-mat-icon">
-              {{ action.icon }}
-            </mat-icon>
+            >
+            @if (action.icon) {
+              <mat-icon class="action-mat-icon">
+                {{ action.icon }}
+              </mat-icon>
+            }
             {{ action.label }}
           </button>
-        </ng-container>
-        <ng-template #elseTemplate>
+        } @else {
           <button
             mat-button
             color="primary"
             class="action-button"
             (click)="action.click && action.click()"
-          >
-            <mat-icon *ngIf="action.icon" class="action-mat-icon">
-              {{ action.icon }}
-            </mat-icon>
+            >
+            @if (action.icon) {
+              <mat-icon class="action-mat-icon">
+                {{ action.icon }}
+              </mat-icon>
+            }
             {{ action.label }}
           </button>
-        </ng-template>
-      </ng-template>
-    </ng-container>
+        }
+      }
+    }
   </app-card-actions>
 </app-card>

@@ -23,7 +23,7 @@ import { Observable, Subject } from 'rxjs';
 import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { MatButton } from '@angular/material/button';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-profile',
@@ -35,9 +35,8 @@ import { NgIf, AsyncPipe } from '@angular/common';
     ReactiveFormsModule,
     FormInputComponent,
     MatButton,
-    NgIf,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class UpdateProfileComponent implements OnInit, OnDestroy {
   private store = inject(Store);

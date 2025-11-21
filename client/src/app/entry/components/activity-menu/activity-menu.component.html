@@ -4,12 +4,12 @@
   class="board-filter-button"
   [matMenuTriggerFor]="menu"
   (click)="onClicked()"
->
+  >
   <mat-icon
     aria-hidden="false"
     aria-label="Show activity"
     class="material-icons-outlined"
-  >
+    >
     timeline
   </mat-icon>
 </button>
@@ -19,40 +19,38 @@
   class="activity-menu"
   panelClass="activity-menu"
   (closed)="onClosed()"
->
+  >
   <ng-template matMenuContent>
-    <ng-container *ngIf="loaded$ | async; else elseTemplate">
-      <ng-container *ngIf="activities$ | async as activities">
-        <ng-container *ngIf="activities.length; else elseTemplate">
-          <div
-            class="activity-menu-item"
-            *ngFor="let activity of activities; trackBy: trackByActivity"
-          >
-            <app-avatar
-              [imageUrl]="activity.userPictureUrl"
-              [name]="activity.userUsername"
-              size="24"
-            >
-            </app-avatar>
-            <span class="user"> {{ activity.userUsername }} </span>
-            <span class="label"> {{ activity | activity }} </span>
-          </div>
-        </ng-container>
-
-        <ng-template #elseTemplate>
+    @if (loaded$ | async) {
+      @if (activities$ | async; as activities) {
+        @if (activities.length) {
+          @for (activity of activities; track trackByActivity($index, activity)) {
+            <div
+              class="activity-menu-item"
+              >
+              <app-avatar
+                [imageUrl]="activity.userPictureUrl"
+                [name]="activity.userUsername"
+                size="24"
+                >
+              </app-avatar>
+              <span class="user"> {{ activity.userUsername }} </span>
+              <span class="label"> {{ activity | activity }} </span>
+            </div>
+          }
+        } @else {
           <div class="no-activity-message">
             <mat-icon class="material-icons-outlined"> timeline </mat-icon>
             <span> There is no activity </span>
             <p>Activity on the item will appear here</p>
           </div>
-        </ng-template>
-      </ng-container>
-    </ng-container>
-
-    <ng-template #elseTemplate>
+        }
+      }
+    } @else {
       <div class="loading">
         <mat-spinner diameter="24" />
       </div>
-    </ng-template>
+    }
+
   </ng-template>
 </mat-menu>
