@@ -3,7 +3,7 @@
     <mat-label> {{ label() }} </mat-label>
     <div class="form-control-input autocomplete-chips">
       <mat-chip-grid #chipList>
-        @for (option of selected; track option) {
+        @for (option of selected(); track option) {
           <mat-chip-row
             [removable]="removable"
             (removed)="remove(option)"
@@ -17,7 +17,7 @@
         <input
           #input
           class="form-control"
-          [placeholder]="selected?.length ? '' : placeholder()"
+          [placeholder]="selected()?.length ? '' : placeholder()"
           [formControl]="formCtrl"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"

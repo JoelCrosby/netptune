@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
 import { MatTooltip } from '@angular/material/tooltip';
 
@@ -16,7 +16,7 @@ import { PxPipe } from '../../pipes/px.pipe';
 export class AvatarComponent {
   readonly name = input<string | null>();
   readonly size = input<(string | number | null) | undefined>('32');
-  @Input() imageUrl?: string | null;
+  readonly imageUrl = input<string | null>();
   readonly border = input(false);
   readonly tooltip = input(true);
   readonly borderRadius = input<string | number>('50%');

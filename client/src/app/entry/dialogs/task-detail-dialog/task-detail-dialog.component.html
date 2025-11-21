@@ -1,4 +1,4 @@
-@if (task$ | async; as task) {
+@if (task(); as task) {
 <div class="task-detail-dialog">
   <form [formGroup]="formGroup">
     <div class="detail-title">
@@ -27,7 +27,7 @@
           <h4>Assignees</h4>
           <app-user-select
             [value]="task.assignees"
-            [options]="users$ | async"
+            [options]="users()"
             (selectChange)="selectAssignee($event)"
           />
         </div>
@@ -59,7 +59,7 @@
           </mat-chip-listbox>
           <mat-menu #projectsMenu="matMenu">
             <small>Change Project</small>
-            @for (project of projects$ | async; track project) {
+            @for (project of projects(); track project) {
             <button mat-menu-item (click)="selectProject(project.id)">
               {{ project.name }}
             </button>
@@ -97,7 +97,7 @@
           <app-autocomplete-chips
             class="tags-autocomplete"
             placeholder="Add a Tag..."
-            [options]="tags$ | async"
+            [options]="tags()"
             [selected]="task.tags"
             (selectionChanged)="onTagsSelectionChanged($event)"
           >
@@ -105,10 +105,10 @@
         </div>
         <div class="detail-list-item comments">
           <h4>Comments</h4>
-          @if (onEditorLoaded$ | async) {
+          @if (editorLoaded()) {
           <app-comments-list
-            [user]="user$ | async"
-            [comments]="comments$ | async"
+            [user]="user()"
+            [comments]="comments()"
             (commentSubmit)="onCommentSubmit($event)"
             (deleteComment)="onDeleteCommentClicked($event)"
           >

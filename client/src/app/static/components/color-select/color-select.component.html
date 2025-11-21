@@ -1,7 +1,7 @@
 <div class="nept-form-control">
-  @if (label) {
+  @if (label()) {
   <label [for]="ngControl?.name" class="form-control-label">
-    {{ label }}
+    {{ label() }}
   </label>
   }
 
@@ -34,7 +34,7 @@
     }
   </div>
 
-  @if (hint) {
-  <small class="form-control-hint"> {{ hint }} </small>
+  @if (hint()) {
+  <small class="form-control-hint"> {{ hint() }} </small>
   }
 </div>

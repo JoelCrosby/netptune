@@ -4,11 +4,12 @@ import {
   Directive,
   OnInit,
   OnChanges,
-  Input,
   ElementRef,
   SimpleChanges,
   inject,
-  input
+  input,
+  signal,
+  effect,
 } from '@angular/core';
 
 function getClosestDialog<TResult, TComponent>(
@@ -50,9 +51,14 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _dialog = inject(Dialog);
 
-  readonly ariaLabel = input<string>(undefined, { alias: "aria-label" });
+  readonly ariaLabel = input<string>(undefined, { alias: 'aria-label' });
   readonly type = input<'submit' | 'button' | 'reset'>('button');
-  @Input() dialogResult?: TResult;
+  readonly dialogResult = input<TResult>();
+  readonly internalDialogResult = signal<TResult | undefined>(undefined);
+
+  constructor() {
+    effect(() => this.internalDialogResult.set(this.dialogResult()));
+  }
 
   ngOnInit() {
     if (!this.dialogRef) {
@@ -69,7 +75,7 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
       changes['_matDialogClose'] || changes['_matDialogCloseResult'];
 
     if (proxiedChange) {
-      this.dialogResult = proxiedChange.currentValue;
+      this.internalDialogResult.set(proxiedChange.currentValue);
     }
   }
 
@@ -79,7 +85,7 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
     closeDialogVia(
       this.dialogRef,
       event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse',
-      this.dialogResult
+      this.internalDialogResult()
     );
   }
 }

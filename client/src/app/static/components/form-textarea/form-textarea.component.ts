@@ -2,11 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   inject,
   input,
+  model,
   output,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
@@ -21,18 +21,17 @@ import { MatIcon } from '@angular/material/icon';
 export class FormTextAreaComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { self: true, optional: true });
 
-  @Input() label!: string;
-  @Input() disabled!: boolean;
-  @Input() icon!: string;
-  @Input() prefix!: string;
+  readonly label = input<string>();
+  readonly disabled = model<boolean>();
+  readonly icon = input<string>();
+  readonly prefix = input<string>();
   readonly placeholder = input<string | null>(null);
-  @Input() hint: string | null = null;
+  readonly hint = input<string | null>(null);
   readonly minLength = input<string | null>(null);
   readonly maxLength = input<string | null>(null);
   readonly rows = input('2');
 
   readonly input = viewChild.required<ElementRef>('input');
-
   readonly submitted = output<string>();
 
   value: string | number = '';
@@ -71,6 +70,6 @@ export class FormTextAreaComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
   }
 }

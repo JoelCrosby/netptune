@@ -1,40 +1,56 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, first, tap, takeUntil } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-inline-edit-input',
-    templateUrl: './inline-edit-input.component.html',
-    styleUrls: ['./inline-edit-input.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, AsyncPipe]
+  selector: 'app-inline-edit-input',
+  templateUrl: './inline-edit-input.component.html',
+  styleUrls: ['./inline-edit-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, ReactiveFormsModule],
+  host: {
+    '[class.edit-active]': 'isEditActive()',
+  },
 })
 export class InlineEditInputComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private cd = inject(ChangeDetectorRef);
   private document = inject(DocumentService);
 
-  @Input() value!: string | null | undefined;
+  readonly value = input<string | null>();
   readonly size = input<number>();
   readonly activeBorder = input<boolean | string | null>();
 
   readonly input = viewChild.required<ElementRef>('input');
-  @HostBinding('class.edit-active') editActiveClass!: boolean;
   readonly submitted = output<string>();
 
   control = new FormControl('', {
     updateOn: 'blur',
   });
 
-  isEditActiveSubject = new BehaviorSubject<boolean>(false);
-  isEditActive$ = this.isEditActiveSubject.pipe(
-    tap((value) => (this.editActiveClass = value))
-  );
-
+  isEditActive = signal(false);
   onDestroy$ = new Subject<void>();
+
+  constructor() {
+    effect(() =>
+      this.control.setValue(this.value() ?? '', { emitEvent: false })
+    );
+  }
 
   ngOnInit() {
     this.document.documentClicked().subscribe({
@@ -55,35 +71,34 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
   }
 
   handleDocumentClick(target: EventTarget) {
-    this.isEditActive$.pipe(first(), debounceTime(100)).subscribe({
-      next: (isEditActive) => {
-        if (isEditActive) {
-          if (!this.elementRef.nativeElement.contains(target)) {
-            return this.isEditActiveSubject.next(false);
-          }
-        } else {
-          if (this.elementRef.nativeElement.contains(target)) {
-            this.isEditActiveSubject.next(true);
-            this.focusInput();
-          }
-        }
-      },
-    });
+    if (this.isEditActive()) {
+      if (!this.elementRef.nativeElement.contains(target)) {
+        return this.isEditActive.set(false);
+      }
+    } else {
+      if (this.elementRef.nativeElement.contains(target)) {
+        this.isEditActive.set(true);
+        this.focusInput();
+      }
+    }
   }
 
   focusInput() {
     this.cd.detectChanges();
 
-    const inputValue = this.input();
-    if (inputValue) {
-      this.control.setValue(this.value as string, { emitEvent: false });
-      inputValue?.nativeElement.focus();
+    const inputEl = this.input();
+    if (inputEl) {
+      this.control.setValue(this.value() as string, {
+        emitEvent: false,
+      });
+      inputEl?.nativeElement.focus();
     }
   }
 
   onSubmit(value: string) {
+    console.log('onSubmit');
+
     this.submitted.emit(value);
-    this.value = value;
-    this.isEditActiveSubject.next(false);
+    this.isEditActive.set(false);
   }
 }

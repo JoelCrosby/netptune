@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   OnInit,
   input,
+  model,
   output,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -59,7 +59,7 @@ export class AutocompleteChipsComponent implements OnInit {
   readonly placeholder = input.required<string>();
   readonly label = input<string | null>();
   readonly options = input.required<string[] | null>();
-  @Input() selected: string[] | null = [];
+  readonly selected = model<string[] | null>([]);
 
   readonly matAutocomplete = viewChild.required<MatAutocomplete>('auto');
   readonly input = viewChild.required<ElementRef>('input');
@@ -82,7 +82,9 @@ export class AutocompleteChipsComponent implements OnInit {
     this.filteredOptions = this.formCtrl.valueChanges.pipe(
       startWith<string>(''),
       map((option: string | null) => this.filter(option)),
-      map((values) => values.filter((value) => !this.selected?.includes(value)))
+      map((values) =>
+        values.filter((value) => !this.selected()?.includes(value))
+      )
     );
   }
 
@@ -93,7 +95,7 @@ export class AutocompleteChipsComponent implements OnInit {
     if ((value || '').trim()) {
       const newOption = value.trim();
 
-      const selectedSet = new Set(this.selected);
+      const selectedSet = new Set(this.selected());
 
       if (selectedSet.has(newOption)) {
         input.value = '';
@@ -106,7 +108,7 @@ export class AutocompleteChipsComponent implements OnInit {
         option: newOption,
       });
 
-      this.selected = [...(this.selected ?? []), newOption];
+      this.selected.set([...(this.selected() ?? []), newOption]);
     }
 
     if (input) {
@@ -117,9 +119,10 @@ export class AutocompleteChipsComponent implements OnInit {
   }
 
   remove(option: string) {
-    if (!this.selected) return;
+    const selected = this.selected();
+    if (!selected) return;
 
-    const index = this.selected.indexOf(option);
+    const index = selected.indexOf(option);
 
     if (index >= 0) {
       this.selectionChanged.emit({
@@ -128,7 +131,7 @@ export class AutocompleteChipsComponent implements OnInit {
       });
 
       this.formCtrl.setValue('');
-      this.selected = this.selected.filter((opt) => opt !== option);
+      this.selected.set(selected.filter((opt) => opt !== option));
     }
   }
 
@@ -143,7 +146,7 @@ export class AutocompleteChipsComponent implements OnInit {
   onSelected(event: MatAutocompleteSelectedEvent): void {
     const newOption = event.option.viewValue;
 
-    const selectedSet = new Set(this.selected);
+    const selectedSet = new Set(this.selected());
 
     if (selectedSet.has(newOption)) {
       this.input().nativeElement.value = '';
@@ -151,7 +154,7 @@ export class AutocompleteChipsComponent implements OnInit {
       return;
     }
 
-    this.selected = [...(this.selected ?? []), newOption];
+    this.selected.set([...(this.selected() ?? []), newOption]);
 
     this.selectionChanged.emit({
       type: 'Added',

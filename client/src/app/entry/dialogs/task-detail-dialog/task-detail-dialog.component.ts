@@ -1,21 +1,28 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { UserResponse } from '@core/auth/store/auth.models';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { MatIconButton } from '@angular/material/button';
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { selectRequiredCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { EntityType } from '@core/models/entity-type';
@@ -23,7 +30,6 @@ import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ActivityActions from '@core/store/activity/activity.actions';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import * as ProjectActions from '@core/store/projects/projects.actions';
@@ -34,37 +40,30 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
+import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { AutocompleteChipsSelectionChanged } from '@static/components/autocomplete-chips/autocomplete-chips.component';
-import { Observable, Subject } from 'rxjs';
+import {
+  AutocompleteChipsComponent,
+  AutocompleteChipsSelectionChanged,
+} from '@static/components/autocomplete-chips/autocomplete-chips.component';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { CommentsListComponent } from '@static/components/comments-list/comments-list.component';
+import { EditorComponent } from '@static/components/editor/editor.component';
+import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
+import { UserSelectComponent } from '@static/components/user-select/user-select.component';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { FromNowPipe } from '@static/pipes/from-now.pipe';
+import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
+import { Subject } from 'rxjs';
 import {
   debounceTime,
-  filter,
   first,
-  share,
   takeUntil,
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
-import { UserSelectComponent } from '@static/components/user-select/user-select.component';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { MatChipListbox, MatChipOption } from '@angular/material/chips';
-import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
-import { MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { AutocompleteChipsComponent } from '@static/components/autocomplete-chips/autocomplete-chips.component';
-import { CommentsListComponent } from '@static/components/comments-list/comments-list.component';
-import { EditorComponent } from '@static/components/editor/editor.component';
-import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { FromNowPipe } from '@static/pipes/from-now.pipe';
-import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
-import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -91,7 +90,6 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
     EditorComponent,
     DialogActionsDirective,
     MatProgressSpinner,
-    AsyncPipe,
     FromNowPipe,
     PrettyDatePipe,
     TaskStatusPipe,
@@ -107,19 +105,29 @@ export class TaskDetailDialogComponent
 
   static width = '972px';
 
-  task$!: Observable<TaskViewModel | undefined>;
-  projects$!: Observable<ProjectViewModel[]>;
-  users$!: Observable<AppUser[]>;
-  comments$!: Observable<CommentViewModel[]>;
-  user$!: Observable<UserResponse | undefined>;
-  tags$!: Observable<string[]>;
+  projects = this.store.selectSignal(ProjectSelectors.selectAllProjects);
+  comments = this.store.selectSignal(TaskSelectors.selectComments);
+  tags = this.store.selectSignal(TagsSelectors.selectTagNames);
+  user = this.store.selectSignal(selectRequiredCurrentUser);
+  users = this.store.selectSignal(UsersSelectors.selectAllUsers);
+
+  editorLoaded = signal(false);
+
+  task = computed(() => {
+    const taskSignal = this.store.selectSignal(TaskSelectors.selectDetailTask);
+    const detailTask = taskSignal();
+    if (!detailTask) return;
+
+    this.buildForm(detailTask);
+    this.loadComments(detailTask);
+
+    return detailTask;
+  });
 
   selectedTypeValue!: number;
   entityType = EntityType.task;
 
   onDestroy$ = new Subject<void>();
-  onEditorLoadedSubject = new Subject<boolean>();
-  onEditorLoaded$ = this.onEditorLoadedSubject.pipe();
 
   formGroup!: FormGroup;
 
@@ -131,25 +139,7 @@ export class TaskDetailDialogComponent
     return this.formGroup.controls.description;
   }
 
-  ngOnInit() {
-    this.task$ = this.store.select(TaskSelectors.selectDetailTask).pipe(
-      filter((task) => task !== undefined),
-      tap((task) => {
-        if (!task) return;
-
-        this.buildForm(task);
-        this.loadComments(task);
-      }),
-      share()
-    );
-
-    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
-    this.comments$ = this.store.select(TaskSelectors.selectComments);
-    this.tags$ = this.store.select(TagsSelectors.selectTagNames);
-
-    this.user$ = this.store.select(selectCurrentUser);
-    this.users$ = this.store.select(UsersSelectors.selectAllUsers);
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     const systemId: string = this.data?.systemId;
@@ -390,6 +380,6 @@ export class TaskDetailDialogComponent
   }
 
   onEditorLoaded() {
-    this.onEditorLoadedSubject.next(true);
+    this.editorLoaded.set(true);
   }
 }

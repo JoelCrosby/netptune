@@ -5,12 +5,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   inject,
   input,
   output,
   viewChild,
-  contentChildren
+  contentChildren,
+  model,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -32,22 +32,21 @@ export class FormSelectComponent<TValue>
   ngControl = inject(NgControl, { self: true, optional: true });
   private service = inject<FormSelectService<TValue>>(FormSelectService);
 
-  @Input() label!: string;
-  @Input() disabled!: boolean;
-  @Input() icon!: string;
-  @Input() prefix!: string;
+  readonly label = input.required<string>();
+  readonly disabled = model<boolean>();
+  readonly icon = input<string>();
+  readonly prefix = input<string>();
   readonly placeholder = input<string>();
-  @Input() hint?: string;
+  readonly hint = input<string>();
 
   readonly changed = output<TValue>();
-
   readonly input = viewChild.required<ElementRef>('input');
+  readonly options = contentChildren(FormSelectOptionComponent, {
+    descendants: true,
+  });
+  readonly submitted = output<string>();
 
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
-
-  readonly options = contentChildren(FormSelectOptionComponent, { descendants: true });
-
-  readonly submitted = output<string>();
 
   value?: TValue | null;
   displayValue: string | null = null;
@@ -138,8 +137,9 @@ export class FormSelectComponent<TValue>
       return;
     }
 
-    this.selectedOption = options
-      .find((option) => option.value() === this.value);
+    this.selectedOption = options.find(
+      (option) => option.value() === this.value
+    );
 
     this.updateTrigger();
   }
@@ -161,7 +161,7 @@ export class FormSelectComponent<TValue>
   }
 
   setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
   }
 
   onKeyDown(event: KeyboardEvent) {

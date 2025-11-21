@@ -1,11 +1,11 @@
-@if (user) {
+@if (user()) {
   <div class="comments-container">
     <div class="comments-input">
       <app-avatar
         size="24"
         class="task-card-user-chip"
-        [name]="user.displayName"
-        [imageUrl]="user.pictureUrl"
+        [name]="user().displayName"
+        [imageUrl]="user().pictureUrl"
         >
       </app-avatar>
       <form [formGroup]="formGroup" (ngSubmit)="submit()">

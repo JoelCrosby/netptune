@@ -5,7 +5,16 @@ import {
   CdkDrag,
   CdkDragHandle,
 } from '@angular/cdk/drag-drop';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  inject,
+  viewChild,
+} from '@angular/core';
 import * as BoardActions from '@boards/store//boards/boards.actions';
 import * as GroupActions from '@boards/store/groups/board-groups.actions';
 import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
@@ -60,8 +69,8 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
     InlineEditInputComponent,
     MatIconButton,
     CreateBoardGroupComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class BoardGroupsViewComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -69,7 +78,8 @@ export class BoardGroupsViewComponent
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
 
-  readonly importTasksInput = viewChild.required<ElementRef>('importTasksInput');
+  readonly importTasksInput =
+    viewChild.required<ElementRef>('importTasksInput');
 
   groups$!: Observable<BoardViewGroup[]>;
   selectedBoard$!: Observable<Board | undefined>;
@@ -151,6 +161,8 @@ export class BoardGroupsViewComponent
 
   onTitleSubmitted(title: string) {
     if (!title || !this.board?.id) return;
+
+    console.log('onTitleSubmitted');
 
     this.store.dispatch(
       BoardActions.updateBoard({

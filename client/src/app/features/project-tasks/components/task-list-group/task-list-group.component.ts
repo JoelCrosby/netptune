@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  input,
+  input
 } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 
@@ -29,7 +28,7 @@ import { TaskInlineComponent } from '../task-inline/task-inline.component';
 })
 export class TaskListGroupComponent {
   readonly groupName = input<string>();
-  @Input() tasks!: TaskViewModel[] | null;
+  readonly tasks = input.required<TaskViewModel[] | null>();
   readonly header = input.required<string>();
   readonly emptyMessage = input.required<string>();
 
