@@ -19,10 +19,9 @@
 <mat-menu #tagMenu="matMenu">
   <ng-template matMenuContent>
     <div class="tags-menu">
-      @if (loaded$ | async) {
-        <ng-container *ngrxLet=" tags$ as tags">
-          @if (tags.length) {
-            @for (tag of tags; track trackByTag($index, tag)) {
+      @if (loaded()) {
+          @if (tags().length) {
+            @for (tag of tags(); track trackByTag($index, tag)) {
               <mat-checkbox
                 class="tag-checkbox mat-menu-item"
                 role="menuitemcheckbox"
@@ -40,7 +39,6 @@
               <p>Tags Assigned to tasks will show here</p>
             </div>
           }
-        </ng-container>
       } @else {
         <div class="loading">
           <mat-spinner diameter="24" />

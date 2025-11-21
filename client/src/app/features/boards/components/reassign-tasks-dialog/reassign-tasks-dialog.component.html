@@ -4,7 +4,7 @@
 
 <div app-dialog-content>
   <div class="user-selection">
-    @for (user of users$ | async; track user) {
+    @for (user of users(); track user) {
       <button
         [class.selected]="selected === user.id"
         mat-stroked-button
