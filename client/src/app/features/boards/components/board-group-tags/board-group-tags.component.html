@@ -6,12 +6,12 @@
   (click)="onClicked()"
   [matBadge]="!!selectedCount() ? selectedCount() : undefined"
   [color]="!!selectedCount() ? 'primary' : ''"
->
+  >
   <mat-icon
     aria-hidden="false"
     aria-label="Expand Tags Dropdown"
     class="material-icons-outlined"
-  >
+    >
     local_offer
   </mat-icon>
 </button>
@@ -19,36 +19,34 @@
 <mat-menu #tagMenu="matMenu">
   <ng-template matMenuContent>
     <div class="tags-menu">
-      <ng-container *ngIf="loaded$ | async; else elseTemplate">
+      @if (loaded$ | async) {
         <ng-container *ngrxLet=" tags$ as tags">
-          <ng-container *ngIf="tags.length; else tagsElseTemplate">
-            <mat-checkbox
-              class="tag-checkbox mat-menu-item"
-              role="menuitemcheckbox"
-              (click)="$event.stopPropagation()"
-              (change)="onOptionClicked(tag)"
-              [checked]="tag.selected ?? false"
-              *ngFor="let tag of tags; trackBy: trackByTag"
-            >
-              {{ tag.name }}
-            </mat-checkbox>
-          </ng-container>
-
-          <ng-template #tagsElseTemplate>
+          @if (tags.length) {
+            @for (tag of tags; track trackByTag($index, tag)) {
+              <mat-checkbox
+                class="tag-checkbox mat-menu-item"
+                role="menuitemcheckbox"
+                (click)="$event.stopPropagation()"
+                (change)="onOptionClicked(tag)"
+                [checked]="tag.selected ?? false"
+                >
+                {{ tag.name }}
+              </mat-checkbox>
+            }
+          } @else {
             <div class="no-tags-message">
               <mat-icon class="material-icons-outlined"> local_offer </mat-icon>
               <span> There are currently No Tags </span>
               <p>Tags Assigned to tasks will show here</p>
             </div>
-          </ng-template>
+          }
         </ng-container>
-      </ng-container>
-
-      <ng-template #elseTemplate>
+      } @else {
         <div class="loading">
           <mat-spinner diameter="24" />
         </div>
-      </ng-template>
+      }
+
     </div>
   </ng-template>
 </mat-menu>

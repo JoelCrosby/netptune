@@ -11,7 +11,7 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CardContentComponent } from '../card/card-content.component';
 import { CardActionsComponent } from '../card/card-actions.component';
-import { NgFor, NgIf } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -26,11 +26,9 @@ import { RouterLink } from '@angular/router';
     MatIcon,
     CardContentComponent,
     CardActionsComponent,
-    NgFor,
-    NgIf,
     MatAnchor,
-    RouterLink,
-  ],
+    RouterLink
+],
 })
 export class CardListItemComponent {
   readonly title = input.required<string>();
