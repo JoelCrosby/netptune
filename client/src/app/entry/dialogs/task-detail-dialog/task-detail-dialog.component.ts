@@ -4,8 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit,
-  computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -95,9 +94,7 @@ import {
     TaskStatusPipe,
   ],
 })
-export class TaskDetailDialogComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
   dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
   private store = inject(Store);
@@ -113,16 +110,7 @@ export class TaskDetailDialogComponent
 
   editorLoaded = signal(false);
 
-  task = computed(() => {
-    const taskSignal = this.store.selectSignal(TaskSelectors.selectDetailTask);
-    const detailTask = taskSignal();
-    if (!detailTask) return;
-
-    this.buildForm(detailTask);
-    this.loadComments(detailTask);
-
-    return detailTask;
-  });
+  task = this.store.selectSignal(TaskSelectors.selectDetailTask);
 
   selectedTypeValue!: number;
   entityType = EntityType.task;
@@ -139,7 +127,16 @@ export class TaskDetailDialogComponent
     return this.formGroup.controls.description;
   }
 
-  ngOnInit() {}
+  constructor() {
+    effect(() => {
+      const task = this.task();
+
+      if (!task) return;
+
+      this.buildForm(task);
+      this.loadComments(task);
+    });
+  }
 
   ngAfterViewInit() {
     const systemId: string = this.data?.systemId;

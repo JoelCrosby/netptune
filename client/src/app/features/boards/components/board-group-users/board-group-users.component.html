@@ -1,5 +1,5 @@
 <div class="board-group-users">
-  @for (user of users$ | async; track trackByUsers($index, user)) {
+  @for (user of users(); track trackByUsers($index, user)) {
     <div
       class="board-group-user"
       [class.selected]="user.selected"

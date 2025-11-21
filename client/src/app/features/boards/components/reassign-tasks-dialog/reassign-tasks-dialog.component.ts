@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AppUser } from '@core/models/appuser';
-import { Selected } from '@core/models/selected';
+import { DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+} from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import * as actions from '@boards/store/groups/board-groups.actions';
 import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { DialogRef } from '@angular/cdk/dialog';
-import * as actions from '@boards/store/groups/board-groups.actions';
-import { AsyncPipe } from '@angular/common';
-import { MatButton } from '@angular/material/button';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
@@ -22,21 +23,16 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     AvatarComponent,
     DialogActionsDirective,
     DialogCloseDirective,
-    AsyncPipe
-],
+  ],
 })
-export class ReassignTasksDialogComponent implements OnInit {
+export class ReassignTasksDialogComponent {
   private store = inject(Store);
   private cd = inject(ChangeDetectorRef);
   dialogRef = inject<DialogRef<ReassignTasksDialogComponent>>(DialogRef);
 
-  users$!: Observable<Selected<AppUser>[]>;
+  users = this.store.selectSignal(selectBoardGroupsUsersModel);
 
   selected: string | null = null;
-
-  ngOnInit() {
-    this.users$ = this.store.select(selectBoardGroupsUsersModel);
-  }
 
   onUserClicked(userId: string) {
     this.selected = userId;

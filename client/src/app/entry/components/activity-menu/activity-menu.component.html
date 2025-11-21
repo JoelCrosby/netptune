@@ -24,7 +24,7 @@
     @if (loaded$ | async) {
       @if (activities$ | async; as activities) {
         @if (activities.length) {
-          @for (activity of activities; track trackByActivity($index, activity)) {
+          @for (activity of activities; track trackByActivity($index)) {
             <div
               class="activity-menu-item"
               >

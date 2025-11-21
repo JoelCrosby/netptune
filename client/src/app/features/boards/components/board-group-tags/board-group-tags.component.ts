@@ -1,28 +1,20 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatBadge } from '@angular/material/badge';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+  MatMenu,
+  MatMenuContent,
+  MatMenuTrigger,
+} from '@angular/material/menu';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
 import * as TagSelectors from '@core/store/tags/tags.selectors';
-import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { LetDirective } from '@ngrx/component';
-import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import {
-  MatMenuTrigger,
-  MatMenu,
-  MatMenuContent,
-} from '@angular/material/menu';
-import { MatBadge } from '@angular/material/badge';
-import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe } from '@angular/common';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-group-tags',
@@ -30,7 +22,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrls: ['./board-group-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LetDirective,
     MatButton,
     MatTooltip,
     MatMenuTrigger,
@@ -40,20 +31,14 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatMenuContent,
     MatCheckbox,
     MatProgressSpinner,
-    AsyncPipe
-],
+  ],
 })
-export class BoardGroupTagsComponent implements OnInit {
+export class BoardGroupTagsComponent {
   private store = inject(Store);
 
-  tags$!: Observable<Selected<Tag>[]>;
-  loaded$!: Observable<boolean>;
+  tags = this.store.selectSignal(TagSelectors.selectTasksWithSelect);
+  loaded = this.store.selectSignal(TagSelectors.selectTagsLoaded);
   selectedCount = this.store.selectSignal(TagSelectors.selectSelectedTagCount);
-
-  ngOnInit() {
-    this.tags$ = this.store.select(TagSelectors.selectTasksWithSelect);
-    this.loaded$ = this.store.select(TagSelectors.selectTagsLoaded);
-  }
 
   trackByTag(_: number, tag: Selected<Tag>) {
     return tag.id;
