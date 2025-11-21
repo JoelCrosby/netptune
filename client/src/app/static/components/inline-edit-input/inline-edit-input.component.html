@@ -1,15 +1,14 @@
 <div class="inline-edit">
-  @if (isEditActive$ | async) {
-    <input
-      #input
-      type="text"
-      class="inline-edit-input"
-      [formControl]="control"
-      [class.active-border]="activeBorder()"
-      (keydown.enter)="onSubmit(input.value)"
-      />
+  @if (isEditActive()) {
+  <input
+    #input
+    type="text"
+    class="inline-edit-input"
+    [formControl]="control"
+    [class.active-border]="activeBorder()"
+    (keyup.enter)="onSubmit(input.value)"
+  />
   } @else {
-    <div class="inline-edit-label">{{ value }}</div>
+  <div class="inline-edit-label">{{ value() }}</div>
   }
-
 </div>

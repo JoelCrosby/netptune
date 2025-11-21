@@ -1,42 +1,40 @@
 <header class="page-header">
   <div class="header-top-row">
-    @if (showSideNavToggle$ | async) {
-      <div class="sidenav-toggle">
-        <button
-          mat-icon-button
-          color="accent"
-          aria-label="Open Menu"
-          (click)="onOpenMenu()"
-          >
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
+    @if (showSideNavToggle()) {
+    <div class="sidenav-toggle">
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Open Menu"
+        (click)="onOpenMenu()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
     }
 
     <div class="header-top-row-left">
       <div class="header-main-back">
-        @if (backLink) {
-          <a class="header-back-link" [routerLink]="backLink">
-            <mat-icon> arrow_back </mat-icon>
-            <span> {{ backLabel() || 'Go back' }} </span>
-          </a>
+        @if (backLink()) {
+        <a class="header-back-link" [routerLink]="backLink()">
+          <mat-icon> arrow_back </mat-icon>
+          <span> {{ backLabel() || 'Go back' }} </span>
+        </a>
         }
       </div>
 
       <div class="header-main">
         @if (!titleEditable()) {
-          <h1 class="page-header-title">{{ title() }}</h1>
-        }
-
-        @if (titleEditable()) {
-          <app-inline-edit-input
-            class="page-header-title page-header-title-editable"
-            activeBorder="true"
-            [value]="title()"
-            [size]="title()?.length"
-            (submitted)="titleSubmitted.emit($event)"
-            >
-          </app-inline-edit-input>
+        <h1 class="page-header-title">{{ title() }}</h1>
+        } @if (titleEditable()) {
+        <app-inline-edit-input
+          class="page-header-title page-header-title-editable"
+          activeBorder="true"
+          [value]="title()"
+          [size]="title()?.length"
+          (submitted)="titleSubmitted.emit($event)"
+        >
+        </app-inline-edit-input>
         }
 
         <div class="header-tool-bar">
@@ -47,50 +45,45 @@
 
     <div class="header-actions">
       @for (action of secondaryActions(); track action) {
-        <button
-          matRipple
-          class="header-secondary-action"
-          (click)="action.click && action.click()"
-          >
-          {{ action.label }}
-        </button>
-      }
-
-      @if (overflowActions().length) {
-        <button
-          matRipple
-          class="header-menu-action"
-          aria-label="Actions"
-          [matMenuTriggerFor]="overflowMenu"
-          >
-          <mat-icon> more_horiz </mat-icon>
-        </button>
+      <button
+        matRipple
+        class="header-secondary-action"
+        (click)="action.click && action.click()"
+      >
+        {{ action.label }}
+      </button>
+      } @if (overflowActions().length) {
+      <button
+        matRipple
+        class="header-menu-action"
+        aria-label="Actions"
+        [matMenuTriggerFor]="overflowMenu"
+      >
+        <mat-icon> more_horiz </mat-icon>
+      </button>
       }
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
         <ng-template matMenuContent>
           @for (action of overflowActions(); track action) {
-            <button
-              mat-menu-item
-              (click)="action.click && action.click()"
-              >
-              <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
-                {{ action.icon || 'more_horiz' }}
-              </mat-icon>
-              <span>{{ action.label }}</span>
-            </button>
+          <button mat-menu-item (click)="action.click && action.click()">
+            <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
+              {{ action.icon || 'more_horiz' }}
+            </mat-icon>
+            <span>{{ action.label }}</span>
+          </button>
           }
         </ng-template>
       </mat-menu>
 
-      @if (actionTitle) {
-        <button
-          matRipple
-          class="header-primary-action"
-          (click)="actionClick.emit()"
-          >
-          {{ actionTitle }}
-        </button>
+      @if (actionTitle()) {
+      <button
+        matRipple
+        class="header-primary-action"
+        (click)="actionClick.emit()"
+      >
+        {{ actionTitle() }}
+      </button>
       }
     </div>
   </div>

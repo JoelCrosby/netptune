@@ -1,30 +1,51 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   input,
-  output
+  output,
 } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
 import { AvatarComponent } from '../avatar/avatar.component';
 import { FormInputComponent } from '../form-input/form-input.component';
 import { MatIconButton } from '@angular/material/button';
-import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
+import {
+  MatMenuTrigger,
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem,
+} from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
 
 @Component({
-    selector: 'app-comments-list',
-    templateUrl: './comments-list.component.html',
-    styleUrls: ['./comments-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AvatarComponent, FormsModule, ReactiveFormsModule, FormInputComponent, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuContent, MatMenuItem, FromNowPipe]
+  selector: 'app-comments-list',
+  templateUrl: './comments-list.component.html',
+  styleUrls: ['./comments-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AvatarComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    FormInputComponent,
+    MatIconButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuContent,
+    MatMenuItem,
+    FromNowPipe,
+  ],
 })
 export class CommentsListComponent {
-  @Input() user!: UserResponse | null | undefined;
+  readonly user = input.required<UserResponse>();
   readonly comments = input.required<CommentViewModel[] | null>();
 
   readonly deleteComment = output<CommentViewModel>();

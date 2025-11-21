@@ -12,6 +12,17 @@ export const selectCurrentUser = createSelector(
   (state: AuthState) => state.currentUser
 );
 
+export const selectRequiredCurrentUser = createSelector(
+  selectAuthFeature,
+  (state: AuthState) => {
+    if (!state.currentUser) {
+      throw new Error('current user is not defined');
+    }
+
+    return state.currentUser;
+  }
+);
+
 export const selectCurrentUserId = createSelector(
   selectCurrentUser,
   (state?: UserResponse) => state?.userId

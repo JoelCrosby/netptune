@@ -1,8 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   inject,
+  input,
+  model,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
@@ -20,9 +21,9 @@ import { MatIcon } from '@angular/material/icon';
 export class ColorSelectComponent implements ControlValueAccessor {
   ngControl = inject(NgControl, { self: true, optional: true });
 
-  @Input() label!: string;
-  @Input() disabled!: boolean;
-  @Input() hint: string | null = null;
+  readonly label = input.required<string>();
+  readonly disabled = model<boolean>();
+  readonly hint = input<string | null>(null);
 
   colors = colorDictionary();
 
@@ -66,6 +67,6 @@ export class ColorSelectComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
   }
 }

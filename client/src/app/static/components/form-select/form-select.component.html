@@ -1,7 +1,7 @@
 <div class="nept-form-control">
-  @if (label) {
+  @if (label()) {
   <label [for]="ngControl?.name" class="form-control-label">
-    {{ label }}
+    {{ label() }}
   </label>
   }
 
@@ -12,8 +12,8 @@
     [class.active]="control?.value && control?.pending"
     (click)="onDropMenuIconClick($event)"
   >
-    @if (prefix) {
-    <div class="form-control-prefix">{{ prefix }}</div>
+    @if (prefix()) {
+    <div class="form-control-prefix">{{ prefix() }}</div>
     }
 
     <input
@@ -21,8 +21,8 @@
       placeholder="{{placeholder()}}"
       [id]="ngControl?.name"
       [value]="displayValue"
-      [disabled]="disabled"
-      [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
+      [disabled]="disabled()"
+      [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
       readonly
       (click)="$event.stopPropagation(); showDropdown()"
       (keydown)="onKeyDown($event)"
@@ -32,14 +32,14 @@
 
     <div
       class="input-template"
-      [style.padding]="prefix ? '0 .8rem 0 0' : '0 .8rem'"
+      [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
     ></div>
 
     <ng-content />
 
-    @if (icon) {
+    @if (icon()) {
     <mat-icon aria-hidden="true" class="material-icons-outlined">
-      {{ icon }}
+      {{ icon() }}
     </mat-icon>
     }
 
@@ -54,7 +54,7 @@
     </app-form-select-dropdown>
   </div>
 
-  @if (hint) {
-  <small class="form-control-hint"> {{ hint }} </small>
+  @if (hint()) {
+  <small class="form-control-hint"> {{ hint() }} </small>
   }
 </div>
