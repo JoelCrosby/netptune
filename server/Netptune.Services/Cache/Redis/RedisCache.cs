@@ -77,7 +77,7 @@ public class RedisCache : ICacheProvider
             return false;
         }
 
-        value = JsonSerializer.Deserialize<TValue>(result!);
+        value = JsonSerializer.Deserialize<TValue>(((string) result)!);
         return true;
     }
 
@@ -95,7 +95,7 @@ public class RedisCache : ICacheProvider
             return (false, default);
         }
 
-        var value = JsonSerializer.Deserialize<TValue>(result!);
+        var value = JsonSerializer.Deserialize<TValue>(((string) result)!);
         return (true, value);
     }
 
@@ -162,12 +162,12 @@ public class RedisCache : ICacheProvider
 
     public void Set(string? key, string value, DistributedCacheEntryOptions options)
     {
-        Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow);
+        Db.StringSet(key, value, options.AbsoluteExpirationRelativeToNow, When.Always);
     }
 
     public Task SetAsync(string? key, byte[] value, DistributedCacheEntryOptions options)
     {
-        return Db.StringSetAsync(key, value, options.AbsoluteExpirationRelativeToNow);
+        return Db.StringSetAsync(key, value, options.AbsoluteExpirationRelativeToNow, When.Always);
     }
 
     public void Set<TValue>(string? key, TValue value, DistributedCacheEntryOptions options)
@@ -175,7 +175,7 @@ public class RedisCache : ICacheProvider
         if (key is null) return;
 
         var json = JsonSerializer.Serialize(value);
-        Db.StringSet(key, json, options.AbsoluteExpirationRelativeToNow);
+        Db.StringSet(key, json, options.AbsoluteExpirationRelativeToNow, When.Always);
     }
 
     public Task SetAsync<TValue>(string? key, TValue value, DistributedCacheEntryOptions options)
@@ -183,6 +183,6 @@ public class RedisCache : ICacheProvider
         if (key is null) return Task.CompletedTask;
 
         var json = JsonSerializer.Serialize(value);
-        return Db.StringSetAsync(key, json, options.AbsoluteExpirationRelativeToNow);
+        return Db.StringSetAsync(key, json, options.AbsoluteExpirationRelativeToNow, When.Always);
     }
 }
