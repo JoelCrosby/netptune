@@ -1,21 +1,26 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, input } from '@angular/core';
-import { EntityType } from '@core/models/entity-type';
-import { ActivityViewModel } from '@core/models/view-models/activity-view-model';
-import * as ActivityActions from '@core/store/activity/activity.actions';
-import * as ActivitySelectors from '@core/store/activity/activity.selectors';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 import {
-  MatMenuTrigger,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
   MatMenu,
   MatMenuContent,
+  MatMenuTrigger,
 } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe } from '@angular/common';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { EntityType } from '@core/models/entity-type';
+import * as ActivityActions from '@core/store/activity/activity.actions';
+import {
+  selectActivities,
+  selectActivitiesLoaded,
+} from '@core/store/activity/activity.selectors';
+import { Store } from '@ngrx/store';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
 
 @Component({
@@ -31,23 +36,17 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     MatMenuContent,
     AvatarComponent,
     MatProgressSpinner,
-    AsyncPipe,
-    ActivityPipe
-],
+    ActivityPipe,
+  ],
 })
-export class ActivityMenuComponent implements OnInit {
+export class ActivityMenuComponent {
   private store = inject(Store);
 
   readonly entityType = input.required<EntityType>();
   readonly entityId = input<number>();
 
-  activities$!: Observable<ActivityViewModel[]>;
-  loaded$!: Observable<boolean>;
-
-  ngOnInit() {
-    this.activities$ = this.store.select(ActivitySelectors.selectActivities);
-    this.loaded$ = this.store.select(ActivitySelectors.selectActivitiesLoaded);
-  }
+  readonly activities = this.store.selectSignal(selectActivities);
+  readonly loaded = this.store.selectSignal(selectActivitiesLoaded);
 
   trackByActivity(index: number) {
     return index;
