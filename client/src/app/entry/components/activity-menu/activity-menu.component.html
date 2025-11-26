@@ -21,30 +21,26 @@
   (closed)="onClosed()"
   >
   <ng-template matMenuContent>
-    @if (loaded$ | async) {
-      @if (activities$ | async; as activities) {
-        @if (activities.length) {
-          @for (activity of activities; track trackByActivity($index)) {
-            <div
-              class="activity-menu-item"
-              >
-              <app-avatar
-                [imageUrl]="activity.userPictureUrl"
-                [name]="activity.userUsername"
-                size="24"
-                >
-              </app-avatar>
-              <span class="user"> {{ activity.userUsername }} </span>
-              <span class="label"> {{ activity | activity }} </span>
-            </div>
-          }
-        } @else {
-          <div class="no-activity-message">
-            <mat-icon class="material-icons-outlined"> timeline </mat-icon>
-            <span> There is no activity </span>
-            <p>Activity on the item will appear here</p>
-          </div>
-        }
+    @if (loaded()) {
+      @for (activity of activities(); track trackByActivity($index)) {
+        <div
+          class="activity-menu-item"
+          >
+          <app-avatar
+            [imageUrl]="activity.userPictureUrl"
+            [name]="activity.userUsername"
+            size="24"
+            >
+          </app-avatar>
+          <span class="user"> {{ activity.userUsername }} </span>
+          <span class="label"> {{ activity | activity }} </span>
+        </div>
+      } @empty {
+        <div class="no-activity-message">
+          <mat-icon class="material-icons-outlined"> timeline </mat-icon>
+          <span> There is no activity </span>
+          <p>Activity on the item will appear here</p>
+        </div>
       }
     } @else {
       <div class="loading">
