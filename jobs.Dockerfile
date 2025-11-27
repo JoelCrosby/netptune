@@ -6,7 +6,7 @@ ARG RUN_ID
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 WORKDIR /
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG COMMIT
 ARG GITHUB_REF
 ARG BUILD_NUMBER
