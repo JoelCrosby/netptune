@@ -48,8 +48,8 @@
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
 
-  --warn-rgb: 255, 82, 82;
-  --warn: rgba(var(255, 82, 82));
+  --warn-rgb: 182, 0, 0;
+  --warn: rgba(var(--warn-rgb));
 
   --side-bar-rgb: 41, 36, 46;
   --side-bar: rgba(var(--side-bar-rgb));
@@ -107,7 +107,7 @@
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
 
   --warn-rgb: 255, 82, 82;
-  --warn: rgba(var(255, 82, 82));
+  --warn: rgba(var(--warn-rgb));
 
   --side-bar-rgb: 12, 12, 12;
   --side-bar: rgba(var(--side-bar-rgb));

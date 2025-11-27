@@ -10,7 +10,7 @@
       class="form-submit-btn"
       mat-stroked-button
       (click)="updateClicked()"
-      [disabled]="formGroup.invalid || (loadingUpdate$ | async)"
+      [disabled]="formGroup.invalid || loadingUpdate()"
       >
       Update Profile
     </button>
@@ -18,7 +18,7 @@
 
   <div class="column-fill">
     <div class="profile-image">
-      @if (editProfilePicture$ | async) {
+      @if (editProfilePicture()) {
         <img [width]="180" [src]="formGroup.controls.pictureUrl.value ?? ''" />
       } @else {
         @if (formGroup.controls.pictureUrl.value) {

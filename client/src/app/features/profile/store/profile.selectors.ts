@@ -28,3 +28,8 @@ export const selectChangePasswordLoading = createSelector(
   selectProfileFeature,
   (state: ProfileState) => state.changePasswordLoading
 );
+
+export const selectChangePasswordError = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => state.changePasswordError?.message
+);

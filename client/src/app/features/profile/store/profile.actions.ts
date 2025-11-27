@@ -47,7 +47,8 @@ export const changePasswordSuccess = createAction(
 );
 
 export const changePasswordFail = createAction(
-  '[Profile] Change Password Fail'
+  '[Profile] Change Password Fail',
+  props<{ error: HttpErrorResponse | Error }>()
 );
 
 // Upload Profile Image
