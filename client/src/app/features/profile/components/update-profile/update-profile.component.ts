@@ -17,7 +17,10 @@ import {
   updateProfile,
   uploadProfilePicture,
 } from '@profile/store/profile.actions';
-import * as ProfileSelectors from '@profile/store/profile.selectors';
+import {
+  selectProfile,
+  selectUpdateProfileLoading,
+} from '@profile/store/profile.selectors';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 @Component({
@@ -39,10 +42,8 @@ export class UpdateProfileComponent {
   });
 
   editProfilePicture = signal(false);
-  currentProfile = this.store.selectSignal(ProfileSelectors.selectProfile);
-  loadingUpdate = this.store.selectSignal(
-    ProfileSelectors.selectUpdateProfileLoading
-  );
+  currentProfile = this.store.selectSignal(selectProfile);
+  loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
 
   constructor() {
     effect(() => {
@@ -50,7 +51,7 @@ export class UpdateProfileComponent {
     });
 
     effect(() => {
-      const profile = this.store.selectSignal(ProfileSelectors.selectProfile);
+      const profile = this.store.selectSignal(selectProfile);
       const value = profile();
 
       if (!value) return;

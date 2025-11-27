@@ -1,25 +1,26 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core';
 import {
-  FormControl,
-  FormGroup,
-  Validators,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
+import {
+  FormBuilder,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import * as AuthActions from '@core/auth/store/auth.actions';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { RouterLink } from '@angular/router';
+import { login } from '@core/auth/store/auth.actions';
 import {
   selectLoginLoading,
   selectShowLoginError,
 } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressBar } from '@angular/material/progress-bar';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { MatAnchor, MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
-import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-login',
@@ -35,21 +36,18 @@ import { MatDivider } from '@angular/material/divider';
     RouterLink,
     MatButton,
     MatDivider,
-    AsyncPipe
-],
+  ],
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   private store = inject(Store);
+  private fb = inject(FormBuilder);
 
-  authLoading$: Observable<boolean>;
-  showLoginError$: Observable<boolean>;
-  onDestroy$ = new Subject<void>();
+  loading = this.store.selectSignal(selectLoginLoading);
+  showLoginError = this.store.selectSignal(selectShowLoginError);
 
-  hidePassword = true;
-
-  loginGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+  loginGroup = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
   });
 
   get email() {
@@ -61,20 +59,13 @@ export class LoginComponent implements OnDestroy {
   }
 
   constructor() {
-    this.showLoginError$ = this.store.select(selectShowLoginError);
-    this.authLoading$ = this.store.select(selectLoginLoading).pipe(
-      tap((loading) => {
-        if (loading) return this.loginGroup.disable();
-        return this.loginGroup.enable();
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(AuthActions.clearError({ error: 'loginError' }));
-
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+    effect(() => {
+      if (this.loading()) {
+        this.loginGroup.disable();
+      } else {
+        this.loginGroup.enable();
+      }
+    });
   }
 
   login() {
@@ -87,7 +78,7 @@ export class LoginComponent implements OnDestroy {
     const password = this.password.value as string;
 
     this.store.dispatch(
-      AuthActions.login({
+      login({
         request: {
           email,
           password,
