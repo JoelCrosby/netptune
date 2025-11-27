@@ -1,7 +1,7 @@
 <div class="auth-page-container">
   <form [formGroup]="loginGroup" (ngSubmit)="login()">
     <div class="auth-progress-bar">
-      @if (authLoading$ | async) {
+      @if (loading()) {
         <mat-progress-bar mode="indeterminate" />
       }
     </div>
@@ -16,7 +16,7 @@
     <h3 class="auth-title">Sign in to continue</h3>
 
     <div class="auth-error">
-      @if (showLoginError$ | async) {
+      @if (showLoginError()) {
         <div class="auth-error-text">
           Username or Password was incorrect
         </div>

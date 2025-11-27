@@ -1,16 +1,16 @@
 <div class="app-container">
-  @if (sideMenuOpen$ | async) {
+  @if (sideMenuOpen()) {
     <div
       class="app-sidenav"
-      [class.app-sidenav-expanded]="sideNavExpanded"
+      [class.app-sidenav-expanded]="sideNavExpanded()"
       >
       <div class="app-sidenav-list">
         <app-workspace-select
           idKey="id"
           labelKey="name"
-          [compact]="!sideNavExpanded"
-          [options]="workspaces$ | async"
-          [value]="workspaceId$ | async"
+          [compact]="!sideNavExpanded()"
+          [options]="workspaces()"
+          [value]="workspaceId()"
           (selectChange)="onWorkspaceChange($event)"
           >
         </app-workspace-select>
@@ -19,7 +19,7 @@
             [routerLink]="link.value"
             class="app-menu-link"
             routerLinkActive="router-link-active"
-            [matTooltip]="sideNavExpanded ? '' : link.label"
+            [matTooltip]="sideNavExpanded() ? '' : link.label"
             matTooltipPosition="right"
             >
             <mat-icon mat-list-icon class="material-icons-outline">
@@ -36,7 +36,7 @@
             [routerLink]="link.value"
             class="app-menu-link"
             routerLinkActive="router-link-active"
-            [matTooltip]="sideNavExpanded ? '' : link.label"
+            [matTooltip]="sideNavExpanded() ? '' : link.label"
             matTooltipPosition="right"
             >
             <mat-icon mat-list-icon class="material-icons-outline">
@@ -45,12 +45,12 @@
             <p>{{ link.label }}</p>
           </a>
         }
-        @if (user$ | async; as user) {
+        @if (user(); as user) {
           <a
             class="app-menu-link profile-nav-btn"
             [routerLink]="['./profile']"
             routerLinkActive="router-link-active"
-            [matTooltip]="sideNavExpanded ? '' : 'Profile'"
+            [matTooltip]="sideNavExpanded() ? '' : 'Profile'"
             matTooltipPosition="right"
             >
             <app-avatar
@@ -68,11 +68,11 @@
       <div
         class="app-menu-link app-menu-collapse"
         (click)="onToggleExpandClicked()"
-        [matTooltip]="sideNavExpanded ? '' : 'Expand'"
+        [matTooltip]="sideNavExpanded() ? '' : 'Expand'"
         matTooltipPosition="right"
         >
         <mat-icon mat-list-icon class="material-icons-round">
-          {{ sideNavExpanded ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
+          {{ sideNavExpanded() ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}
         </mat-icon>
         <p>Collapse</p>
       </div>
@@ -80,8 +80,8 @@
   }
 
   <main
-    [class.app-sidenav-expanded]="sideNavExpanded"
-    [class.app-sidenav-open]="sideMenuOpen$ | async"
+    [class.app-sidenav-expanded]="sideNavExpanded()"
+    [class.app-sidenav-open]="sideMenuOpen()"
     >
     <router-outlet />
   </main>

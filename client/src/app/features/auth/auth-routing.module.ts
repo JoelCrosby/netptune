@@ -11,6 +11,7 @@ import { confirmEmail } from './resolvers/confirm-email.resolver';
 import { registerInvite } from './resolvers/register-invite.resolver';
 import { resetPassword } from './resolvers/reset-password.resolver';
 import { ConfirmViewComponent } from './views/confirm-view/confirm-view.component';
+import { canDeactivateLogin } from './guards/can-deactivate-login.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     canActivate: [loginGuard],
+    canDeactivate: [canDeactivateLogin],
   },
   {
     path: 'register',

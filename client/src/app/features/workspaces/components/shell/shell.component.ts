@@ -1,30 +1,37 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import {
+  selectCurrentUser,
+  selectIsAuthenticated,
+} from '@core/auth/store/auth.selectors';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { Workspace } from '@core/models/workspace';
+import { toggleSideMenu } from '@core/store/layout/layout.actions';
 import {
   selectSideMenuMode,
   selectSideMenuOpen,
 } from '@core/store/layout/layout.selectors';
-import * as AuthSelectors from '@core/auth/store/auth.selectors';
-import { Store } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
-import { toggleSideMenu } from '@core/store/layout/layout.actions';
 import {
   selectAllWorkspaces,
   selectCurrentWorkspaceIdentifier,
 } from '@core/store/workspaces/workspaces.selectors';
-import {
-  Router,
-  RouterLinkActive,
-  RouterLink,
-  RouterOutlet,
-} from '@angular/router';
-import { Workspace } from '@core/models/workspace';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
-import { AsyncPipe } from '@angular/common';
-import { WorkspaceSelectComponent } from '../workspace-select/workspace-select.component';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
+import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { WorkspaceSelectComponent } from '../workspace-select/workspace-select.component';
 
 @Component({
   templateUrl: './shell.component.html',
@@ -38,18 +45,17 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     MatIcon,
     AvatarComponent,
     RouterOutlet,
-    AsyncPipe
-],
+  ],
 })
-export class ShellComponent implements OnInit {
+export class ShellComponent {
   private store = inject(Store);
   private router = inject(Router);
   private storage = inject(LocalStorageService);
 
   readonly sideNav = viewChild.required(MatSidenav);
 
-  authenticated$!: Observable<boolean>;
-  sideNavExpanded = true;
+  authenticated = this.store.selectSignal(selectIsAuthenticated);
+  sideNavExpanded = signal(this.storage.getItem('side-nav-expanded') ?? true);
 
   links = [
     { label: 'Projects', value: ['./projects'], icon: 'assessment' },
@@ -62,30 +68,19 @@ export class ShellComponent implements OnInit {
     { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
   ];
 
-  sideMenuOpen$ = this.store.select(selectSideMenuOpen);
-  sideMenuMode$ = this.store.select(selectSideMenuMode);
-  user$ = this.store.select(AuthSelectors.selectCurrentUser);
-  workspaces$ = this.store.select(selectAllWorkspaces);
-  workspaceId$ = this.store.select(selectCurrentWorkspaceIdentifier);
-  fixedInViewport$ = of(true);
-
-  constructor() {
-    this.sideNavExpanded = this.storage.getItem('side-nav-expanded') ?? true;
-  }
-
-  ngOnInit() {
-    this.authenticated$ = this.store.select(
-      AuthSelectors.selectIsAuthenticated
-    );
-  }
+  sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
+  sideMenuMode = this.store.selectSignal(selectSideMenuMode);
+  user = this.store.selectSignal(selectCurrentUser);
+  workspaces = this.store.selectSignal(selectAllWorkspaces);
+  workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
 
   onSidenavClosedStart() {
     this.store.dispatch(toggleSideMenu());
   }
 
   onToggleExpandClicked() {
-    this.sideNavExpanded = !this.sideNavExpanded;
-    this.storage.setItem('side-nav-expanded', this.sideNavExpanded);
+    this.sideNavExpanded.set(!this.sideNavExpanded());
+    this.storage.setItem('side-nav-expanded', this.sideNavExpanded());
   }
 
   onWorkspaceChange(workspace: Workspace) {

@@ -40,7 +40,11 @@ const reducer = createReducer(
     loginError: true,
     loginLoading: false,
   })),
-
+  on(actions.clearError, (state) => ({
+    ...state,
+    loginError: false,
+    loginLoading: false,
+  })),
   // Register
 
   on(actions.register, (state) => ({ ...state, registerLoading: true })),
