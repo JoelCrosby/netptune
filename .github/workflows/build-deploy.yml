@@ -70,7 +70,7 @@ jobs:
           --build-arg "GITHUB_REF=${GITHUB_REF}" \
           --build-arg "BUILD_NUMBER=${BUILD_NUMBER}.${GITHUB_RUN_NUMBER}" \
           --build-arg "RUN_ID=${GITHUB_RUN_ID}" \
-          -t dokku/netptune-jobs:$GITHUB_SHA -f Dockerfile.jobs .
+          -t dokku/netptune-jobs:$GITHUB_SHA -f jobs.Dockerfile .
           docker save dokku/netptune-jobs:$GITHUB_SHA | bzip2 | ssh $DOKKU_HOST "bunzip2 | docker load"
       -
         name: Deploy Jobs Image
