@@ -1,52 +1,47 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import {
-  FormControl,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  FormBuilder,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
-import { FormErrorStateMatcher } from '@core/util/forms/form-error-state-matcher';
-import { Actions, ofType } from '@ngrx/effects';
-import { select, Store } from '@ngrx/store';
-import * as ProfileActions from '@profile/store/profile.actions';
-import * as ProfileSelectors from '@profile/store/profile.selectors';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { first, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { changePassword } from '@profile/store/profile.actions';
+import {
+  selectChangePasswordError,
+  selectChangePasswordLoading,
+} from '@profile/store/profile.selectors';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { MatButton } from '@angular/material/button';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    FormInputComponent,
-    MatButton,
-    AsyncPipe,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton],
 })
-export class ChangePasswordComponent implements OnInit, OnDestroy {
+export class ChangePasswordComponent {
   private store = inject(Store);
-  private actions$ = inject(Actions);
+  private fb = inject(FormBuilder);
   private cd = inject(ChangeDetectorRef);
 
-  formGroup = new FormGroup({
-    currentPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required]),
+  formGroup = this.fb.nonNullable.group({
+    currentPassword: ['', [Validators.required]],
+    newPassword: ['', [Validators.required]],
+    confirmPassword: ['', [Validators.required]],
   });
-
-  loadingPasswordChange$!: Observable<boolean>;
-  matcher = new FormErrorStateMatcher();
-  onDestroy$ = new Subject<void>();
-  errorMessage$ = new BehaviorSubject<string>('');
 
   get currentPassword() {
     return this.formGroup.controls.currentPassword;
@@ -58,57 +53,53 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     return this.formGroup?.controls.confirmPassword;
   }
 
-  ngOnInit() {
-    this.loadingPasswordChange$ = this.store.pipe(
-      takeUntil(this.onDestroy$),
-      select(ProfileSelectors.selectChangePasswordLoading),
-      tap((loading) =>
-        loading ? this.formGroup.disable() : this.formGroup.enable()
-      ),
-      shareReplay()
-    );
+  confirmPasswordChanges = toSignal(this.confirmPassword.valueChanges);
+  changePasswordError = this.store.selectSignal(selectChangePasswordError);
 
-    this.actions$
-      .pipe(
-        takeUntil(this.onDestroy$),
-        ofType(ProfileActions.changePasswordSuccess),
-        tap(() => {
-          this.formGroup.reset();
-          this.formGroup.enable();
-        })
-      )
-      .subscribe();
+  error = signal('');
 
-    this.actions$
-      .pipe(
-        takeUntil(this.onDestroy$),
-        ofType(ProfileActions.changePasswordFail),
-        tap(() => {
-          this.formGroup.enable();
-          this.errorMessage$.next('Current Password was incorrect');
-        })
-      )
-      .subscribe();
+  loading = this.store.selectSignal(selectChangePasswordLoading);
+
+  constructor() {
+    effect(() => {
+      this.loading() ? this.formGroup.disable() : this.formGroup.enable();
+
+      if (!this.loading()) {
+        this.formGroup.reset();
+        this.formGroup.enable();
+        this.error.set('');
+      }
+    });
+
+    effect(() => {
+      console.log('confirmPasswordChanges: ', this.confirmPasswordChanges());
+
+      if (this.confirmPasswordChanges()) {
+        this.passwordsMatch(this.formGroup);
+      }
+    });
+
+    effect(() => this.error.set(this.changePasswordError() ?? ''));
   }
 
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
-  }
-
-  checkPasswords(group: FormGroup) {
+  passwordsMatch(group: FormGroup) {
     const pass = group.controls.newPassword;
     const confirmPass = group.controls.confirmPassword;
 
-    return pass.value === confirmPass.value ? null : { notSame: true };
+    if (pass.value === confirmPass.value) {
+      this.error.set('');
+      return false;
+    } else {
+      this.error.set('Passwords do not match.');
+      return true;
+    }
   }
 
   changePasswordClicked() {
     this.formGroup.markAllAsTouched();
     this.cd.detectChanges();
 
-    if (this.checkPasswords(this.formGroup)) {
-      this.errorMessage$.next('Passwords do not match');
+    if (this.passwordsMatch(this.formGroup)) {
       return;
     }
 
@@ -116,22 +107,17 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.store
-      .select(selectCurrentUserId)
-      .pipe(
-        first(),
-        tap((userId) => {
-          if (!userId) return;
+    const userIdSignal = this.store.selectSignal(selectCurrentUserId);
+    const userId = userIdSignal();
 
-          const request: ChangePasswordRequest = {
-            userId,
-            currentPassword: this.currentPassword.value as string,
-            newPassword: this.newPassword.value as string,
-          };
+    if (!userId) return;
 
-          this.store.dispatch(ProfileActions.changePassword({ request }));
-        })
-      )
-      .subscribe();
+    const request: ChangePasswordRequest = {
+      userId,
+      currentPassword: this.currentPassword.value as string,
+      newPassword: this.newPassword.value as string,
+    };
+
+    this.store.dispatch(changePassword({ request }));
   }
 }

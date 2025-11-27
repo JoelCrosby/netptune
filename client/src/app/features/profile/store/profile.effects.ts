@@ -79,7 +79,7 @@ export class ProfileEffects {
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Password Changed')),
           map(() => actions.changePasswordSuccess()),
-          catchError(() => of(actions.changePasswordFail()))
+          catchError((error) => of(actions.changePasswordFail({ error })))
         )
       )
     )

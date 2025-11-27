@@ -1,126 +1,91 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit,
+  effect,
   inject,
+  signal,
 } from '@angular/core';
 import {
   FormBuilder,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { AppUser } from '@core/models/appuser';
-import { select, Store } from '@ngrx/store';
+import { MatButton } from '@angular/material/button';
+import { Store } from '@ngrx/store';
 import {
   updateProfile,
   uploadProfilePicture,
 } from '@profile/store/profile.actions';
 import * as ProfileSelectors from '@profile/store/profile.selectors';
-import { Observable, Subject } from 'rxjs';
-import { filter, first, shareReplay, takeUntil, tap } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { MatButton } from '@angular/material/button';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    FormInputComponent,
-    MatButton,
-    AsyncPipe
-],
+  imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton],
 })
-export class UpdateProfileComponent implements OnInit, OnDestroy {
+export class UpdateProfileComponent {
   private store = inject(Store);
   private fb = inject(FormBuilder);
-  private cd = inject(ChangeDetectorRef);
 
-  formGroup = this.fb.group({
+  formGroup = this.fb.nonNullable.group({
     firstname: ['', [Validators.required]],
     lastname: ['', [Validators.required]],
     email: ['', [Validators.required]],
-    pictureUrl: [''],
+    pictureUrl: ['' as string | null],
   });
 
-  onDestroy$ = new Subject<void>();
-  loadingUpdate$!: Observable<boolean>;
-  editProfilePicture$ = new Subject<boolean>();
+  editProfilePicture = signal(false);
+  currentProfile = this.store.selectSignal(ProfileSelectors.selectProfile);
+  loadingUpdate = this.store.selectSignal(
+    ProfileSelectors.selectUpdateProfileLoading
+  );
 
-  data?: FormData;
+  constructor() {
+    effect(() => {
+      this.loadingUpdate() ? this.formGroup.disable() : this.formGroup.enable();
+    });
 
-  ngOnInit() {
-    this.loadingUpdate$ = this.store.pipe(
-      takeUntil(this.onDestroy$),
-      select(ProfileSelectors.selectUpdateProfileLoading),
-      tap((loading) =>
-        loading ? this.formGroup.disable() : this.formGroup.enable()
-      ),
-      shareReplay()
-    );
+    effect(() => {
+      const profile = this.store.selectSignal(ProfileSelectors.selectProfile);
+      const value = profile();
 
-    this.store
-      .select(ProfileSelectors.selectProfile)
-      .pipe(
-        filter((profile) => !!profile),
-        first(),
-        tap((profile) => {
-          const value = profile as AppUser;
+      if (!value) return;
 
-          this.formGroup.setValue(
-            {
-              firstname: value.firstname,
-              lastname: value.lastname,
-              email: value.email,
-              pictureUrl: value.pictureUrl ?? null,
-            },
-            { emitEvent: false }
-          );
-
-          this.cd.markForCheck();
-        })
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+      this.formGroup.setValue(
+        {
+          firstname: value.firstname,
+          lastname: value.lastname,
+          email: value.email,
+          pictureUrl: value.pictureUrl ?? null,
+        },
+        { emitEvent: false }
+      );
+    });
   }
 
   updateClicked() {
-    this.store
-      .select(ProfileSelectors.selectProfile)
-      .pipe(
-        filter((profile) => !!profile),
-        first(),
-        tap((currentProfile) => {
-          if (!currentProfile) {
-            return;
-          }
+    const profile = this.currentProfile();
 
-          const profile: AppUser = {
-            ...currentProfile,
-            firstname: this.formGroup.controls.firstname.value as string,
-            lastname: this.formGroup.controls.lastname.value as string,
-            email: this.formGroup.controls.email.value as string,
-          };
+    if (!profile) return;
 
-          this.store.dispatch(updateProfile({ profile }));
-        })
-      )
-      .subscribe();
+    this.store.dispatch(
+      updateProfile({
+        profile: {
+          ...profile,
+          firstname: this.formGroup.controls.firstname.value,
+          lastname: this.formGroup.controls.lastname.value,
+          email: this.formGroup.controls.email.value,
+        },
+      })
+    );
   }
 
   onChangePictureClicked() {
-    this.editProfilePicture$.next(true);
+    this.editProfilePicture.set(true);
   }
 
   onCropped({ blob, src }: { blob: Blob; src: string }) {
@@ -130,49 +95,36 @@ export class UpdateProfileComponent implements OnInit, OnDestroy {
 
     data.append('file', blob, 'profile-picture.png');
 
-    this.editProfilePicture$.next(false);
+    this.editProfilePicture.set(false);
     this.formGroup.controls.pictureUrl.setValue(src);
 
-    this.store
-      .select(ProfileSelectors.selectProfile)
-      .pipe(
-        filter((profile) => !!profile),
-        first(),
-        tap((profile) => {
-          if (!profile) return;
+    const profile = this.currentProfile();
 
-          this.store.dispatch(updateProfile({ profile }));
-          this.store.dispatch(uploadProfilePicture({ data }));
-        })
-      )
-      .subscribe();
+    if (!profile) return;
+
+    this.store.dispatch(updateProfile({ profile }));
+    this.store.dispatch(uploadProfilePicture({ data }));
   }
 
   onCropperCanceled() {
-    this.editProfilePicture$.next(false);
+    this.editProfilePicture.set(false);
   }
 
   onCropperCleared() {
-    this.store
-      .select(ProfileSelectors.selectProfile)
-      .pipe(
-        filter((profile) => !!profile),
-        first(),
-        tap((current) => {
-          if (!current) {
-            return;
-          }
+    const profile = this.currentProfile();
 
-          const profile: AppUser = {
-            ...current,
-            pictureUrl: null,
-          };
-          this.store.dispatch(updateProfile({ profile }));
-        })
-      )
-      .subscribe();
+    if (!profile) return;
+
+    this.store.dispatch(
+      updateProfile({
+        profile: {
+          ...profile,
+          pictureUrl: null,
+        },
+      })
+    );
 
     this.formGroup.controls.pictureUrl.reset();
-    this.editProfilePicture$.next(false);
+    this.editProfilePicture.set(false);
   }
 }
