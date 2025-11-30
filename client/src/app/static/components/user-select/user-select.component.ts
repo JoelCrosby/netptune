@@ -94,7 +94,9 @@ export class UserSelectComponent implements OnInit, OnChanges {
         this.valueIdSet.clear();
 
         for (const user of value) {
-          user && this.valueIdSet.add(user.id);
+          if (user) {
+            this.valueIdSet.add(user.id);
+          }
         }
       }
     }

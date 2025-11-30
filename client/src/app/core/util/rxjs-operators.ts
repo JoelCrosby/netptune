@@ -2,7 +2,6 @@ import { ClientResponse } from '@core/models/client-response';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const unwrapClientReposne =
   <T>() =>
   <P = unknown>(

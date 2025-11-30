@@ -1,17 +1,23 @@
-/* eslint-disable @angular-eslint/no-host-metadata-property */
-
 import { Highlightable } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  inject,
+  input,
+} from '@angular/core';
 import { FormSelectComponent } from './form-select.component';
 import { FormSelectService } from './form-select.service';
 
 @Component({
-    selector: 'app-form-select-option',
-    host: {
-        class: 'nept-form-select-option',
-    },
-    template: `<ng-content />`,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-form-select-option',
+  host: {
+    class: 'nept-form-select-option',
+  },
+  template: `<ng-content />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
