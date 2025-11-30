@@ -1,33 +1,25 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { DialogService } from '@core/services/dialog.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { WorkspaceAppUser } from '@core/models/appuser';
-import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
-import * as UsersSelectors from '@core/store/users/users.selectors';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { UserListItemComponent } from '../user-list-item/user-list-item.component';
-import { MatIconButton } from '@angular/material/button';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
-import { MatTooltip } from '@angular/material/tooltip';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
-  MatMenuTrigger,
   MatMenu,
   MatMenuContent,
   MatMenuItem,
+  MatMenuTrigger,
 } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { WorkspaceAppUser } from '@core/models/appuser';
+import { DialogService } from '@core/services/dialog.service';
+import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
+import { selectAllUsers } from '@core/store/users/users.selectors';
+import { Store } from '@ngrx/store';
+import { UserListItemComponent } from '../user-list-item/user-list-item.component';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     UserListItemComponent,
@@ -39,19 +31,14 @@ import { MatIcon } from '@angular/material/icon';
     MatMenu,
     MatMenuContent,
     MatMenuItem,
-    AsyncPipe,
   ],
 })
-export class UserListComponent implements OnInit {
-  snackBar = inject(MatSnackBar);
-  dialog = inject(DialogService);
+export class UserListComponent {
   private store = inject(Store);
 
-  users$!: Observable<WorkspaceAppUser[]>;
-
-  ngOnInit() {
-    this.users$ = this.store.pipe(select(UsersSelectors.selectAllUsers));
-  }
+  snackBar = inject(MatSnackBar);
+  dialog = inject(DialogService);
+  users = this.store.selectSignal(selectAllUsers);
 
   onRemoveClicked(user: WorkspaceAppUser) {
     if (!user) return;

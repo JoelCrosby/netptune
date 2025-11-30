@@ -3,7 +3,7 @@
   matTooltip="Filter Flagged tasks"
   class="board-filter-button"
   (click)="onClicked()"
-  [color]="(onyFlagged$ | async) ? 'warn' : ''"
+  [color]="onyFlagged() ? 'warn' : ''"
 >
   <mat-icon
     aria-hidden="false"

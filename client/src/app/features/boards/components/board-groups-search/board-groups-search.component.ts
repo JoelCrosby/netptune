@@ -1,26 +1,32 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
-import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
-
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-    selector: 'app-board-groups-search',
-    templateUrl: './board-groups-search.component.html',
-    styleUrls: ['./board-groups-search.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip]
+  selector: 'app-board-groups-search',
+  templateUrl: './board-groups-search.component.html',
+  styleUrls: ['./board-groups-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip],
 })
-export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
+export class BoardGroupsSearchComponent {
   private store = inject(Store);
 
-  term$!: Observable<string>;
-  onDestroy$ = new Subject<void>();
+  searchTerm = this.store.selectSignal(selectSearchTerm);
 
   termFormControl = new FormControl<string | null | undefined>('', [
     Validators.required,
@@ -28,21 +34,10 @@ export class BoardGroupsSearchComponent implements OnInit, OnDestroy {
     Validators.maxLength(64),
   ]);
 
-  ngOnInit() {
-    this.store
-      .select(selectSearchTerm)
-      .pipe(
-        takeUntil(this.onDestroy$),
-        tap((value) =>
-          this.termFormControl.setValue(value, { emitEvent: false })
-        )
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+  constructor() {
+    effect(() =>
+      this.termFormControl.setValue(this.searchTerm(), { emitEvent: false })
+    );
   }
 
   onSubmit() {

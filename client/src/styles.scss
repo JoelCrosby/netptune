@@ -53,6 +53,7 @@
 
   --side-bar-rgb: 41, 36, 46;
   --side-bar: rgba(var(--side-bar-rgb));
+  --side-bar-border: rgba(140, 140, 140, 1);
 
   --side-bar-active-rgb: 52, 50, 61;
   --side-bar-active: rgba(var(--side-bar-active-rgb));
@@ -61,7 +62,7 @@
   --board-group-rgb: 248, 248, 248;
   --board-group: rgba(var(--board-group-rgb));
 
-  --border: rgba(0, 0, 0, .08);
+  --border: rgb(226, 226, 226);
   --status-bar: #fff;
   --app-bar: #fff;
   --hover: rgba(0, 0, 0, .06);
@@ -111,6 +112,7 @@
 
   --side-bar-rgb: 12, 12, 12;
   --side-bar: rgba(var(--side-bar-rgb));
+  --side-bar-border: rgba(56, 56, 56, 1);
 
   --side-bar-active-rgb: 34, 34, 34;
   --side-bar-active: rgba(var(--side-bar-active-rgb));

@@ -35,7 +35,7 @@ export const selectSelectedTasksCount = createSelector(
 export const selectAllBoardGroupsWithSelection = createSelector(
   selectAllBoardGroups,
   selectSelectedTasks,
-  (state: BoardViewGroup[], selected: number[]) =>
+  (state: BoardViewGroup[], selected: number[]): BoardViewGroup[] =>
     state.map((g) => ({
       ...g,
       tasks: g.tasks.map((t) => ({ ...t, selected: selected.includes(t.id) })),
@@ -67,29 +67,30 @@ export const selectIsDragging = createSelector(
   (state: BoardGroupsState) => state.isDragging
 );
 
-export const selectIsInlineActive = createSelector(
-  selectBoardGroupsFeature,
-  (state: BoardGroupsState, props: { groupId: number }) =>
-    props.groupId === state.inlineActive
-);
+export const selectIsInlineActive = (props: { groupId: number }) => {
+  return createSelector(
+    selectBoardGroupsFeature,
+    (state) => props.groupId === state.inlineActive
+  );
+};
 
-export const selectBoard = createSelector(
+export const selectedBoard = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state?.board
+  (state: BoardGroupsState) => state?.board!
 );
 
 export const selectBoardIdentifier = createSelector(
-  selectBoard,
+  selectedBoard,
   (state?: BoardViewModel) => state?.identifier
 );
 
 export const selectBoardId = createSelector(
-  selectBoard,
+  selectedBoard,
   (state?: BoardViewModel) => state?.id
 );
 
 export const selectBoardIdAndIdentifier = createSelector(
-  selectBoard,
+  selectedBoard,
   (state?: BoardViewModel): [id?: number, identifier?: string] => [
     state?.id,
     state?.identifier,
@@ -137,7 +138,7 @@ export const selectBoardGroupTaskAssignee = createSelector(
 );
 
 export const selectBoardProjectId = createSelector(
-  selectBoard,
+  selectedBoard,
   (state?: BoardViewModel) => state?.projectId
 );
 

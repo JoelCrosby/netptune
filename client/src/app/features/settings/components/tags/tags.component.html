@@ -1,7 +1,7 @@
 <h3 class="section-heading">Tags</h3>
 
 <div class="tag-item-list">
-  @for (tag of tag$ | async; track tag; let i = $index) {
+  @for (tag of tags(); track tag; let i = $index) {
     @if (editTagIndex === i) {
       <app-tags-input
         [value]="tag.name"

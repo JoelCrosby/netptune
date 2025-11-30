@@ -1,4 +1,4 @@
-@for (group of groups$ | async; track group) {
+@for (group of groups(); track group) {
   <div class="boards-grid-group">
     <h1 class="section-heading">{{ group.projectName }}</h1>
     <app-card-group>

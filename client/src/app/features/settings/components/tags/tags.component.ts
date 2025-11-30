@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { selectTags } from '@core/store/tags/tags.selectors';
@@ -6,24 +15,21 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
 import { TagsInputComponent } from '../tags-input/tags-input.component';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-tags',
-    templateUrl: './tags.component.html',
-    styleUrls: ['./tags.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TagsInputComponent, MatTooltip, MatIcon, AsyncPipe]
+  selector: 'app-tags',
+  templateUrl: './tags.component.html',
+  styleUrls: ['./tags.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TagsInputComponent, MatTooltip, MatIcon],
 })
 export class TagsComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private cd = inject(ChangeDetectorRef);
 
-  tag$ = this.store.select(selectTags);
+  tags = this.store.selectSignal(selectTags);
   onDestroy$ = new Subject<void>();
 
   addTagActive = false;

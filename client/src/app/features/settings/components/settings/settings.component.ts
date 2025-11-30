@@ -1,39 +1,27 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { changeTheme } from '@core/store/settings/settings.actions';
-import { SettingsState } from '@core/store/settings/settings.model';
 import { selectSettings } from '@core/store/settings/settings.selectors';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { FormsModule } from '@angular/forms';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormSelectComponent,
-    FormsModule,
-    FormSelectOptionComponent,
-    AsyncPipe
-],
+  imports: [FormSelectComponent, FormsModule, FormSelectOptionComponent],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   private store = inject(Store);
 
-  settings$!: Observable<SettingsState>;
+  settings = this.store.selectSignal(selectSettings);
 
   themes = [
     { value: 'LIGHT-THEME', label: 'Light' },
     { value: 'DARK-THEME', label: 'Dark' },
   ];
-
-  ngOnInit() {
-    this.settings$ = this.store.select(selectSettings);
-  }
 
   onThemeSelect(theme: string) {
     this.store.dispatch(changeTheme({ theme }));

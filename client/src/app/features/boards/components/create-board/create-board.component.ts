@@ -1,40 +1,40 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import * as Actions from '@boards/store/boards/boards.actions';
+import { MatButton } from '@angular/material/button';
+import { createBoard } from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { colorDictionary } from '@core/util/colors/colors';
 import { Logger } from '@core/util/logger';
 import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
-import {
-  animationFrameScheduler,
-  combineLatest,
-  Observable,
-  Subject,
-} from 'rxjs';
-import { debounceTime, map, observeOn, takeUntil, tap } from 'rxjs/operators';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { AsyncPipe } from '@angular/common';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { MatButton } from '@angular/material/button';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { animationFrameScheduler } from 'rxjs';
+import { debounceTime, map, observeOn, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-board',
@@ -51,122 +51,87 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
-    AsyncPipe
-],
+  ],
 })
-export class CreateBoardComponent implements OnInit, AfterViewInit {
+export class CreateBoardComponent {
   private store = inject(Store);
   private fb = inject(FormBuilder);
   private cd = inject(ChangeDetectorRef);
   private boardsService = inject(BoardsService);
+
   dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
   data = inject<Board>(DIALOG_DATA, { optional: true });
+  isEditMode = !!this.data;
 
-  isUniqueLoading$ = new Subject<boolean>();
+  form = this.fb.nonNullable.group(
+    {
+      name: ['', [Validators.required]],
+      identifier: [
+        '',
+        [Validators.required],
+        this.data ? null : this.validate.bind(this),
+        'change',
+      ],
+      color: ['#673AB7' as string | undefined],
+      projectId: [null as number | null, [Validators.required]],
+    },
+    { updateOn: 'blur' }
+  );
 
-  projects$!: Observable<ProjectViewModel[]>;
-  identifierIcon$!: Observable<string | null>;
+  isUniqueLoading = signal(false);
+  identifierStatusChanges = toSignal(
+    this.form.controls.identifier.statusChanges
+  );
 
-  onDestroy$ = new Subject<void>();
+  nameValueChanges = toSignal(this.form.controls.name.valueChanges);
+  projects = this.store.selectSignal(selectAllProjects);
 
-  formGroup!: FormGroup;
+  identifierIcon = computed(() => {
+    this.identifierStatusChanges();
+
+    if (this.isUniqueLoading()) {
+      return null;
+    }
+
+    if (this.form.controls.identifier?.valid) {
+      return 'check';
+    }
+
+    return '';
+  });
 
   colors = colorDictionary();
 
-  get name() {
-    return this.formGroup.controls.name;
-  }
+  constructor() {
+    const { name, identifier, color, projectId } = this.form.controls;
 
-  get identifier() {
-    return this.formGroup.controls.identifier;
-  }
-
-  get color() {
-    return this.formGroup.controls.color;
-  }
-
-  get projectId() {
-    return this.formGroup.controls.projectId;
-  }
-
-  get selectedColor() {
-    return this.color.value;
-  }
-
-  get isEditMode() {
-    return !!this.data;
-  }
-
-  ngOnInit() {
-    this.projects$ = this.store.select(selectAllProjects);
-    this.formGroup = this.fb.group(
-      {
-        name: new FormControl('', {
-          validators: [Validators.required],
-          updateOn: 'change',
-        }),
-        identifier: new FormControl('', {
-          validators: [Validators.required],
-          asyncValidators: this.data ? null : this.validate.bind(this),
-          updateOn: 'change',
-        }),
-        color: new FormControl('#673AB7'),
-        projectId: new FormControl(null, {
-          validators: [Validators.required],
-        }),
-      },
-      { updateOn: 'blur' }
-    );
-
-    this.identifierIcon$ = combineLatest([
-      this.isUniqueLoading$.pipe(),
-      this.identifier.statusChanges,
-    ]).pipe(
-      map(([loading]) => {
-        if (loading) return null;
-
-        if (this.identifier?.valid) {
-          return 'check';
-        }
-
-        return '';
-      })
-    );
+    effect(() => {
+      if (this.data) return;
+      const value = this.nameValueChanges();
+      if (typeof value !== 'string') return;
+      identifier.setValue(toUrlSlug(value));
+    });
 
     if (this.data) {
       const board = this.data;
 
-      this.name.setValue(board.name, { emitEvent: false });
-      this.identifier.setValue(board.identifier, { emitEvent: false });
-      this.color.setValue(board.metaInfo?.color, { emitEvent: false });
-      this.projectId.setValue(board.projectId, { emitEvent: false });
-      this.identifier.disable({ emitEvent: false });
-    } else {
-      this.name.valueChanges
-        .pipe(
-          takeUntil(this.onDestroy$),
-          debounceTime(240),
-          tap((value: string | undefined) => {
-            if (typeof value !== 'string') return;
-
-            this.identifier.setValue(toUrlSlug(value));
-          })
-        )
-        .subscribe();
+      name.setValue(board.name, { emitEvent: false });
+      identifier.setValue(board.identifier, { emitEvent: false });
+      color.setValue(board.metaInfo?.color, { emitEvent: false });
+      projectId.setValue(board.projectId, { emitEvent: false });
+      identifier.disable({ emitEvent: false });
     }
-  }
 
-  ngAfterViewInit() {
     this.store.dispatch(loadProjects());
   }
 
   validate(control: AbstractControl) {
-    this.isUniqueLoading$.next(true);
+    this.isUniqueLoading.set(true);
     return this.boardsService.isIdentifierUnique(control.value as string).pipe(
       observeOn(animationFrameScheduler),
       debounceTime(240),
       map((val) => {
-        this.isUniqueLoading$.next(false);
+        this.isUniqueLoading.set(false);
         if (val?.payload?.isUnique) {
           return null;
         } else {
@@ -178,29 +143,33 @@ export class CreateBoardComponent implements OnInit, AfterViewInit {
   }
 
   getResult() {
-    if (this.formGroup.pending) {
+    if (this.form.pending) {
       return;
     }
 
-    if (this.formGroup.invalid) {
-      this.formGroup.markAllAsTouched();
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
+
+    const { name, identifier, color, projectId } = this.form.controls;
+
+    if (!identifier.value || !projectId.value) return;
 
     const request: AddBoardRequest = {
       ...this.data,
-      name: this.name.value,
-      identifier: this.identifier.value,
-      projectId: this.projectId.value,
+      name: name.value,
+      identifier: identifier.value,
+      projectId: projectId.value,
       meta: {
-        color: this.color.value,
+        color: color.value,
       },
     };
 
     if (this.isEditMode) {
       Logger.warn('Edit is not implemented');
     } else {
-      this.store.dispatch(Actions.createBoard({ request }));
+      this.store.dispatch(createBoard({ request }));
     }
 
     this.dialogRef.close();

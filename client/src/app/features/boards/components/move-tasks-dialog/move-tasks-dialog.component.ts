@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
-import * as actions from '@boards/store/groups/board-groups.actions';
-import * as selectors from '@boards/store/groups/board-groups.selectors';
-import { BoardViewGroup } from '@core/models/view-models/board-view';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { moveSelectedTasks } from '@boards/store/groups/board-groups.actions';
+import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selectors';
+import { Store } from '@ngrx/store';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
@@ -14,37 +17,27 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   templateUrl: './move-tasks-dialog.component.html',
   styleUrls: ['./move-tasks-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatButton,
-    DialogActionsDirective,
-    DialogCloseDirective,
-    AsyncPipe
-],
+  imports: [MatButton, DialogActionsDirective, DialogCloseDirective],
 })
-export class MoveTasksDialogComponent implements OnInit {
+export class MoveTasksDialogComponent {
   private store = inject(Store);
   private cd = inject(ChangeDetectorRef);
   dialogRef = inject<DialogRef<MoveTasksDialogComponent>>(DialogRef);
 
-  groups$!: Observable<BoardViewGroup[]>;
-  selected: number | null = null;
-
-  ngOnInit() {
-    this.groups$ = this.store.select(selectors.selectAllBoardGroups);
-  }
+  groups = this.store.selectSignal(selectAllBoardGroups);
+  selected = signal<number | null>(null);
 
   onGroupClicked(groupId: number) {
-    this.selected = groupId;
+    this.selected.set(groupId);
     this.cd.markForCheck();
   }
 
   onMoveTasksClicked() {
-    const newGroupId = this.selected;
+    const newGroupId = this.selected();
 
     if (newGroupId === null) return;
 
-    this.store.dispatch(actions.moveSelectedTasks({ newGroupId }));
-
+    this.store.dispatch(moveSelectedTasks({ newGroupId }));
     this.dialogRef.close();
   }
 }

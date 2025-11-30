@@ -1,5 +1,5 @@
 <div class="app-list mb-5">
-  @for (user of users$ | async; track user.id) {
+  @for (user of users(); track user.id) {
   <app-user-list-item [user]="user">
     <button
       class="app-list-item-action"

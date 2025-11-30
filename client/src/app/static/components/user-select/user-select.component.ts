@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   input,
   output,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppUser } from '@core/models/appuser';
@@ -22,17 +22,25 @@ import { AutofocusDirective } from '../../directives/autofocus.directive';
 
 @UntilDestroy()
 @Component({
-    selector: 'app-user-select',
-    templateUrl: './user-select.component.html',
-    styleUrls: ['./user-select.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AvatarComponent, FormsModule, AutofocusDirective, ReactiveFormsModule, AsyncPipe]
+  selector: 'app-user-select',
+  templateUrl: './user-select.component.html',
+  styleUrls: ['./user-select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AvatarComponent,
+    FormsModule,
+    AutofocusDirective,
+    ReactiveFormsModule,
+    AsyncPipe,
+  ],
 })
 export class UserSelectComponent implements OnInit, OnChanges {
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
   readonly options = input<AppUser[] | null>([]);
-  readonly value = input<((AssigneeViewModel | AppUser)[] | null) | undefined>([]);
+  readonly value = input<((AssigneeViewModel | AppUser)[] | null) | undefined>(
+    []
+  );
   readonly compact = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
