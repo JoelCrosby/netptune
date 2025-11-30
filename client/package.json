@@ -5,8 +5,6 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration production",
-    "build:stats": "ng build --configuration stats --stats-json",
-    "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "update": "ng update",
     "prettier": "prettier --write \"src/**/*.{ts,html,scss}\""
@@ -55,11 +53,11 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular-eslint/builder": "20.6.0",
-    "@angular-eslint/eslint-plugin": "20.6.0",
-    "@angular-eslint/eslint-plugin-template": "20.6.0",
-    "@angular-eslint/schematics": "^20.6.0",
-    "@angular-eslint/template-parser": "20.6.0",
+    "@angular-eslint/builder": "21.0.0",
+    "@angular-eslint/eslint-plugin": "21.0.0",
+    "@angular-eslint/eslint-plugin-template": "21.0.0",
+    "@angular-eslint/schematics": "^21.0.0",
+    "@angular-eslint/template-parser": "21.0.0",
     "@angular/build": "^21.0.0",
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
