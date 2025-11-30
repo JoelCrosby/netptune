@@ -1,28 +1,21 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { toggleOnlyFlagged } from '@boards/store/groups/board-groups.actions';
 import { selectOnlyFlagged } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-board-groups-flagged',
-    templateUrl: './board-groups-flagged.component.html',
-    styleUrls: ['./board-groups-flagged.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButton, MatTooltip, MatIcon, AsyncPipe]
+  selector: 'app-board-groups-flagged',
+  templateUrl: './board-groups-flagged.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatButton, MatTooltip, MatIcon],
 })
-export class BoardGroupsFlaggedComponent implements OnInit {
+export class BoardGroupsFlaggedComponent {
   private store = inject(Store);
 
-  onyFlagged$!: Observable<boolean>;
-
-  ngOnInit() {
-    this.onyFlagged$ = this.store.select(selectOnlyFlagged);
-  }
+  onyFlagged = this.store.selectSignal(selectOnlyFlagged);
 
   onClicked() {
     this.store.dispatch(toggleOnlyFlagged());

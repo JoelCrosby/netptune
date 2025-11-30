@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ isEditMode ? 'Edit Board' : 'Create Board'}}</h1>
 
-<form app-dialog-content class="form-auth" [formGroup]="formGroup">
+<form app-dialog-content class="form-auth" [formGroup]="form">
   <app-form-input formControlName="name" label="Board Name" maxLength="1024">
   </app-form-input>
 
@@ -8,14 +8,14 @@
     formControlName="identifier"
     label="Board Identifier"
     maxLength="1024"
-    [icon]="identifierIcon$ | async"
-    [loading]="isUniqueLoading$ | async"
-    [hint]="identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
+    [icon]="identifierIcon()"
+    [loading]="isUniqueLoading()"
+    [hint]="form.controls.identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
     >
   </app-form-input>
 
   <app-form-select formControlName="projectId" label="Project">
-    @for (project of projects$ | async; track project) {
+    @for (project of projects(); track project.id) {
       <app-form-select-option
         [value]="project.id"
         >

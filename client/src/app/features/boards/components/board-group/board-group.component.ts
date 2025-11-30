@@ -1,29 +1,33 @@
-import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
-import { DialogService } from '@core/services/dialog.service';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
+import { selectIsInlineActive } from '@boards/store/groups/board-groups.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
 import {
   BoardViewGroup,
   BoardViewTask,
 } from '@core/models/view-models/board-view';
+import { DialogService } from '@core/services/dialog.service';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
-import {
-  BehaviorSubject,
-  combineLatest,
-  fromEvent,
-  Observable,
-  Subject,
-} from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
-import { AsyncPipe } from '@angular/common';
+import { fromEvent } from 'rxjs';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
 import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-board-group',
@@ -37,13 +41,11 @@ import { MatButton } from '@angular/material/button';
     CdkDrag,
     BoardGroupTaskInlineComponent,
     MatButton,
-    AsyncPipe
-],
+  ],
 })
-export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);
   private dialog = inject(DialogService);
-  private zone = inject(NgZone);
 
   readonly dragListId = input.required<string>();
   readonly group = input.required<BoardViewGroup>();
@@ -51,59 +53,33 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
 
   readonly container = viewChild.required<ElementRef>('container');
 
-  focusedSubject = new BehaviorSubject<boolean>(false);
-  onDestroy$ = new Subject<void>();
+  focused = signal(false);
+  isDragging = this.store.selectSignal(BoardGroupSelectors.selectIsDragging);
+  isInlineActive = computed(() => {
+    const groupId = this.group().id;
+    const inline = this.store.selectSignal(selectIsInlineActive({ groupId }));
 
-  focused$!: Observable<boolean>;
-  isDragging$!: Observable<boolean>;
-  isInlineActive$!: Observable<boolean>;
+    return inline();
+  });
 
-  showAddButton$!: Observable<boolean>;
-
-  dragging = false;
-
-  ngOnInit() {
-    this.focused$ = this.focusedSubject.pipe();
-    this.isDragging$ = this.store.select(BoardGroupSelectors.selectIsDragging);
-
-    this.isInlineActive$ = this.store.select(
-      BoardGroupSelectors.selectIsInlineActive,
-      { groupId: this.group().id }
-    );
-
-    this.showAddButton$ = combineLatest([
-      this.focused$,
-      this.isDragging$,
-      this.isInlineActive$,
-    ]).pipe(
-      map(
-        ([focused, isDragging, isInlineActive]) =>
-          focused && !isDragging && !isInlineActive
-      )
-    );
-  }
+  showAddButton = computed(() => {
+    return this.focused() && !this.isDragging() && !this.isInlineActive();
+  });
 
   ngAfterViewInit() {
     const el: HTMLDivElement = this.container().nativeElement;
 
-    fromEvent(el, 'mouseenter', { passive: true })
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe({
-        next: () => this.focusedSubject.next(true),
-      });
+    fromEvent(el, 'mouseenter', { passive: true }).subscribe({
+      next: () => this.focused.set(true),
+    });
 
-    fromEvent(el, 'mouseleave', { passive: true })
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe({
-        next: () => this.focusedSubject.next(false),
-      });
+    fromEvent(el, 'mouseleave', { passive: true }).subscribe({
+      next: () => this.focused.set(false),
+    });
   }
 
   ngOnDestroy() {
     document.removeEventListener('mousemove', mouseMoveHandler);
-
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
   onAddTaskClicked() {
@@ -133,14 +109,9 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDragStarted() {
-    this.dragging = true;
     this.trackMousePosition();
 
-    this.zone.run(() => {
-      this.store.dispatch(
-        BoardGroupActions.setIsDragging({ isDragging: true })
-      );
-    });
+    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: true }));
   }
 
   trackMousePosition() {
@@ -156,11 +127,7 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
   onDragRelease() {
     this.untrackMousePosition();
 
-    this.zone.run(() => {
-      this.store.dispatch(
-        BoardGroupActions.setIsDragging({ isDragging: false })
-      );
-    });
+    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: false }));
   }
 
   trackGroupTask(_: number, task: BoardViewTask) {
@@ -172,13 +139,6 @@ export class BoardGroupComponent implements OnInit, OnDestroy, AfterViewInit {
     task: Selected<BoardViewTask>,
     groupId: number
   ) {
-    if (this.dragging) {
-      this.dragging = false;
-      return;
-    }
-
-    this.dragging = false;
-
     const id = task.id;
     const selected = task.selected;
 

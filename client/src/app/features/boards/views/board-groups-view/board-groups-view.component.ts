@@ -1,49 +1,57 @@
 import {
-  CdkDragDrop,
-  moveItemInArray,
-  CdkDropList,
   CdkDrag,
+  CdkDragDrop,
   CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
-  OnDestroy,
-  OnInit,
   inject,
+  linkedSignal,
+  OnDestroy,
   viewChild,
 } from '@angular/core';
-import * as BoardActions from '@boards/store//boards/boards.actions';
-import * as GroupActions from '@boards/store/groups/board-groups.actions';
-import * as GroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { Board } from '@core/models/board';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { BoardGroupTagsComponent } from '@boards/components/board-group-tags/board-group-tags.component';
+import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
+import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
+import { BoardGroupsFlaggedComponent } from '@boards/components/board-groups-flagged/board-groups-flagged.component';
+import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
+import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
+import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import { deleteBoard, updateBoard } from '@boards/store/boards/boards.actions';
+import {
+  clearState,
+  deleteBoardGroup,
+  editBoardGroup,
+  exportBoardTasks,
+  loadBoardGroups,
+} from '@boards/store/groups/board-groups.actions';
+import {
+  selectAllBoardGroupsWithSelection,
+  selectBoardGroupsLoaded,
+  selectBoardGroupsLoading,
+  selectBoardIdentifier,
+  selectedBoard,
+} from '@boards/store/groups/board-groups.selectors';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
-import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
-import { select, Store } from '@ngrx/store';
-import { from, Observable, of } from 'rxjs';
-import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
-import { PageContainerComponent } from '@static/components/page-container/page-container.component';
-import { AsyncPipe } from '@angular/common';
-import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
-import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
-import { BoardGroupTagsComponent } from '@boards/components/board-group-tags/board-group-tags.component';
-import { BoardGroupsFlaggedComponent } from '@boards/components/board-groups-flagged/board-groups-flagged.component';
-import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
-import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
+import { Store } from '@ngrx/store';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
-import { MatIconButton } from '@angular/material/button';
-import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
@@ -69,23 +77,20 @@ import { CreateBoardGroupComponent } from '@boards/components/create-board-group
     InlineEditInputComponent,
     MatIconButton,
     CreateBoardGroupComponent,
-    AsyncPipe,
   ],
 })
-export class BoardGroupsViewComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
 
   readonly importTasksInput =
     viewChild.required<ElementRef>('importTasksInput');
 
-  groups$!: Observable<BoardViewGroup[]>;
-  selectedBoard$!: Observable<Board | undefined>;
-  selectedBoardName$!: Observable<string | undefined>;
-  loading$!: Observable<boolean>;
-  boardGroupsLoaded$!: Observable<boolean>;
+  groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
+  board = this.store.selectSignal(selectedBoard);
+  boardName = linkedSignal(() => this.board()?.name);
+  loading = this.store.selectSignal(selectBoardGroupsLoading);
+  boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
 
   secondaryActions: HeaderAction[] = [
     {
@@ -108,66 +113,33 @@ export class BoardGroupsViewComponent
     },
   ];
 
-  private board?: Board;
+  constructor() {
+    effect(() => {
+      const idSignal = this.store.selectSignal(selectBoardIdentifier);
+      const identifier = idSignal();
 
-  ngOnInit() {
-    this.groups$ = this.store.select(
-      GroupSelectors.selectAllBoardGroupsWithSelection
-    );
+      if (!identifier) return;
 
-    this.loading$ = this.store
-      .select(GroupSelectors.selectBoardGroupsLoading)
-      .pipe(startWith(true));
+      this.hubService.connect().then(() => {
+        this.hubService.addToGroup(identifier);
+      });
+    });
 
-    this.boardGroupsLoaded$ = this.store
-      .select(GroupSelectors.selectBoardGroupsLoaded)
-      .pipe(startWith(true));
-
-    this.selectedBoardName$ = this.store.pipe(
-      select(GroupSelectors.selectBoard),
-      filter((board) => !!board),
-      tap((board) => {
-        this.board = board;
-      }),
-      map((board) => board && board.name)
-    );
-
-    this.store
-      .select(GroupSelectors.selectBoardIdentifier)
-      .pipe(
-        filter((val) => !!val),
-        first(),
-        switchMap((identifier) =>
-          from(this.hubService.connect()).pipe(
-            switchMap(() => {
-              if (!identifier) return of({ type: 'NOOP' });
-
-              return this.hubService.addToGroup(identifier);
-            })
-          )
-        )
-      )
-      .subscribe();
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(GroupActions.loadBoardGroups());
+    this.store.dispatch(loadBoardGroups());
   }
 
   ngOnDestroy() {
-    this.store.dispatch(GroupActions.clearState());
+    this.store.dispatch(clearState());
     void this.hubService.disconnect();
   }
 
   onTitleSubmitted(title: string) {
-    if (!title || !this.board?.id) return;
-
-    console.log('onTitleSubmitted');
+    if (!title || !this.board()?.id) return;
 
     this.store.dispatch(
-      BoardActions.updateBoard({
+      updateBoard({
         request: {
-          id: this.board.id,
+          id: this.board().id,
           name: title,
         },
       })
@@ -180,7 +152,7 @@ export class BoardGroupsViewComponent
       .map((item) => item.id.toString());
   }
 
-  drop(event: CdkDragDrop<BoardViewGroup[]>) {
+  drop(event: CdkDragDrop<BoardViewGroup[], BoardViewGroup, BoardViewGroup>) {
     moveItemInArray(
       event.container.data,
       event.previousIndex,
@@ -208,7 +180,7 @@ export class BoardGroupsViewComponent
 
   moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
     this.store.dispatch(
-      GroupActions.editBoardGroup({
+      editBoardGroup({
         request: {
           boardGroupId: boardGroup.id,
           sortOrder,
@@ -222,7 +194,7 @@ export class BoardGroupsViewComponent
   }
 
   onDeleteGroupClicked(boardGroup: BoardViewGroup) {
-    this.store.dispatch(GroupActions.deleteBoardGroup({ boardGroup }));
+    this.store.dispatch(deleteBoardGroup({ boardGroup }));
   }
 
   onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {
@@ -233,7 +205,7 @@ export class BoardGroupsViewComponent
       name: value,
     };
 
-    this.store.dispatch(GroupActions.editBoardGroup({ request }));
+    this.store.dispatch(editBoardGroup({ request }));
   }
 
   onImportTasksClicked() {
@@ -245,15 +217,15 @@ export class BoardGroupsViewComponent
   }
 
   onExportTasksClicked() {
-    this.store.dispatch(GroupActions.exportBoardTasks());
+    this.store.dispatch(exportBoardTasks());
   }
 
   onDeleteBoardClicked() {
-    const boardId = this.board?.id;
+    const boardId = this.board()?.id;
 
     if (boardId === undefined || boardId === null) return;
 
-    this.store.dispatch(BoardActions.deleteBoard({ boardId }));
+    this.store.dispatch(deleteBoard({ boardId }));
   }
 
   handleFileInput(event: Event) {
@@ -263,10 +235,10 @@ export class BoardGroupsViewComponent
 
     const file = files[0];
 
-    const boardIdentifier = this.board?.identifier;
+    const boardIdentifier = this.board()?.identifier;
 
     if (boardIdentifier === undefined || boardIdentifier === null) return;
 
-    this.store.dispatch(TaskActions.importTasks({ boardIdentifier, file }));
+    this.store.dispatch(importTasks({ boardIdentifier, file }));
   }
 }

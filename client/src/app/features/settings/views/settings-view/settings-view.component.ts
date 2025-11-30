@@ -6,7 +6,6 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
 @Component({
   templateUrl: './settings-view.component.html',
-  styleUrls: ['./settings-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,

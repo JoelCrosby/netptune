@@ -25,7 +25,7 @@
         </app-board-group-card>
       }
 
-      @if (isInlineActive$ | async) {
+      @if (isInlineActive()) {
         <app-board-group-task-inline
           (canceled)="onInlineCanceled()"
           [boardGroupId]="group().id"
@@ -33,7 +33,7 @@
         </app-board-group-task-inline>
       }
 
-      @if (showAddButton$ | async) {
+      @if (showAddButton()) {
         <div class="create-task">
           <button mat-button color="primary" (click)="onAddTaskClicked()">
             ADD TASK

@@ -1,17 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import * as BoardSelectors from '@boards/store/boards/boards.selectors';
-import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { CardGroupComponent } from '@static/components/card/card-group.component';
-import { RouterLinkActive, RouterLink } from '@angular/router';
-import { CardComponent } from '@static/components/card/card.component';
-import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import * as BoardSelectors from '@boards/store/boards/boards.selectors';
+import { Store } from '@ngrx/store';
+import { CardGroupComponent } from '@static/components/card/card-group.component';
+import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
+import { CardComponent } from '@static/components/card/card.component';
 
 @Component({
   selector: 'app-boards-grid',
@@ -28,15 +25,10 @@ import { CardSubtitleComponent } from '@static/components/card/card-subtitle.com
     CardHeaderComponent,
     CardTitleComponent,
     CardSubtitleComponent,
-    AsyncPipe
-],
+  ],
 })
-export class BoardsGridComponent implements OnInit {
+export class BoardsGridComponent {
   private store = inject(Store);
 
-  groups$!: Observable<BoardsViewModel[]>;
-
-  ngOnInit() {
-    this.groups$ = this.store.select(BoardSelectors.selectAllBoards);
-  }
+  groups = this.store.selectSignal(BoardSelectors.selectAllBoards);
 }

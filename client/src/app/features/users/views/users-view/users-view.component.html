@@ -5,7 +5,7 @@
     (actionClick)="onInviteUsers()"
     />
 
-  @if (loading$ | async) {
+  @if (loading()) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>

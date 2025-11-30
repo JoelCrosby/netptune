@@ -1,26 +1,40 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {
   FormControl,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
+import {
+  selectBoardProjectId,
+  selectCreateBoardGroupTaskMessage,
+} from '@boards/store/groups/board-groups.selectors';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { Workspace } from '@core/models/workspace';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import {
-  BehaviorSubject,
-  combineLatest,
-  fromEvent,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { fromEvent, Subject } from 'rxjs';
 import {
   debounceTime,
   first,
@@ -28,11 +42,6 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { MatInput } from '@angular/material/input';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { AsyncPipe } from '@angular/common';
-import { MatTooltip } from '@angular/material/tooltip';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -46,8 +55,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
     ReactiveFormsModule,
     MatTooltip,
     SpinnerComponent,
-    AsyncPipe
-],
+  ],
 })
 export class BoardGroupTaskInlineComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -57,7 +65,9 @@ export class BoardGroupTaskInlineComponent
   private actions$ = inject<Actions<Action>>(Actions);
 
   readonly inputElementRef = viewChild.required<ElementRef>('taskInput');
-  readonly containerElementRef = viewChild.required<ElementRef>('taskInlineContainer');
+  readonly containerElementRef = viewChild.required<ElementRef>(
+    'taskInlineContainer'
+  );
 
   readonly boardGroupId = input.required<number>();
   readonly canceled = output();
@@ -69,12 +79,12 @@ export class BoardGroupTaskInlineComponent
 
   onDestroy$ = new Subject<void>();
 
-  currentWorkspace$!: Observable<Workspace | undefined>;
-  currentProjectId$!: Observable<number | undefined>;
-  currentUser$!: Observable<UserResponse | undefined>;
-  message$!: Observable<string | null>;
+  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
+  currentProjectId = this.store.selectSignal(selectBoardProjectId);
+  currentUser = this.store.selectSignal(selectCurrentUser);
+  message = this.store.selectSignal(selectCreateBoardGroupTaskMessage);
 
-  createInProgress$ = new BehaviorSubject<boolean>(false);
+  createInProgress = signal(false);
 
   ngOnInit() {
     fromEvent(document, 'mousedown', {
@@ -92,7 +102,7 @@ export class BoardGroupTaskInlineComponent
         takeUntil(this.onDestroy$),
         ofType(BoardGroupActions.loadBoardGroupsSuccess),
         tap(() => {
-          this.createInProgress$.next(false);
+          this.createInProgress.set(false);
           this.taskInputControl.reset();
           this.taskInputControl.enable();
           this.inputElementRef().nativeElement.focus();
@@ -120,15 +130,6 @@ export class BoardGroupTaskInlineComponent
 
   ngAfterViewInit() {
     this.inputElementRef().nativeElement.focus();
-
-    this.currentWorkspace$ = this.store.select(selectCurrentWorkspace);
-    this.currentProjectId$ = this.store.select(
-      BoardGroupSelectors.selectBoardProjectId
-    );
-    this.currentUser$ = this.store.select(selectCurrentUser);
-    this.message$ = this.store.select(
-      BoardGroupSelectors.selectCreateBoardGroupTaskMessage
-    );
   }
 
   ngOnDestroy() {
@@ -146,15 +147,12 @@ export class BoardGroupTaskInlineComponent
   onSubmit(event?: Event) {
     event?.preventDefault();
 
-    combineLatest([this.currentProjectId$, this.currentUser$])
-      .pipe(first())
-      .subscribe({
-        next: ([projectId, user]) => {
-          if (!projectId || !user) return;
+    const user = this.currentUser();
+    const projectId = this.currentProjectId();
 
-          this.createTask(projectId, user);
-        },
-      });
+    if (!projectId || !user) return;
+
+    this.createTask(projectId, user);
   }
 
   createTask(projectId: number, user: UserResponse) {
@@ -167,7 +165,7 @@ export class BoardGroupTaskInlineComponent
 
     this.store.dispatch(BoardGroupActions.createProjectTask({ task }));
 
-    this.createInProgress$.next(true);
+    this.createInProgress.set(true);
     this.taskInputControl.disable();
   }
 }

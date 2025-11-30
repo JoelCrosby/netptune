@@ -1,6 +1,6 @@
 <div
   class="inline-task-container"
-  [class.create-in-progress]="createInProgress$ | async"
+  [class.create-in-progress]="createInProgress()"
   #taskInlineContainer
   >
   <textarea
@@ -18,7 +18,7 @@
     >
   </textarea>
   <div class="inline-task-footer">
-    @if (message$ | async; as message) {
+    @if (message(); as message) {
       <div
         class="inline-task-info-message"
         [matTooltip]="message"
@@ -27,7 +27,7 @@
       </div>
     }
 
-    @if (createInProgress$ | async) {
+    @if (createInProgress()) {
       <app-spinner diameter="1.4rem">
       </app-spinner>
     }

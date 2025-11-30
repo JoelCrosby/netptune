@@ -1,5 +1,9 @@
-import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+} from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DialogService } from '@core/services/dialog.service';
 import {
@@ -16,21 +20,19 @@ import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './users-view.component.html',
-  styleUrls: ['./users-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
     MatProgressSpinner,
     UserListComponent,
-    AsyncPipe
-],
+  ],
 })
 export class UsersViewComponent implements AfterViewInit {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
-  loading$ = this.store.select(selectUsersLoading);
+  loading = this.store.selectSignal(selectUsersLoading);
 
   ngAfterViewInit() {
     this.store.dispatch(loadUsers());

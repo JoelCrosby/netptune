@@ -12,9 +12,9 @@
   [verticalPadding]="false"
   [fullHeight]="true"
   >
-  @if (boardGroupsLoaded$ | async) {
+  @if (boardGroupsLoaded()) {
     <app-page-header
-      [title]="selectedBoardName$ | async"
+      [title]="boardName()"
       [titleEditable]="true"
       [overflowActions]="secondaryActions"
       [backLink]="['../../boards']"
@@ -32,12 +32,12 @@
     </app-page-header>
   }
 
-  @if (loading$ | async) {
+  @if (loading()) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
   } @else {
-    @if (groups$ | async; as groups) {
+    @if (groups(); as groups) {
       <div
         cdkDropList
         appScrollShadow

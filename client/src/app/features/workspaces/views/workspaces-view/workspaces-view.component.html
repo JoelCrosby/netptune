@@ -4,13 +4,13 @@
     (actionClick)="openWorkspaceDialog()"
      />
 
-  @if (loading$ | async) {
+  @if (loading()) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>
   } @else {
     <app-workspace-list />
-    @if (buildInfo$ | async; as buildInfo) {
+    @if (buildInfo(); as buildInfo) {
       <div class="build-info">
         <a
           class="gitHashShort"

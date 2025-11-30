@@ -1,40 +1,39 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
-import * as selectors from '@boards/store/groups/board-groups.selectors';
-import * as actions from '@boards/store/groups/board-groups.actions';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { DialogService } from '@core/services/dialog.service';
-import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
-import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
-import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+import {
+  clearTaskSelection,
+  deleteSelectedTasks,
+} from '@boards/store/groups/board-groups.actions';
+import {
+  selectSelectedTasks,
+  selectSelectedTasksCount,
+} from '@boards/store/groups/board-groups.selectors';
+import { DialogService } from '@core/services/dialog.service';
+import { Store } from '@ngrx/store';
+import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
+import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
 @Component({
-    selector: 'app-board-groups-selection',
-    templateUrl: './board-groups-selection.component.html',
-    styleUrls: ['./board-groups-selection.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIcon, MatTooltip, AsyncPipe]
+  selector: 'app-board-groups-selection',
+  templateUrl: './board-groups-selection.component.html',
+  styleUrls: ['./board-groups-selection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon, MatTooltip],
 })
-export class BoardGroupsSelectionComponent implements OnInit {
+export class BoardGroupsSelectionComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
 
-  selected$!: Observable<number[]>;
-  count$!: Observable<number>;
-
-  ngOnInit() {
-    this.selected$ = this.store.select(selectors.selectSelectedTasks);
-    this.count$ = this.store.select(selectors.selectSelectedTasksCount);
-  }
+  selected = this.store.selectSignal(selectSelectedTasks);
+  count = this.store.selectSignal(selectSelectedTasksCount);
 
   onClearClicked() {
-    this.store.dispatch(actions.clearTaskSelection());
+    this.store.dispatch(clearTaskSelection());
   }
 
   onDeleteClicked() {
-    this.store.dispatch(actions.deleteSelectedTasks());
+    this.store.dispatch(deleteSelectedTasks());
   }
 
   onMoveTasksClicked() {

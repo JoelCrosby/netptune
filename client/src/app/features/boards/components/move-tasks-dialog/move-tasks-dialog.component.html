@@ -4,11 +4,11 @@
 
 <div app-dialog-content>
   <div class="group-selection">
-    @for (group of groups$ | async; track group) {
+    @for (group of groups(); track group.id) {
       <button
-        [class.selected]="selected === group.id"
+        [class.selected]="selected() === group.id"
         mat-stroked-button
-        [color]="selected === group.id ? 'primary' : ''"
+        [color]="selected() === group.id ? 'primary' : ''"
         (click)="onGroupClicked(group.id)"
         >
         <label>

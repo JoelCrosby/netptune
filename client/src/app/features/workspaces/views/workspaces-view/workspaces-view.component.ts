@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DialogService } from '@core/services/dialog.service';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
@@ -7,8 +13,6 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { WorkspaceListComponent } from '@workspaces/components/workspace-list/workspace-list.component';
 
 @Component({
@@ -20,15 +24,14 @@ import { WorkspaceListComponent } from '@workspaces/components/workspace-list/wo
     PageHeaderComponent,
     MatProgressSpinner,
     WorkspaceListComponent,
-    AsyncPipe
-],
+  ],
 })
 export class WorkspacesViewComponent implements OnInit {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
-  buildInfo$ = this.store.select(selectBuildInfo);
-  loading$ = this.store.select(selectWorkspacesLoading);
+  buildInfo = this.store.selectSignal(selectBuildInfo);
+  loading = this.store.selectSignal(selectWorkspacesLoading);
 
   ngOnInit() {
     this.store.dispatch(loadBuildInfo());
