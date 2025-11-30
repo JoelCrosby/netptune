@@ -9,7 +9,7 @@ export interface ActivityViewModel {
   type: ActivityType;
   entityId: number;
   time: Date;
-  meta: { [key: string]: unknown };
+  meta: Record<string, unknown>;
   assignee?: UserAvatar;
 }
 

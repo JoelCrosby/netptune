@@ -96,7 +96,7 @@ export interface NamedColor {
 export const colorDictionary = (): NamedColor[] => {
   const pre = Object.keys(Colors500).map((colorKey) => {
     const name = toWordCase(colorKey);
-    const color = (Colors500 as { [key: string]: string })[colorKey];
+    const color = (Colors500 as Record<string, string>)[colorKey];
 
     if (!name || !color) return null;
 

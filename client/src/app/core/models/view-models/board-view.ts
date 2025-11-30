@@ -37,5 +37,3 @@ export interface AssigneeViewModel {
   displayName: string;
   pictureUrl: string;
 }
-
-export interface BoardViewGroupWithTasks extends BoardViewGroup {}

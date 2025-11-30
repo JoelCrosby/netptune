@@ -15,7 +15,6 @@ export const debug =
     const { type, ...payload } = action;
     const error = type.includes('Fail');
 
-    // eslint-disable-next-line no-console
     const log = console[error ? 'error' : 'info'];
 
     log(`%c[NGRX] %c${type}`, 'color: #D171E1', 'color: inherit', {

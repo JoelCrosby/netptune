@@ -14,9 +14,7 @@ import { firstValueFrom } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { HubMethodHandler } from './hub.service';
 
-interface ConnectionMap {
-  [baseUrl: string]: HubConnection;
-}
+type ConnectionMap = Record<string, HubConnection>;
 
 @Injectable({
   providedIn: 'root',
@@ -81,11 +79,12 @@ export class HubConnectionService {
     try {
       await connection.start();
 
-      connection.connectionId &&
+      if (connection.connectionId) {
         Logger.log(
           `%c[SIGNAL-R][Connected] id: ${connection.connectionId}`,
           'color: lime'
         );
+      }
     } catch (err) {
       if (typeof err === 'string') {
         return console.error(`[SIGNAL-R][ERROR] ${err}`);
@@ -103,10 +102,11 @@ export class HubConnectionService {
 
     await connection.stop();
 
-    connectionId &&
+    if (connectionId) {
       Logger.log(
         `%c[SIGNAL-R][Disconnected] id: ${connectionId}`,
         'color: orange'
       );
+    }
   }
 }
