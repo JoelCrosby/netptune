@@ -1,9 +1,9 @@
 <div
   class="task-inline-container"
-  [class.edit-mode]="editActive"
+  [class.edit-mode]="inlineEditActive()"
   #taskInlineContainer
   >
-  @if (!editActive) {
+  @if (!inlineEditActive()) {
     <button
       mat-button
       disableRipple="true"

@@ -53,10 +53,12 @@ export class BoardGroupsEffects {
         TaskActions.addTagToTaskSuccess
       ),
       withLatestFrom(
-        this.store.select(RouteSelectors.selectRouterParam, 'id'),
+        this.store.select(RouteSelectors.selectRouterParam('id')),
         this.route.queryParamMap,
-        this.route.queryParams
+        this.route.queryParams,
+        this.store.select(RouteSelectors.isBoardGroupsRoute)
       ),
+      filter(([, , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
       switchMap(([_, id, paramMap, params]) =>
         this.boardGroupsService.get(id as string, params).pipe(
           unwrapClientReposne(),

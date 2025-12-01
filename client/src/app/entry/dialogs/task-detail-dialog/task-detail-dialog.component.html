@@ -129,16 +129,7 @@
   </form>
 </div>
 <div app-dialog-actions align="end">
-  <div class="task-dates">
-    <div class="created-at" [matTooltip]="task.createdAt | prettyDate">
-      <label>Created</label>
-      <span>{{ task.createdAt | fromNow }}</span>
-    </div>
-    <div class="updated-at" [matTooltip]="task.updatedAt | prettyDate">
-      <label>Updated</label>
-      <span>{{ task.updatedAt | fromNow }}</span>
-    </div>
-  </div>
+  <app-task-dates [task]="task" />
 </div>
 } @else {
 <div class="task-detail-loading">

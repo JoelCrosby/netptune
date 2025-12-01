@@ -52,8 +52,6 @@ import { EditorComponent } from '@static/components/editor/editor.component';
 import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { FromNowPipe } from '@static/pipes/from-now.pipe';
-import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 import { Subject } from 'rxjs';
 import {
@@ -63,6 +61,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { TaskDates } from '@static/components/task-dates/task-dates.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -89,9 +88,8 @@ import {
     EditorComponent,
     DialogActionsDirective,
     MatProgressSpinner,
-    FromNowPipe,
-    PrettyDatePipe,
     TaskStatusPipe,
+    TaskDates,
   ],
 })
 export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {

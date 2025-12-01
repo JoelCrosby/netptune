@@ -9,12 +9,10 @@ import {
   BrowserModule,
   enableDebugTools,
 } from '@angular/platform-browser';
+import { CoreModule } from '@core/core.module';
 import { environment } from '@env/environment';
-import { SharedModule } from '@shared/shared.module';
-import { StaticModule } from '@static/static.module';
 import { AppComponent } from './app/app.component';
 import { AppRoutingModule } from './app/app.routing.module';
-import { CoreModule } from './app/core';
 
 if (environment.production) {
   enableProdMode();
@@ -37,8 +35,6 @@ bootstrapApplication(AppComponent, {
       BrowserModule,
       // core & shared
       CoreModule,
-      StaticModule,
-      SharedModule,
       // app
       AppRoutingModule
     ),
