@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output
+  output,
 } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { CardComponent } from '../card/card.component';
@@ -27,8 +27,8 @@ import { RouterLink } from '@angular/router';
     CardContentComponent,
     CardActionsComponent,
     MatAnchor,
-    RouterLink
-],
+    RouterLink,
+  ],
 })
 export class CardListItemComponent {
   readonly title = input.required<string>();

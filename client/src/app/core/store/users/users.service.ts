@@ -10,7 +10,6 @@ import { environment } from '@env/environment';
 export class UsersService {
   private http = inject(HttpClient);
 
-
   getUsersInWorkspace() {
     return this.http.get<WorkspaceAppUser[]>(
       environment.apiEndpoint + `api/users`

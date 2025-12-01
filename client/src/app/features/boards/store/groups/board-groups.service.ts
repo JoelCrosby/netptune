@@ -16,7 +16,6 @@ import { switchMap } from 'rxjs/operators';
 export class BoardGroupsService {
   private http = inject(HttpClient);
 
-
   get(boardId: string, params: Params) {
     return this.http.get<ClientResponse<BoardView>>(
       environment.apiEndpoint + `api/boards/view/${boardId}`,

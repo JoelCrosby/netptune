@@ -1,17 +1,24 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
-import { Component, ChangeDetectionStrategy, HostListener, inject, input, viewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  HostListener,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
 @Component({
-    selector: 'app-form-select-dropdown',
-    template: `
+  selector: 'app-form-select-dropdown',
+  template: `
     <ng-template cdkPortal>
       <ng-content />
     </ng-template>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ɵɵCdkPortal]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ɵɵCdkPortal],
 })
 export class FormSelectDropdownComponent {
   private overlay = inject(Overlay);

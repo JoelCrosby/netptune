@@ -1,5 +1,16 @@
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, OnDestroy, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  OnDestroy,
+  ViewEncapsulation,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
 import { Logger } from '@core/util/logger';
@@ -20,18 +31,18 @@ import { environment } from '@env/environment';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-editor',
-    templateUrl: './editor.component.html',
-    styleUrls: ['./editor.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => EditorComponent),
-            multi: true,
-        },
-    ]
+  selector: 'app-editor',
+  template: '<div class="editor" #editorJs></div>',
+  styleUrls: ['./editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => EditorComponent),
+      multi: true,
+    },
+  ],
 })
 export class EditorComponent implements ControlValueAccessor, OnDestroy {
   private storage = inject(StorageService);

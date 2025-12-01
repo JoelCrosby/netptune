@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 export class StorageService {
   private http = inject(HttpClient);
 
-
   uploadMedia(file: File): Observable<ClientResponse<UploadResponse>> {
     const formData = new FormData();
     formData.append('files', file);

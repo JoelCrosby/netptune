@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -32,8 +38,8 @@ import { MatAnchor, MatButton } from '@angular/material/button';
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   private store = inject(Store);

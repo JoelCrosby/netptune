@@ -23,7 +23,6 @@ import { MatButton } from '@angular/material/button';
 export class CreateWorkspaceListItemComponent {
   private dialog = inject(DialogService);
 
-
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {
       data: null,

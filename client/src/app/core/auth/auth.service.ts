@@ -17,7 +17,6 @@ import {
 export class AuthService {
   private http = inject(HttpClient);
 
-
   currentUser() {
     return this.http.get<UserResponse>(
       environment.apiEndpoint + 'api/auth/current-user'

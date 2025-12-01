@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
@@ -10,10 +16,10 @@ import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    templateUrl: './confirm-view.component.html',
-    styleUrls: ['./confirm-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatProgressSpinner, AsyncPipe]
+  templateUrl: './confirm-view.component.html',
+  styleUrls: ['./confirm-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatProgressSpinner, AsyncPipe],
 })
 export class ConfirmViewComponent implements OnInit, AfterViewInit {
   private activatedRoute = inject(ActivatedRoute);

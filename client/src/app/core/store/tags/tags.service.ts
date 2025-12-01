@@ -17,7 +17,6 @@ import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
 export class TagsService {
   private http = inject(HttpClient);
 
-
   get() {
     return this.http.get<Tag[]>(environment.apiEndpoint + 'api/tags/workspace');
   }

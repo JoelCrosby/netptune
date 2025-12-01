@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { select, Store } from '@ngrx/store';
 import { loadProfile } from '@profile/store/profile.actions';
@@ -21,8 +27,8 @@ import { ChangePasswordComponent } from '@profile/components/change-password/cha
     MatProgressSpinner,
     UpdateProfileComponent,
     ChangePasswordComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ProfileViewComponent implements OnInit, AfterViewInit {
   private store = inject(Store);

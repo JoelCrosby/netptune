@@ -1,4 +1,10 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

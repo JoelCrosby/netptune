@@ -17,7 +17,6 @@ import { switchMap } from 'rxjs/operators';
 export class ProjectTasksService {
   private http = inject(HttpClient);
 
-
   get() {
     return this.http.get<TaskViewModel[]>(
       environment.apiEndpoint + 'api/tasks'

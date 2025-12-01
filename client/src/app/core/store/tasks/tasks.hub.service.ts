@@ -29,7 +29,6 @@ export class ProjectTasksHubService {
   private hub = inject(HubService);
   private store = inject(Store);
 
-
   async connect() {
     await this.hub.connect('board-hub', [
       {

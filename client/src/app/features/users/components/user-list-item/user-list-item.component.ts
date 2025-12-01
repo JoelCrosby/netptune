@@ -3,7 +3,6 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
-
 @Component({
   selector: 'app-user-list-item',
   templateUrl: './user-list-item.component.html',

@@ -7,12 +7,11 @@ import { activityTypeToString } from '@core/transforms/activity-type';
 import { FromNowPipe } from './from-now.pipe';
 
 @Pipe({
-    name: 'activity',
-    pure: true
+  name: 'activity',
+  pure: true,
 })
 export class ActivityPipe implements PipeTransform {
   private fromNow = inject(FromNowPipe);
-
 
   transform(value: ActivityViewModel): string {
     const activityType = activityTypeToString(value.type);

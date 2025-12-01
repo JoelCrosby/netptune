@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnChanges, OnInit, SimpleChanges, inject, input, output, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -22,8 +33,8 @@ import { RouterLink } from '@angular/router';
     AutofocusDirective,
     ReactiveFormsModule,
     RouterLink,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   private store = inject(Store);

@@ -15,8 +15,8 @@ import { CreateWorkspaceListItemComponent } from '../create-workspace-list-item/
     CardListComponent,
     WorkspaceListItemComponent,
     CreateWorkspaceListItemComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class WorkspaceListComponent {
   private store = inject(Store);

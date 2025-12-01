@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import * as ProjectsActions from '@core/store/projects/projects.actions';
 import * as ProjectsSelectors from '@core/store/projects/projects.selectors';

@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'px',
-    pure: true
+  name: 'px',
+  pure: true,
 })
 export class PxPipe implements PipeTransform {
   transform(value: string | number | undefined | null): string {

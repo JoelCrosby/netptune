@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -36,8 +42,8 @@ import { MatButton } from '@angular/material/button';
     FormInputComponent,
     FormTextAreaComponent,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   private store = inject(Store);
