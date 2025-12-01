@@ -12,7 +12,6 @@ import { environment } from '@env/environment';
 export class BoardsService {
   private http = inject(HttpClient);
 
-
   get(projectId: number) {
     return this.http.get<BoardViewModel[]>(
       environment.apiEndpoint + `api/boards`,

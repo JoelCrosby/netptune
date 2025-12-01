@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -30,8 +35,8 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     AvatarComponent,
     MatMenu,
     MatMenuContent,
-    MatMenuItem
-],
+    MatMenuItem,
+  ],
 })
 export class TaskListItemComponent {
   private store = inject(Store);

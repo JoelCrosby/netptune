@@ -11,7 +11,6 @@ import { environment } from '@env/environment';
 export class ProjectsService {
   private http = inject(HttpClient);
 
-
   get() {
     return this.http.get<ProjectViewModel[]>(
       environment.apiEndpoint + `api/projects`

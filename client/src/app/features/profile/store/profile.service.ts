@@ -10,7 +10,6 @@ import { UploadResponse } from '@core/models/upload-result';
 export class ProfileService {
   private http = inject(HttpClient);
 
-
   get(userId: string) {
     return this.http.get<AppUser>(
       environment.apiEndpoint + `api/users/${userId}`

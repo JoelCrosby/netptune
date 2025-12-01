@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -39,8 +45,8 @@ import { MatButton } from '@angular/material/button';
     FormSelectOptionComponent,
     DialogActionsDirective,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   private store = inject(Store);

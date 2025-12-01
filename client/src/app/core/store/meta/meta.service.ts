@@ -7,7 +7,6 @@ import { BuildInfo } from './meta.model';
 export class MetaService {
   private http = inject(HttpClient);
 
-
   getBuildInfo() {
     return this.http.get<BuildInfo>(
       environment.apiEndpoint + 'api/meta/build-info'

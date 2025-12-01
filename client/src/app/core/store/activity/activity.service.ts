@@ -9,7 +9,6 @@ import { ActivityViewModel } from '@core/models/view-models/activity-view-model'
 export class ActivityService {
   private http = inject(HttpClient);
 
-
   get(entityType: EntityType, entityId: number) {
     return this.http.get<ClientResponse<ActivityViewModel[]>>(
       environment.apiEndpoint + `api/activity/${entityType}/${entityId}`

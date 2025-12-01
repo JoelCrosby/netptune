@@ -7,7 +7,6 @@ import { DialogContainerComponent } from '@static/components/dialog/dialog-conta
 export class DialogService {
   private dialog = inject(Dialog);
 
-
   open<R = unknown, D = unknown, C = unknown>(
     component: ComponentType<C>,
     config?: DialogConfig<D, DialogRef<R, C>>

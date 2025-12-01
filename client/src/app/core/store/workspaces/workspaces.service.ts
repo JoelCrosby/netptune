@@ -12,7 +12,6 @@ import { throwError } from 'rxjs';
 export class WorkspacesService {
   private http = inject(HttpClient);
 
-
   get() {
     return this.http.get<Workspace[]>(
       environment.apiEndpoint + 'api/workspaces'

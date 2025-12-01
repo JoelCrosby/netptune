@@ -15,7 +15,6 @@ export enum MediaSize {
 export class MediaService {
   private breakpointObserver = inject(BreakpointObserver);
 
-
   minWidth(mediaSize: MediaSize): Observable<boolean> {
     return this.breakpointObserver.observe([`(min-width: ${mediaSize})`]).pipe(
       map((res) => res.matches),

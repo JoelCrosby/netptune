@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -31,8 +36,8 @@ import { RouterLink } from '@angular/router';
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class RequestPasswordResetComponent implements OnInit {
   private store = inject(Store);

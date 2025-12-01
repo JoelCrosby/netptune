@@ -24,11 +24,12 @@ import { MatButton } from '@angular/material/button';
     ReactiveFormsModule,
     FormInputComponent,
     DialogActionsDirective,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class InviteDialogComponent {
-  private dialogRef = inject<DialogRef<string[], InviteDialogComponent>>(DialogRef);
+  private dialogRef =
+    inject<DialogRef<string[], InviteDialogComponent>>(DialogRef);
 
   users: string[] = [];
 

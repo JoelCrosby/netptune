@@ -30,8 +30,8 @@ export interface ConfirmDialogOptions {
     MatCheckbox,
     FormsModule,
     DialogActionsDirective,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);

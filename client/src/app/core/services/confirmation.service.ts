@@ -18,7 +18,6 @@ const DEFAULT_CONFIG: ConfirmDialogOptions = {
 export class ConfirmationService {
   private dialog = inject(DialogService);
 
-
   open(
     config: ConfirmDialogOptions = DEFAULT_CONFIG,
     silent = false

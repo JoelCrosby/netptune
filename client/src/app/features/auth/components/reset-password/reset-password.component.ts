@@ -32,8 +32,8 @@ import { MatAnchor, MatButton } from '@angular/material/button';
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ResetPasswordComponent {
   private activatedRoute = inject(ActivatedRoute);

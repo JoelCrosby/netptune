@@ -1,4 +1,10 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/environment';
@@ -12,7 +18,6 @@ import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces
 export class AuthInterceptor implements HttpInterceptor {
   private store = inject(Store);
   private router = inject(Router);
-
 
   intercept<T>(
     req: HttpRequest<T>,
