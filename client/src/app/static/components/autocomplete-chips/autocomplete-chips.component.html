@@ -1,4 +1,4 @@
-@if (filteredOptions | async; as filtered) {
+@if (filteredOptions(); as filtered) {
   <div class="nept-form-control">
     <mat-label> {{ label() }} </mat-label>
     <div class="form-control-input autocomplete-chips">

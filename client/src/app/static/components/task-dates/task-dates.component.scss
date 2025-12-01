@@ -1,0 +1,24 @@
+.task-dates {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: auto;
+
+  .created-at,
+  .updated-at {
+    font-size: 14px;
+    cursor: pointer;
+
+    .label {
+      opacity: .6;
+      font-size: 12px;
+      font-weight: 400;
+      margin-right: .4rem;
+    }
+
+    .value {
+      font-weight: 500;
+      margin-right: .8rem;
+    }
+  }
+}

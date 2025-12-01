@@ -3,12 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnInit,
+  computed,
   input,
   model,
   output,
   viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocomplete,
@@ -17,18 +18,15 @@ import {
   MatOption,
 } from '@angular/material/autocomplete';
 import {
-  MatChipInputEvent,
   MatChipGrid,
-  MatChipRow,
-  MatChipRemove,
   MatChipInput,
+  MatChipInputEvent,
+  MatChipRemove,
+  MatChipRow,
 } from '@angular/material/chips';
-import { filterStringArray } from '@core/util/arrays';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
+import { MatLabel } from '@angular/material/input';
+import { filterStringArray } from '@core/util/arrays';
 
 export interface AutocompleteChipsSelectionChanged {
   type: 'Added' | 'Removed';
@@ -52,10 +50,9 @@ export interface AutocompleteChipsSelectionChanged {
     ReactiveFormsModule,
     MatAutocomplete,
     MatOption,
-    AsyncPipe,
   ],
 })
-export class AutocompleteChipsComponent implements OnInit {
+export class AutocompleteChipsComponent {
   readonly placeholder = input.required<string>();
   readonly label = input<string | null>();
   readonly options = input.required<string[] | null>();
@@ -76,17 +73,13 @@ export class AutocompleteChipsComponent implements OnInit {
 
   formCtrl = new FormControl();
 
-  filteredOptions!: Observable<string[]>;
+  valueChanges = toSignal(this.formCtrl.valueChanges);
+  filteredOptions = computed(() => {
+    const option = this.valueChanges();
+    const values = this.filter(option);
 
-  ngOnInit() {
-    this.filteredOptions = this.formCtrl.valueChanges.pipe(
-      startWith<string>(''),
-      map((option: string | null) => this.filter(option)),
-      map((values) =>
-        values.filter((value) => !this.selected()?.includes(value))
-      )
-    );
-  }
+    return values.filter((value) => !this.selected()?.includes(value));
+  });
 
   add(event: MatChipInputEvent) {
     const input = event.chipInput.inputElement;

@@ -15,7 +15,9 @@
     <div class="task-scope-id">{{ task().systemId }}</div>
   </div>
 
-  <div class="title" (click)="titleClicked()">{{ task().name }}</div>
+  <div class="title" aria-hidden="false" role="button" tabindex="" (click)="titleClicked()">
+    {{ task().name }}
+  </div>
 
   @if (task().isFlagged) {
     <mat-icon color="warn" class="flag"> flag </mat-icon>
@@ -25,7 +27,7 @@
     <mat-icon class="task-complete"> done </mat-icon>
   }
 
-  @for (assignee of task().assignees; track assignee) {
+  @for (assignee of task().assignees; track assignee.id) {
     <app-avatar
       size="24"
       class="task-card-user-chip"

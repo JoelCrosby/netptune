@@ -1,7 +1,7 @@
 <div class="task-list-main">
   <app-task-list-group
     class="mb-5"
-    [tasks]="tasks$ | async"
+    [tasks]="tasks()"
     header="Tasks"
     emptyMessage="There are currently no tasks. Use the Create Task button above to create a task"
   >

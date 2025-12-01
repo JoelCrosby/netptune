@@ -38,6 +38,7 @@ export default defineConfig([
     processor: angular.processInlineTemplates,
 
     rules: {
+      '@angular-eslint/template/click-events-have-key-events': ['off'],
       '@angular-eslint/component-selector': [
         'error',
         {

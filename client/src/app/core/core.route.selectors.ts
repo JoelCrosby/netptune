@@ -15,10 +15,11 @@ export const selectPageTitle = createSelector(
   (state: RouterStateUrl) => state?.title
 );
 
-export const selectRouterParam = createSelector(
-  selectRouterReducerState,
-  (state: RouterStateUrl, props: string) => state?.params[props]
-);
+export const selectRouterParam = (props: string) =>
+  createSelector(
+    selectRouterReducerState,
+    (state: RouterStateUrl) => state?.params[props]
+  );
 
 export const selectRouterStateUrl = createSelector(
   selectRouterReducerState,
