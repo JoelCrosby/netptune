@@ -26,8 +26,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       }
 
       .dialog-inner {
-        max-height: 65vh;
-        overflow: auto;
         padding-right: 16px;
       }
     `,
