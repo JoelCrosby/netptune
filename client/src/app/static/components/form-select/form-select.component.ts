@@ -73,8 +73,7 @@ export class FormSelectComponent<TValue>
   }
 
   ngAfterViewInit() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.keyManager = new ActiveDescendantKeyManager(this.options()!)
+    this.keyManager = new ActiveDescendantKeyManager(this.options())
       .withHorizontalOrientation('ltr')
       .withVerticalOrientation()
       .withWrap();
