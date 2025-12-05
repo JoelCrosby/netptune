@@ -14,6 +14,7 @@ import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { of, throwError } from 'rxjs';
 import {
@@ -28,6 +29,7 @@ import {
 import * as actions from './board-groups.actions';
 import * as selectors from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 
 @Injectable()
 export class BoardGroupsEffects {
@@ -40,8 +42,8 @@ export class BoardGroupsEffects {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  loadBoardGroups$ = createEffect(() =>
-    this.actions$.pipe(
+  loadBoardGroups$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(
         actions.loadBoardGroups,
         actions.createBoardGroupSuccess,
@@ -52,12 +54,12 @@ export class BoardGroupsEffects {
         TaskActions.deleteTagFromTaskSuccess,
         TaskActions.addTagToTaskSuccess
       ),
-      withLatestFrom(
+      concatLatestFrom(() => [
         this.store.select(RouteSelectors.selectRouterParam('id')),
         this.route.queryParamMap,
         this.route.queryParams,
-        this.store.select(RouteSelectors.isBoardGroupsRoute)
-      ),
+        this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
+      ]),
       filter(([, , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
       switchMap(([_, id, paramMap, params]) =>
         this.boardGroupsService.get(id as string, params).pipe(
@@ -75,12 +77,12 @@ export class BoardGroupsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
   loadBoardGroupsFail$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(actions.loadBoardGroupsFail),
         tap(() => {
           const url = this.router.routerState.snapshot.url;
@@ -90,12 +92,13 @@ export class BoardGroupsEffects {
 
           void this.router.navigateByUrl(base);
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 
-  createBoardGroup$ = createEffect(() =>
-    this.actions$.pipe(
+  createBoardGroup$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createBoardGroup),
       switchMap((action) =>
         this.tasksHubService
@@ -110,16 +113,16 @@ export class BoardGroupsEffects {
             )
           )
       )
-    )
-  );
+    );
+  });
 
-  createProjectTask$ = createEffect(() =>
-    this.actions$.pipe(
+  createProjectTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createProjectTask),
-      withLatestFrom(
+      concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
-        this.store.select(selectors.selectBoardGroupTaskAssignee)
-      ),
+        this.store.select(selectors.selectBoardGroupTaskAssignee),
+      ]),
       switchMap(([action, identifier, userId]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -136,27 +139,29 @@ export class BoardGroupsEffects {
             )
           );
       })
-    )
-  );
+    );
+  });
 
-  createProjectTasksSuccess$ = createEffect(() =>
-    this.actions$.pipe(
+  createProjectTasksSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createProjectTasksSuccess),
       map(() => actions.loadBoardGroups())
-    )
-  );
+    );
+  });
 
-  taskDeleted$ = createEffect(() =>
-    this.actions$.pipe(
+  taskDeleted$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(TaskActions.deleteProjectTasksSuccess),
-      withLatestFrom(this.store.select(RouteSelectors.isBoardGroupsRoute)),
+      concatLatestFrom(() =>
+        this.store.select(RouteSelectors.selectIsBoardGroupsRoute)
+      ),
       filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups())
-    )
-  );
+    );
+  });
 
-  deleteBoardGroups$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteBoardGroups$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteBoardGroup),
       switchMap((action) => {
         if (action.boardGroup.type === BoardGroupType.done) {
@@ -195,13 +200,15 @@ export class BoardGroupsEffects {
           })
         );
       })
-    )
-  );
+    );
+  });
 
-  editBoardGroups$ = createEffect(() =>
-    this.actions$.pipe(
+  editBoardGroups$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.editBoardGroup),
-      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      concatLatestFrom(() =>
+        this.store.select(selectors.selectBoardIdentifier)
+      ),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -215,13 +222,15 @@ export class BoardGroupsEffects {
           )
         );
       })
-    )
-  );
+    );
+  });
 
-  moveTaskInBoardGroup$ = createEffect(() =>
-    this.actions$.pipe(
+  moveTaskInBoardGroup$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.moveTaskInBoardGroup),
-      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      concatLatestFrom(() =>
+        this.store.select(selectors.selectBoardIdentifier)
+      ),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -236,11 +245,11 @@ export class BoardGroupsEffects {
             )
           );
       })
-    )
-  );
+    );
+  });
 
-  deleteSelectedTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteSelectedTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteSelectedTasks),
       switchMap(() =>
         this.confirmation.open(DELETE_SELECTED_TASKS_CONFIRMATION).pipe(
@@ -254,13 +263,15 @@ export class BoardGroupsEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteTaskMultiple$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteTaskMultiple$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteTaskMultiple),
-      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      concatLatestFrom(() =>
+        this.store.select(selectors.selectBoardIdentifier)
+      ),
       switchMap(([action, identifier]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -275,23 +286,23 @@ export class BoardGroupsEffects {
           )
         );
       })
-    )
-  );
+    );
+  });
 
-  deleteTaskMultipleSuccess$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteTaskMultipleSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteTasksMultipleSuccess),
       map(() => actions.loadBoardGroups())
-    )
-  );
+    );
+  });
 
-  moveSelectedTasksToGroup$ = createEffect(() =>
-    this.actions$.pipe(
+  moveSelectedTasksToGroup$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.moveSelectedTasks),
-      withLatestFrom(
+      concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
-        this.store.select(selectors.selectSelectedTasks)
-      ),
+        this.store.select(selectors.selectSelectedTasks),
+      ]),
       switchMap(([action, identifier, taskIds]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -312,54 +323,76 @@ export class BoardGroupsEffects {
             )
           );
       })
-    )
-  );
+    );
+  });
 
-  onWorkspaceSelected$ = createEffect(() =>
-    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
-  );
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
 
-  updateFilters$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(
-          actions.toggleUserSelection,
-          toggleSelectedTag,
-          actions.toggleOnlyFlagged,
-          actions.setSearchTerm
-        ),
-        withLatestFrom(
-          this.store.select(selectors.selectBoardGroupsSelectedUserIds),
-          this.store.select(selectSelectedTags),
-          this.store.select(selectors.selectOnlyFlagged),
-          this.store.select(selectors.selectSearchTerm)
-        ),
-        map(([_, users, tags, flagged, term]) => {
-          const usersParam = users?.length ? users : undefined;
-          const tagsParam = tags?.length ? tags : undefined;
-          const flaggedParam = flagged === true || undefined;
-          const termParam = term;
-
-          return [_, usersParam, tagsParam, flaggedParam, termParam];
-        }),
-        tap(([_, users, tags, flagged, term]) => {
-          void this.router
-            .navigate([], {
-              queryParams: { users, tags, flagged, term },
-            })
-            .then(() => this.store.dispatch(actions.loadBoardGroups()));
-        })
+  updateFilters$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        actions.toggleUserSelection,
+        toggleSelectedTag,
+        actions.toggleOnlyFlagged,
+        actions.setSearchTerm
       ),
+      concatLatestFrom(() => [
+        this.store.select(selectors.selectBoardGroupsSelectedUserIds),
+        this.store.select(selectSelectedTags),
+        this.store.select(selectors.selectOnlyFlagged),
+        this.store.select(selectors.selectSearchTerm),
+      ]),
+      map(([_, users, tags, flagged, term]) => {
+        const usersParam = users?.length ? users : undefined;
+        const tagsParam = tags?.length ? tags : undefined;
+        const flaggedParam = flagged === true || undefined;
+        const termParam = term;
+
+        return {
+          users: usersParam,
+          tags: tagsParam,
+          flagged: flaggedParam,
+          term: termParam,
+        };
+      }),
+      map((params) => actions.updateBoardFilter({ params }))
+    );
+  });
+
+  onUpdateBoardFilters$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.updateBoardFilter),
+        switchMap(({ params }) =>
+          this.router.navigate([], {
+            queryParams: params,
+          })
+        )
+      );
+    },
     { dispatch: false }
   );
 
-  reassignTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  onRouterNavigated$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATED),
+      concatLatestFrom(() => [
+        this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
+      ]),
+      filter(([, isBoardGroupsRoute]) => isBoardGroupsRoute),
+      map(() => actions.loadBoardGroups())
+    );
+  });
+
+  reassignTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.reassignTasks),
-      withLatestFrom(
+      concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
-        this.store.select(selectors.selectSelectedTasks)
-      ),
+        this.store.select(selectors.selectSelectedTasks),
+      ]),
       switchMap(([action, identifier, taskIds]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -380,13 +413,15 @@ export class BoardGroupsEffects {
             )
           );
       })
-    )
-  );
+    );
+  });
 
-  exportTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  exportTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.exportBoardTasks),
-      withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
+      concatLatestFrom(() =>
+        this.store.select(selectors.selectBoardIdentifier)
+      ),
       switchMap(([_, boardId]) => {
         if (boardId === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
@@ -400,8 +435,8 @@ export class BoardGroupsEffects {
           )
         );
       })
-    )
-  );
+    );
+  });
 }
 
 const DELETE_CONFIRMATION: ConfirmDialogOptions = {

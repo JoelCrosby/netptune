@@ -5,6 +5,8 @@ import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-r
 import { Workspace } from '@core/models/workspace';
 import { createAction, props } from '@ngrx/store';
 
+export const initWorkspaces = createAction('[Workspaces] Init');
+
 // Load Workspaces
 
 export const loadWorkspaces = createAction('[Workspaces] Load Workspaces');

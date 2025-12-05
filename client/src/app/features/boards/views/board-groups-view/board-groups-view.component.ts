@@ -32,14 +32,13 @@ import {
   deleteBoardGroup,
   editBoardGroup,
   exportBoardTasks,
-  loadBoardGroups,
 } from '@boards/store/groups/board-groups.actions';
 import {
   selectAllBoardGroupsWithSelection,
   selectBoardGroupsLoaded,
   selectBoardGroupsLoading,
   selectBoardIdentifier,
-  selectedBoard,
+  selectSelectedBoard,
 } from '@boards/store/groups/board-groups.selectors';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
@@ -87,7 +86,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
     viewChild.required<ElementRef>('importTasksInput');
 
   groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
-  board = this.store.selectSignal(selectedBoard);
+  board = this.store.selectSignal(selectSelectedBoard);
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
   boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
@@ -124,8 +123,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
         this.hubService.addToGroup(identifier);
       });
     });
-
-    this.store.dispatch(loadBoardGroups());
   }
 
   ngOnDestroy() {
@@ -134,12 +131,14 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onTitleSubmitted(title: string) {
-    if (!title || !this.board()?.id) return;
+    const board = this.board();
+
+    if (!title || !board?.id) return;
 
     this.store.dispatch(
       updateBoard({
         request: {
-          id: this.board().id,
+          id: board.id,
           name: title,
         },
       })

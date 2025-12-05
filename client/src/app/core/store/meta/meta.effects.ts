@@ -13,8 +13,8 @@ export class MetaEffects {
   private metaService = inject(MetaService);
 
   loadBuildInfo$ = createEffect(
-    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 0, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.loadBuildInfo),
         debounceTime(debounce, scheduler),
         switchMap(() =>
@@ -25,6 +25,7 @@ export class MetaEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 }

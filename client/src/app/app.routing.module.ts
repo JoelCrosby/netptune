@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { authGuard } from '@core/auth/auth-guard.service';
+import { authGuard } from '@core/auth/auth.guard';
 import { workspaceResovler } from '@core/resolvers/workspace-resolver';
 import { ShellComponent } from '@workspaces/components/shell/shell.component';
 

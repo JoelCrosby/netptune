@@ -1,54 +1,49 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
+  computed,
   inject,
   input,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
-import { RouterLink } from '@angular/router';
 import { CardListItemComponent } from '@static/components/card-list-item/card-list-item.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-project-list-item',
   templateUrl: './project-list-item.component.html',
   styleUrls: ['./project-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, CardListItemComponent, AsyncPipe],
+  imports: [RouterLink, CardListItemComponent],
 })
-export class ProjectListItemComponent implements OnInit {
+export class ProjectListItemComponent {
   private store = inject(Store);
-
   readonly project = input.required<ProjectViewModel>();
 
-  actions$!: Observable<HeaderAction[]>;
+  workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
 
-  ngOnInit() {
-    this.actions$ = this.store.select(selectCurrentWorkspaceIdentifier).pipe(
-      filter((val) => !!val),
-      first(),
-      map((identifier) => [
-        {
-          label: 'Go To Board',
-          isLink: true,
-          icon: 'assessment',
-          routerLink: [
-            '/',
-            identifier,
-            'boards',
-            this.project().defaultBoardIdentifier,
-          ],
-        },
-      ])
-    );
-  }
+  actions = computed(() => {
+    const identifier = this.workspaceId();
+
+    if (!identifier) return [];
+
+    return [
+      {
+        label: 'Go To Board',
+        isLink: true,
+        icon: 'assessment',
+        routerLink: [
+          '/',
+          identifier,
+          'boards',
+          this.project().defaultBoardIdentifier,
+        ],
+      },
+    ];
+  });
 
   onDeleteClicked() {
     this.store.dispatch(deleteProject({ project: this.project() }));

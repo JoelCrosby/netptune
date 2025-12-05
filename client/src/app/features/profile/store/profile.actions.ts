@@ -22,7 +22,7 @@ export const loadProfileFail = createAction(
 
 export const updateProfile = createAction(
   '[Profile] Update Profile',
-  props<{ profile: AppUser }>()
+  props<{ profile: AppUser; image?: FormData }>()
 );
 
 export const updateProfileSuccess = createAction(

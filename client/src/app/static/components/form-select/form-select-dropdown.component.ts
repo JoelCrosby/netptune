@@ -7,6 +7,7 @@ import {
   inject,
   input,
   viewChild,
+  signal,
 } from '@angular/core';
 import { ɵɵCdkPortal } from '@angular/cdk/dialog';
 
@@ -27,19 +28,19 @@ export class FormSelectDropdownComponent {
   readonly portal = viewChild.required(CdkPortal);
 
   overlayRef?: OverlayRef;
-  showing = false;
+  showing = signal(false);
 
   show() {
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.portal());
     this.setWidth();
     this.overlayRef.backdropClick().subscribe(() => this.hide());
-    this.showing = true;
+    this.showing.set(true);
   }
 
   hide() {
     this.overlayRef?.detach();
-    this.showing = false;
+    this.showing.set(false);
   }
 
   @HostListener('window:resize')

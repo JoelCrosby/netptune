@@ -1,20 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
+  computed,
+  effect,
   inject,
+  OnDestroy,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  FormControl,
-  FormGroup,
-  Validators,
+  FormBuilder,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
-import { BoardViewModel } from '@core/models/view-models/board-view-model';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import {
   clearProjectDetail,
   updateProject,
@@ -24,12 +24,8 @@ import {
   selectUpdateProjectLoading,
 } from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, startWith, takeUntil, tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-project-detail',
@@ -42,112 +38,81 @@ import { MatButton } from '@angular/material/button';
     FormInputComponent,
     FormTextAreaComponent,
     MatButton,
-    AsyncPipe,
   ],
 })
-export class ProjectDetailComponent implements OnInit, OnDestroy {
+export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);
+  private fb = inject(FormBuilder);
 
-  project$!: Observable<ProjectViewModel | null | undefined>;
-  boards$!: Observable<BoardViewModel[]>;
-  updateDisabled$!: Observable<boolean>;
-  onDestroy$ = new Subject<void>();
+  project = this.store.selectSignal(selectProjectDetail);
+  loading = this.store.selectSignal(selectUpdateProjectLoading);
 
-  formGroup = new FormGroup(
+  form = this.fb.nonNullable.group(
     {
-      id: new FormControl<number | null>(null, [Validators.required]),
-      key: new FormControl('', [Validators.required, Validators.maxLength(6)]),
-      name: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(128),
-      ]),
-      description: new FormControl('', [Validators.maxLength(4096)]),
-      repositoryUrl: new FormControl('', [Validators.maxLength(1024)]),
+      id: [null as number | null, [Validators.required]],
+      key: ['', [Validators.required, Validators.maxLength(6)]],
+      name: ['', [Validators.required, Validators.maxLength(128)]],
+      description: ['', [Validators.maxLength(4096)]],
+      repositoryUrl: ['', [Validators.maxLength(1024)]],
     },
     { updateOn: 'change' }
   );
 
-  get id() {
-    return this.formGroup.controls.id;
-  }
-
-  get name() {
-    return this.formGroup.controls.name;
-  }
-
-  get description() {
-    return this.formGroup.controls.description;
-  }
-
-  get repositoryUrl() {
-    return this.formGroup.controls.repositoryUrl;
-  }
-
-  get key() {
-    return this.formGroup.controls.key;
-  }
-
-  ngOnInit() {
-    this.project$ = this.store.select(selectProjectDetail).pipe(
-      tap((project) => {
-        if (!project) return;
-
-        this.formGroup.setValue({
-          id: project.id,
-          key: project.key,
-          name: project.name,
-          description: project.description,
-          repositoryUrl: project.repositoryUrl,
-        });
-
-        this.updateDisabled$ = combineLatest([
-          this.formGroup.valueChanges,
-          this.store.select(selectUpdateProjectLoading),
-        ]).pipe(
-          takeUntil(this.onDestroy$),
-          map(
-            ([, loading]) =>
-              this.formGroup.pristine || this.formGroup.invalid || loading
-          ),
-          startWith(true)
-        );
-
-        this.store
-          .select(selectUpdateProjectLoading)
-          .pipe(takeUntil(this.onDestroy$))
-          .subscribe({
-            next: (loading) => {
-              if (loading && this.formGroup.enabled) {
-                this.formGroup.disable();
-              } else if (this.formGroup.disabled) {
-                this.formGroup.enable();
-              }
-            },
-          });
-      })
+  valueChanges = toSignal(this.form.valueChanges);
+  updateDisabled = computed(() => {
+    return (
+      this.valueChanges() ||
+      this.form.pristine ||
+      this.form.invalid ||
+      this.loading()
     );
+  });
+
+  constructor() {
+    effect(() => {
+      const project = this.project();
+
+      if (!project) return;
+
+      this.form.setValue({
+        id: project.id,
+        key: project.key,
+        name: project.name,
+        description: project.description,
+        repositoryUrl: project.repositoryUrl,
+      });
+    });
+
+    effect(() => {
+      if (this.loading() && this.form.enabled) {
+        this.form.disable();
+      } else if (this.form.disabled) {
+        this.form.enable();
+      }
+    });
   }
 
   ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
-
     this.store.dispatch(clearProjectDetail());
   }
 
   updateClicked() {
-    if (this.formGroup.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
-    this.formGroup.markAsPristine();
+    this.form.markAsPristine();
+
+    const { id, name, description, repositoryUrl, key } = this.form.controls;
+
+    if (id.value === null) return;
 
     const project: UpdateProjectRequest = {
-      id: this.id.value as number,
-      name: this.name.value as string,
-      description: this.description.value as string,
-      repositoryUrl: this.repositoryUrl.value as string,
-      key: this.key.value as string,
+      id: id.value,
+      name: name.value,
+      description: description.value,
+      repositoryUrl: repositoryUrl.value,
+      key: key.value,
     };
 
     this.store.dispatch(updateProject({ project }));

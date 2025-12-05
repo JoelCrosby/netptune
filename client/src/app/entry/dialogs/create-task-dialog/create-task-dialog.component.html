@@ -12,7 +12,7 @@
   </app-form-textarea>
 
   <app-form-select formControlName="project" label="Project">
-    @for (project of projects$ | async; track project) {
+    @for (project of projects(); track project) {
       <app-form-select-option
         [value]="project.id"
         >

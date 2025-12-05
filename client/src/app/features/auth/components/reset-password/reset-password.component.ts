@@ -1,23 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  linkedSignal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
 import { selectResetPasswordLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormErrorComponent } from '@static/components/form-error/form-error.component';
-import { MatAnchor, MatButton } from '@angular/material/button';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 @Component({
   selector: 'app-reset-password',
@@ -32,18 +36,20 @@ import { MatAnchor, MatButton } from '@angular/material/button';
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe,
   ],
 })
 export class ResetPasswordComponent {
   private activatedRoute = inject(ActivatedRoute);
   private store = inject(Store);
 
-  authLoading$: Observable<boolean>;
+  loading = this.store.selectSignal(selectResetPasswordLoading);
+  routeData = toSignal(this.activatedRoute.data);
 
-  request?: ResetPasswordRequest;
+  request = linkedSignal<ResetPasswordRequest>(() => {
+    return this.routeData()?.resetPassword;
+  });
 
-  formGroup = new FormGroup({
+  form = new FormGroup({
     password0: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
@@ -55,29 +61,21 @@ export class ResetPasswordComponent {
   });
 
   get password0() {
-    return this.formGroup.controls.password0;
+    return this.form.controls.password0;
   }
 
   get password1() {
-    return this.formGroup.controls.password1;
+    return this.form.controls.password1;
   }
 
   constructor() {
-    this.activatedRoute.data
-      .pipe(
-        first(),
-        tap((data) => {
-          this.request = data.resetPassword as ResetPasswordRequest;
-        })
-      )
-      .subscribe();
-
-    this.authLoading$ = this.store.select(selectResetPasswordLoading).pipe(
-      tap((loading) => {
-        if (loading) return this.formGroup.disable();
-        return this.formGroup.enable();
-      })
-    );
+    effect(() => {
+      if (this.loading()) {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
+    });
   }
 
   resetPassword() {
@@ -99,7 +97,7 @@ export class ResetPasswordComponent {
     }
 
     const request: ResetPasswordRequest = {
-      ...this.request,
+      ...this.request(),
       password: this.password0.value,
     };
 

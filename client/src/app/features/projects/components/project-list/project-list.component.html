@@ -1,5 +1,5 @@
 <app-card-list>
-  @for (project of projects$ | async; track trackById($index, project)) {
+  @for (project of projects(); track project.id) {
     <app-project-list-item [project]="project"
        />
   }

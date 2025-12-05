@@ -2,13 +2,14 @@
   <app-form-select
     label="Theme"
     placeholder="Select Theme"
-    [ngModel]="settings.theme"
+    [formControl]="settingsControl"
     (changed)="onThemeSelect($event)"
     >
-    @for (theme of themes; track theme) {
+    @for (theme of themes; track theme.value) {
       <app-form-select-option [value]="theme.value">
         {{ theme.label }}
       </app-form-select-option>
     }
   </app-form-select>
 }
+

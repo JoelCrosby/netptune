@@ -4,23 +4,32 @@ import * as actions from './activity.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
+  on(actions.clearState, (): ActivityState => initialState),
 
   // Load Projects
 
-  on(actions.loadActivity, (state) => ({ ...state, loading: true })),
-  on(actions.loadActivityFail, (state, { error }) => ({
-    ...state,
-    loading: false,
-    loaded: true,
-    loadingError: error,
-  })),
-  on(actions.loadActivitySuccess, (state, { activities }) => ({
-    ...state,
-    loading: false,
-    loaded: true,
-    activities,
-  }))
+  on(
+    actions.loadActivity,
+    (state): ActivityState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.loadActivityFail,
+    (state, { error }): ActivityState => ({
+      ...state,
+      loading: false,
+      loaded: true,
+      loadingError: error,
+    })
+  ),
+  on(
+    actions.loadActivitySuccess,
+    (state, { activities }): ActivityState => ({
+      ...state,
+      loading: false,
+      loaded: true,
+      activities,
+    })
+  )
 );
 
 export const activityReducer = (

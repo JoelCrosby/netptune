@@ -1,5 +1,5 @@
 <app-page-container
-  [showProgress]="loadingUpdate$ | async"
+  [showProgress]="loadingUpdate()"
   [centerPage]="true"
   [marginBottom]="true"
   >
@@ -8,7 +8,7 @@
     (actionClick)="onLogoutClicked()"
      />
 
-  @if (loading$ | async) {
+  @if (loading()) {
     <div class="page-loading">
       <mat-spinner diameter="32" />
     </div>

@@ -14,7 +14,7 @@ import {
 
 function getClosestDialog<TResult, TComponent>(
   element: ElementRef<HTMLElement>,
-  openDialogs: DialogRef<TResult, TComponent>[]
+  openDialogs: readonly DialogRef<TResult, TComponent>[]
 ) {
   let parent: HTMLElement | null = element.nativeElement.parentElement;
 
@@ -39,7 +39,6 @@ function closeDialogVia<R>(
 @Directive({
   selector: '[app-dialog-close], [dialogClose]',
   exportAs: 'matDialogClose',
-  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '(click)': 'onButtonClick($event)',
     '[attr.aria-label]': 'ariaLabel() || null',
@@ -64,8 +63,7 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
     if (!this.dialogRef) {
       this.dialogRef = getClosestDialog(
         this._elementRef,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-        this._dialog.openDialogs as any
+        this._dialog.openDialogs
       )!;
     }
   }

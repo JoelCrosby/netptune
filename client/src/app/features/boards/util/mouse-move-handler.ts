@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let timer: any = null;
 const edgeSize = 120;

@@ -5,14 +5,13 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
-import { selectAuthToken } from '../auth/store/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
+import { selectAuthTokenWithWorkspaceId } from '../auth/store/auth.selectors';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,18 +22,15 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    return combineLatest([
-      this.store.select(selectAuthToken),
-      this.store.select(selectCurrentWorkspaceIdentifier),
-    ]).pipe(
+    return this.store.select(selectAuthTokenWithWorkspaceId).pipe(
       first(),
-      switchMap(([token, workspace]) => {
+      switchMap(({ token, workspaceId }) => {
         if (!this.isApiRequest(req)) {
           return next.handle(req);
         }
 
         const workspaceRoute = this.getWorkspaceRoute();
-        const workspaceHeader = workspace ?? workspaceRoute;
+        const workspaceHeader = workspaceId ?? workspaceRoute;
 
         if (token) {
           req = req.clone({

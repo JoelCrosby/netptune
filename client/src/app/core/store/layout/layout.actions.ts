@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
+export const initLayout = createAction('[Layout] Init');
+
 export const clearState = createAction('[Layout] Clear State');
 
 // Side Menu

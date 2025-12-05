@@ -14,8 +14,8 @@ export class ActivityEffects {
   private activityService = inject(ActivityService);
 
   loadActivities$ = createEffect(
-    ({ debounce = 0, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 0, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.loadActivity),
         debounceTime(debounce, scheduler),
         switchMap(({ entityType, entityId }) =>
@@ -27,6 +27,7 @@ export class ActivityEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 }

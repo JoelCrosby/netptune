@@ -12,6 +12,8 @@ import {
 
 // Current User
 
+export const initAuth = createAction('[Auth] Init');
+
 export const currentUser = createAction('[Auth] Current User');
 
 export const currentUserSuccess = createAction(

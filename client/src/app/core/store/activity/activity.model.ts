@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivityViewModel } from '@core/models/view-models/activity-view-model';
 
 export const initialState: ActivityState = {
@@ -10,4 +11,5 @@ export interface ActivityState {
   activities: ActivityViewModel[];
   loading: boolean;
   loaded: boolean;
+  loadingError?: HttpErrorResponse | Error;
 }

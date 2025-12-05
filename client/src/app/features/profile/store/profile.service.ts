@@ -6,7 +6,7 @@ import { ChangePasswordRequest } from '@core/models/requests/change-password-req
 import { ClientResponse } from '@core/models/client-response';
 import { UploadResponse } from '@core/models/upload-result';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProfileService {
   private http = inject(HttpClient);
 
@@ -30,7 +30,7 @@ export class ProfileService {
     );
   }
 
-  uloadProfilePicture(data: FormData) {
+  uploadProfilePicture(data: FormData) {
     return this.http.post<ClientResponse<UploadResponse>>(
       environment.apiEndpoint + 'api/storage/profile-picture',
       data

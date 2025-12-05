@@ -2,12 +2,12 @@
   <app-card-list-item
     [title]="project().name"
     [description]="project().description"
-    [actions]="actions$ | async"
+    [actions]="actions()"
     (delete)="onDeleteClicked()"
   >
     <h5>Repository</h5>
 
-    <a (click)="$event.stopPropagation()" class="link">
+    <a [href]="project().repositoryUrl" class="link">
       {{ project().repositoryUrl }}
     </a>
   </app-card-list-item>

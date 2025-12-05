@@ -74,23 +74,23 @@ export const selectIsInlineActive = (props: { groupId: number }) => {
   );
 };
 
-export const selectedBoard = createSelector(
+export const selectSelectedBoard = createSelector(
   selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state?.board!
+  (state: BoardGroupsState) => state?.board
 );
 
 export const selectBoardIdentifier = createSelector(
-  selectedBoard,
+  selectSelectedBoard,
   (state?: BoardViewModel) => state?.identifier
 );
 
 export const selectBoardId = createSelector(
-  selectedBoard,
+  selectSelectedBoard,
   (state?: BoardViewModel) => state?.id
 );
 
 export const selectBoardIdAndIdentifier = createSelector(
-  selectedBoard,
+  selectSelectedBoard,
   (state?: BoardViewModel): [id?: number, identifier?: string] => [
     state?.id,
     state?.identifier,
@@ -138,7 +138,7 @@ export const selectBoardGroupTaskAssignee = createSelector(
 );
 
 export const selectBoardProjectId = createSelector(
-  selectedBoard,
+  selectSelectedBoard,
   (state?: BoardViewModel) => state?.projectId
 );
 

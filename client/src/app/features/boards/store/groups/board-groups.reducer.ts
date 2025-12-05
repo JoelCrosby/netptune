@@ -11,18 +11,27 @@ import { adapter, BoardGroupsState, initialState } from './board-groups.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
+  on(actions.clearState, (): BoardGroupsState => initialState),
 
   // Load Board Groups
 
-  on(actions.loadBoardGroups, (state) => ({ ...state, loading: true })),
-  on(actions.loadBoardGroupsFail, (state, { error }) => ({
-    ...state,
-    loadingError: error,
-  })),
+  on(
+    actions.loadBoardGroups,
+    (state): BoardGroupsState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.loadBoardGroupsFail,
+    (state, { error }): BoardGroupsState => ({
+      ...state,
+      loadingError: error,
+    })
+  ),
   on(
     actions.loadBoardGroupsSuccess,
-    (state, { boardGroups, selectedIds, onlyFlagged, searchTerm }) => {
+    (
+      state,
+      { boardGroups, selectedIds, onlyFlagged, searchTerm }
+    ): BoardGroupsState => {
       const selectedIdMap = new Set(selectedIds);
 
       return adapter.setAll(boardGroups.groups, {
@@ -43,34 +52,51 @@ const reducer = createReducer(
 
   // Create Board Group
 
-  on(actions.createBoardGroup, (state) => ({ ...state, loading: true })),
-  on(actions.createBoardGroupFail, (state, { error }) => ({
-    ...state,
-    loadingError: error,
-  })),
+  on(
+    actions.createBoardGroup,
+    (state): BoardGroupsState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.createBoardGroupFail,
+    (state, { error }): BoardGroupsState => ({
+      ...state,
+      loadingError: error,
+    })
+  ),
 
   // Select Board Group
 
-  on(actions.selectBoardGroup, (state, { boardGroup }) => ({
-    ...state,
-    currentBoardGroup: boardGroup,
-  })),
+  on(
+    actions.selectBoardGroup,
+    (state, { boardGroup }): BoardGroupsState => ({
+      ...state,
+      currentBoardGroup: boardGroup,
+    })
+  ),
 
   // Delete Board Group
 
-  on(actions.deleteBoardGroup, (state) => ({
-    ...state,
-    deleteState: { loading: true },
-  })),
-  on(actions.deleteBoardGroupFail, (state, { error }) => ({
-    ...state,
-    deleteState: { loading: false, error },
-  })),
-  on(actions.deleteBoardGroupSuccess, (state, { boardGroupId }) =>
-    adapter.removeOne(boardGroupId, {
+  on(
+    actions.deleteBoardGroup,
+    (state): BoardGroupsState => ({
       ...state,
-      deleteState: { loading: false },
+      deleteState: { loading: true },
     })
+  ),
+  on(
+    actions.deleteBoardGroupFail,
+    (state, { error }): BoardGroupsState => ({
+      ...state,
+      deleteState: { loading: false, error },
+    })
+  ),
+  on(
+    actions.deleteBoardGroupSuccess,
+    (state, { boardGroupId }): BoardGroupsState =>
+      adapter.removeOne(boardGroupId, {
+        ...state,
+        deleteState: { loading: false },
+      })
   ),
 
   // Move Board Group
@@ -78,27 +104,37 @@ const reducer = createReducer(
   on(
     actions.moveTaskInBoardGroup,
     hubAction(actions.moveTaskInBoardGroup),
-    (state, { request }) => moveTaskInBoardGroup(state, request)
+    (state, { request }): BoardGroupsState =>
+      moveTaskInBoardGroup(state, request)
   ),
-  on(actions.setIsDragging, (state, { isDragging }) => ({
-    ...state,
-    isDragging,
-  })),
+  on(
+    actions.setIsDragging,
+    (state, { isDragging }): BoardGroupsState => ({
+      ...state,
+      isDragging,
+    })
+  ),
 
   // Set Inline Active
 
-  on(actions.setInlineActive, (state, { groupId }) => ({
-    ...state,
-    inlineActive: groupId,
-  })),
-  on(actions.clearInlineActive, (state) => ({
-    ...state,
-    inlineActive: undefined,
-  })),
+  on(
+    actions.setInlineActive,
+    (state, { groupId }): BoardGroupsState => ({
+      ...state,
+      inlineActive: groupId,
+    })
+  ),
+  on(
+    actions.clearInlineActive,
+    (state): BoardGroupsState => ({
+      ...state,
+      inlineActive: undefined,
+    })
+  ),
 
   // Toggle User Selection
 
-  on(actions.toggleUserSelection, (state, { user }) => {
+  on(actions.toggleUserSelection, (state, { user }): BoardGroupsState => {
     const exists = state.selectedUsers.find((item) => item.id === user.id);
 
     const selectedUsers = exists
@@ -113,75 +149,102 @@ const reducer = createReducer(
 
   // Toggle Only Flagged
 
-  on(actions.toggleOnlyFlagged, (state) => ({
-    ...state,
-    onlyFlagged: !state.onlyFlagged,
-  })),
+  on(
+    actions.toggleOnlyFlagged,
+    (state): BoardGroupsState => ({
+      ...state,
+      onlyFlagged: !state.onlyFlagged,
+    })
+  ),
 
   // Set Search Term
 
-  on(actions.setSearchTerm, (state, { term }) => ({
-    ...state,
-    searchTerm: term,
-  })),
+  on(
+    actions.setSearchTerm,
+    (state, { term }): BoardGroupsState => ({
+      ...state,
+      searchTerm: term,
+    })
+  ),
 
   // Select Task
 
-  on(actions.selectTask, (state, { id }) => ({
-    ...state,
-    selectedTasks: (() => {
-      const set = new Set(state.selectedTasks);
-      const mod = set.add(id);
+  on(
+    actions.selectTask,
+    (state, { id }): BoardGroupsState => ({
+      ...state,
+      selectedTasks: (() => {
+        const set = new Set(state.selectedTasks);
+        const mod = set.add(id);
 
-      return Array.from(mod);
-    })(),
-  })),
+        return Array.from(mod);
+      })(),
+    })
+  ),
 
   // Select Task Bulk
 
-  on(actions.selectTaskBulk, (state, { id, groupId }) => ({
-    ...state,
-    selectedTasks: (() => {
-      const selections = getBulkTaskSelection(state, id, groupId);
-      return Array.from(new Set([...state.selectedTasks, ...selections]));
-    })(),
-  })),
+  on(
+    actions.selectTaskBulk,
+    (state, { id, groupId }): BoardGroupsState => ({
+      ...state,
+      selectedTasks: (() => {
+        const selections = getBulkTaskSelection(state, id, groupId);
+        return Array.from(new Set([...state.selectedTasks, ...selections]));
+      })(),
+    })
+  ),
 
   // Deselect Task
 
-  on(actions.deSelectTask, (state, { id }) => ({
-    ...state,
-    selectedTasks: state.selectedTasks.filter((t) => t !== id),
-  })),
+  on(
+    actions.deSelectTask,
+    (state, { id }): BoardGroupsState => ({
+      ...state,
+      selectedTasks: state.selectedTasks.filter((t) => t !== id),
+    })
+  ),
 
   // Deselect Task Bulk
 
-  on(actions.deSelectTaskBulk, (state, { id, groupId }) => ({
-    ...state,
-    selectedTasks: (() => {
-      const selections = getBulkTaskSelection(state, id, groupId);
-      const selectionSet = new Set(selections);
-      return state.selectedTasks.filter((task) => !selectionSet.has(task));
-    })(),
-  })),
+  on(
+    actions.deSelectTaskBulk,
+    (state, { id, groupId }): BoardGroupsState => ({
+      ...state,
+      selectedTasks: (() => {
+        const selections = getBulkTaskSelection(state, id, groupId);
+        const selectionSet = new Set(selections);
+        return state.selectedTasks.filter((task) => !selectionSet.has(task));
+      })(),
+    })
+  ),
 
   // Clear Task Selection
 
-  on(actions.clearTaskSelection, (state) => ({
-    ...state,
-    selectedTasks: [],
-  })),
+  on(
+    actions.clearTaskSelection,
+    (state): BoardGroupsState => ({
+      ...state,
+      selectedTasks: [],
+    })
+  ),
 
   // ProjectTaskActions
 
-  on(TaskActions.editProjectTask, (state, { task }) => updateTask(state, task)),
+  on(
+    TaskActions.editProjectTask,
+    (state, { task }): BoardGroupsState => updateTask(state, task)
+  ),
 
   // Set Inline Task Content
 
-  on(actions.setInlineTaskContent, (state, { content }) => ({
-    ...state,
-    inlineTaskContent: content,
-  }))
+  on(
+    actions.setInlineTaskContent,
+    (state, { content }): BoardGroupsState => ({
+      ...state,
+      inlineTaskContent: content,
+    })
+  )
 );
 
 export const boardGroupsReducer = (

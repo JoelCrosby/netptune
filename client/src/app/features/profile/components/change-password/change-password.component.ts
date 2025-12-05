@@ -62,7 +62,11 @@ export class ChangePasswordComponent {
 
   constructor() {
     effect(() => {
-      this.loading() ? this.formGroup.disable() : this.formGroup.enable();
+      if (this.loading()) {
+        this.formGroup.disable();
+      } else {
+        this.formGroup.enable();
+      }
 
       if (!this.loading()) {
         this.formGroup.reset();

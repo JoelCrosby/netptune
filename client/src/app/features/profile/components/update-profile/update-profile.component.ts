@@ -13,10 +13,7 @@ import {
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
-import {
-  updateProfile,
-  uploadProfilePicture,
-} from '@profile/store/profile.actions';
+import { updateProfile } from '@profile/store/profile.actions';
 import {
   selectProfile,
   selectUpdateProfileLoading,
@@ -47,7 +44,11 @@ export class UpdateProfileComponent {
 
   constructor() {
     effect(() => {
-      this.loadingUpdate() ? this.formGroup.disable() : this.formGroup.enable();
+      if (this.loadingUpdate()) {
+        this.formGroup.disable();
+      } else {
+        this.formGroup.enable();
+      }
     });
 
     effect(() => {
@@ -103,8 +104,7 @@ export class UpdateProfileComponent {
 
     if (!profile) return;
 
-    this.store.dispatch(updateProfile({ profile }));
-    this.store.dispatch(uploadProfilePicture({ data }));
+    this.store.dispatch(updateProfile({ profile, image: data }));
   }
 
   onCropperCanceled() {

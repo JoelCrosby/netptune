@@ -23,7 +23,7 @@
   position: absolute;
   top: 55px;
   left: 0;
-  border: 1px solid var(--border);
+
   box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%);
 }
 
@@ -54,12 +54,14 @@
   list-style: none;
   overflow-x: hidden;
   font-family: inherit;
+  border: 1px solid var(--border);
 }
 
 .select-menu-inner-options {
   padding: .4rem 0 .4rem .4rem;
   max-height: 216px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .label-input {
@@ -161,9 +163,7 @@ input {
   }
 
   .label-input {
-    $dark-bg: var(--card);
-    $light-bg: var(--card);
-    background-color: var(--background);
+    border: 2px solid var(--border);
   }
 
   .select-trigger {
@@ -181,8 +181,7 @@ input {
 
   .select-item {
     &:hover {
-      color: rgba(255, 255, 255, 1);
-      background-color: var(--side-bar-active);
+      background-color: var(--hover);
     }
 
     &.active {
@@ -203,8 +202,7 @@ input {
     color: var(--foreground);
 
     &:hover {
-      color: rgba(255, 255, 255, 1);
-      background-color: var(--side-bar-active);
+      background-color: var(--hover);
     }
   }
 }

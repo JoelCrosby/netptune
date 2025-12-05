@@ -4,6 +4,10 @@ import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { AppUser } from '@core/models/appuser';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
+import {
+  AsyncDataState,
+  initialAsyncDataState,
+} from '@core/types/async-data-state';
 
 export const sortBySortOrder = (a: BoardViewGroup, b: BoardViewGroup): number =>
   a.sortOrder - b.sortOrder;
@@ -21,6 +25,7 @@ export const initialState: BoardGroupsState = adapter.getInitialState({
   users: [],
   selectedUsers: [],
   selectedTasks: [],
+  deleteState: initialAsyncDataState(),
 });
 
 export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
@@ -35,4 +40,12 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   selectedTasks: number[];
   searchTerm?: string | null;
   inlineTaskContent?: string | null;
+  deleteState: AsyncDataState;
+}
+
+export interface BorderFilterParams {
+  users?: string[];
+  tags?: string[];
+  flagged?: boolean;
+  term?: string | null;
 }

@@ -1,3 +1,4 @@
+import { concatLatestFrom } from '@ngrx/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +21,6 @@ import {
   map,
   switchMap,
   tap,
-  withLatestFrom,
 } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
@@ -39,16 +39,16 @@ export class AuthEffects implements OnInitEffects {
   private snackbar = inject(MatSnackBar);
   private cookie = inject(CookieService);
 
-  init$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType('[Auth]: Init'),
+  init$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.initAuth),
       map(() => actions.currentUser())
-    )
-  );
+    );
+  });
 
   persistSettings = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(
           actions.loginSuccess,
           actions.logout,
@@ -60,32 +60,33 @@ export class AuthEffects implements OnInitEffects {
           actions.confirmEmailFail,
           actions.currentUserSuccess
         ),
-        withLatestFrom(this.store.select(selectAuthFeature)),
+        concatLatestFrom(() => this.store.select(selectAuthFeature)),
         tap(([_, settings]) => {
           const { token, currentUser } = settings;
           this.localStorageService.setItem(AUTH_KEY, { token, currentUser });
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 
-  fetchCurrentUser$ = createEffect(() =>
-    this.actions$.pipe(
+  fetchCurrentUser$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(
         actions.loginSuccess,
         actions.registerSuccess,
         actions.confirmEmailSuccess
       ),
       map(() => actions.currentUser())
-    )
-  );
+    );
+  });
 
   currentUser$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.currentUser),
         debounceTime(debounce, scheduler),
-        withLatestFrom(this.store.select(selectIsAuthenticated)),
+        concatLatestFrom(() => this.store.select(selectIsAuthenticated)),
         filter(([_, auth]) => auth),
         switchMap(() =>
           this.authService.currentUser().pipe(
@@ -95,42 +96,56 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
-  currentUserFail$ = createEffect(() =>
-    this.actions$.pipe(
+  currentUserFail$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.currentUserFail),
       map(() => actions.logout({ silent: true }))
-    )
-  );
+    );
+  });
 
-  login$ = createEffect(({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-    this.actions$.pipe(
-      ofType(actions.login),
-      debounceTime(debounce, scheduler),
-      switchMap((action) =>
-        this.authService.login(action.request).pipe(
-          map((token) => actions.loginSuccess({ token })),
-          catchError(() => of(actions.loginFail()))
+  login$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
+        ofType(actions.login),
+        debounceTime(debounce, scheduler),
+        switchMap((action) =>
+          this.authService.login(action.request).pipe(
+            map((token) => actions.loginSuccess({ token })),
+            catchError(() => of(actions.loginFail()))
+          )
         )
-      )
-    )
+      );
+    }
   );
 
-  loginSuccess$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+  openSideNav$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.loginSuccess),
         debounceTime(debounce, scheduler),
-        tap(() => void this.router.navigate(['/workspaces'])),
-        switchMap(() => [openSideNav(), loadWorkspaces()])
-      )
+        map(() => openSideNav())
+      );
+    }
+  );
+
+  loadWorkspaces$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
+        ofType(actions.loginSuccess),
+        debounceTime(debounce, scheduler),
+        switchMap(() => this.router.navigate(['/workspaces'])),
+        map(() => loadWorkspaces())
+      );
+    }
   );
 
   register$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.register),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
@@ -142,12 +157,13 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
   confirmEmail$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.confirmEmail),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
@@ -160,12 +176,13 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
   confirmEmailFail$ = createEffect(
-    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.confirmEmailFail),
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
@@ -173,12 +190,13 @@ export class AuthEffects implements OnInitEffects {
           this.snackbar.open('Email confirmation code is invalid or expired')
         ),
         map(() => actions.logoutSuccess())
-      )
+      );
+    }
   );
 
   requestPasswordReset$ = createEffect(
-    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.requestPasswordReset),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
@@ -192,12 +210,13 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
   resetPassword$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.resetPassword),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
@@ -210,12 +229,13 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
   resetPasswordFail$ = createEffect(
-    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.resetPasswordFail),
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
@@ -223,11 +243,12 @@ export class AuthEffects implements OnInitEffects {
           this.snackbar.open('Reset password request is invalid or expired')
         ),
         map(() => actions.logoutSuccess())
-      )
+      );
+    }
   );
 
-  logout$ = createEffect(() =>
-    this.actions$.pipe(
+  logout$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.logout),
       switchMap((action) =>
         this.confirmation.open(LOGOUT_CONFIRMATION, action.silent).pipe(
@@ -241,20 +262,21 @@ export class AuthEffects implements OnInitEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
   clearUserInfo$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(actions.clearUserInfo),
         tap(() => this.localStorageService.removeItem(AUTH_KEY))
-      ),
+      );
+    },
     { dispatch: false }
   );
 
   ngrxOnInitEffects(): Action {
-    return { type: '[Auth]: Init' };
+    return actions.initAuth();
   }
 }
 

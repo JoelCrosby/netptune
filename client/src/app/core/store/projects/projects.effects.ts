@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
 import {
@@ -15,13 +17,11 @@ import {
   switchMap,
   tap,
   throttleTime,
-  withLatestFrom,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
 import { selectCurrentWorkspaceIdentifier } from '../workspaces/workspaces.selectors';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class ProjectsEffects {
@@ -33,8 +33,8 @@ export class ProjectsEffects {
   private snackbar = inject(MatSnackBar);
 
   loadProjectDetail$ = createEffect(
-    ({ throttle = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.loadProjectDetail),
         throttleTime(throttle, scheduler),
         switchMap((action) =>
@@ -45,25 +45,29 @@ export class ProjectsEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
   loadProjectDetailfail$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(actions.loadProjectDetailFail),
-        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+        concatLatestFrom(() =>
+          this.store.select(selectCurrentWorkspaceIdentifier)
+        ),
         tap(
           ([_, workspaceId]) =>
             void this.router.navigate(['/', workspaceId, 'projects'])
         )
-      ),
+      );
+    },
     { dispatch: false }
   );
 
   loadProjects$ = createEffect(
-    ({ throttle = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.loadProjects, selectWorkspace),
         throttleTime(throttle, scheduler),
         switchMap(() =>
@@ -74,24 +78,25 @@ export class ProjectsEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
-  loadProjectsSuccess$ = createEffect(() =>
-    this.actions$.pipe(
+  loadProjectsSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadProjectsSuccess),
-      withLatestFrom(this.store.select(selectCurrentProject)),
+      concatLatestFrom(() => this.store.select(selectCurrentProject)),
       map(([action, project]) => {
         if (project) return { type: '[N/A]' };
         return actions.selectProject({
           project: action.projects && action.projects[0],
         });
       })
-    )
-  );
+    );
+  });
 
-  createProject$ = createEffect(() =>
-    this.actions$.pipe(
+  createProject$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createProject),
       switchMap((action) =>
         this.projectsService.post(action.project).pipe(
@@ -102,12 +107,12 @@ export class ProjectsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
   deleteProject$ = createEffect(
-    ({ debounce = 200, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.deleteProject),
         switchMap(({ project }) =>
           this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
@@ -130,12 +135,13 @@ export class ProjectsEffects {
             })
           )
         )
-      )
+      );
+    }
   );
 
   updateProject$ = createEffect(
-    ({ debounce = 400, scheduler = asyncScheduler } = {}) =>
-      this.actions$.pipe(
+    ({ debounce = 400, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
         ofType(actions.updateProject),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
@@ -148,11 +154,12 @@ export class ProjectsEffects {
             )
           )
         )
-      )
+      );
+    }
   );
 
-  getProjectBoards$ = createEffect(() =>
-    this.actions$.pipe(
+  getProjectBoards$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.getProjectBoards),
       switchMap((action) =>
         this.projectsService.getProjectBoards(action.projectId).pipe(
@@ -162,12 +169,12 @@ export class ProjectsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  onWorkspaceSelected$ = createEffect(() =>
-    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
-  );
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
 }
 
 const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {

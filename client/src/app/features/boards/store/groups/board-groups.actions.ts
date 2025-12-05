@@ -9,6 +9,7 @@ import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
 import { createAction, props } from '@ngrx/store';
+import { BorderFilterParams } from './board-groups.model';
 
 export const clearState = createAction('[BoardGroups] Clear State');
 
@@ -265,4 +266,11 @@ export const exportBoardTasksSuccess = createAction(
 export const exportBoardTasksFail = createAction(
   '[BoardGroups] Export Board Tasks Fail',
   props<{ error: HttpErrorResponse }>()
+);
+
+// Update Board Filter
+
+export const updateBoardFilter = createAction(
+  '[BoardGroups] Update Board Filter',
+  props<{ params: BorderFilterParams }>()
 );

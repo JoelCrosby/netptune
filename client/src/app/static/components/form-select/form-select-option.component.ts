@@ -27,7 +27,7 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
 
   @HostBinding('class.selected')
   get selected(): boolean {
-    return this.select?.selectedOption === this;
+    return this.select?.selectedOption() === this;
   }
 
   @HostBinding('class.active')

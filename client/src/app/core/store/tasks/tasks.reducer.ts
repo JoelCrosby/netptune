@@ -4,134 +4,191 @@ import { adapter, initialState, TasksState } from './tasks.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
+  on(actions.clearState, (): TasksState => initialState),
 
   // Load Tasks
 
-  on(actions.loadProjectTasks, (state) => ({ ...state, loading: true })),
-  on(actions.loadProjectTasksFail, (state, { error }) => ({
-    ...state,
-    loading: false,
-    loadProjectsError: error,
-  })),
-  on(actions.loadProjectTasksSuccess, (state, { tasks }) =>
-    adapter.setAll(tasks, {
+  on(
+    actions.loadProjectTasks,
+    (state): TasksState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.loadProjectTasksFail,
+    (state, { error }): TasksState => ({
       ...state,
       loading: false,
-      loaded: true,
+      loadProjectsError: error,
     })
+  ),
+  on(
+    actions.loadProjectTasksSuccess,
+    (state, { tasks }): TasksState =>
+      adapter.setAll(tasks, {
+        ...state,
+        loading: false,
+        loaded: true,
+      })
   ),
 
   // Create Task
 
-  on(actions.createProjectTask, (state) => ({
-    ...state,
-    loadingNewTask: true,
-  })),
-  on(actions.createProjectTasksFail, (state, { error }) => ({
-    ...state,
-    loadingNewTask: false,
-    createError: error,
-  })),
-  on(actions.createProjectTasksSuccess, (state, { task }) =>
-    adapter.addOne(task, {
+  on(
+    actions.createProjectTask,
+    (state): TasksState => ({
+      ...state,
+      loadingNewTask: true,
+    })
+  ),
+  on(
+    actions.createProjectTasksFail,
+    (state, { error }): TasksState => ({
       ...state,
       loadingNewTask: false,
-      createdTask: task,
+      createError: error,
     })
+  ),
+  on(
+    actions.createProjectTasksSuccess,
+    (state, { task }): TasksState =>
+      adapter.addOne(task, {
+        ...state,
+        loadingNewTask: false,
+        createdTask: task,
+      })
   ),
 
   // Edit Task
 
-  on(actions.editProjectTask, (state) => ({
-    ...state,
-    editState: { loading: true },
-  })),
-  on(actions.editProjectTasksFail, (state, { error }) => ({
-    ...state,
-    editState: { loading: false, error },
-  })),
-  on(actions.editProjectTasksSuccess, (state, { task }) =>
-    adapter.upsertOne(task, {
+  on(
+    actions.editProjectTask,
+    (state): TasksState => ({
       ...state,
-      editState: { loading: false },
-      detailTask: task,
+      editState: { loading: true },
     })
+  ),
+  on(
+    actions.editProjectTasksFail,
+    (state, { error }): TasksState => ({
+      ...state,
+      editState: { loading: false, error },
+    })
+  ),
+  on(
+    actions.editProjectTasksSuccess,
+    (state, { task }): TasksState =>
+      adapter.upsertOne(task, {
+        ...state,
+        editState: { loading: false },
+        detailTask: task,
+      })
   ),
 
   // Delete Task
 
-  on(actions.deleteProjectTask, (state) => ({
-    ...state,
-    deleteState: { loading: true },
-  })),
-  on(actions.deleteProjectTasksFail, (state, { error }) => ({
-    ...state,
-    deleteState: { loading: false, error },
-  })),
-  on(actions.deleteProjectTasksSuccess, (state, { taskId }) =>
-    adapter.removeOne(taskId, {
+  on(
+    actions.deleteProjectTask,
+    (state): TasksState => ({
       ...state,
-      deleteState: { loading: false },
+      deleteState: { loading: true },
     })
+  ),
+  on(
+    actions.deleteProjectTasksFail,
+    (state, { error }): TasksState => ({
+      ...state,
+      deleteState: { loading: false, error },
+    })
+  ),
+  on(
+    actions.deleteProjectTasksSuccess,
+    (state, { taskId }): TasksState =>
+      adapter.removeOne(taskId, {
+        ...state,
+        deleteState: { loading: false },
+      })
   ),
 
   // Select Task
 
-  on(actions.selectTask, (state, { task }) => ({
-    ...state,
-    selectedTask: task,
-  })),
-  on(actions.clearSelectedTask, (state) => ({
-    ...state,
-    selectedTask: undefined,
-  })),
+  on(
+    actions.selectTask,
+    (state, { task }): TasksState => ({
+      ...state,
+      selectedTask: task,
+    })
+  ),
+  on(
+    actions.clearSelectedTask,
+    (state): TasksState => ({
+      ...state,
+      selectedTask: undefined,
+    })
+  ),
 
   // Set Inline Edit Active
 
-  on(actions.setInlineEditActive, (state, { active }) => ({
-    ...state,
-    inlineEditActive: active,
-  })),
+  on(
+    actions.setInlineEditActive,
+    (state, { active }): TasksState => ({
+      ...state,
+      inlineEditActive: active,
+    })
+  ),
 
   // Load Task Details
 
-  on(actions.loadTaskDetailsSuccess, (state, { task }) => ({
-    ...state,
-    detailTask: task,
-  })),
+  on(
+    actions.loadTaskDetailsSuccess,
+    (state, { task }): TasksState => ({
+      ...state,
+      detailTask: task,
+    })
+  ),
 
   // Load Comments
 
-  on(actions.loadCommentsSuccess, (state, { comments }) => ({
-    ...state,
-    comments,
-  })),
+  on(
+    actions.loadCommentsSuccess,
+    (state, { comments }): TasksState => ({
+      ...state,
+      comments,
+    })
+  ),
 
   // Delete Comment
 
-  on(actions.deleteCommentSuccess, (state, { commentId }) => ({
-    ...state,
-    comments: state.comments.filter((c) => c.id !== commentId),
-  })),
+  on(
+    actions.deleteCommentSuccess,
+    (state, { commentId }): TasksState => ({
+      ...state,
+      comments: state.comments.filter((c) => c.id !== commentId),
+    })
+  ),
 
   // Add Comment
 
-  on(actions.addCommentSuccess, (state, { comment }) => ({
-    ...state,
-    comments: [...state.comments, comment].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    ),
-  })),
+  on(
+    actions.addCommentSuccess,
+    (state, { comment }): TasksState => ({
+      ...state,
+      comments: [...state.comments, comment].sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }),
+    })
+  ),
 
   // Clear Task Detail
 
-  on(actions.clearTaskDetail, (state) => ({
-    ...state,
-    detailTask: undefined,
-    comments: [],
-  }))
+  on(
+    actions.clearTaskDetail,
+    (state): TasksState => ({
+      ...state,
+      detailTask: undefined,
+      comments: [],
+    })
+  )
 );
 
 export const projectTasksReducer = (

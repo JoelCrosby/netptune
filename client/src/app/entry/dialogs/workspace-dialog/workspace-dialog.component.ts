@@ -1,49 +1,38 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit,
+  computed,
+  effect,
   inject,
+  signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { MatButton } from '@angular/material/button';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
+import { debouncedSignal } from '@core/util/signals';
 import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
-import {
-  animationFrameScheduler,
-  combineLatest,
-  Observable,
-  Subject,
-} from 'rxjs';
-import {
-  debounceTime,
-  map,
-  observeOn,
-  takeUntil,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { MatButton } from '@angular/material/button';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { AsyncPipe } from '@angular/common';
+import { debounceTime, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -59,29 +48,38 @@ import { AsyncPipe } from '@angular/common';
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
-    AsyncPipe,
   ],
 })
-export class WorkspaceDialogComponent implements OnInit, OnDestroy {
+export class WorkspaceDialogComponent {
   private store = inject(Store);
   private cd = inject(ChangeDetectorRef);
   private workspaceServcie = inject(WorkspacesService);
+
   dialogRef = inject<DialogRef<WorkspaceDialogComponent>>(DialogRef);
   data = inject<Workspace>(DIALOG_DATA, { optional: true });
 
-  isUniqueLoadingSubject$ = new Subject<boolean>();
-  showIdentifierCheckSubject$ = new Subject<boolean>();
-  identifierIcon$!: Observable<string | null>;
+  isUniqueLoading = signal(false);
+  identifierCheck = signal(false);
+  identifierStatusChange = toSignal(this.identifier.statusChanges);
+  nameValueChanges = toSignal(this.name.valueChanges);
+  identifierIcon = computed(() => {
+    if (this.isUniqueLoading()) return null;
 
-  showIdentifierCheck$ = this.showIdentifierCheckSubject$.pipe(
-    withLatestFrom(this.isUniqueLoadingSubject$),
-    map(([check, loading]) => !loading && check),
-    debounceTime(640)
-  );
+    if (this.identifier?.valid) {
+      return 'check';
+    }
 
-  isUniqueLoading$ = this.isUniqueLoadingSubject$.pipe(debounceTime(640));
+    return '';
+  });
 
-  onDestroy$ = new Subject<void>();
+  showIdentifierCheck = computed(() => {
+    const check = this.identifierCheck();
+    const loading = this.isUniqueLoading();
+
+    return !loading && check;
+  });
+
+  isUniqueLoadingDebounced = debouncedSignal(this.isUniqueLoading, 640);
 
   formGroup = new FormGroup(
     {
@@ -127,23 +125,24 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
     return !!this.data;
   }
 
-  ngOnInit() {
-    this.identifierIcon$ = combineLatest([
-      this.isUniqueLoading$.pipe(),
-      this.identifier.statusChanges,
-    ]).pipe(
-      map(([loading]) => {
-        if (loading) return null;
+  constructor() {
+    const editMode = this.data && this.data.slug;
 
-        if (this.identifier?.valid) {
-          return 'check';
-        }
+    effect(() => {
+      const value = this.nameValueChanges();
 
-        return '';
-      })
-    );
+      if (!value) {
+        this.identifier.setValue('');
+        this.identifierCheck.set(false);
+        return;
+      }
 
-    if (this.data && this.data.slug) {
+      if (typeof value !== 'string') return;
+
+      this.identifier.setValue(toUrlSlug(value));
+    });
+
+    if (editMode) {
       const workspace = this.data as Required<Workspace>;
 
       this.name.setValue(workspace.name, { emitEvent: false });
@@ -154,43 +153,20 @@ export class WorkspaceDialogComponent implements OnInit, OnDestroy {
       });
 
       this.identifier.disable({ emitEvent: false });
-    } else {
-      this.name.valueChanges
-        .pipe(
-          takeUntil(this.onDestroy$),
-          observeOn(animationFrameScheduler),
-          tap((value: string | undefined) => {
-            if (!value) {
-              this.identifier.setValue('');
-              this.showIdentifierCheckSubject$.next(false);
-              return;
-            }
-
-            if (typeof value !== 'string') return;
-
-            this.identifier.setValue(toUrlSlug(value));
-          })
-        )
-        .subscribe();
     }
   }
 
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
-  }
-
   validate(control: AbstractControl) {
-    this.isUniqueLoadingSubject$.next(true);
+    this.isUniqueLoading.set(true);
     return this.workspaceServcie.isSlugUnique(control.value as string).pipe(
       debounceTime(640),
       map((val) => {
-        this.isUniqueLoadingSubject$.next(false);
+        this.isUniqueLoading.set(false);
         if (val?.payload?.isUnique) {
-          this.showIdentifierCheckSubject$.next(true);
+          this.identifierCheck.set(true);
           return null;
         } else {
-          this.showIdentifierCheckSubject$.next(false);
+          this.identifierCheck.set(false);
           return { 'already-taken': true };
         }
       }),
