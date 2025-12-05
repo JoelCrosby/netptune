@@ -11,7 +11,7 @@
         [color]="selected === user.id ? 'primary' : ''"
         (click)="onUserClicked(user.id)"
         >
-        <label>
+        <div class="user-item">
           <app-avatar
             size="24"
             [name]="user.displayName"
@@ -19,7 +19,7 @@
             >
           </app-avatar>
           <span>{{ user.displayName }}</span>
-        </label>
+        </div>
       </button>
     }
   </div>

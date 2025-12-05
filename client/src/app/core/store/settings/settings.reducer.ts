@@ -4,11 +4,17 @@ import * as actions from './settings.actions';
 
 const reducer = createReducer(
   initialState,
-  on(actions.changeTheme, (state, { theme }) => ({
-    ...state,
-    theme,
-  })),
-  on(actions.clearSttings, (state) => ({ ...state, theme: 'LIGHT-THEME' }))
+  on(
+    actions.changeTheme,
+    (state, { theme }): SettingsState => ({
+      ...state,
+      theme,
+    })
+  ),
+  on(
+    actions.clearSttings,
+    (state): SettingsState => ({ ...state, theme: 'LIGHT-THEME' })
+  )
 );
 
 export const settingsReducer = (

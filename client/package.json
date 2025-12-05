@@ -63,6 +63,7 @@
     "@angular/compiler-cli": "^21.0.0",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.1",
+    "@ngrx/eslint-plugin": "^20.1.0",
     "@schematics/angular": "^21.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.19.25",

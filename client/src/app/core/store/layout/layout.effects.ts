@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Actions, OnInitEffects, createEffect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
 import { MediaService, MediaSize } from '@core/services/media.service';
-import { map, withLatestFrom, filter } from 'rxjs/operators';
-import { setIsMobileView, closeSideMenu, openSideMenu } from './layout.actions';
+import { Actions, OnInitEffects, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Action, Store } from '@ngrx/store';
+import { filter, map, switchMap } from 'rxjs/operators';
+import * as actions from './layout.actions';
 import { selectIsMobileView } from './layout.selectors';
 
 @Injectable()
@@ -12,37 +13,39 @@ export class LayoutEffects implements OnInitEffects {
   private media = inject(MediaService);
   private store = inject(Store);
 
-  init$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType('[Layout]: Init'),
-        map(() =>
-          this.media.maxWidth(MediaSize.xs).subscribe({
-            next: (matches) => {
-              if (matches) {
-                this.store.dispatch(closeSideMenu());
-              } else {
-                this.store.dispatch(openSideMenu());
-              }
+  init$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.initLayout),
+      switchMap(() => this.media.maxWidth(MediaSize.xs)),
+      map((matches) => {
+        if (matches) {
+          return actions.closeSideMenu();
+        } else {
+          return actions.openSideMenu();
+        }
+      })
+    );
+  });
 
-              this.store.dispatch(setIsMobileView({ isMobileView: matches }));
-            },
-          })
-        )
-      ),
-    { dispatch: false }
-  );
+  setIsMobileView$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.initLayout),
+      switchMap(() => this.media.maxWidth(MediaSize.xs)),
+      map((matches) => actions.setIsMobileView({ isMobileView: matches }))
+    );
+  });
 
-  routeChanged$ = createEffect(() =>
-    this.actions$.pipe(
+  routeChanged$ = createEffect(() => {
+    return this.actions$.pipe(
+      // eslint-disable-next-line @ngrx/prefer-action-creator-in-of-type
       ofType('@ngrx/router-store/navigation'),
-      withLatestFrom(this.store.select(selectIsMobileView)),
+      concatLatestFrom(() => this.store.select(selectIsMobileView)),
       filter(([_, isMobileView]) => isMobileView),
-      map(() => closeSideMenu())
-    )
-  );
+      map(() => actions.closeSideMenu())
+    );
+  });
 
   ngrxOnInitEffects(): Action {
-    return { type: '[Layout]: Init' };
+    return actions.initLayout();
   }
 }

@@ -57,20 +57,21 @@ if (!environment.production) {
   metaReducers.unshift(debug);
 }
 
-const feature = <TState>(name: keyof AppState) =>
+const selectFeature = <TState>(name: keyof AppState) =>
   createFeatureSelector<TState>(name);
 
-export const selectAuthFeature = feature<AuthState>('auth');
-export const selectMetaFeature = feature<MetaState>('meta');
-export const selectActivitesFeature = feature<ActivityState>('activites');
-export const selectLayoutFeature = feature<LayoutState>('layout');
-export const selectSettingsFeature = feature<SettingsState>('settings');
-export const selectWorkspacesFeature = feature<WorkspacesState>('workspaces');
-export const selectProjectsFeature = feature<ProjectsState>('projects');
-export const selectTasksFeature = feature<TasksState>('tasks');
-export const selectUsersFeature = feature<UsersState>('users');
-export const selectTagsFeature = feature<TagsState>('tags');
-export const selectHubContextFeature = feature<HubContextState>('hub');
+export const selectAuthFeature = selectFeature<AuthState>('auth');
+export const selectMetaFeature = selectFeature<MetaState>('meta');
+export const selectActivitesFeature = selectFeature<ActivityState>('activites');
+export const selectLayoutFeature = selectFeature<LayoutState>('layout');
+export const selectSettingsFeature = selectFeature<SettingsState>('settings');
+export const selectWorkspacesFeature =
+  selectFeature<WorkspacesState>('workspaces');
+export const selectProjectsFeature = selectFeature<ProjectsState>('projects');
+export const selectTasksFeature = selectFeature<TasksState>('tasks');
+export const selectUsersFeature = selectFeature<UsersState>('users');
+export const selectTagsFeature = selectFeature<TagsState>('tags');
+export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 
 export interface AppState {
   auth: AuthState;

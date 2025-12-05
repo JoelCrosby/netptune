@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { selectSettingsFeature } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { merge, of } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
@@ -19,20 +20,21 @@ export class SettingsEffects {
   private localStorageService = inject(LocalStorageService);
 
   persistSettings$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(actions.changeTheme),
-        withLatestFrom(this.store.select(selectSettingsFeature)),
+        concatLatestFrom(() => this.store.select(selectSettingsFeature)),
         tap(([_, settings]) =>
           this.localStorageService.setItem(SETTINGS_KEY, settings)
         )
-      ),
+      );
+    },
     { dispatch: false }
   );
 
   updateTheme$ = createEffect(
-    () =>
-      merge(INIT, this.actions$.pipe(ofType(actions.changeTheme))).pipe(
+    () => {
+      return merge(INIT, this.actions$.pipe(ofType(actions.changeTheme))).pipe(
         withLatestFrom(this.store.select(selectEffectiveTheme)),
         tap(([_, effectiveTheme]) => {
           const classList = document.documentElement.classList;
@@ -44,7 +46,8 @@ export class SettingsEffects {
           }
           classList.add(effectiveTheme);
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 }

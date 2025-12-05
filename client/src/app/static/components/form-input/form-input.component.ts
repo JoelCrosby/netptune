@@ -19,7 +19,8 @@ import { MatIcon } from '@angular/material/icon';
   imports: [MatIcon],
 })
 export class FormInputComponent implements ControlValueAccessor {
-  ngControl = inject(NgControl, { self: true, optional: true });
+  readonly ngControl = inject(NgControl, { self: true, optional: true });
+  readonly formControl = input<NgControl>();
 
   readonly label = input<string>();
   readonly disabled = model<boolean>();
@@ -49,6 +50,12 @@ export class FormInputComponent implements ControlValueAccessor {
   constructor() {
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
+    }
+
+    const inputControl = this.formControl();
+
+    if (inputControl) {
+      inputControl.valueAccessor = this;
     }
   }
 

@@ -4,13 +4,14 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  contentChildren,
   ElementRef,
   inject,
   input,
-  output,
-  viewChild,
-  contentChildren,
   model,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
@@ -29,7 +30,8 @@ import { MatIcon } from '@angular/material/icon';
 export class FormSelectComponent<TValue>
   implements AfterViewInit, ControlValueAccessor
 {
-  ngControl = inject(NgControl, { self: true, optional: true });
+  readonly ngControl = inject(NgControl, { self: true, optional: true });
+
   private service = inject<FormSelectService<TValue>>(FormSelectService);
 
   readonly label = input.required<string>();
@@ -41,23 +43,20 @@ export class FormSelectComponent<TValue>
 
   readonly changed = output<TValue>();
   readonly input = viewChild.required<ElementRef>('input');
-  readonly options = contentChildren(FormSelectOptionComponent, {
-    descendants: true,
-  });
+  readonly options = contentChildren(FormSelectOptionComponent);
   readonly submitted = output<string>();
 
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
-  value?: TValue | null;
-  displayValue: string | null = null;
+  value = signal<TValue | null>(null);
+  displayValue = signal<string | null>(null);
 
   selectedPortal?: CdkPortal;
 
   onChange!: (value: TValue) => void;
   onTouch!: (...args: unknown[]) => void;
 
-  selectedOption?: FormSelectOptionComponent<TValue> | null = null;
-
+  selectedOption = signal<FormSelectOptionComponent<TValue> | null>(null);
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
   get control() {
@@ -73,6 +72,8 @@ export class FormSelectComponent<TValue>
   }
 
   ngAfterViewInit() {
+    this.updateTrigger();
+
     this.keyManager = new ActiveDescendantKeyManager(this.options())
       .withHorizontalOrientation('ltr')
       .withVerticalOrientation()
@@ -86,9 +87,13 @@ export class FormSelectComponent<TValue>
       return;
     }
 
-    this.selectedOption
-      ? this.keyManager?.setActiveItem(this.selectedOption)
-      : this.keyManager?.setFirstItemActive();
+    const selected = this.selectedOption();
+
+    if (selected) {
+      this.keyManager?.setActiveItem(selected);
+    } else {
+      this.keyManager?.setFirstItemActive();
+    }
   }
 
   onDropMenuIconClick(event: UIEvent) {
@@ -107,21 +112,24 @@ export class FormSelectComponent<TValue>
 
   selectOption(option: FormSelectOptionComponent<TValue> | undefined | null) {
     if (!option) {
-      this.value = null;
-      this.selectedOption = null;
+      this.value.set(null);
+      this.selectedOption.set(null);
 
       return;
     }
 
-    this.value = option.value();
-    this.selectedOption = option;
+    this.value.set(option.value());
+    this.selectedOption.set(option);
 
     this.keyManager?.setActiveItem(option);
 
     this.updateTrigger();
     this.hideDropdown();
 
-    const value = this.selectedOption?.value();
+    const value = this.selectedOption()?.value();
+
+    if (!value) return;
+
     this.changed.emit(value);
     this.onChange(value);
 
@@ -129,26 +137,23 @@ export class FormSelectComponent<TValue>
   }
 
   writeValue(value: TValue) {
-    this.value = value;
-
-    const options = this.options();
-    if (!options) {
-      return;
-    }
-
-    this.selectedOption = options.find(
-      (option) => option.value() === this.value
-    );
-
-    this.updateTrigger();
+    this.value.set(value);
   }
 
   updateTrigger() {
-    this.displayValue = this.selectedOption
-      ? this.selectedOption.viewValue
-      : null;
+    const options = this.options();
 
-    this.input().nativeElement.value = this.displayValue;
+    if (!options.length) {
+      return;
+    }
+
+    const selected = options.find((option) => option.value() === this.value());
+    const display = selected ? selected.viewValue : null;
+    this.displayValue.set(display);
+
+    console.log({ selected, display });
+
+    this.input().nativeElement.value = this.displayValue();
   }
 
   registerOnChange(fn: (...args: unknown[]) => unknown) {
@@ -192,7 +197,9 @@ export class FormSelectComponent<TValue>
     if (event.key === 'Enter' || event.key === ' ') {
       this.selectOption(this.keyManager?.activeItem);
     } else if (event.key === 'Escape' || event.key === 'Esc') {
-      dropdown.showing && this.hideDropdown();
+      if (dropdown.showing()) {
+        this.hideDropdown();
+      }
     } else if (arrowKeys.includes(event.key)) {
       this.keyManager?.onKeydown(event);
     } else if (
@@ -200,7 +207,9 @@ export class FormSelectComponent<TValue>
       event.key === 'PageDown' ||
       event.key === 'Tab'
     ) {
-      dropdown.showing && event.preventDefault();
+      if (dropdown.showing()) {
+        event.preventDefault();
+      }
     }
   }
 }

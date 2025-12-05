@@ -18,42 +18,63 @@ export interface LayoutState {
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
+  on(actions.clearState, (): LayoutState => initialState),
 
-  on(actions.toggleSideMenu, (state) => ({
-    ...state,
-    sideMenuOpen: !state.sideMenuOpen,
-    sideNavOpen: !state.sideMenuOpen,
-  })),
-  on(actions.openSideMenu, (state) => ({
-    ...state,
-    sideMenuOpen: true,
-    sideNavOpen: true,
-  })),
-  on(actions.closeSideMenu, (state) => ({
-    ...state,
-    sideMenuOpen: false,
-    sideNavOpen: false,
-  })),
+  on(
+    actions.toggleSideMenu,
+    (state): LayoutState => ({
+      ...state,
+      sideMenuOpen: !state.sideMenuOpen,
+      sideNavOpen: !state.sideMenuOpen,
+    })
+  ),
+  on(
+    actions.openSideMenu,
+    (state): LayoutState => ({
+      ...state,
+      sideMenuOpen: true,
+      sideNavOpen: true,
+    })
+  ),
+  on(
+    actions.closeSideMenu,
+    (state): LayoutState => ({
+      ...state,
+      sideMenuOpen: false,
+      sideNavOpen: false,
+    })
+  ),
 
-  on(actions.toggleSideNav, (state) => ({
-    ...state,
-    sideNavOpen: !state.sideNavOpen,
-  })),
-  on(actions.openSideNav, (state) => ({
-    ...state,
-    sideNavOpen: true,
-  })),
-  on(actions.closeSideNav, (state) => ({
-    ...state,
-    sideNavOpen: false,
-  })),
+  on(
+    actions.toggleSideNav,
+    (state): LayoutState => ({
+      ...state,
+      sideNavOpen: !state.sideNavOpen,
+    })
+  ),
+  on(
+    actions.openSideNav,
+    (state): LayoutState => ({
+      ...state,
+      sideNavOpen: true,
+    })
+  ),
+  on(
+    actions.closeSideNav,
+    (state): LayoutState => ({
+      ...state,
+      sideNavOpen: false,
+    })
+  ),
 
-  on(actions.setIsMobileView, (state, { isMobileView }) => ({
-    ...state,
-    isMobileView,
-    sideNavMode: (isMobileView ? 'over' : 'side') as MatDrawerMode,
-  }))
+  on(
+    actions.setIsMobileView,
+    (state, { isMobileView }): LayoutState => ({
+      ...state,
+      isMobileView,
+      sideNavMode: (isMobileView ? 'over' : 'side') as MatDrawerMode,
+    })
+  )
 );
 
 export const layoutReducer = (

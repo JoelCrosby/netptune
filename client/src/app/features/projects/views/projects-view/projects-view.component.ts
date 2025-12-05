@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
@@ -16,7 +11,6 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
 @Component({
   templateUrl: './projects-view.component.html',
-  styleUrls: ['./projects-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -25,13 +19,13 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     ProjectListComponent,
   ],
 })
-export class ProjectsViewComponent implements AfterViewInit {
+export class ProjectsViewComponent {
   dialog = inject(DialogService);
   store = inject(Store);
 
   loading = this.store.selectSignal(selectProjectsLoading);
 
-  ngAfterViewInit() {
+  constructor() {
     this.store.dispatch(loadProjects());
   }
 

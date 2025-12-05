@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import angular from 'angular-eslint';
 import typescript from 'typescript-eslint';
+import ngrx from '@ngrx/eslint-plugin/v9';
 
 // 'plugin:@angular-eslint/recommended',
 // 'plugin:@angular-eslint/template/process-inline-templates',
@@ -23,10 +24,12 @@ export default defineConfig([
       ...typescript.configs.stylistic,
       // Apply the recommended Angular rules
       ...angular.configs.tsRecommended,
+      // Apply ngrx rules
+      ...ngrx.configs.all
     ],
 
     languageOptions: {
-      ecmaVersion: 5,
+      ecmaVersion: 'latest',
       sourceType: 'script',
 
       parserOptions: {
@@ -38,7 +41,6 @@ export default defineConfig([
     processor: angular.processInlineTemplates,
 
     rules: {
-      '@angular-eslint/template/click-events-have-key-events': ['off'],
       '@angular-eslint/component-selector': [
         'error',
         {
@@ -89,6 +91,9 @@ export default defineConfig([
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
     ],
-    rules: {},
+    rules: {
+      '@angular-eslint/template/click-events-have-key-events': 'off',
+      '@angular-eslint/template/interactive-supports-focus': 'off',
+    },
   },
 ]);

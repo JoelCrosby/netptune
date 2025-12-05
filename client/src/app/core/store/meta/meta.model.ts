@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export interface BuildInfo {
   gitHash?: string;
   gitHashShort?: string;
@@ -6,8 +8,12 @@ export interface BuildInfo {
   runId?: string;
 }
 
-export const initialState: MetaState = {};
+export const initialState: MetaState = {
+  loading: true,
+};
 
 export interface MetaState {
   buildInfo?: BuildInfo;
+  loading: boolean;
+  loadingError?: HttpErrorResponse | Error;
 }

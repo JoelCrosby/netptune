@@ -11,10 +11,10 @@
         [color]="selected() === group.id ? 'primary' : ''"
         (click)="onGroupClicked(group.id)"
         >
-        <label>
+        <div class="group-item">
           <span>{{ group.name }}</span>
           <div class="pill"></div
-          ></label>
+          ></div>
         </button>
       }
     </div>

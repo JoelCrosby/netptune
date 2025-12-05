@@ -1,6 +1,7 @@
 import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse, UserToken } from './auth.models';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
 export const selectLoginLoading = createSelector(
   selectAuthFeature,
@@ -36,6 +37,15 @@ export const selectUserToken = createSelector(
 export const selectAuthToken = createSelector(
   selectUserToken,
   (token?: UserToken) => token?.token
+);
+
+export const selectAuthTokenWithWorkspaceId = createSelector(
+  selectUserToken,
+  selectCurrentWorkspaceIdentifier,
+  (token: UserToken | undefined, workspaceId: string | undefined) => ({
+    token: token?.token,
+    workspaceId,
+  })
 );
 
 export const selectLoginError = createSelector(

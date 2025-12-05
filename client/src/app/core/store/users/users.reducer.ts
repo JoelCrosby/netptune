@@ -5,22 +5,29 @@ import { UsersState } from './users.model';
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
-  on(actions.loadUsers, (state) => ({ ...state, loading: true })),
-  on(actions.loadUsersFail, (state, { error }) => ({
-    ...state,
-    loading: false,
-    loadUsersError: error,
-  })),
-  on(actions.loadUsersSuccess, (state, { users }) =>
-    adapter.setAll(users, { ...state, loading: false, loaded: true })
-  ),
-  on(actions.removeUsersFromWorkspaceSuccess, (state, { emailAddresses }) =>
-    adapter.removeMany(emailAddresses, {
+  on(actions.clearState, (): UsersState => initialState),
+  on(actions.loadUsers, (state): UsersState => ({ ...state, loading: true })),
+  on(
+    actions.loadUsersFail,
+    (state, { error }): UsersState => ({
       ...state,
       loading: false,
-      loaded: true,
+      loadingError: error,
     })
+  ),
+  on(
+    actions.loadUsersSuccess,
+    (state, { users }): UsersState =>
+      adapter.setAll(users, { ...state, loading: false, loaded: true })
+  ),
+  on(
+    actions.removeUsersFromWorkspaceSuccess,
+    (state, { emailAddresses }): UsersState =>
+      adapter.removeMany(emailAddresses, {
+        ...state,
+        loading: false,
+        loaded: true,
+      })
   )
 );
 

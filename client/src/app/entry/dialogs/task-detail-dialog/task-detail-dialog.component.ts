@@ -29,15 +29,11 @@ import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import * as ActivityActions from '@core/store/activity/activity.actions';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
-import * as ProjectActions from '@core/store/projects/projects.actions';
 import * as ProjectSelectors from '@core/store/projects/projects.selectors';
-import * as TagsActions from '@core/store/tags/tags.actions';
 import * as TagsSelectors from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
-import * as UsersActions from '@core/store/users/users.actions';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { Actions, ofType } from '@ngrx/effects';
@@ -50,6 +46,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { CommentsListComponent } from '@static/components/comments-list/comments-list.component';
 import { EditorComponent } from '@static/components/editor/editor.component';
 import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
+import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
@@ -61,7 +58,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { TaskDates } from '@static/components/task-dates/task-dates.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -140,10 +136,6 @@ export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
     const systemId: string = this.data?.systemId;
 
     this.store.dispatch(TaskActions.loadTaskDetails({ systemId }));
-
-    this.store.dispatch(ProjectActions.loadProjects());
-    this.store.dispatch(UsersActions.loadUsers());
-    this.store.dispatch(TagsActions.loadTags());
   }
 
   buildForm(task: TaskViewModel) {
@@ -246,7 +238,7 @@ export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.store.dispatch(TaskActions.clearTaskDetail());
-    this.store.dispatch(ActivityActions.clearState());
+
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }

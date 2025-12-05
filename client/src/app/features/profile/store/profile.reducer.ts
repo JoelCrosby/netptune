@@ -7,67 +7,97 @@ const reducer = createReducer(
 
   // Load Profile
 
-  on(actions.loadProfile, (state) => ({ ...state, loadProfileloading: true })),
-  on(actions.loadProfileFail, (state, { error }) => ({
-    ...state,
-    loadProfileloading: false,
-    loadProfileError: error,
-  })),
-  on(actions.loadProfileSuccess, (state, { profile }) => ({
-    ...state,
-    loadProfileloading: false,
-    profileloaded: true,
-    profile,
-  })),
+  on(
+    actions.loadProfile,
+    (state): ProfileState => ({ ...state, loadProfileloading: true })
+  ),
+  on(
+    actions.loadProfileFail,
+    (state, { error }): ProfileState => ({
+      ...state,
+      loadProfileloading: false,
+      loadProfileError: error,
+    })
+  ),
+  on(
+    actions.loadProfileSuccess,
+    (state, { profile }): ProfileState => ({
+      ...state,
+      loadProfileloading: false,
+      profileloaded: true,
+      profile,
+    })
+  ),
 
   // Update Profile
 
-  on(actions.updateProfile, (state) => ({
-    ...state,
-    updateProfileLoading: true,
-  })),
-  on(actions.updateProfileFail, (state, { error }) => ({
-    ...state,
-    updateProfileLoading: false,
-    updateProfileError: error,
-  })),
-  on(actions.updateProfileSuccess, (state, { profile }) => ({
-    ...state,
-    updateProfileLoading: false,
-    profile,
-  })),
+  on(
+    actions.updateProfile,
+    (state): ProfileState => ({
+      ...state,
+      updateProfileLoading: true,
+    })
+  ),
+  on(
+    actions.updateProfileFail,
+    (state, { error }): ProfileState => ({
+      ...state,
+      updateProfileLoading: false,
+      updateProfileError: error,
+    })
+  ),
+  on(
+    actions.updateProfileSuccess,
+    (state, { profile }): ProfileState => ({
+      ...state,
+      updateProfileLoading: false,
+      profile,
+    })
+  ),
 
   // Change Password
 
-  on(actions.changePassword, (state) => ({
-    ...state,
-    changePasswordLoading: true,
-  })),
-  on(actions.changePasswordFail, (state, { error }) => ({
-    ...state,
-    changePasswordLoading: false,
-    changePasswordError: error,
-  })),
-  on(actions.changePasswordSuccess, (state) => ({
-    ...state,
-    changePasswordLoading: false,
-  })),
+  on(
+    actions.changePassword,
+    (state): ProfileState => ({
+      ...state,
+      changePasswordLoading: true,
+    })
+  ),
+  on(
+    actions.changePasswordFail,
+    (state, { error }): ProfileState => ({
+      ...state,
+      changePasswordLoading: false,
+      changePasswordError: error,
+    })
+  ),
+  on(
+    actions.changePasswordSuccess,
+    (state): ProfileState => ({
+      ...state,
+      changePasswordLoading: false,
+    })
+  ),
 
   // Upload Profile Picture
 
-  on(actions.uploadProfilePictureSuccess, (state, { response }) => {
-    if (!response?.uri || !state.profile) {
-      return state;
-    }
+  on(
+    actions.uploadProfilePictureSuccess,
+    (state, { response }): ProfileState => {
+      if (!response?.uri || !state.profile) {
+        return state;
+      }
 
-    return {
-      ...state,
-      profile: {
-        ...state.profile,
-        pictureUrl: response?.uri,
-      },
-    };
-  })
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          pictureUrl: response?.uri,
+        },
+      };
+    }
+  )
 );
 
 export const profileReducer = (

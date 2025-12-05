@@ -14,7 +14,7 @@
   </app-card-content>
 
   <app-card-actions>
-    @for (action of actions(); track action; let isFirst = $first) {
+    @for (action of actions(); track action.routerLink; let isFirst = $first) {
       @if (action.isLink) {
         @if (isFirst) {
           <a

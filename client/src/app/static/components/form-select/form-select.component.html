@@ -18,9 +18,9 @@
 
     <input
       #input
-      placeholder="{{placeholder()}}"
+      [placeholder]="placeholder()"
       [id]="ngControl?.name"
-      [value]="displayValue"
+      [value]="displayValue()"
       [disabled]="disabled()"
       [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
       readonly

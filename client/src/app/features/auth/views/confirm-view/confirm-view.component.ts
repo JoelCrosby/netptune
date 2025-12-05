@@ -1,52 +1,31 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
 import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   templateUrl: './confirm-view.component.html',
   styleUrls: ['./confirm-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatProgressSpinner, AsyncPipe],
+  imports: [MatProgressSpinner],
 })
-export class ConfirmViewComponent implements OnInit, AfterViewInit {
+export class ConfirmViewComponent {
   private activatedRoute = inject(ActivatedRoute);
   private store = inject(Store);
 
-  loading$!: Observable<boolean>;
-
-  private request?: AuthCodeRequest;
+  loading = this.store.selectSignal(selectIsConfirmEmailLoading);
+  routeData = toSignal(this.activatedRoute.data);
 
   constructor() {
-    this.activatedRoute.data
-      .pipe(
-        first(),
-        tap((data) => {
-          this.request = data.confirmEmail as AuthCodeRequest;
-        })
-      )
-      .subscribe();
-  }
+    const data = this.routeData();
+    const request = data?.confirmEmail as AuthCodeRequest;
 
-  ngOnInit() {
-    this.loading$ = this.store.select(selectIsConfirmEmailLoading);
-  }
+    if (!request) return;
 
-  ngAfterViewInit() {
-    if (!this.request) return;
-
-    this.store.dispatch(confirmEmail({ request: this.request }));
+    this.store.dispatch(confirmEmail({ request }));
   }
 }

@@ -5,6 +5,7 @@ import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
@@ -14,7 +15,6 @@ import {
   map,
   switchMap,
   tap,
-  withLatestFrom,
 } from 'rxjs/operators';
 import * as actions from './profile.actions';
 import { ProfileService } from './profile.service';
@@ -26,10 +26,10 @@ export class ProfileEffects {
   private store = inject(Store);
   private snackbar = inject(MatSnackBar);
 
-  loadProfile$ = createEffect(() =>
-    this.actions$.pipe(
+  loadProfile$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadProfile),
-      withLatestFrom(this.store.select(selectCurrentUser)),
+      concatLatestFrom(() => this.store.select(selectCurrentUser)),
       switchMap(([_, user]) => {
         if (!user) return of({ type: 'noop' });
 
@@ -40,11 +40,11 @@ export class ProfileEffects {
           )
         );
       })
-    )
-  );
+    );
+  });
 
-  updateProfile$ = createEffect(() =>
-    this.actions$.pipe(
+  updateProfile$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.updateProfile),
       switchMap(({ profile }) => {
         if (!profile) return of({ type: 'noop' });
@@ -60,19 +60,19 @@ export class ProfileEffects {
           )
         );
       })
-    )
-  );
+    );
+  });
 
-  updateProfileSuccess$ = createEffect(() =>
-    this.actions$.pipe(
+  updateProfileSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.updateProfileSuccess, actions.uploadProfilePictureSuccess),
       debounceTime(280),
       map(() => currentUser())
-    )
-  );
+    );
+  });
 
-  changePassword$ = createEffect(() =>
-    this.actions$.pipe(
+  changePassword$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.changePassword),
       switchMap((action) =>
         this.profileService.changePassword(action.request).pipe(
@@ -82,15 +82,28 @@ export class ProfileEffects {
           catchError((error) => of(actions.changePasswordFail({ error })))
         )
       )
-    )
-  );
+    );
+  });
 
-  uploadProfilePicture$ = createEffect(() =>
-    this.actions$.pipe(
+  updateProfileWithImage$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.updateProfile),
+      map((action) => {
+        if (!action.image) {
+          return { type: 'noop' };
+        }
+
+        return actions.uploadProfilePicture({ data: action.image });
+      })
+    );
+  });
+
+  uploadProfilePicture$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.uploadProfilePicture),
       filter((action) => !!action.data),
       switchMap((action) =>
-        this.profileService.uloadProfilePicture(action.data).pipe(
+        this.profileService.uploadProfilePicture(action.data).pipe(
           unwrapClientReposne(),
           map((response) => actions.uploadProfilePictureSuccess({ response })),
           catchError((error: HttpErrorResponse) =>
@@ -98,6 +111,6 @@ export class ProfileEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 }

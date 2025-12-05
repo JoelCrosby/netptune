@@ -1,6 +1,6 @@
-@if (project$ | async; as project) {
+@if (project(); as project) {
   <div>
-    <form [formGroup]="formGroup">
+    <form [formGroup]="form">
       <app-form-input formControlName="name" label="Name" maxLength="1024">
       </app-form-input>
       <app-form-textarea
@@ -37,7 +37,7 @@
         mat-flat-button
         color="primary"
         (click)="updateClicked()"
-        [disabled]="updateDisabled$ | async"
+        [disabled]="updateDisabled()"
         >
         Save Changes
       </button>

@@ -19,7 +19,7 @@
   <div class="column-fill">
     <div class="profile-image">
       @if (editProfilePicture()) {
-        <img [width]="180" [src]="formGroup.controls.pictureUrl.value ?? ''" />
+        <img [width]="180" [src]="formGroup.controls.pictureUrl.value ?? ''" alt="profile-image" />
       } @else {
         @if (formGroup.controls.pictureUrl.value) {
           <img

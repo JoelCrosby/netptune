@@ -10,9 +10,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { loadProjects } from '../projects/projects.actions';
+import { loadTags } from '../tags/tags.actions';
+import { loadUsers } from '../users/users.actions';
 import * as actions from './tasks.actions';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import { ProjectTasksService } from './tasks.service';
+import { clearState } from '../activity/activity.actions';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -22,8 +26,8 @@ export class ProjectTasksEffects {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(MatSnackBar);
 
-  loadProjectTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  loadProjectTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadProjectTasks),
       switchMap(() =>
         this.projectTasksService.get().pipe(
@@ -33,11 +37,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  createProjectTask$ = createEffect(() =>
-    this.actions$.pipe(
+  createProjectTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createProjectTask),
       switchMap((action) =>
         this.projectTasksHubService.post(action.identifier, action.task).pipe(
@@ -49,11 +53,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  editProjectTask$ = createEffect(() =>
-    this.actions$.pipe(
+  editProjectTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.editProjectTask),
       switchMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
@@ -65,11 +69,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteProjectTask$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteProjectTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteProjectTask),
       switchMap((action) =>
         this.confirmation.open(DELETE_TASK_CONFIRMATION).pipe(
@@ -99,11 +103,11 @@ export class ProjectTasksEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteComment$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteComment$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteComment),
       switchMap((action) =>
         this.confirmation.open(DELETE_COMMENT_CONFIRMATION).pipe(
@@ -127,11 +131,11 @@ export class ProjectTasksEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  loadTaskDetail$ = createEffect(() =>
-    this.actions$.pipe(
+  loadTaskDetail$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadTaskDetails),
       switchMap((action) =>
         this.projectTasksService.detail(action.systemId).pipe(
@@ -141,11 +145,39 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  loadComments$ = createEffect(() =>
-    this.actions$.pipe(
+  loadTaskDetailProjects$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadTaskDetails),
+      map(() => loadProjects())
+    );
+  });
+
+  loadTaskDetailUsers$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadTaskDetails),
+      map(() => loadUsers())
+    );
+  });
+
+  loadTaskDetailTags$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadTaskDetails),
+      map(() => loadTags())
+    );
+  });
+
+  clearTaskDetail$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.clearTaskDetail),
+      map(() => clearState())
+    );
+  });
+
+  loadComments$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadComments),
       switchMap((action) =>
         this.projectTasksService.getComments(action.systemId).pipe(
@@ -155,11 +187,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  addComment$ = createEffect(() =>
-    this.actions$.pipe(
+  addComment$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.addComment),
       switchMap((action) =>
         this.projectTasksService.postComment(action.request).pipe(
@@ -170,11 +202,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  exportTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  exportTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.exportTasks),
       switchMap(() =>
         this.projectTasksService.export().pipe(
@@ -185,11 +217,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  importTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  importTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.importTasks),
       switchMap((action) =>
         this.projectTasksService
@@ -204,11 +236,11 @@ export class ProjectTasksEffects {
             })
           )
       )
-    )
-  );
+    );
+  });
 
-  addTagToTask$ = createEffect(() =>
-    this.actions$.pipe(
+  addTagToTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.addTagToTask),
       switchMap(({ identifier, request }) =>
         this.projectTasksHubService.addTagToTask(identifier, request).pipe(
@@ -219,11 +251,11 @@ export class ProjectTasksEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteTagFromTask$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteTagFromTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteTagFromTask),
       switchMap(({ identifier, systemId, tag }) =>
         this.projectTasksHubService
@@ -236,12 +268,12 @@ export class ProjectTasksEffects {
             )
           )
       )
-    )
-  );
+    );
+  });
 
-  onWorkspaceSelected$ = createEffect(() =>
-    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
-  );
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
 }
 
 const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {

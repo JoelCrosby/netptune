@@ -9,12 +9,15 @@ export interface HubContextState {
 
 const reducer = createReducer(
   initialState,
-  on(actions.clearState, () => initialState),
+  on(actions.clearState, (): HubContextState => initialState),
 
-  on(actions.setCurrentGroupId, (state, { groupId: identifier }) => ({
-    ...state,
-    groupId: identifier,
-  }))
+  on(
+    actions.setCurrentGroupId,
+    (state, { groupId: identifier }): HubContextState => ({
+      ...state,
+      groupId: identifier,
+    })
+  )
 );
 
 export const hubContextReducer = (

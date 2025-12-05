@@ -10,9 +10,11 @@
         >
       </app-tags-input>
     } @else {
-      <div class="tag-item" (click)="onItemClicked(i)">
-        <span class="tag-item-label"> {{ tag.name }} </span>
+      <div role="button" [tabindex]="i" class="tag-item" (click)="onItemClicked(i)">
+        <div class="tag-item-label"> {{ tag.name }} </div>
         <div
+          role="button"
+          aria-disabled="true"
           class="tag-item-delete"
           matTooltip="Delete Tag"
           (click)="$event.stopPropagation(); onDeleteClicked(tag)"
@@ -30,7 +32,10 @@
       >
     </app-tags-input>
   } @else {
-    <div class="tag-item add-tag-item" (click)="onAddTagClicked()">
+    <div role="button"
+         aria-disabled="true"
+         class="tag-item add-tag-item"
+         (click)="onAddTagClicked()">
       <span class="add-tag-item-label"> Add Tag... </span>
     </div>
   }

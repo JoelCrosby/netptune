@@ -14,7 +14,7 @@
           (selectChange)="onWorkspaceChange($event)"
           >
         </app-workspace-select>
-        @for (link of links; track link) {
+        @for (link of links; track link.value) {
           <a
             [routerLink]="link.value"
             class="app-menu-link"
@@ -31,7 +31,7 @@
       </div>
       <div class="app-sidenav-spacer"></div>
       <div class="app-sidenav-list">
-        @for (link of bottomLinks; track link) {
+        @for (link of bottomLinks; track link.value) {
           <a
             [routerLink]="link.value"
             class="app-menu-link"
@@ -70,6 +70,7 @@
         (click)="onToggleExpandClicked()"
         [matTooltip]="sideNavExpanded() ? '' : 'Expand'"
         matTooltipPosition="right"
+        role="button"
         >
         <mat-icon mat-list-icon class="material-icons-round">
           {{ sideNavExpanded() ? 'keyboard_arrow_left' : 'keyboard_arrow_right' }}

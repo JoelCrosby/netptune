@@ -5,10 +5,11 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import * as actions from './tags.actions';
 import { TagsService } from './tags.service';
 
@@ -19,19 +20,19 @@ export class TagsEffects {
   private tagsService = inject(TagsService);
   private confirmation = inject(ConfirmationService);
 
-  routerNavigated$ = createEffect(() =>
-    this.actions$.pipe(
+  routerNavigated$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ROUTER_NAVIGATED),
-      withLatestFrom(this.route.queryParamMap),
+      concatLatestFrom(() => this.route.queryParamMap),
       map(([_, paramMap]) => {
         const selectedTags = paramMap.getAll('tags');
         return actions.setSelectedTags({ selectedTags });
       })
-    )
-  );
+    );
+  });
 
-  loadProjectTasks$ = createEffect(() =>
-    this.actions$.pipe(
+  loadProjectTasks$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadTags, actions.deleteTagsSuccess),
       switchMap(() =>
         this.tagsService.get().pipe(
@@ -41,11 +42,11 @@ export class TagsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  addTag$ = createEffect(() =>
-    this.actions$.pipe(
+  addTag$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.addTag),
       switchMap((action) =>
         this.tagsService.post({ tag: action.name }).pipe(
@@ -56,11 +57,11 @@ export class TagsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  addTagToTask$ = createEffect(() =>
-    this.actions$.pipe(
+  addTagToTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.addTagToTask),
       switchMap((action) =>
         this.tagsService.postToTask(action.request).pipe(
@@ -71,11 +72,11 @@ export class TagsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteTag$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteTag$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteTags),
       switchMap((action) =>
         this.confirmation.open(DELETE_TAG_CONFIRMATION).pipe(
@@ -92,11 +93,11 @@ export class TagsEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteTagFromTask$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteTagFromTask$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteTagFromTask),
       switchMap(({ systemId, tag }) =>
         this.tagsService.deleteFromTask({ systemId, tag }).pipe(
@@ -107,11 +108,11 @@ export class TagsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  editTag$ = createEffect(() =>
-    this.actions$.pipe(
+  editTag$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.editTag),
       switchMap(({ currentValue, newValue }) =>
         this.tagsService.patch({ currentValue, newValue }).pipe(
@@ -122,8 +123,8 @@ export class TagsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 }
 
 const DELETE_TAG_CONFIRMATION: ConfirmDialogOptions = {

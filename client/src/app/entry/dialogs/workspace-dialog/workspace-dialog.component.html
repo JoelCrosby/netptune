@@ -10,8 +10,8 @@
     formControlName="identifier"
     label="Identifier"
     maxLength="1024"
-    [icon]="identifierIcon$ | async"
-    [loading]="isUniqueLoading$ | async"
+    [icon]="identifierIcon()"
+    [loading]="isUniqueLoading()"
     [hint]="identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
   >
   </app-form-input>

@@ -7,74 +7,113 @@ const reducer = createReducer(
 
   // Load Workspaces
 
-  on(actions.loadWorkspaces, (state) => ({ ...state, loading: true })),
-  on(actions.loadWorkspacesFail, (state, { error }) => ({
-    ...state,
-    loadingError: error,
-    loading: false,
-  })),
-  on(actions.loadWorkspacesSuccess, (state, { workspaces }) =>
-    adapter.setAll(workspaces, { ...state, loading: false, loaded: true })
+  on(
+    actions.loadWorkspaces,
+    (state): WorkspacesState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.loadWorkspacesFail,
+    (state, { error }): WorkspacesState => ({
+      ...state,
+      loadingError: error,
+      loading: false,
+    })
+  ),
+  on(
+    actions.loadWorkspacesSuccess,
+    (state, { workspaces }): WorkspacesState =>
+      adapter.setAll(workspaces, { ...state, loading: false, loaded: true })
   ),
 
   // Create Workspaces
 
-  on(actions.createWorkspace, (state) => ({ ...state, loadingCreate: true })),
-  on(actions.createWorkspaceFail, (state, { error }) => ({
-    ...state,
-    loadingError: error,
-  })),
-  on(actions.createWorkspaceSuccess, (state, { workspace }) =>
-    adapter.addOne(workspace, {
+  on(
+    actions.createWorkspace,
+    (state): WorkspacesState => ({ ...state, loadingCreate: true })
+  ),
+  on(
+    actions.createWorkspaceFail,
+    (state, { error }): WorkspacesState => ({
       ...state,
-      loadingCreate: false,
+      loadingError: error,
     })
+  ),
+  on(
+    actions.createWorkspaceSuccess,
+    (state, { workspace }): WorkspacesState =>
+      adapter.addOne(workspace, {
+        ...state,
+        loadingCreate: false,
+      })
   ),
 
   // Edit Workspaces
 
-  on(actions.editWorkspace, (state) => ({ ...state, loadingEdit: true })),
-  on(actions.editWorkspaceFail, (state, { error }) => ({
-    ...state,
-    editError: error,
-  })),
-  on(actions.editWorkspaceSuccess, (state, { workspace }) =>
-    adapter.upsertOne(workspace, {
+  on(
+    actions.editWorkspace,
+    (state): WorkspacesState => ({ ...state, loadingEdit: true })
+  ),
+  on(
+    actions.editWorkspaceFail,
+    (state, { error }): WorkspacesState => ({
       ...state,
-      loadingEdit: false,
+      loadingEditError: error,
     })
+  ),
+  on(
+    actions.editWorkspaceSuccess,
+    (state, { workspace }): WorkspacesState =>
+      adapter.upsertOne(workspace, {
+        ...state,
+        loadingEdit: false,
+      })
   ),
 
   // Select Workspaces
 
-  on(actions.selectWorkspace, (state, { workspace }) => ({
-    ...state,
-    currentWorkspace: workspace,
-  })),
+  on(
+    actions.selectWorkspace,
+    (state, { workspace }): WorkspacesState => ({
+      ...state,
+      currentWorkspace: workspace,
+    })
+  ),
 
   // Delete Workspace
 
-  on(actions.deleteWorkspaceSuccess, (state, { workspace }) => {
-    if (workspace.id === undefined || workspace.id === null) {
-      return state;
-    }
+  on(
+    actions.deleteWorkspaceSuccess,
+    (state, { workspace }): WorkspacesState => {
+      if (workspace.id === undefined || workspace.id === null) {
+        return state;
+      }
 
-    return adapter.removeOne(workspace.id, state);
-  }),
+      return adapter.removeOne(workspace.id, state);
+    }
+  ),
 
   // Is Slug Unique
 
-  on(actions.isSlugUniue, (state) => ({ ...state, isSlugUniqueLoading: true })),
-  on(actions.isSlugUniueFail, (state, { error }) => ({
-    ...state,
-    isSlugUniqueError: error,
-    isSlugUniqueLoading: false,
-  })),
-  on(actions.isSlugUniueSuccess, (state, { response }) => ({
-    ...state,
-    isSlugUnique: response,
-    isSlugUniqueLoading: false,
-  }))
+  on(
+    actions.isSlugUniue,
+    (state): WorkspacesState => ({ ...state, isSlugUniqueLoading: true })
+  ),
+  on(
+    actions.isSlugUniueFail,
+    (state, { error }): WorkspacesState => ({
+      ...state,
+      isSlugUniqueError: error,
+      isSlugUniqueLoading: false,
+    })
+  ),
+  on(
+    actions.isSlugUniueSuccess,
+    (state, { response }): WorkspacesState => ({
+      ...state,
+      isSlugUnique: response,
+      isSlugUniqueLoading: false,
+    })
+  )
 );
 
 export const workspacesReducer = (

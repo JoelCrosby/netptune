@@ -26,9 +26,14 @@ export const selectRouterStateUrl = createSelector(
   (state: RouterStateUrl) => state.url
 );
 
-export const isBoardGroupsRoute = createSelector(
-  selectPageTitle,
-  (state: string) => state === 'Boards'
+export const selectIsBoardGroupsRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) => {
+    console.log('router-url: ', state);
+
+    const match = state.match(/.+\/boards\/.+/) ?? [];
+    return match.length > 0;
+  }
 );
 
 export const selectSideBarTransparent = createSelector(

@@ -18,8 +18,8 @@ export class UsersEffects {
   private snackbar = inject(MatSnackBar);
   private confirmation = inject(ConfirmationService);
 
-  loadUsers$ = createEffect(() =>
-    this.actions$.pipe(
+  loadUsers$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadUsers),
       switchMap(() =>
         this.usersService.getUsersInWorkspace().pipe(
@@ -29,15 +29,15 @@ export class UsersEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  onWorkspaceSelected$ = createEffect(() =>
-    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
-  );
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
 
-  inviteUsers$ = createEffect(() =>
-    this.actions$.pipe(
+  inviteUsers$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.inviteUsersToWorkspace),
       switchMap(({ emailAddresses }) =>
         this.usersService.inviteUsersToWorkspace(emailAddresses).pipe(
@@ -48,11 +48,11 @@ export class UsersEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  removeUsers$ = createEffect(() =>
-    this.actions$.pipe(
+  removeUsers$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.removeUsersFromWorkspace),
       switchMap(({ emailAddresses }) =>
         this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
@@ -72,8 +72,8 @@ export class UsersEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 }
 
 const REMOVE_USERS_CONFIRMATION: ConfirmDialogOptions = {

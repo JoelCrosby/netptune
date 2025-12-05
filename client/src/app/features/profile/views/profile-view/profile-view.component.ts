@@ -1,25 +1,19 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import * as AuthActions from '@core/auth/store/auth.actions';
-import { select, Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { logout } from '@core/auth/store/auth.actions';
+import { Store } from '@ngrx/store';
+import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
+import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
 import { loadProfile } from '@profile/store/profile.actions';
-import * as ProfileSelectors from '@profile/store/profile.selectors';
-import { Observable } from 'rxjs';
+import {
+  selectProfileLoading,
+  selectUpdateProfileLoading,
+} from '@profile/store/profile.selectors';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
-import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 
 @Component({
   templateUrl: './profile-view.component.html',
-  styleUrls: ['./profile-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -27,27 +21,19 @@ import { ChangePasswordComponent } from '@profile/components/change-password/cha
     MatProgressSpinner,
     UpdateProfileComponent,
     ChangePasswordComponent,
-    AsyncPipe,
   ],
 })
-export class ProfileViewComponent implements OnInit, AfterViewInit {
+export class ProfileViewComponent {
   private store = inject(Store);
 
-  loadingUpdate$!: Observable<boolean>;
-  loading$!: Observable<boolean>;
+  loading = this.store.selectSignal(selectProfileLoading);
+  loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
 
-  ngOnInit() {
-    this.loading$ = this.store.select(ProfileSelectors.selectProfileLoading);
-    this.loadingUpdate$ = this.store.pipe(
-      select(ProfileSelectors.selectUpdateProfileLoading)
-    );
-  }
-
-  ngAfterViewInit() {
+  constructor() {
     this.store.dispatch(loadProfile());
   }
 
   onLogoutClicked() {
-    this.store.dispatch(AuthActions.logout());
+    this.store.dispatch(logout());
   }
 }

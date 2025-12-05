@@ -10,6 +10,7 @@ export const initialState: WorkspacesState = adapter.getInitialState({
   loading: true,
   loaded: false,
   loadingCreate: false,
+  loadingEdit: false,
   isSlugUniqueLoading: false,
 });
 
@@ -18,4 +19,6 @@ export interface WorkspacesState extends AsyncEntityState<Workspace> {
   isSlugUnique?: IsSlugUniqueResponse;
   isSlugUniqueLoading: boolean;
   isSlugUniqueError?: HttpErrorResponse;
+  loadingEdit: boolean;
+  loadingEditError?: HttpErrorResponse | Error;
 }

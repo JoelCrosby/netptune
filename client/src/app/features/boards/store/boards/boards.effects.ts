@@ -8,15 +8,10 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import {
-  catchError,
-  map,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './boards.actions';
 import { BoardsService } from './boards.service';
 
@@ -29,8 +24,8 @@ export class BoardsEffects {
   private snackbar = inject(MatSnackBar);
   private router = inject(Router);
 
-  loadBoards$ = createEffect(() =>
-    this.actions$.pipe(
+  loadBoards$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.loadBoards),
       switchMap(() =>
         this.boardsService.getByWorkspace().pipe(
@@ -40,11 +35,11 @@ export class BoardsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  createBoard$ = createEffect(() =>
-    this.actions$.pipe(
+  createBoard$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createBoard),
       switchMap((action) =>
         this.boardsService.post(action.request).pipe(
@@ -55,11 +50,11 @@ export class BoardsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  updateBoard$ = createEffect(() =>
-    this.actions$.pipe(
+  updateBoard$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.updateBoard),
       switchMap((action) =>
         this.boardsService.put(action.request).pipe(
@@ -70,11 +65,11 @@ export class BoardsEffects {
           )
         )
       )
-    )
-  );
+    );
+  });
 
-  deleteBoard$ = createEffect(() =>
-    this.actions$.pipe(
+  deleteBoard$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.deleteBoard),
       switchMap((action) =>
         this.confirmation.open(DELETE_BOARD_CONFIRMATION).pipe(
@@ -96,32 +91,35 @@ export class BoardsEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
   deleteBoardSuccess$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(actions.deleteBoardSuccess),
-        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier)),
+        concatLatestFrom(() =>
+          this.store.select(selectCurrentWorkspaceIdentifier)
+        ),
         tap(
           ([_, workspaceId]) =>
             void this.router.navigate(['/', workspaceId, 'boards'])
         )
-      ),
+      );
+    },
     { dispatch: false }
   );
 
-  createBoardSuccess$ = createEffect(() =>
-    this.actions$.pipe(
+  createBoardSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(actions.createBoardSuccess),
       map(() => actions.loadBoards())
-    )
-  );
+    );
+  });
 
-  onWorkspaceSelected$ = createEffect(() =>
-    this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState))
-  );
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
 }
 
 const DELETE_BOARD_CONFIRMATION: ConfirmDialogOptions = {

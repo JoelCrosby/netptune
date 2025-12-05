@@ -1,36 +1,36 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit,
+  effect,
   inject,
 } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { DialogRef } from '@angular/cdk/dialog';
+import { MatButton } from '@angular/material/button';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { Workspace } from '@core/models/workspace';
 import { loadProjects } from '@core/store/projects/projects.actions';
-import * as ProjectSelectors from '@core/store/projects/projects.selectors';
+import {
+  selectAllProjects,
+  selectCurrentProjectId,
+} from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
-import * as WorkspaceSelectors from '@core/store/workspaces/workspaces.selectors';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { AsyncPipe } from '@angular/common';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { MatButton } from '@angular/material/button';
+import { Subject } from 'rxjs';
 
 @Component({
   templateUrl: './create-task-dialog.component.html',
@@ -45,15 +45,14 @@ import { MatButton } from '@angular/material/button';
     FormSelectOptionComponent,
     DialogActionsDirective,
     MatButton,
-    AsyncPipe,
   ],
 })
 export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
 
-  projects$!: Observable<ProjectViewModel[]>;
-  currentWorkspace$!: Observable<Workspace | undefined>;
+  projects = this.store.selectSignal(selectAllProjects);
+  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
 
   selectedTypeValue!: number;
 
@@ -75,16 +74,14 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
     return this.formGroup.controls.project;
   }
 
-  ngOnInit() {
-    this.projects$ = this.store.select(ProjectSelectors.selectAllProjects);
-    this.currentWorkspace$ = this.store.select(
-      WorkspaceSelectors.selectCurrentWorkspace
-    );
-
-    this.store.select(ProjectSelectors.selectCurrentProjectId).subscribe({
-      next: (value) => this.formGroup.controls.project.setValue(value),
+  constructor() {
+    effect(() => {
+      const value = this.store.selectSignal(selectCurrentProjectId);
+      this.formGroup.controls.project.setValue(value());
     });
+  }
 
+  ngOnInit() {
     this.store.dispatch(loadProjects());
   }
 
@@ -98,30 +95,30 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
   }
 
   saveClicked() {
-    this.currentWorkspace$.pipe(first()).subscribe((workspace) => {
-      if (this.project.value === undefined || this.project.value === null) {
-        throw new Error('project id is undefined');
-      }
+    const workspace = this.currentWorkspace();
 
-      const task: AddProjectTaskRequest = {
-        name: (this.name.value as string).trim(),
-        description: (this.description.value as string)?.trim(),
-        projectId: this.project.value,
-        status: TaskStatus.new,
-      };
+    if (this.project.value === undefined || this.project.value === null) {
+      throw new Error('project id is undefined');
+    }
 
-      if (!workspace?.slug) {
-        throw new Error('workspace slug is undefined');
-      }
+    const task: AddProjectTaskRequest = {
+      name: (this.name.value as string).trim(),
+      description: (this.description.value as string)?.trim(),
+      projectId: this.project.value,
+      status: TaskStatus.new,
+    };
 
-      this.store.dispatch(
-        createProjectTask({
-          identifier: `[workspace] ${workspace.slug}`,
-          task,
-        })
-      );
+    if (!workspace?.slug) {
+      throw new Error('workspace slug is undefined');
+    }
 
-      this.dialogRef.close();
-    });
+    this.store.dispatch(
+      createProjectTask({
+        identifier: `[workspace] ${workspace.slug}`,
+        task,
+      })
+    );
+
+    this.dialogRef.close();
   }
 }

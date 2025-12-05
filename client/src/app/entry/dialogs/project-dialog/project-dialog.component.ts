@@ -1,26 +1,20 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-project-dialog',
@@ -36,14 +30,13 @@ import { MatButton } from '@angular/material/button';
     MatButton,
   ],
 })
-export class ProjectDialogComponent implements OnDestroy {
+export class ProjectDialogComponent {
   private store = inject(Store);
   dialogRef = inject<DialogRef<ProjectDialogComponent>>(DialogRef);
 
-  currentWorkspace$ = this.store.select(selectCurrentWorkspace);
-  subs = new Subscription();
+  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
 
-  projectFromGroup = new FormGroup({
+  form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
     repositoryUrl: new FormControl(),
     description: new FormControl(),
@@ -52,20 +45,16 @@ export class ProjectDialogComponent implements OnDestroy {
   });
 
   get name() {
-    return this.projectFromGroup.controls.name;
+    return this.form.controls.name;
   }
   get description() {
-    return this.projectFromGroup.controls.description;
+    return this.form.controls.description;
   }
   get repositoryUrl() {
-    return this.projectFromGroup.controls.repositoryUrl;
+    return this.form.controls.repositoryUrl;
   }
   get color() {
-    return this.projectFromGroup.controls.color;
-  }
-
-  ngOnDestroy() {
-    this.subs.unsubscribe();
+    return this.form.controls.color;
   }
 
   close() {
@@ -73,23 +62,21 @@ export class ProjectDialogComponent implements OnDestroy {
   }
 
   getResult() {
-    this.subs = this.currentWorkspace$.subscribe({
-      next: (workspace) => {
-        if (!workspace?.slug) return;
+    const workspace = this.currentWorkspace();
 
-        const project: AddProjectRequest = {
-          name: this.name.value as string,
-          description: this.description.value,
-          repositoryUrl: this.repositoryUrl.value,
-          metaInfo: {
-            color: this.color.value as string,
-          },
-        };
+    if (!workspace?.slug) return;
 
-        this.store.dispatch(createProject({ project }));
-
-        this.dialogRef.close();
+    const project: AddProjectRequest = {
+      name: this.name.value as string,
+      description: this.description.value,
+      repositoryUrl: this.repositoryUrl.value,
+      metaInfo: {
+        color: this.color.value as string,
       },
-    });
+    };
+
+    this.store.dispatch(createProject({ project }));
+
+    this.dialogRef.close();
   }
 }

@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
@@ -24,19 +19,19 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     BoardsGridComponent,
   ],
 })
-export class BoardsViewComponent implements AfterViewInit {
+export class BoardsViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectBoardsLoading);
 
+  constructor() {
+    this.store.dispatch(loadBoards());
+  }
+
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {
       width: '600px',
     });
-  }
-
-  ngAfterViewInit() {
-    this.store.dispatch(loadBoards());
   }
 }
