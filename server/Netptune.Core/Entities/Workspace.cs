@@ -40,6 +40,7 @@ public record Workspace : AuditableEntity<int>
     {
         return new()
         {
+            Id = Id,
             Name = Name,
             Description = Description,
             Slug = Slug,
