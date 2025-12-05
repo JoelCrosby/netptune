@@ -2,28 +2,26 @@
   {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace'}}
 </h1>
 
-<form app-dialog-content class="form-auth" [formGroup]="formGroup">
-  <app-form-input formControlName="name" label="Name" maxLength="1024">
-  </app-form-input>
+<form app-dialog-content class="form-auth">
+  <app-form-input [field]="dialogForm.name" label="Name" maxLength="1024" />
 
   <app-form-input
-    formControlName="identifier"
+    [field]="dialogForm.identifier"
     label="Identifier"
     maxLength="1024"
     [icon]="identifierIcon()"
-    [loading]="isUniqueLoading()"
-    [hint]="identifier.hasError('already-taken') ? 'Identifier is already taken' : null"
-  >
-  </app-form-input>
+    [loading]="dialogForm.identifier().pending()"
+    [hint]="dialogForm.identifier().errors()[0]?.message"
+  />
 
   <app-form-textarea
-    formControlName="description"
+    [field]="dialogForm.description"
     label="Description"
     maxLength="4096"
-  >
-  </app-form-textarea>
+  />
 
-  <app-color-select formControlName="color" label="Color"> </app-color-select>
+
+  <app-color-select [field]="dialogForm.color" label="Color" />
 </form>
 
 <div app-dialog-actions align="end">
