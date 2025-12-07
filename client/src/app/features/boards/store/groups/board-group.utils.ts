@@ -67,7 +67,7 @@ export const moveTaskInBoardGroup = (
 
 export const updateTask = (
   state: BoardGroupsState,
-  task: BoardViewTask | TaskViewModel | UpdateProjectTaskRequest
+  task: BoardViewTask | TaskViewModel | Partial<UpdateProjectTaskRequest>
 ) => {
   const getGroupWithTask = (): BoardViewGroup | undefined => {
     for (const g of Object.values(state.entities)) {

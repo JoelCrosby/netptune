@@ -1,6 +1,6 @@
 <div class="user-select" [class.user-select-compact]="compact()" #dropdown>
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    @for (user of value(); track user) {
+    @for (user of value(); track user.id) {
       <div class="user-item">
         <app-avatar
           [imageUrl]="user.pictureUrl"
@@ -36,7 +36,7 @@
               {{noResults()}}
             </div>
           }
-          @for (option of options$ | async; track option) {
+          @for (option of options$ | async; track option.id) {
             <div
               class="select-item"
               [class.active]="isActive(option)"

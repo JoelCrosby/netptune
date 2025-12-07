@@ -133,7 +133,7 @@ export class ProjectTasksHubService {
 
   put(
     groupId: string,
-    task: ProjectTask | BoardViewTask | UpdateProjectTaskRequest
+    task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
   ) {
     return this.hub.invoke<ClientResponse<TaskViewModel>>(
       'update',
