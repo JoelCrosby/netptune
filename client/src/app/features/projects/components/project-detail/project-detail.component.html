@@ -1,10 +1,10 @@
 @if (project(); as project) {
   <div>
-    <form [formGroup]="form">
-      <app-form-input formControlName="name" label="Name" maxLength="1024">
+    <form (submit)="updateClicked($event)">
+      <app-form-input [field]="projectForm.name" label="Name" maxLength="1024">
       </app-form-input>
       <app-form-textarea
-        formControlName="description"
+        [field]="projectForm.description"
         label="Description"
         maxLength="4096"
         rows="6"
@@ -13,7 +13,7 @@
       <div class="form-seperator"></div>
       <div class="project-key-row">
         <app-form-input
-          formControlName="key"
+          [field]="projectForm.key"
           label="Project ID"
           class="project-key-input"
           maxLength="6"
@@ -27,7 +27,7 @@
         </div>
       </div>
       <app-form-input
-        formControlName="repositoryUrl"
+        [field]="projectForm.repositoryUrl"
         label="Repository URL"
         maxLength="1024"
         >
@@ -36,8 +36,7 @@
         class="form-submit-btn"
         mat-flat-button
         color="primary"
-        (click)="updateClicked()"
-        [disabled]="updateDisabled()"
+        [disabled]="projectForm().disabled()"
         >
         Save Changes
       </button>

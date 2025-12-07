@@ -1,15 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
+  signal,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { disabled, email, Field, form, required } from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatProgressBar } from '@angular/material/progress-bar';
@@ -28,54 +23,40 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     MatProgressBar,
     FormInputComponent,
     MatAnchor,
     RouterLink,
     MatButton,
     MatDivider,
+    Field,
   ],
 })
 export class LoginComponent {
   private store = inject(Store);
-  private fb = inject(FormBuilder);
 
   loading = this.store.selectSignal(selectLoginLoading);
   showLoginError = this.store.selectSignal(selectShowLoginError);
 
-  loginGroup = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+  loginFormModel = signal({
+    email: '',
+    password: '',
   });
 
-  get email() {
-    return this.loginGroup.controls.email;
-  }
+  loginForm = form(this.loginFormModel, (schema) => {
+    required(schema.email);
+    email(schema.email);
+    required(schema.password);
+    disabled(schema, () => this.loading());
+  });
 
-  get password() {
-    return this.loginGroup.controls.password;
-  }
+  login(event: Event) {
+    event.preventDefault();
 
-  constructor() {
-    effect(() => {
-      if (this.loading()) {
-        this.loginGroup.disable();
-      } else {
-        this.loginGroup.enable();
-      }
-    });
-  }
+    if (this.loginForm().invalid()) return;
 
-  login() {
-    if (this.email.invalid || this.password.invalid) {
-      this.email.markAllAsTouched();
-      return;
-    }
-
-    const email = this.email.value as string;
-    const password = this.password.value as string;
+    const email = this.loginForm.email().value();
+    const password = this.loginForm.password().value();
 
     this.store.dispatch(
       login({

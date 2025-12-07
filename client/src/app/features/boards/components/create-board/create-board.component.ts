@@ -1,21 +1,21 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   effect,
   inject,
+  resource,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  AbstractControl,
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  customError,
+  disabled,
+  Field,
+  form,
+  required,
+  validateAsync,
+} from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { createBoard } from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
@@ -33,8 +33,8 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { animationFrameScheduler } from 'rxjs';
-import { debounceTime, map, observeOn, tap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-board',
@@ -42,8 +42,6 @@ import { debounceTime, map, observeOn, tap } from 'rxjs/operators';
   styleUrls: ['./create-board.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
@@ -51,49 +49,72 @@ import { debounceTime, map, observeOn, tap } from 'rxjs/operators';
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
+    Field,
   ],
 })
 export class CreateBoardComponent {
   private store = inject(Store);
-  private fb = inject(FormBuilder);
-  private cd = inject(ChangeDetectorRef);
   private boardsService = inject(BoardsService);
 
   dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
   data = inject<Board>(DIALOG_DATA, { optional: true });
   isEditMode = !!this.data;
 
-  form = this.fb.nonNullable.group(
-    {
-      name: ['', [Validators.required]],
-      identifier: [
-        '',
-        [Validators.required],
-        this.data ? null : this.validate.bind(this),
-        'change',
-      ],
-      color: ['#673AB7' as string | undefined],
-      projectId: [null as number | null, [Validators.required]],
-    },
-    { updateOn: 'blur' }
-  );
+  boardFormModel = signal({
+    name: this.data?.name ?? '',
+    identifier: this.data?.identifier ?? '',
+    color: this.data?.metaInfo?.color ?? '',
+    projectId: this.data?.projectId ?? (null as number | null),
+  });
 
-  isUniqueLoading = signal(false);
-  identifierStatusChanges = toSignal(
-    this.form.controls.identifier.statusChanges
-  );
+  boardForm = form(this.boardFormModel, (schema) => {
+    required(schema.name);
+    required(schema.identifier);
+    required(schema.color);
+    required(schema.projectId);
+    disabled(schema.identifier, () => this.isEditMode);
+    validateAsync(schema.identifier, {
+      params: ({ value }) => {
+        const identifier = value();
+        if (!identifier || identifier.length < 4) return undefined;
+        return identifier;
+      },
+      factory: (params) =>
+        resource({
+          params: params,
+          loader: ({ params }) => {
+            const request = this.boardsService
+              .isIdentifierUnique(params)
+              .pipe(map((response) => response?.payload?.isUnique ?? false));
 
-  nameValueChanges = toSignal(this.form.controls.name.valueChanges);
+            return firstValueFrom(request);
+          },
+        }),
+      onSuccess: (isUnique) => {
+        if (isUnique) {
+          return null;
+        }
+
+        return customError({
+          kind: 'identifierTaken',
+          message: 'Identifier is already taken',
+        });
+      },
+      onError: () => ({
+        kind: 'networkError',
+        message: 'Could not veify Identifier availability',
+      }),
+    });
+  });
+
   projects = this.store.selectSignal(selectAllProjects);
 
   identifierIcon = computed(() => {
-    this.identifierStatusChanges();
-
-    if (this.isUniqueLoading()) {
+    if (this.boardForm.identifier().pending()) {
       return null;
     }
 
-    if (this.form.controls.identifier?.valid) {
+    if (this.boardForm.identifier().valid()) {
       return 'check';
     }
 
@@ -103,66 +124,48 @@ export class CreateBoardComponent {
   colors = colorDictionary();
 
   constructor() {
-    const { name, identifier, color, projectId } = this.form.controls;
-
     effect(() => {
       if (this.data) return;
-      const value = this.nameValueChanges();
-      if (typeof value !== 'string') return;
-      identifier.setValue(toUrlSlug(value));
+
+      const current = this.boardForm.identifier().value();
+      const name = this.boardForm.name().value();
+      const identifier = toUrlSlug(name);
+
+      if (identifier === current) return;
+
+      this.boardFormModel.update((model) => {
+        const name = model.name;
+        const identifier = toUrlSlug(name);
+
+        return { ...model, identifier };
+      });
     });
-
-    if (this.data) {
-      const board = this.data;
-
-      name.setValue(board.name, { emitEvent: false });
-      identifier.setValue(board.identifier, { emitEvent: false });
-      color.setValue(board.metaInfo?.color, { emitEvent: false });
-      projectId.setValue(board.projectId, { emitEvent: false });
-      identifier.disable({ emitEvent: false });
-    }
 
     this.store.dispatch(loadProjects());
   }
 
-  validate(control: AbstractControl) {
-    this.isUniqueLoading.set(true);
-    return this.boardsService.isIdentifierUnique(control.value as string).pipe(
-      observeOn(animationFrameScheduler),
-      debounceTime(240),
-      map((val) => {
-        this.isUniqueLoading.set(false);
-        if (val?.payload?.isUnique) {
-          return null;
-        } else {
-          return { 'already-taken': true };
-        }
-      }),
-      tap(() => this.cd.markForCheck())
-    );
-  }
-
   getResult() {
-    if (this.form.pending) {
+    if (this.boardForm().pending()) {
       return;
     }
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (this.boardForm().invalid()) {
+      this.boardForm().markAsTouched();
       return;
     }
 
-    const { name, identifier, color, projectId } = this.form.controls;
+    const { name, identifier, color } = this.boardForm;
+    const projectId = this.boardForm.projectId().value();
 
-    if (!identifier.value || !projectId.value) return;
+    if (!projectId) return;
 
     const request: AddBoardRequest = {
       ...this.data,
-      name: name.value,
-      identifier: identifier.value,
-      projectId: projectId.value,
+      name: name().value(),
+      identifier: identifier().value(),
+      projectId,
       meta: {
-        color: color.value,
+        color: color().value(),
       },
     };
 

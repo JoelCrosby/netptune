@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Add Group</h1>
 
 <div app-dialog-content>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <app-form-input formControlName="group" label="Group Name" maxLength="128">
+  <form (ngSubmit)="onSubmit()">
+    <app-form-input [field]="groupForm.group" label="Group Name" maxLength="128">
     </app-form-input>
   </form>
 </div>

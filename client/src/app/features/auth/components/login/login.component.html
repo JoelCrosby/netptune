@@ -1,5 +1,5 @@
 <div class="auth-page-container">
-  <form [formGroup]="loginGroup" (ngSubmit)="login()">
+  <form (submit)="login($event)">
     <div class="auth-progress-bar">
       @if (loading()) {
         <mat-progress-bar mode="indeterminate" />
@@ -24,22 +24,20 @@
     </div>
 
     <app-form-input
-      formControlName="email"
+      [field]="loginForm.email"
       label="Email"
       maxLength="1024"
       id="email"
-      name="email"
       type="email"
       autocomplete="username"
       >
     </app-form-input>
 
     <app-form-input
-      formControlName="password"
+      [field]="loginForm.password"
       label="Password"
       maxLength="1024"
       id="password"
-      name="password"
       autocomplete="current-password"
       type="password"
       >

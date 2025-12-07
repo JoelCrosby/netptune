@@ -1,17 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
-import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { email, Field, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -20,25 +19,25 @@ import { MatButton } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogContentComponent,
-    FormsModule,
-    ReactiveFormsModule,
     FormInputComponent,
     DialogActionsDirective,
     MatButton,
+    Field,
   ],
 })
 export class InviteDialogComponent {
   private dialogRef =
     inject<DialogRef<string[], InviteDialogComponent>>(DialogRef);
 
-  users: string[] = [];
+  users = signal<string[]>([]);
 
-  get email() {
-    return this.formGroup.controls.email;
-  }
+  inviteFormModel = signal({
+    email: '',
+  });
 
-  formGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+  inviteForm = form(this.inviteFormModel, (schema) => {
+    required(schema.email);
+    email(schema.email);
   });
 
   close() {
@@ -46,39 +45,33 @@ export class InviteDialogComponent {
   }
 
   getResult() {
-    this.dialogRef.close(this.users);
+    this.dialogRef.close(this.users());
   }
 
   add() {
-    if (!this.email.valid) {
-      this.email.markAsDirty();
+    if (this.inviteForm().invalid()) {
+      this.inviteForm().markAsDirty();
       return;
     }
 
-    const user = this.email.value as string;
+    const user = this.inviteForm.email().value();
 
-    if (this.users.includes(user)) {
-      this.email.reset();
+    if (this.users().includes(user)) {
+      this.inviteForm.email().value.set('');
+      this.inviteForm.email().reset();
       return;
     }
 
-    this.users.push(user);
-    this.email.reset();
+    this.users.update((u) => [...u, user]);
+    this.inviteForm.email().value.set('');
+    this.inviteForm.email().reset();
   }
 
   remove(user: string): void {
-    const index = this.users.indexOf(user);
+    const index = this.users().indexOf(user);
 
     if (index >= 0) {
-      this.users.splice(index, 1);
+      this.users.update((u) => u.splice(index, 1));
     }
-  }
-
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
-
-    return this.email.hasError('email') ? 'Not a valid email' : '';
   }
 }

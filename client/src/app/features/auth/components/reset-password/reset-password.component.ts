@@ -1,18 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   linkedSignal,
+  signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  customError,
+  disabled,
+  Field,
+  form,
+  minLength,
+  required,
+  validate,
+} from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -20,7 +22,7 @@ import { resetPassword } from '@core/auth/store/auth.actions';
 import { ResetPasswordRequest } from '@core/auth/store/auth.models';
 import { selectResetPasswordLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { FormErrorComponent } from '@static/components/form-error/form-error.component';
+import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 @Component({
@@ -28,14 +30,13 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './reset-password.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     MatProgressBar,
     FormInputComponent,
-    FormErrorComponent,
+    FormErrorsComponent,
     MatAnchor,
     RouterLink,
     MatButton,
+    Field,
   ],
 })
 export class ResetPasswordComponent {
@@ -49,56 +50,37 @@ export class ResetPasswordComponent {
     return this.routeData()?.resetPassword;
   });
 
-  form = new FormGroup({
-    password0: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    password1: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
+  resetFormModel = signal({
+    password0: '',
+    password1: '',
   });
 
-  get password0() {
-    return this.form.controls.password0;
-  }
-
-  get password1() {
-    return this.form.controls.password1;
-  }
-
-  constructor() {
-    effect(() => {
-      if (this.loading()) {
-        this.form.disable();
-      } else {
-        this.form.enable();
+  resetForm = form(this.resetFormModel, (schema) => {
+    required(schema.password0);
+    required(schema.password1);
+    minLength(schema.password0, 4);
+    minLength(schema.password1, 4);
+    disabled(schema, () => this.loading());
+    validate(schema.password1, ({ value }) => {
+      if (this.resetForm.password0().value() === value()) {
+        return customError({
+          kind: 'noMatch',
+          message: 'Passwords do not match',
+        });
       }
+
+      return null;
     });
-  }
+  });
 
   resetPassword() {
-    if (!this.request) return;
+    if (!this.request || this.resetForm().invalid()) return;
 
-    if (
-      !this.password0.value ||
-      this.password0.invalid ||
-      this.password1.invalid
-    ) {
-      this.password0.markAllAsTouched();
-      return;
-    }
-
-    if (this.password0.value !== this.password1.value) {
-      this.password1.setErrors({ noMatch: true });
-      this.password0.markAllAsTouched();
-      return;
-    }
+    const password = this.resetForm.password0().value();
 
     const request: ResetPasswordRequest = {
       ...this.request(),
-      password: this.password0.value,
+      password,
     };
 
     this.store.dispatch(resetPassword({ request }));

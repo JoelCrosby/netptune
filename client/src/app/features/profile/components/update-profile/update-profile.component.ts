@@ -5,12 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { disabled, email, Field, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
 import { updateProfile } from '@profile/store/profile.actions';
@@ -25,17 +20,24 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton],
+  imports: [Field, FormInputComponent, MatButton],
 })
 export class UpdateProfileComponent {
   private store = inject(Store);
-  private fb = inject(FormBuilder);
 
-  formGroup = this.fb.nonNullable.group({
-    firstname: ['', [Validators.required]],
-    lastname: ['', [Validators.required]],
-    email: ['', [Validators.required]],
-    pictureUrl: ['' as string | null],
+  profileFormModel = signal({
+    firstname: '',
+    lastname: '',
+    email: '',
+    pictureUrl: '',
+  });
+
+  profileForm = form(this.profileFormModel, (schema) => {
+    required(schema.firstname);
+    required(schema.lastname);
+    required(schema.email);
+    email(schema.email);
+    disabled(schema, () => this.loadingUpdate());
   });
 
   editProfilePicture = signal(false);
@@ -44,28 +46,17 @@ export class UpdateProfileComponent {
 
   constructor() {
     effect(() => {
-      if (this.loadingUpdate()) {
-        this.formGroup.disable();
-      } else {
-        this.formGroup.enable();
-      }
-    });
-
-    effect(() => {
       const profile = this.store.selectSignal(selectProfile);
       const value = profile();
 
       if (!value) return;
 
-      this.formGroup.setValue(
-        {
-          firstname: value.firstname,
-          lastname: value.lastname,
-          email: value.email,
-          pictureUrl: value.pictureUrl ?? null,
-        },
-        { emitEvent: false }
-      );
+      this.profileFormModel.set({
+        firstname: value.firstname,
+        lastname: value.lastname,
+        email: value.email,
+        pictureUrl: value.pictureUrl ?? '',
+      });
     });
   }
 
@@ -78,9 +69,9 @@ export class UpdateProfileComponent {
       updateProfile({
         profile: {
           ...profile,
-          firstname: this.formGroup.controls.firstname.value,
-          lastname: this.formGroup.controls.lastname.value,
-          email: this.formGroup.controls.email.value,
+          firstname: this.profileForm.firstname().value(),
+          lastname: this.profileForm.lastname().value(),
+          email: this.profileForm.email().value(),
         },
       })
     );
@@ -98,7 +89,7 @@ export class UpdateProfileComponent {
     data.append('file', blob, 'profile-picture.png');
 
     this.editProfilePicture.set(false);
-    this.formGroup.controls.pictureUrl.setValue(src);
+    this.profileForm.pictureUrl().value.set(src);
 
     const profile = this.currentProfile();
 
@@ -125,7 +116,7 @@ export class UpdateProfileComponent {
       })
     );
 
-    this.formGroup.controls.pictureUrl.reset();
+    this.profileForm.pictureUrl().reset();
     this.editProfilePicture.set(false);
   }
 }

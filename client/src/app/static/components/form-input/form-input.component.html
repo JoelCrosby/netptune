@@ -7,8 +7,8 @@
 
   <div
     class="form-control-input"
-    [class.invalid]="control?.touched && control?.invalid"
-    [class.active]="control?.value && control?.pending"
+    [class.invalid]="touched() && invalid()"
+    [class.active]="pending()"
   >
     @if (prefix()) {
     <div class="form-control-prefix">{{ prefix() }}</div>
@@ -16,18 +16,15 @@
 
     <input
       #input
-      [id]="ngControl?.name"
-      [value]="value"
+      [value]="value()"
       [disabled]="disabled()"
       [class.form-control-disabled]="disabled()"
       [attr.type]="type()"
       [attr.autocomplete]="autocomplete()"
       [attr.placeholder]="placeholder()"
-      [attr.maxLength]="maxLength()"
-      [attr.minLength]="minLength()"
       [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
       (input)="onInputchange($event)"
-      (blur)="onTouch()"
+      (blur)="touched.set(true)"
     />
 
     @if (icon()) {
@@ -38,7 +35,15 @@
   </div>
 
   @if (hint()) {
-  <small class="form-control-hint"> {{ hint() }} </small>
+    <small class="form-control-hint"> {{ hint() }} </small>
+  }
+
+  @if (errors()) {
+    @for (error of errors(); track error.kind) {
+      <app-form-error>
+        {{ error.message }}
+      </app-form-error>
+    }
   }
 
   <div class="form-control-content">

@@ -1,24 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  effect,
   inject,
+  signal,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { disabled, email, Field, form, required } from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { RouterLink } from '@angular/router';
 import { requestPasswordReset } from '@core/auth/store/auth.actions';
 import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { FormErrorComponent } from '@static/components/form-error/form-error.component';
+import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 @Component({
@@ -26,46 +19,37 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './request-password-reset.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     MatProgressBar,
     FormInputComponent,
-    FormErrorComponent,
+    FormErrorsComponent,
     MatAnchor,
     RouterLink,
     MatButton,
+    Field,
   ],
 })
-export class RequestPasswordResetComponent implements OnInit {
+export class RequestPasswordResetComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectRequestPasswordResetLoading);
 
-  formGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+  requestFormModel = signal({
+    email: '',
   });
 
-  get email() {
-    return this.formGroup.controls.email;
-  }
-
-  ngOnInit() {
-    effect(() => {
-      if (this.loading()) {
-        this.formGroup.disable();
-      } else {
-        this.formGroup.enable();
-      }
-    });
-  }
+  requestForm = form(this.requestFormModel, (schema) => {
+    required(schema.email);
+    email(schema.email);
+    disabled(schema, () => this.loading());
+  });
 
   requestPasswordReset() {
-    if (this.email.invalid) {
-      this.email.markAsDirty();
+    if (this.requestForm().invalid()) {
+      this.requestForm().markAsDirty();
       return;
     }
 
-    const email = this.email.value as string;
+    const email = this.requestForm.email().value();
     this.store.dispatch(requestPasswordReset({ email }));
   }
 }

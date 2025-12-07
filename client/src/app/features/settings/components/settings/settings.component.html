@@ -2,7 +2,7 @@
   <app-form-select
     label="Theme"
     placeholder="Select Theme"
-    [formControl]="settingsControl"
+    [field]="settingsForm.theme"
     (changed)="onThemeSelect($event)"
     >
     @for (theme of themes; track theme.value) {

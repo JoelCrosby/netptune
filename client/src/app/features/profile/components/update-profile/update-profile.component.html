@@ -1,8 +1,8 @@
-<form [formGroup]="formGroup" class="px-0">
+<form class="px-0">
   <div class="column">
-    <app-form-input formControlName="firstname" label="Firstname" />
-    <app-form-input formControlName="lastname" label="Lastname" />
-    <app-form-input formControlName="email" label="Email Address" />
+    <app-form-input [field]="profileForm.firstname" label="Firstname" />
+    <app-form-input [field]="profileForm.lastname" label="Lastname" />
+    <app-form-input [field]="profileForm.email" label="Email Address" />
 
     <input type="hidden" formControlName="pictureUrl" />
 
@@ -10,7 +10,6 @@
       class="form-submit-btn"
       mat-stroked-button
       (click)="updateClicked()"
-      [disabled]="formGroup.invalid || loadingUpdate()"
       >
       Update Profile
     </button>
@@ -19,13 +18,13 @@
   <div class="column-fill">
     <div class="profile-image">
       @if (editProfilePicture()) {
-        <img [width]="180" [src]="formGroup.controls.pictureUrl.value ?? ''" alt="profile-image" />
+        <img [width]="180" [src]="profileForm.pictureUrl()" alt="profile-image" />
       } @else {
-        @if (formGroup.controls.pictureUrl.value) {
+        @if (profileForm.pictureUrl()) {
           <img
             crossorigin="anonymous"
             class="profile-picture"
-            [src]="formGroup.controls.pictureUrl.value"
+            [src]="profileForm.pictureUrl()"
             alt="Profile Image"
             height="180"
             width="180"
