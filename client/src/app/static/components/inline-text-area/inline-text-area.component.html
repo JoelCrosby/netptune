@@ -1,18 +1,24 @@
 <div class="inline-text-area">
-  @if (isEditActive$ | async) {
+  @if (isEditActive()) {
     <textarea
       #textarea
       #autosize="cdkTextareaAutosize"
       class="inline-text-area-input custom-scroll"
       [class.active-border]="activeBorder()"
+      [class.invalid]="invalid()"
+      [attr.aria-invalid]="invalid()"
       cdkTextareaAutosize
-      rows="1"
       [cdkAutosizeMinRows]="minRows()"
       [cdkAutosizeMaxRows]="maxRows()"
-      [formControl]="control"
+      [value]="value()"
+      [disabled]="disabled()"
+      [readonly]="readonly()"
+      (input)="onInput($event)"
+      (blur)="touched.set(true)"
+      rows="1"
     ></textarea>
   } @else {
-    <div class="inline-text-area-label">{{ control.value }}</div>
+    <div class="inline-text-area-label">{{ value() }}</div>
   }
 
 </div>

@@ -1,20 +1,20 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
   effect,
   inject,
+  OnDestroy,
   signal,
 } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  debounce,
+  Field,
+  form,
+  minLength,
+  required,
+} from '@angular/forms/signals';
 import { MatIconButton } from '@angular/material/button';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
@@ -36,8 +36,7 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
-import { Actions, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import {
   AutocompleteChipsComponent,
   AutocompleteChipsSelectionChanged,
@@ -50,14 +49,6 @@ import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
-import { Subject } from 'rxjs';
-import {
-  debounceTime,
-  first,
-  takeUntil,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -86,13 +77,13 @@ import {
     MatProgressSpinner,
     TaskStatusPipe,
     TaskDates,
+    Field,
   ],
 })
-export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
+export class TaskDetailDialogComponent implements OnDestroy {
   dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
   private store = inject(Store);
-  private actions$ = inject<Actions<Action>>(Actions);
 
   static width = '972px';
 
@@ -102,134 +93,92 @@ export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
   user = this.store.selectSignal(selectRequiredCurrentUser);
   users = this.store.selectSignal(UsersSelectors.selectAllUsers);
 
-  editorLoaded = signal(false);
-
-  task = this.store.selectSignal(TaskSelectors.selectDetailTask);
-
   selectedTypeValue!: number;
   entityType = EntityType.task;
 
-  onDestroy$ = new Subject<void>();
+  editorLoaded = signal(false);
 
-  formGroup!: FormGroup;
+  task = this.store.selectSignal(TaskSelectors.selectDetailTask);
+  hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
 
-  get name() {
-    return this.formGroup.controls.name;
-  }
+  taskFormModel = signal({
+    name: '',
+    description: '',
+  });
 
-  get description() {
-    return this.formGroup.controls.description;
-  }
+  taskForm = form(this.taskFormModel, (schema) => {
+    required(schema.name);
+    minLength(schema.name, 4);
+    debounce(schema.name, 300);
+    debounce(schema.description, 300);
+  });
 
   constructor() {
     effect(() => {
       const task = this.task();
+      const touched = this.taskForm().touched();
 
-      if (!task) return;
+      if (!task || touched) return;
 
-      this.buildForm(task);
-      this.loadComments(task);
+      this.taskFormModel.set({
+        name: task.name,
+        description: task.description,
+      });
     });
-  }
 
-  ngAfterViewInit() {
+    effect(() => {
+      const touched = this.taskForm().touched();
+      const valid = this.taskForm().valid();
+
+      if (!touched || !valid) return;
+
+      const updated = {
+        name: this.taskForm.name().value(),
+        description: this.taskForm.description().value(),
+      };
+
+      this.updateTask(updated);
+    });
+
     const systemId: string = this.data?.systemId;
 
-    this.store.dispatch(TaskActions.loadTaskDetails({ systemId }));
-  }
-
-  buildForm(task: TaskViewModel) {
-    this.formGroup = new FormGroup({
-      name: new FormControl(task?.name, {
-        updateOn: 'blur',
-        validators: [Validators.required, Validators.minLength(4)],
-      }),
-      description: new FormControl(task?.description, {
-        updateOn: 'change',
-        validators: [],
-      }),
-    });
-
-    this.monitorInputs(task);
-  }
-
-  monitorInputs(task: TaskViewModel) {
-    this.name.valueChanges
-      .pipe(
-        takeUntil(this.onDestroy$),
-        debounceTime(300),
-        tap((name) => {
-          const updated: UpdateProjectTaskRequest = {
-            ...task,
-            name,
-          };
-
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
-
-    this.description.valueChanges
-      .pipe(
-        takeUntil(this.onDestroy$),
-        debounceTime(300),
-        tap((description) => {
-          const updated: UpdateProjectTaskRequest = {
-            ...task,
-            description,
-          };
-
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
-  }
-
-  getTaskObservable() {
-    return this.store.select(TaskSelectors.selectDetailTask);
-  }
-
-  loadComments(task: TaskViewModel) {
-    this.store.dispatch(TaskActions.loadComments({ systemId: task.systemId }));
+    if (systemId) {
+      this.store.dispatch(TaskActions.loadTaskDetails({ systemId }));
+    }
   }
 
   onCommentSubmit(value: string) {
     if (!value) return;
 
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        tap((viewModel) => {
-          if (!viewModel) return;
+    const task = this.task();
 
-          const request: AddCommentRequest = {
-            comment: value.trim(),
-            systemId: viewModel.systemId,
-          };
+    if (!task) return;
 
-          this.store.dispatch(TaskActions.addComment({ request }));
-        })
-      )
-      .subscribe();
+    const request: AddCommentRequest = {
+      comment: value.trim(),
+      systemId: task.systemId,
+    };
+
+    this.store.dispatch(TaskActions.addComment({ request }));
   }
 
-  updateTask(task: UpdateProjectTaskRequest) {
-    this.store
-      .select(selectCurrentHubGroupId)
-      .pipe(
-        first(),
-        tap((identifier) => {
-          if (!identifier) return;
+  updateTask(update: Partial<UpdateProjectTaskRequest>) {
+    this.taskForm().reset();
 
-          this.store.dispatch(
-            TaskActions.editProjectTask({
-              identifier,
-              task,
-            })
-          );
-        })
-      )
-      .subscribe();
+    const identifier = this.hubGroupId();
+    const task = this.task();
+
+    if (!identifier || !task) return;
+
+    this.store.dispatch(
+      TaskActions.editProjectTask({
+        identifier,
+        task: {
+          ...task,
+          ...update,
+        },
+      })
+    );
   }
 
   close() {
@@ -238,97 +187,64 @@ export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.store.dispatch(TaskActions.clearTaskDetail());
-
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
   onFlagClicked() {
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        tap((task) => {
-          if (!task) return;
+    const task = this.task();
 
-          const updated: UpdateProjectTaskRequest = {
-            ...task,
-            isFlagged: !task.isFlagged,
-          };
+    if (!task) return;
 
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
+    const updated: UpdateProjectTaskRequest = {
+      ...task,
+      isFlagged: !task.isFlagged,
+    };
+
+    this.updateTask(updated);
   }
 
   selectProject(projectId: number) {
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        tap((task) => {
-          if (!task) return;
+    const task = this.task();
 
-          const updated: UpdateProjectTaskRequest = {
-            ...task,
-            projectId,
-          };
+    if (!task) return;
 
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
+    const updated: UpdateProjectTaskRequest = {
+      ...task,
+      projectId,
+    };
+
+    this.updateTask(updated);
   }
 
   selectAssignee(user: AppUser) {
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        tap((task) => {
-          if (!task) return;
+    const task = this.task();
 
-          const assigneeSet = new Set(task.assignees.map((u) => u.id));
+    if (!task) return;
 
-          if (assigneeSet.has(user.id)) {
-            assigneeSet.delete(user.id);
-          } else {
-            assigneeSet.add(user.id);
-          }
+    const assigneeSet = new Set(task.assignees.map((u) => u.id));
 
-          const assigneeIds = Array.from(assigneeSet);
-          const updated: UpdateProjectTaskRequest = {
-            ...task,
-            assigneeIds,
-          };
+    if (assigneeSet.has(user.id)) {
+      assigneeSet.delete(user.id);
+    } else {
+      assigneeSet.add(user.id);
+    }
 
-          this.updateTask(updated);
-        })
-      )
-      .subscribe();
+    const assigneeIds = Array.from(assigneeSet);
+    const updated: UpdateProjectTaskRequest = {
+      ...task,
+      assigneeIds,
+    };
+
+    this.updateTask(updated);
   }
 
   deleteClicked() {
-    this.actions$
-      .pipe(
-        ofType(TaskActions.deleteProjectTasksSuccess),
-        takeUntil(this.onDestroy$),
-        first(),
-        tap(() => this.dialogRef.close())
-      )
-      .subscribe();
+    const task = this.task();
+    const identifier = this.hubGroupId();
 
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        withLatestFrom(this.store.select(selectCurrentHubGroupId)),
-        tap(([task, identifier]) => {
-          if (!task || !identifier) return;
+    if (!task || !identifier) return;
 
-          this.store.dispatch(
-            TaskActions.deleteProjectTask({ identifier, task })
-          );
-        })
-      )
-      .subscribe();
+    this.store.dispatch(TaskActions.deleteProjectTask({ identifier, task }));
+    this.dialogRef.close();
   }
 
   onDeleteCommentClicked(comment: CommentViewModel) {
@@ -337,33 +253,26 @@ export class TaskDetailDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   onTagsSelectionChanged(event: AutocompleteChipsSelectionChanged) {
-    this.getTaskObservable()
-      .pipe(
-        first(),
-        withLatestFrom(this.store.select(selectCurrentHubGroupId)),
-        tap(([task, identifier]) => {
-          if (!task || !identifier) return;
+    const task = this.task();
+    const identifier = this.hubGroupId();
 
-          if (event.type === 'Removed') {
-            const systemId = task.systemId;
-            const tag = event.option;
+    if (!task || !identifier) return;
 
-            this.store.dispatch(
-              TaskActions.deleteTagFromTask({ identifier, systemId, tag })
-            );
-          } else {
-            const request: AddTagToTaskRequest = {
-              systemId: task.systemId,
-              tag: event.option,
-            };
+    if (event.type === 'Removed') {
+      const systemId = task.systemId;
+      const tag = event.option;
 
-            this.store.dispatch(
-              TaskActions.addTagToTask({ identifier, request })
-            );
-          }
-        })
-      )
-      .subscribe();
+      this.store.dispatch(
+        TaskActions.deleteTagFromTask({ identifier, systemId, tag })
+      );
+    } else {
+      const request: AddTagToTaskRequest = {
+        systemId: task.systemId,
+        tag: event.option,
+      };
+
+      this.store.dispatch(TaskActions.addTagToTask({ identifier, request }));
+    }
   }
 
   onEditorLoaded() {

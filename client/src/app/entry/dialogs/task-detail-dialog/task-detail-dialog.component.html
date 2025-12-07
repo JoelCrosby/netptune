@@ -1,6 +1,6 @@
 @if (task(); as task) {
 <div class="task-detail-dialog">
-  <form [formGroup]="formGroup">
+  <form>
     <div class="detail-title">
       @if (task.status === 1) {
       <mat-icon class="task-complete"> done </mat-icon>
@@ -13,9 +13,7 @@
       <app-inline-text-area
         class="w-100"
         class="form-control task-detail-title"
-        formControlName="name"
-        name="name"
-        required
+        [field]="taskForm.name"
         [minRows]="1"
         [maxRows]="5"
         activeBorder="true"
@@ -59,7 +57,7 @@
           </mat-chip-listbox>
           <mat-menu #projectsMenu="matMenu">
             <small>Change Project</small>
-            @for (project of projects(); track project) {
+            @for (project of projects(); track project.id) {
             <button mat-menu-item (click)="selectProject(project.id)">
               {{ project.name }}
             </button>
@@ -120,7 +118,7 @@
       <app-editor
         id="description"
         aria-labelledby="description"
-        formControlName="description"
+        [field]="taskForm.description"
         placeholder="Add a Description..."
         (loaded)="onEditorLoaded()"
       >

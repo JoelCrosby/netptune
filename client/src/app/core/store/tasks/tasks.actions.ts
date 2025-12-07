@@ -51,7 +51,7 @@ export const editProjectTask = createAction(
   '[ProjectTasks] Edit Project Task',
   props<{
     identifier: string;
-    task: BoardViewTask | TaskViewModel | UpdateProjectTaskRequest;
+    task: BoardViewTask | TaskViewModel | Partial<UpdateProjectTaskRequest>;
     silent?: boolean;
   }>()
 );

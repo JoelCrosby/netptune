@@ -148,6 +148,13 @@ export class ProjectTasksEffects {
     );
   });
 
+  loadTaskDetailComments$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadTaskDetails),
+      map(({ systemId }) => actions.loadComments({ systemId }))
+    );
+  });
+
   loadTaskDetailProjects$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadTaskDetails),
