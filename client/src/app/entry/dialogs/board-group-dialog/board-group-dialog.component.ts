@@ -43,7 +43,9 @@ export class BoardGroupDialogComponent {
     required(schema.group);
   });
 
-  onSubmit() {
+  onSubmit(event: Event) {
+    event.preventDefault();
+
     if (this.groupForm().invalid()) return;
 
     const name = this.groupForm.group().value();

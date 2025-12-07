@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Invite Users to Workspace</h1>
 
 <app-dialog-content>
-  <form (ngSubmit)="add()">
+  <form (submit)="add($event)">
     <app-form-input
       [field]="inviteForm.email"
       label="Invitee Email"

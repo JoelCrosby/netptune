@@ -1,9 +1,9 @@
 <div
   class="task-inline-container"
-  [class.edit-mode]="inlineEditActive()"
+  [class.edit-mode]="isEditActive()"
   #taskInlineContainer
   >
-  @if (!inlineEditActive()) {
+  @if (!isEditActive()) {
     <button
       mat-button
       disableRipple="true"
@@ -17,16 +17,15 @@
     <div class="inline-task-form" #taskInlineForm>
       <mat-icon>drag_indicator</mat-icon>
       <mat-checkbox color="primary" disabled />
-      <form [formGroup]="taskGroup" class="task-form" (ngSubmit)="onSubmit()">
+      <form class="task-form" (submit)="onSubmit($event)">
         <input
-          #taskInput
+          #input
           matInput
-          formControlName="taskName"
+          [field]="taskFrom.name"
           class="inline-task-input"
           placeholder="What do you need to get done?"
           />
       </form>
     </div>
   }
-
 </div>

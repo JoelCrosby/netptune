@@ -180,3 +180,8 @@ export const selectInlineTaskContent = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.inlineTaskContent
 );
+
+export const selectIsInlineDirty = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.isInlineDirty
+);

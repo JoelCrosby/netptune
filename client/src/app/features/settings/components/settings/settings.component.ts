@@ -4,7 +4,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Field, form, required } from '@angular/forms/signals';
 import { changeTheme } from '@core/store/settings/settings.actions';
 import { selectSettings } from '@core/store/settings/settings.selectors';
@@ -23,7 +22,6 @@ export class SettingsComponent {
   private store = inject(Store);
 
   settings = this.store.selectSignal(selectSettings);
-  settingsControl = new FormControl(this.settings().theme);
 
   settingsFormModel = signal({
     theme: this.settings().theme ?? 'LIGHT-THEME',

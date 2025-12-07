@@ -244,6 +244,16 @@ const reducer = createReducer(
       ...state,
       inlineTaskContent: content,
     })
+  ),
+
+  // Set Inline Task Content
+
+  on(
+    actions.setIsInlineDirty,
+    (state, { isDirty }): BoardGroupsState => ({
+      ...state,
+      isInlineDirty: isDirty,
+    })
   )
 );
 

@@ -8,18 +8,17 @@
         [imageUrl]="user().pictureUrl"
         >
       </app-avatar>
-      <form [formGroup]="formGroup" (ngSubmit)="submit()">
+      <form (submit)="submit($event)">
         <app-form-input
-          formControlName="comment"
+          [field]="commentForm.comment"
           placeholder="Add Comment"
-          name="comment"
           icon="chat_bubble_outline"
           >
         </app-form-input>
       </form>
     </div>
     <div class="comments-list">
-      @for (comment of comments(); track comment) {
+      @for (comment of comments(); track comment.id) {
         <div class="comments-list-item">
           <app-avatar
             size="24"
