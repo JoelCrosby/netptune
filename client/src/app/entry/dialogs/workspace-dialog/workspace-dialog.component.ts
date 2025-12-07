@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   resource,
   signal,
@@ -23,6 +24,7 @@ import { Workspace } from '@core/models/workspace';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
+import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -122,6 +124,25 @@ export class WorkspaceDialogComponent {
 
   get isEditMode() {
     return !!this.data;
+  }
+
+  constructor() {
+    effect(() => {
+      if (this.data) return;
+
+      const current = this.dialogForm.identifier().value();
+      const name = this.dialogForm.name().value();
+      const identifier = toUrlSlug(name);
+
+      if (identifier === current) return;
+
+      this.dialogFormModel.update((model) => {
+        const name = model.name;
+        const identifier = toUrlSlug(name);
+
+        return { ...model, identifier };
+      });
+    });
   }
 
   getResult() {

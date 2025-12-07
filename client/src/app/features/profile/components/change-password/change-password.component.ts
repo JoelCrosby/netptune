@@ -1,19 +1,11 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   effect,
   inject,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { disabled, Field, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
@@ -30,67 +22,54 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule, FormInputComponent, MatButton],
+  imports: [Field, FormInputComponent, MatButton],
 })
 export class ChangePasswordComponent {
   private store = inject(Store);
-  private fb = inject(FormBuilder);
-  private cd = inject(ChangeDetectorRef);
 
-  formGroup = this.fb.nonNullable.group({
-    currentPassword: ['', [Validators.required]],
-    newPassword: ['', [Validators.required]],
-    confirmPassword: ['', [Validators.required]],
+  loading = this.store.selectSignal(selectChangePasswordLoading);
+
+  passwordFormModel = signal({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
   });
 
-  get currentPassword() {
-    return this.formGroup.controls.currentPassword;
-  }
-  get newPassword() {
-    return this.formGroup.controls.newPassword;
-  }
-  get confirmPassword() {
-    return this.formGroup?.controls.confirmPassword;
-  }
+  passwordForm = form(this.passwordFormModel, (schema) => {
+    required(schema.currentPassword);
+    required(schema.newPassword);
+    required(schema.confirmPassword);
+    disabled(schema, () => this.loading());
+  });
 
-  confirmPasswordChanges = toSignal(this.confirmPassword.valueChanges);
   changePasswordError = this.store.selectSignal(selectChangePasswordError);
 
   error = signal('');
 
-  loading = this.store.selectSignal(selectChangePasswordLoading);
-
   constructor() {
     effect(() => {
-      if (this.loading()) {
-        this.formGroup.disable();
-      } else {
-        this.formGroup.enable();
-      }
-
       if (!this.loading()) {
-        this.formGroup.reset();
-        this.formGroup.enable();
         this.error.set('');
       }
     });
 
     effect(() => {
-      console.log('confirmPasswordChanges: ', this.confirmPasswordChanges());
-
-      if (this.confirmPasswordChanges()) {
-        this.passwordsMatch(this.formGroup);
+      if (
+        this.passwordForm().touched() &&
+        this.passwordForm.confirmPassword().value()
+      ) {
+        this.passwordsMatch();
       }
     });
 
     effect(() => this.error.set(this.changePasswordError() ?? ''));
   }
 
-  passwordsMatch(group: FormGroup) {
-    const pass = group.controls.newPassword;
-    const confirmPass = group.controls.confirmPassword;
+  passwordsMatch() {
+    const pass = this.passwordForm.newPassword().value();
+    const confirmPass = this.passwordForm.confirmPassword().value();
 
-    if (pass.value === confirmPass.value) {
+    if (pass === confirmPass) {
       this.error.set('');
       return false;
     } else {
@@ -100,14 +79,11 @@ export class ChangePasswordComponent {
   }
 
   changePasswordClicked() {
-    this.formGroup.markAllAsTouched();
-    this.cd.detectChanges();
-
-    if (this.passwordsMatch(this.formGroup)) {
+    if (this.passwordsMatch()) {
       return;
     }
 
-    if (this.formGroup.invalid) {
+    if (this.passwordForm().invalid()) {
       return;
     }
 
@@ -118,8 +94,8 @@ export class ChangePasswordComponent {
 
     const request: ChangePasswordRequest = {
       userId,
-      currentPassword: this.currentPassword.value as string,
-      newPassword: this.newPassword.value as string,
+      currentPassword: this.passwordForm.currentPassword().value(),
+      newPassword: this.passwordForm.newPassword().value(),
     };
 
     this.store.dispatch(changePassword({ request }));

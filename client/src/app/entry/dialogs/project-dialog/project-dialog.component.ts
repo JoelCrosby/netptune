@@ -1,12 +1,11 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { Field, form, minLength, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
@@ -22,8 +21,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
   styleUrls: ['./project-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
+    Field,
     FormInputComponent,
     FormTextAreaComponent,
     DialogActionsDirective,
@@ -36,26 +34,18 @@ export class ProjectDialogComponent {
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
 
-  form = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    repositoryUrl: new FormControl(),
-    description: new FormControl(),
-    workspace: new FormControl(),
-    color: new FormControl('#673AB7'),
+  prjectFormModel = signal({
+    name: '',
+    repositoryUrl: '',
+    description: '',
+    workspace: '',
+    color: '',
   });
 
-  get name() {
-    return this.form.controls.name;
-  }
-  get description() {
-    return this.form.controls.description;
-  }
-  get repositoryUrl() {
-    return this.form.controls.repositoryUrl;
-  }
-  get color() {
-    return this.form.controls.color;
-  }
+  projectForm = form(this.prjectFormModel, (schema) => {
+    required(schema.name);
+    minLength(schema.name, 4);
+  });
 
   close() {
     this.dialogRef.close();
@@ -64,14 +54,20 @@ export class ProjectDialogComponent {
   getResult() {
     const workspace = this.currentWorkspace();
 
+    if (this.projectForm().invalid()) {
+      return;
+    }
+
+    const { name, repositoryUrl, description, color } = this.projectForm;
+
     if (!workspace?.slug) return;
 
     const project: AddProjectRequest = {
-      name: this.name.value as string,
-      description: this.description.value,
-      repositoryUrl: this.repositoryUrl.value,
+      name: name().value(),
+      description: description().value(),
+      repositoryUrl: repositoryUrl().value(),
       metaInfo: {
-        color: this.color.value as string,
+        color: color().value() as string,
       },
     };
 

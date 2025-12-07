@@ -1,173 +1,139 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
+  computed,
+  effect,
   inject,
+  OnDestroy,
+  signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  FormControl,
-  FormGroup,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+  customError,
+  disabled,
+  email,
+  Field,
+  form,
+  maxLength,
+  minLength,
+  required,
+  validate,
+} from '@angular/forms/signals';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { first, map, takeUntil, tap } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormErrorComponent } from '@static/components/form-error/form-error.component';
-import { MatAnchor, MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     MatProgressBar,
     FormInputComponent,
-    FormErrorComponent,
+    FormErrorsComponent,
     MatAnchor,
     RouterLink,
     MatButton,
-    AsyncPipe,
+    Field,
+    FormErrorsComponent,
   ],
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent implements OnDestroy {
   private store = inject(Store);
-  private activatedRoute = inject(ActivatedRoute);
+  private activatedRoute = toSignal(inject(ActivatedRoute).data);
 
-  authLoading$: Observable<boolean>;
-  request$!: Observable<WorkspaceInvite | null>;
+  invite = computed(() => {
+    const data = this.activatedRoute();
+    const invite = data?.invite as WorkspaceInvite;
 
-  onDestroy$ = new Subject<void>();
+    if (invite?.success && invite?.email) {
+      return invite;
+    }
 
-  formGroup = new FormGroup({
-    firstname: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(128),
-    ]),
-    lastname: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(128),
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email,
-      Validators.maxLength(128),
-    ]),
-    password0: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
-    password1: new FormControl('', [
-      Validators.required,
-      Validators.minLength(4),
-    ]),
+    return null;
   });
 
-  get firstname() {
-    return this.formGroup.controls.firstname;
-  }
+  loading = this.store.selectSignal(selectRegisterLoading);
 
-  get lastname() {
-    return this.formGroup.controls.lastname;
-  }
+  registerFormModel = signal({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password0: '',
+    password1: '',
+  });
 
-  get email() {
-    return this.formGroup.controls.email;
-  }
+  registerForm = form(this.registerFormModel, (schema) => {
+    required(schema.firstname);
+    maxLength(schema.firstname, 128);
+    required(schema.lastname);
+    maxLength(schema.lastname, 128);
+    required(schema.email);
+    email(schema.email);
+    maxLength(schema.email, 128);
+    required(schema.password0);
+    minLength(schema.password0, 4);
+    required(schema.password1);
+    minLength(schema.password1, 4);
+    disabled(schema, () => this.loading());
+    disabled(schema.email, () => !!this.invite()?.code);
+    validate(schema.password1, ({ value }) => {
+      if (this.registerForm.password0().value() === value()) {
+        return customError({
+          kind: 'noMatch',
+          message: 'Passwords do not match',
+        });
+      }
 
-  get password0() {
-    return this.formGroup.controls.password0;
-  }
-
-  get password1() {
-    return this.formGroup.controls.password1;
-  }
+      return null;
+    });
+  });
 
   constructor() {
-    this.authLoading$ = this.store.select(selectRegisterLoading).pipe(
-      tap((loading) => {
-        if (loading) return this.formGroup.disable();
-        return this.formGroup.enable();
-      })
-    );
-  }
+    effect(() => {
+      const email = this.invite()?.email;
 
-  ngOnInit() {
-    this.request$ = this.activatedRoute.data.pipe(
-      map((data) => {
-        const invite = data.invite as WorkspaceInvite;
-        return invite.success ? invite : null;
-      }),
-      tap((invite) => {
-        if (invite?.email) {
-          this.email.setValue(invite.email, { emitEvent: false });
-          this.email.disable({ emitEvent: false });
-        }
-      })
-    );
-
-    this.request$.pipe(takeUntil(this.onDestroy$)).subscribe();
+      if (email) {
+        return this.registerForm.email().value.set(email);
+      }
+    });
   }
 
   ngOnDestroy() {
     this.store.dispatch(AuthActions.clearError({ error: 'registerError' }));
-
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
-  register() {
-    const firstname = this.firstname.value;
-    const lastname = this.lastname.value;
-    const email = this.email.value;
-    const password = this.password0.value;
-    const passwordConfirm = this.password1.value;
+  register(event: Event) {
+    event.preventDefault();
 
-    if (!firstname || !lastname) {
-      this.formGroup.markAsDirty();
+    const firstname = this.registerForm.firstname().value();
+    const lastname = this.registerForm.lastname().value();
+    const email = this.registerForm.email().value();
+    const password = this.registerForm.password0().value();
+
+    const inviteCode = this.invite()?.code;
+
+    if (this.registerForm().invalid()) {
+      this.registerForm().markAsDirty();
       return;
     }
 
-    if (password !== passwordConfirm) {
-      this.password1.setErrors({ noMatch: true });
-      this.formGroup.markAsDirty();
-      return;
-    }
-
-    if (!email || !password) {
-      this.formGroup.markAsDirty();
-      return;
-    }
-
-    this.request$
-      .pipe(
-        first(),
-        map((invite) => invite?.code),
-        tap((inviteCode) => {
-          this.store.dispatch(
-            AuthActions.register({
-              request: {
-                firstname,
-                lastname,
-                email,
-                password,
-                inviteCode,
-              },
-            })
-          );
-        })
-      )
-      .subscribe();
+    this.store.dispatch(
+      AuthActions.register({
+        request: {
+          firstname,
+          lastname,
+          email,
+          password,
+          inviteCode,
+        },
+      })
+    );
   }
 }

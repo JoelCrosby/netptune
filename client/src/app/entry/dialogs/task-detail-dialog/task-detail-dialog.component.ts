@@ -7,7 +7,6 @@ import {
   OnDestroy,
   signal,
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   debounce,
   Field,
@@ -56,8 +55,6 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
   styleUrls: ['./task-detail-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     MatIcon,
     ActivityMenuComponent,
     InlineTextAreaComponent,

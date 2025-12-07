@@ -1,7 +1,7 @@
 <div class="auth-page-container">
-  <form [formGroup]="formGroup" (ngSubmit)="register()">
+  <form (Submit)="register($event)">
     <div class="auth-progress-bar">
-      @if (authLoading$ | async) {
+      @if (loading()) {
         <mat-progress-bar mode="indeterminate" />
       }
     </div>
@@ -16,61 +16,52 @@
     <h3 class="auth-title">Create new Account</h3>
 
     <app-form-input
-      formControlName="firstname"
+      [field]="registerForm.firstname"
       label="Firstname"
       maxLength="1024"
       id="firstname"
-      name="firstname"
       autocomplete="givenname"
       >
     </app-form-input>
 
     <app-form-input
-      formControlName="lastname"
+      [field]="registerForm.lastname"
       label="Lastname"
       maxLength="1024"
       id="lastname"
-      name="lastname"
       autocomplete="familyname"
       >
     </app-form-input>
 
     <app-form-input
-      formControlName="email"
+      [field]="registerForm.email"
       label="Email"
       maxLength="1024"
       id="email"
-      name="email"
       type="email"
       autocomplete="username"
       >
     </app-form-input>
 
     <app-form-input
-      formControlName="password0"
+      [field]="registerForm.password0"
       label="Password"
       maxLength="1024"
       id="new-password"
-      name="new-password"
       autocomplete="new-password"
       type="password"
       >
     </app-form-input>
 
     <app-form-input
-      formControlName="password1"
+      [field]="registerForm.password1"
       label="Confirm Password"
       maxLength="1024"
       id="confirm-new-password"
-      name="confirm-new-password"
       autocomplete="new-password"
       type="password"
       >
-      @if (password1.hasError('noMatch')) {
-        <app-form-error>
-          Passwords do not macth!
-        </app-form-error>
-      }
+        <app-form-errors [field]="registerForm.password1" />
     </app-form-input>
 
     <div class="button-container">

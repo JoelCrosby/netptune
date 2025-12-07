@@ -1,18 +1,18 @@
 <h1 mat-dialog-title>Create Project</h1>
 
-<form app-dialog-content [formGroup]="form">
-  <app-form-input formControlName="name" label="Name" maxLength="1024">
+<form app-dialog-content>
+  <app-form-input [field]="projectForm.name" label="Name" maxLength="1024">
   </app-form-input>
 
   <app-form-input
-    formControlName="repositoryUrl"
+    [field]="projectForm.repositoryUrl"
     label="Repository URl"
     maxLength="1024"
   >
   </app-form-input>
 
   <app-form-textarea
-    formControlName="description"
+    [field]="projectForm.description"
     label="Description"
     maxLength="4096"
   >

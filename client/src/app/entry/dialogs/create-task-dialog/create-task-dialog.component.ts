@@ -2,18 +2,10 @@ import { DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
-  effect,
   inject,
+  signal,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Field, form, minLength, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -30,15 +22,13 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { Subject } from 'rxjs';
 
 @Component({
   templateUrl: './create-task-dialog.component.html',
   styleUrls: ['./create-task-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
+    Field,
     FormInputComponent,
     FormTextAreaComponent,
     FormSelectComponent,
@@ -47,47 +37,29 @@ import { Subject } from 'rxjs';
     MatButton,
   ],
 })
-export class CreateTaskDialogComponent implements OnInit, OnDestroy {
+export class CreateTaskDialogComponent {
   private store = inject(Store);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
 
   projects = this.store.selectSignal(selectAllProjects);
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
+  projectId = this.store.selectSignal(selectCurrentProjectId);
 
   selectedTypeValue!: number;
 
-  formGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    project: new FormControl<number | null | undefined>(null),
-    description: new FormControl(''),
+  taskFormModel = signal({
+    name: '',
+    project: this.projectId() ?? '',
+    description: '',
   });
 
-  onDestroy$ = new Subject<void>();
-
-  get name() {
-    return this.formGroup.controls.name;
-  }
-  get description() {
-    return this.formGroup.controls.description;
-  }
-  get project() {
-    return this.formGroup.controls.project;
-  }
+  taskForm = form(this.taskFormModel, (schema) => {
+    required(schema.name);
+    minLength(schema.name, 4);
+  });
 
   constructor() {
-    effect(() => {
-      const value = this.store.selectSignal(selectCurrentProjectId);
-      this.formGroup.controls.project.setValue(value());
-    });
-  }
-
-  ngOnInit() {
     this.store.dispatch(loadProjects());
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
   close() {
@@ -96,15 +68,18 @@ export class CreateTaskDialogComponent implements OnInit, OnDestroy {
 
   saveClicked() {
     const workspace = this.currentWorkspace();
+    const projectId = this.projectId();
 
-    if (this.project.value === undefined || this.project.value === null) {
+    if (projectId === undefined || projectId === null) {
       throw new Error('project id is undefined');
     }
 
+    const { name, description } = this.taskForm;
+
     const task: AddProjectTaskRequest = {
-      name: (this.name.value as string).trim(),
-      description: (this.description.value as string)?.trim(),
-      projectId: this.project.value,
+      name: name().value().trim(),
+      description: description().value().trim(),
+      projectId,
       status: TaskStatus.new,
     };
 

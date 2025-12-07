@@ -38,7 +38,7 @@ export class FormSelectComponent<TValue>
   readonly disabled = model<boolean>();
   readonly icon = input<string>();
   readonly prefix = input<string>();
-  readonly placeholder = input<string>();
+  readonly placeholder = input<string>('');
   readonly hint = input<string>();
 
   readonly changed = output<TValue>();
@@ -49,7 +49,7 @@ export class FormSelectComponent<TValue>
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
   value = signal<TValue | null>(null);
-  displayValue = signal<string | null>(null);
+  displayValue = signal<string | null>('');
 
   selectedPortal?: CdkPortal;
 

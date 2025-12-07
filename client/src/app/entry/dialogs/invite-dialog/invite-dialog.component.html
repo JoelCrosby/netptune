@@ -1,9 +1,9 @@
 <h1 mat-dialog-title>Invite Users to Workspace</h1>
 
 <app-dialog-content>
-  <form [formGroup]="formGroup" (ngSubmit)="add()">
+  <form (ngSubmit)="add()">
     <app-form-input
-      formControlName="email"
+      [field]="inviteForm.email"
       label="Invitee Email"
       maxLength="128"
       type="email"
@@ -11,12 +11,12 @@
     </app-form-input>
 
     <div class="app-list">
-      @if (users.length) { @for (user of users; track user) {
-      <div class="app-list-item">{{ user }}</div>
-      } } @else {
-      <div class="app-list-message">
-        Email addresses entered below will show here.
-      </div>
+      @for (user of users(); track user) {
+        <div class="app-list-item">{{ user }}</div>
+      } @empty {
+        <div class="app-list-message">
+          Email addresses entered below will show here.
+        </div>
       }
     </div>
   </form>
