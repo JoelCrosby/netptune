@@ -2,20 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   ElementRef,
   inject,
   input,
-  OnDestroy,
-  OnInit,
+  signal,
   viewChild,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
@@ -27,99 +19,81 @@ import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 
+import { Field, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
-import { selectInlineEditActive } from '@core/store/tasks/tasks.selectors';
+import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-task-inline',
   templateUrl: './task-inline.component.html',
   styleUrls: ['./task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatButton,
-    MatIcon,
-    MatCheckbox,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInput,
-  ],
+  imports: [MatButton, MatIcon, MatCheckbox, MatInput, Field],
 })
-export class TaskInlineComponent implements OnInit, OnDestroy {
+export class TaskInlineComponent {
   private store = inject(Store);
+  private document = inject(DocumentService);
   private cd = inject(ChangeDetectorRef);
+  private elementRef = inject(ElementRef);
 
   readonly status = input<TaskStatus>(TaskStatus.new);
   readonly siblings = input<TaskViewModel[] | null>();
-
-  readonly containerElementRef = viewChild.required<ElementRef>(
-    'taskInlineContainer'
-  );
-  readonly formElementRef = viewChild.required<ElementRef>('taskInlineForm');
-  readonly inputElementRef = viewChild.required<ElementRef>('taskInput');
-
-  outSideClickListener$!: Observable<Event>;
-  outsideClickSubscription!: Subscription;
+  readonly inputElementRef = viewChild<ElementRef>('input');
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
   currentProject = this.store.selectSignal(selectCurrentProject);
   currentUser = this.store.selectSignal(selectCurrentUser);
 
-  inlineEditActive = computed(() => {
-    const editActive = this.store.selectSignal(selectInlineEditActive);
-    return !!editActive();
+  isEditActive = signal(false);
+
+  taskFormModel = signal({
+    name: '',
   });
 
-  taskGroup = new FormGroup({
-    taskName: new FormControl(''),
+  taskFrom = form(this.taskFormModel, (schema) => {
+    required(schema.name);
   });
 
-  onDestroy$ = new Subject<void>();
-
-  get taskName() {
-    return this.taskGroup.controls.taskName;
+  constructor() {
+    this.document.documentClicked().subscribe({
+      next: this.handleDocumentClick.bind(this),
+    });
   }
 
-  ngOnInit(): void {
-    this.outSideClickListener$ = fromEvent(document, 'mousedown', {
-      passive: true,
-    }).pipe(
-      takeUntil(this.onDestroy$),
-      throttleTime(200),
-      tap((event) => {
-        if (
-          this.inlineEditActive() &&
-          !this.containerElementRef().nativeElement.contains(event.target) &&
-          !this.formElementRef().nativeElement.contains(event.target)
-        ) {
-          this.store.dispatch(
-            TaskActions.setInlineEditActive({ active: false })
-          );
-          this.outsideClickSubscription.unsubscribe();
-          this.cd.detectChanges();
-        }
-      })
-    );
+  handleDocumentClick(target: EventTarget) {
+    if (this.isEditActive()) {
+      if (!this.elementRef.nativeElement.contains(target)) {
+        return this.isEditActive.set(false);
+      }
+    } else {
+      if (this.elementRef.nativeElement.contains(target)) {
+        this.isEditActive.set(true);
+        this.focusInput();
+      }
+    }
   }
 
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+  focusInput() {
+    this.cd.detectChanges();
+    const textarea = this.inputElementRef();
+
+    if (textarea) {
+      textarea?.nativeElement.focus();
+    }
   }
 
   addTaskClicked() {
     this.store.dispatch(TaskActions.setInlineEditActive({ active: true }));
-    this.outsideClickSubscription = this.outSideClickListener$.subscribe();
-    this.cd.detectChanges();
-    this.inputElementRef().nativeElement.focus();
+    this.focusInput();
   }
 
-  onSubmit() {
+  onSubmit(event: Event) {
+    event.preventDefault();
+
     const workspace = this.currentWorkspace();
     const project = this.currentProject();
     const user = this.currentUser();
@@ -136,13 +110,18 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
     project: ProjectViewModel,
     user: UserResponse
   ) {
+    if (this.taskFrom().invalid()) {
+      return;
+    }
+
     const siblings = this.siblings();
     const lastSibling = siblings && siblings[siblings.length - 1];
 
     const order = lastSibling && lastSibling.sortOrder + 1;
+    const name = this.taskFrom.name().value();
 
     const task: AddProjectTaskRequest = {
-      name: (this.taskName.value as string).trim(),
+      name: name.trim(),
       projectId: project.id,
       status: this.status(),
       sortOrder: order || 1,
@@ -160,6 +139,7 @@ export class TaskInlineComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.taskGroup.reset();
+    this.taskFormModel.set({ name: '' });
+    this.taskFrom().reset();
   }
 }

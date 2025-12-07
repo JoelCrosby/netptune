@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Add Group</h1>
 
 <div app-dialog-content>
-  <form (ngSubmit)="onSubmit()">
+  <form (submit)="onSubmit($event)">
     <app-form-input [field]="groupForm.group" label="Group Name" maxLength="128">
     </app-form-input>
   </form>
@@ -9,7 +9,7 @@
 
 <div app-dialog-actions align="end">
   <button mat-stroked-button app-dialog-close>Close</button>
-  <button mat-flat-button color="primary" (click)="onSubmit()" type="button">
+  <button mat-flat-button color="primary" (click)="onSubmit($event)" type="button">
     Add Group
   </button>
 </div>

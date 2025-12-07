@@ -1,60 +1,62 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
+  signal,
 } from '@angular/core';
 import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  Field,
+  form,
+  maxLength,
+  minLength,
+  required,
+} from '@angular/forms/signals';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-board-groups-search',
   templateUrl: './board-groups-search.component.html',
   styleUrls: ['./board-groups-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip],
+  imports: [MatIcon, MatTooltip, Field],
 })
 export class BoardGroupsSearchComponent {
   private store = inject(Store);
 
   searchTerm = this.store.selectSignal(selectSearchTerm);
 
-  termFormControl = new FormControl<string | null | undefined>('', [
-    Validators.required,
-    Validators.minLength(2),
-    Validators.maxLength(64),
-  ]);
+  termFormModel = signal({
+    term: this.searchTerm() ?? '',
+  });
 
-  constructor() {
-    effect(() =>
-      this.termFormControl.setValue(this.searchTerm(), { emitEvent: false })
-    );
-  }
+  termForm = form(this.termFormModel, (schema) => {
+    required(schema.term);
+    minLength(schema.term, 2);
+    maxLength(schema.term, 64);
+  });
 
   onSubmit() {
-    if (!this.termFormControl.value) {
-      this.store.dispatch(setSearchTerm({ term: null }));
-    }
-
-    if (!this.termFormControl.valid) {
+    if (!this.termForm.term().value()) {
+      this.onClearClicked();
       return;
     }
 
-    const term = this.termFormControl.value;
+    if (this.termForm().invalid()) {
+      return;
+    }
+
+    const term = this.termForm.term().value();
     this.store.dispatch(setSearchTerm({ term }));
   }
 
   onClearClicked() {
-    this.termFormControl.setValue('');
-    setTimeout(() => this.store.dispatch(setSearchTerm({ term: null })), 240);
+    this.termForm.term().value.set('');
+    this.termForm.term().reset();
+
+    this.store.dispatch(setSearchTerm({ term: null }));
   }
 }

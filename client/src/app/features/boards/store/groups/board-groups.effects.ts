@@ -15,6 +15,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
 import { of, throwError } from 'rxjs';
 import {
@@ -29,7 +30,6 @@ import {
 import * as actions from './board-groups.actions';
 import * as selectors from './board-groups.selectors';
 import { BoardGroupsService } from './board-groups.service';
-import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 
 @Injectable()
 export class BoardGroupsEffects {
@@ -139,6 +139,16 @@ export class BoardGroupsEffects {
             )
           );
       })
+    );
+  });
+
+  createProjectTaskSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.createProjectTasksSuccess),
+      concatLatestFrom(() => [
+        this.store.select(selectors.selectInlineTaskContent),
+      ]),
+      map(() => actions.setIsInlineDirty({ isDirty: true }))
     );
   });
 

@@ -43,7 +43,9 @@ export class RequestPasswordResetComponent {
     disabled(schema, () => this.loading());
   });
 
-  requestPasswordReset() {
+  requestPasswordReset(event: Event) {
+    event.preventDefault();
+
     if (this.requestForm().invalid()) {
       this.requestForm().markAsDirty();
       return;

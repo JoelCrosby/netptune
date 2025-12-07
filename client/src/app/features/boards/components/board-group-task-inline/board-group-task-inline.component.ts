@@ -4,144 +4,127 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   inject,
   input,
-  OnDestroy,
-  OnInit,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  debounce,
+  disabled,
+  Field,
+  form,
+  maxLength,
+  required,
+} from '@angular/forms/signals';
 import { MatInput } from '@angular/material/input';
 import { MatTooltip } from '@angular/material/tooltip';
-import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
-import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
+import {
+  createProjectTask,
+  setInlineTaskContent,
+  setIsInlineDirty,
+} from '@boards/store/groups/board-groups.actions';
 import {
   selectBoardProjectId,
   selectCreateBoardGroupTaskMessage,
+  selectInlineTaskContent,
+  selectIsInlineDirty,
 } from '@boards/store/groups/board-groups.selectors';
-import { UserResponse } from '@core/auth/store/auth.models';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { Actions, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { fromEvent, Subject } from 'rxjs';
-import {
-  debounceTime,
-  first,
-  takeUntil,
-  tap,
-  throttleTime,
-} from 'rxjs/operators';
+import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-board-group-task-inline',
   templateUrl: './board-group-task-inline.component.html',
   styleUrls: ['./board-group-task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatInput,
-    CdkTextareaAutosize,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTooltip,
-    SpinnerComponent,
-  ],
+  imports: [MatInput, CdkTextareaAutosize, MatTooltip, SpinnerComponent, Field],
 })
-export class BoardGroupTaskInlineComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private cd = inject(ChangeDetectorRef);
+  private document = inject(DocumentService);
   private store = inject(Store);
-  private actions$ = inject<Actions<Action>>(Actions);
-
-  readonly inputElementRef = viewChild.required<ElementRef>('taskInput');
-  readonly containerElementRef = viewChild.required<ElementRef>(
-    'taskInlineContainer'
-  );
+  private elementRef = inject(ElementRef);
+  private inputElementRef = viewChild<ElementRef>('textarea');
 
   readonly boardGroupId = input.required<number>();
   readonly canceled = output();
-
-  taskInputControl = new FormControl<string | null | undefined>(null, [
-    Validators.required,
-    Validators.maxLength(256),
-  ]);
-
-  onDestroy$ = new Subject<void>();
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
   currentProjectId = this.store.selectSignal(selectBoardProjectId);
   currentUser = this.store.selectSignal(selectCurrentUser);
   message = this.store.selectSignal(selectCreateBoardGroupTaskMessage);
+  content = this.store.selectSignal(selectInlineTaskContent);
+  isInlineDirty = this.store.selectSignal(selectIsInlineDirty);
 
-  createInProgress = signal(false);
+  taskFormModel = signal({
+    name: this.content() ?? '',
+  });
 
-  ngOnInit() {
-    fromEvent(document, 'mousedown', {
-      passive: true,
-    })
-      .pipe(
-        takeUntil(this.onDestroy$),
-        throttleTime(200),
-        tap(this.handleDocumentClick.bind(this))
-      )
-      .subscribe();
+  taskForm = form(this.taskFormModel, (schema) => {
+    required(schema.name);
+    maxLength(schema.name, 256);
+    disabled(schema.name, () => this.isEditActive());
+    debounce(schema.name, 240);
+  });
 
-    this.actions$
-      .pipe(
-        takeUntil(this.onDestroy$),
-        ofType(BoardGroupActions.loadBoardGroupsSuccess),
-        tap(() => {
-          this.createInProgress.set(false);
-          this.taskInputControl.reset();
-          this.taskInputControl.enable();
-          this.inputElementRef().nativeElement.focus();
-        })
-      )
-      .subscribe();
+  isEditActive = signal(false);
+  loading = signal(false);
 
-    this.store
-      .select(BoardGroupSelectors.selectInlineTaskContent)
-      .pipe(first())
-      .subscribe({
-        next: (content) =>
-          this.taskInputControl.setValue(content, { emitEvent: false }),
-      });
+  constructor() {
+    this.document.documentClicked().subscribe({
+      next: this.handleDocumentClick.bind(this),
+    });
 
-    this.taskInputControl.valueChanges
-      .pipe(debounceTime(200), takeUntil(this.onDestroy$))
-      .subscribe({
-        next: (content) =>
-          this.store.dispatch(
-            BoardGroupActions.setInlineTaskContent({ content })
-          ),
-      });
+    effect(() => {
+      const content = this.taskForm.name().value();
+      this.store.dispatch(setInlineTaskContent({ content }));
+    });
+
+    effect(() => {
+      const isInlineDirty = this.isInlineDirty();
+
+      if (isInlineDirty) {
+        this.loading.set(false);
+        this.taskForm.name().value.set('');
+        this.store.dispatch(setIsInlineDirty({ isDirty: false }));
+      }
+    });
+  }
+
+  handleDocumentClick(target: EventTarget) {
+    if (this.isEditActive()) {
+      if (!this.elementRef.nativeElement.contains(target)) {
+        this.canceled.emit();
+        this.isEditActive.set(false);
+        this.loading.set(false);
+      }
+    } else {
+      if (this.elementRef.nativeElement.contains(target)) {
+        this.isEditActive.set(true);
+        this.focusInput();
+      }
+    }
+  }
+
+  focusInput() {
+    this.cd.detectChanges();
+    const textarea = this.inputElementRef();
+
+    if (textarea) {
+      textarea?.nativeElement.focus();
+    }
   }
 
   ngAfterViewInit() {
-    this.inputElementRef().nativeElement.focus();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
-  }
-
-  handleDocumentClick(event: Event) {
-    if (!this.containerElementRef().nativeElement.contains(event.target)) {
-      this.canceled.emit();
-      this.cd.detectChanges();
-    }
+    this.inputElementRef()?.nativeElement.focus();
   }
 
   onSubmit(event?: Event) {
@@ -152,20 +135,17 @@ export class BoardGroupTaskInlineComponent
 
     if (!projectId || !user) return;
 
-    this.createTask(projectId, user);
-  }
+    const name = this.taskForm.name().value();
 
-  createTask(projectId: number, user: UserResponse) {
     const task: AddProjectTaskRequest = {
-      name: (this.taskInputControl.value as string).trim(),
+      name: name.trim(),
       projectId,
       assigneeId: user.userId,
       boardGroupId: this.boardGroupId(),
     };
 
-    this.store.dispatch(BoardGroupActions.createProjectTask({ task }));
+    this.store.dispatch(createProjectTask({ task }));
 
-    this.createInProgress.set(true);
-    this.taskInputControl.disable();
+    this.loading.set(true);
   }
 }

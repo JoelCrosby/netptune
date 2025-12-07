@@ -1,20 +1,20 @@
 <div
   class="inline-task-container"
-  [class.create-in-progress]="createInProgress()"
+  [class.create-in-progress]="loading()"
+  [class.active]="!loading()"
   #taskInlineContainer
   >
   <textarea
     class="inline-task-textarea"
-    #taskInput
+    #textarea
     matInput
-    [formControl]="taskInputControl"
+    [field]="taskForm.name"
     cdkTextareaAutosize
     cdkAutosizeMinRows="2"
     cdkAutosizeMaxRows="12"
     #autosize="cdkTextareaAutosize"
     (keydown.enter)="onSubmit($event)"
     placeholder="What do you need to get done?"
-    maxlength="256"
     >
   </textarea>
   <div class="inline-task-footer">
@@ -27,7 +27,7 @@
       </div>
     }
 
-    @if (createInProgress()) {
+    @if (loading()) {
       <app-spinner diameter="1.4rem">
       </app-spinner>
     }

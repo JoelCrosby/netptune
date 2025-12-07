@@ -48,7 +48,9 @@ export class InviteDialogComponent {
     this.dialogRef.close(this.users());
   }
 
-  add() {
+  add(event: Event) {
+    event.preventDefault();
+
     if (this.inviteForm().invalid()) {
       this.inviteForm().markAsDirty();
       return;

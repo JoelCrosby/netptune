@@ -73,7 +73,9 @@ export class ResetPasswordComponent {
     });
   });
 
-  resetPassword() {
+  resetPassword(event: Event) {
+    event.preventDefault();
+
     if (!this.request || this.resetForm().invalid()) return;
 
     const password = this.resetForm.password0().value();

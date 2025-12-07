@@ -3,27 +3,23 @@ import {
   Component,
   input,
   output,
+  signal,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
-import { AvatarComponent } from '../avatar/avatar.component';
-import { FormInputComponent } from '../form-input/form-input.component';
+import { Field, form, required } from '@angular/forms/signals';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
-  MatMenuTrigger,
   MatMenu,
   MatMenuContent,
   MatMenuItem,
+  MatMenuTrigger,
 } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { FormInputComponent } from '../form-input/form-input.component';
 
 @Component({
   selector: 'app-comments-list',
@@ -32,8 +28,6 @@ import { FromNowPipe } from '../../pipes/from-now.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
-    FormsModule,
-    ReactiveFormsModule,
     FormInputComponent,
     MatIconButton,
     MatMenuTrigger,
@@ -42,6 +36,7 @@ import { FromNowPipe } from '../../pipes/from-now.pipe';
     MatMenuContent,
     MatMenuItem,
     FromNowPipe,
+    Field,
   ],
 })
 export class CommentsListComponent {
@@ -51,20 +46,19 @@ export class CommentsListComponent {
   readonly deleteComment = output<CommentViewModel>();
   readonly commentSubmit = output<string>();
 
-  formGroup = new FormGroup({
-    comment: new FormControl(''),
+  commentFormModel = signal({
+    comment: '',
   });
 
-  get comment() {
-    return this.formGroup.controls.comment;
-  }
+  commentForm = form(this.commentFormModel, (schema) => {
+    required(schema.comment);
+  });
 
-  get value() {
-    return this.comment.value as string;
-  }
+  submit(event: Event) {
+    event.preventDefault();
 
-  submit() {
-    this.commentSubmit.emit(this.value);
-    this.comment.reset();
+    this.commentSubmit.emit(this.commentForm.comment().value());
+    this.commentForm.comment().value.set('');
+    this.commentForm().reset();
   }
 }

@@ -252,6 +252,13 @@ export const setInlineTaskContent = createAction(
   props<{ content: string | undefined | null }>()
 );
 
+// Set Inline Dirty
+
+export const setIsInlineDirty = createAction(
+  '[BoardGroups] Set Inline Dirty',
+  props<{ isDirty: boolean }>()
+);
+
 // Export Board Tasks
 
 export const exportBoardTasks = createAction(

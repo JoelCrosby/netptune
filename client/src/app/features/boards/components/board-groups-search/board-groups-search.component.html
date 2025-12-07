@@ -1,16 +1,16 @@
 <div
   class="board-groups-search-input"
-  [class.invalid]="termFormControl.value && termFormControl.touched && termFormControl.invalid"
-  [class.active]="termFormControl.value && termFormControl.valid"
+  [class.invalid]="termForm.term().value() && termForm.term().touched() && termForm.term().invalid()"
+  [class.active]="termForm.term().value() && termForm.term().touched() && termForm.term().valid()"
   >
   <input
     type="text"
     placeholder="Search"
-    [formControl]="termFormControl"
+    [field]="termForm.term"
     (keydown.enter)="onSubmit()"
     />
 
-  @if (termFormControl.value) {
+  @if (termForm.term().value()) {
     <mat-icon
       aria-hidden="false"
       aria-label="Clear Search Icon"
