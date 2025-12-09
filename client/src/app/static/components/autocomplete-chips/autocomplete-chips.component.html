@@ -18,7 +18,8 @@
           #input
           class="form-control"
           [placeholder]="selected()?.length ? '' : placeholder()"
-          [formControl]="formCtrl"
+          [value]="value()"
+          (input)="value.set($event.target.value)"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

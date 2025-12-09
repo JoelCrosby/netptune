@@ -23,10 +23,24 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         height: 100%;
         min-height: inherit;
         max-height: inherit;
+        animation: dialog-enter 0.16s ease;
       }
 
       .dialog-inner {
         padding-right: 16px;
+        opacity: 1;
+      }
+
+      @keyframes dialog-enter {
+        from {
+          opacity: 0;
+          transform: scale(0.9) translate(0, 0.2vh);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
       }
     `,
   ],
