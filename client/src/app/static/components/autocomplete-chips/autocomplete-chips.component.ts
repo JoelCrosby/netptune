@@ -129,8 +129,6 @@ export class AutocompleteChipsComponent {
       return [];
     }
 
-    console.log({ filter: name, options: this.options() });
-
     return filterStringArray(this.options(), name);
   }
 
@@ -154,7 +152,6 @@ export class AutocompleteChipsComponent {
 
     this.input().nativeElement.value = '';
     this.value.set(null);
-    console.log('open: ', this.autoTrigger());
 
     requestAnimationFrame(() => this.autoTrigger()?.openPanel());
   }

@@ -83,8 +83,6 @@ export class ProjectTasksHubService {
   }
 
   reloadRequiredViews() {
-    console.log('reloadRequiredViews');
-
     this.store
       .select(selectIsWorkspaceGroup)
       .pipe(

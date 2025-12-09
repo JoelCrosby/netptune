@@ -122,8 +122,6 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
     if (!this.selected()) {
       const firstOption = options[0];
-      console.log({ firstOption });
-
       this.selected.set(firstOption);
     } else {
       const currentIndex = options.findIndex(

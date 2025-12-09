@@ -43,8 +43,6 @@ export class TagsInputComponent implements AfterViewInit {
 
     this.value.set(value);
 
-    console.log('onSubmit(): ', value);
-
     if (value) {
       this.submitted.emit(value);
     }
