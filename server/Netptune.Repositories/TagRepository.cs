@@ -97,6 +97,7 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
         var trimmed = value.Trim();
 
         return Entities
+            .Include(tag => tag.Owner)
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
     }

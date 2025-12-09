@@ -3,63 +3,55 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnDestroy,
-  OnInit,
-  input,
+  inject,
+  model,
   output,
   viewChild,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil, tap, throttleTime } from 'rxjs/operators';
+import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-tags-input',
   templateUrl: './tags-input.component.html',
   styleUrls: ['./tags-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [],
 })
-export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
-  readonly value = input<string | null>(null);
+export class TagsInputComponent implements AfterViewInit {
+  readonly value = model<string | null>(null);
   readonly input = viewChild.required<ElementRef>('input');
+  readonly document = inject(DocumentService);
 
   readonly submitted = output<string>();
   readonly canceled = output();
 
-  onDestroy$ = new Subject<void>();
-  formControl = new FormControl<string | null>(null);
+  constructor() {
+    this.document.documentClicked().subscribe({
+      next: this.handleDocumentClick.bind(this),
+    });
 
-  ngOnInit() {
-    fromEvent(document, 'mousedown', {
-      passive: true,
-    })
-      .pipe(
-        takeUntil(this.onDestroy$),
-        throttleTime(200),
-        tap(this.handleDocumentClick.bind(this))
-      )
-      .subscribe();
-
-    this.formControl.setValue(this.value(), { emitEvent: false });
+    this.value.set(this.value());
   }
 
   ngAfterViewInit() {
     this.input().nativeElement.focus();
   }
 
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+  onSubmit(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value as string;
+
+    this.value.set(value);
+
+    console.log('onSubmit(): ', value);
+
+    if (value) {
+      this.submitted.emit(value);
+    }
   }
 
-  onSubmit() {
-    const value = this.formControl.value as string;
-    this.submitted.emit(value);
-  }
-
-  handleDocumentClick(event: Event) {
-    if (!this.input().nativeElement.contains(event.target)) {
+  handleDocumentClick(target: EventTarget) {
+    if (!this.input().nativeElement.contains(target)) {
       this.canceled.emit();
     }
   }

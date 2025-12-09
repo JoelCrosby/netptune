@@ -119,7 +119,7 @@ export class TagsEffects {
           unwrapClientReposne(),
           map((tag) => actions.editTagSuccess({ tag })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.deleteTagFromTaskFail(error))
+            of(actions.editTagFail(error))
           )
         )
       )

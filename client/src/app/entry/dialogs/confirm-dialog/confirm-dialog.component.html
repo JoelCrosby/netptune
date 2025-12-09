@@ -23,7 +23,7 @@
     @if (data.confirmationCheckboxLabel) {
       <mat-checkbox
         [class.indented]="data.message"
-        [(ngModel)]="confirmationChecked"
+        [field]="confirmForm.confirmationChecked"
         >
         {{ data.confirmationCheckboxLabel }}
       </mat-checkbox>
@@ -50,7 +50,7 @@
       mat-flat-button
       [color]="data.color"
       (click)="dialogRef.close(true)"
-      [disabled]="data.confirmationCheckboxLabel && !confirmationChecked"
+      [disabled]="data.confirmationCheckboxLabel && !confirmForm.confirmationChecked().value()"
       >
       {{ data.acceptLabel }}
     </button>
