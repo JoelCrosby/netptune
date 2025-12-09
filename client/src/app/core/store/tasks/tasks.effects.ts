@@ -288,6 +288,7 @@ const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this task?',
   title: 'Delete Task',
+  color: 'warn',
 };
 
 const DELETE_COMMENT_CONFIRMATION: ConfirmDialogOptions = {
@@ -295,4 +296,5 @@ const DELETE_COMMENT_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this comment?',
   title: 'Delete Comment',
+  color: 'warn',
 };

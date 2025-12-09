@@ -7,10 +7,9 @@ import {
   input,
   model,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -44,10 +43,8 @@ export interface AutocompleteChipsSelectionChanged {
     MatChipRow,
     MatIcon,
     MatChipRemove,
-    FormsModule,
     MatAutocompleteTrigger,
     MatChipInput,
-    ReactiveFormsModule,
     MatAutocomplete,
     MatOption,
   ],
@@ -55,12 +52,12 @@ export interface AutocompleteChipsSelectionChanged {
 export class AutocompleteChipsComponent {
   readonly placeholder = input.required<string>();
   readonly label = input<string | null>();
-  readonly options = input.required<string[] | null>();
+  readonly options = model.required<string[] | null>();
   readonly selected = model<string[] | null>([]);
 
   readonly matAutocomplete = viewChild.required<MatAutocomplete>('auto');
   readonly input = viewChild.required<ElementRef>('input');
-  readonly autoTrigger = viewChild.required(MatAutocompleteTrigger);
+  readonly autoTrigger = viewChild(MatAutocompleteTrigger);
 
   readonly selectionChanged = output<AutocompleteChipsSelectionChanged>();
 
@@ -71,11 +68,10 @@ export class AutocompleteChipsComponent {
 
   separatorKeysCodes = [ENTER, COMMA];
 
-  formCtrl = new FormControl();
+  value = signal<string | null>('');
 
-  valueChanges = toSignal(this.formCtrl.valueChanges);
   filteredOptions = computed(() => {
-    const option = this.valueChanges();
+    const option = this.value();
     const values = this.filter(option);
 
     return values.filter((value) => !this.selected()?.includes(value));
@@ -92,7 +88,7 @@ export class AutocompleteChipsComponent {
 
       if (selectedSet.has(newOption)) {
         input.value = '';
-        this.formCtrl.setValue(null);
+        this.value.set(null);
         return;
       }
 
@@ -108,7 +104,7 @@ export class AutocompleteChipsComponent {
       input.value = '';
     }
 
-    this.formCtrl.setValue(null);
+    this.value.set(null);
   }
 
   remove(option: string) {
@@ -123,7 +119,7 @@ export class AutocompleteChipsComponent {
         option,
       });
 
-      this.formCtrl.setValue('');
+      this.value.set('');
       this.selected.set(selected.filter((opt) => opt !== option));
     }
   }
@@ -132,6 +128,8 @@ export class AutocompleteChipsComponent {
     if (name === null) {
       return [];
     }
+
+    console.log({ filter: name, options: this.options() });
 
     return filterStringArray(this.options(), name);
   }
@@ -143,7 +141,7 @@ export class AutocompleteChipsComponent {
 
     if (selectedSet.has(newOption)) {
       this.input().nativeElement.value = '';
-      this.formCtrl.setValue(null);
+      this.value.set(null);
       return;
     }
 
@@ -155,7 +153,9 @@ export class AutocompleteChipsComponent {
     });
 
     this.input().nativeElement.value = '';
-    this.formCtrl.setValue(null);
-    requestAnimationFrame(() => this.autoTrigger().openPanel());
+    this.value.set(null);
+    console.log('open: ', this.autoTrigger());
+
+    requestAnimationFrame(() => this.autoTrigger()?.openPanel());
   }
 }
