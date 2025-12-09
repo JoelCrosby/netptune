@@ -151,8 +151,6 @@ export class FormSelectComponent<TValue>
     const display = selected ? selected.viewValue : null;
     this.displayValue.set(display);
 
-    console.log({ selected, display });
-
     this.input().nativeElement.value = this.displayValue();
   }
 

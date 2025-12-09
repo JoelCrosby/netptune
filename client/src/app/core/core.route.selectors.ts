@@ -29,8 +29,6 @@ export const selectRouterStateUrl = createSelector(
 export const selectIsBoardGroupsRoute = createSelector(
   selectRouterStateUrl,
   (state: string) => {
-    console.log('router-url: ', state);
-
     const match = state.match(/.+\/boards\/.+/) ?? [];
     return match.length > 0;
   }
