@@ -1,12 +1,17 @@
-import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
-import { MatIcon } from '@angular/material/icon';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { FormsModule } from '@angular/forms';
-import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { Field, form } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 export interface ConfirmDialogOptions {
   acceptLabel?: string;
@@ -25,19 +30,17 @@ export interface ConfirmDialogOptions {
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatIcon,
-    MatCheckbox,
-    FormsModule,
-    DialogActionsDirective,
-    MatButton,
-  ],
+  imports: [MatIcon, MatCheckbox, DialogActionsDirective, MatButton, Field],
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);
   data = inject<ConfirmDialogOptions>(DIALOG_DATA, { optional: true }) ?? {};
 
-  confirmationChecked = false;
+  confirmFormModel = signal({
+    confirmationChecked: false,
+  });
+
+  confirmForm = form(this.confirmFormModel);
 
   constructor() {
     this.data = { color: 'primary', ...this.data };

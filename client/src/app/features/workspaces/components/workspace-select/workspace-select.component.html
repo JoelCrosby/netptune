@@ -4,7 +4,7 @@
   #dropdown
   >
   <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
-    @if (currentWorkspace) {
+    @if (currentWorkspace(); as currentWorkspace) {
       <div
         class="app-workspace-link-inner"
         [style.backgroundColor]="currentWorkspace.metaInfo?.color"
@@ -20,7 +20,7 @@
   </button>
 
   <div #selectmenu class="select-menu">
-    @if (isOpen) {
+    @if (isOpen()) {
       <div class="select-menu-inner menu-scale-in">
         @if (!options()?.length) {
           <div class="no-results-item">
@@ -32,15 +32,15 @@
             appAutofocus
             class="label-input"
             placeholder="Search.."
-            [formControl]="searchControl"
+            [field]="searchForm.term"
             (click)="$event.stopPropagation()"
             />
         }
         <div class="select-menu-inner-options custom-scroll">
-          @for (option of options$ | async; track option) {
+          @for (option of filteredOptions(); track option.id) {
             <div
               class="select-item"
-              [class.active]="isActive(option)"
+              [class.active]="option.id === selected()?.id"
               (click)="select(option)"
               >
               <div

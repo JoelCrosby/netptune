@@ -1,26 +1,28 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
   inject,
   input,
+  model,
+  OnChanges,
+  OnInit,
   output,
+  signal,
+  SimpleChanges,
   viewChild,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { debounce, Field, form } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
 import { AutofocusDirective } from '@static/directives/autofocus.directive';
-import { RouterLink } from '@angular/router';
+import { fromEvent } from 'rxjs';
+import { filter, tap, throttleTime } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -28,39 +30,42 @@ import { RouterLink } from '@angular/router';
   templateUrl: './workspace-select.component.html',
   styleUrls: ['./workspace-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    AutofocusDirective,
-    ReactiveFormsModule,
-    RouterLink,
-    AsyncPipe,
-  ],
+  imports: [Field, AutofocusDirective, RouterLink],
 })
 export class WorkspaceSelectComponent implements OnInit, OnChanges {
   private store = inject(Store);
 
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
-  readonly options = input<Workspace[] | null>([]);
+  readonly options = model<Workspace[] | null>([]);
+  readonly filteredOptions = model<Workspace[] | null>([]);
   readonly value = input<string | null>();
   readonly compact = input(false);
 
   readonly selectChange = output<Workspace>();
   readonly closed = output();
 
-  searchControl = new FormControl();
+  searchFormModel = signal({
+    term: '',
+  });
 
-  isOpen = false;
-  currentWorkspace: Workspace | null = null;
-  selected: Workspace | null = null;
+  searchForm = form(this.searchFormModel, (schema) => {
+    debounce(schema.term, 300);
+  });
 
-  options$ = new BehaviorSubject<Workspace[]>([]);
+  isOpen = signal(false);
+  currentWorkspace = signal<Workspace | null>(null);
+  selected = signal<Workspace | null>(null);
+
+  constructor() {
+    effect(() => {
+      this.search(this.searchForm.term().value());
+    });
+
+    effect(() => this.filteredOptions.set(this.options()));
+  }
 
   ngOnInit() {
-    this.searchControl.valueChanges
-      .pipe(debounceTime(300), untilDestroyed(this))
-      .subscribe((term: string) => this.search(term));
-
     fromEvent(document, 'mousedown', {
       passive: true,
     })
@@ -76,18 +81,16 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     })
       .pipe(
         untilDestroyed(this),
-        filter(() => this.isOpen),
+        filter(() => this.isOpen()),
         tap(this.handleKeyDown.bind(this))
       )
       .subscribe();
-
-    this.options$.next(this.options() ?? []);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.options) {
       const options = this.options();
-      if (this.value() && !this.currentWorkspace && options) {
+      if (this.value() && !this.currentWorkspace() && options) {
         const option = options.find((opt) => opt.slug === this.value());
         this.select(option);
       }
@@ -115,48 +118,48 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
   }
 
   selectNextOptiom() {
-    const options = this.options$.value;
+    const options = this.filteredOptions() ?? [];
 
-    if (!this.selected) {
-      this.selected = (options.length && options[0]) || null;
+    if (!this.selected()) {
+      const firstOption = options[0];
+      console.log({ firstOption });
+
+      this.selected.set(firstOption);
     } else {
       const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected?.id
+        (opt) => opt.id === this.selected()?.id
       );
 
       if (options.length === currentIndex + 1) {
         return;
       }
 
-      this.selected = options[currentIndex + 1];
+      this.selected.set(options[currentIndex + 1]);
     }
-
-    this.options$.next(options);
   }
 
   selectPreviousOption() {
-    const options = this.options$.value;
+    const options = this.filteredOptions();
+    const selected = this.selected();
 
-    const optionsValue = this.options();
-    if (!optionsValue) return;
+    if (!options) return;
 
-    if (!this.selected) {
-      this.selected = (options.length && options[0]) || null;
+    if (!selected) {
+      this.selected.set((options?.length && options[0]) || null);
     } else {
-      const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected?.id
-      );
+      const index = options?.findIndex((opt) => opt.id === selected.id) ?? -1;
 
-      if (currentIndex === 0) return;
+      if (index === 0 || index === -1) {
+        return;
+      }
 
-      this.selected = optionsValue[currentIndex - 1];
+      this.selected.set(options[index - 1]);
     }
-
-    this.options$.next(options);
   }
 
   open(dropdown: HTMLElement, origin: HTMLElement) {
-    this.isOpen = true;
+    this.isOpen.set(true);
+
     if (this.compact()) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
@@ -170,27 +173,29 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
 
   close() {
     this.closed.emit();
-    this.isOpen = false;
-    this.searchControl.patchValue('');
+    this.isOpen.set(false);
+    this.searchForm.term().value.set('');
   }
 
   select(option: Workspace | null = null) {
-    this.selected = option ?? this.selected;
-    this.currentWorkspace = this.selected;
+    this.selected.set(option ?? this.selected());
+    this.currentWorkspace.set(this.selected());
 
-    if (this.isOpen && this.selected) {
-      this.selectChange.emit(this.selected);
+    const selected = this.selected();
+
+    if (this.isOpen() && selected) {
+      this.selectChange.emit(selected);
       this.close();
     }
 
-    this.selected = null;
+    this.selected.set(null);
   }
 
   isActive(option: Workspace) {
-    if (!this.selected) {
+    if (!this.selected()) {
       return false;
     }
-    return option.id === this.selected.id;
+    return option.id === this.selected()?.id;
   }
 
   search(value: string) {
@@ -198,9 +203,9 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     if (!options) return;
 
     if (!value) {
-      this.options$.next(options);
+      this.filteredOptions.set(options);
     } else {
-      this.options$.next(filterObjectArray(options, 'name', value));
+      this.filteredOptions.set(filterObjectArray(options, 'name', value));
       this.selectNextOptiom();
     }
   }
