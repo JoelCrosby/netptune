@@ -142,4 +142,5 @@ const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this Workspace?',
   title: 'Delete Workspace',
+  color: 'warn',
 };

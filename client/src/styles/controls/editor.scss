@@ -24,7 +24,7 @@
     color: var(--editor-code-color);
     font-family: var(--monospace);
     border: 1px solid rgba(var(--foreground-rgb), .12);
-    border-radius: 3px;
+    border-radius: var(--border-radius-small);
     font-size: 14px;
     resize: none;
     white-space: pre-wrap;
@@ -105,7 +105,7 @@
 .ce-inline-toolbar,
 .ce-conversion-toolbar,
 .ce-conversion-tool__icon {
-  border-radius: 3px;
+  border-radius: var(--border-radius-small);
   background-color: var(--background);
   color: rgba(var(--foreground-rgb), .6);
   box-shadow: 0 3px 15px -3px rgba(13, 20, 33, .42);

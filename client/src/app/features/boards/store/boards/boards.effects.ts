@@ -127,4 +127,5 @@ const DELETE_BOARD_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this Board?',
   title: 'Delete Board',
+  color: 'warn',
 };

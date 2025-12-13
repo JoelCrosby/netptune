@@ -1,8 +1,8 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   effect,
   ElementRef,
@@ -10,6 +10,7 @@ import {
   input,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import {
@@ -45,10 +46,16 @@ import { DocumentService } from '@static/services/document.service';
   templateUrl: './board-group-task-inline.component.html',
   styleUrls: ['./board-group-task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatInput, CdkTextareaAutosize, MatTooltip, SpinnerComponent, Field],
+  imports: [
+    MatInput,
+    CdkTextareaAutosize,
+    MatTooltip,
+    SpinnerComponent,
+    Field,
+    A11yModule,
+  ],
 })
 export class BoardGroupTaskInlineComponent implements AfterViewInit {
-  private cd = inject(ChangeDetectorRef);
   private document = inject(DocumentService);
   private store = inject(Store);
   private elementRef = inject(ElementRef);
@@ -79,8 +86,9 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   loading = signal(false);
 
   constructor() {
-    this.document.documentClicked().subscribe({
-      next: this.handleDocumentClick.bind(this),
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
     });
 
     effect(() => {
@@ -100,22 +108,20 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   }
 
   handleDocumentClick(target: EventTarget) {
-    if (this.isEditActive()) {
-      if (!this.elementRef.nativeElement.contains(target)) {
-        this.canceled.emit();
-        this.isEditActive.set(false);
-        this.loading.set(false);
-      }
+    const isEditActive = this.isEditActive();
+    const clickedInside = this.elementRef.nativeElement.contains(target);
+
+    if (isEditActive && !clickedInside) {
+      this.canceled.emit();
+      this.isEditActive.set(false);
+      this.loading.set(false);
     } else {
-      if (this.elementRef.nativeElement.contains(target)) {
-        this.isEditActive.set(true);
-        this.focusInput();
-      }
+      this.isEditActive.set(true);
+      this.focusInput();
     }
   }
 
   focusInput() {
-    this.cd.detectChanges();
     const textarea = this.inputElementRef();
 
     if (textarea) {

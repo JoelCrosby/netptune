@@ -8,7 +8,7 @@ mat-divider {
   justify-content: center;
   position: relative;
   padding: .8rem 1.6rem;
-  border-radius: 3px;
+  border-radius: var(--border-radius-small);
   outline: none;
   font-family: inherit;
   font-size: 14px;

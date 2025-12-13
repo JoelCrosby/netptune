@@ -1,15 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  model,
-} from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
-
-import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-color-select',
@@ -18,11 +11,8 @@ import { MatIcon } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTooltip, MatIcon],
 })
-export class ColorSelectComponent implements ControlValueAccessor {
-  ngControl = inject(NgControl, { self: true, optional: true });
-
+export class ColorSelectComponent extends AbstractFormValueControl {
   readonly label = input.required<string>();
-  readonly disabled = model<boolean>();
   readonly hint = input<string | null>(null);
 
   colors = colorDictionary();
@@ -33,40 +23,7 @@ export class ColorSelectComponent implements ControlValueAccessor {
     this.colors.length - 1
   );
 
-  value: string | undefined;
-
-  get control() {
-    return this.ngControl?.control;
-  }
-
-  onChange!: (value: string) => void;
-  onTouch!: (...args: unknown[]) => void;
-
-  constructor() {
-    if (this.ngControl) {
-      this.ngControl.valueAccessor = this;
-    }
-  }
-
   onOptionClicked(color: NamedColor) {
-    this.value = color.color;
-    this.onChange(this.value);
-    this.onTouch();
-  }
-
-  writeValue(value: string) {
-    this.value = value;
-  }
-
-  registerOnChange(fn: (...args: unknown[]) => unknown) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: (...args: unknown[]) => unknown) {
-    this.onTouch = fn;
-  }
-
-  setDisabledState(isDisabled: boolean) {
-    this.disabled.set(isDisabled);
+    this.value.set(color.color);
   }
 }

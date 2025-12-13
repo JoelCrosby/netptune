@@ -1,5 +1,5 @@
 <div class="user-select" [class.user-select-compact]="compact()" #dropdown>
-  <button class="select-trigger" (click)="open(selectmenu, origin)" #origin>
+  <button class="select-trigger" (click)="open($event, selectmenu, origin)" #origin>
     @for (user of value(); track user.id) {
       <div class="user-item">
         <app-avatar
@@ -19,24 +19,20 @@
   </button>
 
   <div #selectmenu class="select-menu">
-    @if (isOpen) {
+    @if (isOpen()) {
       <div class="select-menu-inner menu-scale-in">
         @if (options()?.length) {
           <input
             appAutofocus
             class="label-input"
             placeholder="Search.."
-            [formControl]="searchControl"
+            [field]="searchForm.term"
             (click)="$event.stopPropagation()"
             />
         }
         <div class="select-menu-inner-options custom-scroll">
-          @if (!options()?.length) {
-            <div class="no-results-item">
-              {{noResults()}}
-            </div>
-          }
-          @for (option of options$ | async; track option.id) {
+
+          @for (option of filterdOptions(); track option.id) {
             <div
               class="select-item"
               [class.active]="isActive(option)"
@@ -50,6 +46,10 @@
                 >
               </app-avatar>
               <span> {{ option.displayName }} </span>
+            </div>
+          } @empty {
+            <div class="no-results-item">
+              {{ noResults() }}
             </div>
           }
         </div>

@@ -1,6 +1,6 @@
 <div class="nept-form-control">
   @if (label()) {
-  <label [for]="ngControl?.name" class="form-control-label">
+  <label [for]="name()" class="form-control-label">
     {{ label() }}
   </label>
   }
@@ -16,6 +16,7 @@
 
     <input
       #input
+      [id]="name()"
       [value]="value()"
       [disabled]="disabled()"
       [class.form-control-disabled]="disabled()"
