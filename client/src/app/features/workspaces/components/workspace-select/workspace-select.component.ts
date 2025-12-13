@@ -6,11 +6,9 @@ import {
   inject,
   input,
   model,
-  OnChanges,
-  OnInit,
   output,
   signal,
-  SimpleChanges,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { debounce, Field, form } from '@angular/forms/signals';
@@ -18,11 +16,11 @@ import { RouterLink } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AutofocusDirective } from '@static/directives/autofocus.directive';
-import { fromEvent } from 'rxjs';
-import { filter, tap, throttleTime } from 'rxjs/operators';
+import { DocumentService } from '@static/services/document.service';
+import { KeyboardService } from '@static/services/keyboard.service';
 
 @UntilDestroy()
 @Component({
@@ -32,8 +30,10 @@ import { filter, tap, throttleTime } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Field, AutofocusDirective, RouterLink],
 })
-export class WorkspaceSelectComponent implements OnInit, OnChanges {
+export class WorkspaceSelectComponent {
   private store = inject(Store);
+  private document = inject(DocumentService);
+  private keyboard = inject(KeyboardService);
 
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
@@ -63,42 +63,24 @@ export class WorkspaceSelectComponent implements OnInit, OnChanges {
     });
 
     effect(() => this.filteredOptions.set(this.options()));
+
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
+    });
+
+    effect(() => {
+      const event = this.keyboard.keyDown();
+      untracked(() => {
+        if (this.isOpen()) {
+          this.handleKeyDown(event);
+        }
+      });
+    });
   }
 
-  ngOnInit() {
-    fromEvent(document, 'mousedown', {
-      passive: true,
-    })
-      .pipe(
-        untilDestroyed(this),
-        throttleTime(200),
-        tap(this.handleDocumentClick.bind(this))
-      )
-      .subscribe();
-
-    fromEvent<KeyboardEvent>(document, 'keydown', {
-      passive: true,
-    })
-      .pipe(
-        untilDestroyed(this),
-        filter(() => this.isOpen()),
-        tap(this.handleKeyDown.bind(this))
-      )
-      .subscribe();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.value || changes.options) {
-      const options = this.options();
-      if (this.value() && !this.currentWorkspace() && options) {
-        const option = options.find((opt) => opt.slug === this.value());
-        this.select(option);
-      }
-    }
-  }
-
-  handleDocumentClick(event: Event) {
-    if (!this.dropdownElementRef().nativeElement.contains(event.target)) {
+  handleDocumentClick(target: EventTarget) {
+    if (!this.dropdownElementRef().nativeElement.contains(target)) {
       this.close();
     }
   }

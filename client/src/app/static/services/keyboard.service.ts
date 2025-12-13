@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class KeyboardService {
-  readonly keyDown = signal<KeyboardEvent | null>(null, {
+  readonly keyDown = signal<KeyboardEvent>(null!, {
     equal: () => false,
   });
 
