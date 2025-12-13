@@ -35,6 +35,11 @@ export const selectCurrentWorkspaceIdentifier = createSelector(
   (state?: Workspace) => state?.slug
 );
 
+export const selectCurrentWorkspaceId = createSelector(
+  selectCurrentWorkspace,
+  (state?: Workspace) => state?.id
+);
+
 export const selectIsSlugUnique = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.isSlugUnique?.isUnique

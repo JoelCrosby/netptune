@@ -9,8 +9,6 @@
           idKey="id"
           labelKey="name"
           [compact]="!sideNavExpanded()"
-          [options]="workspaces()"
-          [value]="workspaceId()"
           (selectChange)="onWorkspaceChange($event)"
           >
         </app-workspace-select>

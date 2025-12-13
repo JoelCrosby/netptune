@@ -1,11 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
   input,
-  model,
   output,
   signal,
   untracked,
@@ -15,14 +15,16 @@ import { debounce, Field, form } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
+import {
+  selectAllWorkspaces,
+  selectCurrentWorkspaceId,
+} from '@core/store/workspaces/workspaces.selectors';
 import { filterObjectArray } from '@core/util/arrays';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AutofocusDirective } from '@static/directives/autofocus.directive';
 import { DocumentService } from '@static/services/document.service';
 import { KeyboardService } from '@static/services/keyboard.service';
 
-@UntilDestroy()
 @Component({
   selector: 'app-workspace-select',
   templateUrl: './workspace-select.component.html',
@@ -37,13 +39,29 @@ export class WorkspaceSelectComponent {
 
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
-  readonly options = model<Workspace[] | null>([]);
-  readonly filteredOptions = model<Workspace[] | null>([]);
-  readonly value = input<string | null>();
-  readonly compact = input(false);
-
   readonly selectChange = output<Workspace>();
   readonly closed = output();
+
+  readonly compact = input(false);
+  readonly workspaces = this.store.selectSignal(selectAllWorkspaces);
+
+  readonly workspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+
+  filteredOptions = computed(() => {
+    const options = this.workspaces();
+    const term = this.searchForm.term().value();
+    if (!term) {
+      return options;
+    }
+    return filterObjectArray(options, 'name', term);
+  });
+
+  currentWorkspace = computed(() => {
+    const workspaces = this.workspaces();
+    const workspaceId = this.workspaceId();
+
+    return workspaces.find((w) => w.id === workspaceId);
+  });
 
   searchFormModel = signal({
     term: '',
@@ -54,16 +72,9 @@ export class WorkspaceSelectComponent {
   });
 
   isOpen = signal(false);
-  currentWorkspace = signal<Workspace | null>(null);
   selected = signal<Workspace | null>(null);
 
   constructor() {
-    effect(() => {
-      this.search(this.searchForm.term().value());
-    });
-
-    effect(() => this.filteredOptions.set(this.options()));
-
     effect(() => {
       const el = this.document.documentClicked();
       untracked(() => this.handleDocumentClick(el));
@@ -76,6 +87,12 @@ export class WorkspaceSelectComponent {
           this.handleKeyDown(event);
         }
       });
+    });
+
+    effect(() => {
+      if (this.searchForm.term().value()) {
+        this.selectNextOptiom();
+      }
     });
   }
 
@@ -100,7 +117,7 @@ export class WorkspaceSelectComponent {
   }
 
   selectNextOptiom() {
-    const options = this.filteredOptions() ?? [];
+    const options = this.filteredOptions();
 
     if (!this.selected()) {
       const firstOption = options[0];
@@ -159,7 +176,6 @@ export class WorkspaceSelectComponent {
 
   select(option: Workspace | null = null) {
     this.selected.set(option ?? this.selected());
-    this.currentWorkspace.set(this.selected());
 
     const selected = this.selected();
 
@@ -176,18 +192,6 @@ export class WorkspaceSelectComponent {
       return false;
     }
     return option.id === this.selected()?.id;
-  }
-
-  search(value: string) {
-    const options = this.options();
-    if (!options) return;
-
-    if (!value) {
-      this.filteredOptions.set(options);
-    } else {
-      this.filteredOptions.set(filterObjectArray(options, 'name', value));
-      this.selectNextOptiom();
-    }
   }
 
   onlogOutClicked() {

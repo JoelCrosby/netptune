@@ -25,10 +25,6 @@ import {
   selectSideMenuMode,
   selectSideMenuOpen,
 } from '@core/store/layout/layout.selectors';
-import {
-  selectAllWorkspaces,
-  selectCurrentWorkspaceIdentifier,
-} from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { WorkspaceSelectComponent } from '../workspace-select/workspace-select.component';
@@ -71,8 +67,6 @@ export class ShellComponent {
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
   sideMenuMode = this.store.selectSignal(selectSideMenuMode);
   user = this.store.selectSignal(selectCurrentUser);
-  workspaces = this.store.selectSignal(selectAllWorkspaces);
-  workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
 
   onSidenavClosedStart() {
     this.store.dispatch(toggleSideMenu());
