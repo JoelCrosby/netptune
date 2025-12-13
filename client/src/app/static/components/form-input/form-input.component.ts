@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  inject,
   input,
   output,
   viewChild,
 } from '@angular/core';
-import { NgControl } from '@angular/forms';
 
 import { MatIcon } from '@angular/material/icon';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
@@ -20,9 +18,6 @@ import { FormErrorComponent } from '../form-error/form-error.component';
   imports: [MatIcon, FormErrorComponent],
 })
 export class FormInputComponent extends AbstractFormValueControl {
-  readonly ngControl = inject(NgControl, { self: true, optional: true });
-  readonly formControl = input<NgControl>();
-
   readonly label = input<string>();
   readonly icon = input<string | null>();
   readonly prefix = input<string | null>();

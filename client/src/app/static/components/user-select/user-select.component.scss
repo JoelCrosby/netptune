@@ -97,7 +97,7 @@ input {
   cursor: pointer;
   font-size: 14px;
   font-family: inherit;
-  border-radius: 3px;
+  border-radius: var(--border-radius-small);
   margin: .2rem 0;
 
   app-avatar {
@@ -144,7 +144,7 @@ input {
     margin: .2rem 0;
     font-size: 14px;
     letter-spacing: .225px;
-    border-radius: 3px;
+    border-radius: var(--border-radius-small);
   }
 }
 
@@ -195,9 +195,8 @@ input {
   }
 
   .label-input {
-    $dark-bg: var(--card);
-    $light-bg: var(--card);
-    background-color: var(--background);
+    border: var(--border);
+    background-color: var(--seconday-background);
   }
 
   .select-trigger {
@@ -205,7 +204,7 @@ input {
     background-color: transparent;
 
     &:hover {
-      background-color: rgba(var(--foreground-rgb), .08);
+      background-color: var(--hover);
     }
   }
 
@@ -215,17 +214,15 @@ input {
 
   .select-item {
     &:hover {
-      $dark-bg: var(--card);
-      $light-bg: var(--card);
-      background-color: var(--background);
+      background-color: var(--hover);
     }
 
     &.active {
-      // Todo: add back colors
+      background-color: var(--primary);
     }
 
     &.selected {
-      // Todo: add back colors
+      background-color: var(--primary);
     }
   }
 

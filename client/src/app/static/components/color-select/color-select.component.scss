@@ -7,7 +7,7 @@
     height: 36px;
     min-width: 36px;
     min-height: 36px;
-    border-radius: 3px;
+    border-radius: var(--border-radius-small);
     margin: .2rem;
     display: flex;
     justify-content: center;

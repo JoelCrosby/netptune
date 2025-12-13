@@ -4,8 +4,11 @@
     #input
     type="text"
     class="inline-edit-input"
-    [formControl]="control"
+    [value]="value()"
+    [readonly]="readonly()"
+    [disabled]="disabled()"
     [class.active-border]="activeBorder()"
+    (input)="onInput($event)"
     (keyup.enter)="onSubmit(input.value)"
   />
   } @else {

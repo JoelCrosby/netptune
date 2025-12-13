@@ -2,45 +2,41 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+  computed,
+  effect,
+  inject,
   input,
+  model,
   output,
+  signal,
+  untracked,
   viewChild,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { debounce, form, Field } from '@angular/forms/signals';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime, filter, tap, throttleTime } from 'rxjs/operators';
-import { AsyncPipe } from '@angular/common';
-import { AvatarComponent } from '../avatar/avatar.component';
+import { DocumentService } from '@static/services/document.service';
+import { KeyboardService } from '@static/services/keyboard.service';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { AvatarComponent } from '../avatar/avatar.component';
 
-@UntilDestroy()
+type User = AssigneeViewModel | AppUser;
+
 @Component({
   selector: 'app-user-select',
   templateUrl: './user-select.component.html',
   styleUrls: ['./user-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    AvatarComponent,
-    FormsModule,
-    AutofocusDirective,
-    ReactiveFormsModule,
-    AsyncPipe,
-  ],
+  imports: [AvatarComponent, AutofocusDirective, Field],
 })
-export class UserSelectComponent implements OnInit, OnChanges {
+export class UserSelectComponent {
+  private document = inject(DocumentService);
+  private keyboard = inject(KeyboardService);
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
   readonly options = input<AppUser[] | null>([]);
-  readonly value = input<((AssigneeViewModel | AppUser)[] | null) | undefined>(
-    []
-  );
+  readonly value = model<User[]>([]);
   readonly compact = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
@@ -48,62 +44,52 @@ export class UserSelectComponent implements OnInit, OnChanges {
   readonly selectChange = output<AppUser>();
   readonly closed = output();
 
-  searchControl = new FormControl('');
+  isOpen = signal(false);
+  selected = signal<AppUser | null>(null);
 
-  isOpen = false;
-  selected: AppUser | null = null;
+  filterdOptions = signal<AppUser[]>(this.options() ?? []);
+  valueIdSet = computed(() => {
+    const ids = this.value().map((v) => v.id);
+    return new Set<string>(ids);
+  });
 
-  options$ = new BehaviorSubject<AppUser[]>([]);
-  valueIdSet = new Set<string>();
+  searchFormModel = signal({
+    term: '',
+  });
 
-  ngOnInit() {
-    this.searchControl.valueChanges
-      .pipe(debounceTime(300), untilDestroyed(this))
-      .subscribe((term) => this.search(term));
+  searchForm = form(this.searchFormModel, (schema) => {
+    debounce(schema.term, 300);
+  });
 
-    fromEvent(document, 'mousedown', {
-      passive: true,
-    })
-      .pipe(
-        untilDestroyed(this),
-        throttleTime(200),
-        tap(this.handleDocumentClick.bind(this))
-      )
-      .subscribe();
+  constructor() {
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
+    });
 
-    fromEvent<KeyboardEvent>(document, 'keydown', {
-      passive: true,
-    })
-      .pipe(
-        untilDestroyed(this),
-        filter(() => this.isOpen),
-        tap(this.handleKeyDown.bind(this))
-      )
-      .subscribe();
+    effect(() => {
+      const event = this.keyboard.keyDown();
 
-    this.options$.next(this.options() ?? []);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.value || changes.options) {
-      const options = this.options();
-      const value = this.value();
-      if (value && options) {
-        this.options$.next(options);
-
-        this.valueIdSet.clear();
-
-        for (const user of value) {
-          if (user) {
-            this.valueIdSet.add(user.id);
-          }
+      untracked(() => {
+        if (event && this.isOpen()) {
+          this.handleKeyDown(event);
         }
-      }
-    }
+      });
+    });
+
+    effect(() => {
+      const term = this.searchForm.term().value();
+      untracked(() => this.search(term));
+    });
   }
 
-  handleDocumentClick(event: Event) {
-    if (!this.dropdownElementRef().nativeElement.contains(event.target)) {
+  handleDocumentClick(event: EventTarget) {
+    if (!this.isOpen()) {
+      return;
+    }
+
+    if (!this.dropdownElementRef().nativeElement.contains(event)) {
+      console.log('closed');
       this.close();
     }
   }
@@ -123,48 +109,52 @@ export class UserSelectComponent implements OnInit, OnChanges {
   }
 
   selectNextOptiom() {
-    const options = this.options$.value;
+    const options = this.filterdOptions();
 
-    if (!this.selected) {
-      this.selected = (options.length && options[0]) || null;
+    if (!this.selected()) {
+      this.selected.set((options.length && options[0]) || null);
     } else {
       const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected?.id
+        (opt) => opt.id === this.selected()?.id
       );
 
       if (options.length === currentIndex + 1) {
         return;
       }
 
-      this.selected = options[currentIndex + 1];
+      this.selected.set(options[currentIndex + 1]);
     }
 
-    this.options$.next(options);
+    this.filterdOptions.set(options);
   }
 
   selectPreviousOption() {
-    const options = this.options$.value;
+    const options = this.filterdOptions();
 
     const optionsValue = this.options();
     if (!optionsValue) return;
 
-    if (!this.selected) {
-      this.selected = (options.length && options[0]) || null;
+    if (!this.selected()) {
+      this.selected.set((options.length && options[0]) || null);
     } else {
       const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected?.id
+        (opt) => opt.id === this.selected()?.id
       );
 
       if (currentIndex === 0) return;
 
-      this.selected = optionsValue[currentIndex - 1];
+      this.selected.set(optionsValue[currentIndex - 1]);
     }
 
-    this.options$.next(options);
+    this.filterdOptions.set(options);
   }
 
-  open(dropdown: HTMLElement, origin: HTMLElement) {
-    this.isOpen = true;
+  open(event: Event, dropdown: HTMLElement, origin: HTMLElement) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    this.isOpen.set(true);
+
     if (this.compact()) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
@@ -177,30 +167,37 @@ export class UserSelectComponent implements OnInit, OnChanges {
   }
 
   close() {
+    console.log('user-select close.');
+
+    this.searchForm.term().value.set('');
+    this.isOpen.set(false);
+
     this.closed.emit();
-    this.isOpen = false;
-    this.searchControl.patchValue('');
   }
 
   select(option: AppUser | null = null) {
-    this.selected = option ?? this.selected;
+    this.selected.set(option ?? this.selected());
+    const selected = this.selected();
 
-    if (this.isOpen && this.selected) {
-      this.selectChange.emit(this.selected);
+    if (this.isOpen() && selected) {
+      this.selectChange.emit(selected);
     }
 
-    this.selected = null;
+    this.selected.set(null);
   }
 
   isActive(option: AppUser) {
-    if (!this.selected) {
+    const selected = this.selected();
+
+    if (!selected) {
       return false;
     }
-    return option.id === this.selected.id;
+
+    return option.id === selected.id;
   }
 
   isSelected(option: AppUser) {
-    return this.valueIdSet.has(option.id);
+    return this.valueIdSet().has(option.id);
   }
 
   search(value?: string | null) {
@@ -208,9 +205,9 @@ export class UserSelectComponent implements OnInit, OnChanges {
     if (!options) return;
 
     if (!value) {
-      this.options$.next(options);
+      this.filterdOptions.set(options);
     } else {
-      this.options$.next(filterObjectArray(options, 'displayName', value));
+      this.filterdOptions.set(filterObjectArray(options, 'displayName', value));
       this.selectNextOptiom();
     }
   }

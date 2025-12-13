@@ -1,23 +1,17 @@
-import { Injectable } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  private documentClickedTarget = new Subject<EventTarget>();
+  readonly documentClicked = signal<EventTarget>(document, {
+    equal: () => false,
+  });
 
   constructor() {
-    fromEvent(document, 'click').subscribe({
-      next: (el) => {
-        if (!el?.target) return;
-
-        this.documentClickedTarget.next(el.target);
-      },
+    document.addEventListener('click', (el) => {
+      if (!el?.target) return;
+      this.documentClicked.set(el.target);
     });
-  }
-
-  documentClicked() {
-    return this.documentClickedTarget.pipe();
   }
 }

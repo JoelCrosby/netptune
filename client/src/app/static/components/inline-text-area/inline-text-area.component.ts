@@ -3,14 +3,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   inject,
   input,
   model,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   DisabledReason,
   FormValueControl,
@@ -24,7 +25,7 @@ import { DocumentService } from '@static/services/document.service';
   templateUrl: './inline-text-area.component.html',
   styleUrls: ['./inline-text-area.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CdkTextareaAutosize, FormsModule, ReactiveFormsModule],
+  imports: [CdkTextareaAutosize],
   host: { '[class.edit-active]': 'isEditActive()' },
 })
 export class InlineTextAreaComponent implements FormValueControl<string> {
@@ -55,8 +56,9 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
   isEditActive = signal(false);
 
   constructor() {
-    this.document.documentClicked().subscribe({
-      next: this.handleDocumentClick.bind(this),
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
     });
   }
 

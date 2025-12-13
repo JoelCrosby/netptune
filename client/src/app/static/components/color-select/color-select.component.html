@@ -1,6 +1,6 @@
 <div class="nept-form-control">
   @if (label()) {
-  <label [for]="ngControl?.name" class="form-control-label">
+  <label [for]="name()" class="form-control-label">
     {{ label() }}
   </label>
   }
@@ -13,21 +13,21 @@
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"
     >
-      @if (value === color.color) {
+      @if (value() === color.color) {
       <mat-icon>done</mat-icon>
       }
     </div>
     }
   </div>
   <div class="color-options">
-    @for (color of colorsRowBottom; track color) {
+    @for (color of colorsRowBottom; track color.color) {
     <div
       class="color-option"
       [matTooltip]="color.name"
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"
     >
-      @if (value === color.color) {
+      @if (value() === color.color) {
       <mat-icon>done</mat-icon>
       }
     </div>

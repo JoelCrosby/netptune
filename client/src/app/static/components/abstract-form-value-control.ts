@@ -8,6 +8,7 @@ import {
 
 @Directive()
 export class AbstractFormValueControl implements FormValueControl<string> {
+  readonly name = input<string>('');
   readonly value = model('');
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);

@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
   inject,
   model,
   output,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { DocumentService } from '@static/services/document.service';
@@ -26,8 +28,9 @@ export class TagsInputComponent implements AfterViewInit {
   readonly canceled = output();
 
   constructor() {
-    this.document.documentClicked().subscribe({
-      next: this.handleDocumentClick.bind(this),
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
     });
 
     this.value.set(this.value());

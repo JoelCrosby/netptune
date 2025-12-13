@@ -54,7 +54,7 @@
       margin-left: .2rem;
       width: 100%;
       transition: background-color .2s ease-in-out;
-      border-radius: 3px;
+      border-radius: var(--border-radius-small);
       padding: 4px 6px;
     }
 

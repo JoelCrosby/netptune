@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   inject,
   input,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { UserResponse } from '@core/auth/store/auth.models';
@@ -59,8 +61,9 @@ export class TaskInlineComponent {
   });
 
   constructor() {
-    this.document.documentClicked().subscribe({
-      next: this.handleDocumentClick.bind(this),
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
     });
   }
 

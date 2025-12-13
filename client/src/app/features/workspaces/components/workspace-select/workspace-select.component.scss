@@ -19,7 +19,7 @@
 
 .select-menu {
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: var(--border-radius-small);
   position: absolute;
   top: 55px;
   left: 0;
@@ -91,7 +91,7 @@ input {
   cursor: pointer;
   font-size: 14px;
   font-family: inherit;
-  border-radius: 3px;
+  border-radius: var(--border-radius-small);
   margin: .2rem 0;
 }
 
@@ -134,7 +134,7 @@ input {
     margin: .2rem 0;
     font-size: 14px;
     letter-spacing: .225px;
-    border-radius: 3px;
+    border-radius: var(--border-radius-small);
   }
 }
 

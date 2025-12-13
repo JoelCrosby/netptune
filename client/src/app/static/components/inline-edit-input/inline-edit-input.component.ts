@@ -3,71 +3,56 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnDestroy,
-  OnInit,
   effect,
   inject,
   input,
+  model,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentService } from '@static/services/document.service';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-inline-edit-input',
   templateUrl: './inline-edit-input.component.html',
   styleUrls: ['./inline-edit-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [],
   host: {
     '[class.edit-active]': 'isEditActive()',
   },
 })
-export class InlineEditInputComponent implements OnInit, OnDestroy {
+export class InlineEditInputComponent {
   private elementRef = inject(ElementRef);
   private cd = inject(ChangeDetectorRef);
   private document = inject(DocumentService);
 
-  readonly value = input<string | null>();
+  readonly value = model<string | null | undefined>('');
+  readonly touched = model<boolean>(false);
+  readonly disabled = input<boolean>(false);
+  readonly required = input<boolean>(false);
   readonly size = input<number>();
   readonly activeBorder = input<boolean | string | null>();
+  readonly readonly = input<boolean>(false);
 
   readonly input = viewChild.required<ElementRef>('input');
   readonly submitted = output<string>();
-
-  control = new FormControl('', {
-    updateOn: 'blur',
-  });
-
   isEditActive = signal(false);
-  onDestroy$ = new Subject<void>();
 
   constructor() {
-    effect(() =>
-      this.control.setValue(this.value() ?? '', { emitEvent: false })
-    );
-  }
-
-  ngOnInit() {
-    this.document.documentClicked().subscribe({
-      next: this.handleDocumentClick.bind(this),
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
     });
-
-    this.control.valueChanges
-      .pipe(
-        takeUntil(this.onDestroy$),
-        tap((value) => this.onSubmit(value as string))
-      )
-      .subscribe();
   }
 
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+  onInput(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    this.value.set(value);
   }
 
   handleDocumentClick(target: EventTarget) {
@@ -85,13 +70,10 @@ export class InlineEditInputComponent implements OnInit, OnDestroy {
 
   focusInput() {
     this.cd.detectChanges();
+    const textarea = this.input();
 
-    const inputEl = this.input();
-    if (inputEl) {
-      this.control.setValue(this.value() as string, {
-        emitEvent: false,
-      });
-      inputEl?.nativeElement.focus();
+    if (textarea) {
+      textarea?.nativeElement.focus();
     }
   }
 

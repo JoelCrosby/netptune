@@ -13,12 +13,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectService } from './form-select.service';
-
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-select',
@@ -27,15 +25,10 @@ import { MatIcon } from '@angular/material/icon';
   providers: [FormSelectService],
   imports: [MatIcon, FormSelectDropdownComponent],
 })
-export class FormSelectComponent<TValue>
-  implements AfterViewInit, ControlValueAccessor
-{
-  readonly ngControl = inject(NgControl, { self: true, optional: true });
-
+export class FormSelectComponent<TValue> implements AfterViewInit {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
 
   readonly label = input.required<string>();
-  readonly disabled = model<boolean>();
   readonly icon = input<string>();
   readonly prefix = input<string>();
   readonly placeholder = input<string>('');
@@ -48,7 +41,16 @@ export class FormSelectComponent<TValue>
 
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
-  value = signal<TValue | null>(null);
+  readonly value = signal<TValue | null>(null);
+  readonly name = input<string>('');
+  readonly touched = model<boolean>(false);
+  readonly disabled = input<boolean>(false);
+  readonly required = input<boolean>(false);
+  readonly readonly = input<boolean>(false);
+  readonly hidden = input<boolean>(false);
+  readonly invalid = input<boolean>(false);
+  readonly pending = input<boolean>(false);
+
   displayValue = signal<string | null>('');
 
   selectedPortal?: CdkPortal;
@@ -59,16 +61,8 @@ export class FormSelectComponent<TValue>
   selectedOption = signal<FormSelectOptionComponent<TValue> | null>(null);
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
-  get control() {
-    return this.ngControl?.control;
-  }
-
   constructor() {
     this.service.register(this);
-
-    if (this.ngControl) {
-      this.ngControl.valueAccessor = this;
-    }
   }
 
   ngAfterViewInit() {
@@ -136,10 +130,6 @@ export class FormSelectComponent<TValue>
     this.input().nativeElement.focus();
   }
 
-  writeValue(value: TValue) {
-    this.value.set(value);
-  }
-
   updateTrigger() {
     const options = this.options();
 
@@ -152,18 +142,6 @@ export class FormSelectComponent<TValue>
     this.displayValue.set(display);
 
     this.input().nativeElement.value = this.displayValue();
-  }
-
-  registerOnChange(fn: (...args: unknown[]) => unknown) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: (...args: unknown[]) => unknown) {
-    this.onTouch = fn;
-  }
-
-  setDisabledState(isDisabled: boolean) {
-    this.disabled.set(isDisabled);
   }
 
   onKeyDown(event: KeyboardEvent) {
