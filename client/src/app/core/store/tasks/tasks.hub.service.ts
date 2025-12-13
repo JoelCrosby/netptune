@@ -18,7 +18,6 @@ import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import { Store } from '@ngrx/store';
-import { first, tap } from 'rxjs/operators';
 import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
 import * as actions from './tasks.actions';
 
@@ -83,17 +82,13 @@ export class ProjectTasksHubService {
   }
 
   reloadRequiredViews() {
-    this.store
-      .select(selectIsWorkspaceGroup)
-      .pipe(
-        first(),
-        tap((res) =>
-          res
-            ? this.hub.dispatch(actions.loadProjectTasks())
-            : this.hub.dispatch(groupsActions.loadBoardGroups())
-        )
-      )
-      .subscribe();
+    const isWorkspaceGroup = this.store.selectSignal(selectIsWorkspaceGroup);
+
+    if (isWorkspaceGroup()) {
+      this.hub.dispatch(actions.loadProjectTasks());
+    } else {
+      this.hub.dispatch(groupsActions.loadBoardGroups());
+    }
   }
 
   disconnect() {
