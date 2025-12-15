@@ -89,7 +89,6 @@ export class UserSelectComponent {
     }
 
     if (!this.dropdownElementRef().nativeElement.contains(event)) {
-      console.log('closed');
       this.close();
     }
   }
@@ -167,8 +166,6 @@ export class UserSelectComponent {
   }
 
   close() {
-    console.log('user-select close.');
-
     this.searchForm.term().value.set('');
     this.isOpen.set(false);
 

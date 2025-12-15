@@ -2,20 +2,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit,
+  effect,
+  ElementRef,
   inject,
+  signal,
+  untracked,
+  viewChild,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { selectTags } from '@core/store/tags/tags.selectors';
-import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
 import { TagsInputComponent } from '../tags-input/tags-input.component';
+import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-tags',
@@ -24,61 +25,29 @@ import { TagsInputComponent } from '../tags-input/tags-input.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TagsInputComponent, MatTooltip, MatIcon],
 })
-export class TagsComponent implements OnInit, OnDestroy {
+export class TagsComponent {
   private store = inject(Store);
-  private actions$ = inject(Actions);
   private cd = inject(ChangeDetectorRef);
+  readonly document = inject(DocumentService);
+  readonly input = viewChild<ElementRef>('tagsinput');
 
   tags = this.store.selectSignal(selectTags);
-  onDestroy$ = new Subject<void>();
 
-  addTagActive = false;
-  editTagIndex: number | null = null;
+  addTagActive = signal(false);
+  editTagIndex = signal<number | null>(null);
 
-  ngOnInit() {
+  constructor() {
     this.store.dispatch(actions.loadTags());
-    this.listenForEditActions();
-    this.listenForAddActions();
-  }
 
-  listenForEditActions() {
-    this.actions$
-      .pipe(
-        takeUntil(this.onDestroy$),
-        ofType(actions.editTag, actions.editTagSuccess, actions.editTagFail),
-        tap((action) => {
-          if (action.type === actions.editTagSuccess.type) {
-            this.editTagIndex = null;
-          }
-          this.cd.detectChanges();
-        })
-      )
-      .subscribe();
-  }
-
-  listenForAddActions() {
-    this.actions$
-      .pipe(
-        takeUntil(this.onDestroy$),
-        ofType(actions.addTag, actions.addTagSuccess, actions.addTagFail),
-        tap((action) => {
-          if (action.type === actions.addTagSuccess.type) {
-            this.addTagActive = false;
-          }
-          this.cd.detectChanges();
-        })
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+    effect(() => {
+      const el = this.document.documentClicked();
+      untracked(() => this.handleDocumentClick(el));
+    });
   }
 
   onItemClicked(index: number) {
-    this.editTagIndex = index;
-    this.addTagActive = false;
+    this.editTagIndex.set(index);
+    this.addTagActive.set(false);
   }
 
   onEditTagSubmit(value: string, tag: Tag) {
@@ -91,13 +60,13 @@ export class TagsComponent implements OnInit, OnDestroy {
   }
 
   onEditCanceled() {
-    this.editTagIndex = null;
+    this.editTagIndex.set(null);
     this.cd.detectChanges();
   }
 
   onAddTagClicked() {
-    this.editTagIndex = null;
-    this.addTagActive = true;
+    this.editTagIndex.set(null);
+    this.addTagActive.set(true);
   }
 
   onAddTagSubmit(name: string) {
@@ -105,7 +74,7 @@ export class TagsComponent implements OnInit, OnDestroy {
   }
 
   onAddCanceled() {
-    this.addTagActive = false;
+    this.addTagActive.set(false);
     this.cd.detectChanges();
   }
 
@@ -114,5 +83,17 @@ export class TagsComponent implements OnInit, OnDestroy {
 
     const tags = [tag.name];
     this.store.dispatch(actions.deleteTags({ tags }));
+  }
+
+  handleDocumentClick(target: EventTarget) {
+    if (!this.addTagActive()) return;
+
+    const input = this.input();
+
+    if (!input?.nativeElement) return;
+
+    if (!input.nativeElement.contains(target)) {
+      this.onAddCanceled();
+    }
   }
 }

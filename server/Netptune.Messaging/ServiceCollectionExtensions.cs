@@ -10,27 +10,30 @@ namespace Netptune.Messaging;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddSendGridEmailService(this IServiceCollection services, Action<SendGridEmailOptions> action)
+    extension(IServiceCollection services)
     {
-        if (action == null) throw new ArgumentNullException(nameof(action));
+        public void AddSendGridEmailService(Action<SendGridEmailOptions> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
 
-        var options = new SendGridEmailOptions();
-        action(options);
+            var options = new SendGridEmailOptions();
+            action(options);
 
-        services.Configure(action);
-        services.AddTransient<IEmailService, SendGridEmailService>();
+            services.Configure(action);
+            services.AddTransient<IEmailService, SendGridEmailService>();
 
-        services.AddRazorLightRenderer();
-    }
+            services.AddRazorLightRenderer();
+        }
 
-    public static void AddRazorLightRenderer(this IServiceCollection services)
-    {
-        var razorEngine = new RazorLightEngineBuilder()
-            .UseEmbeddedResourcesProject(typeof(ServiceCollectionExtensions))
-            .UseMemoryCachingProvider()
-            .Build();
+        private void AddRazorLightRenderer()
+        {
+            var razorEngine = new RazorLightEngineBuilder()
+                .UseEmbeddedResourcesProject(typeof(ServiceCollectionExtensions))
+                .UseMemoryCachingProvider()
+                .Build();
 
-        services.AddSingleton(razorEngine);
-        services.AddTransient<IEmailRenderService, RazorLightRenderService>();
+            services.AddSingleton(razorEngine);
+            services.AddTransient<IEmailRenderService, RazorLightRenderService>();
+        }
     }
 }

@@ -13,6 +13,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { MatIcon } from '@angular/material/icon';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
@@ -25,7 +26,9 @@ import { FormSelectService } from './form-select.service';
   providers: [FormSelectService],
   imports: [MatIcon, FormSelectDropdownComponent],
 })
-export class FormSelectComponent<TValue> implements AfterViewInit {
+export class FormSelectComponent<TValue>
+  implements AfterViewInit, FormValueControl<TValue | null>
+{
   private service = inject<FormSelectService<TValue>>(FormSelectService);
 
   readonly label = input.required<string>();
@@ -41,7 +44,7 @@ export class FormSelectComponent<TValue> implements AfterViewInit {
 
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
-  readonly value = signal<TValue | null>(null);
+  readonly value = model<TValue | null>(null);
   readonly name = input<string>('');
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
@@ -54,10 +57,6 @@ export class FormSelectComponent<TValue> implements AfterViewInit {
   displayValue = signal<string | null>('');
 
   selectedPortal?: CdkPortal;
-
-  onChange!: (value: TValue) => void;
-  onTouch!: (...args: unknown[]) => void;
-
   selectedOption = signal<FormSelectOptionComponent<TValue> | null>(null);
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
@@ -96,8 +95,6 @@ export class FormSelectComponent<TValue> implements AfterViewInit {
       this.input().nativeElement.focus();
       this.input().nativeElement.click();
     }, 10);
-
-    this.onTouch();
   }
 
   hideDropdown() {
@@ -125,8 +122,6 @@ export class FormSelectComponent<TValue> implements AfterViewInit {
     if (!value) return;
 
     this.changed.emit(value);
-    this.onChange(value);
-
     this.input().nativeElement.focus();
   }
 
