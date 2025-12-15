@@ -270,3 +270,14 @@
     opacity: 1;
   }
 }
+
+#description {
+  border: 2px solid rgba(var(--foreground-rgb), 0.3);
+  border-radius: 4px;
+  display: flex;
+  overflow-y: auto;
+  max-height: calc(100vh - 960px);
+  scrollbar-gutter: stable;
+  padding: 0.2rem 1rem;
+  margin-top: .8rem;
+}

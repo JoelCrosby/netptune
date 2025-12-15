@@ -1,8 +1,8 @@
 <h3 class="section-heading">Tags</h3>
 
 <div class="tag-item-list">
-  @for (tag of tags(); track tag; let i = $index) {
-    @if (editTagIndex === i) {
+  @for (tag of tags(); track tag.id; let i = $index) {
+    @if (editTagIndex() === i) {
       <app-tags-input
         [value]="tag.name"
         (submitted)="onEditTagSubmit($event, tag)"
@@ -25,8 +25,10 @@
     }
   }
 
-  @if (addTagActive) {
+  <div class="tag-item-list-add" #tagsinput>
+    @if (addTagActive()) {
     <app-tags-input
+
       (submitted)="onAddTagSubmit($event)"
       (canceled)="onAddCanceled()"
       >
@@ -36,8 +38,9 @@
          aria-disabled="true"
          class="tag-item add-tag-item"
          (click)="onAddTagClicked()">
-      <span class="add-tag-item-label"> Add Tag... </span>
+      <span class="add-tag-item-label"> Create Tag </span>
     </div>
   }
+  </div>
 
 </div>

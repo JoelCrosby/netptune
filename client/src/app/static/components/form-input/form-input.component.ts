@@ -32,10 +32,6 @@ export class FormInputComponent extends AbstractFormValueControl {
 
   readonly submitted = output<string>();
 
-  constructor() {
-    super();
-  }
-
   onInputchange(event: Event) {
     const target = event.target as HTMLInputElement;
     const value = target.value;
