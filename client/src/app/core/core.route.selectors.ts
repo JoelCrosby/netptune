@@ -29,7 +29,7 @@ export const selectRouterStateUrl = createSelector(
 export const selectIsBoardGroupsRoute = createSelector(
   selectRouterStateUrl,
   (state: string) => {
-    const match = state.match(/.+\/boards\/.+/) ?? [];
+    const match = state.match(/\/.+\/boards\/.+/) ?? [];
     return match.length > 0;
   }
 );
