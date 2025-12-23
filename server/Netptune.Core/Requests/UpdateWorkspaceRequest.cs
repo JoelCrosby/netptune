@@ -14,4 +14,6 @@ public record UpdateWorkspaceRequest
     public string? Description { get; init; }
 
     public WorkspaceMeta? MetaInfo { get; init; }
+
+    public bool? IsPublic { get; init; }
 }
