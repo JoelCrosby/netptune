@@ -1,0 +1,29 @@
+.form-button {
+  outline-offset: 2px;
+  max-width: 100%;
+  font-weight: 500;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  text-decoration: none;
+  border: 0;
+  appearance: none;
+  background-color: var(--primary);
+  color: var(--background);
+  min-height: 38px;
+
+  &:hover {
+    background-color: var(--primary-hover);
+  }
+
+  &.icon-only {
+    padding: 0.2rem 1.4rem;
+  }
+}

@@ -22,9 +22,11 @@
 @use 'styles/modals';
 @use 'styles/dialogs';
 @use 'styles/animations/menu';
+@use 'styles/controls/button';
 @use 'styles/controls/editor';
 @use 'styles/controls/form-control';
 @use 'styles/controls/form-select';
+@use 'styles/controls/form-toggle';
 @use 'styles/controls/form-autocomplete-chips.scss';
 @use 'styles/controls/activity-menu.scss';
 @use 'styles/controls/cards';
@@ -107,6 +109,8 @@
   --primary: rgba(var(--primary-rgb));
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
+  --primary-hover-rgb: 220, 207, 242;
+  --primary-hover: rgba(var(--primary-hover-rgb));
 
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(--warn-rgb));

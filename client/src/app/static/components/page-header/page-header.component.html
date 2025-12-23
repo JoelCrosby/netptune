@@ -2,14 +2,13 @@
   <div class="header-top-row">
     @if (showSideNavToggle()) {
     <div class="sidenav-toggle">
-      <button
-        mat-icon-button
-        color="accent"
+      <app-button
+        [iconOnly]="true"
         aria-label="Open Menu"
         (click)="onOpenMenu()"
       >
         <mat-icon>menu</mat-icon>
-      </button>
+      </app-button>
     </div>
     }
 
@@ -45,22 +44,21 @@
 
     <div class="header-actions">
       @for (action of secondaryActions(); track action) {
-      <button
-        matRipple
+      <app-button
         class="header-secondary-action"
         (click)="action.click && action.click()"
       >
         {{ action.label }}
-      </button>
+      </app-button>
       } @if (overflowActions().length) {
-      <button
-        matRipple
-        class="header-menu-action"
+      <app-button
+        class="header-actions-overflow"
         aria-label="Actions"
+        [iconOnly]="true"
         [matMenuTriggerFor]="overflowMenu"
       >
         <mat-icon> more_horiz </mat-icon>
-      </button>
+      </app-button>
       }
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
@@ -77,13 +75,12 @@
       </mat-menu>
 
       @if (actionTitle()) {
-      <button
-        matRipple
+      <app-button
         class="header-primary-action"
         (click)="actionClick.emit()"
       >
         {{ actionTitle() }}
-      </button>
+      </app-button>
       }
     </div>
   </div>

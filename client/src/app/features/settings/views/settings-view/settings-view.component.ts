@@ -3,6 +3,7 @@ import { SettingsComponent } from '@settings/components/settings/settings.compon
 import { TagsComponent } from '@settings/components/tags/tags.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { WorkspaceSettings } from '@settings/components/workspace-settings/workspace-settings.component';
 
 @Component({
   templateUrl: './settings-view.component.html',
@@ -12,6 +13,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     PageHeaderComponent,
     SettingsComponent,
     TagsComponent,
+    WorkspaceSettings,
   ],
 })
 export class SettingsViewComponent {}

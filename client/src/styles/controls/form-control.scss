@@ -22,7 +22,7 @@
     margin-top: .4rem;
   }
 
-  label {
+  label:not(.form-toggle) {
     display: block;
     margin-bottom: .4rem;
     font-size: 15px;
