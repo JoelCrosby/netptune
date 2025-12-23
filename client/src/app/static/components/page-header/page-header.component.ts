@@ -5,21 +5,20 @@ import {
   input,
   output,
 } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatMenu,
+  MatMenuContent,
+  MatMenuItem,
+  MatMenuTrigger,
+} from '@angular/material/menu';
+import { RouterLink } from '@angular/router';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { Store } from '@ngrx/store';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
 import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input.component';
-import { MatRipple } from '@angular/material/core';
-import {
-  MatMenuTrigger,
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-} from '@angular/material/menu';
 
 @Component({
   selector: 'app-page-header',
@@ -27,15 +26,14 @@ import {
   styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIconButton,
     MatIcon,
     RouterLink,
     InlineEditInputComponent,
-    MatRipple,
     MatMenuTrigger,
     MatMenu,
     MatMenuContent,
     MatMenuItem,
+    ButtonComponent,
   ],
 })
 export class PageHeaderComponent {
