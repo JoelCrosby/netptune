@@ -12,18 +12,15 @@ public static class AuthorizationServiceCollectionExtensions
 {
     public static void AddNeptuneAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
-        {
-            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        services.AddAuthorizationBuilder()
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                .Build();
-
-            options.AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
+                .Build())
+            .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
                 .Build());
-        });
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, WorkspaceResourceAuthorizationHandler>();

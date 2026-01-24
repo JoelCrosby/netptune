@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-using Netptune.App;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.IntegrationTests.TestServices;
@@ -34,7 +33,7 @@ public sealed class DatabaseCollection : ICollectionFixture<NetptuneApiFactory>
     // ICollectionFixture<> interfaces.
 }
 
-public sealed class NetptuneApiFactory : WebApplicationFactory<Startup>, IAsyncLifetime
+public sealed class NetptuneApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder().Build();
     private readonly RedisContainer CacheContainer = new RedisBuilder().Build();

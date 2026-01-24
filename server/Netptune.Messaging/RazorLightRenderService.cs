@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +36,9 @@ public class RazorLightRenderService : IEmailRenderService
     private static async Task<string> GetTemplateFromEmbeddedResource(string resourceName)
     {
         var assembly = typeof(RazorLightRenderService).GetTypeInfo().Assembly;
-        var names = assembly.GetManifestResourceNames();
+        var names = assembly.GetManifestResourceNames().ToList();
 
-        if (!names.Contains(resourceName))
+        if (names.Contains(resourceName))
         {
             throw new Exception($"Unable to find embedded resource {resourceName} in assembly {assembly.FullName}.");
         }
