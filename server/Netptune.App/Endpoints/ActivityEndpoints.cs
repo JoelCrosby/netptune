@@ -11,9 +11,9 @@ namespace Netptune.App.Endpoints;
 
 public static class ActivityEndpoints
 {
-    public static RouteGroupBuilder Map(this WebApplication app)
+    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
     {
-        var group = app.MapGroup("activity")
+        var group = builder.MapGroup("activity")
             .RequireAuthorization();
 
         group.MapGet("/", HandleGet);

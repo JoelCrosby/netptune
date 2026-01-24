@@ -64,7 +64,7 @@ public class BoardServiceUnitTests
         var groups = new List<BoardViewGroup> { AutoFixtures.BoardViewGroup };
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
-        var filter = new BoardGroupsFilter();
+        var filter = BoardGroupsFilter.Empty();
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId).Returns(boardId);
@@ -87,7 +87,7 @@ public class BoardServiceUnitTests
         var groups = new List<BoardViewGroup> { AutoFixtures.BoardViewGroup };
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
-        var filter = new BoardGroupsFilter();
+        var filter = BoardGroupsFilter.Empty();
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId).ReturnsNull();
@@ -110,7 +110,7 @@ public class BoardServiceUnitTests
         var groups = new List<BoardViewGroup> { AutoFixtures.BoardViewGroup };
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
-        var filter = new BoardGroupsFilter();
+        var filter = BoardGroupsFilter.Empty();
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId).Returns(boardId);
@@ -133,7 +133,7 @@ public class BoardServiceUnitTests
         var boardViewModel = AutoFixtures.BoardViewModel;
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
-        var filter = new BoardGroupsFilter();
+        var filter = BoardGroupsFilter.Empty();
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId).Returns(boardId);

@@ -1,14 +1,20 @@
-using System.Collections.Generic;
-
 namespace Netptune.Core.Requests;
 
 public record BoardGroupsFilter
 {
-    public List<string> Users { get; set; } = new();
+    public required string[] Users { get; init; }
 
-    public List<string> Tags { get; set; } = new();
+    public required string[] Tags { get; init; }
 
-    public bool Flagged { get; set; }
+    public bool? Flagged { get; init; }
 
-    public string? Term { get; set; }
+    public string? Term { get; init; }
+
+    public static BoardGroupsFilter Empty()
+    {
+        return new BoardGroupsFilter
+        {
+            Tags = [], Users = [],
+        };
+    }
 }
