@@ -9,7 +9,7 @@ using Netptune.Core.ViewModels.Activity;
 
 using Xunit;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
 public class ActivityEndpointTests

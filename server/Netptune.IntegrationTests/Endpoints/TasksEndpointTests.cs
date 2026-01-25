@@ -10,7 +10,7 @@ using Netptune.Core.ViewModels.ProjectTasks;
 
 using Xunit;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
 public sealed class TasksEndpointTests

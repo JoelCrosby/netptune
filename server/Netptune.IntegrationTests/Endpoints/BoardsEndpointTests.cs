@@ -10,7 +10,7 @@ using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
 public sealed class BoardsEndpointTests

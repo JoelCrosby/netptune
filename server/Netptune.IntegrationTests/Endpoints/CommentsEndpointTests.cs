@@ -9,7 +9,7 @@ using Netptune.Core.ViewModels.Comments;
 
 using Xunit;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
 public sealed class CommentsEndpointTests

@@ -5,32 +5,42 @@ using Xunit;
 
 using FluentAssertions;
 
-using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
-public sealed class BoardGroupsEndpointTests
+public sealed class ProjectsEndpointTests
 {
     private readonly HttpClient Client;
 
-    public BoardGroupsEndpointTests(NetptuneApiFactory factory)
+    public ProjectsEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }
 
     [Fact]
-    public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
+    public async Task Get_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.GetAsync("api/boardgroups/1");
+        var response = await Client.GetAsync("api/projects");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<BoardGroup>();
+        var result = await response.Content.ReadFromJsonAsync<List<ProjectViewModel>>();
+
+        result!.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var response = await Client.GetAsync("api/projects/neo");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ProjectViewModel>();
 
         result!.Should().NotBeNull();
     }
@@ -38,45 +48,44 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.GetAsync("api/boardgroups/1000");
+        var response = await Client.GetAsync("api/projects/1000");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Fact]
+     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = new UpdateBoardGroupRequest
+        var request = new UpdateProjectRequest
         {
-            BoardGroupId = 1,
+            Id = 1,
             Name = "Updated name",
-            SortOrder = 10,
+            Description = "Updated Description",
         };
 
-        var response = await Client.PutAsJsonAsync("api/boardgroups", request);
+        var response = await Client.PutAsJsonAsync("api/projects", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
 
         result!.IsSuccess.Should().BeTrue();
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
-        result.Payload.SortOrder.Should().Be(request.SortOrder);
+        result.Payload!.Description.Should().Be(request.Description);
     }
 
     [Fact]
     public async Task Update_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var request = new UpdateBoardGroupRequest
+        var request = new UpdateProjectRequest
         {
-            BoardGroupId = 1000,
+            Id = 1000,
             Name = "Updated name",
-            SortOrder = 10,
         };
 
-        var response = await Client.PutAsJsonAsync("api/boardgroups", request);
+        var response = await Client.PutAsJsonAsync("api/projects", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -84,38 +93,40 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = new AddBoardGroupRequest
+        var request = new AddProjectRequest
         {
             Name = "new name",
-            SortOrder = 2,
-            Type = BoardGroupType.Basic,
-            BoardId = 1,
+            Description = "project description",
+            MetaInfo = new ()
+            {
+                Color = "#ffffff",
+            },
         };
 
-        var response = await Client.PostAsJsonAsync("api/boardgroups", request);
+        var response = await Client.PostAsJsonAsync("api/projects", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
 
         result!.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
-        result.Payload.SortOrder.Should().Be(request.SortOrder);
-        result.Payload.Type.Should().Be(request.Type);
-        result.Payload.BoardId.Should().Be(request.BoardId);
+        result.Payload!.Description.Should().Be(request.Description);
     }
 
     [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
-        var request = new AddBoardGroupRequest
+        var request = new AddProjectRequest
         {
-            SortOrder = 2,
-            Type = BoardGroupType.Basic,
-            BoardId = 1,
+            Description = "project description",
+            MetaInfo = new ()
+            {
+                Color = "#ffffff",
+            },
         };
 
-        var response = await Client.PostAsJsonAsync("api/boardgroups", request);
+        var response = await Client.PostAsJsonAsync("api/projects", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -123,7 +134,7 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.DeleteAsync("api/boardgroups/3");
+        var response = await Client.DeleteAsync("api/projects/3");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -135,7 +146,7 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
-        var response = await Client.DeleteAsync("api/boardgroups/1000");
+        var response = await Client.DeleteAsync("api/projects/1000");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
