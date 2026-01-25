@@ -8,7 +8,7 @@ using Netptune.Core.Responses.Common;
 
 using Xunit;
 
-namespace Netptune.IntegrationTests.Controllers;
+namespace Netptune.IntegrationTests.Endpoints;
 
 [Collection(Collections.Database)]
 public sealed class StorageEndpointTests
