@@ -58,7 +58,7 @@ public sealed class TagsEndpointTests
     {
         var request = new UpdateTagRequest
         {
-            CurrentValue = "Go0",
+            CurrentValue = "Go",
             NewValue = "Update value",
         };
 

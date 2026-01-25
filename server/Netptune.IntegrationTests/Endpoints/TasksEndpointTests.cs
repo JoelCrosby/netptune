@@ -233,7 +233,7 @@ public sealed class TasksEndpointTests
         {
             CurrentIndex = 0,
             PreviousIndex = 0,
-            TaskId = 1,
+            TaskId = 7,
             NewGroupId = 1,
             OldGroupId = 0,
         };
