@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 using Netptune.Core.Enums;
@@ -16,14 +17,14 @@ public static class ActivityEndpoints
         var group = builder.MapGroup("activity")
             .RequireAuthorization();
 
-        group.MapGet("/", HandleGet);
+        group.MapGet("/{entityType}/{id}", HandleGet);
 
         return group;
     }
 
-    public static async Task<IResult> HandleGet(IActivityService activityService, EntityType entityType, int entityId)
+    public static async Task<IResult> HandleGet(IActivityService activityService, EntityType entityType, [FromRoute] int id)
     {
-        var result = await activityService.GetActivities(entityType, entityId);
+        var result = await activityService.GetActivities(entityType, id);
 
         return Results.Ok(result);
     }

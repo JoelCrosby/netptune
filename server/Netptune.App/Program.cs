@@ -113,6 +113,8 @@ services.AddNetptuneMessageQueue(options =>
     options.ConnectionString = zeroMqConnectionString;
 });
 
+services.AddValidation();
+
 var app = builder.Build();
 
 app.UseForwardedHeaders();

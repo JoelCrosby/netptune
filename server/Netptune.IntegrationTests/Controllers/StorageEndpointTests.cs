@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 
 using FluentAssertions;
@@ -11,11 +11,11 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class StorageControllerTests
+public sealed class StorageEndpointTests
 {
     private readonly HttpClient Client;
 
-    public StorageControllerTests(NetptuneApiFactory factory)
+    public StorageEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }

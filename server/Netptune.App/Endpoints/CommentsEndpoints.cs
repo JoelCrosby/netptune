@@ -30,7 +30,7 @@ public static class CommentsEndpoints
     {
         var result = await commentService.GetCommentsForTask(systemId);
 
-        if (result is null) return Results.NotFound();
+        if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -41,7 +41,7 @@ public static class CommentsEndpoints
     {
         var result = await commentService.AddCommentToTask(request);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -52,7 +52,7 @@ public static class CommentsEndpoints
     {
         var result = await commentService.Delete(id);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }

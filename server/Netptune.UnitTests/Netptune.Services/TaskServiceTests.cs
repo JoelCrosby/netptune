@@ -426,7 +426,7 @@ public class TaskServiceTests
             SortOrder = request.SortOrder ?? 8,
         };
 
-        UnitOfWork.Tasks.GetAsync(request.Id!.Value).Returns(task);
+        UnitOfWork.Tasks.GetAsync(request.Id).Returns(task);
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>()).Returns(AutoFixtures.BoardGroups);
         UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);
@@ -450,7 +450,7 @@ public class TaskServiceTests
             .Build<UpdateProjectTaskRequest>()
             .Create();
 
-        UnitOfWork.Tasks.GetAsync(request.Id!.Value).ReturnsNull();
+        UnitOfWork.Tasks.GetAsync(request.Id).ReturnsNull();
 
         var result = await Service.Update(request);
 
@@ -472,7 +472,7 @@ public class TaskServiceTests
             SortOrder = request.SortOrder ?? 8,
         };
 
-        UnitOfWork.Tasks.GetAsync(request.Id!.Value).Returns(task);
+        UnitOfWork.Tasks.GetAsync(request.Id).Returns(task);
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>()).Returns(AutoFixtures.BoardGroups);
         UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);

@@ -7,8 +7,7 @@ namespace Netptune.Core.Requests;
 
 public record UpdateProjectTaskRequest
 {
-    [Required]
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
     public string? Name { get; set; }
 

@@ -143,12 +143,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
 
     public async Task<ClientResponse<TaskViewModel>> Update(UpdateProjectTaskRequest request)
     {
-        if (request.Id is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
-
-        var result = await TaskRepository.GetAsync(request.Id.Value);
+        var result = await TaskRepository.GetAsync(request.Id);
 
         if (result is null)
         {
