@@ -2,7 +2,6 @@ using System;
 using System.IO;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,7 +39,7 @@ var zeroMqConnectionString = configuration.GetNetptuneZeroMqConnectionString();
 
 services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder => builder
+    options.AddDefaultPolicy(policy => policy
         .WithOrigins(configuration.GetCorsOrigins())
         .AllowAnyHeader()
         .AllowAnyMethod()
@@ -103,9 +102,9 @@ services.AddS3StorageService(options =>
     options.SecretAccessKey = configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
-services.AddSpaStaticFiles(configuration =>
+services.AddSpaStaticFiles(options =>
 {
-    configuration.RootPath = Path.Join(environment.WebRootPath, "dist");
+    options.RootPath = Path.Join(environment.WebRootPath, "dist");
 });
 
 services.AddNetptuneMessageQueue(options =>
@@ -149,13 +148,10 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map SignalR Hub
 app.MapHub<BoardHub>(BoardHub.Path);
 
-// Create base API route group
 var api = app.MapGroup("/api");
 
-// Map Minimal API Endpoints
 ActivityEndpoints.Map(api);
 AuthEndpoints.Map(api);
 BoardGroupsEndpoints.Map(api);
