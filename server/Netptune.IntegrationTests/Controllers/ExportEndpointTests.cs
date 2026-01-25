@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 using FluentAssertions;
 
@@ -7,11 +7,11 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class ExportControllerTests
+public sealed class ExportEndpointTests
 {
     private readonly HttpClient Client;
 
-    public ExportControllerTests(NetptuneApiFactory factory)
+    public ExportEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }

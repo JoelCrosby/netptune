@@ -101,7 +101,7 @@ public static class BoardsEndpoints
     {
         var result = await boardService.Delete(id);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }

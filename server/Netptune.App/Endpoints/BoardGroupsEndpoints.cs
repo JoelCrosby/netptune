@@ -62,7 +62,7 @@ public static class BoardGroupsEndpoints
     {
         var result = await boardGroupService.Delete(id);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }

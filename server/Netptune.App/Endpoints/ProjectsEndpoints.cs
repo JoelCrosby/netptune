@@ -40,7 +40,7 @@ public static class ProjectsEndpoints
     {
         var result = await projectService.GetProject(key);
 
-        if (result is null) return Results.NotFound();
+        if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -51,7 +51,7 @@ public static class ProjectsEndpoints
     {
         var result = await projectService.Update(request);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -71,7 +71,7 @@ public static class ProjectsEndpoints
     {
         var result = await projectService.Delete(id);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }

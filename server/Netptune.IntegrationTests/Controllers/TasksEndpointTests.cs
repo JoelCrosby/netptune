@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 
 using FluentAssertions;
@@ -13,11 +13,11 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class TasksControllerTests
+public sealed class TasksEndpointTests
 {
     private readonly HttpClient Client;
 
-    public TasksControllerTests(NetptuneApiFactory factory)
+    public TasksEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }
@@ -137,7 +137,7 @@ public sealed class TasksControllerTests
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

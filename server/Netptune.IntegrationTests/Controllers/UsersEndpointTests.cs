@@ -13,11 +13,11 @@ using Xunit;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class UsersControllerTests
+public sealed class UsersEndpointTests
 {
     private readonly HttpClient Client;
 
-    public UsersControllerTests(NetptuneApiFactory factory)
+    public UsersEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }

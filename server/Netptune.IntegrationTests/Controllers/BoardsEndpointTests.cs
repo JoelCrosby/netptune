@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 
 using Xunit;
@@ -13,11 +13,11 @@ using Netptune.Core.ViewModels.Boards;
 namespace Netptune.IntegrationTests.Controllers;
 
 [Collection(Collections.Database)]
-public sealed class BoardsControllerTests
+public sealed class BoardsEndpointTests
 {
     private readonly HttpClient Client;
 
-    public BoardsControllerTests(NetptuneApiFactory factory)
+    public BoardsEndpointTests(NetptuneApiFactory factory)
     {
         Client = factory.CreateNetptuneClient();
     }

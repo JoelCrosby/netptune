@@ -46,7 +46,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.GetTask(id);
 
-        if (result is null) return Results.NotFound();
+        if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -57,7 +57,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.GetTaskDetail(systemId);
 
-        if (result is null) return Results.NotFound();
+        if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -68,7 +68,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.Update(request);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -88,7 +88,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.Delete(ids);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -99,7 +99,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.Delete(id);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -110,7 +110,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.MoveTaskInBoardGroup(request);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
@@ -121,7 +121,7 @@ public static class TasksEndpoints
     {
         var result = await taskService.MoveTasksToGroup(request);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
