@@ -35,8 +35,8 @@ public sealed class DatabaseCollection : ICollectionFixture<NetptuneApiFactory>
 
 public sealed class NetptuneApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder().Build();
-    private readonly RedisContainer CacheContainer = new RedisBuilder().Build();
+    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:15.1").Build();
+    private readonly RedisContainer CacheContainer = new RedisBuilder("redis:7.0").Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
