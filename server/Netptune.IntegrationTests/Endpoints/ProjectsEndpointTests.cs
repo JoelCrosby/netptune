@@ -11,14 +11,13 @@ using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-[Collection(Collections.Database)]
 public sealed class ProjectsEndpointTests
 {
     private readonly HttpClient Client;
 
-    public ProjectsEndpointTests(NetptuneApiFactory factory)
+    public ProjectsEndpointTests(NetptuneFixture fixture)
     {
-        Client = factory.CreateNetptuneClient();
+        Client = fixture.CreateNetptuneClient();
     }
 
     [Fact]

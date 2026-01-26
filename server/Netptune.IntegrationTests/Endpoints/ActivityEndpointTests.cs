@@ -11,20 +11,12 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-[Collection(Collections.Database)]
-public class ActivityEndpointTests
+public class ActivityEndpointTests(NetptuneFixture fixture)
 {
-    private readonly HttpClient Client;
-
-    public ActivityEndpointTests(NetptuneApiFactory factory)
-    {
-        Client = factory.CreateNetptuneClient();
-    }
-
     [Fact]
     public async Task Get_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.GetAsync($"api/activity/{EntityType.Task}/1");
+        var response = await fixture.Client.GetAsync($"api/activity/{EntityType.Task}/1");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 

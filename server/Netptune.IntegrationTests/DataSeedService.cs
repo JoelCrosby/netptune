@@ -136,16 +136,20 @@ internal sealed class DataSeedService : IHostedService
             .SelectMany(list => list)
             .ToList();
 
-        var tasks = new Faker<ProjectTask>()
-            .RuleFor(p => p.Name, f => f.System.Exception().Message)
-            .RuleFor(p => p.Description, f => f.System.Exception().StackTrace)
-            .RuleFor(p => p.Status, f => f.PickRandom<ProjectTaskStatus>())
-            .RuleFor(p => p.IsFlagged, f => f.Random.Bool())
-            .RuleFor(p => p.Owner, f => f.PickRandom(users))
-            .RuleFor(p => p.Project, f => f.PickRandom(projects))
-            .RuleFor(p => p.ProjectScopeId, f => f.IndexFaker)
-            .RuleFor(p => p.Workspace, (_, p) => p.Project!.Workspace)
-            .Generate(8);
+        var tasks = projects.SelectMany(p =>
+        {
+            return new Faker<ProjectTask>()
+                .RuleFor(t => t.Name, f => f.System.Exception().Message)
+                .RuleFor(t => t.Description, f => f.System.Exception().StackTrace)
+                .RuleFor(t => t.Status, f => f.PickRandom<ProjectTaskStatus>())
+                .RuleFor(t => t.IsFlagged, f => f.Random.Bool())
+                .RuleFor(t => t.Owner, f => f.PickRandom(users))
+                .RuleFor(t => t.Project, _ => p)
+                .RuleFor(t => t.ProjectScopeId, f => f.IndexFaker)
+                .RuleFor(t => t.Workspace, _ => p.Workspace)
+                .Generate(8);
+        })
+            .ToList();
 
         try
         {
@@ -162,15 +166,19 @@ internal sealed class DataSeedService : IHostedService
 
             await context.SaveChangesAsync(ct);
 
-            var activityLogs = new Faker<ActivityLog>()
-                .RuleFor(p => p.EntityType, _ => EntityType.Task)
-                .RuleFor(p => p.TaskId, f => f.PickRandom(tasks).Id)
-                .RuleFor(p => p.EntityId, (_, p) => p.TaskId)
-                .RuleFor(p => p.Time, f => f.Date.Recent())
-                .RuleFor(p => p.Type, f => f.PickRandom<ActivityType>())
-                .RuleFor(p => p.User, f => f.PickRandom(users))
-                .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
-                .Generate(32);
+            var activityLogs = tasks.SelectMany(t =>
+            {
+                return new Faker<ActivityLog>()
+                    .RuleFor(p => p.EntityType, _ => EntityType.Task)
+                    .RuleFor(p => p.TaskId, _ => t.Id)
+                    .RuleFor(p => p.EntityId, _ => t.Id)
+                    .RuleFor(p => p.Time, f => f.Date.Recent())
+                    .RuleFor(p => p.Type, f => f.PickRandom<ActivityType>())
+                    .RuleFor(p => p.User, f => f.PickRandom(users))
+                    .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+                    .Generate(32);
+            })
+                .ToList();
 
             var comments = new Faker<Comment>()
                 .RuleFor(p => p.Body, f => f.System.Exception().Message)
@@ -183,7 +191,7 @@ internal sealed class DataSeedService : IHostedService
             var tags = new Faker<Tag>()
                 .RuleFor(p => p.Owner, f => f.PickRandom(users))
                 .RuleFor(p => p.WorkspaceId, f => f.PickRandom(tasks).WorkspaceId)
-                .RuleFor(p => p.Name, f => f.PickRandom(Tags))
+                .RuleFor(p => p.Name, f => Tags.ElementAt(f.IndexFaker))
                 .Generate(Tags.Count);
 
             var taskTags = new Faker<ProjectTaskTag>()

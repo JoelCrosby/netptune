@@ -24,9 +24,7 @@ public static class CommentsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetCommentsForTask(
-        ICommentService commentService,
-        string systemId)
+    public static async Task<IResult> HandleGetCommentsForTask(ICommentService commentService, string systemId)
     {
         var result = await commentService.GetCommentsForTask(systemId);
 
@@ -35,9 +33,7 @@ public static class CommentsEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePostTaskComment(
-        ICommentService commentService,
-        AddCommentRequest request)
+    public static async Task<IResult> HandlePostTaskComment(ICommentService commentService, AddCommentRequest request)
     {
         var result = await commentService.AddCommentToTask(request);
 
@@ -46,9 +42,7 @@ public static class CommentsEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(
-        ICommentService commentService,
-        int id)
+    public static async Task<IResult> HandleDelete(ICommentService commentService, int id)
     {
         var result = await commentService.Delete(id);
 

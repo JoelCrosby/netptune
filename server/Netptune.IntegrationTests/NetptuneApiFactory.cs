@@ -2,7 +2,6 @@ using System.Net;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
+using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;
 
@@ -18,57 +18,59 @@ using Testcontainers.Redis;
 
 using Xunit;
 
+[assembly: AssemblyFixture(typeof(NetptuneFixture))]
+
 namespace Netptune.IntegrationTests;
 
-internal sealed class Collections
-{
-    public const string Database = "Database collection";
-}
-
-[CollectionDefinition(Collections.Database)]
-public sealed class DatabaseCollection : ICollectionFixture<NetptuneApiFactory>
-{
-    // This class has no code, and is never created. Its purpose is simply
-    // to be the place to apply [CollectionDefinition] and all the
-    // ICollectionFixture<> interfaces.
-}
-
-public sealed class NetptuneApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class NetptuneFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:15.1").Build();
     private readonly RedisContainer CacheContainer = new RedisBuilder("redis:7.0").Build();
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    private WebApplicationFactory<Program> WebApplicationFactory { get; }
+
+    public HttpClient Client { get; }
+
+    public NetptuneFixture()
     {
+        CacheContainer.StartAsync().Wait();
+        DbContainer.StartAsync().Wait();
+
         LoadEnvironmentVariables();
 
         Environment.SetEnvironmentVariable("DATABASE_URL", DbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
 
-        builder.ConfigureTestServices(services =>
-        {
-            services.Replace<IStorageService, TestStorageService>();
-
-            services.AddAuthorization(options =>
+        WebApplicationFactory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
             {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
-                    .Build();
+                builder.ConfigureTestServices(services =>
+                {
+                    services.Replace<IStorageService, TestStorageService>();
 
-                options.AddPolicy(NetptunePolicies.Workspace, config => config.RequireAuthenticatedUser()
-                    .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
-                    .AddRequirements(new WorkspaceRequirement())
-                    .Build());
+                    services.AddAuthorization(options =>
+                    {
+                        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
+                            .Build();
+
+                        options.AddPolicy(NetptunePolicies.Workspace, config => config.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
+                            .AddRequirements(new WorkspaceRequirement())
+                            .Build());
+                    });
+
+                    services
+                        .AddAuthentication(TestAuthenticationHandler.AuthenticationScheme)
+                        .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
+                            TestAuthenticationHandler.AuthenticationScheme, _ => { });
+
+                    services.AddHostedService<DataSeedService>();
+                });
             });
 
-            services
-                .AddAuthentication(TestAuthenticationHandler.AuthenticationScheme)
-                .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
-                    TestAuthenticationHandler.AuthenticationScheme, _ => { });
-
-            services.AddHostedService<DataSeedService>();
-        });
+        Client = CreateNetptuneClient();
     }
 
     private static void LoadEnvironmentVariables()
@@ -83,21 +85,22 @@ public sealed class NetptuneApiFactory : WebApplicationFactory<Program>, IAsyncL
         Environment.SetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY", "test");
     }
 
-    public async Task InitializeAsync()
-    {
-        await CacheContainer.StartAsync().ConfigureAwait(false);
-        await DbContainer.StartAsync().ConfigureAwait(false);
-    }
-
-    public new async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await CacheContainer.DisposeAsync().ConfigureAwait(false);
         await DbContainer.DisposeAsync().ConfigureAwait(false);
+
+        await WebApplicationFactory.DisposeAsync().ConfigureAwait(false);
+    }
+
+    public ValueTask InitializeAsync()
+    {
+        return ValueTask.CompletedTask;
     }
 
     public HttpClient CreateNetptuneClient()
     {
-        var client = CreateDefaultClient(new TestExceptionHttpHandler());
+        var client = WebApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
 
         client.DefaultRequestHeaders.Authorization = new ("TestScheme");
         client.DefaultRequestHeaders.Add("workspace", "netptune");
