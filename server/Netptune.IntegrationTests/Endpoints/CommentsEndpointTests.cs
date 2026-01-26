@@ -11,14 +11,13 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-[Collection(Collections.Database)]
 public sealed class CommentsEndpointTests
 {
     private readonly HttpClient Client;
 
-    public CommentsEndpointTests(NetptuneApiFactory factory)
+    public CommentsEndpointTests(NetptuneFixture fixture)
     {
-        Client = factory.CreateNetptuneClient();
+        Client = fixture.CreateNetptuneClient();
     }
 
     [Fact]

@@ -5,11 +5,11 @@ namespace Netptune.Core.Requests;
 public record AddTagRequest
 {
     [Required]
-    public string Tag { get; set; } = null!;
+    public required string Tag { get; init; }
 }
 
 public record AddTagToTaskRequest : AddTagRequest
 {
     [Required]
-    public string SystemId { get; set; } = null!;
+    public required string SystemId { get; init; }
 }

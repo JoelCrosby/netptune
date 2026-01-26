@@ -11,14 +11,13 @@ using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-[Collection(Collections.Database)]
 public sealed class TagsEndpointTests
 {
     private readonly HttpClient Client;
 
-    public TagsEndpointTests(NetptuneApiFactory factory)
+    public TagsEndpointTests(NetptuneFixture fixture)
     {
-        Client = factory.CreateNetptuneClient();
+        Client = fixture.CreateNetptuneClient();
     }
 
     [Fact]
@@ -109,9 +108,7 @@ public sealed class TagsEndpointTests
     [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
-        var request = new AddTagRequest();
-
-        var response = await Client.PostAsJsonAsync("api/tags", request);
+        var response = await Client.PostAsJsonAsync("api/tags", new {});
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

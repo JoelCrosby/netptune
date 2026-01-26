@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 using Microsoft.AspNetCore.Builder;
@@ -29,15 +28,13 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Services(services)
     .Enrich.FromLogContext());
 
-var services = builder.Services;
 var configuration = builder.Configuration;
-var environment = builder.Environment;
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
 var zeroMqConnectionString = configuration.GetNetptuneZeroMqConnectionString();
 
-services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy => policy
         .WithOrigins(configuration.GetCorsOrigins())
@@ -48,23 +45,23 @@ services.AddCors(options =>
     );
 });
 
-services.Configure<ForwardedHeadersOptions>(options =>
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
-services.AddSingleton<BuildInfo>();
+builder.Services.AddSingleton<BuildInfo>();
 
-services.AddSignalR(options =>
+builder.Services.AddSignalR(options =>
 {
-    options.EnableDetailedErrors = environment.IsDevelopment();
+    options.EnableDetailedErrors = builder.Environment.IsDevelopment();
 });
 
-services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
-services.AddNeptuneAuthorization();
-services.AddNeptuneAuthentication(options =>
+builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
+builder.Services.AddNeptuneAuthorization();
+builder.Services.AddNeptuneAuthentication(options =>
 {
     options.Issuer = configuration.GetRequiredValue("Tokens:Issuer");
     options.Audience = configuration.GetRequiredValue("Tokens:Audience");
@@ -73,28 +70,28 @@ services.AddNeptuneAuthentication(options =>
     options.GitHubSecret = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
 });
 
-services.AddNetptuneRedis(options =>
+builder.Services.AddNetptuneRedis(options =>
 {
     options.Connection = redisConnectionString;
 });
 
-services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
-services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
+builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
+builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
-services.AddNetptuneServices(options =>
+builder.Services.AddNetptuneServices(options =>
 {
     options.ClientOrigin = configuration.GetRequiredValue("Origin");
-    options.ContentRootPath = environment.ContentRootPath;
+    options.ContentRootPath = builder.Environment.ContentRootPath;
 });
 
-services.AddSendGridEmailService(options =>
+builder.Services.AddSendGridEmailService(options =>
 {
     options.SendGridApiKey = configuration.GetEnvironmentVariable("SEND_GRID_API_KEY");
     options.DefaultFromAddress = configuration.GetRequiredValue("Email:DefaultFromAddress");
     options.DefaultFromDisplayName = configuration.GetRequiredValue("Email:DefaultFromDisplayName");
 });
 
-services.AddS3StorageService(options =>
+builder.Services.AddS3StorageService(options =>
 {
     options.BucketName = configuration.GetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME");
     options.Region = configuration.GetEnvironmentVariable("NETPTUNE_S3_REGION");
@@ -102,23 +99,23 @@ services.AddS3StorageService(options =>
     options.SecretAccessKey = configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
-services.AddSpaStaticFiles(options =>
+builder.Services.AddSpaStaticFiles(options =>
 {
-    options.RootPath = Path.Join(environment.WebRootPath, "dist");
+    options.RootPath = Path.Join(builder.Environment.WebRootPath, "dist");
 });
 
-services.AddNetptuneMessageQueue(options =>
+builder.Services.AddNetptuneMessageQueue(options =>
 {
     options.ConnectionString = zeroMqConnectionString;
 });
 
-services.AddValidation();
+builder.Services.AddValidation();
 
 var app = builder.Build();
 
 app.UseForwardedHeaders();
 
-if (environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 
@@ -169,15 +166,4 @@ WorkspacesEndpoints.Map(api);
 
 app.UseSpa(_ => { });
 
-try
-{
-    app.Run();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Host terminated unexpectedly");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
+app.Run();
