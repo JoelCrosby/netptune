@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
+using Netptune.Services.Authentication;
 using Netptune.Services.Authorization.Handlers;
 using Netptune.Services.Authorization.Requirements;
 
@@ -20,9 +21,14 @@ public static class AuthorizationServiceCollectionExtensions
             .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
+                .Build())
+            .AddPolicy(NetptunePolicies.Github, builder => builder
+                .AddAuthenticationSchemes(AuthenticationSchemes.Github)
+                .AddRequirements(new GithubRequirement())
                 .Build());
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, WorkspaceResourceAuthorizationHandler>();
+        services.AddScoped<IAuthorizationHandler, GithubAuthorizationHandler>();
     }
 }

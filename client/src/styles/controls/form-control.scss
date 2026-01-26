@@ -42,6 +42,10 @@
     max-width: inherit;
   }
 
+  textarea {
+    line-height: 1.6rem !important;
+  }
+
   input,
   textarea,
   select,
@@ -52,8 +56,8 @@
     background-color: transparent;
     color: inherit;
     outline: none;
-    line-height: 2.5rem !important;
-    font-size: inherit !important;
+    line-height: 2.5rem;
+    font-size: inherit;
     font-weight: inherit;
     font-family: inherit;
     width: 100%;
@@ -65,10 +69,6 @@
 
   .mat-icon {
     padding: 0 .8rem;
-  }
-
-  textarea {
-    line-height: 1.5rem;
   }
 }
 
