@@ -103,7 +103,6 @@ public static class AuthenticationServiceCollectionExtensions
             options.Scope.Add("user:email");
             options.SaveTokens = true;
             options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-            options.SignInScheme = AuthenticationSchemes.Github;
             options.Events.OnRedirectToAuthorizationEndpoint = context =>
             {
                 var original = context.RedirectUri;
