@@ -26,8 +26,14 @@ export class AuthInterceptor implements HttpInterceptor {
       first(),
       switchMap(({ token, workspaceId }) => {
         if (!this.isApiRequest(req)) {
+          console.log('NOT API: ', req.url);
+
           return next.handle(req);
         }
+
+        req = req.clone({
+          url: environment.apiEndpoint + req.url,
+        });
 
         const workspaceRoute = this.getWorkspaceRoute();
         const workspaceHeader = workspaceId ?? workspaceRoute;
@@ -62,7 +68,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   isApiRequest<T>(req: HttpRequest<T>): boolean {
-    return req.url.startsWith(environment.apiEndpoint);
+    return req.url.startsWith('api/');
   }
 
   getWorkspaceRoute(): string | null {

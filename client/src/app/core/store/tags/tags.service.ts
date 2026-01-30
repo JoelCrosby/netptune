@@ -8,7 +8,6 @@ import {
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { UpdateTagRequest } from '@core/models/requests/update-tag-request';
 import { Tag } from '@core/models/tag';
-import { environment } from '@env/environment';
 import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
 
 @Injectable({
@@ -18,53 +17,34 @@ export class TagsService {
   private http = inject(HttpClient);
 
   get() {
-    return this.http.get<Tag[]>(environment.apiEndpoint + 'api/tags/workspace');
+    return this.http.get<Tag[]>('api/tags/workspace');
   }
 
   getForTask(systemId: string) {
-    return this.http.get<Tag[]>(
-      environment.apiEndpoint + `api/tags/task/${systemId}`
-    );
+    return this.http.get<Tag[]>(`api/tags/task/${systemId}`);
   }
 
   post(request: AddTagRequest) {
-    return this.http.post<ClientResponse<Tag>>(
-      environment.apiEndpoint + `api/tags`,
-      request
-    );
+    return this.http.post<ClientResponse<Tag>>(`api/tags`, request);
   }
 
   postToTask(request: AddTagToTaskRequest) {
-    return this.http.post<ClientResponse<Tag>>(
-      environment.apiEndpoint + `api/tags/task`,
-      request
-    );
+    return this.http.post<ClientResponse<Tag>>(`api/tags/task`, request);
   }
 
   delete(request: DeleteTagsRequest) {
-    return this.http.request<ClientResponse>(
-      'DELETE',
-      environment.apiEndpoint + `api/tags`,
-      {
-        body: request,
-      }
-    );
+    return this.http.request<ClientResponse>('DELETE', `api/tags`, {
+      body: request,
+    });
   }
 
   deleteFromTask(request: DeleteTagFromTaskRequest) {
-    return this.http.request<ClientResponse>(
-      'DELETE',
-      environment.apiEndpoint + `api/tags/task`,
-      {
-        body: request,
-      }
-    );
+    return this.http.request<ClientResponse>('DELETE', `api/tags/task`, {
+      body: request,
+    });
   }
 
   patch(request: UpdateTagRequest) {
-    return this.http.patch<ClientResponse<Tag>>(
-      environment.apiEndpoint + `api/tags`,
-      request
-    );
+    return this.http.patch<ClientResponse<Tag>>(`api/tags`, request);
   }
 }

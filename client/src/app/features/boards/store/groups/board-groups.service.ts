@@ -8,7 +8,6 @@ import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-m
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
-import { environment } from '@env/environment';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -18,7 +17,7 @@ export class BoardGroupsService {
 
   get(boardId: string, params: Params) {
     return this.http.get<ClientResponse<BoardView>>(
-      environment.apiEndpoint + `api/boards/view/${boardId}`,
+      `api/boards/view/${boardId}`,
       {
         params,
       }
@@ -27,40 +26,35 @@ export class BoardGroupsService {
 
   post(request: AddBoardGroupRequest) {
     return this.http.post<ClientResponse<BoardGroupViewModel>>(
-      environment.apiEndpoint + 'api/boardgroups',
+      'api/boardgroups',
       request
     );
   }
 
   moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
     return this.http.post<ClientResponse>(
-      environment.apiEndpoint + 'api/tasks/move-task-in-group',
+      'api/tasks/move-task-in-group',
       request
     );
   }
 
   delete(boardGorupId: number) {
-    return this.http.delete<ClientResponse>(
-      environment.apiEndpoint + `api/boardgroups/${boardGorupId}`
-    );
+    return this.http.delete<ClientResponse>(`api/boardgroups/${boardGorupId}`);
   }
 
   put(boardGorup: BoardGroupViewModel | BoardViewGroup) {
     return this.http.put<ClientResponse<BoardGroupViewModel>>(
-      environment.apiEndpoint + 'api/boardgroups',
+      'api/boardgroups',
       boardGorup
     );
   }
 
   export(boardId: string): Observable<FileResponse> {
     return this.http
-      .get(
-        environment.apiEndpoint + `api/export/tasks/export-board/${boardId}`,
-        {
-          observe: 'response',
-          responseType: 'blob',
-        }
-      )
+      .get(`api/export/tasks/export-board/${boardId}`, {
+        observe: 'response',
+        responseType: 'blob',
+      })
       .pipe(
         switchMap((response) => {
           if (response.body === null) {
