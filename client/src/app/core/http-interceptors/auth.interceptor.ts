@@ -69,7 +69,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const url = window.location.pathname;
     const parts = url.split('/').filter((p) => !!p);
 
-    if (parts.length === 1) {
+    if (parts.length >= 1) {
       const workspace = parts[0];
 
       if (workspace !== 'workspaces') {

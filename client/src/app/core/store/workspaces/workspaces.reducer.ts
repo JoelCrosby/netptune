@@ -69,7 +69,17 @@ const reducer = createReducer(
       })
   ),
 
-  // Select Workspaces
+  // Set Current Workspace
+
+  on(
+    actions.setCurrentWorkspace,
+    (state, { workspace }): WorkspacesState => ({
+      ...state,
+      currentWorkspace: workspace,
+    })
+  ),
+
+  // Select Workspace
 
   on(
     actions.selectWorkspace,

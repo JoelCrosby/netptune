@@ -72,6 +72,13 @@ export const deleteWorkspaceFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Set Current Workspace
+
+export const setCurrentWorkspace = createAction(
+  '[Core] Set Current Workspace',
+  props<{ workspace: Workspace }>()
+);
+
 // Select Workspace
 
 export const selectWorkspace = createAction(
