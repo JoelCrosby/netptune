@@ -7,7 +7,6 @@ import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
-import { environment } from '@env/environment';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -18,23 +17,15 @@ export class ProjectTasksService {
   private http = inject(HttpClient);
 
   get() {
-    return this.http.get<TaskViewModel[]>(
-      environment.apiEndpoint + 'api/tasks'
-    );
+    return this.http.get<TaskViewModel[]>('api/tasks');
   }
 
   post(task: AddProjectTaskRequest) {
-    return this.http.post<ClientResponse<TaskViewModel>>(
-      environment.apiEndpoint + `api/tasks`,
-      task
-    );
+    return this.http.post<ClientResponse<TaskViewModel>>(`api/tasks`, task);
   }
 
   put(task: ProjectTask) {
-    return this.http.put<ClientResponse<TaskViewModel>>(
-      environment.apiEndpoint + `api/tasks`,
-      task
-    );
+    return this.http.put<ClientResponse<TaskViewModel>>(`api/tasks`, task);
   }
 
   delete(task: ProjectTask) {
@@ -42,44 +33,35 @@ export class ProjectTasksService {
       throw new Error('task id undefined');
     }
 
-    return this.http.delete<ClientResponse>(
-      environment.apiEndpoint + `api/tasks/${task.id}`
-    );
+    return this.http.delete<ClientResponse>(`api/tasks/${task.id}`);
   }
 
   detail(systemId: string) {
-    return this.http.get<TaskViewModel>(
-      environment.apiEndpoint + 'api/tasks/detail',
-      {
-        params: {
-          systemId,
-        },
-      }
-    );
+    return this.http.get<TaskViewModel>('api/tasks/detail', {
+      params: {
+        systemId,
+      },
+    });
   }
 
   postComment(request: AddCommentRequest) {
     return this.http.post<ClientResponse<CommentViewModel>>(
-      environment.apiEndpoint + 'api/comments/task',
+      'api/comments/task',
       request
     );
   }
 
   getComments(systemId: string) {
-    return this.http.get<CommentViewModel[]>(
-      environment.apiEndpoint + `api/comments/task/${systemId}`
-    );
+    return this.http.get<CommentViewModel[]>(`api/comments/task/${systemId}`);
   }
 
   deleteComment(commentId: number) {
-    return this.http.delete<ClientResponse>(
-      environment.apiEndpoint + `api/comments/${commentId}`
-    );
+    return this.http.delete<ClientResponse>(`api/comments/${commentId}`);
   }
 
   export(): Observable<FileResponse> {
     return this.http
-      .get(environment.apiEndpoint + `api/export/tasks/export-workspace`, {
+      .get(`api/export/tasks/export-workspace`, {
         observe: 'response',
         responseType: 'blob',
       })
@@ -102,7 +84,7 @@ export class ProjectTasksService {
     formData.append('files', file);
 
     return this.http.post<ClientResponse>(
-      environment.apiEndpoint + `api/import/tasks/${boardIdentifier}`,
+      `api/import/tasks/${boardIdentifier}`,
       formData
     );
   }
