@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
-import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { setCurrentWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
@@ -22,5 +22,7 @@ export const workspaceResovler: ResolveFn<Workspace> = (
 
   return http
     .get<Workspace>(environment.apiEndpoint + `api/workspaces/${workspaceKey}`)
-    .pipe(tap((workspace) => store.dispatch(selectWorkspace({ workspace }))));
+    .pipe(
+      tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
+    );
 };
