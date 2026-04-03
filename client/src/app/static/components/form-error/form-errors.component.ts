@@ -7,7 +7,7 @@ import { FormErrorComponent } from './form-error.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormErrorComponent],
   template: `
-    @if (field(); as field) {
+    @if (formField(); as field) {
       @if (field().touched()) {
         @for (error of field().errors(); track error.kind) {
           <app-form-error>
@@ -19,5 +19,5 @@ import { FormErrorComponent } from './form-error.component';
   `,
 })
 export class FormErrorsComponent<TValue extends string | number> {
-  field = input.required<FieldTree<TValue, TValue>>();
+  formField = input.required<FieldTree<TValue, TValue>>();
 }

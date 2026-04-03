@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  customError,
   disabled,
   FormField,
   form,
@@ -63,10 +62,10 @@ export class ResetPasswordComponent {
     disabled(schema, () => this.loading());
     validate(schema.password1, ({ value }) => {
       if (this.resetForm.password0().value() === value()) {
-        return customError({
+        return {
           kind: 'noMatch',
           message: 'Passwords do not match',
-        });
+        };
       }
 
       return null;
