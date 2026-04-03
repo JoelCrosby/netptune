@@ -8,7 +8,7 @@ import {
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
-import { email, Field, form, required } from '@angular/forms/signals';
+import { email, FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
@@ -22,7 +22,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FormInputComponent,
     DialogActionsDirective,
     MatButton,
-    Field,
+    FormField,
   ],
 })
 export class InviteDialogComponent {

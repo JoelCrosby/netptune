@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   customError,
   disabled,
-  Field,
+  FormField,
   form,
   minLength,
   required,
@@ -36,7 +36,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
     MatAnchor,
     RouterLink,
     MatButton,
-    Field,
+    FormField,
   ],
 })
 export class ResetPasswordComponent {

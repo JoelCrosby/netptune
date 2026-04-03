@@ -3,7 +3,7 @@
 <app-dialog-content>
   <form (submit)="add($event)">
     <app-form-input
-      [field]="inviteForm.email"
+      [formField]="inviteForm.email"
       label="Invitee Email"
       maxLength="128"
       type="email"

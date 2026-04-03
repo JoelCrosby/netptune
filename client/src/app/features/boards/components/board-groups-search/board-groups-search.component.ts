@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import {
-  Field,
+  FormField,
   form,
   maxLength,
   minLength,
@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
   templateUrl: './board-groups-search.component.html',
   styleUrls: ['./board-groups-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon, MatTooltip, Field],
+  imports: [MatIcon, MatTooltip, FormField],
 })
 export class BoardGroupsSearchComponent {
   private store = inject(Store);

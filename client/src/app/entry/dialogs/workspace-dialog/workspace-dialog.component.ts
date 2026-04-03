@@ -12,7 +12,7 @@ import {
   customError,
   debounce,
   disabled,
-  Field,
+  FormField,
   form,
   required,
   validateAsync,
@@ -45,7 +45,7 @@ import { firstValueFrom, map } from 'rxjs';
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
-    Field,
+    FormField,
   ],
 })
 export class WorkspaceDialogComponent {

@@ -11,7 +11,7 @@ import {
 import {
   customError,
   disabled,
-  Field,
+  FormField,
   form,
   required,
   validateAsync,
@@ -49,7 +49,7 @@ import { map } from 'rxjs/operators';
     DialogActionsDirective,
     MatButton,
     DialogCloseDirective,
-    Field,
+    FormField,
   ],
 })
 export class CreateBoardComponent {

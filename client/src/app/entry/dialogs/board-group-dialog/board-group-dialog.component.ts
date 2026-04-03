@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
@@ -23,7 +23,7 @@ export interface BoardGroupDialogData {
   templateUrl: './board-group-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    Field,
+    FormField,
     FormInputComponent,
     DialogActionsDirective,
     MatButton,

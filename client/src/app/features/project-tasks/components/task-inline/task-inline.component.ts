@@ -22,7 +22,7 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
@@ -34,7 +34,7 @@ import { DocumentService } from '@static/services/document.service';
   templateUrl: './task-inline.component.html',
   styleUrls: ['./task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButton, MatIcon, MatCheckbox, MatInput, Field],
+  imports: [MatButton, MatIcon, MatCheckbox, MatInput, FormField],
 })
 export class TaskInlineComponent {
   private store = inject(Store);

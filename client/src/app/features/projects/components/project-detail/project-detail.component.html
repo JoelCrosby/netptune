@@ -1,10 +1,10 @@
 @if (project(); as project) {
   <div>
     <form (submit)="updateClicked($event)">
-      <app-form-input [field]="projectForm.name" label="Name" maxLength="1024">
+      <app-form-input [formField]="projectForm.name" label="Name" maxLength="1024">
       </app-form-input>
       <app-form-textarea
-        [field]="projectForm.description"
+        [formField]="projectForm.description"
         label="Description"
         rows="6"
         >
@@ -12,7 +12,7 @@
       <div class="form-seperator"></div>
       <div class="project-key-row">
         <app-form-input
-          [field]="projectForm.key"
+          [formField]="projectForm.key"
           label="Project ID"
           class="project-key-input"
           maxLength="6"
@@ -26,7 +26,7 @@
         </div>
       </div>
       <app-form-input
-        [field]="projectForm.repositoryUrl"
+        [formField]="projectForm.repositoryUrl"
         label="Repository URL"
         maxLength="1024"
         >

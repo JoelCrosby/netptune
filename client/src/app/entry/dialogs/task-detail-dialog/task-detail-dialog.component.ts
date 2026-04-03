@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {
   debounce,
-  Field,
+  FormField,
   form,
   minLength,
   required,
@@ -74,7 +74,7 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
     MatProgressSpinner,
     TaskStatusPipe,
     TaskDates,
-    Field,
+    FormField,
   ],
 })
 export class TaskDetailDialogComponent implements OnDestroy {

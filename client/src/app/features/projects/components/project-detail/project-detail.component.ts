@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import {
   disabled,
-  Field,
+  FormField,
   form,
   maxLength,
   required,
@@ -31,7 +31,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormInputComponent, FormTextAreaComponent, MatButton, Field],
+  imports: [FormInputComponent, FormTextAreaComponent, MatButton, FormField],
 })
 export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);

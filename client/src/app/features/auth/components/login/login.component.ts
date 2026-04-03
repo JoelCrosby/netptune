@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, email, Field, form, required } from '@angular/forms/signals';
+import { disabled, email, FormField, form, required } from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatProgressBar } from '@angular/material/progress-bar';
@@ -29,7 +29,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
     RouterLink,
     MatButton,
     MatDivider,
-    Field,
+    FormField,
   ],
 })
 export class LoginComponent {

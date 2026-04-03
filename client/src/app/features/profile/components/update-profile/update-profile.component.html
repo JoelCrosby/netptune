@@ -1,10 +1,10 @@
 <form class="px-0">
   <div class="column">
-    <app-form-input [field]="profileForm.firstname" label="Firstname" />
-    <app-form-input [field]="profileForm.lastname" label="Lastname" />
-    <app-form-input [field]="profileForm.email" label="Email Address" />
+    <app-form-input [formField]="profileForm.firstname" label="Firstname" />
+    <app-form-input [formField]="profileForm.lastname" label="Lastname" />
+    <app-form-input [formField]="profileForm.email" label="Email Address" />
 
-    <input type="hidden" [field]="profileForm.pictureUrl" />
+    <input type="hidden" [formField]="profileForm.pictureUrl" />
 
     <button
       class="form-submit-btn"

@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, Field, form, required } from '@angular/forms/signals';
+import { disabled, FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
@@ -22,7 +22,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Field, FormInputComponent, MatButton],
+  imports: [FormField, FormInputComponent, MatButton],
 })
 export class ChangePasswordComponent {
   private store = inject(Store);

@@ -16,7 +16,7 @@
     <h3 class="auth-title">Create new Account</h3>
 
     <app-form-input
-      [field]="registerForm.firstname"
+      [formField]="registerForm.firstname"
       label="Firstname"
       maxLength="1024"
       id="firstname"
@@ -25,7 +25,7 @@
     </app-form-input>
 
     <app-form-input
-      [field]="registerForm.lastname"
+      [formField]="registerForm.lastname"
       label="Lastname"
       maxLength="1024"
       id="lastname"
@@ -34,7 +34,7 @@
     </app-form-input>
 
     <app-form-input
-      [field]="registerForm.email"
+      [formField]="registerForm.email"
       label="Email"
       maxLength="1024"
       id="email"
@@ -44,7 +44,7 @@
     </app-form-input>
 
     <app-form-input
-      [field]="registerForm.password0"
+      [formField]="registerForm.password0"
       label="Password"
       maxLength="1024"
       id="new-password"
@@ -54,14 +54,14 @@
     </app-form-input>
 
     <app-form-input
-      [field]="registerForm.password1"
+      [formField]="registerForm.password1"
       label="Confirm Password"
       maxLength="1024"
       id="confirm-new-password"
       autocomplete="new-password"
       type="password"
       >
-        <app-form-errors [field]="registerForm.password1" />
+        <app-form-errors [formField]="registerForm.password1" />
     </app-form-input>
 
     <div class="button-container">

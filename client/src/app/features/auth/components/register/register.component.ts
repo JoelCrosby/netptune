@@ -12,7 +12,7 @@ import {
   customError,
   disabled,
   email,
-  Field,
+  FormField,
   form,
   maxLength,
   minLength,
@@ -40,7 +40,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
     MatAnchor,
     RouterLink,
     MatButton,
-    Field,
+    FormField,
     FormErrorsComponent,
   ],
 })
