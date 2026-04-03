@@ -9,7 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import {
-  customError,
   debounce,
   disabled,
   FormField,
@@ -90,10 +89,10 @@ export class WorkspaceDialogComponent {
           return null;
         }
 
-        return customError({
+        return {
           kind: 'identifierTaken',
           message: 'Identifier is already taken',
-        });
+        };
       },
       onError: () => ({
         kind: 'networkError',

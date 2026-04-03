@@ -9,7 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import {
-  customError,
   disabled,
   FormField,
   form,
@@ -95,10 +94,10 @@ export class CreateBoardComponent {
           return null;
         }
 
-        return customError({
+        return {
           kind: 'identifierTaken',
           message: 'Identifier is already taken',
-        });
+        };
       },
       onError: () => ({
         kind: 'networkError',

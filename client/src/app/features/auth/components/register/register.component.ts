@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  customError,
   disabled,
   email,
   FormField,
@@ -85,10 +84,10 @@ export class RegisterComponent implements OnDestroy {
     disabled(schema.email, () => !!this.invite()?.code);
     validate(schema.password1, ({ value }) => {
       if (this.registerForm.password0().value() === value()) {
-        return customError({
+        return {
           kind: 'noMatch',
           message: 'Passwords do not match',
-        });
+        };
       }
 
       return null;
