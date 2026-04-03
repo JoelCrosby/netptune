@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
-import { Field, form } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
@@ -30,7 +30,7 @@ export interface ConfirmDialogOptions {
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon, MatCheckbox, DialogActionsDirective, MatButton, Field],
+  imports: [MatIcon, MatCheckbox, DialogActionsDirective, MatButton, FormField],
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);

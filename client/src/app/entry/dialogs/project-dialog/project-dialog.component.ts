@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Field, form, minLength, required } from '@angular/forms/signals';
+import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
@@ -21,7 +21,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
   styleUrls: ['./project-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    Field,
+    FormField,
     FormInputComponent,
     FormTextAreaComponent,
     DialogActionsDirective,

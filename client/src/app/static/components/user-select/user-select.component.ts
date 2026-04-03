@@ -12,7 +12,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { debounce, form, Field } from '@angular/forms/signals';
+import { debounce, form, FormField } from '@angular/forms/signals';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
@@ -28,7 +28,7 @@ type User = AssigneeViewModel | AppUser;
   templateUrl: './user-select.component.html',
   styleUrls: ['./user-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AvatarComponent, AutofocusDirective, Field],
+  imports: [AvatarComponent, AutofocusDirective, FormField],
 })
 export class UserSelectComponent {
   private document = inject(DocumentService);

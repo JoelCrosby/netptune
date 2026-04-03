@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, email, Field, form, required } from '@angular/forms/signals';
+import { disabled, email, FormField, form, required } from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { RouterLink } from '@angular/router';
@@ -25,7 +25,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
     MatAnchor,
     RouterLink,
     MatButton,
-    Field,
+    FormField,
   ],
 })
 export class RequestPasswordResetComponent {

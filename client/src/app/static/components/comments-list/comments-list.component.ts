@@ -8,7 +8,7 @@ import {
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -36,7 +36,7 @@ import { FormInputComponent } from '../form-input/form-input.component';
     MatMenuContent,
     MatMenuItem,
     FromNowPipe,
-    Field,
+    FormField,
   ],
 })
 export class CommentsListComponent {

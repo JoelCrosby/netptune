@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Field, form, required } from '@angular/forms/signals';
+import { FormField, form, required } from '@angular/forms/signals';
 import { changeTheme } from '@core/store/settings/settings.actions';
 import { selectSettings } from '@core/store/settings/settings.selectors';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,7 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormSelectComponent, FormSelectOptionComponent, Field],
+  imports: [FormSelectComponent, FormSelectOptionComponent, FormField],
 })
 export class SettingsComponent {
   private store = inject(Store);

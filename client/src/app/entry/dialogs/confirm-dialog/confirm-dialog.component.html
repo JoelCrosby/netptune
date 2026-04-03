@@ -23,7 +23,7 @@
     @if (data.confirmationCheckboxLabel) {
       <mat-checkbox
         [class.indented]="data.message"
-        [field]="confirmForm.confirmationChecked"
+        [formField]="confirmForm.confirmationChecked"
         >
         {{ data.confirmationCheckboxLabel }}
       </mat-checkbox>

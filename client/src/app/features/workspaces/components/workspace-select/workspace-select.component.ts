@@ -11,7 +11,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { debounce, Field, form } from '@angular/forms/signals';
+import { debounce, FormField, form } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
@@ -30,7 +30,7 @@ import { KeyboardService } from '@static/services/keyboard.service';
   templateUrl: './workspace-select.component.html',
   styleUrls: ['./workspace-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Field, AutofocusDirective, RouterLink],
+  imports: [FormField, AutofocusDirective, RouterLink],
 })
 export class WorkspaceSelectComponent {
   private store = inject(Store);

@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, email, Field, form, required } from '@angular/forms/signals';
+import { disabled, email, FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
 import { updateProfile } from '@profile/store/profile.actions';
@@ -20,7 +20,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Field, FormInputComponent, MatButton],
+  imports: [FormField, FormInputComponent, MatButton],
 })
 export class UpdateProfileComponent {
   private store = inject(Store);

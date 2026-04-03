@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Field, form, minLength, required } from '@angular/forms/signals';
+import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -28,7 +28,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
   styleUrls: ['./create-task-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    Field,
+    FormField,
     FormInputComponent,
     FormTextAreaComponent,
     FormSelectComponent,

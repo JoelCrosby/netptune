@@ -4,7 +4,7 @@
   <app-form-select
     label="Theme"
     placeholder="Select Theme"
-    [field]="settingsForm.theme"
+    [formField]="settingsForm.theme"
     (changed)="onThemeSelect($event)"
     >
     @for (theme of themes; track theme.value) {

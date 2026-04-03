@@ -3,10 +3,10 @@
 </h1>
 
 <form app-dialog-content class="form-auth">
-  <app-form-input [field]="dialogForm.name" label="Name" maxLength="1024" />
+  <app-form-input [formField]="dialogForm.name" label="Name" maxLength="1024" />
 
   <app-form-input
-    [field]="dialogForm.identifier"
+    [formField]="dialogForm.identifier"
     label="Identifier"
     maxLength="1024"
     [icon]="identifierIcon()"
@@ -15,13 +15,13 @@
   />
 
   <app-form-textarea
-    [field]="dialogForm.description"
+    [formField]="dialogForm.description"
     label="Description"
     maxLength="4096"
   />
 
 
-  <app-color-select [field]="dialogForm.color" label="Color" />
+  <app-color-select [formField]="dialogForm.color" label="Color" />
 </form>
 
 <div app-dialog-actions align="end">

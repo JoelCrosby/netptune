@@ -13,7 +13,7 @@
       <app-inline-text-area
         class="w-100"
         class="form-control task-detail-title"
-        [field]="taskForm.name"
+        [formField]="taskForm.name"
         [minRows]="1"
         [maxRows]="5"
         activeBorder="true"
@@ -118,7 +118,7 @@
       <app-editor
         id="description"
         aria-labelledby="description"
-        [field]="taskForm.description"
+        [formField]="taskForm.description"
         placeholder="Add a Description..."
         (loaded)="onEditorLoaded()"
       >
