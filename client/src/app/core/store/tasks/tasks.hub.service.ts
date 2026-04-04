@@ -1,7 +1,6 @@
-import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import * as groupsActions from '@boards/store/groups/board-groups.actions';
-import { HubService } from '@core/hubs/hub.service';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
@@ -11,187 +10,144 @@ import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-
 import { MoveTasksToGroupRequest } from '@core/models/requests/move-tasks-to-group-request';
 import { ReassignTasksRequest } from '@core/models/requests/re-assign-tasks-request';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { Tag } from '@core/models/tag';
-import { UserConnection } from '@core/models/user-connection';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
+import { selectIsWorkspaceGroup } from '@core/store/hub-context/hub-context.selectors';
+import { SseService } from '@core/sse/sse.service';
 import { Store } from '@ngrx/store';
-import { selectIsWorkspaceGroup } from '../hub-context/hub-context.selectors';
 import * as actions from './tasks.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectTasksHubService {
-  private hub = inject(HubService);
+  private http = inject(HttpClient);
   private store = inject(Store);
+  private sse = inject(SseService);
 
-  async connect() {
-    await this.hub.connect('board-hub', [
-      {
-        method: 'MoveTaskInBoardGroup',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'Create',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'Delete',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'DeleteMultiple',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'Update',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'UpdateGroup',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'AddTagToTask',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'DeleteTagFromTask',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'AddBoardGroup',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'DeleteBoardGroup',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'MoveTasksToGroup',
-        callback: () => this.reloadRequiredViews(),
-      },
-      {
-        method: 'ReassignTasks',
-        callback: () => this.reloadRequiredViews(),
-      },
-    ]);
+  addToGroup(groupId: string) {
+    this.store.dispatch(setCurrentGroupId({ groupId }));
+    this.sse.connect(groupId, () => this.reloadRequiredViews());
+  }
+
+  removeFromGroup(_groupId: string) {
+    this.store.dispatch(setCurrentGroupId({ groupId: null }));
+    this.sse.disconnect();
+  }
+
+  disconnect() {
+    this.sse.disconnect();
   }
 
   reloadRequiredViews() {
     const isWorkspaceGroup = this.store.selectSignal(selectIsWorkspaceGroup);
 
     if (isWorkspaceGroup()) {
-      this.hub.dispatch(actions.loadProjectTasks());
+      this.store.dispatch(actions.loadProjectTasks());
     } else {
-      this.hub.dispatch(groupsActions.loadBoardGroups());
+      this.store.dispatch(groupsActions.loadBoardGroups());
     }
   }
 
-  disconnect() {
-    return this.hub.disconnect();
-  }
-
-  addToGroup(groupId: string) {
-    this.store.dispatch(setCurrentGroupId({ groupId }));
-    return this.hub.invoke<UserConnection>('AddToGroup', groupId);
-  }
-
-  removeFromGroup(groupId: string) {
-    this.store.dispatch(setCurrentGroupId({ groupId: null }));
-    return this.hub.invoke<UserConnection>('RemoveFromGroup', groupId);
-  }
-
-  moveTaskInBoardGroup(
-    boardIdentifier: string,
-    request: MoveTaskInGroupRequest
-  ) {
-    return this.hub.invoke<ClientResponse>(
-      'MoveTaskInBoardGroup',
-      boardIdentifier,
-      request
+  moveTaskInBoardGroup(boardIdentifier: string, request: MoveTaskInGroupRequest) {
+    return this.http.post<ClientResponse>(
+      'api/tasks/move-task-in-group',
+      request,
+      { headers: { 'X-Group': boardIdentifier } }
     );
   }
 
   post(groupId: string, task: AddProjectTaskRequest) {
-    return this.hub.invoke<ClientResponse<TaskViewModel>>(
-      'create',
-      groupId,
-      task
+    return this.http.post<ClientResponse<TaskViewModel>>(
+      'api/tasks',
+      task,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
-  put(
-    groupId: string,
-    task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
-  ) {
-    return this.hub.invoke<ClientResponse<TaskViewModel>>(
-      'update',
-      groupId,
-      task
+  put(groupId: string, task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>) {
+    console.log("task.hub.service put");
+
+    return this.http.put<ClientResponse<TaskViewModel>>(
+      'api/tasks',
+      task,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   putGroup(groupId: string, request: UpdateBoardGroupRequest) {
-    return this.hub.invoke<ClientResponse<BoardGroupViewModel>>(
-      'updateGroup',
-      groupId,
-      request
+    return this.http.put<ClientResponse<BoardGroupViewModel>>(
+      'api/boardgroups',
+      request,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   delete(groupId: string, task: ProjectTask) {
-    return this.hub.invoke<ClientResponse>('Delete', groupId, task.id);
+    if (task.id === undefined || task.id === null) {
+      throw new Error('task id undefined');
+    }
+
+    return this.http.delete<ClientResponse>(
+      `api/tasks/${task.id}`,
+      { headers: { 'X-Group': groupId } }
+    );
   }
 
   deleteMultiple(groupId: string, ids: number[]) {
-    return this.hub.invoke<ClientResponse>('DeleteMultiple', groupId, ids);
+    return this.http.delete<ClientResponse>(
+      'api/tasks',
+      { headers: { 'X-Group': groupId }, body: ids }
+    );
   }
 
   addTagToTask(groupId: string, request: AddTagToTaskRequest) {
-    return this.hub.invoke<ClientResponse<Tag>>(
-      'AddTagToTask',
-      groupId,
-      request
+    return this.http.post<ClientResponse<Tag>>(
+      'api/tags/task',
+      request,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {
-    return this.hub.invoke<ClientResponse>(
-      'DeleteTagFromTask',
-      groupId,
-      request
+    return this.http.delete<ClientResponse>(
+      'api/tags/task',
+      { headers: { 'X-Group': groupId }, body: request }
     );
   }
 
   addBoardGroup(groupId: string, request: AddBoardGroupRequest) {
-    return this.hub.invoke<ClientResponse<BoardGroupViewModel>>(
-      'AddBoardGroup',
-      groupId,
-      request
+    return this.http.post<ClientResponse<BoardGroupViewModel>>(
+      'api/boardgroups',
+      request,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   deleteBoardGroup(groupId: string, boardGroupId: number) {
-    return this.hub.invoke<ClientResponse>(
-      'DeleteBoardGroup',
-      groupId,
-      boardGroupId
+    return this.http.delete<ClientResponse>(
+      `api/boardgroups/${boardGroupId}`,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   moveTasksToGroup(groupId: string, request: MoveTasksToGroupRequest) {
-    return this.hub.invoke<ClientResponse>(
-      'MoveTasksToGroup',
-      groupId,
-      request
+    return this.http.post<ClientResponse>(
+      'api/tasks/move-tasks-to-group',
+      request,
+      { headers: { 'X-Group': groupId } }
     );
   }
 
   reassignTasks(groupId: string, request: ReassignTasksRequest) {
-    return this.hub.invoke<ClientResponse>('ReassignTasks', groupId, request);
+    return this.http.post<ClientResponse>(
+      'api/tasks/reassign-tasks',
+      request,
+      { headers: { 'X-Group': groupId } }
+    );
   }
 }

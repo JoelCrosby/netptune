@@ -64,12 +64,23 @@ public static class AuthenticationServiceCollectionExtensions
             {
                 OnTokenValidated = context =>
                 {
-                    if (!context.Request.Headers.TryGetValue(NetptuneClaims.Workspace, out var workspace))
+                    string? workspace = null;
+
+                    if (context.Request.Headers.TryGetValue(NetptuneClaims.Workspace, out var headerWorkspace))
+                    {
+                        workspace = headerWorkspace;
+                    }
+                    else if (context.Request.Path.StartsWithSegments("/hubs"))
+                    {
+                        workspace = context.Request.Query[NetptuneClaims.Workspace];
+                    }
+
+                    if (string.IsNullOrEmpty(workspace))
                     {
                         return Task.CompletedTask;
                     }
 
-                    var claims = new[] { new Claim(NetptuneClaims.Workspace, workspace!) };
+                    var claims = new[] { new Claim(NetptuneClaims.Workspace, workspace) };
                     var identity = new ClaimsIdentity(claims);
 
                     context.Principal?.AddIdentity(identity);

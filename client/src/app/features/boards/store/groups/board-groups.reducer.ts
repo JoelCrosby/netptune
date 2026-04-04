@@ -1,4 +1,3 @@
-import { hubAction } from '@core/hubs/hub.utils';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
@@ -103,7 +102,6 @@ const reducer = createReducer(
 
   on(
     actions.moveTaskInBoardGroup,
-    hubAction(actions.moveTaskInBoardGroup),
     (state, { request }): BoardGroupsState =>
       moveTaskInBoardGroup(state, request)
   ),

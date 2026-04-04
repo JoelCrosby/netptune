@@ -144,6 +144,10 @@ export class TaskDetailDialogComponent implements OnDestroy {
     }
   }
 
+  onSubmit(event: Event) {
+    event.preventDefault();
+  }
+
   onCommentSubmit(value: string) {
     if (!value) return;
 

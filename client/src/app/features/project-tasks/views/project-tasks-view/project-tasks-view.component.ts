@@ -45,19 +45,17 @@ export class ProjectTasksViewComponent implements OnDestroy {
   ];
 
   constructor() {
-    this.hubService.connect().then(() => {
-      const identifier = this.workspaceId();
+    const identifier = this.workspaceId();
 
-      if (!identifier) return;
-
-      return this.hubService.addToGroup(identifier);
-    });
+    if (identifier) {
+      this.hubService.addToGroup(identifier);
+    }
 
     this.store.dispatch(loadProjectTasks());
   }
 
   ngOnDestroy() {
-    void this.hubService.disconnect();
+    this.hubService.disconnect();
   }
 
   showAddModal() {
