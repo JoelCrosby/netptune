@@ -32,7 +32,7 @@ RUN dotnet publish "Netptune.App.csproj" \
     /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 # client app
-FROM node:22-slim AS client-build
+FROM node:25-alpine3.22 AS client-build
 WORKDIR /client
 COPY /client/package*.json ./
 COPY /client/pnpm-lock.yaml ./
