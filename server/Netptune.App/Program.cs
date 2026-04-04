@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Endpoints;
-using Netptune.App.Hubs;
+using Netptune.App.Services;
 using Netptune.App.Utility;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
@@ -53,11 +53,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddSingleton<BuildInfo>();
-
-builder.Services.AddSignalR(options =>
-{
-    options.EnableDetailedErrors = builder.Environment.IsDevelopment();
-});
+builder.Services.AddSingleton<IBoardEventService, BoardEventService>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
 builder.Services.AddNeptuneAuthorization();
@@ -145,7 +141,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHub<BoardHub>(BoardHub.Path);
+BoardEventsEndpoints.Map(app);
 
 var api = app.MapGroup("/api");
 

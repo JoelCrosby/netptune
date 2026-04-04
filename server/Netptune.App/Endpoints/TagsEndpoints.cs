@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -42,11 +43,15 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandlePostTaskTag(
         ITagService tagService,
+        IBoardEventService boardEventService,
+        HttpContext context,
         [FromBody] AddTagToTaskRequest request)
     {
         var result = await tagService.AddToTask(request);
 
         if (result.IsNotFound) return Results.NotFound();
+
+        await BroadcastAsync(boardEventService, context);
 
         return Results.Ok(result);
     }
@@ -83,13 +88,26 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleDeleteFromTask(
         ITagService tagService,
+        IBoardEventService boardEventService,
+        HttpContext context,
         [FromBody] DeleteTagFromTaskRequest request)
     {
         var result = await tagService.DeleteFromTask(request);
 
         if (result.IsNotFound) return Results.NotFound();
 
+        await BroadcastAsync(boardEventService, context);
+
         return Results.Ok(result);
+    }
+
+    private static Task BroadcastAsync(IBoardEventService boardEventService, HttpContext context)
+    {
+        var group = context.Request.Headers["X-Group"].ToString();
+
+        if (string.IsNullOrEmpty(group)) return Task.CompletedTask;
+
+        return boardEventService.BroadcastAsync(group);
     }
 
     public static async Task<IResult> HandleUpdateTag(

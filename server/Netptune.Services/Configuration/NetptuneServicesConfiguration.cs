@@ -42,8 +42,6 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<IWebService, WebService>();
         services.AddTransient<IHtmlDocumentService, HtmlDocumentService>();
 
-        services.AddTransient<IUserConnectionService, UserConnectionService>();
-
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IUserCache, UserCache>();
         services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();

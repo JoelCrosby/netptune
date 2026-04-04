@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -38,32 +39,53 @@ public static class BoardGroupsEndpoints
 
     public static async Task<IResult> HandlePut(
         IBoardGroupService boardGroupService,
+        IBoardEventService boardEventService,
+        HttpContext context,
         UpdateBoardGroupRequest request)
     {
         var result = await boardGroupService.Update(request);
 
         if (result.IsNotFound) return Results.NotFound();
 
+        await BroadcastAsync(boardEventService, context);
+
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandlePost(
         IBoardGroupService boardGroupService,
+        IBoardEventService boardEventService,
+        HttpContext context,
         AddBoardGroupRequest request)
     {
         var result = await boardGroupService.Create(request);
+
+        await BroadcastAsync(boardEventService, context);
 
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleDelete(
         IBoardGroupService boardGroupService,
+        IBoardEventService boardEventService,
+        HttpContext context,
         int id)
     {
         var result = await boardGroupService.Delete(id);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
+        await BroadcastAsync(boardEventService, context);
+
         return Results.Ok(result);
+    }
+
+    private static Task BroadcastAsync(IBoardEventService boardEventService, HttpContext context)
+    {
+        var group = context.Request.Headers["X-Group"].ToString();
+
+        if (string.IsNullOrEmpty(group)) return Task.CompletedTask;
+
+        return boardEventService.BroadcastAsync(group);
     }
 }
