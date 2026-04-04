@@ -33,12 +33,12 @@ RUN dotnet publish "Netptune.App.csproj" \
 
 # client app
 FROM node:25-alpine3.22 AS client-build
+RUN npm install -g pnpm
 WORKDIR /client
 COPY /client/package*.json ./
 COPY /client/pnpm-lock.yaml ./
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY /client .
 RUN pnpm build
