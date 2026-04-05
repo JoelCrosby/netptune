@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using MediatR;
+using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
@@ -23,7 +23,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         AncestorService = ancestorService;
     }
 
-    public async Task Handle(ActivityMessage request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
     {
         foreach (var activity in request.Events)
         {
@@ -53,5 +53,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         }
 
         await UnitOfWork.CompleteAsync();
+
+        return default;
     }
 }
