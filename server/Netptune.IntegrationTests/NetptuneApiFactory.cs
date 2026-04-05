@@ -24,8 +24,8 @@ namespace Netptune.IntegrationTests;
 
 public sealed class NetptuneFixture : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:15.1").Build();
-    private readonly RedisContainer CacheContainer = new RedisBuilder("redis:7.0").Build();
+    private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:18.3").Build();
+    private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.0-alpine").Build();
 
     private WebApplicationFactory<Program> WebApplicationFactory { get; }
 
