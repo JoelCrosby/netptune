@@ -11,7 +11,7 @@ using Netptune.Core.Services.Activity;
 
 namespace Netptune.Events;
 
-public class EventPublisher : IEventPublisher, IDisposable
+public sealed class EventPublisher : IEventPublisher, IDisposable
 {
     private readonly ILogger<EventPublisher> Logger;
     private readonly PublisherSocket Publisher;

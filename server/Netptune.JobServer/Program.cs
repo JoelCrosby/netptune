@@ -61,10 +61,9 @@ builder.Services.AddNetptuneMessageQueue(options =>
     options.ConnectionString = zeroMqConnectionString;
 });
 
-builder.Services.AddMediatR(options =>
+builder.Services.AddMediator(options =>
 {
-    options.Lifetime = ServiceLifetime.Transient;
-    options.RegisterServicesFromAssemblyContaining(typeof(Program));
+    options.ServiceLifetime = ServiceLifetime.Transient;
 });
 
 var app = builder.Build();
