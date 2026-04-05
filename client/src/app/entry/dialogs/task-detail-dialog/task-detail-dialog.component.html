@@ -6,8 +6,7 @@
       <mat-icon class="task-complete"> done </mat-icon>
       }
       <div class="task-scope-id">{{ task.systemId }}</div>
-      <app-activity-menu [entityType]="entityType" [entityId]="task.id">
-      </app-activity-menu>
+      <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
     </div>
     <div class="detail-column detail-title-input">
       <app-inline-text-area

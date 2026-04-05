@@ -1,24 +1,23 @@
-import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import {
   ActivityType,
   ActivityViewModel,
 } from '@core/models/view-models/activity-view-model';
 import { activityTypeToString } from '@core/transforms/activity-type';
-import { FromNowPipe } from './from-now.pipe';
+import { fromNow } from '@core/util/dates';
 
 @Pipe({
   name: 'activity',
   pure: true,
+  standalone: true,
 })
 export class ActivityPipe implements PipeTransform {
-  private fromNow = inject(FromNowPipe);
-
   transform(value: ActivityViewModel): string {
     const activityType = activityTypeToString(value.type);
     const meta = getMeta(value);
     const action = `${activityType} ${meta}`;
 
-    const time = this.fromNow.transform(value.time);
+    const time = fromNow(value.time);
 
     return `${action} ${time}`;
   }
