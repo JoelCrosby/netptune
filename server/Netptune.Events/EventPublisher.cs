@@ -1,46 +1,40 @@
 ﻿using System.Text.Json;
 
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Confluent.Kafka;
 
-using NetMQ;
-using NetMQ.Sockets;
+using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Events;
 using Netptune.Core.Services.Activity;
 
 namespace Netptune.Events;
 
-public sealed class EventPublisher : IEventPublisher, IDisposable
+public sealed class EventPublisher : IEventPublisher
 {
     private readonly ILogger<EventPublisher> Logger;
-    private readonly PublisherSocket Publisher;
+    private readonly IProducer<string, string> Producer;
 
-    public EventPublisher(IOptions<MessageQueueOptions> options, ILogger<EventPublisher> logger)
+    public EventPublisher(ILogger<EventPublisher> logger, IProducer<string, string> producer)
     {
-        Publisher = new PublisherSocket(options.Value.ConnectionString);
         Logger = logger;
+        Producer = producer;
     }
 
-    public Task Dispatch<TPayload>(TPayload payload) where TPayload : class
+    public async Task Dispatch<TPayload>(TPayload payload) where TPayload : class
     {
         var json = JsonSerializer.Serialize(payload);
         var type = typeof(TPayload).FullName;
 
         ArgumentException.ThrowIfNullOrEmpty(type);
 
-        Publisher
-            .SendMoreFrame(MessageKeys.RoutingKey)
-            .SendMoreFrame(type)
-            .SendFrame(json);
+        var message = new Message<string, string>
+        {
+            Key =  type,
+            Value = json,
+        };
+
+        await Producer.ProduceAsync(MessageKeys.RoutingKey, message);
 
         Logger.LogInformation("[Event] type {Type} published: {Payload}", type, json);
-
-        return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        Publisher.Dispose();
     }
 }

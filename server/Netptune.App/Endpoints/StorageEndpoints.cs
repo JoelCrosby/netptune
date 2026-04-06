@@ -15,7 +15,7 @@ namespace Netptune.App.Endpoints;
 
 public static class StorageEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapStorageEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("storage")
             .RequireAuthorization();

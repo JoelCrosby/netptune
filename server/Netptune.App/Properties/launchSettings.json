@@ -3,17 +3,11 @@
   "profiles": {
     "Netptune.App": {
       "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7401;http://localhost:7400",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "http://localhost:7400;https://localhost:7401",
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:7400"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true,
-      "useSSL": true
+      }
     }
   }
 }

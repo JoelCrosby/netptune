@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Netptune.Cache\Netptune.Cache.csproj" />
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
     <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
@@ -54,6 +55,7 @@
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
+    <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
-using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
@@ -9,22 +7,22 @@ using Netptune.Core.Cache.Common;
 
 using StackExchange.Redis;
 
-namespace Netptune.Services.Cache.Redis;
+namespace Netptune.Cache.Redis;
 
 public class RedisCache : ICacheProvider
 {
-    private readonly ConnectionMultiplexer Redis;
+    private readonly IConnectionMultiplexer Connection;
 
-    private IDatabase Db => Redis.GetDatabase();
+    private IDatabase Db => Connection.GetDatabase();
 
     public RedisCache(IOptions<RedisCacheOptions> options)
     {
-        if (options.Value is null)
+        if (options.Value.Connection is null)
         {
             throw new ($"{nameof(RedisCache)} was instantiated without options provided");
         }
 
-        Redis = ConnectionMultiplexer.Connect(options.Value.Connection);
+        Connection = ConnectionMultiplexer.Connect(options.Value.Connection);
     }
 
     public string? GetString(string key)

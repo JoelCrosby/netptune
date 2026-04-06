@@ -12,7 +12,7 @@ namespace Netptune.App.Endpoints;
 
 public static class UsersEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapUsersEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("users");
 

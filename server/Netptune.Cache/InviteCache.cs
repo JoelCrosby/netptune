@@ -1,12 +1,9 @@
-using System;
-using System.Threading.Tasks;
-
+using Netptune.Cache.Common;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 using Netptune.Core.Models.Authentication;
-using Netptune.Services.Cache.Common;
 
-namespace Netptune.Services.Cache;
+namespace Netptune.Cache;
 
 public class InviteCache : ValueCache<WorkspaceInvite>, IInviteCache
 {

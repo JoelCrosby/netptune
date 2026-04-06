@@ -14,7 +14,7 @@ namespace Netptune.App.Endpoints;
 
 public static class TasksEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapTasksEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("tasks")
             .RequireAuthorization(NetptunePolicies.Workspace);

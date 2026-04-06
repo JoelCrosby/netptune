@@ -12,7 +12,7 @@ namespace Netptune.App.Endpoints;
 
 public static class CommentsEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapCommentsEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("comments")
             .RequireAuthorization(NetptunePolicies.Workspace);

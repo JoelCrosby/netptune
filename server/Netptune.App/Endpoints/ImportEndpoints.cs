@@ -12,7 +12,7 @@ namespace Netptune.App.Endpoints;
 
 public static class ImportEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapImportEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("import")
             .RequireAuthorization(NetptunePolicies.Workspace);

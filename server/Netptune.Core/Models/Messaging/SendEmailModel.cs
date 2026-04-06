@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 
+using Netptune.Core.Events;
+
 namespace Netptune.Core.Models.Messaging;
 
-public class SendEmailModel
+public class SendEmailModel : IEventMessage
 {
     public SendTo SendTo { get; init; } = null!;
 
@@ -23,7 +25,7 @@ public class SendEmailModel
     public string Reason { get; init; } = null!;
 }
 
-public class SendEmailModelMultiple
+public class SendEmailModelMultiple : IEventMessage
 {
     public List<string> ToAddress { get; init; } = null!;
 

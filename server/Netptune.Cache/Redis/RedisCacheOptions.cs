@@ -1,4 +1,4 @@
-namespace Netptune.Services.Cache.Redis;
+namespace Netptune.Cache.Redis;
 
 public class RedisCacheOptions
 {

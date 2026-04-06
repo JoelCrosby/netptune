@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
     {
         var razorEngine = new RazorLightEngineBuilder()
             .UseEmbeddedResourcesProject(typeof(ServiceCollectionExtensions))
+            .SetOperatingAssembly(typeof(ServiceCollectionExtensions).Assembly)
             .UseMemoryCachingProvider()
             .Build();
 

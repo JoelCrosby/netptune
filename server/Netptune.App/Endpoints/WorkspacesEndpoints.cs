@@ -13,7 +13,7 @@ namespace Netptune.App.Endpoints;
 
 public static class WorkspacesEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapWorkspacesEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("workspaces")
             .RequireAuthorization();
