@@ -5,5 +5,5 @@ namespace Netptune.Core.Events;
 
 public interface IEventConsumer
 {
-    IAsyncEnumerable<EventMessage> GetEventMessages(CancellationToken cancellationToken);
+    IEnumerable<EventMessage> GetEventMessages(CancellationToken cancellationToken);
 }

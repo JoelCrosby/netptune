@@ -11,7 +11,7 @@ namespace Netptune.App.Endpoints;
 
 public static class ExportEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapExportEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("export")
             .RequireAuthorization(NetptunePolicies.Workspace);

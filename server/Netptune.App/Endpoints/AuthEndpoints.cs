@@ -17,7 +17,7 @@ namespace Netptune.App.Endpoints;
 
 public static class AuthEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapAuthEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("auth");
 

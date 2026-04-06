@@ -7,16 +7,8 @@ namespace Netptune.Events;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddNetptuneMessageQueue(this IServiceCollection services, Action<MessageQueueOptions> action)
+    public static void AddNetptuneMessageQueue(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(action);
-
-        var options = new MessageQueueOptions();
-
-        action(options);
-
-        services.Configure(action);
-
         services.AddSingleton<IEventPublisher, EventPublisher>();
         services.AddSingleton<IEventConsumer, EventConsumer>();
     }

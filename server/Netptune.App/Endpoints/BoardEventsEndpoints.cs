@@ -10,7 +10,7 @@ namespace Netptune.App.Endpoints;
 
 public static class BoardEventsEndpoints
 {
-    public static IEndpointRouteBuilder Map(IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapBoardEventsEndpoints(this IEndpointRouteBuilder builder)
     {
         builder
             .MapGet("/hubs/board-events", HandleGet)

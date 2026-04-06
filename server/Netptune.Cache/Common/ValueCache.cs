@@ -1,11 +1,8 @@
-using System;
-using System.Threading.Tasks;
-
 using Microsoft.Extensions.Caching.Distributed;
 
 using Netptune.Core.Cache.Common;
 
-namespace Netptune.Services.Cache.Common;
+namespace Netptune.Cache.Common;
 
 public abstract class ValueCache<TValue> : IValueCache<TValue>
 {

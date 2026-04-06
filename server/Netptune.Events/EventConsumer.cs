@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Confluent.Kafka;
 
-using NetMQ;
-using NetMQ.Sockets;
+using Microsoft.Extensions.Logging;
+
+using NATS.Client.Core;
 
 using Netptune.Core.Events;
 
@@ -13,35 +13,41 @@ namespace Netptune.Events;
 public sealed class EventConsumer : IEventConsumer
 {
     private readonly ILogger<EventConsumer> Logger;
-    private readonly SubscriberSocket Subscriber;
+    private readonly IConsumer<string, string> Consumer;
 
-    public EventConsumer(IOptions<MessageQueueOptions> options, ILogger<EventConsumer> logger)
+    public EventConsumer(ILogger<EventConsumer> logger, IConsumer<string, string> consumer)
     {
         Logger = logger;
-        Subscriber = new(options.Value.ConnectionString);
+        Consumer = consumer;
     }
 
-    public async IAsyncEnumerable<EventMessage> GetEventMessages([EnumeratorCancellation] CancellationToken cancellationToken)
+    public IEnumerable<EventMessage> GetEventMessages(CancellationToken cancellationToken)
     {
-        Subscriber.Subscribe(MessageKeys.RoutingKey);
+        Consumer.Subscribe([MessageKeys.RoutingKey]);
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            _ = Subscriber.ReceiveFrameString();
-            var type = Subscriber.ReceiveFrameString();
-            var message = Subscriber.ReceiveFrameString();
+            var msg = Consumer.Consume(cancellationToken);
+
+            var payload = msg.Message.Value;
+            var type = msg.Message.Key;
+
+            if (type is null || payload is null)
+            {
+                throw new Exception("Unknown message type");
+            }
 
             var pendingMessage = new EventMessage
             {
                 Type = type,
-                Payload = message,
+                Payload = payload,
             };
 
-            Logger.LogInformation("[Event] type {Type} consumed: {Payload}", type, message);
+            Logger.LogInformation("[Event] type {Type} consumed", type);
 
             yield return pendingMessage;
-
-            await Task.Delay(1000, cancellationToken);
         }
+
+        Consumer.Unsubscribe();
     }
 }

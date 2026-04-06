@@ -1,13 +1,11 @@
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Cache.Common;
 
-namespace Netptune.Services.Cache.Common;
+namespace Netptune.Cache.Common;
 
 public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
 {

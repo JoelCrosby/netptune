@@ -1,14 +1,11 @@
-using System;
-using System.Threading.Tasks;
-
 using Microsoft.Extensions.Logging;
 
+using Netptune.Cache.Common;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Cache.Common;
 
-namespace Netptune.Services.Cache;
+namespace Netptune.Cache;
 
 public class WorkspaceUserCache : EntityCache<bool, WorkspaceUserKey>, IWorkspaceUserCache
 {

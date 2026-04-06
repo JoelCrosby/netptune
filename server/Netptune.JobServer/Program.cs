@@ -1,19 +1,22 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Cache;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
 using Netptune.JobServer.Services;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
-using Netptune.Services.Cache.Redis;
+using Netptune.ServiceDefaults;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
 using Serilog;
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
@@ -23,9 +26,8 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 
 var connectionString = builder.Configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = builder.Configuration.GetNetptuneRedisConnectionString();
-var zeroMqConnectionString = builder.Configuration.GetNetptuneZeroMqConnectionString();
 
-builder.Services.AddNetptuneRedis(options =>
+builder.AddNetptuneCache(options =>
 {
     options.Connection = redisConnectionString;
 });
@@ -56,10 +58,7 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddHostedService<QueueConsumerService>();
 
-builder.Services.AddNetptuneMessageQueue(options =>
-{
-    options.ConnectionString = zeroMqConnectionString;
-});
+builder.Services.AddNetptuneMessageQueue();
 
 builder.Services.AddMediator(options =>
 {
@@ -68,4 +67,5 @@ builder.Services.AddMediator(options =>
 
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
 app.Run();

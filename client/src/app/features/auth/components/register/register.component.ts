@@ -83,7 +83,7 @@ export class RegisterComponent implements OnDestroy {
     disabled(schema, () => this.loading());
     disabled(schema.email, () => !!this.invite()?.code);
     validate(schema.password1, ({ value }) => {
-      if (this.registerForm.password0().value() === value()) {
+      if (this.registerForm.password0().value() !== value()) {
         return {
           kind: 'noMatch',
           message: 'Passwords do not match',
@@ -110,6 +110,8 @@ export class RegisterComponent implements OnDestroy {
 
   register(event: Event) {
     event.preventDefault();
+
+    console.log('register: ', event);
 
     const firstname = this.registerForm.firstname().value();
     const lastname = this.registerForm.lastname().value();

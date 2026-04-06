@@ -12,7 +12,7 @@ namespace Netptune.App.Endpoints;
 
 public static class MetaEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapMetaEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("meta");
 

@@ -14,7 +14,7 @@ namespace Netptune.App.Endpoints;
 
 public static class TagsEndpoints
 {
-    public static RouteGroupBuilder Map(this RouteGroupBuilder builder)
+    public static RouteGroupBuilder MapTagsEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("tags")
             .RequireAuthorization(NetptunePolicies.Workspace);

@@ -1,5 +1,5 @@
 <div class="auth-page-container">
-  <form (Submit)="register($event)">
+  <form (submit)="register($event)">
     <div class="auth-progress-bar">
       @if (loading()) {
         <mat-progress-bar mode="indeterminate" />
@@ -20,7 +20,7 @@
       label="Firstname"
       maxLength="1024"
       id="firstname"
-      autocomplete="givenname"
+      autocomplete="given-name"
       >
     </app-form-input>
 
@@ -29,7 +29,7 @@
       label="Lastname"
       maxLength="1024"
       id="lastname"
-      autocomplete="familyname"
+      autocomplete="family-name"
       >
     </app-form-input>
 
