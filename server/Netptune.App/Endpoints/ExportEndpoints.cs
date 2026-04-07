@@ -1,9 +1,3 @@
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Export;
 

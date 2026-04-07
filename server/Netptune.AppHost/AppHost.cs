@@ -6,9 +6,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder
     .AddKubernetesEnvironment("k8s")
-    .WithProperties(k8s =>
+    .WithProperties(options =>
     {
-        k8s.HelmChartName = "netptune-app";
+        options.HelmChartName = "netptune-app";
     });
 
 var postgres = builder.AddPostgres("postgres").WithDataVolume();
@@ -32,10 +32,12 @@ var api = builder
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WithExternalHttpEndpoints();
 
 var client = builder
     .AddViteApp("client", "../../client/", "start")
-    .WithPnpm();
+    .WithPnpm()
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

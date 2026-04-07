@@ -1,11 +1,6 @@
-using System.Threading.Tasks;
-
 using Flurl;
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;

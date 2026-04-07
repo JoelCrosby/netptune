@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
 
 namespace Netptune.App.Services;
 
-public class BoardEventService : IBoardEventService
+public class BoardEventService(ILogger<BoardEventService> logger) : IBoardEventService
 {
     private readonly ConcurrentDictionary<string, List<Channel<bool>>> Groups = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock Lock = new();
@@ -35,9 +29,9 @@ public class BoardEventService : IBoardEventService
                 await response.Body.FlushAsync(cancellationToken);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            // Client disconnected
+            logger.LogError(ex, "Client disconnected");
         }
         finally
         {

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 
 namespace Netptune.App.Utility;
@@ -10,7 +8,7 @@ public class BuildInfo
 
     public BuildInfoViewModel GetBuildInfo()
     {
-        if (CachedBuildInfo is {})
+        if (CachedBuildInfo is not null)
         {
             return CachedBuildInfo;
         }
@@ -24,7 +22,7 @@ public class BuildInfo
         var version = $"1.0.0+LOCAL+REF+{DateTime.UtcNow:yyyyMMdd}.0+LOCAL_BUILD";
         var infoVerAttr = GetInfoVerAttr();
 
-        if (infoVerAttr is {} && infoVerAttr.InformationalVersion.Length > 6)
+        if (infoVerAttr is not null && infoVerAttr.InformationalVersion.Length > 6)
         {
             // Hash is embedded in the version after a '+' symbol
             // e.g. 1.0.0+a34a913742f8845d3da5309b7b17242222d41a21
@@ -65,13 +63,13 @@ public class BuildInfo
 
 public class BuildInfoViewModel
 {
-    public string? GitHash { get; set; }
+    public string? GitHash { get; init; }
 
-    public string? GitHashShort { get; set; }
+    public string? GitHashShort { get; init; }
 
-    public string? GitHubRef { get; set; }
+    public string? GitHubRef { get; init; }
 
-    public string? BuildNumber { get; set; }
+    public string? BuildNumber { get; init; }
 
-    public string? RunId { get; set; }
+    public string? RunId { get; init; }
 }
