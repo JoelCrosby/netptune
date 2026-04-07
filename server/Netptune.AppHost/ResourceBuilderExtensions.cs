@@ -23,7 +23,6 @@ public static class ResourceBuilderExtensions
         public IResourceBuilder<T> WithKafka(IResourceBuilder<KafkaServerResource> kafka)
         {
             return builder
-                .WaitFor(kafka)
                 .WithReference(kafka);
         }
 
