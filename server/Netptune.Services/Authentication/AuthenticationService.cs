@@ -136,7 +136,7 @@ public class NetptuneAuthService : INetptuneAuthService
             return RegisterResult.Failed("Invite code is invalid/expired.");
         }
 
-        if (model.Password is null)
+        if (model.Password is null && model.AuthenticationProvider != AuthenticationProvider.GitHub)
         {
             return RegisterResult.Failed("Invalid request.");
         }
@@ -160,7 +160,7 @@ public class NetptuneAuthService : INetptuneAuthService
         var result = model.AuthenticationProvider switch
         {
             AuthenticationProvider.GitHub => await UserManager.CreateAsync(user),
-            _ => await UserManager.CreateAsync(user, model.Password),
+            _ => await UserManager.CreateAsync(user, model.Password!),
         };
 
         if (invite is {})
