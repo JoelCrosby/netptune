@@ -22,11 +22,11 @@ parameters:
     port_http: 8080
     jobs_image: "ghcr.io/joelcrosby/netptune-jobs:latest"
   api:
-    port_http: 8080
+    port_http: 7400
     api_image: "ghcr.io/joelcrosby/netptune:latest"
   client:
     client_image: "ghcr.io/joelcrosby/netptune-client:latest"
-    api_url: "http://api-service:8080"
+    api_url: "http://api-service:7400"
 secrets:
   headlamp:
     github_client_id: ""
