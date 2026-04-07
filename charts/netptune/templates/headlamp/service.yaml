@@ -1,0 +1,22 @@
+{{- if .Values.headlamp.enabled }}
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "headlamp-service"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "headlamp"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  type: "LoadBalancer"
+  selector:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "headlamp"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  ports:
+    - name: "http"
+      protocol: "TCP"
+      port: 4466
+      targetPort: 4466
+{{- end }}

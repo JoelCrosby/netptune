@@ -1,0 +1,15 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "client-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "client"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  API_HTTP: "{{ .Values.parameters.client.api_url }}"
+  services__api__http__0: "{{ .Values.parameters.client.api_url }}"
+  API_HTTPS: "{{ .Values.parameters.client.api_url }}"
+  services__api__https__0: "{{ .Values.parameters.client.api_url }}"
+  API_URL: "{{ .Values.parameters.client.api_url }}"

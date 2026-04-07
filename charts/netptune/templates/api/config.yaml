@@ -1,0 +1,28 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "api-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.api.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.api.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
+  HTTP_PORTS: "{{ .Values.parameters.api.port_http }}"
+  ASPNETCORE_URLS: "{{ .Values.config.api.ASPNETCORE_URLS }}"
+  JOBS_HTTP: "http://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  services__jobs__http__0: "http://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  JOBS_HTTPS: "https://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  services__jobs__https__0: "https://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  CACHE_HOST: "{{ .Values.config.api.CACHE_HOST }}"
+  CACHE_PORT: "{{ .Values.config.api.CACHE_PORT }}"
+  POSTGRESDB_HOST: "{{ .Values.config.api.POSTGRESDB_HOST }}"
+  POSTGRESDB_PORT: "{{ .Values.config.api.POSTGRESDB_PORT }}"
+  POSTGRESDB_USERNAME: "{{ .Values.config.api.POSTGRESDB_USERNAME }}"
+  POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.api.POSTGRESDB_JDBCCONNECTIONSTRING }}"
+  POSTGRESDB_DATABASENAME: "{{ .Values.config.api.POSTGRESDB_DATABASENAME }}"
+  ConnectionStrings__kafka: "{{ .Values.config.api.ConnectionStrings__kafka }}"
+  KAFKA_HOST: "{{ .Values.config.api.KAFKA_HOST }}"
+  KAFKA_PORT: "{{ .Values.config.api.KAFKA_PORT }}"

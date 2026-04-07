@@ -1,0 +1,81 @@
+persistence:
+  postgres:
+    size: "10Gi"
+  kafka:
+    size: "10Gi"
+
+headlamp:
+  enabled: true
+  image: "ghcr.io/headlamp-k8s/headlamp:latest"
+parameters:
+  jobs:
+    port_http: 8080
+    jobs_image: "ghcr.io/joelcrosby/netptune-jobs:latest"
+  api:
+    port_http: 8080
+    api_image: "ghcr.io/joelcrosby/netptune:latest"
+  client:
+    client_image: "ghcr.io/joelcrosby/netptune-client:latest"
+    api_url: "http://api-service:8080"
+secrets:
+  postgres:
+    postgres_password: ""
+  cache:
+    cache_password: ""
+  jobs:
+    cache_password: ""
+    postgres_password: ""
+    signing_key: ""
+    sendgrid_api_key: ""
+    s3_bucket_name: ""
+    s3_region: ""
+    s3_access_key_id: ""
+    s3_secret_access_key: ""
+  api:
+    cache_password: ""
+    postgres_password: ""
+    signing_key: ""
+    github_client_id: ""
+    github_secret: ""
+    sendgrid_api_key: ""
+    s3_bucket_name: ""
+    s3_region: ""
+    s3_access_key_id: ""
+    s3_secret_access_key: ""
+config:
+  postgres:
+    POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    POSTGRES_USER: "postgres"
+  kafka:
+    KAFKA_LISTENERS: "PLAINTEXT://localhost:29092,CONTROLLER://localhost:29093,PLAINTEXT_HOST://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:9093"
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT"
+    KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-service:29092,PLAINTEXT_HOST://kafka-service:9092,PLAINTEXT_INTERNAL://kafka-service:9093"
+    KAFKA_LOG_DIRS: "/var/lib/kafka/data"
+  jobs:
+    OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+    CACHE_HOST: "cache-service"
+    CACHE_PORT: "6379"
+    POSTGRESDB_HOST: "postgres-service"
+    POSTGRESDB_PORT: "5432"
+    POSTGRESDB_USERNAME: "postgres"
+    POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
+    POSTGRESDB_DATABASENAME: "netptune"
+    ConnectionStrings__kafka: "kafka-service:9092"
+    KAFKA_HOST: "kafka-service"
+    KAFKA_PORT: "9092"
+  api:
+    OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+    ASPNETCORE_URLS: "http://0.0.0.0:7400"
+    CACHE_HOST: "cache-service"
+    CACHE_PORT: "6379"
+    POSTGRESDB_HOST: "postgres-service"
+    POSTGRESDB_PORT: "5432"
+    POSTGRESDB_USERNAME: "postgres"
+    POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
+    POSTGRESDB_DATABASENAME: "netptune"
+    ConnectionStrings__kafka: "kafka-service:9092"
+    KAFKA_HOST: "kafka-service"
+    KAFKA_PORT: "9092"
