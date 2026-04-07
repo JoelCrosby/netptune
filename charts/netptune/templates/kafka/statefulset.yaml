@@ -22,6 +22,8 @@ spec:
         app.kubernetes.io/component: "kafka"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - image: "docker.io/confluentinc/confluent-local:8.1.1"
           name: "kafka"
@@ -38,6 +40,7 @@ spec:
           volumeMounts:
             - name: "kafka-data"
               mountPath: "/var/lib/kafka/data"
+              subPath: "data"
           imagePullPolicy: "IfNotPresent"
   updateStrategy:
     type: "RollingUpdate"
