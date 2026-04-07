@@ -22,9 +22,14 @@ spec:
         app.kubernetes.io/component: "postgres"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      securityContext:
+        fsGroup: 999
       containers:
         - image: "docker.io/library/postgres:17.6"
           name: "postgres"
+          env:
+            - name: "PGDATA"
+              value: "/var/lib/postgresql/data/pgdata"
           envFrom:
             - configMapRef:
                 name: "postgres-config"
