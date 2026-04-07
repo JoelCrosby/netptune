@@ -1,3 +1,10 @@
+ingress:
+  enabled: true
+  host: "netptune.co.uk"
+  tls:
+    enabled: true
+    email: ""
+
 persistence:
   postgres:
     size: "40Gi"

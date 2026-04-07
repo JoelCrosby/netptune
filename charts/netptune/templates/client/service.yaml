@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: "client"
     app.kubernetes.io/instance: "{{ .Release.Name }}"
 spec:
-  type: "LoadBalancer"
+  type: "ClusterIP"
   selector:
     app.kubernetes.io/name: "netptune-app"
     app.kubernetes.io/component: "client"
