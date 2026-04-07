@@ -32,6 +32,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -53,7 +57,7 @@ jobs:
           build-args: |
             COMMIT=${{ github.sha }}
             GITHUB_REF=${{ github.ref }}
-            BUILD_NUMBER=${{ github.run_number }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
             RUN_ID=${{ github.run_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
