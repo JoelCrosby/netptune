@@ -27,7 +27,7 @@ spec:
             - name: "http"
               protocol: "TCP"
               containerPort: {{ .Values.parameters.jobs.port_http | int }}
-          imagePullPolicy: "IfNotPresent"
+          imagePullPolicy: "Always"
   selector:
     matchLabels:
       app.kubernetes.io/name: "netptune-app"
