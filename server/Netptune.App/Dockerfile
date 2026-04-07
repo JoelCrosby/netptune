@@ -31,21 +31,8 @@ RUN dotnet publish "Netptune.App.csproj" \
     -o /app/publish \
     /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
-# client app
-FROM node:25-alpine3.22 AS client-build
-RUN npm install -g pnpm
-WORKDIR /client
-COPY /client/package*.json ./
-COPY /client/pnpm-lock.yaml ./
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-COPY /client .
-RUN pnpm build
-
 FROM base AS final
 EXPOSE 4800/tcp
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY --from=client-build /client/dist/browser ./wwwroot/dist
 ENTRYPOINT ["dotnet", "Netptune.App.dll"]
