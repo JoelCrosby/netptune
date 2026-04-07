@@ -3,8 +3,14 @@ name: Build App Image
 on:
   push:
     branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/build-image-app.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/build-image-app.yml"
 
 env:
   REGISTRY: ghcr.io

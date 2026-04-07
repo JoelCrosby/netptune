@@ -3,8 +3,14 @@ name: Build Jobs Image
 on:
   push:
     branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/build-image-jobs.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/build-image-jobs.yml"
 
 env:
   REGISTRY: ghcr.io

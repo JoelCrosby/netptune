@@ -3,8 +3,14 @@ name: Build Client Image
 on:
   push:
     branches: [ main ]
+    paths:
+      - "client/**"
+      - ".github/workflows/build-image-client.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - "client/**"
+      - ".github/workflows/build-image-client.yml"
 
 env:
   REGISTRY: ghcr.io
