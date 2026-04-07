@@ -5,7 +5,8 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp</SpaRoot>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -20,31 +21,7 @@
 
     <!-- Docker -->
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Nullable>enable</Nullable>
-
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="$(SpaRoot)\**" />
-    <Content Remove="$(SpaRoot)\**" />
-    <EmbeddedResource Remove="$(SpaRoot)\**" />
-    <None Remove="$(SpaRoot)\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="App_Data\**" />
-    <Content Remove="App_Data\**" />
-    <EmbeddedResource Remove="App_Data\**" />
-    <None Remove="App_Data\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.5" />
-    <PackageReference Include="Serilog" Version="4.3.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Cache\Netptune.Cache.csproj" />

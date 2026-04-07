@@ -1,9 +1,4 @@
-using System.IO;
-
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 using Netptune.App.Endpoints;
 using Netptune.App.Services;
@@ -20,20 +15,12 @@ using Netptune.Services.Authorization;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
-using Serilog;
-
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 var isDevelopment = builder.Environment.IsDevelopment();
 
 builder.AddServiceDefaults();
-
-builder.Host.UseSerilog((context, services, config) => config
-    .ReadFrom.Configuration(context.Configuration)
-    .ReadFrom.Services(services)
-    .Enrich.FromLogContext());
-
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
@@ -107,11 +94,6 @@ builder.Services.AddS3StorageService(options =>
     options.SecretAccessKey = configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
-builder.Services.AddSpaStaticFiles(options =>
-{
-    options.RootPath = Path.Join(builder.Environment.WebRootPath, "dist");
-});
-
 builder.Services.AddNetptuneMessageQueue();
 
 builder.Services.AddValidation();
@@ -119,7 +101,6 @@ builder.Services.AddValidation();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-app.UseSerilogRequestLogging();
 
 app.UseRouting();
 
