@@ -145,6 +145,13 @@ public class NetptuneAuthService : INetptuneAuthService
             return RegisterResult.Failed("Invalid request.");
         }
 
+        var existingUser = await UserManager.FindByEmailAsync(model.Email);
+
+        if (existingUser is not null)
+        {
+            return RegisterResult.Failed("User with email already exists");
+        }
+
         var user = new AppUser
         {
             Email = model.Email,
