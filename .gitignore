@@ -243,3 +243,6 @@ pgdata/
 
 # Helm values
 charts/**/values.secret.yaml
+
+# Claude Code
+.claude/settings.json
