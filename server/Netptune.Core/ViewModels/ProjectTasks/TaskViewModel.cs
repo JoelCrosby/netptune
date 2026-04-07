@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using Netptune.Core.Enums;
 using Netptune.Core.ViewModels.Users;
 

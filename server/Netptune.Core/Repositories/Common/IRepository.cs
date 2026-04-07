@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netptune.Core.Repositories.Common;
 
 public interface IRepository<TEntity, in TId> where TEntity : class

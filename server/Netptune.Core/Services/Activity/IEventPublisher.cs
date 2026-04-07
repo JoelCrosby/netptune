@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netptune.Core.Services.Activity;
+﻿namespace Netptune.Core.Services.Activity;
 
 public interface IEventPublisher
 {

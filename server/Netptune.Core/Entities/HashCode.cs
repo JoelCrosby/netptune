@@ -1,5 +1,3 @@
-using System;
-
 using Netptune.Core.BaseEntities;
 
 namespace Netptune.Core.Entities;

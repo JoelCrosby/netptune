@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using AngleSharp.Dom;
+﻿using AngleSharp.Dom;
 
 namespace Netptune.Core.Services.Integration;
 

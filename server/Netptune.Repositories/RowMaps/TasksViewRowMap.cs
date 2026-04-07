@@ -1,4 +1,3 @@
-using System;
 using Netptune.Core.Enums;
 
 // ReSharper disable InconsistentNaming

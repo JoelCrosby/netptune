@@ -1,5 +1,3 @@
-using System;
-
 namespace Netptune.Core.Authentication.Models;
 
 public class AuthenticationTicket : CurrentUserResponse

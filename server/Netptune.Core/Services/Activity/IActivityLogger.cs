@@ -1,5 +1,3 @@
-using System;
-
 using Netptune.Core.Models.Activity;
 
 namespace Netptune.Core.Services.Activity;

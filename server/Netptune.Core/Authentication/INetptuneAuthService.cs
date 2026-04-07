@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Authentication;

@@ -1,5 +1,3 @@
-using System;
-
 namespace Netptune.Core.ViewModels.Projects;
 
 public class ProjectViewModel
