@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using Netptune.Core.Events;
 
 namespace Netptune.Core.Models.Messaging;
@@ -23,27 +21,6 @@ public class SendEmailModel : IEventMessage
     public string RawTextContent { get; init; } = null!;
 
     public string Reason { get; init; } = null!;
-}
-
-public class SendEmailModelMultiple : IEventMessage
-{
-    public List<string> ToAddress { get; init; } = null!;
-
-    public string ToDisplayName { get; init; } = null!;
-
-    public string Name { get; init; } = null!;
-
-    public string Subject { get; init; } = null!;
-
-    public string PreHeader { get; init; } = null!;
-
-    public string Message { get; init; } = null!;
-
-    public string? Link { get; init; }
-
-    public string? Action { get; init; }
-
-    public string? RawTextContent { get; init; }
 }
 
 public class SendTo
