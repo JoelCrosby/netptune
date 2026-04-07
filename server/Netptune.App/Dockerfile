@@ -18,7 +18,7 @@ COPY server/*/*.csproj ./
 RUN for file in $(ls *.csproj); do \
       mkdir -p ${file%.*}/ && mv $file ${file%.*}/; \
     done
-COPY server/*.sln .
+COPY server/*.slnx .
 RUN dotnet restore
 
 # copy everything else
