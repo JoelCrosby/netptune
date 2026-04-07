@@ -14,6 +14,9 @@ persistence:
 headlamp:
   enabled: true
   image: "ghcr.io/headlamp-k8s/headlamp:latest"
+  host: "headlamp.netptune.co.uk"
+  oauth2:
+    allowed_email_domain: "live.co.uk"
 parameters:
   jobs:
     port_http: 8080
@@ -25,6 +28,10 @@ parameters:
     client_image: "ghcr.io/joelcrosby/netptune-client:latest"
     api_url: "http://api-service:8080"
 secrets:
+  headlamp:
+    github_client_id: ""
+    github_client_secret: ""
+    cookie_secret: ""
   postgres:
     postgres_password: ""
   cache:
