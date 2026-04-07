@@ -29,6 +29,8 @@ var jobs = builder
 
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
+    .WithEndpoint("http", e => e.IsProxied = false)
+    .WithEnvironment("ASPNETCORE_URLS", "http://0.0.0.0:7400")
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
@@ -37,6 +39,7 @@ var api = builder
 
 var client = builder
     .AddDockerfile("client", "../../client/")
+    .WithReference(api)
     .WithEnvironment("API_URL", api.GetEndpoint("http"))
     .WithHttpEndpoint(targetPort: 80)
     .WithExternalHttpEndpoints();
