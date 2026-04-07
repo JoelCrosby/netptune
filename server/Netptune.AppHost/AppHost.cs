@@ -25,14 +25,14 @@ var jobs = builder
     .AddProject<Projects.Netptune_JobServer>("jobs")
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithReference(kafka);
+    .WithKafka(kafka);
 
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithReference(kafka)
+    .WithKafka(kafka)
     .WithExternalHttpEndpoints();
 
 var client = builder

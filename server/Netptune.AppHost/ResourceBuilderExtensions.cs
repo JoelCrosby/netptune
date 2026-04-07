@@ -20,6 +20,13 @@ public static class ResourceBuilderExtensions
                 .WithEnvironment("ConnectionStrings__netptune", database.Resource.ConnectionStringExpression);
         }
 
+        public IResourceBuilder<T> WithKafka(IResourceBuilder<KafkaServerResource> kafka)
+        {
+            return builder
+                .WaitFor(kafka)
+                .WithReference(kafka);
+        }
+
         public IResourceBuilder<T> WithJobServer(IResourceBuilder<ProjectResource> jobs)
         {
             return builder
