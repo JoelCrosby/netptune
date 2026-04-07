@@ -36,8 +36,9 @@ var api = builder
     .WithExternalHttpEndpoints();
 
 var client = builder
-    .AddViteApp("client", "../../client/", "start")
-    .WithPnpm()
+    .AddDockerfile("client", "../../client/")
+    .WithEnvironment("API_URL", api.GetEndpoint("http"))
+    .WithHttpEndpoint(targetPort: 80)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();
