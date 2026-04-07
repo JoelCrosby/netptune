@@ -1,0 +1,14 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "kafka-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "kafka"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  KAFKA_LISTENERS: "{{ .Values.config.kafka.KAFKA_LISTENERS }}"
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "{{ .Values.config.kafka.KAFKA_LISTENER_SECURITY_PROTOCOL_MAP }}"
+  KAFKA_ADVERTISED_LISTENERS: "{{ .Values.config.kafka.KAFKA_ADVERTISED_LISTENERS }}"
+  KAFKA_LOG_DIRS: "{{ .Values.config.kafka.KAFKA_LOG_DIRS }}"

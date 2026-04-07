@@ -1,0 +1,53 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "kafka-statefulset"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "kafka"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  serviceName: "kafka-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "kafka"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "kafka"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      containers:
+        - image: "docker.io/confluentinc/confluent-local:8.1.1"
+          name: "kafka"
+          envFrom:
+            - configMapRef:
+                name: "kafka-config"
+          ports:
+            - name: "tcp"
+              protocol: "TCP"
+              containerPort: 9092
+            - name: "internal"
+              protocol: "TCP"
+              containerPort: 9093
+          volumeMounts:
+            - name: "kafka-data"
+              mountPath: "/var/lib/kafka/data"
+          imagePullPolicy: "IfNotPresent"
+  updateStrategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxUnavailable: 1
+  volumeClaimTemplates:
+    - metadata:
+        name: "kafka-data"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.kafka.size }}"

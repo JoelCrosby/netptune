@@ -1,0 +1,12 @@
+apiVersion: "v2"
+name: "netptune-app"
+version: "0.1.0"
+kubeVersion: ">= 1.18.0-0"
+description: "Aspire Helm Chart"
+type: "application"
+keywords:
+  - "aspire"
+  - "kubernetes"
+appVersion: "0.1.0"
+icon: "https://netptune.co.uk/assets/apple-touch-icon.png"
+deprecated: false

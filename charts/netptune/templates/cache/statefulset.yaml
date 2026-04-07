@@ -1,0 +1,44 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "cache-statefulset"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "cache"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  serviceName: "cache-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "cache"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "cache"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      containers:
+        - command:
+            - "/bin/sh"
+          image: "docker.io/valkey/valkey:9.0"
+          name: "cache"
+          envFrom:
+            - secretRef:
+                name: "cache-secrets"
+          args:
+            - "-c"
+            - "valkey-server --requirepass $VALKEY_PASSWORD"
+          ports:
+            - name: "tcp"
+              protocol: "TCP"
+              containerPort: 6379
+          imagePullPolicy: "IfNotPresent"
+  updateStrategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxUnavailable: 1
