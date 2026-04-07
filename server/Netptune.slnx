@@ -1,0 +1,39 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="../.dockerignore" />
+    <File Path="../.editorconfig" />
+    <File Path="../.github/workflows/build-deploy.yml" />
+    <File Path="../.gitignore" />
+    <File Path="../docker-compose.yml" />
+    <File Path="../Dockerfile" />
+    <File Path="../jobs.Dockerfile" />
+    <File Path="../LICENSE.txt" />
+    <File Path="../netptune-client.code-workspace" />
+    <File Path="../netptune-server.code-workspace" />
+    <File Path="../README.md" />
+    <File Path="global.json" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Netptune.IntegrationTests/Netptune.IntegrationTests.csproj" />
+    <Project Path="Netptune.UnitTests/Netptune.UnitTests.csproj" />
+  </Folder>
+  <Project Path="Netptune.App/Netptune.App.csproj" />
+  <Project Path="Netptune.AppHost/Netptune.AppHost.csproj" />
+  <Project Path="Netptune.Cache/Netptune.Cache.csproj" />
+  <Project Path="Netptune.Core/Netptune.Core.csproj" />
+  <Project Path="Netptune.Entities/Netptune.Entities.csproj" />
+  <Project Path="Netptune.Events/Netptune.Events.csproj" />
+  <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
+  <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />
+  <Project Path="Netptune.Repositories/Netptune.Repositories.csproj">
+    <BuildDependency Project="Netptune.Services/Netptune.Services.csproj" />
+  </Project>
+  <Project Path="Netptune.ServiceDefaults/Netptune.ServiceDefaults.csproj" />
+  <Project Path="Netptune.Services/Netptune.Services.csproj" />
+  <Project Path="Netptune.Storage/Netptune.Storage.csproj" />
+</Solution>
