@@ -12,16 +12,27 @@ ARG GITHUB_REF
 ARG BUILD_NUMBER
 ARG RUN_ID
 WORKDIR /
+
+# copy csproj and restore as distinct layers
 COPY server/*/*.csproj ./
 RUN for file in $(ls *.csproj); do \
       mkdir -p ${file%.*}/ && mv $file ${file%.*}/; \
     done
+COPY server/*.slnx .
+RUN dotnet restore
+
+# copy everything else
 COPY /server .
+
+# build job server
 WORKDIR "/Netptune.JobServer"
-RUN dotnet publish "Netptune.JobServer.csproj" -c Release -o /app/publish /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
+RUN dotnet publish "Netptune.JobServer.csproj" \
+    -c Release \
+    -o /app/publish \
+    /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 FROM base AS final
-EXPOSE 4800/tcp
+EXPOSE 4700/tcp
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Netptune.JobServer.dll"]
