@@ -1,5 +1,3 @@
-using System;
-
 namespace Netptune.Core.ViewModels.Users;
 
 public class UserViewModel

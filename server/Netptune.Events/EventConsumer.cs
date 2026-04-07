@@ -1,10 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 
 using Microsoft.Extensions.Logging;
-
-using NATS.Client.Core;
 
 using Netptune.Core.Events;
 

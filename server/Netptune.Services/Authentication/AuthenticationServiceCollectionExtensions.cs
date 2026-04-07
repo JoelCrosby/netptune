@@ -1,9 +1,6 @@
-using System;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;

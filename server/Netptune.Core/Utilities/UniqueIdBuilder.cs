@@ -1,5 +1,3 @@
-using System;
-
 using HashidsNet;
 
 using shortid;

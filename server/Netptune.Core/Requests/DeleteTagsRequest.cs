@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Netptune.Core.Requests;
 
 public record DeleteTagsRequest

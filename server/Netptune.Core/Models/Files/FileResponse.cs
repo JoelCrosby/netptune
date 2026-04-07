@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Netptune.Core.Models.Files;
 
 public class FileResponse

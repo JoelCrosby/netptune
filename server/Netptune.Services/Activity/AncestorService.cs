@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;

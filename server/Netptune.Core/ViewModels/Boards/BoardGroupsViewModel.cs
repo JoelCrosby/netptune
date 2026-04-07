@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using Netptune.Core.Entities;
 using Netptune.Core.ViewModels.Users;
 

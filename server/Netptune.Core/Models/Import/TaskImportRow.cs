@@ -1,5 +1,3 @@
-using System;
-
 namespace Netptune.Core.Models.Import;
 
 public record TaskImportRow

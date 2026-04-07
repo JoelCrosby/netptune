@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 using Netptune.Core.Models.Messaging;
 
 namespace Netptune.Core.Messaging;

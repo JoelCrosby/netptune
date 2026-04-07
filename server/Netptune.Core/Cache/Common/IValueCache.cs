@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netptune.Core.Cache.Common;
 
 public interface IValueCache<TValue>

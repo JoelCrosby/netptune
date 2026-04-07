@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Netptune.Core.Utilities;
 
 public static class ConnectionStringParser

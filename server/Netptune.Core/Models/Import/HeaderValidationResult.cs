@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Netptune.Core.Models.Import;
 
 public class HeaderValidationResult

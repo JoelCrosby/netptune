@@ -1,5 +1,3 @@
-using System;
-
 using CsvHelper;
 using CsvHelper.TypeConversion;
 

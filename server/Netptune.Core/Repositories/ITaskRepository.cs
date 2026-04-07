@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories.Common;
