@@ -13,6 +13,7 @@ using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;
 
+using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -26,6 +27,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:18.3").Build();
     private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.0-alpine").Build();
+    private readonly KafkaContainer KafkaContainer = new KafkaBuilder("confluentinc/cp-kafka:7.5.12").Build();
 
     private WebApplicationFactory<Program> WebApplicationFactory { get; }
 
@@ -35,11 +37,13 @@ public sealed class NetptuneFixture : IAsyncLifetime
     {
         CacheContainer.StartAsync().Wait();
         DbContainer.StartAsync().Wait();
+        KafkaContainer.StartAsync().Wait();
 
         LoadEnvironmentVariables();
 
         Environment.SetEnvironmentVariable("DATABASE_URL", DbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__kafka", KafkaContainer.GetBootstrapAddress());
 
         WebApplicationFactory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
@@ -89,6 +93,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
     {
         await CacheContainer.DisposeAsync().ConfigureAwait(false);
         await DbContainer.DisposeAsync().ConfigureAwait(false);
+        await KafkaContainer.DisposeAsync().ConfigureAwait(false);
 
         await WebApplicationFactory.DisposeAsync().ConfigureAwait(false);
     }
