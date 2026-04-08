@@ -31,7 +31,9 @@ public sealed class EventPublisher : IEventPublisher
             Payload = json,
         };
 
-        await JetStream.PublishAsync(MessageKeys.RoutingKey, message);
+        var ack = await JetStream.PublishAsync(MessageKeys.RoutingKey, message);
+
+        ack.EnsureSuccess();
 
         Logger.LogInformation("[Event] type {Type} published", type);
     }
