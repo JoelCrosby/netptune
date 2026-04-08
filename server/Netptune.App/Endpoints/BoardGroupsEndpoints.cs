@@ -77,9 +77,10 @@ public static class BoardGroupsEndpoints
     private static Task BroadcastAsync(IBoardEventService boardEventService, HttpContext context)
     {
         var group = context.Request.Headers["X-Group"].ToString();
+        var clientId = context.Connection.Id;
 
         if (string.IsNullOrEmpty(group)) return Task.CompletedTask;
 
-        return boardEventService.BroadcastAsync(group);
+        return boardEventService.BroadcastAsync(group, clientId);
     }
 }

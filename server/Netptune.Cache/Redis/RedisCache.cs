@@ -1,7 +1,6 @@
 using System.Text.Json;
 
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 
 using Netptune.Core.Cache.Common;
 
@@ -15,14 +14,9 @@ public class RedisCache : ICacheProvider
 
     private IDatabase Db => Connection.GetDatabase();
 
-    public RedisCache(IOptions<RedisCacheOptions> options)
+    public RedisCache(IConnectionMultiplexer connection)
     {
-        if (options.Value.Connection is null)
-        {
-            throw new ($"{nameof(RedisCache)} was instantiated without options provided");
-        }
-
-        Connection = ConnectionMultiplexer.Connect(options.Value.Connection);
+        Connection = connection;
     }
 
     public string? GetString(string key)
