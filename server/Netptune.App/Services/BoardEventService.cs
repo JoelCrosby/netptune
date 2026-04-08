@@ -1,14 +1,20 @@
-using System.Collections.Concurrent;
-using System.Threading.Channels;
+using System.Text.Json;
+
+using StackExchange.Redis;
 
 namespace Netptune.App.Services;
 
-public class BoardEventService(ILogger<BoardEventService> logger) : IBoardEventService
-{
-    private readonly ConcurrentDictionary<string, List<Channel<bool>>> Groups = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Lock Lock = new();
+public record ClientChannel(string Client, string Group, DateTimeOffset CreatedAt);
 
-    public async Task SubscribeAsync(string group, HttpResponse response, CancellationToken cancellationToken)
+public class BoardEventService(ILogger<BoardEventService> logger, IConnectionMultiplexer connection) : IBoardEventService
+{
+    private readonly RedisChannel RealTimeGroupChannel = RedisChannel.Literal("real-time-groups");
+
+    public async Task SubscribeAsync(
+        string group,
+        string clientId,
+        HttpResponse response,
+        CancellationToken cancellationToken)
     {
         response.Headers.Append("Content-Type", "text/event-stream");
         response.Headers.Append("Cache-Control", "no-cache");
@@ -17,16 +23,31 @@ public class BoardEventService(ILogger<BoardEventService> logger) : IBoardEventS
 
         await response.Body.FlushAsync(cancellationToken);
 
-        var channel = Channel.CreateUnbounded<bool>();
-
-        AddChannel(group, channel);
+        var queue = await connection.GetSubscriber().SubscribeAsync(RealTimeGroupChannel);
 
         try
         {
-            await foreach (var _ in channel.Reader.ReadAllAsync(cancellationToken))
+            await foreach (var message in queue)
             {
-                await response.WriteAsync("data: update\n\n", cancellationToken);
-                await response.Body.FlushAsync(cancellationToken);
+                try
+                {
+                    var clientChannel = JsonSerializer.Deserialize(message.Message.ToString(), BoardEventSerializerContext.Default.ClientChannel);
+
+                    if (clientChannel is null) continue;
+
+                    var notFromConnectedClient = clientChannel.Client != clientId;
+                    var isSameGroup = clientChannel.Group == group;
+
+                    if (notFromConnectedClient && isSameGroup)
+                    {
+                        await response.WriteAsync("data: update\n\n", cancellationToken);
+                        await response.Body.FlushAsync(cancellationToken);
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Message deserialization failed");
+                }
             }
         }
         catch (OperationCanceledException ex)
@@ -35,53 +56,15 @@ public class BoardEventService(ILogger<BoardEventService> logger) : IBoardEventS
         }
         finally
         {
-            RemoveChannel(group, channel);
+            await queue.UnsubscribeAsync();
         }
     }
 
-    public async Task BroadcastAsync(string group)
+    public Task BroadcastAsync(string group, string clientId)
     {
-        if (!Groups.TryGetValue(group, out var channels)) return;
+        var message = new ClientChannel(clientId, group, DateTimeOffset.UtcNow);
+        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.ClientChannel);
 
-        List<Channel<bool>> snapshot;
-
-        lock (Lock)
-        {
-            snapshot = [..channels];
-        }
-
-        foreach (var channel in snapshot)
-        {
-            await channel.Writer.WriteAsync(true);
-        }
-    }
-
-    private void AddChannel(string group, Channel<bool> channel)
-    {
-        lock (Lock)
-        {
-            if (!Groups.TryGetValue(group, out var channels))
-            {
-                channels = [];
-                Groups[group] = channels;
-            }
-
-            channels.Add(channel);
-        }
-    }
-
-    private void RemoveChannel(string group, Channel<bool> channel)
-    {
-        lock (Lock)
-        {
-            if (!Groups.TryGetValue(group, out var channels)) return;
-
-            channels.Remove(channel);
-
-            if (channels.Count == 0)
-            {
-                Groups.TryRemove(group, out _);
-            }
-        }
+        return connection.GetSubscriber().PublishAsync(RealTimeGroupChannel, json);
     }
 }

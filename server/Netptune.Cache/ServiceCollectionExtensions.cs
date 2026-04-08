@@ -6,6 +6,8 @@ using Netptune.Cache.Redis;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 
+using StackExchange.Redis;
+
 namespace Netptune.Cache;
 
 public static class ServiceCollectionExtensions
@@ -18,6 +20,7 @@ public static class ServiceCollectionExtensions
 
         services.Configure(action);
 
+        services.TryAddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.Connection));
         services.TryAddSingleton<ICacheProvider, RedisCache>();
 
         services.AddScoped<IUserCache, UserCache>();

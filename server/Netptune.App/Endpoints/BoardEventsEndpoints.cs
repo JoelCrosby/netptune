@@ -18,6 +18,8 @@ public static class BoardEventsEndpoints
         IBoardEventService boardEventService,
         string group)
     {
-        await boardEventService.SubscribeAsync(group, context.Response, context.RequestAborted);
+        var clientId = context.Connection.Id;
+
+        await boardEventService.SubscribeAsync(group, clientId, context.Response, context.RequestAborted);
     }
 }
