@@ -67,7 +67,7 @@ public static class AuthenticationServiceCollectionExtensions
                     {
                         workspace = headerWorkspace;
                     }
-                    else if (context.Request.Path.StartsWithSegments("/hubs"))
+                    else if (context.Request.Path.StartsWithSegments("/api/hubs"))
                     {
                         workspace = context.Request.Query[NetptuneClaims.Workspace];
                     }
@@ -89,7 +89,7 @@ public static class AuthenticationServiceCollectionExtensions
                     var accessToken = context.Request.Query["access_token"];
                     var path = context.HttpContext.Request.Path;
                     var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
-                    var isHubPath = path.StartsWithSegments("/hubs");
+                    var isHubPath = path.StartsWithSegments("/api/hubs");
 
                     if (accessTokenNotEmpty && isHubPath)
                     {
