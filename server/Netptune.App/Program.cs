@@ -24,6 +24,7 @@ builder.AddServiceDefaults();
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
+var natsConnectionString = configuration.GetNetptuneNatsConnectionString();
 
 builder.Services.AddCors(options =>
 {
@@ -94,7 +95,7 @@ builder.Services.AddS3StorageService(options =>
     options.SecretAccessKey = configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
-builder.Services.AddNetptuneMessageQueue();
+builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
 builder.Services.AddValidation();
 

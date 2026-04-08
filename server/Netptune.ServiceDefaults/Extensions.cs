@@ -28,8 +28,6 @@ public static class Extensions
             http.AddServiceDiscovery();
         });
 
-        builder.AddNatsClient("nats");
-
         return builder;
     }
 

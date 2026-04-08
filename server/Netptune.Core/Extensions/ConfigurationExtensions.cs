@@ -36,6 +36,21 @@ public static class ConfigurationExtensions
         return ConnectionStringParser.ParseRedis(connectionString);
     }
 
+    public static string GetNetptuneNatsConnectionString(this IConfiguration configuration)
+    {
+        var appSettingsConString = configuration.GetConnectionString("nats");
+        var envVar = Environment.GetEnvironmentVariable("ConnectionStrings__nats");
+
+        var connectionString = envVar ?? appSettingsConString;
+
+        if (connectionString is null)
+        {
+            throw new Exception("No NATS connection string found. Set 'ConnectionStrings:nats' in appsettings or the 'ConnectionStrings__nats' environment variable.");
+        }
+
+        return connectionString;
+    }
+
     public static string GetNetptuneZeroMqConnectionString(this IConfiguration configuration)
     {
         var appSettingsConString = configuration.GetConnectionString("zeromq");
