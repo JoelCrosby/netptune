@@ -1,6 +1,9 @@
-﻿using Confluent.Kafka;
+using System.Runtime.CompilerServices;
 
 using Microsoft.Extensions.Logging;
+
+using NATS.Client.JetStream;
+using NATS.Client.JetStream.Models;
 
 using Netptune.Core.Events;
 
@@ -8,42 +11,39 @@ namespace Netptune.Events;
 
 public sealed class EventConsumer : IEventConsumer
 {
+    private readonly INatsJSContext JetStream;
     private readonly ILogger<EventConsumer> Logger;
-    private readonly IConsumer<string, string> Consumer;
 
-    public EventConsumer(ILogger<EventConsumer> logger, IConsumer<string, string> consumer)
+    public EventConsumer(INatsJSContext jetStream, ILogger<EventConsumer> logger)
     {
+        JetStream = jetStream;
         Logger = logger;
-        Consumer = consumer;
     }
 
-    public IEnumerable<EventMessage> GetEventMessages(CancellationToken cancellationToken)
+    public async IAsyncEnumerable<EventMessage> GetEventMessages([EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        Consumer.Subscribe([MessageKeys.RoutingKey]);
-
-        while (!cancellationToken.IsCancellationRequested)
+        await JetStream.CreateOrUpdateStreamAsync(new StreamConfig
         {
-            var msg = Consumer.Consume(cancellationToken);
+            Name = MessageKeys.Queue,
+            Subjects = [MessageKeys.RoutingKey],
+            Storage = StreamConfigStorage.Memory,
+        }, cancellationToken);
 
-            var payload = msg.Message.Value;
-            var type = msg.Message.Key;
+        var consumer = await JetStream.CreateOrUpdateConsumerAsync(MessageKeys.Queue, new ConsumerConfig
+        {
+            Name = MessageKeys.Consumer,
+            DurableName = MessageKeys.Consumer,
+        }, cancellationToken);
 
-            if (type is null || payload is null)
-            {
-                throw new Exception("Unknown message type");
-            }
+        await foreach (var msg in consumer.ConsumeAsync<EventMessage>(cancellationToken: cancellationToken))
+        {
+            if (msg.Data is null) continue;
 
-            var pendingMessage = new EventMessage
-            {
-                Type = type,
-                Payload = payload,
-            };
+            Logger.LogInformation("[Event] type {Type} consumed", msg.Data.Type);
 
-            Logger.LogInformation("[Event] type {Type} consumed", type);
+            yield return msg.Data;
 
-            yield return pendingMessage;
+            await msg.AckAsync(cancellationToken: cancellationToken);
         }
-
-        Consumer.Unsubscribe();
     }
 }

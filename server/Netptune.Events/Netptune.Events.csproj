@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.1" />
     <PackageReference Include="Aspire.NATS.Net" Version="13.2.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.5" />
-    <PackageReference Include="NetMQ" Version="4.0.2.2" />
   </ItemGroup>
 
   <ItemGroup>

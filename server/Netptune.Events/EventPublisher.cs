@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-
-using Confluent.Kafka;
+using System.Text.Json;
 
 using Microsoft.Extensions.Logging;
+
+using NATS.Client.JetStream;
 
 using Netptune.Core.Events;
 using Netptune.Core.Services.Activity;
@@ -11,30 +11,28 @@ namespace Netptune.Events;
 
 public sealed class EventPublisher : IEventPublisher
 {
+    private readonly INatsJSContext JetStream;
     private readonly ILogger<EventPublisher> Logger;
-    private readonly IProducer<string, string> Producer;
 
-    public EventPublisher(ILogger<EventPublisher> logger, IProducer<string, string> producer)
+    public EventPublisher(INatsJSContext jetStream, ILogger<EventPublisher> logger)
     {
+        JetStream = jetStream;
         Logger = logger;
-        Producer = producer;
     }
 
     public async Task Dispatch<TPayload>(TPayload payload) where TPayload : class
     {
+        var type = typeof(TPayload).FullName!;
         var json = JsonSerializer.Serialize(payload);
-        var type = typeof(TPayload).FullName;
 
-        ArgumentException.ThrowIfNullOrEmpty(type);
-
-        var message = new Message<string, string>
+        var message = new EventMessage
         {
-            Key =  type,
-            Value = json,
+            Type = type,
+            Payload = json,
         };
 
-        await Producer.ProduceAsync(MessageKeys.RoutingKey, message);
+        await JetStream.PublishAsync(MessageKeys.RoutingKey, message);
 
-        Logger.LogInformation("[Event] type {Type} published: {Payload}", type, json);
+        Logger.LogInformation("[Event] type {Type} published", type);
     }
 }
