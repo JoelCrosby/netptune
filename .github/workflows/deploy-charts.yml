@@ -61,3 +61,8 @@ jobs:
             --set "secrets.headlamp.github_client_id=${{ secrets.HEADLAMP_GITHUB_CLIENT_ID }}" \
             --set "secrets.headlamp.github_client_secret=${{ secrets.HEADLAMP_GITHUB_CLIENT_SECRET }}" \
             --set "secrets.headlamp.cookie_secret=${{ secrets.HEADLAMP_COOKIE_SECRET }}"
+
+      - name: Restart deployments
+        run: |
+          kubectl --kubeconfig kubeconfig.yaml rollout restart deployment/api-deployment deployment/jobs-deployment deployment/client-deployment
+          kubectl --kubeconfig kubeconfig.yaml rollout status deployment/api-deployment deployment/jobs-deployment deployment/client-deployment
