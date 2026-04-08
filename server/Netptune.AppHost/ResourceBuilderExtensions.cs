@@ -20,10 +20,10 @@ public static class ResourceBuilderExtensions
                 .WithEnvironment("ConnectionStrings__netptune", database.Resource.ConnectionStringExpression);
         }
 
-        public IResourceBuilder<T> WithKafka(IResourceBuilder<KafkaServerResource> kafka)
+        public IResourceBuilder<T> WithNats(IResourceBuilder<NatsServerResource> nats)
         {
             return builder
-                .WithReference(kafka);
+                .WithReference(nats);
         }
 
         public IResourceBuilder<T> WithJobServer(IResourceBuilder<ProjectResource> jobs)
