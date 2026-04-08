@@ -28,12 +28,7 @@ public static class Extensions
             http.AddServiceDiscovery();
         });
 
-        builder.AddKafkaProducer<string, string>("kafka");
-        builder.AddKafkaConsumer<string, string>("kafka", settings =>
-        {
-            settings.Config.GroupId = "netptune";
-            settings.Config.AllowAutoCreateTopics = true;
-        });
+        builder.AddNatsClient("nats");
 
         return builder;
     }
