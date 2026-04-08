@@ -4,9 +4,9 @@ An Open Source self-hostable project management application built for teams. Org
 
 [**Website**](https://netptune.co.uk)
 
-[![Build App Image](https://github.com/joelcrosby/netptune/actions/workflows/build-app-image.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-app-image.yml)
-[![Build Client Image](https://github.com/joelcrosby/netptune/actions/workflows/build-client-image.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-client-image.yml)
-[![Build Jobs Image](https://github.com/joelcrosby/netptune/actions/workflows/build-jobs-image.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-jobs-image.yml)
+[![Build App Image](https://github.com/joelcrosby/netptune/actions/workflows/build-image-app.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-image-app.yml)
+[![Build Client Image](https://github.com/joelcrosby/netptune/actions/workflows/build-image-client.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-image-client.yml)
+[![Build Jobs Image](https://github.com/joelcrosby/netptune/actions/workflows/build-image-jobs.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-image-jobs.yml)
 
 ---
 
