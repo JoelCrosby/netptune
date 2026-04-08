@@ -28,11 +28,9 @@ public sealed class QueueConsumerService : BackgroundService
     {
         Logger.LogInformation("[QueueConsumer] service started");
 
-        while (!stoppingToken.IsCancellationRequested)
+        await foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken))
         {
-            foreach (var eventMessage in EventConsumer.GetEventMessages(stoppingToken))
-            {
-                var messageType = GetType(eventMessage.Type);
+            var messageType = GetType(eventMessage.Type);
 
                 if (messageType is null)
                 {
@@ -55,7 +53,6 @@ public sealed class QueueConsumerService : BackgroundService
                 catch (Exception e)
                 {
                     Logger.LogError(e, "[QueueConsumer] processing message of type {Type} failed", messageType.Name);
-                }
             }
         }
 
