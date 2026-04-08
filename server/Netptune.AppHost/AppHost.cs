@@ -14,9 +14,9 @@ builder
 var postgres = builder.AddPostgres("postgres").WithDataVolume();
 var postgresdb = postgres.AddDatabase("postgresdb", "netptune");
 
-var kafka = builder
-    .AddKafka("kafka")
-    .WithKafkaUI()
+var nats = builder
+    .AddNats("nats")
+    .WithJetStream()
     .WithDataVolume();
 
 var cache = builder.AddValkey("cache");
@@ -25,7 +25,7 @@ var jobs = builder
     .AddProject<Projects.Netptune_JobServer>("jobs")
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithKafka(kafka);
+    .WithNats(nats);
 
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
@@ -34,7 +34,7 @@ var api = builder
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithKafka(kafka)
+    .WithNats(nats)
     .WithExternalHttpEndpoints();
 
 var client = builder
