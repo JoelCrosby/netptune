@@ -8,6 +8,8 @@ An Open Source self-hostable project management application built for teams. Org
 [![Build Client Image](https://github.com/joelcrosby/netptune/actions/workflows/build-image-client.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-image-client.yml)
 [![Build Jobs Image](https://github.com/joelcrosby/netptune/actions/workflows/build-image-jobs.yml/badge.svg)](https://github.com/joelcrosby/netptune/actions/workflows/build-image-jobs.yml)
 
+![Netptune screenshot](https://netptune.co.uk/assets/screenshot.png)
+
 ---
 
 ## Built With
