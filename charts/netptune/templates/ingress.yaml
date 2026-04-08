@@ -9,7 +9,8 @@ metadata:
     app.kubernetes.io/instance: "{{ .Release.Name }}"
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     {{- if .Values.ingress.tls.enabled }}
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     {{- end }}

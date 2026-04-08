@@ -29,7 +29,7 @@ export class SseService {
       params.set('workspace', workspaceId);
     }
 
-    const url = `${environment.apiEndpoint}hubs/board-events?${params.toString()}`;
+    const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
 
     this.eventSource = new EventSource(url);
 

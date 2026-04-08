@@ -109,10 +109,9 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapBoardEventsEndpoints();
-
 var apiGroup = app.MapGroup("/api");
 
+apiGroup.MapBoardEventsEndpoints();
 apiGroup.MapActivityEndpoints();
 apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
