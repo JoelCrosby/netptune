@@ -31,7 +31,7 @@ public class BoardEventService(ILogger<BoardEventService> logger) : IBoardEventS
         }
         catch (OperationCanceledException ex)
         {
-            logger.LogError(ex, "Client disconnected");
+            logger.LogDebug(ex, "Client disconnected");
         }
         finally
         {
