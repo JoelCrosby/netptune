@@ -47,7 +47,7 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddHostedService<QueueConsumerService>();
 
-builder.Services.AddNetptuneMessageQueue();
+builder.Services.AddNetptuneMessageQueue(builder.Configuration.GetNetptuneNatsConnectionString());
 
 builder.Services.AddMediator(options =>
 {
