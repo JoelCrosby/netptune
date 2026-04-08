@@ -18,6 +18,4 @@ data:
   POSTGRESDB_USERNAME: "{{ .Values.config.jobs.POSTGRESDB_USERNAME }}"
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.jobs.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.jobs.POSTGRESDB_DATABASENAME }}"
-  ConnectionStrings__kafka: "{{ .Values.config.jobs.ConnectionStrings__kafka }}"
-  KAFKA_HOST: "{{ .Values.config.jobs.KAFKA_HOST }}"
-  KAFKA_PORT: "{{ .Values.config.jobs.KAFKA_PORT }}"
+  ConnectionStrings__nats: "{{ .Values.config.jobs.ConnectionStrings__nats }}"

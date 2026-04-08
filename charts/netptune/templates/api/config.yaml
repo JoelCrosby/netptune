@@ -23,6 +23,4 @@ data:
   POSTGRESDB_USERNAME: "{{ .Values.config.api.POSTGRESDB_USERNAME }}"
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.api.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.api.POSTGRESDB_DATABASENAME }}"
-  ConnectionStrings__kafka: "{{ .Values.config.api.ConnectionStrings__kafka }}"
-  KAFKA_HOST: "{{ .Values.config.api.KAFKA_HOST }}"
-  KAFKA_PORT: "{{ .Values.config.api.KAFKA_PORT }}"
+  ConnectionStrings__nats: "{{ .Values.config.api.ConnectionStrings__nats }}"
