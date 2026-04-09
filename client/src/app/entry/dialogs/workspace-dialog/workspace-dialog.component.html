@@ -25,9 +25,6 @@
 </form>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button app-dialog-close>Close</button>
-
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
-    {{ isEditMode ? 'Save Changes' : 'Save Workspace'}}
-  </button>
+  <app-button variant="outlined" app-dialog-close>Close</app-button>
+  <app-button variant="filled" (click)="getResult()">{{ isEditMode ? 'Save Changes' : 'Save Workspace'}}</app-button>
 </div>

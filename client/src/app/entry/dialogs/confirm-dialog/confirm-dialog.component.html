@@ -34,27 +34,16 @@
 
 <div app-dialog-actions align="end">
   @if (data.isInfoMessage) {
-    <button mat-stroked-button cdkFocusInitial (click)="dialogRef.close(false)">
-      Ok
-    </button>
+    <app-button variant="outlined" cdkFocusInitial (click)="dialogRef.close(false)">Ok</app-button>
   } @else {
     @if (data.cancelLabel) {
-      <button
-        mat-stroked-button
-        cdkFocusInitial
-        (click)="dialogRef.close(false)"
-        >
-        {{ data.cancelLabel }}
-      </button>
+      <app-button variant="outlined" cdkFocusInitial (click)="dialogRef.close(false)">{{ data.cancelLabel }}</app-button>
     }
-    <button
-      mat-flat-button
-      [color]="data.color"
+    <app-button
+      variant="filled"
+      [color]="data.color === 'warn' ? 'warn' : 'primary'"
       (click)="dialogRef.close(true)"
-      [disabled]="data.confirmationCheckboxLabel && !confirmForm.confirmationChecked().value()"
-      >
-      {{ data.acceptLabel }}
-    </button>
+      [disabled]="!!data.confirmationCheckboxLabel && !confirmForm.confirmationChecked().value()"
+    >{{ data.acceptLabel }}</app-button>
   }
-
 </div>

@@ -8,8 +8,6 @@
 </div>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button app-dialog-close>Close</button>
-  <button mat-flat-button color="primary" (click)="onSubmit($event)" type="button">
-    Add Group
-  </button>
+  <app-button variant="outlined" app-dialog-close>Close</app-button>
+  <app-button variant="filled" (click)="onSubmit($event)">Add Group</app-button>
 </div>
