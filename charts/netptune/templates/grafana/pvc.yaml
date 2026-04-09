@@ -1,0 +1,17 @@
+{{- if .Values.grafana.enabled }}
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "grafana-pvc"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "grafana"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "{{ .Values.persistence.grafana.size }}"
+{{- end }}

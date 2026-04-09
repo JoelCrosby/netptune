@@ -1,0 +1,51 @@
+{{- if .Values.loki.enabled }}
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "loki-deployment"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "loki"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "loki"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  strategy:
+    type: "Recreate"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "loki"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      containers:
+        - name: "loki"
+          image: "{{ .Values.loki.image }}"
+          args:
+            - "-config.file=/etc/loki/loki.yaml"
+          ports:
+            - name: "http"
+              protocol: "TCP"
+              containerPort: 3100
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: "config"
+              mountPath: "/etc/loki"
+              readOnly: true
+            - name: "data"
+              mountPath: "/loki"
+      volumes:
+        - name: "config"
+          configMap:
+            name: "loki-config"
+        - name: "data"
+          persistentVolumeClaim:
+            claimName: "loki-pvc"
+{{- end }}

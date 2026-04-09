@@ -8,6 +8,10 @@ ingress:
 persistence:
   postgres:
     size: "40Gi"
+  grafana:
+    size: "5Gi"
+  loki:
+    size: "20Gi"
 
 headlamp:
   enabled: true
@@ -30,6 +34,11 @@ grafana:
   enabled: true
   image: "grafana/grafana:latest"
   host: "grafana.netptune.co.uk"
+
+loki:
+  enabled: true
+  image: "grafana/loki:latest"
+  promtailImage: "grafana/promtail:latest"
 parameters:
   jobs:
     port_http: 8080

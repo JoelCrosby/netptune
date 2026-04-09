@@ -55,5 +55,6 @@ spec:
           configMap:
             name: "grafana-datasource"
         - name: "data"
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: "grafana-pvc"
 {{- end }}
