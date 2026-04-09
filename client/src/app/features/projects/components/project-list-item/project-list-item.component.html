@@ -5,9 +5,9 @@
     [actions]="actions()"
     (delete)="onDeleteClicked()"
   >
-    <h5>Repository</h5>
+    <h5 class="mt-4 mb-[0.4rem]">Repository</h5>
 
-    <a [href]="project().repositoryUrl" class="link">
+    <a [href]="project().repositoryUrl" class="block whitespace-nowrap overflow-hidden text-ellipsis max-w-full underline py-[0.6rem]">
       {{ project().repositoryUrl }}
     </a>
   </app-card-list-item>

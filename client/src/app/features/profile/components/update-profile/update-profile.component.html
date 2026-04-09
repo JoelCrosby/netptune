@@ -1,5 +1,5 @@
-<form class="px-0">
-  <div class="column">
+<form class="flex flex-row justify-start max-[1036px]:flex-col-reverse px-0">
+  <div class="w-full max-w-[480px]">
     <app-form-input [formField]="profileForm.firstname" label="Firstname" />
     <app-form-input [formField]="profileForm.lastname" label="Lastname" />
     <app-form-input [formField]="profileForm.email" label="Email Address" />
@@ -7,7 +7,7 @@
     <input type="hidden" [formField]="profileForm.pictureUrl" />
 
     <button
-      class="form-submit-btn"
+      class="block mt-3 ml-auto"
       mat-stroked-button
       (click)="updateClicked()"
       >
@@ -15,22 +15,22 @@
     </button>
   </div>
 
-  <div class="column-fill">
-    <div class="profile-image">
+  <div class="w-full max-[1036px]:max-w-[480px] max-[1036px]:mb-16">
+    <div class="flex flex-col w-[180px] items-center my-[1.4rem] mx-auto">
       @if (editProfilePicture()) {
         <img [width]="180" [src]="profileForm.pictureUrl()" alt="profile-image" />
       } @else {
         @if (profileForm.pictureUrl()) {
           <img
             crossorigin="anonymous"
-            class="profile-picture"
+            class="mx-auto rounded-full h-[180px] w-[180px]"
             [src]="profileForm.pictureUrl()"
             alt="Profile Image"
             height="180"
             width="180"
             />
           <button
-            class="profile-picture-btn"
+            class="my-[1.4rem] mx-auto"
             mat-stroked-button
             (click)="onChangePictureClicked()"
             >
@@ -39,14 +39,14 @@
         } @else {
           <img
             crossorigin="anonymous"
-            class="profile-picture"
+            class="mx-auto rounded-full h-[180px] w-[180px]"
             src="https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png"
             alt="Placeholder Profile Image"
             height="180"
             width="180"
             />
           <button
-            class="profile-picture-btn"
+            class="my-[1.4rem] mx-auto"
             mat-stroked-button
             (click)="onChangePictureClicked()"
             >

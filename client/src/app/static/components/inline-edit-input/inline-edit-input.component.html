@@ -1,9 +1,9 @@
-<div class="inline-edit">
+<div class="w-full rounded">
   @if (isEditActive()) {
   <input
     #input
     type="text"
-    class="inline-edit-input"
+    class="inline-edit-input w-full border-0 bg-transparent p-1 text-[inherit] [font:inherit] box-border transition-all duration-200"
     [value]="value()"
     [readonly]="readonly()"
     [disabled]="disabled()"
@@ -12,6 +12,6 @@
     (keyup.enter)="onSubmit(input.value)"
   />
   } @else {
-  <div class="inline-edit-label">{{ value() }}</div>
+  <div class="p-1 border-2 border-transparent [font:inherit]">{{ value() }}</div>
   }
 </div>

@@ -28,7 +28,6 @@ export interface ConfirmDialogOptions {
 @Component({
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIcon, MatCheckbox, DialogActionsDirective, MatButton, FormField],
 })

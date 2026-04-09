@@ -9,20 +9,20 @@
         rows="6"
         >
       </app-form-textarea>
-      <div class="form-seperator"></div>
-      <div class="project-key-row">
+      <div class="border-b-2 border-border my-8"></div>
+      <div class="flex items-center">
         <app-form-input
           [formField]="projectForm.key"
           label="Project ID"
-          class="project-key-input"
+          class="w-[120px]"
           maxLength="6"
           >
         </app-form-input>
         <div>
-          <small>
+          <small class="block opacity-60 px-[1.4rem]">
             The Project ID is displayed as the first part of task's ID
           </small>
-          <small> max 6 characters. should be unique to workspace </small>
+          <small class="block opacity-60 px-[1.4rem]"> max 6 characters. should be unique to workspace </small>
         </div>
       </div>
       <app-form-input
@@ -32,7 +32,7 @@
         >
       </app-form-input>
       <button
-        class="form-submit-btn"
+        class="block mt-3 ml-auto"
         mat-flat-button
         color="primary"
         [disabled]="projectForm().disabled()"

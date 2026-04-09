@@ -13,11 +13,11 @@
       height="72"
       />
 
-    <h3 class="auth-title">Sign in to continue</h3>
+    <h3 class="tracking-normal mb-[2.8rem] w-full text-center font-normal">Sign in to continue</h3>
 
-    <div class="auth-error">
+    <div class="h-8 mb-6 w-full flex flex-col justify-center items-center">
       @if (showLoginError()) {
-        <div class="auth-error-text">
+        <div class="rounded-[0.4rem] w-full p-[0.4rem] text-sm font-medium tracking-[0.25px] text-center bg-[rgba(var(--warn-rgb),0.06)] text-warn">
           Username or Password was incorrect
         </div>
       }
@@ -56,7 +56,7 @@
       <button mat-stroked-button color="primary" type="submit">Sign in</button>
     </div>
 
-    <div class="button-container auth-footer">
+    <div class="button-container mt-[1.4rem]">
       <a
         mat-button
         color="primary"
@@ -69,7 +69,7 @@
     <mat-divider />
 
     <button
-      class="signin-github"
+      class="flex items-center justify-center relative py-[0.8rem] px-[1.6rem] rounded-[--radius-sm] outline-none font-[inherit] text-sm font-medium text-center no-underline cursor-pointer transition-colors duration-[140ms] ease-in bg-[#161b22] text-white appearance-none whitespace-nowrap border-0 w-full mt-0 hover:bg-[#1d232c]"
       (click)="$event.preventDefault(); onGithubSignInClicked()"
       >
       <svg
@@ -79,7 +79,7 @@
         viewBox="0 0 24 24"
         role="img"
         aria-labelledby="a7qpw25exvox07kjj8aslcg42h7nzhd3"
-        class="github-icon"
+        class="fill-white text-white mr-4"
         >
         <title id="a7qpw25exvox07kjj8aslcg42h7nzhd3">github</title>
         <path

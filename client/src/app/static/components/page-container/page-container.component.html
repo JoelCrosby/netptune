@@ -1,17 +1,19 @@
 <div
-  class="page-container"
-  [class.full-height]="fullHeight()"
-  [class.center-page]="centerPage()"
+  class="flex flex-col h-screen"
+  [class.mx-auto]="centerPage()"
+  [class.w-full]="centerPage()"
+  [class.max-w-[1200px]]="centerPage()"
   >
-  <div class="page-progress">
+  <div class="shrink-0 h-[0.8rem]">
     @if (showProgress()) {
       <mat-progress-bar mode="indeterminate" />
     }
   </div>
   <div
-    class="page-content"
-    [class.page-vertical-padding]="verticalPadding()"
-    [class.page-margin-bottom]="marginBottom()"
+    class="flex-1 flex flex-col px-8 max-[600px]:px-3"
+    [class.py-16]="verticalPadding()"
+    [class.pb-[20vh]]="marginBottom()"
+    [class.h-[calc(100vh-56px)]]="fullHeight()"
     >
     <ng-content />
   </div>

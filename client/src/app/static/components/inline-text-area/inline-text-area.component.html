@@ -1,9 +1,9 @@
-<div class="inline-text-area">
+<div class="w-full pb-[0.4rem] flex">
   @if (isEditActive()) {
     <textarea
       #textarea
       #autosize="cdkTextareaAutosize"
-      class="inline-text-area-input custom-scroll"
+      class="inline-text-area-input custom-scroll p-3 leading-[1.5] w-full border-0 bg-transparent rounded flex-1 [font:inherit] text-[inherit] color-[inherit]"
       [class.active-border]="activeBorder()"
       [class.invalid]="invalid()"
       [attr.aria-invalid]="invalid()"
@@ -18,7 +18,7 @@
       rows="1"
     ></textarea>
   } @else {
-    <div class="inline-text-area-label">{{ value() }}</div>
+    <div class="inline-text-area-label [font:inherit] text-[inherit] leading-[1.5] p-3 rounded transition-colors duration-200 w-full whitespace-[inherit]">{{ value() }}</div>
   }
 
 </div>

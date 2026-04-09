@@ -15,7 +15,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 @Component({
   selector: 'app-invite-dialog',
   templateUrl: './invite-dialog.component.html',
-  styleUrls: ['./invite-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogContentComponent,

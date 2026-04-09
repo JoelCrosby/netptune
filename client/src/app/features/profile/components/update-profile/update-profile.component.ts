@@ -18,7 +18,6 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.component.html',
-  styleUrls: ['./update-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormField, FormInputComponent, MatButton],
 })

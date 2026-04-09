@@ -15,7 +15,6 @@ import { CardListItemComponent } from '@static/components/card-list-item/card-li
 @Component({
   selector: 'app-project-list-item',
   templateUrl: './project-list-item.component.html',
-  styleUrls: ['./project-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, CardListItemComponent],
 })

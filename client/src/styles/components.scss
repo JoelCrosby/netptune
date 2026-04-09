@@ -6,61 +6,6 @@
   }
 }
 
-.card {
-  border: 0 !important;
-  margin: 1rem !important;
-  border-radius: .2rem !important;
-}
-
-.card-footer {
-  border: 0 !important;
-  background-color: transparent;
-}
-
-ul {
-  list-style-type: none;
-}
-
-.button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.flex-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.center {
-  display: flex;
-  align-items: center;
-  vertical-align: middle;
-}
-
-.flex-row {
-  display: flex !important;
-}
-
-.space-between {
-  justify-content: space-between;
-}
-
-.card-actions {
-  display: flex;
-}
-
-.card-chips {
-  display: flex;
-}
-
 .mat-mdc-menu-item {
   line-height: 32px !important;
   height: 32px !important;
@@ -163,20 +108,4 @@ ul {
   animation: fadein .8s;
   border-radius: 4px;
   z-index: 32;
-}
-
-// Form Seperator
-
-.form-seperator {
-  border-bottom: 2px solid var(--border);
-  margin: 2rem 0;
-}
-
-// Error Message
-
-.error-message {
-  margin: .4rem 0 .8rem;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--warn);
 }

@@ -20,7 +20,6 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormField, FormInputComponent, MatButton],
 })

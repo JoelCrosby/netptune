@@ -10,9 +10,9 @@
     >
     </app-form-input>
 
-    <div class="app-list">
+    <div class="min-h-[128px] max-h-[496px] overflow-y-auto">
       @for (user of users(); track user) {
-        <div class="app-list-item">{{ user }}</div>
+        <div class="px-4">{{ user }}</div>
       } @empty {
         <div class="app-list-message">
           Email addresses entered below will show here.

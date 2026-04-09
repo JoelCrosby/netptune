@@ -17,7 +17,6 @@ import { WorkspaceListComponent } from '@workspaces/components/workspace-list/wo
 
 @Component({
   templateUrl: './workspaces-view.component.html',
-  styleUrls: ['./workspaces-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,

@@ -7,7 +7,6 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 @Component({
   selector: 'app-color-select',
   templateUrl: './color-select.component.html',
-  styleUrls: ['./color-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTooltip, MatIcon],
 })

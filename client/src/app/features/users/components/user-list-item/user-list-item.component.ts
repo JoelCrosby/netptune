@@ -6,7 +6,6 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 @Component({
   selector: 'app-user-list-item',
   templateUrl: './user-list-item.component.html',
-  styleUrls: ['./user-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCheckbox, AvatarComponent],
 })

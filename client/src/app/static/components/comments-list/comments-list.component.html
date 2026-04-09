@@ -1,6 +1,6 @@
 @if (user()) {
-  <div class="comments-container">
-    <div class="comments-input">
+  <div>
+    <div class="flex flex-row items-center">
       <app-avatar
         size="24"
         class="task-card-user-chip"
@@ -8,7 +8,7 @@
         [imageUrl]="user().pictureUrl"
         >
       </app-avatar>
-      <form (submit)="submit($event)">
+      <form class="flex-1 ml-3" (submit)="submit($event)">
         <app-form-input
           [formField]="commentForm.comment"
           placeholder="Add Comment"
@@ -17,9 +17,9 @@
         </app-form-input>
       </form>
     </div>
-    <div class="comments-list">
+    <div class="flex flex-col">
       @for (comment of comments(); track comment.id) {
-        <div class="comments-list-item">
+        <div class="mb-5 flex flex-row items-center group">
           <app-avatar
             size="24"
             class="task-card-user-chip"
@@ -27,13 +27,13 @@
             [imageUrl]="comment.userDisplayImage"
             >
           </app-avatar>
-          <div class="comment-body">
-            <span class="comment-user-display-name">
+          <div class="flex-1 flex flex-col">
+            <span class="font-medium mb-1 flex flex-row items-center">
               {{ comment.userDisplayName }}
-              <small> {{ comment.createdAt | fromNow }} </small>
-              <div class="comment-actions">
+              <small class="flex-1 ml-[0.6rem] opacity-60"> {{ comment.createdAt | fromNow }} </small>
+              <div class="w-10 hidden group-hover:block">
                 <button
-                  class="comment-button"
+                  class="leading-4 h-4"
                   mat-icon-button
                   aria-label="Comment Actions"
                   [matMenuTriggerFor]="commentMenu"
@@ -51,7 +51,7 @@
                 </mat-menu>
               </div>
             </span>
-            <span class="comment-body-text"> {{ comment.body }} </span>
+            <span class="text-sm font-normal ml-3"> {{ comment.body }} </span>
           </div>
         </div>
       }

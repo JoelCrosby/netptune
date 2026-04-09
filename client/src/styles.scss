@@ -1,5 +1,5 @@
+// SCSS @use rules must come first
 @use 'styles/variables';
-
 @use '@angular/material' as mat;
 
 // Themes
@@ -11,18 +11,14 @@
 
 @use 'styles/typography';
 @use 'styles/material';
-@use 'styles/utility';
 @use 'styles/components';
 @use 'styles/lists';
 @use 'styles/forms';
-@use 'styles/colors';
 @use 'styles/boards';
 @use 'styles/spinners';
 @use 'styles/containers';
 @use 'styles/modals';
-@use 'styles/dialogs';
 @use 'styles/animations/menu';
-@use 'styles/controls/button';
 @use 'styles/controls/editor';
 @use 'styles/controls/form-control';
 @use 'styles/controls/form-select';
@@ -30,6 +26,40 @@
 @use 'styles/controls/form-autocomplete-chips.scss';
 @use 'styles/controls/activity-menu.scss';
 @use 'styles/controls/cards';
+
+// Tailwind (theme + utilities only — preflight skipped to avoid conflicting with Angular Material)
+@use 'tailwindcss';
+
+@custom-variant dark (&:where(.dark-theme, .dark-theme *));
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-selected: var(--primary-selected);
+  --color-primary-selected-hover: var(--primary-selected-hover);
+  --color-warn: var(--warn);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-secondary-background: var(--seconday-background);
+  --color-dialog-background: var(--dialog-background);
+  --color-border: var(--border);
+  --color-hover: var(--hover);
+  --color-card: var(--card);
+  --color-card-warn: var(--card-warn);
+  --color-card-warn-hover: var(--card-warn-hover);
+  --color-card-selected: var(--card-selected);
+  --color-side-bar: var(--side-bar);
+  --color-side-bar-active: var(--side-bar-active);
+  --color-side-bar-active-foreground: var(--side-bar-active-foreground);
+  --color-board-group: var(--board-group);
+  --color-app-bar: var(--app-bar);
+  --color-status-bar: var(--status-bar);
+
+  --radius: var(--border-radius);
+  --radius-sm: var(--border-radius-small);
+
+  --font-overpass: 'Overpass', sans-serif;
+  --font-avatar: 'Roboto Mono', 'Roboto', sans-serif;
+}
 
 :root {
   --border-radius: 8px;
