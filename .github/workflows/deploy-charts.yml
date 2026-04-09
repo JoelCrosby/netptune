@@ -8,11 +8,16 @@ on:
       - Build Jobs Image
     branches: [main]
     types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - "charts/**"
+      - ".github/workflows/deploy-charts.yml"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout
@@ -60,7 +65,8 @@ jobs:
             --set "secrets.jobs.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
             --set "secrets.headlamp.github_client_id=${{ secrets.HEADLAMP_GITHUB_CLIENT_ID }}" \
             --set "secrets.headlamp.github_client_secret=${{ secrets.HEADLAMP_GITHUB_CLIENT_SECRET }}" \
-            --set "secrets.headlamp.cookie_secret=${{ secrets.HEADLAMP_COOKIE_SECRET }}"
+            --set "secrets.headlamp.cookie_secret=${{ secrets.HEADLAMP_COOKIE_SECRET }}" \
+            --set "secrets.grafana.admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}"
 
       - name: Restart deployments
         run: |
