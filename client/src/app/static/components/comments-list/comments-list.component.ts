@@ -24,7 +24,6 @@ import { FormInputComponent } from '../form-input/form-input.component';
 @Component({
   selector: 'app-comments-list',
   templateUrl: './comments-list.component.html',
-  styleUrls: ['./comments-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
