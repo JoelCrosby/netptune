@@ -6,5 +6,6 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardTitleComponent {
-  @HostBinding('class') className = 'netp-card-title';
+  @HostBinding('class') className =
+    'flex flex-row justify-between mb-[12px] text-[20px] font-medium font-overpass text-neutral-900 dark:text-white';
 }

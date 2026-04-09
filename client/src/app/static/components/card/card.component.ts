@@ -9,5 +9,6 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  @HostBinding('class') className = 'netp-card';
+  @HostBinding('class') className =
+    'block p-6 rounded-sm border border-neutral-800 bg-neutral-900 flex min-h-[96px] rounded-[.2rem] p-[1.6rem] overflow-hidden';
 }

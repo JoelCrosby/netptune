@@ -11,5 +11,5 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderComponent {
-  @HostBinding('class') className = 'netp-card-header';
+  @HostBinding('class') className = 'flex flex-col items-start';
 }

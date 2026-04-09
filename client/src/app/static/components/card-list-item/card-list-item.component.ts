@@ -17,7 +17,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-card-list-item',
   templateUrl: './card-list-item.component.html',
-  styleUrls: ['./card-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,

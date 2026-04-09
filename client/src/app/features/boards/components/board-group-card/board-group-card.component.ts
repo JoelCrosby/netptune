@@ -8,13 +8,14 @@ import { CardComponent } from '@static/components/card/card.component';
 
 import { MatIcon } from '@angular/material/icon';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-board-group-card',
   templateUrl: './board-group-card.component.html',
   styleUrls: ['./board-group-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardComponent, MatIcon, AvatarComponent],
+  imports: [CardComponent, MatIcon, AvatarComponent, TaskScopeIdComponent],
 })
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
