@@ -18,4 +18,9 @@ data:
         url: http://prometheus-service:9090
         isDefault: true
         editable: false
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-service:3100
+        editable: false
 {{- end }}
