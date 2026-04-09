@@ -25,7 +25,6 @@
 @use 'styles/controls/form-toggle';
 @use 'styles/controls/form-autocomplete-chips.scss';
 @use 'styles/controls/activity-menu.scss';
-@use 'styles/controls/cards';
 
 // Tailwind (theme + utilities only — preflight skipped to avoid conflicting with Angular Material)
 @use 'tailwindcss';
@@ -50,6 +49,7 @@
   --color-side-bar: var(--side-bar);
   --color-side-bar-active: var(--side-bar-active);
   --color-side-bar-active-foreground: var(--side-bar-active-foreground);
+  --color-side-bar-border: var(--side-bar-border);
   --color-board-group: var(--board-group);
   --color-app-bar: var(--app-bar);
   --color-status-bar: var(--status-bar);
@@ -117,12 +117,6 @@
   --editor-link-background-color: #fff;
 
   color-scheme: light;
-
-  @include mat.elevation-classes();
-  @include mat.app-background();
-  @include mat.all-component-bases(light-theme.$theme);
-  @include mat.all-component-colors(light-theme.$theme);
-  @include mat.all-component-typographies(typography.$netptune);
 }
 
 .dark-theme {
@@ -175,10 +169,4 @@
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
 
   color-scheme: dark;
-
-  @include mat.elevation-classes();
-  @include mat.app-background();
-  @include mat.all-component-bases(dark-theme.$theme);
-  @include mat.all-component-colors(dark-theme.$theme);
-  @include mat.all-component-typographies(typography.$netptune);
 }
