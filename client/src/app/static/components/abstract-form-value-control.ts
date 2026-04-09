@@ -1,12 +1,14 @@
-import { Directive, input, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import {
   DisabledReason,
   FormValueControl,
   ValidationError,
-  WithOptionalField,
+  WithOptionalFieldTree,
 } from '@angular/forms/signals';
 
-@Directive()
+@Component({
+  template: '',
+})
 export class AbstractFormValueControl implements FormValueControl<string> {
   readonly name = input<string>('');
   readonly value = model('');
@@ -14,10 +16,10 @@ export class AbstractFormValueControl implements FormValueControl<string> {
   readonly disabled = input<boolean>(false);
   readonly required = input<boolean>(false);
   readonly disabledReasons = input<
-    readonly WithOptionalField<DisabledReason>[]
+    readonly WithOptionalFieldTree<DisabledReason>[]
   >([]);
   readonly readonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
-  readonly errors = input<readonly ValidationError.WithOptionalField[]>([]);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
 }
