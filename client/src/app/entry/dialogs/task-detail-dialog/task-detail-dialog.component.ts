@@ -48,11 +48,12 @@ import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
   templateUrl: './task-detail-dialog.component.html',
-  styleUrls: ['./task-detail-dialog.component.scss'],
+  styleUrls: ['./task-detail-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatIcon,
@@ -75,6 +76,7 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
     TaskStatusPipe,
     TaskDates,
     FormField,
+    TaskScopeIdComponent,
   ],
 })
 export class TaskDetailDialogComponent implements OnDestroy {

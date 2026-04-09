@@ -6,5 +6,6 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderImageComponent {
-  @HostBinding('class') className = 'netp-card-header-image';
+  @HostBinding('class') className =
+    'mr-[16px] flex items-center justify-center p-[.4rem] rounded-[var(--border-radius-small)] text-[#fff] opacity-[.6]';
 }

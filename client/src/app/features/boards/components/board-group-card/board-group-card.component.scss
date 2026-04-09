@@ -1,21 +1,3 @@
-.group-task-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px;
-  font-size: 14px;
-  letter-spacing: .1px;
-  cursor: pointer;
-  margin-bottom: .3rem;
-  overflow: hidden;
-}
-
-.task-name-text {
-  margin-bottom: 0;
-  line-height: 1.4rem;
-  word-break: break-word;
-}
-
 .card-tags {
   display: flex;
   flex-direction: row;
@@ -52,19 +34,6 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-
-    .task-scope-id {
-      border-radius: 4px;
-      padding: .2rem .4rem;
-      height: 1rem;
-      font-size: 14px;
-      margin-right: .6rem;
-    }
-  }
-
-  .task-card-user-chip {
-    margin-left: .4rem;
-    justify-self: flex-end;
   }
 
   .task-scope-id {

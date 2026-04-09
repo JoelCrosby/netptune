@@ -1,0 +1,34 @@
+.task-detail-dialog {
+  animation: dialog-enter .14s ease-in;
+}
+
+.task-detail-loading {
+  opacity: 1;
+  animation: loading-enter 3.2s;
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: 0;
+    transform: translate(0, 12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes loading-enter {
+  0% {
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

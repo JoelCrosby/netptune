@@ -6,5 +6,6 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardGroupComponent {
-  @HostBinding('class') className = 'netp-card-group';
+  @HostBinding('class') className =
+    'inline-flex flex-wrap gap-4 p-2 bg-neutral-950 mb-2';
 }
