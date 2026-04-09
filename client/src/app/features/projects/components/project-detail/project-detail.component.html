@@ -1,6 +1,6 @@
 @if (project(); as project) {
   <div>
-    <form (submit)="updateClicked($event)">
+    <form class="w-full max-w-[512px]" (submit)="updateClicked($event)">
       <app-form-input [formField]="projectForm.name" label="Name" maxLength="1024">
       </app-form-input>
       <app-form-textarea

@@ -9,8 +9,6 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-create-workspace-list-item',
-  templateUrl: './create-workspace-list-item.component.html',
-  styleUrls: ['./create-workspace-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
@@ -19,6 +17,31 @@ import { MatButton } from '@angular/material/button';
     CardActionsComponent,
     MatButton,
   ],
+  template: `
+    <app-card class="create-workspace-card">
+      <app-card-title>Create a new Workspace</app-card-title>
+      <app-card-content>
+        <p class="card-text">
+          Workspaces allow for team collaboration on multiple projects and are
+          the foundation of all workflows within Netptune.
+        </p>
+
+        <app-card-actions>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="openWorkspaceDialog()">
+            Create Workspace
+          </button>
+        </app-card-actions>
+      </app-card-content>
+      <div class="card-footer">
+        <small class="text-muted"
+          >Created with <span class="text-red">❤</span> by Joel</small
+        >
+      </div>
+    </app-card>
+  `,
 })
 export class CreateWorkspaceListItemComponent {
   private dialog = inject(DialogService);

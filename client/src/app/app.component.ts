@@ -5,7 +5,7 @@ import { SnackbarHostComponent } from './static/components/snackbar/snackbar-hos
 @Component({
   selector: 'app-root',
   template: `
-    <div class="app-container">
+    <div class="bg-background">
       <router-outlet />
       <app-snackbar-host />
     </div>

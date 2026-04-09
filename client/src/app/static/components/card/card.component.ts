@@ -10,5 +10,5 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 })
 export class CardComponent {
   @HostBinding('class') className =
-    'block p-6 rounded-sm border border-border bg-card flex min-h-[96px] rounded-[.2rem] p-[1.6rem] overflow-hidden';
+    'flex flex-col p-6 rounded-sm border border-border bg-card flex min-h-[96px] rounded-[.2rem] p-[1.6rem] overflow-hidden';
 }
