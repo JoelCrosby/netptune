@@ -74,6 +74,9 @@ importers:
       '@editorjs/underline':
         specifier: ^1.2.1
         version: 1.2.1
+      '@lucide/angular':
+        specifier: ^1.8.0
+        version: 1.8.0(@angular/common@21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1))
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -1061,6 +1064,12 @@ packages:
     resolution: {integrity: sha512-qwosvPyl+zpUlp3gRb7UcJ3H8S28XHCzkv0Y0EgQToXjQP91ZD67EHSCDmaLjtKhe+GVIW5om1KUpzVLA0l6pg==}
     cpu: [x64]
     os: [win32]
+
+  '@lucide/angular@1.8.0':
+    resolution: {integrity: sha512-IfcAvgWCyF6P7ERhvaY3j3SNnYfq1LMavJjUzCHSPAxDF23uZi9rYS1nkAoJz8+4qc9jK2FkySmTv5rlOWFD+g==}
+    peerDependencies:
+      '@angular/common': 17.x - 21.x
+      '@angular/core': 17.x - 21.x
 
   '@mdi/font@7.4.47':
     resolution: {integrity: sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==}
@@ -4391,6 +4400,12 @@ snapshots:
 
   '@lmdb/lmdb-win32-x64@3.5.1':
     optional: true
+
+  '@lucide/angular@1.8.0(@angular/common@21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1))':
+    dependencies:
+      '@angular/common': 21.2.8(@angular/core@21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 21.2.8(@angular/compiler@21.2.8)(rxjs@7.8.2)(zone.js@0.15.1)
+      tslib: 2.8.1
 
   '@mdi/font@7.4.47': {}
 

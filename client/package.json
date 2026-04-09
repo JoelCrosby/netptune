@@ -33,6 +33,7 @@
     "@editorjs/list": "^2.0.9",
     "@editorjs/marker": "^1.4.0",
     "@editorjs/underline": "^1.2.1",
+    "@lucide/angular": "^1.8.0",
     "@mdi/font": "^7.4.47",
     "@ngrx/component": "^21.1.0",
     "@ngrx/effects": "21.1.0",
