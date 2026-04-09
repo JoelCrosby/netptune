@@ -1,0 +1,88 @@
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { SnackbarItem, SnackbarType } from './snackbar.models';
+import { SnackbarService } from './snackbar.service';
+
+const TYPE_STYLES: Record<SnackbarType, string> = {
+  default: 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]',
+  success: 'bg-[#1a3a2a] text-green-300 border-green-800',
+  error:   'bg-[#3a1a1a] text-red-300 border-red-800',
+  warn:    'bg-[#3a2e1a] text-yellow-300 border-yellow-800',
+  info:    'bg-[#1a2a3a] text-blue-300 border-blue-800',
+};
+
+const TYPE_ICONS: Record<SnackbarType, string> = {
+  default: '',
+  success: 'check_circle',
+  error:   'error',
+  warn:    'warning',
+  info:    'info',
+};
+
+@Component({
+  selector: 'app-snackbar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIconModule],
+  template: `
+    <div
+      class="flex items-center gap-3 min-w-[280px] max-w-[480px] px-4 py-3 rounded-[var(--radius-sm)] border shadow-lg text-sm font-medium leading-tight"
+      [class]="typeStyles()"
+      role="status"
+      aria-live="polite"
+    >
+      @if (icon()) {
+        <mat-icon class="shrink-0 text-[1.1rem] h-[1.1rem] w-[1.1rem] leading-none">{{ icon() }}</mat-icon>
+      }
+
+      <span class="flex-1">{{ item().message }}</span>
+
+      @if (item().action) {
+        <button
+          class="shrink-0 uppercase text-xs font-semibold tracking-wide opacity-80 hover:opacity-100 transition-opacity"
+          (click)="actionClicked.emit(item())"
+        >
+          {{ item().action }}
+        </button>
+      }
+
+      <button
+        class="shrink-0 opacity-50 hover:opacity-100 transition-opacity leading-none"
+        aria-label="Dismiss"
+        (click)="snackbarService.dismiss(item().id)"
+      >
+        <mat-icon class="text-[1rem] h-[1rem] w-[1rem] leading-none">close</mat-icon>
+      </button>
+    </div>
+  `,
+  styles: [`
+    :host {
+      display: block;
+      animation: snackbar-enter 0.2s ease;
+    }
+
+    @keyframes snackbar-enter {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  `],
+})
+export class SnackbarComponent {
+  readonly item = input.required<SnackbarItem>();
+  readonly actionClicked = output<SnackbarItem>();
+
+  readonly snackbarService = inject(SnackbarService);
+
+  typeStyles() {
+    return TYPE_STYLES[this.item().type];
+  }
+
+  icon() {
+    return TYPE_ICONS[this.item().type];
+  }
+}

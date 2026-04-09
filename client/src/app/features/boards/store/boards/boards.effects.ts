@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -21,7 +21,7 @@ export class BoardsEffects {
   private boardsService = inject(BoardsService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private router = inject(Router);
 
   loadBoards$ = createEffect(() => {

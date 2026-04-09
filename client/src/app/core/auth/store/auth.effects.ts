@@ -1,7 +1,7 @@
 import { concatLatestFrom } from '@ngrx/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { Router } from '@angular/router';
 import { selectAuthFeature } from '@core/core.state';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
@@ -36,7 +36,7 @@ export class AuthEffects implements OnInitEffects {
   private authService = inject(AuthService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private cookie = inject(CookieService);
 
   init$ = createEffect(() => {

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
@@ -38,7 +38,7 @@ export class BoardGroupsEffects {
   private tasksHubService = inject(ProjectTasksHubService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 

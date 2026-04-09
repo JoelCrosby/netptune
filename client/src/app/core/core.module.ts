@@ -27,7 +27,6 @@ import { TagsEffects } from './store/tags/tags.effects';
 import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
 
 @NgModule({
@@ -70,14 +69,7 @@ import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: RouterStateSerializer, useClass: CustomSerializer },
     provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useValue: {
-        duration: 2500,
-        horizontalPosition: 'right',
-      },
-    },
-    { provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
+{ provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
   ],
 })
 export class CoreModule {
