@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -15,7 +15,7 @@ import { UsersService } from './users.service';
 export class UsersEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private usersService = inject(UsersService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private confirmation = inject(ConfirmationService);
 
   loadUsers$ = createEffect(() => {

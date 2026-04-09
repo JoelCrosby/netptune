@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
@@ -24,7 +24,7 @@ export class ProjectTasksEffects {
   private projectTasksService = inject(ProjectTasksService);
   private projectTasksHubService = inject(ProjectTasksHubService);
   private confirmation = inject(ConfirmationService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(

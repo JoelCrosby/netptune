@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
@@ -30,7 +30,7 @@ export class ProjectsEffects {
   private confirmation = inject(ConfirmationService);
   private store = inject(Store);
   private router = inject(Router);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
 
   loadProjectDetail$ = createEffect(
     ({ throttle = 200, scheduler = asyncScheduler } = {}) => {

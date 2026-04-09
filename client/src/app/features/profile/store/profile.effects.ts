@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { currentUser } from '@core/auth/store/auth.actions';
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -24,7 +24,7 @@ export class ProfileEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private profileService = inject(ProfileService);
   private store = inject(Store);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
 
   loadProfile$ = createEffect(() => {
     return this.actions$.pipe(

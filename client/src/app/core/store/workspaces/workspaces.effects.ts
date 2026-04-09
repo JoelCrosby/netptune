@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -27,7 +27,7 @@ export class WorkspacesEffects implements OnInitEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private workspacesService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
-  private snackbar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private hubService = inject(ProjectTasksHubService);
 
   init$ = createEffect(() => {

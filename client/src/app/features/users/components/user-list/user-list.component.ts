@@ -8,7 +8,6 @@ import {
   MatMenuItem,
   MatMenuTrigger,
 } from '@angular/material/menu';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { DialogService } from '@core/services/dialog.service';
@@ -36,7 +35,6 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
 export class UserListComponent {
   private store = inject(Store);
 
-  snackBar = inject(MatSnackBar);
   dialog = inject(DialogService);
   users = this.store.selectSignal(selectAllUsers);
 
