@@ -23,8 +23,6 @@
 </app-dialog-content>
 
 <div app-dialog-actions align="end">
-  <button mat-stroked-button (click)="close()">Close</button>
-  <button mat-flat-button color="primary" (click)="getResult()" type="button">
-    Invite Users
-  </button>
+  <app-button variant="outlined" (click)="close()">Close</app-button>
+  <app-button variant="filled" (click)="getResult()">Invite Users</app-button>
 </div>

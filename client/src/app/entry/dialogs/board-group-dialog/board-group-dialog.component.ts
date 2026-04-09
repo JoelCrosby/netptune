@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -26,7 +26,7 @@ export interface BoardGroupDialogData {
     FormField,
     FormInputComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
     DialogCloseDirective,
   ],
 })

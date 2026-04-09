@@ -9,7 +9,7 @@ import { DialogContentComponent } from '@static/components/dialog-content/dialog
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 import { email, FormField, form, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
@@ -20,7 +20,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     DialogContentComponent,
     FormInputComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
     FormField,
   ],
 })

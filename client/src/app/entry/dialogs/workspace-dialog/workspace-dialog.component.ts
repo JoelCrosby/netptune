@@ -16,7 +16,7 @@ import {
   required,
   validateAsync,
 } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
@@ -41,7 +41,7 @@ import { firstValueFrom, map } from 'rxjs';
     FormTextAreaComponent,
     ColorSelectComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
     DialogCloseDirective,
     FormField,
   ],

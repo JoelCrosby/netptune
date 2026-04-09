@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -25,7 +25,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FormInputComponent,
     FormTextAreaComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
   ],
 })
 export class ProjectDialogComponent {

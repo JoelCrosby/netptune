@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { loadProjects } from '@core/store/projects/projects.actions';
@@ -25,7 +25,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 
 @Component({
   templateUrl: './create-task-dialog.component.html',
-  styleUrls: ['./create-task-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormField,
@@ -34,7 +33,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FormSelectComponent,
     FormSelectOptionComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
   ],
 })
 export class CreateTaskDialogComponent {

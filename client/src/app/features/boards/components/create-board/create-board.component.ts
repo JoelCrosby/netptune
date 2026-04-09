@@ -15,7 +15,7 @@ import {
   required,
   validateAsync,
 } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { createBoard } from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
@@ -46,7 +46,7 @@ import { map } from 'rxjs/operators';
     FormSelectOptionComponent,
     ColorSelectComponent,
     DialogActionsDirective,
-    MatButton,
+    ButtonComponent,
     DialogCloseDirective,
     FormField,
   ],
