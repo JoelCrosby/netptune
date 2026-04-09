@@ -9,9 +9,9 @@ persistence:
   postgres:
     size: "40Gi"
   grafana:
-    size: "5Gi"
+    size: "40Gi"
   loki:
-    size: "20Gi"
+    size: "40Gi"
 
 headlamp:
   enabled: true
