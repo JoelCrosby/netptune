@@ -7,9 +7,3 @@ $netptune: mat.m2-define-typography-config(
   $headline-5: mat.m2-define-typography-level(24px, 1.4, 500),
   $body-2: mat.m2-define-typography-level(14px, 1.2, 400)
 );
-
-.section-heading {
-  font-weight: 400;
-  font-size: 1.4rem;
-  font-family: 'Overpass', sans-serif;
-}

@@ -9,7 +9,6 @@ import { Store } from '@ngrx/store';
 
 @Component({
   templateUrl: './confirm-view.component.html',
-  styleUrls: ['./confirm-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatProgressSpinner],
 })

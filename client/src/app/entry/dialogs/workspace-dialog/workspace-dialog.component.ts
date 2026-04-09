@@ -35,7 +35,6 @@ import { firstValueFrom, map } from 'rxjs';
 @Component({
   selector: 'app-workspace-dialog',
   templateUrl: './workspace-dialog.component.html',
-  styleUrls: ['./workspace-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormInputComponent,

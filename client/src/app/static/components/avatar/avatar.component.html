@@ -1,5 +1,5 @@
 <div
-  class="avatar-container"
+  class="flex flex-col justify-center items-center select-none font-medium tracking-[0.8px] overflow-hidden text-xs font-avatar whitespace-nowrap"
   [style.height]="size() | px"
   [style.width]="size() | px"
   [style.background-color]="imageUrl() ? null : backgroundColor"
@@ -12,7 +12,7 @@
   @if (imageUrl()) {
     <img
       crossorigin="anonymous"
-      class="avatar-image"
+      class="object-cover rounded-full"
       [width]="size()"
       [height]="size()"
       [src]="imageUrl()"

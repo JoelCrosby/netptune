@@ -5,7 +5,6 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 @Component({
   selector: 'app-page-container',
   templateUrl: './page-container.component.html',
-  styleUrls: ['./page-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatProgressBar],
 })

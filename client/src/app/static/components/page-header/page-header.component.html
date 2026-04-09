@@ -1,7 +1,7 @@
-<header class="page-header">
-  <div class="header-top-row">
+<header class="flex flex-col pt-[0.4rem] max-h-[136px] h-[136px] max-[600px]:flex-row max-[600px]:items-center max-[600px]:pt-0 max-[600px]:pb-[1.4rem]">
+  <div class="h-[108px] flex flex-row items-center justify-between max-[600px]:flex-1">
     @if (showSideNavToggle()) {
-    <div class="sidenav-toggle">
+    <div>
       <app-button
         [iconOnly]="true"
         aria-label="Open Menu"
@@ -12,22 +12,22 @@
     </div>
     }
 
-    <div class="header-top-row-left">
-      <div class="header-main-back">
+    <div class="flex flex-col justify-between h-full max-[600px]:flex-1 max-[600px]:mt-1">
+      <div class="h-6">
         @if (backLink()) {
-        <a class="header-back-link" [routerLink]="backLink()">
-          <mat-icon> arrow_back </mat-icon>
+        <a class="header-back-link inline-flex items-center text-sm font-medium tracking-[0.225px] cursor-pointer" [routerLink]="backLink()">
+          <mat-icon class="text-2xl h-6 mr-[0.4rem]"> arrow_back </mat-icon>
           <span> {{ backLabel() || 'Go back' }} </span>
         </a>
         }
       </div>
 
-      <div class="header-main">
+      <div class="flex flex-row justify-start h-full items-center">
         @if (!titleEditable()) {
-        <h1 class="page-header-title">{{ title() }}</h1>
+        <h1 class="page-header-title font-normal text-[2rem] font-overpass m-0 max-[600px]:text-[1.4rem]">{{ title() }}</h1>
         } @if (titleEditable()) {
         <app-inline-edit-input
-          class="page-header-title page-header-title-editable"
+          class="page-header-title font-normal text-[2rem] font-overpass m-0 cursor-pointer"
           activeBorder="true"
           [value]="title()"
           [size]="title()?.length"
@@ -36,16 +36,16 @@
         </app-inline-edit-input>
         }
 
-        <div class="header-tool-bar">
+        <div class="ml-[1.4rem] flex flex-row items-center gap-3">
           <ng-content />
         </div>
       </div>
     </div>
 
-    <div class="header-actions">
+    <div class="flex flex-row">
       @for (action of secondaryActions(); track action) {
       <app-button
-        class="header-secondary-action"
+        class="rounded-[6rem] ml-3"
         (click)="action.click && action.click()"
       >
         {{ action.label }}
@@ -76,7 +76,7 @@
 
       @if (actionTitle()) {
       <app-button
-        class="header-primary-action"
+        class="rounded-[6rem] ml-3"
         (click)="actionClick.emit()"
       >
         {{ actionTitle() }}

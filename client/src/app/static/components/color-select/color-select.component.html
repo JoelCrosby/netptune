@@ -5,10 +5,10 @@
   </label>
   }
 
-  <div class="color-options">
+  <div class="flex justify-stretch">
     @for (color of colorsRowTop; track color) {
     <div
-      class="color-option"
+      class="flex-1 h-9 min-w-9 min-h-9 rounded-[--radius-sm] m-[0.2rem] flex justify-center items-center text-white cursor-pointer"
       [matTooltip]="color.name"
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"
@@ -19,10 +19,10 @@
     </div>
     }
   </div>
-  <div class="color-options">
+  <div class="flex justify-stretch">
     @for (color of colorsRowBottom; track color.color) {
     <div
-      class="color-option"
+      class="flex-1 h-9 min-w-9 min-h-9 rounded-[--radius-sm] m-[0.2rem] flex justify-center items-center text-white cursor-pointer"
       [matTooltip]="color.name"
       [style.background-color]="color.color"
       (click)="onOptionClicked(color)"

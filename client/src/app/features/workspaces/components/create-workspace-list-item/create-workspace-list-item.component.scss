@@ -1,39 +1,4 @@
-netp-card-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-netp-card {
-  margin-bottom: 2rem;
-  padding: 1.6rem;
-}
-
-app-card-actions {
-  padding: 1.6rem;
-  margin-bottom: 2rem;
-}
-
-app-card > app-card-actions:last-child {
-  margin-bottom: 0 !important;
-  padding-bottom: 0;
-}
-
-.action-button {
-  margin-right: .8rem;
-}
-
-.action-button:first-child,
-app-card-actions .mat-mdc-raised-button:first-child {
-  margin-left: 0;
-  margin-right: .8rem !important;
-}
-
-.action-mat-icon {
-  margin-right: .6rem;
-}
-
-.create-workspace-card.netp-card {
+.create-workspace-card.app-card {
   background-color: transparent !important;
   box-shadow: none !important;
 }

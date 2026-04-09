@@ -24,7 +24,7 @@
   }
 
   @if (task().status === 1) {
-    <mat-icon class="task-complete"> done </mat-icon>
+    <mat-icon class="text-green-500"> done </mat-icon>
   }
 
   @for (assignee of task().assignees; track assignee.id) {

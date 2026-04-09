@@ -3,7 +3,7 @@
   <form (submit)="onSubmit($event)">
     <div class="detail-title">
       @if (task.status === 1) {
-      <mat-icon class="task-complete"> done </mat-icon>
+      <mat-icon class="text-green-500"> done </mat-icon>
       }
       <div class="task-scope-id">{{ task.systemId }}</div>
       <app-activity-menu [entityType]="entityType" [entityId]="task.id" />

@@ -3,9 +3,9 @@ import { Directive, input } from '@angular/core';
 @Directive({
   selector: '[app-dialog-actions], app-dialog-actions, [dialogActions]',
   host: {
-    class: 'dialog-actions',
-    '[class.dialog-actions-align-center]': 'align() === "center"',
-    '[class.dialog-actions-align-end]': 'align() === "end"',
+    class: 'flex gap-3 mt-7',
+    '[class.justify-center]': 'align() === "center"',
+    '[class.justify-end]': 'align() === "end"',
   },
 })
 export class DialogActionsDirective {

@@ -1,22 +1,3 @@
-.avatar-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  font-weight: 500;
-  letter-spacing: .8px;
-  overflow: hidden;
-  font-size: 12px;
-  font-family: 'Roboto Mono', 'Roboto', sans-serif;
-  white-space: nowrap;
-}
-
-.avatar-image {
-  object-fit: cover;
-  border-radius: 100% !important;
-}
-
 .avatar-border {
   border: 3px solid rgba(255, 255, 255, .8);
 }

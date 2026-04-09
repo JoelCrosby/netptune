@@ -8,7 +8,6 @@ import { TaskListGroupComponent } from '../task-list-group/task-list-group.compo
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TaskListGroupComponent],
 })
