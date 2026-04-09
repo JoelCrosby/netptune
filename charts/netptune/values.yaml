@@ -15,6 +15,21 @@ headlamp:
   host: "headlamp.netptune.co.uk"
   oauth2:
     allowed_email_domain: "live.co.uk"
+
+otelCollector:
+  enabled: true
+  image: "otel/opentelemetry-collector-contrib:latest"
+
+prometheus:
+  enabled: true
+  image: "prom/prometheus:latest"
+  retention: "15d"
+  host: "prometheus.netptune.co.uk"
+
+grafana:
+  enabled: true
+  image: "grafana/grafana:latest"
+  host: "grafana.netptune.co.uk"
 parameters:
   jobs:
     port_http: 8080
@@ -26,6 +41,8 @@ parameters:
     client_image: "ghcr.io/joelcrosby/netptune-client:latest"
     api_url: "http://api-service:7400"
 secrets:
+  grafana:
+    admin_password: ""
   headlamp:
     github_client_id: ""
     github_client_secret: ""

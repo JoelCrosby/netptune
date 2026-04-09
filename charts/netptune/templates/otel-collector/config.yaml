@@ -1,0 +1,45 @@
+{{- if .Values.otelCollector.enabled }}
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "otel-collector-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "otel-collector"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+          http:
+            endpoint: "0.0.0.0:4318"
+
+    processors:
+      batch:
+        timeout: 5s
+        send_batch_size: 1000
+
+    exporters:
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+        namespace: "netptune"
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [prometheus]
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: []
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: []
+{{- end }}

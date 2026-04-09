@@ -9,6 +9,8 @@ metadata:
     app.kubernetes.io/instance: "{{ .Release.Name }}"
 data:
   OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.jobs.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "{{ if .Values.otelCollector.enabled }}http://otel-collector-service:4317{{ end }}"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "{{ if .Values.otelCollector.enabled }}grpc{{ end }}"
   ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.jobs.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
   HTTP_PORTS: "{{ .Values.parameters.jobs.port_http }}"
   CACHE_HOST: "{{ .Values.config.jobs.CACHE_HOST }}"

@@ -1,0 +1,30 @@
+{{- if .Values.otelCollector.enabled }}
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "otel-collector-service"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "otel-collector"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  type: "ClusterIP"
+  selector:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "otel-collector"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  ports:
+    - name: "otlp-grpc"
+      protocol: "TCP"
+      port: 4317
+      targetPort: 4317
+    - name: "otlp-http"
+      protocol: "TCP"
+      port: 4318
+      targetPort: 4318
+    - name: "prometheus"
+      protocol: "TCP"
+      port: 8889
+      targetPort: 8889
+{{- end }}
