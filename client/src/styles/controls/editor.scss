@@ -34,8 +34,6 @@
 .ce-popover {
   border: 0;
   background-color: var(--background);
-
-  //@extend  .mat-elevation-z4;
 }
 
 .ce-popover__item:hover:not(.ce-popover__item--no-visible-hover) {
