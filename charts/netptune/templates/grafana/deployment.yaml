@@ -28,6 +28,10 @@ spec:
         app.kubernetes.io/component: "grafana"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
+        runAsGroup: 472
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
