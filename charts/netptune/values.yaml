@@ -8,9 +8,7 @@ ingress:
 persistence:
   postgres:
     size: "40Gi"
-  grafana:
-    size: "40Gi"
-  loki:
+  monitoring:
     size: "40Gi"
 
 headlamp:

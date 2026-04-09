@@ -50,11 +50,12 @@ spec:
               readOnly: true
             - name: "data"
               mountPath: "/var/lib/grafana"
+              subPath: "grafana"
       volumes:
         - name: "datasource"
           configMap:
             name: "grafana-datasource"
         - name: "data"
           persistentVolumeClaim:
-            claimName: "grafana-pvc"
+            claimName: "monitoring-pvc"
 {{- end }}

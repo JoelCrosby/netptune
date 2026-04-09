@@ -41,11 +41,12 @@ spec:
               readOnly: true
             - name: "data"
               mountPath: "/loki"
+              subPath: "loki"
       volumes:
         - name: "config"
           configMap:
             name: "loki-config"
         - name: "data"
           persistentVolumeClaim:
-            claimName: "loki-pvc"
+            claimName: "monitoring-pvc"
 {{- end }}
