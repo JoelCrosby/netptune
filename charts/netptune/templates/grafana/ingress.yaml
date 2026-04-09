@@ -1,0 +1,33 @@
+{{- if .Values.grafana.enabled }}
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "Ingress"
+metadata:
+  name: "grafana-ingress"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "grafana"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-url: "https://{{ .Values.headlamp.host }}/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.headlamp.host }}/oauth2/sign_in?rd=https://$host$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - "{{ .Values.grafana.host }}"
+      secretName: "grafana-tls"
+  rules:
+    - host: "{{ .Values.grafana.host }}"
+      http:
+        paths:
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: "grafana-service"
+                port:
+                  number: 3000
+{{- end }}

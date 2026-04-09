@@ -32,8 +32,9 @@ spec:
             - "--http-address=0.0.0.0:4180"
             - "--email-domain={{ .Values.headlamp.oauth2.allowed_email_domain }}"
             - "--cookie-secure=true"
-            - "--cookie-domain={{ .Values.headlamp.host }}"
+            - "--cookie-domain=.{{ .Values.ingress.host }}"
             - "--redirect-url=https://{{ .Values.headlamp.host }}/oauth2/callback"
+            - "--whitelist-domain=.{{ .Values.ingress.host }}"
             - "--skip-provider-button=true"
             - "--scope=user:email read:org"
           envFrom:
