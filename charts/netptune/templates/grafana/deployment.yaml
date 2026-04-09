@@ -28,6 +28,13 @@ spec:
         app.kubernetes.io/component: "grafana"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: "loki"
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: "grafana"
           image: "{{ .Values.grafana.image }}"
