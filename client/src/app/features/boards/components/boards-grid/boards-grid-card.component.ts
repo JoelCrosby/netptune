@@ -17,7 +17,7 @@ import { CardTitleComponent } from '@static/components/card/card-title.component
     CardSubtitleComponent,
   ],
   template: ` <div
-    class="p-6 rounded-sm border border-neutral-800 bg-neutral-900 flex overflow-hidden min-w-72 min-h-38">
+    class="bg-card border-border flex min-h-38 min-w-72 overflow-hidden rounded-sm border p-6">
     <app-card-header-image
       [style.background-color]="board().metaInfo.color || 'inherit'">
       <mat-icon class="material-icons-outlined"> table_chart </mat-icon>
