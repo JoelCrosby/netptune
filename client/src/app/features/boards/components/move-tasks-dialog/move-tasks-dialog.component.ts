@@ -6,18 +6,56 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { moveSelectedTasks } from '@boards/store/groups/board-groups.actions';
 import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
-  templateUrl: './move-tasks-dialog.component.html',
   styleUrls: ['./move-tasks-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButton, DialogActionsDirective, DialogCloseDirective],
+  imports: [
+    FlatButtonComponent,
+    StrokedButtonComponent,
+    DialogActionsDirective,
+    DialogCloseDirective,
+  ],
+  template: `
+    <h1 mat-dialog-title>Move Tasks To Group</h1>
+
+    <p>Select the group you wish to move the selected tasks to</p>
+
+    <div app-dialog-content>
+      <div class="group-selection">
+        @for (group of groups(); track group.id) {
+          <button
+            [class.selected]="selected() === group.id"
+            app-stroked-button
+            [class.bg-primary]="selected() === group.id"
+            (click)="onGroupClicked(group.id)">
+            <div class="group-item">
+              <span>{{ group.name }}</span>
+              <div class="pill"></div>
+            </div>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div app-dialog-actions align="end">
+      <button mat-stroked-button app-dialog-close>Cancel</button>
+      <button
+        app-flat-button
+        color="primary"
+        (click)="onMoveTasksClicked()"
+        type="button">
+        Move Tasks
+      </button>
+    </div>
+  `,
 })
 export class MoveTasksDialogComponent {
   private store = inject(Store);

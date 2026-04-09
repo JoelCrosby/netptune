@@ -6,5 +6,5 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardContentComponent {
-  @HostBinding('class') className = 'netp-card-content';
+  @HostBinding('class') className = 'flex flex-col gap-4';
 }

@@ -10,13 +10,31 @@ import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { CardListItemComponent } from '@static/components/card-list-item/card-list-item.component';
+import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 
 @Component({
   selector: 'app-project-list-item',
-  templateUrl: './project-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, CardListItemComponent],
+  template: `
+    <a [routerLink]="['.', project().key]">
+      <app-card-list-item
+        [title]="project().name"
+        [description]="project().description"
+        [actions]="actions()"
+        (delete)="onDeleteClicked()">
+        <div class="flex flex-col">
+          <h5 class="mt-4 mb-[0.4rem]">Repository</h5>
+
+          <a
+            [href]="project().repositoryUrl"
+            class="block max-w-full overflow-hidden py-[0.6rem] text-ellipsis whitespace-nowrap underline">
+            {{ project().repositoryUrl }}
+          </a>
+        </div>
+      </app-card-list-item>
+    </a>
+  `,
 })
 export class ProjectListItemComponent {
   private store = inject(Store);

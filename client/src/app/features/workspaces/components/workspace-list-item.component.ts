@@ -11,14 +11,21 @@ import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { HeaderAction } from '@core/types/header-action';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
-import { CardListItemComponent } from '@static/components/card-list-item/card-list-item.component';
+import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
 
 @Component({
   selector: 'app-workspace-list-item',
-  templateUrl: './workspace-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardListItemComponent, FromNowPipe],
+  template: `
+    <app-card-list-item
+      [title]="workspace().name"
+      [description]="workspace().description"
+      [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
+      [actions]="actions"
+      (delete)="deleteClicked(workspace())" />
+  `,
 })
 export class WorkspaceListItemComponent implements OnInit {
   private store = inject(Store);

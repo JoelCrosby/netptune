@@ -14,7 +14,7 @@ export type ButtonColor = 'primary' | 'warn' | '';
     <button
       [type]="type()"
       [disabled]="disabled() || null"
-      class="w-full h-full bg-transparent border-0 cursor-pointer inline-flex items-center justify-center gap-2 font-[inherit] text-[inherit] outline-none disabled:opacity-40 disabled:cursor-not-allowed">
+      class="hover:bg-primary/60 inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 border-0 bg-transparent font-[inherit] text-[inherit] outline-none disabled:cursor-not-allowed disabled:opacity-40">
       <ng-content />
     </button>
   `,

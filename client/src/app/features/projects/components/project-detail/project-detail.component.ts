@@ -29,7 +29,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
-  styleUrls: ['./project-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormInputComponent, FormTextAreaComponent, MatButton, FormField],
 })
