@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 })
 export class CardGroupComponent {
   @HostBinding('class') className =
-    'inline-flex flex-wrap gap-4 p-2 bg-neutral-950 mb-2';
+    'inline-flex flex-wrap gap-4 p-2 bg-board-group mb-2';
 }

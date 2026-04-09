@@ -5,14 +5,12 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
   output,
   signal,
   untracked,
   viewChild,
 } from '@angular/core';
-import { debounce, FormField, form } from '@angular/forms/signals';
-import { RouterLink } from '@angular/router';
+import { debounce, form } from '@angular/forms/signals';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import {
@@ -21,30 +19,70 @@ import {
 } from '@core/store/workspaces/workspaces.selectors';
 import { filterObjectArray } from '@core/util/arrays';
 import { Store } from '@ngrx/store';
-import { AutofocusDirective } from '@static/directives/autofocus.directive';
 import { DocumentService } from '@static/services/document.service';
 import { KeyboardService } from '@static/services/keyboard.service';
+import { ShellService } from '@app/shell/shell.service';
+import { WorkspaceBadgeComponent } from './workspace-badge.component';
+import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component';
 
 @Component({
   selector: 'app-workspace-select',
-  templateUrl: './workspace-select.component.html',
-  styleUrls: ['./workspace-select.component.scss'],
+  host: { class: 'block w-full' },
+  template: `
+    <div class="relative" #dropdown>
+      <button
+        class="hover:bg-side-bar-active/60 border-side-bar-border transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded-sm border-b py-4 text-sm font-medium text-white/70"
+        [class.px-8]="shell.sideNavExpanded()"
+        [class.justify-start]="shell.sideNavExpanded()"
+        [class.w-full]="shell.sideNavExpanded()"
+        [class.text-left]="shell.sideNavExpanded()"
+        [class.justify-center]="shell.sideNavCollapsed()"
+        [class.mx-auto]="shell.sideNavCollapsed()"
+        (click)="open(selectmenu, origin)"
+        #origin>
+        @if (currentWorkspace(); as workspace) {
+          <app-workspace-badge
+            [color]="workspace.metaInfo?.color"
+            [letter]="workspace.name[0]" />
+          @if (shell.sideNavExpanded()) {
+            <div
+              class="w-full overflow-hidden text-base font-medium tracking-[.225px] text-ellipsis whitespace-nowrap text-white select-none">
+              {{ workspace.name }}
+            </div>
+          }
+        }
+      </button>
+
+      <div
+        #selectmenu
+        class="absolute top-[55px] left-0 overflow-hidden rounded-sm shadow-[0_2px_4px_-1px_rgb(0_0_0/20%),0_4px_5px_0_rgb(0_0_0/14%),0_1px_10px_0_rgb(0_0_0/12%)]">
+        <app-workspace-select-menu
+          [isOpen]="isOpen()"
+          [filteredOptions]="filteredOptions()"
+          [workspaces]="workspaces()"
+          [selected]="selected()"
+          [searchField]="searchForm.term"
+          (optionSelect)="select($event)"
+          (logout)="onlogOutClicked()" />
+      </div>
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, AutofocusDirective, RouterLink],
+  imports: [WorkspaceBadgeComponent, WorkspaceSelectMenuComponent],
 })
 export class WorkspaceSelectComponent {
   private store = inject(Store);
   private document = inject(DocumentService);
   private keyboard = inject(KeyboardService);
 
+  shell = inject(ShellService);
+
   readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
 
   readonly selectChange = output<Workspace>();
   readonly closed = output();
 
-  readonly compact = input(false);
   readonly workspaces = this.store.selectSignal(selectAllWorkspaces);
-
   readonly workspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
 
   filteredOptions = computed(() => {
@@ -157,7 +195,7 @@ export class WorkspaceSelectComponent {
   open(dropdown: HTMLElement, origin: HTMLElement) {
     this.isOpen.set(true);
 
-    if (this.compact()) {
+    if (this.shell.sideNavCollapsed()) {
       dropdown.style.width = '200px';
       dropdown.style.left = '80px';
       dropdown.style.top = '0px';
