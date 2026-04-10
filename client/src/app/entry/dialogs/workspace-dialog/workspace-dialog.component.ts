@@ -25,6 +25,7 @@ import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
 import { colorDictionary } from '@core/util/colors/colors';
 import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
+import { LucideCheck } from '@lucide/angular';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
@@ -104,10 +105,10 @@ export class WorkspaceDialogComponent {
 
   identifierIcon = computed(() => {
     if (this.dialogForm.identifier().valid()) {
-      return 'check';
+      return LucideCheck;
     }
 
-    return '';
+    return null;
   });
 
   identifierHint = computed(() => {

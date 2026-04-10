@@ -1,8 +1,8 @@
-<div class="auth-page-container">
-  <form (submit)="login($event)">
+<app-auth-page-container>
+  <form (submit)="login($event)" class="bg-background z-1 p-8 w-md rounded shadow-lg border border-border flex flex-col gap-4">
     <div class="auth-progress-bar">
       @if (loading()) {
-        <mat-progress-bar mode="indeterminate" />
+        <app-progress-bar mode="indeterminate" />
       }
     </div>
 
@@ -11,11 +11,12 @@
       alt="Netptune Logo"
       width="72"
       height="72"
+      class="my-2 mx-auto"
       />
 
-    <h3 class="tracking-normal mb-[2.8rem] w-full text-center font-normal">Sign in to continue</h3>
+    <h3 class="tracking-normal w-full text-center font-normal">Sign in to continue</h3>
 
-    <div class="h-8 mb-6 w-full flex flex-col justify-center items-center">
+    <div class="h-4 mb-6 w-full flex flex-col justify-center items-center">
       @if (showLoginError()) {
         <div class="rounded-[0.4rem] w-full p-[0.4rem] text-sm font-medium tracking-[0.25px] text-center bg-[rgba(var(--warn-rgb),0.06)] text-warn">
           Username or Password was incorrect
@@ -43,9 +44,9 @@
       >
     </app-form-input>
 
-    <div class="button-container">
+    <div class="flex items-center justify-between">
       <a
-        mat-button
+        app-button-link
         color="primary"
         type="button"
         [routerLink]="['/auth/register']"
@@ -53,12 +54,12 @@
         Create Account
       </a>
 
-      <button mat-stroked-button color="primary" type="submit">Sign in</button>
+      <button app-stroked-button color="primary" type="submit" class="min-w-32">Sign in</button>
     </div>
 
     <div class="button-container mt-[1.4rem]">
       <a
-        mat-button
+        app-button-link
         color="primary"
         [routerLink]="['/auth/request-password-reset']"
         >
@@ -66,28 +67,8 @@
       </a>
     </div>
 
-    <mat-divider />
+    <div class="border-t border-border my-2"></div>
 
-    <button
-      class="flex items-center justify-center relative py-[0.8rem] px-[1.6rem] rounded-[--radius-sm] outline-none font-[inherit] text-sm font-medium text-center no-underline cursor-pointer transition-colors duration-[140ms] ease-in bg-[#161b22] text-white appearance-none whitespace-nowrap border-0 w-full mt-0 hover:bg-[#1d232c]"
-      (click)="$event.preventDefault(); onGithubSignInClicked()"
-      >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        role="img"
-        aria-labelledby="a7qpw25exvox07kjj8aslcg42h7nzhd3"
-        class="fill-white text-white mr-4"
-        >
-        <title id="a7qpw25exvox07kjj8aslcg42h7nzhd3">github</title>
-        <path
-          d="M12 2C6.475 2 2 6.475 2 12a9.994 9.994 0 006.838 9.488c.5.087.687-.213.687-.476 0-.237-.013-1.024-.013-1.862-2.512.463-3.162-.612-3.362-1.175-.113-.288-.6-1.175-1.025-1.413-.35-.187-.85-.65-.013-.662.788-.013 1.35.725 1.538 1.025.9 1.512 2.338 1.087 2.912.825.088-.65.35-1.087.638-1.337-2.225-.25-4.55-1.113-4.55-4.938 0-1.088.387-1.987 1.025-2.688-.1-.25-.45-1.275.1-2.65 0 0 .837-.262 2.75 1.026a9.28 9.28 0 012.5-.338c.85 0 1.7.112 2.5.337 1.912-1.3 2.75-1.024 2.75-1.024.55 1.375.2 2.4.1 2.65.637.7 1.025 1.587 1.025 2.687 0 3.838-2.337 4.688-4.562 4.938.362.312.675.912.675 1.85 0 1.337-.013 2.412-.013 2.75 0 .262.188.574.688.474A10.016 10.016 0 0022 12c0-5.525-4.475-10-10-10z"
-          />
-      </svg>
-
-      Continue with GitHub
-    </button>
+    <app-login-github />
   </form>
-</div>
+</app-auth-page-container>

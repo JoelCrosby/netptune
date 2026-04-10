@@ -1,46 +1,38 @@
 <button
-  mat-button
-  matTooltip="Show activity"
+  app-flat-button
+  appTooltip="Show activity"
   class="board-filter-button"
-  [matMenuTriggerFor]="menu"
-  (click)="onClicked()"
+  (click)="toggleMenu()"
   >
   <svg lucideActivity aria-hidden="false" aria-label="Show activity"></svg>
 </button>
 
-<mat-menu
-  #menu="matMenu"
-  class="activity-menu"
-  panelClass="activity-menu"
-  (closed)="onClosed()"
-  >
-  <ng-template matMenuContent>
+<ng-template #menuTemplate>
+  <div class="custom-scroll min-w-[400px] max-w-[480px] p-4 py-6 max-h-[80vh] mt-[0.4rem] overflow-y-auto border border-border bg-background rounded-[0.4rem] shadow-md">
     @if (loaded()) {
-      @for (activity of activities(); track trackByActivity($index)) {
-        <div
-          class="activity-menu-item"
-          >
+      @for (activity of activities(); track $index) {
+        <div class="flex flex-row items-center py-[0.6rem] px-[1.2rem] min-w-80 text-sm">
           <app-avatar
+            class="shrink-0 grow-0 basis-8"
             [imageUrl]="activity.userPictureUrl"
             [name]="activity.userUsername"
             size="24"
             >
           </app-avatar>
-          <span class="user"> {{ activity.userUsername }} </span>
-          <span class="label"> {{ activity | activity }} </span>
+          <span class="font-medium tracking-[0.225px] whitespace-nowrap"> {{ activity.userUsername }} </span>
+          <span class="ml-[0.3rem] whitespace-nowrap"> {{ activity | activity }} </span>
         </div>
       } @empty {
-        <div class="no-activity-message">
+        <div class="flex flex-col gap-4 items-center py-[0.4rem] px-[0.8rem] min-w-80 text-sm">
           <svg lucideActivity></svg>
           <span> There is no activity </span>
-          <p>Activity on the item will appear here</p>
+          <p class="text-foreground/60">Activity on the item will appear here</p>
         </div>
       }
     } @else {
-      <div class="loading">
-        <mat-spinner diameter="24" />
+      <div class="flex justify-center p-4">
+        <app-spinner diameter="24" />
       </div>
     }
-
-  </ng-template>
-</mat-menu>
+  </div>
+</ng-template>

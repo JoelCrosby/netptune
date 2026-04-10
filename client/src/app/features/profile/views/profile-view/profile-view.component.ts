@@ -13,7 +13,6 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
-  templateUrl: './profile-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -22,6 +21,25 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     UpdateProfileComponent,
     ChangePasswordComponent,
   ],
+  template: `<app-page-container
+    [showProgress]="loadingUpdate()"
+    [centerPage]="true"
+    [marginBottom]="true">
+    <app-page-header
+      title="Profile"
+      actionTitle="Logout"
+      (actionClick)="onLogoutClicked()" />
+
+    @if (loading()) {
+      <div class="flex h-full flex-col items-center justify-center">
+        <mat-spinner diameter="32" />
+      </div>
+    } @else {
+      <app-update-profile />
+      <div class="border-border my-8 border-b-2"></div>
+      <app-change-password />
+    }
+  </app-page-container> `,
 })
 export class ProfileViewComponent {
   private store = inject(Store);

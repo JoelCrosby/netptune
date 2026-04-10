@@ -9,23 +9,23 @@ import {
 } from '@angular/core';
 import {
   debounce,
-  FormField,
   form,
+  FormField,
   minLength,
   required,
 } from '@angular/forms/signals';
-import { MatIconButton } from '@angular/material/button';
-import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatTooltip } from '@angular/material/tooltip';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
+import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
+import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { selectRequiredCurrentUser } from '@core/auth/store/auth.selectors';
 import { AppUser } from '@core/models/appuser';
 import { CommentViewModel } from '@core/models/comment';
 import { EntityType } from '@core/models/entity-type';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
-import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
@@ -36,19 +36,17 @@ import * as TaskSelectors from '@core/store/tasks/tasks.selectors';
 import * as UsersSelectors from '@core/store/users/users.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { Store } from '@ngrx/store';
-import {
-  AutocompleteChipsComponent,
-  AutocompleteChipsSelectionChanged,
-} from '@static/components/autocomplete-chips/autocomplete-chips.component';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { ChipListboxComponent } from '@static/components/chip/chip-listbox.component';
+import { ChipOptionComponent } from '@static/components/chip/chip-option.component';
 import { CommentsListComponent } from '@static/components/comments-list/comments-list.component';
 import { EditorComponent } from '@static/components/editor/editor.component';
 import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -61,22 +59,23 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     InlineTextAreaComponent,
     UserSelectComponent,
     AvatarComponent,
-    MatChipListbox,
-    MatChipOption,
+    ChipListboxComponent,
+    ChipOptionComponent,
     MatMenuTrigger,
     MatMenu,
     MatMenuItem,
-    MatIconButton,
-    MatTooltip,
-    AutocompleteChipsComponent,
+    StrokedButtonComponent,
+    TooltipDirective,
+    FormSelectTagsComponent,
     CommentsListComponent,
     EditorComponent,
     DialogActionsDirective,
-    MatProgressSpinner,
+    SpinnerComponent,
     TaskStatusPipe,
     TaskDates,
     FormField,
     TaskScopeIdComponent,
+    FormSelectTagsOptionComponent,
   ],
 })
 export class TaskDetailDialogComponent implements OnDestroy {
@@ -255,26 +254,36 @@ export class TaskDetailDialogComponent implements OnDestroy {
     this.store.dispatch(TaskActions.deleteComment({ commentId }));
   }
 
-  onTagsSelectionChanged(event: AutocompleteChipsSelectionChanged) {
+  onTagsSelectionChanged(tags: string[]) {
     const task = this.task();
     const identifier = this.hubGroupId();
 
     if (!task || !identifier) return;
 
-    if (event.type === 'Removed') {
-      const systemId = task.systemId;
-      const tag = event.option;
+    const currentTags = new Set(task.tags);
+    const nextTags = new Set(tags);
 
+    const added = tags.find((t) => !currentTags.has(t));
+    const removed = task.tags.find((t) => !nextTags.has(t));
+
+    if (removed) {
       this.store.dispatch(
-        TaskActions.deleteTagFromTask({ identifier, systemId, tag })
+        TaskActions.deleteTagFromTask({
+          identifier,
+          systemId: task.systemId,
+          tag: removed,
+        })
       );
-    } else {
-      const request: AddTagToTaskRequest = {
-        systemId: task.systemId,
-        tag: event.option,
-      };
-
-      this.store.dispatch(TaskActions.addTagToTask({ identifier, request }));
+    } else if (added) {
+      this.store.dispatch(
+        TaskActions.addTagToTask({
+          identifier,
+          request: {
+            systemId: task.systemId,
+            tag: added,
+          },
+        })
+      );
     }
   }
 

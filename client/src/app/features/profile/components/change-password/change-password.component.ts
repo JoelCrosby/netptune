@@ -6,7 +6,6 @@ import {
   signal,
 } from '@angular/core';
 import { disabled, FormField, form, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
 import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { Store } from '@ngrx/store';
@@ -16,12 +15,13 @@ import {
   selectChangePasswordLoading,
 } from '@profile/store/profile.selectors';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, FormInputComponent, MatButton],
+  imports: [FormField, FormInputComponent, StrokedButtonComponent],
 })
 export class ChangePasswordComponent {
   private store = inject(Store);

@@ -29,9 +29,7 @@
     />
 
     @if (icon()) {
-    <mat-icon aria-hidden="true" class="material-icons-outlined">
-      {{ icon() }}
-    </mat-icon>
+    <svg class="mr-3" [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
     }
   </div>
 

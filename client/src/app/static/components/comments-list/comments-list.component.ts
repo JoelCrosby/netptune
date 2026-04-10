@@ -9,6 +9,7 @@ import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
 import { FormField, form, required } from '@angular/forms/signals';
+import { LucideMessageCircle } from '@lucide/angular';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -39,6 +40,7 @@ import { FormInputComponent } from '../form-input/form-input.component';
   ],
 })
 export class CommentsListComponent {
+  lucideMessageCircle = LucideMessageCircle;
   readonly user = input.required<UserResponse>();
   readonly comments = input.required<CommentViewModel[] | null>();
 

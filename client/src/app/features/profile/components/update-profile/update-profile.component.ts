@@ -5,21 +5,27 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, email, FormField, form, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import {
+  disabled,
+  email,
+  form,
+  FormField,
+  required,
+} from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
 import { updateProfile } from '@profile/store/profile.actions';
 import {
   selectProfile,
   selectUpdateProfileLoading,
 } from '@profile/store/profile.selectors';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, FormInputComponent, MatButton],
+  imports: [FormField, FormInputComponent, StrokedButtonComponent],
 })
 export class UpdateProfileComponent {
   private store = inject(Store);
