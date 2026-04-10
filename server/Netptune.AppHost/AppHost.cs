@@ -37,11 +37,4 @@ var api = builder
     .WithNats(nats)
     .WithExternalHttpEndpoints();
 
-var client = builder
-    .AddDockerfile("client", "../../client/")
-    .WithReference(api)
-    .WithEnvironment("API_URL", api.GetEndpoint("http"))
-    .WithHttpEndpoint(targetPort: 80)
-    .WithExternalHttpEndpoints();
-
 builder.Build().Run();
