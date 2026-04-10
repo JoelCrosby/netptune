@@ -42,7 +42,7 @@ public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
             }
         }
 
-        return Success(activities);
+        return activities;
     }
 
     private static IEnumerable<string> GetAssigneeIds(IEnumerable<ActivityViewModel> activities)

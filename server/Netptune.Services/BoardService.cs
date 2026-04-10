@@ -93,7 +93,7 @@ public class BoardService : IBoardService
             Users = users,
         };
 
-        return ClientResponse<BoardView>.Success(result);
+        return result;
     }
 
     public async Task<ClientResponse<BoardViewModel>> Update(UpdateBoardRequest request)
@@ -117,7 +117,7 @@ public class BoardService : IBoardService
 
         var payload = result.ToViewModel();
 
-        return ClientResponse<BoardViewModel>.Success(payload);
+        return payload;
     }
 
     public async Task<ClientResponse<BoardViewModel>> Create(AddBoardRequest request)
@@ -173,9 +173,7 @@ public class BoardService : IBoardService
 
         await UnitOfWork.CompleteAsync();
 
-        var payload = result.ToViewModel();
-
-        return ClientResponse<BoardViewModel>.Success(payload);
+        return result.ToViewModel();
     }
 
     public async Task<ClientResponse> Delete(int id)
@@ -189,7 +187,7 @@ public class BoardService : IBoardService
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<List<BoardsViewModel>?> GetBoardsInWorkspace()
@@ -214,11 +212,11 @@ public class BoardService : IBoardService
         var slugLower = identifier.ToUrlSlug();
         var exists = await Boards.Exists(slugLower);
 
-        return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
+        return new IsSlugUniqueResponse
         {
             Request = identifier,
             Slug = slugLower,
             IsUnique = !exists,
-        });
+        };
     }
 }

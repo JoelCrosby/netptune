@@ -107,10 +107,10 @@ public class UserService : IUserService
 
         await SendUserInviteEmails(usersToInvite, workspace);
 
-        return ClientResponse<InviteUserResponse>.Success(new InviteUserResponse
+        return new InviteUserResponse
         {
             Emails = usersToInvite.ToList(),
-        });
+        };
     }
 
     public async Task<ClientResponse<RemoveUsersWorkspaceResponse>> RemoveUsersFromWorkspace(IEnumerable<string> emails)
@@ -154,10 +154,10 @@ public class UserService : IUserService
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse<RemoveUsersWorkspaceResponse>.Success(new RemoveUsersWorkspaceResponse
+        return new RemoveUsersWorkspaceResponse
         {
             Emails = removeUserEmails,
-        });
+        };
     }
 
     public async Task<ClientResponse<UserViewModel>> Update(UpdateUserRequest request)
@@ -172,9 +172,7 @@ public class UserService : IUserService
 
         await UnitOfWork.CompleteAsync();
 
-        var result = updatedUser.ToViewModel();
-
-        return ClientResponse<UserViewModel>.Success(result);
+        return updatedUser.ToViewModel();
     }
 
     private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)

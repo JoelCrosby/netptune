@@ -223,7 +223,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             };
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ClientResponse> ReassignTasks(ReassignTasksRequest request)
@@ -257,7 +257,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             };
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public Task<ClientResponse> MoveTaskInBoardGroup(MoveTaskInGroupRequest request)
@@ -286,7 +286,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             options.Type = ActivityType.Delete;
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ClientResponse> Delete(IEnumerable<int> ids)
@@ -305,7 +305,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             options.Type = ActivityType.Delete;
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     private async Task PutTaskInBoardGroup(ProjectTaskStatus status, ProjectTask result)
@@ -481,7 +481,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             };
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request)
@@ -507,7 +507,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             options.Type = ActivityType.Reorder;
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     private async Task<double> GetTaskInGroupSortOrder

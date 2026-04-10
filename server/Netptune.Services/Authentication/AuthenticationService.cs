@@ -255,7 +255,7 @@ public class NetptuneAuthService : INetptuneAuthService
             Message = "Click the following link to reset your password.",
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<LoginResult> ResetPassword(ResetPasswordRequest request)
@@ -285,7 +285,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await LogUserIn(user);
 
-        return ClientResponse.Success("Password Changed");
+        return ClientResponse.Success;
     }
 
     public async Task<CurrentUserResponse?> CurrentUser()

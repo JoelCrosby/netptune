@@ -44,7 +44,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
         await UnitOfWork.CompleteAsync();
 
-        return Success(result.ToViewModel());
+        return result.ToViewModel();
     }
 
     public async Task<ClientResponse<BoardGroupViewModel>> Create(AddBoardGroupRequest request)
@@ -55,7 +55,7 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
         if (board is null)
         {
-            return ClientResponse<BoardGroupViewModel>.NotFound;
+            return NotFound();
         }
 
         var sortOrder = request.SortOrder ?? await BoardGroups.GetBoardGroupDefaultSortOrder(boardId);
@@ -87,6 +87,6 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 }
