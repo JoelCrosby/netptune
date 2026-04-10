@@ -14,8 +14,6 @@
 @use 'styles/components';
 @use 'styles/lists';
 @use 'styles/forms';
-@use 'styles/boards';
-@use 'styles/spinners';
 @use 'styles/containers';
 @use 'styles/modals';
 @use 'styles/animations/menu';
@@ -76,7 +74,7 @@
 
   --scrollbar-foreground: rgba(0, 0, 0, .2);
 
-  --primary-rgb: 179, 157, 219;
+  --primary-rgb: 103, 58, 183;
   --primary: rgba(var(--primary-rgb));
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
@@ -86,7 +84,7 @@
 
   --side-bar-rgb: 41, 36, 46;
   --side-bar: rgba(var(--side-bar-rgb));
-  --side-bar-border: rgba(140, 140, 140, 1);
+  --side-bar-border: rgb(52, 52, 52);
 
   --side-bar-active-rgb: 52, 50, 61;
   --side-bar-active: rgba(var(--side-bar-active-rgb));
