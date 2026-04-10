@@ -4,32 +4,41 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { disabled, email, FormField, form, required } from '@angular/forms/signals';
-import { MatAnchor, MatButton } from '@angular/material/button';
-import { MatDivider } from '@angular/material/divider';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import {
+  disabled,
+  email,
+  form,
+  FormField,
+  required,
+} from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
+import { ButtonLinkComponent } from '@app/static/components/button/button-link.component';
+import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import { login } from '@core/auth/store/auth.actions';
 import {
   selectLoginLoading,
   selectShowLoginError,
 } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { LoginGithubComponent } from './login-github.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatProgressBar,
+    AuthPageContainerComponent,
+    ProgressBarComponent,
     FormInputComponent,
-    MatAnchor,
     RouterLink,
-    MatButton,
-    MatDivider,
+    ButtonLinkComponent,
+    StrokedButtonComponent,
     FormField,
+    LoginGithubComponent,
+    ButtonLinkComponent,
   ],
 })
 export class LoginComponent {

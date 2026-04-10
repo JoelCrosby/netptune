@@ -30,13 +30,7 @@
     ></textarea>
 
     @if (icon()) {
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Clear Search Icon"
-      class="material-icons-outlined"
-    >
-      {{ icon() }}
-    </mat-icon>
+    <svg [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
     }
   </div>
 

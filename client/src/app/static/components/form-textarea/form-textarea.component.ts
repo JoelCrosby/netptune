@@ -7,18 +7,18 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { MatIcon } from '@angular/material/icon';
+import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-form-textarea',
   templateUrl: './form-textarea.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon],
+  imports: [LucideDynamicIcon],
 })
 export class FormTextAreaComponent extends AbstractFormValueControl {
   readonly label = input<string>();
-  readonly icon = input<string>();
+  readonly icon = input<LucideIconInput | null>();
   readonly prefix = input<string>();
   readonly placeholder = input<string | null>(null);
   readonly hint = input<string | null>(null);

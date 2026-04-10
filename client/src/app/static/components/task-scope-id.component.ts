@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 @Component({
   selector: 'app-task-scope-id',
   template: ` <div
-    class="rounded-sm text-center px-2 text-sm mr-[0.6rem] bg-primary text-black">
+    class="bg-primary/10 dark:bg-primary py-/5 mr-[0.6rem] rounded-sm px-2 text-center text-sm text-black">
     {{ id() }}
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

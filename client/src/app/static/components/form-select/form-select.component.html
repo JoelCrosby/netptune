@@ -38,14 +38,10 @@
     <ng-content />
 
     @if (icon()) {
-    <mat-icon aria-hidden="true" class="material-icons-outlined">
-      {{ icon() }}
-    </mat-icon>
+    <svg class="mr-3" [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
     }
 
-    <mat-icon aria-hidden="true" class="material-icons-outlined arrow">
-      arrow_drop_down
-    </mat-icon>
+    <svg lucideChevronDown size="20" aria-hidden="true" class="arrow"></svg>
 
     <app-form-select-dropdown [reference]="dropreference">
       <div class="form-select-dropdown menu-scale-in">

@@ -3,7 +3,7 @@
     <div class="flex flex-row items-center">
       <app-avatar
         size="24"
-        class="task-card-user-chip"
+        class=""
         [name]="user().displayName"
         [imageUrl]="user().pictureUrl"
         >
@@ -12,7 +12,7 @@
         <app-form-input
           [formField]="commentForm.comment"
           placeholder="Add Comment"
-          icon="chat_bubble_outline"
+          [icon]="lucideMessageCircle"
           >
         </app-form-input>
       </form>
@@ -22,7 +22,7 @@
         <div class="mb-5 flex flex-row items-center group">
           <app-avatar
             size="24"
-            class="task-card-user-chip"
+            class=""
             [name]="comment.userDisplayName"
             [imageUrl]="comment.userDisplayImage"
             >

@@ -14,7 +14,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
-import { MatIcon } from '@angular/material/icon';
+import { LucideChevronDown, LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectService } from './form-select.service';
@@ -24,7 +24,7 @@ import { FormSelectService } from './form-select.service';
   templateUrl: './form-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectService],
-  imports: [MatIcon, FormSelectDropdownComponent],
+  imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue | null>
@@ -32,7 +32,7 @@ export class FormSelectComponent<TValue>
   private service = inject<FormSelectService<TValue>>(FormSelectService);
 
   readonly label = input.required<string>();
-  readonly icon = input<string>();
+  readonly icon = input<LucideIconInput | null>();
   readonly prefix = input<string>();
   readonly placeholder = input<string>('');
   readonly hint = input<string>();

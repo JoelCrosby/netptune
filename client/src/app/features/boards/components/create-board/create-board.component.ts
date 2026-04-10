@@ -26,6 +26,7 @@ import { colorDictionary } from '@core/util/colors/colors';
 import { Logger } from '@core/util/logger';
 import { toUrlSlug } from '@core/util/strings';
 import { Store } from '@ngrx/store';
+import { LucideCheck } from '@lucide/angular';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -114,10 +115,10 @@ export class CreateBoardComponent {
     }
 
     if (this.boardForm.identifier().valid()) {
-      return 'check';
+      return LucideCheck;
     }
 
-    return '';
+    return null;
   });
 
   colors = colorDictionary();

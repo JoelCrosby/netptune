@@ -11,29 +11,31 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   disabled,
   email,
-  FormField,
   form,
+  FormField,
   maxLength,
   minLength,
   required,
   validate,
 } from '@angular/forms/signals';
 import { MatAnchor, MatButton } from '@angular/material/button';
-import { MatProgressBar } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
 import { selectRegisterLoading } from '@core/auth/store/auth.selectors';
 import { Store } from '@ngrx/store';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatProgressBar,
+    AuthPageContainerComponent,
+    ProgressBarComponent,
     FormInputComponent,
     FormErrorsComponent,
     MatAnchor,

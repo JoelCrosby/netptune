@@ -7,7 +7,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { MatIcon } from '@angular/material/icon';
+import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { FormErrorComponent } from '../form-error/form-error.component';
 
@@ -15,11 +15,11 @@ import { FormErrorComponent } from '../form-error/form-error.component';
   selector: 'app-form-input',
   templateUrl: './form-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon, FormErrorComponent],
+  imports: [LucideDynamicIcon, FormErrorComponent],
 })
 export class FormInputComponent extends AbstractFormValueControl {
   readonly label = input<string>();
-  readonly icon = input<string | null>();
+  readonly icon = input<LucideIconInput | null>();
   readonly prefix = input<string | null>();
   readonly autocomplete = input('off');
   readonly placeholder = input<string | null>();
