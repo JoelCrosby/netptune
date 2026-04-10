@@ -5,13 +5,7 @@
   [matMenuTriggerFor]="menu"
   (click)="onClicked()"
   >
-  <mat-icon
-    aria-hidden="false"
-    aria-label="Show activity"
-    class="material-icons-outlined"
-    >
-    timeline
-  </mat-icon>
+  <svg lucideActivity aria-hidden="false" aria-label="Show activity"></svg>
 </button>
 
 <mat-menu
@@ -37,7 +31,7 @@
         </div>
       } @empty {
         <div class="no-activity-message">
-          <mat-icon class="material-icons-outlined"> timeline </mat-icon>
+          <svg lucideActivity></svg>
           <span> There is no activity </span>
           <p>Activity on the item will appear here</p>
         </div>

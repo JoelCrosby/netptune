@@ -19,12 +19,8 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
-import { BoardGroupTagsComponent } from '@boards/components/board-group-tags/board-group-tags.component';
-import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
+import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
-import { BoardGroupsFlaggedComponent } from '@boards/components/board-groups-flagged/board-groups-flagged.component';
-import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
-import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
 import { deleteBoard, updateBoard } from '@boards/store/boards/boards.actions';
 import {
@@ -60,11 +56,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    BoardGroupsSearchComponent,
-    BoardGroupUsersComponent,
-    BoardGroupTagsComponent,
-    BoardGroupsFlaggedComponent,
-    BoardGroupsSelectionComponent,
+    BoardGroupHeaderComponent,
     MatProgressSpinner,
     CdkDropList,
     ScrollShadowDirective,
