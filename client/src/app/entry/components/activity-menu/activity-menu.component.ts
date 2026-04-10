@@ -5,7 +5,6 @@ import {
   input,
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import {
   MatMenu,
   MatMenuContent,
@@ -19,6 +18,7 @@ import {
   selectActivities,
   selectActivitiesLoaded,
 } from '@core/store/activity/activity.selectors';
+import { LucideActivity } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
@@ -31,7 +31,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     MatButton,
     MatTooltip,
     MatMenuTrigger,
-    MatIcon,
+    LucideActivity,
     MatMenu,
     MatMenuContent,
     AvatarComponent,

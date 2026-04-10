@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatBadge } from '@angular/material/badge';
-import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -9,21 +8,19 @@ import {
   MatMenuTrigger,
 } from '@angular/material/menu';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatTooltip } from '@angular/material/tooltip';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
 import * as TagSelectors from '@core/store/tags/tags.selectors';
 import { Store } from '@ngrx/store';
+import { BoardGroupHeaderActionComponent } from '../board-group-header/board-group-header-action.component';
+import { LucideTag } from '@lucide/angular';
 
 @Component({
   selector: 'app-board-group-tags',
-  templateUrl: './board-group-tags.component.html',
   styleUrls: ['./board-group-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatButton,
-    MatTooltip,
     MatMenuTrigger,
     MatBadge,
     MatIcon,
@@ -31,10 +28,55 @@ import { Store } from '@ngrx/store';
     MatMenuContent,
     MatCheckbox,
     MatProgressSpinner,
+    BoardGroupHeaderActionComponent,
   ],
+  template: `
+    <app-board-group-header-action
+      label="Filter by Tag"
+      [icon]="lucideTag"
+      (action)="onClicked()"
+      [matMenuTriggerFor]="tagMenu"
+      [matBadge]="!!selectedCount() ? selectedCount() : undefined"
+      [color]="!!selectedCount() ? 'primary' : undefined" />
+
+    <mat-menu #tagMenu="matMenu">
+      <ng-template matMenuContent>
+        <div class="tags-menu">
+          @if (loaded()) {
+            @if (tags().length) {
+              @for (tag of tags(); track trackByTag($index, tag)) {
+                <mat-checkbox
+                  class="tag-checkbox mat-menu-item"
+                  role="menuitemcheckbox"
+                  (click)="$event.stopPropagation()"
+                  (change)="onOptionClicked(tag)"
+                  [checked]="tag.selected ?? false">
+                  {{ tag.name }}
+                </mat-checkbox>
+              }
+            } @else {
+              <div class="no-tags-message">
+                <mat-icon class="material-icons-outlined">
+                  local_offer
+                </mat-icon>
+                <span> There are currently No Tags </span>
+                <p>Tags Assigned to tasks will show here</p>
+              </div>
+            }
+          } @else {
+            <div class="loading">
+              <mat-spinner diameter="24" />
+            </div>
+          }
+        </div>
+      </ng-template>
+    </mat-menu>
+  `,
 })
 export class BoardGroupTagsComponent {
   private store = inject(Store);
+
+  lucideTag = LucideTag;
 
   tags = this.store.selectSignal(TagSelectors.selectTasksWithSelect);
   loaded = this.store.selectSignal(TagSelectors.selectTagsLoaded);
