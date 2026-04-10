@@ -48,7 +48,12 @@ public class CommentService : ICommentService
 
         var result = await Comments.GetCommentViewModel(comment.Id);
 
-        return ClientResponse<CommentViewModel>.Success(result!);
+        if (result is null)
+        {
+            return ClientResponse<CommentViewModel>.Failed("add comment failed");
+        }
+
+        return result;
     }
 
     public async Task<List<CommentViewModel>?> GetCommentsForTask(string systemId)
@@ -76,6 +81,6 @@ public class CommentService : ICommentService
         await Comments.DeletePermanent(comment.Id);
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 }

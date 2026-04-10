@@ -136,7 +136,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         await UnitOfWork.Tags.DeletePermanent(tags);
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ClientResponse> DeleteFromTask(DeleteTagFromTaskRequest request)
@@ -156,7 +156,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Tag);
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ClientResponse<TagViewModel>> Update(UpdateTagRequest request)
@@ -173,7 +173,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
         if (tag is null)
         {
-            return NotFound<TagViewModel>();
+            return NotFound();
         }
 
         tag.Name = request.NewValue.Trim();

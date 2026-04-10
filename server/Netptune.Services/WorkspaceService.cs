@@ -107,7 +107,7 @@ public class WorkspaceService : IWorkspaceService
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ClientResponse> DeletePermanent(string key)
@@ -148,7 +148,7 @@ public class WorkspaceService : IWorkspaceService
             await UnitOfWork.CompleteAsync();
         });
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public Task<Workspace?> GetWorkspace(string slug)

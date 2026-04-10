@@ -3,12 +3,13 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
 
 namespace Netptune.Services;
 
-public class ProjectService : IProjectService
+public class ProjectService : ServiceBase<ProjectViewModel>, IProjectService
 {
     private readonly IProjectRepository ProjectRepository;
     private readonly INetptuneUnitOfWork UnitOfWork;
@@ -30,7 +31,7 @@ public class ProjectService : IProjectService
 
             if (workspace is null)
             {
-                return ClientResponse<ProjectViewModel>.NotFound;
+                return NotFound();
             }
 
             var user = await IdentityService.GetCurrentUser();
@@ -53,7 +54,12 @@ public class ProjectService : IProjectService
 
             var result = await ProjectRepository.GetProjectViewModel(project.Id);
 
-            return ClientResponse<ProjectViewModel>.Success(result!);
+            if (result is null)
+            {
+                return Failed("Project not found");
+            }
+
+            return result;
         });
     }
 
@@ -71,7 +77,7 @@ public class ProjectService : IProjectService
 
         await UnitOfWork.CompleteAsync();
 
-        return ClientResponse.Success();
+        return ClientResponse.Success;
     }
 
     public async Task<ProjectViewModel?> GetProject(string projectKey)
@@ -97,7 +103,7 @@ public class ProjectService : IProjectService
 
         if (project is null)
         {
-            return ClientResponse<ProjectViewModel>.NotFound;
+            return NotFound();
         }
 
         project.Name = request.Name ?? project.Name;
@@ -108,8 +114,6 @@ public class ProjectService : IProjectService
 
         await UnitOfWork.CompleteAsync();
 
-        var result = project.ToViewModel();
-
-        return ClientResponse<ProjectViewModel>.Success(result);
+        return project.ToViewModel();
     }
 }
