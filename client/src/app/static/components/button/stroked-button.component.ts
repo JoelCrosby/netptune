@@ -21,7 +21,7 @@ export class StrokedButtonComponent {
     const colors: Record<string, string> = {
       primary:
         'border-border text-primary bg-transparent hover:bg-primary/10 focus-visible:ring-primary',
-      warn: 'border-warn text-warn bg-transparent hover:bg-warn/10 focus-visible:ring-warn',
+      warn: 'border-border text-warn bg-transparent hover:bg-warn/10 focus-visible:ring-warn',
     };
 
     return `${base} ${colors[this.color()]}`;

@@ -15,7 +15,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 
 @Component({
   selector: 'app-invite-dialog',
-  templateUrl: './invite-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogContentComponent,
@@ -25,6 +24,33 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     StrokedButtonComponent,
     FormField,
   ],
+  template: `<h1 mat-dialog-title>Invite Users to Workspace</h1>
+
+    <app-dialog-content>
+      <form (submit)="add($event)">
+        <app-form-input
+          [formField]="inviteForm.email"
+          label="Invitee Email"
+          maxLength="128"
+          type="email">
+        </app-form-input>
+
+        <div class="max-h-[496px] min-h-[128px] overflow-y-auto">
+          @for (user of users(); track user) {
+            <div class="px-4">{{ user }}</div>
+          } @empty {
+            <div class="app-list-message">
+              Email addresses entered below will show here.
+            </div>
+          }
+        </div>
+      </form>
+    </app-dialog-content>
+
+    <div app-dialog-actions align="end">
+      <button app-stroked-button (click)="close()">Close</button>
+      <button app-flat-button (click)="getResult()">Invite Users</button>
+    </div> `,
 })
 export class InviteDialogComponent {
   private dialogRef =
