@@ -12,7 +12,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlatButtonComponent {
-  readonly color = input<'primary' | 'warn'>('primary');
+  readonly color = input<'primary' | 'warn' | 'ghost'>('primary');
 
   @HostBinding('class') get className(): string {
     const base =
@@ -22,6 +22,8 @@ export class FlatButtonComponent {
       primary:
         'bg-primary text-white dark:text-neutral-900 hover:bg-primary/90 focus-visible:ring-primary',
       warn: 'bg-warn text-white dark:text-neutral-900 hover:bg-warn/90 focus-visible:ring-warn',
+      ghost:
+        'bg-transparent text-foreground hover:bg-foreground/10 active:bg-foreground/20 focus-visible:ring-warn',
     };
 
     return `${base} ${colors[this.color()]}`;

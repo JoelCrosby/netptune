@@ -11,6 +11,7 @@ import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
+import { LucidePanelsTopLeft } from '@lucide/angular';
 
 @Component({
   selector: 'app-project-list-item',
@@ -51,7 +52,7 @@ export class ProjectListItemComponent {
       {
         label: 'Go To Board',
         isLink: true,
-        icon: 'assessment',
+        icon: LucidePanelsTopLeft,
         routerLink: [
           '/',
           identifier,

@@ -13,7 +13,12 @@ import { ButtonLinkComponent } from '../button/button-link.component';
 @Component({
   selector: 'app-card-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, LucideDynamicIcon, FlatButtonComponent, ButtonLinkComponent],
+  imports: [
+    RouterLink,
+    LucideDynamicIcon,
+    FlatButtonComponent,
+    ButtonLinkComponent,
+  ],
   template: `
     <div class="mt-4 flex items-center gap-2">
       @for (
@@ -26,11 +31,12 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <a
               app-flat-button
               color="primary"
-              class="mr-3"
               type="button"
               [routerLink]="action.routerLink">
               @if (action.icon) {
-                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
+                <svg
+                  [lucideIcon]="action.icon"
+                  class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </a>
@@ -38,11 +44,12 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <a
               app-button-link
               color="primary"
-              class="mr-3"
               type="button"
               [routerLink]="action.routerLink">
               @if (action.icon) {
-                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
+                <svg
+                  [lucideIcon]="action.icon"
+                  class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </a>
@@ -52,10 +59,11 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <button
               app-flat-button
               color="primary"
-              class="mr-3"
               (click)="action.click && action.click()">
               @if (action.icon) {
-                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
+                <svg
+                  [lucideIcon]="action.icon"
+                  class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </button>
@@ -63,10 +71,11 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <button
               app-button-link
               color="primary"
-              class="mr-3"
               (click)="action.click && action.click()">
               @if (action.icon) {
-                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
+                <svg
+                  [lucideIcon]="action.icon"
+                  class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </button>

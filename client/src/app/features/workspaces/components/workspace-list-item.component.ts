@@ -13,6 +13,7 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
+import { LucidePanelsTopLeft } from '@lucide/angular';
 
 @Component({
   selector: 'app-workspace-list-item',
@@ -41,7 +42,7 @@ export class WorkspaceListItemComponent implements OnInit {
         label: 'Go To Projects',
         isLink: true,
         routerLink: ['/', this.workspace().slug],
-        icon: 'assessment',
+        icon: LucidePanelsTopLeft,
       },
       {
         label: 'Manage Users',

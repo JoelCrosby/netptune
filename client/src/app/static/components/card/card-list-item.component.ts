@@ -5,12 +5,12 @@ import {
   output,
 } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
-import { CardComponent } from './card.component';
-import { CardTitleComponent } from './card-title.component';
-import { MatButton, MatAnchor } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { CardContentComponent } from './card-content.component';
+import { LucideX } from '@lucide/angular';
+import { FlatButtonComponent } from '../button/flat-button.component';
 import { CardActionsComponent } from './card-actions.component';
+import { CardContentComponent } from './card-content.component';
+import { CardTitleComponent } from './card-title.component';
+import { CardComponent } from './card.component';
 
 @Component({
   selector: 'app-card-list-item',
@@ -18,22 +18,21 @@ import { CardActionsComponent } from './card-actions.component';
   imports: [
     CardComponent,
     CardTitleComponent,
-    MatButton,
-    MatIcon,
+    FlatButtonComponent,
+    LucideX,
     CardContentComponent,
     CardActionsComponent,
-    MatAnchor,
   ],
   template: `
     <app-card>
       <app-card-title>
         {{ title() }}
         <button
-          mat-button
-          color="primary"
+          app-flat-button
+          color="ghost"
           type="button"
           (click)="delete.emit()">
-          <mat-icon>close</mat-icon>
+          <svg lucideX [size]="28"></svg>
         </button>
       </app-card-title>
       <app-card-content>
