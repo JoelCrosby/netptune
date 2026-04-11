@@ -22,23 +22,25 @@ export type DropdownMenuXPosition = 'before' | 'after';
       </div>
     </ng-template>
   `,
-  styles: [`
-    @keyframes dropdown-in {
-      from {
-        opacity: 0;
-        transform: scale(0.95) translateY(-4px);
+  styles: [
+    `
+      @keyframes dropdown-in {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
       }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
 
-    .dropdown-menu {
-      animation: dropdown-in 120ms ease-out;
-      transform-origin: top;
-    }
-  `],
+      .dropdown-menu {
+        animation: dropdown-in 120ms ease-out;
+        transform-origin: top;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkPortal],
 })

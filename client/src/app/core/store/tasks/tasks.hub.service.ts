@@ -53,7 +53,10 @@ export class ProjectTasksHubService {
     }
   }
 
-  moveTaskInBoardGroup(boardIdentifier: string, request: MoveTaskInGroupRequest) {
+  moveTaskInBoardGroup(
+    boardIdentifier: string,
+    request: MoveTaskInGroupRequest
+  ) {
     return this.http.post<ClientResponse>(
       'api/tasks/move-task-in-group',
       request,
@@ -62,21 +65,20 @@ export class ProjectTasksHubService {
   }
 
   post(groupId: string, task: AddProjectTaskRequest) {
-    return this.http.post<ClientResponse<TaskViewModel>>(
-      'api/tasks',
-      task,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.post<ClientResponse<TaskViewModel>>('api/tasks', task, {
+      headers: { 'X-Group': groupId },
+    });
   }
 
-  put(groupId: string, task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>) {
-    console.log("task.hub.service put");
+  put(
+    groupId: string,
+    task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
+  ) {
+    console.log('task.hub.service put');
 
-    return this.http.put<ClientResponse<TaskViewModel>>(
-      'api/tasks',
-      task,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.put<ClientResponse<TaskViewModel>>('api/tasks', task, {
+      headers: { 'X-Group': groupId },
+    });
   }
 
   putGroup(groupId: string, request: UpdateBoardGroupRequest) {
@@ -92,32 +94,29 @@ export class ProjectTasksHubService {
       throw new Error('task id undefined');
     }
 
-    return this.http.delete<ClientResponse>(
-      `api/tasks/${task.id}`,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.delete<ClientResponse>(`api/tasks/${task.id}`, {
+      headers: { 'X-Group': groupId },
+    });
   }
 
   deleteMultiple(groupId: string, ids: number[]) {
-    return this.http.delete<ClientResponse>(
-      'api/tasks',
-      { headers: { 'X-Group': groupId }, body: ids }
-    );
+    return this.http.delete<ClientResponse>('api/tasks', {
+      headers: { 'X-Group': groupId },
+      body: ids,
+    });
   }
 
   addTagToTask(groupId: string, request: AddTagToTaskRequest) {
-    return this.http.post<ClientResponse<Tag>>(
-      'api/tags/task',
-      request,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.post<ClientResponse<Tag>>('api/tags/task', request, {
+      headers: { 'X-Group': groupId },
+    });
   }
 
   deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {
-    return this.http.delete<ClientResponse>(
-      'api/tags/task',
-      { headers: { 'X-Group': groupId }, body: request }
-    );
+    return this.http.delete<ClientResponse>('api/tags/task', {
+      headers: { 'X-Group': groupId },
+      body: request,
+    });
   }
 
   addBoardGroup(groupId: string, request: AddBoardGroupRequest) {
@@ -129,10 +128,9 @@ export class ProjectTasksHubService {
   }
 
   deleteBoardGroup(groupId: string, boardGroupId: number) {
-    return this.http.delete<ClientResponse>(
-      `api/boardgroups/${boardGroupId}`,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.delete<ClientResponse>(`api/boardgroups/${boardGroupId}`, {
+      headers: { 'X-Group': groupId },
+    });
   }
 
   moveTasksToGroup(groupId: string, request: MoveTasksToGroupRequest) {
@@ -144,10 +142,8 @@ export class ProjectTasksHubService {
   }
 
   reassignTasks(groupId: string, request: ReassignTasksRequest) {
-    return this.http.post<ClientResponse>(
-      'api/tasks/reassign-tasks',
-      request,
-      { headers: { 'X-Group': groupId } }
-    );
+    return this.http.post<ClientResponse>('api/tasks/reassign-tasks', request, {
+      headers: { 'X-Group': groupId },
+    });
   }
 }

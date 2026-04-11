@@ -17,7 +17,7 @@ import { BoardsGridCardComponent } from './boards-grid-card.component';
   template: `
     @for (group of groups(); track group) {
       <div class="inline-flex flex-col gap-2">
-        <h1 class="font-overpass text-[1.4rem] font-normal my-2">
+        <h1 class="font-overpass my-2 text-[1.4rem] font-normal">
           {{ group.projectName }}
         </h1>
         <app-card-group>

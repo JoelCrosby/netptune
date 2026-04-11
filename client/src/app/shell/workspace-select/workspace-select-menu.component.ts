@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
@@ -10,52 +15,46 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
   template: `
     @if (isOpen()) {
       <div
-        class="flex flex-col origin-top h-full text-left overflow-x-hidden border border-border bg-card menu-scale-in"
-      >
+        class="border-border bg-card menu-scale-in flex h-full origin-top flex-col overflow-x-hidden border text-left">
         @if (!workspaces().length) {
-          <div class="h-[38px] flex items-center px-2 text-sm font-[inherit]">
+          <div class="flex h-[38px] items-center px-2 font-[inherit] text-sm">
             No results found...
           </div>
         }
         @if (workspaces().length) {
           <input
             appAutofocus
-            class="text-sm font-[inherit] p-2 m-2 appearance-none sticky top-0 border-2 border-border text-foreground bg-card focus:outline-none"
+            class="border-border text-foreground bg-card sticky top-0 m-2 appearance-none border-2 p-2 font-[inherit] text-sm focus:outline-none"
             placeholder="Search.."
             [formField]="searchField()"
             (click)="$event.stopPropagation()"
-            autocomplete="off"
-          />
+            autocomplete="off" />
         }
-        <div class="py-[.4rem] pl-[.4rem] max-h-[216px] overflow-y-auto custom-scroll [scrollbar-gutter:stable]">
+        <div
+          class="custom-scroll max-h-[216px] overflow-y-auto py-[.4rem] pl-[.4rem] [scrollbar-gutter:stable]">
           @for (option of filteredOptions(); track option.id) {
             <div
-              class="h-[38px] flex items-center px-2 cursor-pointer text-sm font-[inherit] rounded-sm my-[.2rem] hover:bg-hover"
+              class="hover:bg-hover my-[.2rem] flex h-[38px] cursor-pointer items-center rounded-sm px-2 font-[inherit] text-sm"
               [class.bg-primary]="option.id === selected()?.id"
-              (click)="optionSelect.emit(option)"
-            >
+              (click)="optionSelect.emit(option)">
               <app-workspace-badge
                 class="mr-[14px]"
                 [color]="option.metaInfo?.color"
-                [letter]="option.name[0]"
-              />
+                [letter]="option.name[0]" />
               <span>{{ option.name }}</span>
             </div>
           }
         </div>
         <div
-          class="p-[.4rem] flex flex-col justify-start border-t border-foreground/10 bg-card"
-        >
+          class="border-foreground/10 bg-card flex flex-col justify-start border-t p-[.4rem]">
           <a
-            class="cursor-pointer h-6 leading-6 block py-[.2rem] px-[.4rem] my-[.2rem] text-sm tracking-[.225px] rounded-sm text-foreground hover:bg-hover"
-            [routerLink]="['/workspaces']"
-          >
+            class="text-foreground hover:bg-hover my-[.2rem] block h-6 cursor-pointer rounded-sm px-[.4rem] py-[.2rem] text-sm leading-6 tracking-[.225px]"
+            [routerLink]="['/workspaces']">
             Workspaces
           </a>
           <div
-            class="cursor-pointer h-6 leading-6 block py-[.2rem] px-[.4rem] my-[.2rem] text-sm tracking-[.225px] rounded-sm text-foreground hover:bg-hover"
-            (click)="logout.emit()"
-          >
+            class="text-foreground hover:bg-hover my-[.2rem] block h-6 cursor-pointer rounded-sm px-[.4rem] py-[.2rem] text-sm leading-6 tracking-[.225px]"
+            (click)="logout.emit()">
             Logout
           </div>
         </div>

@@ -20,7 +20,9 @@ import { FormSelectTagsService } from './form-select-tags.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
-  private service = inject<FormSelectTagsService<TValue>>(FormSelectTagsService);
+  private service = inject<FormSelectTagsService<TValue>>(
+    FormSelectTagsService
+  );
   private element = inject(ElementRef);
 
   readonly value = input.required<TValue>();
