@@ -1,4 +1,3 @@
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,49 +15,69 @@ import {
   DisabledReason,
   FormValueControl,
   ValidationError,
-  WithOptionalField,
+  WithOptionalFieldTree,
 } from '@angular/forms/signals';
 import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-inline-text-area',
-  templateUrl: './inline-text-area.component.html',
-  styleUrls: ['./inline-text-area.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CdkTextareaAutosize],
-  host: { '[class.edit-active]': 'isEditActive()' },
+  host: {
+    '(input)': 'onInput($event)',
+  },
+  template: `
+    <div
+      class="hover:bg-hover font-overpass my-4 flex w-full rounded text-3xl transition">
+      <div
+        #div
+        (click)="onClicked()"
+        class="inline-text-area-label whitespace-[inherit] w-full rounded p-3 leading-[1.5] text-[inherit] transition-colors duration-200 [font:inherit]">
+        {{ value() }}
+      </div>
+    </div>
+  `,
 })
 export class InlineTextAreaComponent implements FormValueControl<string> {
-  private elementRef = inject(ElementRef);
+  private elementRef = viewChild.required<ElementRef>('div');
   private document = inject(DocumentService);
   private cd = inject(ChangeDetectorRef);
 
   readonly activeBorder = input.required<boolean | string>();
-
-  readonly minRows = input(1);
-  readonly maxRows = input(3);
-
-  readonly autosize = viewChild<CdkTextareaAutosize>('autosize');
-  readonly textarea = viewChild<ElementRef>('textarea');
 
   readonly value = model('');
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly required = input<boolean>(false);
   readonly disabledReasons = input<
-    readonly WithOptionalField<DisabledReason>[]
+    readonly WithOptionalFieldTree<DisabledReason>[]
   >([]);
   readonly readonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
-  readonly errors = input<readonly ValidationError.WithOptionalField[]>([]);
+  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
 
-  isEditActive = signal(false);
+  isContentEditable = signal(false);
 
   constructor() {
     effect(() => {
       const el = this.document.documentClicked();
       untracked(() => this.handleDocumentClick(el));
+    });
+
+    effect(() => {
+      const element = this.elementRef();
+
+      if (!this.elementRef()) return;
+
+      if (this.isContentEditable()) {
+        element.nativeElement.setAttribute('contenteditable', 'true');
+        console.log("element.setAttribute('contenteditable', 'true');");
+      } else {
+        element.nativeElement.setAttribute('contenteditable', 'false');
+        console.log("element.setAttribute('contenteditable', 'false');");
+      }
+
+      this.cd.markForCheck();
     });
   }
 
@@ -70,26 +89,29 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
   }
 
   handleDocumentClick(target: EventTarget) {
-    if (this.isEditActive()) {
-      if (!this.elementRef.nativeElement.contains(target)) {
-        return this.isEditActive.set(false);
-      }
-    } else {
-      if (this.elementRef.nativeElement.contains(target)) {
-        this.isEditActive.set(true);
-        this.focusInput();
+    console.log('handleDocumentClick: ', target);
+
+    const element = this.elementRef();
+
+    console.log('handleDocumentClick', element);
+
+    if (!element) return;
+
+    if (this.isContentEditable()) {
+      if (!element.nativeElement.contains(target as HTMLElement)) {
+        return this.isContentEditable.set(false);
       }
     }
   }
 
-  focusInput() {
-    this.cd.detectChanges();
-    this.autosize()?.resizeToFitContent(true);
+  onClicked() {
+    console.log(
+      'Element Clicked | isContentEditable:',
+      this.isContentEditable()
+    );
 
-    const textarea = this.textarea();
-
-    if (textarea) {
-      textarea?.nativeElement.focus();
+    if (!this.isContentEditable()) {
+      this.isContentEditable.set(true);
     }
   }
 }

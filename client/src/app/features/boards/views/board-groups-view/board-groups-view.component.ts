@@ -88,19 +88,16 @@ export class BoardGroupsViewComponent implements OnDestroy {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
       icon: 'file_upload',
-      iconClass: 'material-icons-outlined',
     },
     {
       label: 'Export Board Tasks',
       click: () => this.onExportTasksClicked(),
       icon: 'file_download',
-      iconClass: 'material-icons-outlined',
     },
     {
       label: 'Delete Board',
       click: () => this.onDeleteBoardClicked(),
       icon: 'delete',
-      iconClass: 'material-icons-outlined',
     },
   ];
 

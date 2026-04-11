@@ -1,10 +1,9 @@
-import { IconClass } from '@core/consts/icon-class';
+import { LucideIconInput } from '@lucide/angular';
 
 export interface HeaderAction {
   label: string;
   click?: () => void;
-  icon?: string;
-  iconClass?: IconClass;
+  icon?: LucideIconInput;
   isLink?: boolean;
   routerLink?: string | unknown[];
 }

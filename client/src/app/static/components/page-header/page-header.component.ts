@@ -5,7 +5,6 @@ import {
   input,
   output,
 } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import {
   MatMenu,
   MatMenuContent,
@@ -16,24 +15,32 @@ import { RouterLink } from '@angular/router';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
+import {
+  LucideArrowLeft,
+  LucideDynamicIcon,
+  LucideEllipsis,
+  LucideMenu,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { ButtonComponent } from '../button/button.component';
+import { FlatButtonComponent } from '../button/flat-button.component';
 import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input.component';
 
 @Component({
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIcon,
+    LucideMenu,
+    LucideArrowLeft,
+    LucideEllipsis,
+    LucideDynamicIcon,
     RouterLink,
     InlineEditInputComponent,
     MatMenuTrigger,
     MatMenu,
     MatMenuContent,
     MatMenuItem,
-    ButtonComponent,
+    FlatButtonComponent,
   ],
 })
 export class PageHeaderComponent {
