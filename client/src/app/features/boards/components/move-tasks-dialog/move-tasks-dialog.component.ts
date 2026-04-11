@@ -48,7 +48,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     </div>
 
     <div app-dialog-actions align="end">
-      <button mat-stroked-button app-dialog-close>Cancel</button>
+      <button app-stroked-button app-dialog-close>Cancel</button>
       <button
         app-flat-button
         color="primary"
