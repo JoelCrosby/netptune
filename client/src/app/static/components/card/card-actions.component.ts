@@ -4,7 +4,7 @@ import {
   HostBinding,
   input,
 } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { LucideDynamicIcon } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
 import { HeaderAction } from '@core/types/header-action';
 import { FlatButtonComponent } from '../button/flat-button.component';
@@ -13,7 +13,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
 @Component({
   selector: 'app-card-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatIcon, FlatButtonComponent, ButtonLinkComponent],
+  imports: [RouterLink, LucideDynamicIcon, FlatButtonComponent, ButtonLinkComponent],
   template: `
     <div class="mt-4 flex items-center gap-2">
       @for (
@@ -30,9 +30,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               type="button"
               [routerLink]="action.routerLink">
               @if (action.icon) {
-                <mat-icon class="mr-[0.6rem]">
-                  {{ action.icon }}
-                </mat-icon>
+                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </a>
@@ -44,9 +42,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               type="button"
               [routerLink]="action.routerLink">
               @if (action.icon) {
-                <mat-icon class="mr-[0.6rem]">
-                  {{ action.icon }}
-                </mat-icon>
+                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </a>
@@ -59,9 +55,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               class="mr-3"
               (click)="action.click && action.click()">
               @if (action.icon) {
-                <mat-icon class="mr-[0.6rem]">
-                  {{ action.icon }}
-                </mat-icon>
+                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </button>
@@ -72,9 +66,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               class="mr-3"
               (click)="action.click && action.click()">
               @if (action.icon) {
-                <mat-icon class="mr-[0.6rem]">
-                  {{ action.icon }}
-                </mat-icon>
+                <svg [lucideIcon]="action.icon" class="mr-[0.6rem] h-4 w-4"></svg>
               }
               {{ action.label }}
             </button>

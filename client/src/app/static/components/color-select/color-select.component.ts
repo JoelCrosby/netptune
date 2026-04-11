@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
-import { MatIcon } from '@angular/material/icon';
+import { LucideCheck } from '@lucide/angular';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 
@@ -8,7 +8,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
   selector: 'app-color-select',
   templateUrl: './color-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatTooltip, MatIcon],
+  imports: [MatTooltip, LucideCheck],
 })
 export class ColorSelectComponent extends AbstractFormValueControl {
   readonly label = input.required<string>();

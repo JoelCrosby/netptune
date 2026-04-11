@@ -16,7 +16,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
@@ -42,7 +41,7 @@ import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
-import { LucideDelete, LucideFileDown, LucideFileUp } from '@lucide/angular';
+import { LucideCheck, LucideDelete, LucideFileDown, LucideFileUp, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -64,7 +63,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     BoardGroupComponent,
     CdkDrag,
     CdkDragHandle,
-    MatIcon,
+    LucideCheck,
+    LucideX,
     MatTooltip,
     InlineEditInputComponent,
     MatIconButton,

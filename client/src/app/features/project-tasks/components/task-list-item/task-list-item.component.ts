@@ -17,7 +17,13 @@ import {
   MatMenuContent,
   MatMenuItem,
 } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
+import {
+  LucideArchiveRestore,
+  LucideCheck,
+  LucideEllipsisVertical,
+  LucideFlag,
+  LucideTrash2,
+} from '@lucide/angular';
 import { MatCheckbox } from '@angular/material/checkbox';
 
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -30,7 +36,11 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   imports: [
     MatIconButton,
     MatMenuTrigger,
-    MatIcon,
+    LucideEllipsisVertical,
+    LucideFlag,
+    LucideCheck,
+    LucideArchiveRestore,
+    LucideTrash2,
     MatCheckbox,
     AvatarComponent,
     MatMenu,

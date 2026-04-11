@@ -9,7 +9,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { LucideX } from '@lucide/angular';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
@@ -23,7 +23,7 @@ import { DocumentService } from '@static/services/document.service';
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TagsInputComponent, MatTooltip, MatIcon],
+  imports: [TagsInputComponent, MatTooltip, LucideX],
 })
 export class TagsComponent {
   private store = inject(Store);

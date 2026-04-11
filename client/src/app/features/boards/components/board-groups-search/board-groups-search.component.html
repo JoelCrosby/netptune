@@ -11,22 +11,20 @@
     />
 
   @if (termForm.term().value()) {
-    <mat-icon
+    <svg
+      lucideX
       aria-hidden="false"
       aria-label="Clear Search Icon"
-      class="material-icons-outlined clear-search"
+      class="clear-search h-4 w-4"
       matTooltip="Clear search term"
       (click)="onClearClicked()"
-      >
-      close
-    </mat-icon>
+      ></svg>
   } @else {
-    <mat-icon
+    <svg
+      lucideSearch
       aria-hidden="false"
       aria-label="Search Icon"
-      class="material-icons-outlined"
-      >
-      search
-    </mat-icon>
+      class="h-4 w-4"
+      ></svg>
   }
 </div>

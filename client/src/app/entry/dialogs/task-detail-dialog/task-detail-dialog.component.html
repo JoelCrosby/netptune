@@ -3,7 +3,7 @@
   <form (submit)="onSubmit($event)">
     <div class="flex flex-row justify-end gap-4 items-center mb-1">
       @if (task.status === 1) {
-        <mat-icon class="text-green-500"> done </mat-icon>
+        <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
       }
       <app-task-scope-id [id]="task.systemId" />
       <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
@@ -70,7 +70,7 @@
             appTooltip="Delete Task"
             (click)="deleteClicked()"
           >
-            <mat-icon class="material-icons-outlined"> delete </mat-icon>
+            <svg lucideTrash2 class="h-4 w-4"></svg>
           </button>
           <button
             app-stroked-button
@@ -79,9 +79,7 @@
             color="warn"
             (click)="onFlagClicked()"
           >
-            <mat-icon [class.material-icons-outlined]="!task.isFlagged">
-              flag
-            </mat-icon>
+            <svg lucideFlag class="h-4 w-4" [class.fill-current]="task.isFlagged"></svg>
           </button>
         </div>
       </div>

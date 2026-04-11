@@ -34,7 +34,7 @@
     display: flex;
     flex-direction: row;
 
-    mat-icon {
+    svg {
       padding: .5rem;
     }
 
@@ -70,7 +70,7 @@
 }
 
 .new-task-button span,
-.new-task-button .mat-icon {
+.new-task-button svg {
   color: var(--primary);
 }
 
@@ -82,6 +82,6 @@
   background-color: var(--card);
 }
 
-.inline-task-form .mat-icon {
+.inline-task-form svg {
   color: rgba(var(--foreground-rgb), .1);
 }

@@ -9,9 +9,8 @@ import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 
 import { FormField, form, required } from '@angular/forms/signals';
-import { LucideMessageCircle } from '@lucide/angular';
+import { LucideEllipsis, LucideMessageCircle, LucideTrash2 } from '@lucide/angular';
 import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import {
   MatMenu,
   MatMenuContent,
@@ -31,7 +30,8 @@ import { FormInputComponent } from '../form-input/form-input.component';
     FormInputComponent,
     MatIconButton,
     MatMenuTrigger,
-    MatIcon,
+    LucideEllipsis,
+    LucideTrash2,
     MatMenu,
     MatMenuContent,
     MatMenuItem,

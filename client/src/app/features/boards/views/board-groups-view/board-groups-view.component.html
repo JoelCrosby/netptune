@@ -51,12 +51,11 @@
             <span class="board-group-header" cdkDragHandle>
               <div class="title">
                 @if (group.type === 2) {
-                  <mat-icon
-                    class="text-green-500 done-group"
+                  <svg
+                    lucideCheck
+                    class="text-green-500 done-group h-4 w-4"
                     matTooltip="Tasks moved into this group will be marked as Done"
-                    >
-                    done
-                  </mat-icon>
+                    ></svg>
                 }
                 <app-inline-edit-input
                   class="title-input"
@@ -72,7 +71,7 @@
                 class="delete-board-group-btn"
                 (click)="onDeleteGroupClicked(group)"
                 >
-                <mat-icon>close</mat-icon>
+                <svg lucideX class="h-4 w-4"></svg>
               </button>
             </span>
           </app-board-group>
