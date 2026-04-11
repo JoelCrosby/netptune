@@ -6,7 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
-import { ButtonComponent } from '@static/components/button/button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { loadProjects } from '@core/store/projects/projects.actions';
@@ -33,7 +34,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FormSelectComponent,
     FormSelectOptionComponent,
     DialogActionsDirective,
-    ButtonComponent,
+    FlatButtonComponent,
+    StrokedButtonComponent,
   ],
 })
 export class CreateTaskDialogComponent {

@@ -9,7 +9,8 @@ import { DialogContentComponent } from '@static/components/dialog-content/dialog
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
 import { email, FormField, form, required } from '@angular/forms/signals';
-import { ButtonComponent } from '@static/components/button/button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
@@ -20,7 +21,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     DialogContentComponent,
     FormInputComponent,
     DialogActionsDirective,
-    ButtonComponent,
+    FlatButtonComponent,
+    StrokedButtonComponent,
     FormField,
   ],
 })
