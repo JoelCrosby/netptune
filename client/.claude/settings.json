@@ -5,7 +5,10 @@
       "Bash(gio mime:*)",
       "Bash(dbus-send --session --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListNames)",
       "Read(//usr/share/xdg-desktop-portal/portals/**)",
-      "Read(//opt/visual-studio-code/resources/app/out/**)"
+      "Read(//opt/visual-studio-code/resources/app/out/**)",
+      "Bash(npx tsc:*)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(echo \"Exit: $?\")"
     ]
   }
 }
