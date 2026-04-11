@@ -9,6 +9,8 @@ import { tap, withLatestFrom } from 'rxjs/operators';
 import * as actions from './settings.actions';
 import { selectEffectiveTheme } from './settings.selectors';
 
+const themes = new Set(['light', 'dark']);
+
 const INIT = of('app-init-effect-trigger');
 
 export const SETTINGS_KEY = 'SETTINGS';
@@ -39,7 +41,7 @@ export class SettingsEffects {
         tap(([_, effectiveTheme]) => {
           const classList = document.documentElement.classList;
           const toRemove = Array.from(classList).filter((item: string) =>
-            item.includes('-theme')
+            themes.has(item)
           );
           if (toRemove.length) {
             classList.remove(...toRemove);
