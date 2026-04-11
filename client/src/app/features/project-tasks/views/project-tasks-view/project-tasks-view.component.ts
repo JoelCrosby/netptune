@@ -12,6 +12,7 @@ import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
+import { LucideFolderDown } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -39,7 +40,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
     {
       label: 'Export Tasks',
       click: () => this.onExportTasksClicked(),
-      icon: 'get_app',
+      icon: LucideFolderDown,
     },
   ];
 
