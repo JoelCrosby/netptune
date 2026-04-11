@@ -20,8 +20,8 @@ export class FlatButtonComponent {
 
     const colors: Record<string, string> = {
       primary:
-        'bg-primary text-white dark:text-neutral-700 hover:bg-primary/90 focus-visible:ring-primary',
-      warn: 'bg-warn text-white dark:text-neutral-700 hover:bg-warn/90 focus-visible:ring-warn',
+        'bg-primary text-white dark:text-neutral-900 hover:bg-primary/90 focus-visible:ring-primary',
+      warn: 'bg-warn text-white dark:text-neutral-900 hover:bg-warn/90 focus-visible:ring-warn',
     };
 
     return `${base} ${colors[this.color()]}`;

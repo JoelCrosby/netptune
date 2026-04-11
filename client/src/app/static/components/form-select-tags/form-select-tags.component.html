@@ -11,7 +11,7 @@
     [class.active]="value().length > 0 && pending()"
     (click)="onTriggerClick($event)"
   >
-    <div class="flex flex-1 flex-wrap items-center gap-1 px-2 py-1 min-w-0">
+    <div class="flex flex-1 flex-wrap items-center gap-1 px-3 py-1 min-w-0">
       @for (option of selectedOptions(); track option.value()) {
       <span
         class="inline-flex items-center gap-2 bg-primary-selected rounded-sm px-1.5 py-0.5 font-medium whitespace-nowrap"

@@ -40,7 +40,6 @@ export class ProjectTasksViewComponent implements OnDestroy {
       label: 'Export Tasks',
       click: () => this.onExportTasksClicked(),
       icon: 'get_app',
-      iconClass: 'material-icons-round',
     },
   ];
 

@@ -17,8 +17,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 
 @Component({
   selector: 'app-project-dialog',
-  templateUrl: './project-dialog.component.html',
-  styleUrls: ['./project-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormField,
@@ -27,6 +25,36 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     DialogActionsDirective,
     ButtonComponent,
   ],
+  template: `
+    <h1 mat-dialog-title>Create Project</h1>
+
+    <form app-dialog-content>
+      <app-form-input
+        [formField]="projectForm.name"
+        label="Name"
+        maxLength="1024">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="projectForm.repositoryUrl"
+        label="Repository URl"
+        maxLength="1024">
+      </app-form-input>
+
+      <app-form-textarea
+        [formField]="projectForm.description"
+        label="Description"
+        maxLength="4096">
+      </app-form-textarea>
+    </form>
+
+    <div app-dialog-actions align="end">
+      <app-button variant="outlined" (click)="close()">Close</app-button>
+      <app-button variant="filled" (click)="getResult()"
+        >Create Project</app-button
+      >
+    </div>
+  `,
 })
 export class ProjectDialogComponent {
   private store = inject(Store);

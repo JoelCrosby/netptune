@@ -2,13 +2,12 @@
   <div class="h-[108px] flex flex-row items-center justify-between max-[600px]:flex-1">
     @if (showSideNavToggle()) {
     <div>
-      <app-button
-        [iconOnly]="true"
+      <button app-flat-button
         aria-label="Open Menu"
         (click)="onOpenMenu()"
       >
-        <mat-icon>menu</mat-icon>
-      </app-button>
+        <svg lucideMenu></svg>
+      </button>
     </div>
     }
 
@@ -16,7 +15,7 @@
       <div class="h-6">
         @if (backLink()) {
         <a class="header-back-link inline-flex items-center text-sm font-medium tracking-[0.225px] cursor-pointer" [routerLink]="backLink()">
-          <mat-icon class="text-2xl h-6 mr-[0.4rem]"> arrow_back </mat-icon>
+          <svg lucideArrowLeft class="h-4 w-4 mr-[0.4rem]" aria-hidden="true"></svg>
           <span> {{ backLabel() || 'Go back' }} </span>
         </a>
         }
@@ -42,32 +41,30 @@
       </div>
     </div>
 
-    <div class="flex flex-row">
+    <div class="flex flex-row items-center gap-4">
       @for (action of secondaryActions(); track action) {
-      <app-button
+      <button app-flat-button
         class="rounded-[6rem] ml-3"
         (click)="action.click && action.click()"
       >
         {{ action.label }}
-      </app-button>
+      </button>
       } @if (overflowActions().length) {
-      <app-button
-        class="header-actions-overflow"
+      <button app-flat-button
         aria-label="Actions"
-        [iconOnly]="true"
         [matMenuTriggerFor]="overflowMenu"
       >
-        <mat-icon> more_horiz </mat-icon>
-      </app-button>
+        <svg lucideEllipsis></svg>
+      </button>
       }
 
       <mat-menu #overflowMenu="matMenu" xPosition="before">
         <ng-template matMenuContent>
           @for (action of overflowActions(); track action) {
           <button mat-menu-item (click)="action.click && action.click()">
-            <mat-icon [class]="action.iconClass || 'material-icons-outlined'">
-              {{ action.icon || 'more_horiz' }}
-            </mat-icon>
+            @if (action.icon) {
+              <svg [lucideIcon]="action.icon" class="mr-2 h-4 w-4" aria-hidden="true"></svg>
+            }
             <span>{{ action.label }}</span>
           </button>
           }
@@ -75,12 +72,11 @@
       </mat-menu>
 
       @if (actionTitle()) {
-      <app-button
-        class="rounded-[6rem] ml-3"
+      <button app-flat-button
         (click)="actionClick.emit()"
       >
         {{ actionTitle() }}
-      </app-button>
+      </button>
       }
     </div>
   </div>
