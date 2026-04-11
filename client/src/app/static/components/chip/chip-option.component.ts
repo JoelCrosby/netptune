@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-chip-option, button[app-chip-option]',
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,
