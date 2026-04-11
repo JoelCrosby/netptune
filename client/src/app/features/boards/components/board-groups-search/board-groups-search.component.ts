@@ -19,43 +19,38 @@ import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-groups-search',
-  styleUrls: ['./board-groups-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideX, LucideSearch, TooltipDirective, FormField],
-  template: `<div
-    class="board-groups-search-input"
-    [class.invalid]="
-      termForm.term().value() &&
-      termForm.term().touched() &&
-      termForm.term().invalid()
-    "
-    [class.active]="
-      termForm.term().value() &&
-      termForm.term().touched() &&
-      termForm.term().valid()
-    ">
-    <input
-      type="text"
-      placeholder="Search"
-      [formField]="termForm.term"
-      (keydown.enter)="onSubmit()" />
+  template: `
+    <div
+      class="flex flex-row items-center pr-[0.4rem] border-2 border-solid rounded border-[rgba(var(--foreground-rgb),.1)] bg-secondary-background transition-colors duration-[240ms] ease-out [&_svg]:text-[rgba(var(--foreground-rgb),.1)] focus-within:bg-transparent focus-within:border-primary [&.active]:bg-transparent [&.active]:border-primary [&.invalid]:border-warn"
+      [class.invalid]="termForm.term().value() && termForm.term().touched() && termForm.term().invalid()"
+      [class.active]="termForm.term().value() && termForm.term().touched() && termForm.term().valid()"
+    >
+      <input
+        type="text"
+        placeholder="Search"
+        class="appearance-none border-0 bg-transparent text-inherit px-[0.8rem] py-0 outline-none leading-[33px] text-[15px] font-medium [font-family:inherit] w-[180px] transition-[width] duration-[140ms] ease-out [&:placeholder-shown:not(:focus)]:w-[80px] placeholder:opacity-60"
+        [formField]="termForm.term"
+        (keydown.enter)="onSubmit()" />
 
-    @if (termForm.term().value()) {
-      <svg
-        lucideX
-        aria-hidden="false"
-        aria-label="Clear Search Icon"
-        class="clear-search h-4 w-4"
-        appTooltip="Clear search term"
-        (click)="onClearClicked()"></svg>
-    } @else {
-      <svg
-        lucideSearch
-        aria-hidden="false"
-        aria-label="Search Icon"
-        class="h-4 w-4"></svg>
-    }
-  </div> `,
+      @if (termForm.term().value()) {
+        <svg
+          lucideX
+          aria-hidden="false"
+          aria-label="Clear Search Icon"
+          class="h-4 w-4 cursor-pointer hover:!text-primary"
+          appTooltip="Clear search term"
+          (click)="onClearClicked()"></svg>
+      } @else {
+        <svg
+          lucideSearch
+          aria-hidden="false"
+          aria-label="Search Icon"
+          class="h-4 w-4"></svg>
+      }
+    </div>
+  `,
 })
 export class BoardGroupsSearchComponent {
   private store = inject(Store);
