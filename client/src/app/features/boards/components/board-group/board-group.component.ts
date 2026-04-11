@@ -11,7 +11,6 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { selectIsInlineActive } from '@boards/store/groups/board-groups.selectors';
@@ -28,11 +27,31 @@ import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-v
 import { fromEvent } from 'rxjs';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
 import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-group-task-inline.component';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-board-group',
-  templateUrl: './board-group.component.html',
-  styleUrls: ['./board-group.component.scss'],
+  styles: `
+    .cdk-drag-placeholder {
+      opacity: 0.2;
+    }
+
+    .cdk-drag-preview .netp-card {
+      box-shadow:
+        0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .cdk-drag-animating {
+      transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .board-task-list.cdk-drop-list-dragging
+      .board-group-task-card:not(.cdk-drag-placeholder) {
+      transition: transform 140ms cubic-bezier(0, 0, 0.2, 1);
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CdkDropList,
@@ -40,8 +59,57 @@ import { BoardGroupTaskInlineComponent } from '../board-group-task-inline/board-
     BoardGroupCardComponent,
     CdkDrag,
     BoardGroupTaskInlineComponent,
-    MatButton,
+    StrokedButtonComponent,
   ],
+  template: `<div
+    class="relative flex h-full flex-1 flex-col rounded-[var(--border-radius)] border border-[var(--border)] bg-[var(--board-group)]">
+    <ng-content />
+
+    <div #container class="h-full flex-1">
+      <div
+        cdkDropList
+        appScrollShadowVertical
+        class="board-task-list custom-scroll flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
+        [id]="dragListId()"
+        [cdkDropListConnectedTo]="siblingIds()"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListData]="group().tasks">
+        @for (task of group().tasks; track trackGroupTask($index, task)) {
+          <app-board-group-card
+            cdkDrag
+            class="board-group-task-card"
+            [cdkDragData]="task"
+            [task]="task"
+            [groupId]="group().id"
+            (cdkDragStarted)="onDragStarted()"
+            (cdkDragReleased)="onDragRelease()"
+            (click)="onTaskClicked($event, task, group().id)">
+          </app-board-group-card>
+        }
+
+        @if (isInlineActive()) {
+          <app-board-group-task-inline
+            (canceled)="onInlineCanceled()"
+            [boardGroupId]="group().id">
+          </app-board-group-task-inline>
+        }
+
+        @if (showAddButton()) {
+          <div class="h-[46px] p-[.3rem]">
+            <button
+              app-stroked-button
+              color="primary"
+              class="block w-full"
+              (click)="onAddTaskClicked()">
+              ADD TASK
+            </button>
+          </div>
+        } @else {
+          <div class="h-[46px] min-h-[46px] w-full">{{ ' ' }}</div>
+        }
+      </div>
+    </div>
+  </div> `,
 })
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);

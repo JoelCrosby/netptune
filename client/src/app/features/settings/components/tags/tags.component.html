@@ -1,6 +1,6 @@
 <h3 class="font-overpass text-[1.4rem] font-normal">Tags</h3>
 
-<div class="tag-item-list">
+<div class="flex flex-col text-base tracking-[.1px] leading-5 max-w-[calc(300px-.4rem)]">
   @for (tag of tags(); track tag.id; let i = $index) {
     @if (editTagIndex() === i) {
       <app-tags-input
@@ -10,12 +10,17 @@
         >
       </app-tags-input>
     } @else {
-      <div role="button" [tabindex]="i" class="tag-item" (click)="onItemClicked(i)">
-        <div class="tag-item-label"> {{ tag.name }} </div>
+      <div
+        role="button"
+        [tabindex]="i"
+        class="group cursor-pointer flex flex-row items-center my-[.3rem] rounded py-[calc(.4rem+2px)] px-[calc(.6rem+2px)] transition-colors duration-[240ms] ease-in-out text-[var(--foreground)] bg-[rgba(var(--foreground-rgb),.06)] hover:bg-[rgba(var(--foreground-rgb),.1)]"
+        (click)="onItemClicked(i)"
+        >
+        <div class="w-full"> {{ tag.name }} </div>
         <div
           role="button"
           aria-disabled="true"
-          class="tag-item-delete"
+          class="hidden group-hover:block h-5 w-5"
           appTooltip="Delete Tag"
           (click)="$event.stopPropagation(); onDeleteClicked(tag)"
           >
@@ -25,22 +30,23 @@
     }
   }
 
-  <div class="tag-item-list-add" #tagsinput>
+  <div #tagsinput>
     @if (addTagActive()) {
-    <app-tags-input
-
-      (submitted)="onAddTagSubmit($event)"
-      (canceled)="onAddCanceled()"
-      >
-    </app-tags-input>
-  } @else {
-    <div role="button"
-         aria-disabled="true"
-         class="tag-item add-tag-item"
-         (click)="onAddTagClicked()">
-      <span class="add-tag-item-label"> Create Tag </span>
-    </div>
-  }
+      <app-tags-input
+        (submitted)="onAddTagSubmit($event)"
+        (canceled)="onAddCanceled()"
+        >
+      </app-tags-input>
+    } @else {
+      <div
+        role="button"
+        aria-disabled="true"
+        class="cursor-pointer flex flex-row items-center justify-center my-[.3rem] rounded py-[calc(.4rem+2px)] px-[calc(.6rem+2px)] transition-colors duration-[240ms] ease-in-out bg-transparent border border-[rgba(var(--foreground-rgb),.06)] text-[var(--foreground)] hover:border-2 hover:border-[rgba(var(--foreground-rgb),1)]"
+        (click)="onAddTagClicked()"
+        >
+        <span class="block text-sm font-medium"> Create Tag </span>
+      </div>
+    }
   </div>
 
 </div>
