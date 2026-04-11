@@ -2,10 +2,6 @@
 
 // Angular Material Modal Class
 
-.mat-mdc-dialog-content {
-  @extend .custom-scroll
-}
-
 .app-modal-class {
   transition: max-height .3s ease-out;
   height: auto;

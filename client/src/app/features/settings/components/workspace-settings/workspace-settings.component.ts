@@ -3,9 +3,10 @@ import { FormToggleComponent } from '@static/components/form-toggle/form-toggle.
 
 @Component({
   selector: 'app-workspace-settings',
-  templateUrl: './workspace-settings.component.html',
-  styleUrl: './workspace-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormToggleComponent],
+  template: `<h3 class="font-overpass text-[1.4rem] font-normal">Workspace</h3>
+
+    <app-form-toggle label="Public" /> `,
 })
 export class WorkspaceSettings {}

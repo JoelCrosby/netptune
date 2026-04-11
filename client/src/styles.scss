@@ -153,3 +153,7 @@
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
 }
+
+cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
+  padding-right: 0.4rem;
+}
