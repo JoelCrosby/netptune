@@ -27,7 +27,6 @@ import { LoginGithubComponent } from './login-github.component';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
@@ -40,6 +39,86 @@ import { LoginGithubComponent } from './login-github.component';
     LoginGithubComponent,
     ButtonLinkComponent,
   ],
+  template: `<app-auth-page-container>
+    <form
+      (submit)="login($event)"
+      class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
+      <div>
+        @if (loading()) {
+          <app-progress-bar mode="indeterminate" />
+        }
+      </div>
+
+      <img
+        src="assets/apple-touch-icon.png"
+        alt="Netptune Logo"
+        width="72"
+        height="72"
+        class="mx-auto my-2" />
+
+      <h3 class="w-full text-center font-normal tracking-normal">
+        Sign in to continue
+      </h3>
+
+      <div class="mb-6 flex h-4 w-full flex-col items-center justify-center">
+        @if (showLoginError()) {
+          <div
+            class="text-warn w-full rounded-[0.4rem] bg-[rgba(var(--warn-rgb),0.06)] p-[0.4rem] text-center text-sm font-medium tracking-[0.25px]">
+            Username or Password was incorrect
+          </div>
+        }
+      </div>
+
+      <app-form-input
+        [formField]="loginForm.email"
+        label="Email"
+        maxLength="1024"
+        id="email"
+        type="email"
+        autocomplete="username">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="loginForm.password"
+        label="Password"
+        maxLength="1024"
+        id="password"
+        autocomplete="current-password"
+        type="password">
+      </app-form-input>
+
+      <div class="flex items-center justify-between">
+        <a
+          app-button-link
+          color="primary"
+          type="button"
+          [routerLink]="['/auth/register']">
+          Create Account
+        </a>
+
+        <button
+          app-stroked-button
+          color="primary"
+          type="submit"
+          class="min-w-32">
+          Sign in
+        </button>
+      </div>
+
+      <div class="button-container mt-[1.4rem]">
+        <a
+          app-button-link
+          color="primary"
+          [routerLink]="['/auth/request-password-reset']">
+          Forgot Password?
+        </a>
+      </div>
+
+      <div class="border-border my-2 border-t"></div>
+
+      <app-login-github />
+    </form>
+  </app-auth-page-container> `,
 })
 export class LoginComponent {
   private store = inject(Store);
@@ -75,9 +154,5 @@ export class LoginComponent {
         },
       })
     );
-  }
-
-  onGithubSignInClicked() {
-    location.href = '/api/auth/github-login';
   }
 }

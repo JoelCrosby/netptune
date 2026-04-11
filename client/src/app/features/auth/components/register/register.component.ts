@@ -18,8 +18,9 @@ import {
   required,
   validate,
 } from '@angular/forms/signals';
-import { MatAnchor, MatButton } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import * as AuthActions from '@core/auth/store/auth.actions';
 import { WorkspaceInvite } from '@core/auth/store/auth.models';
@@ -31,19 +32,97 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     ProgressBarComponent,
     FormInputComponent,
     FormErrorsComponent,
-    MatAnchor,
     RouterLink,
-    MatButton,
+    FlatButtonComponent,
+    StrokedButtonComponent,
     FormField,
     FormErrorsComponent,
   ],
+  template: `<app-auth-page-container>
+    <form
+      (submit)="register($event)"
+      class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
+      <div>
+        @if (loading()) {
+          <app-progress-bar mode="indeterminate" />
+        }
+      </div>
+
+      <img
+        src="assets/apple-touch-icon.png"
+        alt="Netptune Logo"
+        width="72"
+        height="72" />
+
+      <h3 class="mb-[2.8rem] w-full text-center font-normal tracking-normal">
+        Create new Account
+      </h3>
+
+      <app-form-input
+        [formField]="registerForm.firstname"
+        label="Firstname"
+        maxLength="1024"
+        id="firstname"
+        autocomplete="given-name">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="registerForm.lastname"
+        label="Lastname"
+        maxLength="1024"
+        id="lastname"
+        autocomplete="family-name">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="registerForm.email"
+        label="Email"
+        maxLength="1024"
+        id="email"
+        type="email"
+        autocomplete="username">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="registerForm.password0"
+        label="Password"
+        maxLength="1024"
+        id="new-password"
+        autocomplete="new-password"
+        type="password">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="registerForm.password1"
+        label="Confirm Password"
+        maxLength="1024"
+        id="confirm-new-password"
+        autocomplete="new-password"
+        type="password">
+        <app-form-errors [formField]="registerForm.password1" />
+      </app-form-input>
+
+      <div class="flex flex-row items-center justify-between gap-4">
+        <a
+          app-stroked-button
+          color="primary"
+          type="button"
+          [routerLink]="['/auth/login']">
+          Back to Log in
+        </a>
+
+        <button app-flat-button color="primary" type="submit">
+          Create Account
+        </button>
+      </div>
+    </form>
+  </app-auth-page-container> `,
 })
 export class RegisterComponent implements OnDestroy {
   private store = inject(Store);
