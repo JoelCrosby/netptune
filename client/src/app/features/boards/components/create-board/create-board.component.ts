@@ -31,6 +31,7 @@ import { ColorSelectComponent } from '@static/components/color-select/color-sele
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom } from 'rxjs';
@@ -42,6 +43,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./create-board.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,

@@ -10,6 +10,7 @@ import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.s
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -19,13 +20,14 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
   styleUrls: ['./reassign-tasks-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     AvatarComponent,
     DialogActionsDirective,
     DialogCloseDirective,
   ],
-  template: `<h1 mat-dialog-title>Re-assign Tasks</h1>
+  template: `<app-dialog-title>Re-assign Tasks</app-dialog-title>
 
     <p>Select the user you wish to assign the selected tasks to</p>
 

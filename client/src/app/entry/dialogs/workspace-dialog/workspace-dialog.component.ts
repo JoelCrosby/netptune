@@ -30,6 +30,7 @@ import { LucideCheck } from '@lucide/angular';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom, map } from 'rxjs';
@@ -38,6 +39,7 @@ import { firstValueFrom, map } from 'rxjs';
   selector: 'app-workspace-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FormInputComponent,
     FormTextAreaComponent,
     ColorSelectComponent,
@@ -47,9 +49,9 @@ import { firstValueFrom, map } from 'rxjs';
     DialogCloseDirective,
     FormField,
   ],
-  template: `<h1 mat-dialog-title>
+  template: `<app-dialog-title>
       {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace' }}
-    </h1>
+    </app-dialog-title>
 
     <form app-dialog-content class="form-auth">
       <app-form-input

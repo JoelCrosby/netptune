@@ -22,11 +22,13 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FormField,
     FormInputComponent,
     FormTextAreaComponent,
@@ -36,7 +38,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<h1 mat-dialog-title>Add new Task</h1>
+  template: `<app-dialog-title>Add new Task</app-dialog-title>
 
     <form app-dialog-content>
       <app-form-input
