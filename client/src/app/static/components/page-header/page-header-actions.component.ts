@@ -1,53 +1,53 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import {
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-  MatMenuTrigger,
-} from '@angular/material/menu';
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideDynamicIcon, LucideEllipsis } from '@lucide/angular';
 import { FlatButtonComponent } from '../button/flat-button.component';
+import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 
 @Component({
   selector: 'app-page-header-actions',
   template: `
     <div class="flex flex-row items-center gap-4">
       @for (action of secondaryActions(); track action) {
-      <button app-flat-button
-        class="rounded-[6rem] ml-3"
-        (click)="action.click && action.click()"
-      >
-        {{ action.label }}
-      </button>
-      } @if (overflowActions().length) {
-      <button app-flat-button
-        aria-label="Actions"
-        [matMenuTriggerFor]="overflowMenu"
-      >
-        <svg lucideEllipsis></svg>
-      </button>
+        <button
+          app-flat-button
+          class="ml-3 rounded-[6rem]"
+          (click)="action.click && action.click()">
+          {{ action.label }}
+        </button>
+      }
+      @if (overflowActions().length) {
+        <button
+          app-flat-button
+          aria-label="Actions"
+          (click)="menu.toggle($any($event.currentTarget))">
+          <svg lucideEllipsis></svg>
+        </button>
+        <app-dropdown-menu #menu xPosition="before">
+          @for (action of overflowActions(); track action) {
+            <button app-menu-item (click)="action.click && action.click(); menu.close()">
+              @if (action.icon) {
+                <svg
+                  [lucideIcon]="action.icon"
+                  class="h-4 w-4"
+                  aria-hidden="true"></svg>
+              }
+              {{ action.label }}
+            </button>
+          }
+        </app-dropdown-menu>
       }
 
-      <mat-menu #overflowMenu="matMenu" xPosition="before">
-        <ng-template matMenuContent>
-          @for (action of overflowActions(); track action) {
-          <button mat-menu-item (click)="action.click && action.click()">
-            @if (action.icon) {
-              <svg [lucideIcon]="action.icon" class="mr-2 h-4 w-4" aria-hidden="true"></svg>
-            }
-            <span>{{ action.label }}</span>
-          </button>
-          }
-        </ng-template>
-      </mat-menu>
-
       @if (actionTitle()) {
-      <button app-flat-button
-        (click)="actionClick.emit()"
-      >
-        {{ actionTitle() }}
-      </button>
+        <button app-flat-button (click)="actionClick.emit()">
+          {{ actionTitle() }}
+        </button>
       }
     </div>
   `,
@@ -55,11 +55,9 @@ import { FlatButtonComponent } from '../button/flat-button.component';
   imports: [
     LucideEllipsis,
     LucideDynamicIcon,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuContent,
-    MatMenuItem,
     FlatButtonComponent,
+    DropdownMenuComponent,
+    MenuItemComponent,
   ],
 })
 export class PageHeaderActionsComponent {

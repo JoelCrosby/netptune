@@ -7,10 +7,34 @@ import { TooltipComponent } from '../components/tooltip/tooltip.component';
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
 const POSITIONS: Record<TooltipPosition, ConnectedPosition> = {
-  top: { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom', offsetY: -8 },
-  bottom: { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top', offsetY: 8 },
-  left: { originX: 'start', originY: 'center', overlayX: 'end', overlayY: 'center', offsetX: -8 },
-  right: { originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center', offsetX: 8 },
+  top: {
+    originX: 'center',
+    originY: 'top',
+    overlayX: 'center',
+    overlayY: 'bottom',
+    offsetY: -8,
+  },
+  bottom: {
+    originX: 'center',
+    originY: 'bottom',
+    overlayX: 'center',
+    overlayY: 'top',
+    offsetY: 8,
+  },
+  left: {
+    originX: 'start',
+    originY: 'center',
+    overlayX: 'end',
+    overlayY: 'center',
+    offsetX: -8,
+  },
+  right: {
+    originX: 'end',
+    originY: 'center',
+    overlayX: 'start',
+    overlayY: 'center',
+    offsetX: 8,
+  },
 };
 
 @Directive({
@@ -23,7 +47,7 @@ const POSITIONS: Record<TooltipPosition, ConnectedPosition> = {
   },
 })
 export class TooltipDirective implements OnDestroy {
-  appTooltip = input<string>('');
+  appTooltip = input<string | null | undefined>();
   appTooltipPosition = input<TooltipPosition>('top');
   appTooltipDisabled = input<boolean>(false);
 
