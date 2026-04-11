@@ -32,7 +32,14 @@ import { DocumentService } from '@static/services/document.service';
 @Component({
   selector: 'app-task-inline',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButton, LucidePlus, LucideGripVertical, MatCheckbox, MatInput, FormField],
+  imports: [
+    MatButton,
+    LucidePlus,
+    LucideGripVertical,
+    MatCheckbox,
+    MatInput,
+    FormField,
+  ],
   styles: [
     `
       .inline-task-input:-webkit-autofill,
@@ -44,29 +51,30 @@ import { DocumentService } from '@static/services/document.service';
     `,
   ],
   template: `
-    <div class="flex min-h-[40px] max-h-[40px] w-full flex-row justify-center rounded-sm">
+    <div
+      class="flex max-h-[40px] min-h-[40px] w-full flex-row justify-center rounded-sm">
       @if (!isEditActive()) {
         <button
           mat-button
           disableRipple="true"
-          class="flex w-full flex-row justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium text-primary hover:bg-primary/10"
-          (click)="addTaskClicked()"
-        >
-          <svg lucidePlus class="h-4 w-4 text-primary"></svg>
-          <span class="my-auto mx-4 text-primary">Add Task</span>
+          class="text-primary hover:bg-primary/10 flex w-full flex-row justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium"
+          (click)="addTaskClicked()">
+          <svg lucidePlus class="text-primary h-4 w-4"></svg>
+          <span class="text-primary mx-4 my-auto">Add Task</span>
         </button>
       } @else {
-        <div class="flex w-full flex-row">
-          <svg lucideGripVertical class="h-4 w-4 p-2 text-foreground/10 box-content"></svg>
+        <div class="flex w-full flex-row items-center gap-3">
+          <svg
+            lucideGripVertical
+            class="text-foreground/10 box-content h-4 w-4 p-2"></svg>
           <mat-checkbox color="primary" disabled />
           <form class="flex h-full w-full flex-row" (submit)="onSubmit($event)">
             <input
               #input
               matInput
               [formField]="taskFrom.name"
-              class="inline-task-input w-full border-0 bg-transparent py-0.5 px-5 text-sm text-foreground"
-              placeholder="What do you need to get done?"
-            />
+              class="inline-task-input text-foreground w-full border-0 bg-transparent px-5 py-0.5 text-sm"
+              placeholder="What do you need to get done?" />
           </form>
         </div>
       }

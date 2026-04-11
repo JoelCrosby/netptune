@@ -40,33 +40,30 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   ],
   template: `
     <div
-      class="bg-card flex h-10 cursor-pointer items-center overflow-hidden transition-colors duration-200 ease-in-out"
-      [class.flagged]="task().isFlagged"
-    >
+      class="bg-card flex h-10 cursor-pointer items-center gap-2 overflow-hidden transition-colors duration-200 ease-in-out"
+      [class.flagged]="task().isFlagged">
       <button
         class="w-10 flex-none"
         mat-icon-button
         aria-label="more"
-        (click)="menu.toggle($any($event.currentTarget))"
-      >
-        <svg lucideEllipsisVertical class="h-4 w-4 text-foreground/30"></svg>
+        (click)="menu.toggle($any($event.currentTarget))">
+        <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
       </button>
 
       <mat-checkbox class="w-8 flex-none" color="primary"></mat-checkbox>
 
       <div class="w-[100px] flex-none">
-        <div class="inline rounded bg-foreground/10 px-1.5 py-0.5 text-sm">
+        <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
           {{ task().systemId }}
         </div>
       </div>
 
       <div
-        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
+        class="flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap"
         aria-hidden="false"
         role="button"
         tabindex=""
-        (click)="titleClicked()"
-      >
+        (click)="titleClicked()">
         {{ task().name }}
       </div>
 
@@ -83,8 +80,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           class="w-[38px] flex-none"
           size="24"
           [name]="assignee.displayName"
-          [imageUrl]="assignee.pictureUrl"
-        >
+          [imageUrl]="assignee.pictureUrl">
         </app-avatar>
       }
     </div>
@@ -95,7 +91,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         <span>Mark Complete</span>
       </button>
 
-      <button app-menu-item (click)="moveToBacklogClicked(task()); menu.close()">
+      <button
+        app-menu-item
+        (click)="moveToBacklogClicked(task()); menu.close()">
         <svg lucideArchiveRestore class="h-4 w-4"></svg>
         <span>Move to Backlog</span>
       </button>
