@@ -25,13 +25,10 @@ import {
   LucideTrash2,
 } from '@lucide/angular';
 import { MatCheckbox } from '@angular/material/checkbox';
-
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-task-list-item',
-  templateUrl: './task-list-item.component.html',
-  styleUrls: ['./task-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatIconButton,
@@ -47,6 +44,73 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     MatMenuContent,
     MatMenuItem,
   ],
+  template: `
+    <div
+      class="bg-card flex h-10 cursor-pointer items-center overflow-hidden transition-colors duration-200 ease-in-out"
+      [class.flagged]="task().isFlagged">
+      <button
+        class="w-10 flex-none"
+        mat-icon-button
+        aria-label="more"
+        [matMenuTriggerData]="{ task: task() }"
+        [matMenuTriggerFor]="menu">
+        <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
+      </button>
+
+      <mat-checkbox class="w-8 flex-none" color="primary"></mat-checkbox>
+
+      <div class="w-[100px] flex-none">
+        <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
+          {{ task().systemId }}
+        </div>
+      </div>
+
+      <div
+        class="flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap"
+        aria-hidden="false"
+        role="button"
+        tabindex=""
+        (click)="titleClicked()">
+        {{ task().name }}
+      </div>
+
+      @if (task().isFlagged) {
+        <svg lucideFlag class="h-5 w-8 flex-none text-red-500"></svg>
+      }
+
+      @if (task().status === 1) {
+        <svg lucideCheck class="h-5 w-5 text-green-500"></svg>
+      }
+
+      @for (assignee of task().assignees; track assignee.id) {
+        <app-avatar
+          class="w-[38px] flex-none"
+          size="24"
+          [name]="assignee.displayName"
+          [imageUrl]="assignee.pictureUrl">
+        </app-avatar>
+      }
+    </div>
+
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent let-task="task">
+        <button mat-menu-item (click)="markCompleteClicked(task)">
+          <svg lucideCheck class="h-4 w-4"></svg>
+          <span>Mark Complete</span>
+        </button>
+
+        <button mat-menu-item (click)="moveToBacklogClicked(task)">
+          <svg lucideArchiveRestore class="h-4 w-4"></svg>
+          <span>Move to Backlog</span>
+        </button>
+
+        <button mat-menu-item (click)="deleteClicked(task)">
+          <svg lucideTrash2 class="h-4 w-4"></svg>
+          <span>Delete</span>
+        </button>
+      </ng-template>
+    </mat-menu>
+  `,
 })
 export class TaskListItemComponent {
   private store = inject(Store);
