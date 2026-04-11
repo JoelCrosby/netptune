@@ -31,10 +31,47 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-task-inline',
-  templateUrl: './task-inline.component.html',
-  styleUrls: ['./task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, LucidePlus, LucideGripVertical, MatCheckbox, MatInput, FormField],
+  styles: [
+    `
+      .inline-task-input:-webkit-autofill,
+      .inline-task-input:-webkit-autofill:hover,
+      .inline-task-input:-webkit-autofill:focus,
+      .inline-task-input:-webkit-autofill:active {
+        -webkit-transition-delay: 99999s;
+      }
+    `,
+  ],
+  template: `
+    <div class="flex min-h-[40px] max-h-[40px] w-full flex-row justify-center rounded-sm">
+      @if (!isEditActive()) {
+        <button
+          mat-button
+          disableRipple="true"
+          class="flex w-full flex-row justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium text-primary hover:bg-primary/10"
+          (click)="addTaskClicked()"
+        >
+          <svg lucidePlus class="h-4 w-4 text-primary"></svg>
+          <span class="my-auto mx-4 text-primary">Add Task</span>
+        </button>
+      } @else {
+        <div class="flex w-full flex-row">
+          <svg lucideGripVertical class="h-4 w-4 p-2 text-foreground/10 box-content"></svg>
+          <mat-checkbox color="primary" disabled />
+          <form class="flex h-full w-full flex-row" (submit)="onSubmit($event)">
+            <input
+              #input
+              matInput
+              [formField]="taskFrom.name"
+              class="inline-task-input w-full border-0 bg-transparent py-0.5 px-5 text-sm text-foreground"
+              placeholder="What do you need to get done?"
+            />
+          </form>
+        </div>
+      }
+    </div>
+  `,
 })
 export class TaskInlineComponent {
   private store = inject(Store);
