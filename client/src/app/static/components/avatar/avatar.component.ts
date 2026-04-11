@@ -11,13 +11,16 @@ import { PxPipe } from '../../pipes/px.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, AvatarPipe, AvatarFontSizePipe, PxPipe],
   template: `<div
-    class="font-avatar flex flex-col items-center justify-center overflow-hidden border border-2 border-white/80 text-xs font-medium tracking-[0.8px] whitespace-nowrap select-none"
+    class="font-avatar flex flex-col items-center justify-center overflow-hidden text-xs font-medium tracking-[0.8px] whitespace-nowrap select-none"
     [style.height]="size() | px"
     [style.width]="size() | px"
     [style.background-color]="imageUrl() ? null : backgroundColor"
     [style.color]="color"
     [style.border-radius]="borderRadius()"
     [class.avatar-border]="border()"
+    [class.border]="border()"
+    [class.border-2]="border()"
+    [class.border-forground]="border()"
     [appTooltip]="tooltip() && name() ? name() : ''"
     [style.font-size]="size() | avatarFontSize">
     @if (imageUrl()) {
