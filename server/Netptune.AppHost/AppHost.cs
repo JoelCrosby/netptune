@@ -11,15 +11,22 @@ builder
         options.HelmChartName = "netptune-app";
     });
 
-var postgres = builder.AddPostgres("postgres").WithDataVolume();
+var postgres = builder
+    .AddPostgres("postgres")
+    .WithDataVolume()
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var postgresdb = postgres.AddDatabase("postgresdb", "netptune");
 
 var nats = builder
     .AddNats("nats")
     .WithJetStream()
-    .WithDataVolume();
+    .WithDataVolume()
+    .WithLifetime(ContainerLifetime.Persistent);
 
-var cache = builder.AddValkey("cache");
+var cache = builder
+    .AddValkey("cache")
+    .WithLifetime(ContainerLifetime.Persistent);
 
 var jobs = builder
     .AddProject<Projects.Netptune_JobServer>("jobs")
