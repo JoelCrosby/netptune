@@ -13,8 +13,25 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 
 @Component({
   selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  template: `
+    <h3 class="font-overpass text-[1.4rem] font-normal">User Preferences</h3>
+
+    @if (settings(); as settings) {
+      <app-form-select
+        class="w-[400px]"
+        label="Theme"
+        placeholder="Select Theme"
+        [formField]="settingsForm.theme"
+        (changed)="onThemeSelect($event)"
+      >
+        @for (theme of themes; track theme.value) {
+          <app-form-select-option [value]="theme.value">
+            {{ theme.label }}
+          </app-form-select-option>
+        }
+      </app-form-select>
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormSelectComponent, FormSelectOptionComponent, FormField],
 })

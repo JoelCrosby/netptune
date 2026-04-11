@@ -39,8 +39,38 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-board',
-  templateUrl: './create-board.component.html',
-  styleUrls: ['./create-board.component.css'],
+  template: `
+    <app-dialog-title>{{ isEditMode ? 'Edit Board' : 'Create Board' }}</app-dialog-title>
+
+    <form app-dialog-content class="form-auth">
+      <app-form-input [formField]="boardForm.name" label="Board Name" maxLength="1024">
+      </app-form-input>
+
+      <app-form-input
+        [formField]="boardForm.identifier"
+        label="Board Identifier"
+        maxLength="1024"
+        [icon]="identifierIcon()"
+        [loading]="boardForm.identifier().pending()"
+      >
+      </app-form-input>
+
+      <app-form-select [formField]="boardForm.projectId" label="Project">
+        @for (project of projects(); track project.id) {
+          <app-form-select-option [value]="project.id">
+            {{ project.name }}
+          </app-form-select-option>
+        }
+      </app-form-select>
+
+      <app-color-select [formField]="boardForm.color" label="Color"></app-color-select>
+    </form>
+
+    <div app-dialog-actions align="end">
+      <app-button variant="outlined" app-dialog-close>Close</app-button>
+      <app-button variant="filled" (click)="getResult()">{{ isEditMode ? 'Save Changes' : 'Create Board' }}</app-button>
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,

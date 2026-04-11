@@ -51,8 +51,140 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 
 @Component({
   selector: 'app-task-detail-dialog',
-  templateUrl: './task-detail-dialog.component.html',
-  styleUrls: ['./task-detail-dialog.component.css'],
+  template: `
+    @if (task(); as task) {
+      <div>
+        <form (submit)="onSubmit($event)">
+          <div class="flex flex-row justify-end gap-4 items-center mb-1">
+            @if (task.status === 1) {
+              <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
+            }
+            <app-task-scope-id [id]="task.systemId" />
+            <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
+          </div>
+          <div class="px-12 py-[0]">
+            <app-inline-text-area
+              class="form-control"
+              [formField]="taskForm.name"
+              activeBorder="true"
+            />
+          </div>
+          <div class="px-12 py-[0]">
+            <div class="flex flex-col">
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Assignees</h4>
+                <app-user-select
+                  [value]="task.assignees"
+                  [options]="users()"
+                  (selectChange)="selectAssignee($event)"
+                />
+              </div>
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Reporter</h4>
+                <div class="flex flex-row items-center rounded">
+                  <app-avatar
+                    size="24"
+                    [name]="task.ownerUsername"
+                    [imageUrl]="task.ownerPictureUrl"
+                  >
+                  </app-avatar>
+                  <small class="font-medium text-sm ml-2">{{ task.ownerUsername }}</small>
+                </div>
+              </div>
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Status</h4>
+                <app-chip-listbox>
+                  <app-chip-option>{{ task.status | taskStatus }}</app-chip-option>
+                </app-chip-listbox>
+              </div>
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Project</h4>
+                <app-chip-listbox>
+                  <button app-chip-option (click)="projectsMenu.toggle($any($event.currentTarget))">
+                    {{ task.projectName }}
+                  </button>
+                </app-chip-listbox>
+                <app-dropdown-menu #projectsMenu>
+                  <small class="block px-3 py-1 text-xs text-neutral-500">Change Project</small>
+                  @for (project of projects(); track project.id) {
+                    <button app-menu-item (click)="selectProject(project.id); projectsMenu.close()">
+                      {{ project.name }}
+                    </button>
+                  }
+                </app-dropdown-menu>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-sm font-semibold mb-2 mt-4">Actions</h4>
+              <div class="flex gap-2">
+                <button
+                  app-stroked-button
+                  aria-label="Delete Task"
+                  appTooltip="Delete Task"
+                  (click)="deleteClicked()"
+                >
+                  <svg lucideTrash2 class="h-4 w-4"></svg>
+                </button>
+                <button
+                  app-stroked-button
+                  aria-label="Flag Task"
+                  appTooltip="Flag Task"
+                  color="warn"
+                  (click)="onFlagClicked()"
+                >
+                  <svg lucideFlag class="h-4 w-4" [class.fill-current]="task.isFlagged"></svg>
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Tags</h4>
+                <app-form-select-tags
+                  class="tags-autocomplete"
+                  placeholder="Add a Tag..."
+                  (changed)="onTagsSelectionChanged($event)"
+                >
+                  @for (tag of tags(); track tag) {
+                    <app-form-select-tags-option [value]="tag">
+                      {{ tag }}
+                    </app-form-select-tags-option>
+                  }
+                </app-form-select-tags>
+              </div>
+              <div>
+                <h4 class="font-sm font-semibold mb-2 mt-4">Comments</h4>
+                @if (editorLoaded()) {
+                  <app-comments-list
+                    [user]="user()"
+                    [comments]="comments()"
+                    (commentSubmit)="onCommentSubmit($event)"
+                    (deleteComment)="onDeleteCommentClicked($event)"
+                  >
+                  </app-comments-list>
+                }
+              </div>
+            </div>
+            <label class="font-sm font-semibold" for="description">Description</label>
+            <app-editor
+              class="border-2 border border-neutral-700 rounded-sm flex overflow-y-auto max-h-[calc(100vh_-_960px)] px-4 py-1 mt-2"
+              aria-labelledby="description"
+              [formField]="taskForm.description"
+              placeholder="Add a Description..."
+              (loaded)="onEditorLoaded()"
+            >
+            </app-editor>
+          </div>
+        </form>
+      </div>
+      <div app-dialog-actions align="end">
+        <app-task-dates [task]="task" />
+      </div>
+    } @else {
+      <div class="h-[974px] flex flex-col justify-center items-center">
+        <app-spinner diameter="64" />
+      </div>
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideCheck,

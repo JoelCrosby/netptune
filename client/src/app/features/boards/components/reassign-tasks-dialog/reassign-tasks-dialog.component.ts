@@ -17,7 +17,6 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
 @Component({
   selector: 'app-reassign-tasks-dialog',
-  styleUrls: ['./reassign-tasks-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
@@ -27,20 +26,24 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     DialogActionsDirective,
     DialogCloseDirective,
   ],
-  template: `<app-dialog-title>Re-assign Tasks</app-dialog-title>
+  template: `
+    <app-dialog-title>Re-assign Tasks</app-dialog-title>
 
     <p>Select the user you wish to assign the selected tasks to</p>
 
     <div app-dialog-content>
-      <div class="user-selection">
+      <div class="flex flex-row flex-wrap m-8 justify-center">
         @for (user of users(); track user) {
           <button
-            [class.selected]="selected === user.id"
             app-stroked-button
-            [class.bg-primary]="selected === user.id"
+            class="mx-4 w-full max-w-[200px]"
+            [class.selected]="selected === user.id"
+            [class.text-foreground]="selected === user.id"
+            [class.bg-primary/25]="selected === user.id"
             (click)="onUserClicked(user.id)">
-            <div class="user-item">
+            <div class="flex flex-1 flex-row items-center gap-[0.8rem]">
               <app-avatar
+                class="shrink-0 basis-[24px]"
                 size="24"
                 [name]="user.displayName"
                 [imageUrl]="user.pictureUrl">
@@ -61,7 +64,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         type="button">
         Re-assign Tasks
       </button>
-    </div> `,
+    </div>
+  `,
 })
 export class ReassignTasksDialogComponent {
   private store = inject(Store);

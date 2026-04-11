@@ -32,8 +32,7 @@ import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
-  template: '<div class="editor" #editorJs></div>',
-  styleUrls: ['./editor.component.css'],
+  template: '<div class="editor rounded mb-4" #editorJs></div>',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
