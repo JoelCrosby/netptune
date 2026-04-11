@@ -20,15 +20,24 @@ import {
 } from '@profile/store/profile.selectors';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { UpdateProfileImageComponent } from '@profile/components/update-profile-image/update-profile-image.component';
+import { DialogService } from '@core/services/dialog.service';
+import { SelectProfileImageDialogComponent } from '@profile/components/select-profile-image-dialog/select-profile-image-dialog.component';
 
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormField, FormInputComponent, StrokedButtonComponent],
+  imports: [
+    FormField,
+    FormInputComponent,
+    StrokedButtonComponent,
+    UpdateProfileImageComponent,
+  ],
 })
 export class UpdateProfileComponent {
   private store = inject(Store);
+  private dialog = inject(DialogService);
 
   profileFormModel = signal({
     firstname: '',
@@ -45,7 +54,6 @@ export class UpdateProfileComponent {
     disabled(schema, () => this.loadingUpdate());
   });
 
-  editProfilePicture = signal(false);
   currentProfile = this.store.selectSignal(selectProfile);
   loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
 
@@ -83,45 +91,6 @@ export class UpdateProfileComponent {
   }
 
   onChangePictureClicked() {
-    this.editProfilePicture.set(true);
-  }
-
-  onCropped({ blob, src }: { blob: Blob; src: string }) {
-    if (!blob) return;
-
-    const data = new FormData();
-
-    data.append('file', blob, 'profile-picture.png');
-
-    this.editProfilePicture.set(false);
-    this.profileForm.pictureUrl().value.set(src);
-
-    const profile = this.currentProfile();
-
-    if (!profile) return;
-
-    this.store.dispatch(updateProfile({ profile, image: data }));
-  }
-
-  onCropperCanceled() {
-    this.editProfilePicture.set(false);
-  }
-
-  onCropperCleared() {
-    const profile = this.currentProfile();
-
-    if (!profile) return;
-
-    this.store.dispatch(
-      updateProfile({
-        profile: {
-          ...profile,
-          pictureUrl: null,
-        },
-      })
-    );
-
-    this.profileForm.pictureUrl().reset();
-    this.editProfilePicture.set(false);
+    this.dialog.open(SelectProfileImageDialogComponent, { width: '360px' });
   }
 }
