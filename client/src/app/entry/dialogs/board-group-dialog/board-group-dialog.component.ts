@@ -11,6 +11,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
@@ -23,6 +24,7 @@ export interface BoardGroupDialogData {
   selector: 'app-board-group-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FormField,
     FormInputComponent,
     DialogActionsDirective,
@@ -30,7 +32,7 @@ export interface BoardGroupDialogData {
     StrokedButtonComponent,
     DialogCloseDirective,
   ],
-  template: `<h1 mat-dialog-title>Add Group</h1>
+  template: `<app-dialog-title>Add Group</app-dialog-title>
 
     <div app-dialog-content>
       <form (submit)="onSubmit($event)">

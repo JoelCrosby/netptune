@@ -14,12 +14,14 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
   selector: 'app-project-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FormField,
     FormInputComponent,
     FormTextAreaComponent,
@@ -28,7 +30,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     StrokedButtonComponent,
   ],
   template: `
-    <h1 mat-dialog-title>Create Project</h1>
+    <app-dialog-title>Create Project</app-dialog-title>
 
     <form app-dialog-content>
       <app-form-input

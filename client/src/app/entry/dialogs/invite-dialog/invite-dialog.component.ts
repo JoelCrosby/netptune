@@ -11,12 +11,14 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { email, FormField, form, required } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
   selector: 'app-invite-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     DialogContentComponent,
     FormInputComponent,
     DialogActionsDirective,
@@ -24,7 +26,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     StrokedButtonComponent,
     FormField,
   ],
-  template: `<h1 mat-dialog-title>Invite Users to Workspace</h1>
+  template: `<app-dialog-title>Invite Users to Workspace</app-dialog-title>
 
     <app-dialog-content>
       <form (submit)="add($event)">

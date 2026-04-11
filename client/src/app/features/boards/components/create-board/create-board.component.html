@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{ isEditMode ? 'Edit Board' : 'Create Board'}}</h1>
+<app-dialog-title>{{ isEditMode ? 'Edit Board' : 'Create Board'}}</app-dialog-title>
 
 <form app-dialog-content class="form-auth">
   <app-form-input [formField]="boardForm.name" label="Board Name" maxLength="1024">

@@ -11,6 +11,7 @@ import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selector
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
@@ -18,13 +19,14 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   styleUrls: ['./move-tasks-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DialogTitleComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     DialogActionsDirective,
     DialogCloseDirective,
   ],
   template: `
-    <h1 mat-dialog-title>Move Tasks To Group</h1>
+    <app-dialog-title>Move Tasks To Group</app-dialog-title>
 
     <p>Select the group you wish to move the selected tasks to</p>
 
