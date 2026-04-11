@@ -11,12 +11,8 @@ import { CommentViewModel } from '@core/models/comment';
 import { FormField, form, required } from '@angular/forms/signals';
 import { LucideEllipsis, LucideMessageCircle, LucideTrash2 } from '@lucide/angular';
 import { MatIconButton } from '@angular/material/button';
-import {
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-  MatMenuTrigger,
-} from '@angular/material/menu';
+import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { FormInputComponent } from '../form-input/form-input.component';
@@ -29,12 +25,10 @@ import { FormInputComponent } from '../form-input/form-input.component';
     AvatarComponent,
     FormInputComponent,
     MatIconButton,
-    MatMenuTrigger,
+    DropdownMenuComponent,
+    MenuItemComponent,
     LucideEllipsis,
     LucideTrash2,
-    MatMenu,
-    MatMenuContent,
-    MatMenuItem,
     FromNowPipe,
     FormField,
   ],
