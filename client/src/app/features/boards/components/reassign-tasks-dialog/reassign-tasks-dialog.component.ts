@@ -36,7 +36,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         @for (user of users(); track user) {
           <button
             [class.selected]="selected === user.id"
-            mat-stroked-button
+            app-stroked-button
             [class.bg-primary]="selected === user.id"
             (click)="onUserClicked(user.id)">
             <div class="user-item">
