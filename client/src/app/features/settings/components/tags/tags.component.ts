@@ -21,7 +21,6 @@ import { TagsInputComponent } from '../tags-input/tags-input.component';
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TagsInputComponent, TooltipDirective, LucideX],
 })

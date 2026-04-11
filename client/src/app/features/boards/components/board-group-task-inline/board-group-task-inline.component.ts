@@ -1,5 +1,4 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -21,7 +20,6 @@ import {
   maxLength,
   required,
 } from '@angular/forms/signals';
-import { MatInput } from '@angular/material/input';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import {
   createProjectTask,
@@ -43,38 +41,29 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-board-group-task-inline',
-  styleUrls: ['./board-group-task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatInput,
-    CdkTextareaAutosize,
-    TooltipDirective,
-    SpinnerComponent,
-    FormField,
-    A11yModule,
-  ],
+  imports: [TooltipDirective, SpinnerComponent, FormField, A11yModule],
   template: `<div
-    class="inline-task-container"
-    [class.create-in-progress]="loading()"
-    [class.active]="!loading()"
+    class="border-border bg-card overflow-hidden rounded-sm border-2 p-[0.4rem]"
+    [class.opacity-60]="loading()"
+    [class.border-primary]="!loading()"
     #taskInlineContainer>
     <textarea
-      class="inline-task-textarea"
+      class="text-foreground bg-card w-full resize-none border-0 [font-family:inherit] text-sm tracking-[0.1px] outline-none"
       #textarea
-      matInput
       [formField]="taskForm.name"
-      cdkTextareaAutosize
-      cdkAutosizeMinRows="2"
-      cdkAutosizeMaxRows="12"
-      #autosize="cdkTextareaAutosize"
       (keydown.enter)="onSubmit($event)"
       [cdkTrapFocusAutoCapture]="true"
       [cdkTrapFocus]="true"
       placeholder="What do you need to get done?">
     </textarea>
-    <div class="inline-task-footer">
+    <div class="h-[1.6rem] p-[0.4rem]">
       @if (message(); as message) {
-        <div class="inline-task-info-message" [appTooltip]="message">!</div>
+        <div
+          class="bg-primary h-6 w-6 rounded-full text-center leading-6 text-white"
+          [appTooltip]="message">
+          !
+        </div>
       }
 
       @if (loading()) {
@@ -106,7 +95,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   taskForm = form(this.taskFormModel, (schema) => {
     required(schema.name);
     maxLength(schema.name, 256);
-    disabled(schema.name, () => this.isEditActive());
+    disabled(schema.name, () => !this.isEditActive());
     debounce(schema.name, 240);
   });
 
