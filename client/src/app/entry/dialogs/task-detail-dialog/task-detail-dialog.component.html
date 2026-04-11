@@ -47,18 +47,18 @@
         <div>
           <h4 class="font-sm font-semibold mb-2 mt-4">Project</h4>
           <app-chip-listbox>
-            <button app-chip-option [matMenuTriggerFor]="projectsMenu">
+            <button app-chip-option (click)="projectsMenu.toggle($any($event.currentTarget))">
               {{ task.projectName }}
             </button>
           </app-chip-listbox>
-          <mat-menu #projectsMenu="matMenu">
-            <small>Change Project</small>
+          <app-dropdown-menu #projectsMenu>
+            <small class="block px-3 py-1 text-xs text-neutral-500">Change Project</small>
             @for (project of projects(); track project.id) {
-            <button mat-menu-item (click)="selectProject(project.id)">
-              {{ project.name }}
-            </button>
+              <button app-menu-item (click)="selectProject(project.id); projectsMenu.close()">
+                {{ project.name }}
+              </button>
             }
-          </mat-menu>
+          </app-dropdown-menu>
         </div>
       </div>
       <div>

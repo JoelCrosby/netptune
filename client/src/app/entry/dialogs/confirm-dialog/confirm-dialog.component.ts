@@ -8,12 +8,12 @@ import {
 import { ThemePalette } from '@angular/material/core';
 
 import { FormField, form } from '@angular/forms/signals';
+import { CheckboxComponent } from '@app/static/components/checkbox/checkbox.component';
+import { DialogContentComponent } from '@app/static/components/dialog-content/dialog-content.component';
+import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { DialogContentComponent } from '@app/static/components/dialog-content/dialog-content.component';
 
 export interface ConfirmDialogOptions {
   acceptLabel?: string;
@@ -32,7 +32,7 @@ export interface ConfirmDialogOptions {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideDynamicIcon,
-    MatCheckbox,
+    CheckboxComponent,
     DialogActionsDirective,
     FlatButtonComponent,
     StrokedButtonComponent,
@@ -61,12 +61,12 @@ export interface ConfirmDialogOptions {
           }
         }
         @if (data.confirmationCheckboxLabel) {
-          <mat-checkbox
+          <app-checkbox
             [class.mt-8]="data.message"
             [class.ml-8]="data.message"
             [formField]="confirmForm.confirmationChecked">
             {{ data.confirmationCheckboxLabel }}
-          </mat-checkbox>
+          </app-checkbox>
         }
       </app-dialog-content>
     }
