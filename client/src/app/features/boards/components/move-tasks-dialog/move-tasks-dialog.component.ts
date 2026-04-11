@@ -16,7 +16,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
-  styleUrls: ['./move-tasks-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
@@ -31,16 +30,18 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     <p>Select the group you wish to move the selected tasks to</p>
 
     <div app-dialog-content>
-      <div class="group-selection">
+      <div class="flex flex-row flex-wrap my-8 justify-between">
         @for (group of groups(); track group.id) {
           <button
-            [class.selected]="selected() === group.id"
             app-stroked-button
-            [class.bg-primary]="selected() === group.id"
+            class="mx-[7rem] w-full uppercase"
+            [class.selected]="selected() === group.id"
+            [class.text-foreground]="selected() === group.id"
+            [class.bg-primary/25]="selected() === group.id"
             (click)="onGroupClicked(group.id)">
-            <div class="group-item">
+            <div class="flex flex-col justify-around items-center gap-[0.2rem] w-full">
               <span>{{ group.name }}</span>
-              <div class="pill"></div>
+              <div class="h-[0.2rem] w-full rounded-full bg-[rgba(var(--foreground-rgb),0.1)] [.selected_&]:bg-primary/40"></div>
             </div>
           </button>
         }
