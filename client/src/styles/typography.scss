@@ -1,9 +1,0 @@
-@use '@angular/material' as mat;
-@use 'sass:map';
-@use 'variables' as *;@use 'variables';
-
-$netptune: mat.m2-define-typography-config(
-  $font-family: variables.$netptune-font-family,
-  $headline-5: mat.m2-define-typography-level(24px, 1.4, 500),
-  $body-2: mat.m2-define-typography-level(14px, 1.2, 400)
-);

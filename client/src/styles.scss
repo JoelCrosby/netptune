@@ -2,14 +2,7 @@
 @use 'styles/variables';
 @use '@angular/material' as mat;
 
-// Themes
-@use 'themes/light-theme';
-@use 'themes/dark-theme';
 
-// Styles reset
-@use 'styles/reset';
-
-@use 'styles/typography';
 @use 'styles/material';
 @use 'styles/components';
 @use 'styles/lists';
