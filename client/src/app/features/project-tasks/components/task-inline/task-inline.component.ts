@@ -24,7 +24,7 @@ import { Store } from '@ngrx/store';
 
 import { FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { LucideGripVertical, LucidePlus } from '@lucide/angular';
 import { MatInput } from '@angular/material/input';
 import { DocumentService } from '@static/services/document.service';
@@ -36,7 +36,7 @@ import { DocumentService } from '@static/services/document.service';
     MatButton,
     LucidePlus,
     LucideGripVertical,
-    MatCheckbox,
+    CheckboxComponent,
     MatInput,
     FormField,
   ],
@@ -67,7 +67,7 @@ import { DocumentService } from '@static/services/document.service';
           <svg
             lucideGripVertical
             class="text-foreground/10 box-content h-4 w-4 p-2"></svg>
-          <mat-checkbox color="primary" disabled />
+          <app-checkbox [disabled]="true"></app-checkbox>
           <form class="flex h-full w-full flex-row" (submit)="onSubmit($event)">
             <input
               #input

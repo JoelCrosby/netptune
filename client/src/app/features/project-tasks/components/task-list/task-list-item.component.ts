@@ -18,7 +18,7 @@ import {
   LucideFlag,
   LucideTrash2,
 } from '@lucide/angular';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
@@ -33,7 +33,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     LucideCheck,
     LucideArchiveRestore,
     LucideTrash2,
-    MatCheckbox,
+    CheckboxComponent,
     AvatarComponent,
     DropdownMenuComponent,
     MenuItemComponent,
@@ -50,7 +50,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
       </button>
 
-      <mat-checkbox class="w-8 flex-none" color="primary"></mat-checkbox>
+      <app-checkbox class="w-8 flex-none"></app-checkbox>
 
       <div class="w-[100px] flex-none">
         <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
