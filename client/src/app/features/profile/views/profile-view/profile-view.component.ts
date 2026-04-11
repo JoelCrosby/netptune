@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { logout } from '@core/auth/store/auth.actions';
 import { Store } from '@ngrx/store';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
@@ -17,7 +17,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     UpdateProfileComponent,
     ChangePasswordComponent,
   ],
@@ -32,7 +32,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
     @if (loading()) {
       <div class="flex h-full flex-col items-center justify-center">
-        <mat-spinner diameter="32" />
+        <app-spinner diameter="32px" />
       </div>
     } @else {
       <app-update-profile />

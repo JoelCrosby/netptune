@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@boards/store/boards/boards.actions';
@@ -15,7 +15,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     BoardsGridComponent,
   ],
 })

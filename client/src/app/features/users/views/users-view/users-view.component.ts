@@ -4,7 +4,7 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import {
   inviteUsersToWorkspace,
@@ -24,7 +24,7 @@ import { first } from 'rxjs/operators';
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     UserListComponent,
   ],
 })

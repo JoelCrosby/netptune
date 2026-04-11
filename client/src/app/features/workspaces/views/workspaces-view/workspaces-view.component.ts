@@ -4,7 +4,7 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
@@ -21,7 +21,7 @@ import { WorkspaceListComponent } from '@app/features/workspaces/components/work
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     WorkspaceListComponent,
   ],
 })

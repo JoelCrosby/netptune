@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ActivatedRoute } from '@angular/router';
 import { confirmEmail } from '@core/auth/store/auth.actions';
 import { AuthCodeRequest } from '@core/auth/store/auth.models';
@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 @Component({
   templateUrl: './confirm-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatProgressSpinner],
+  imports: [SpinnerComponent],
 })
 export class ConfirmViewComponent {
   private activatedRoute = inject(ActivatedRoute);
