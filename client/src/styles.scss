@@ -1,13 +1,9 @@
-// SCSS @use rules must come first
-@use '@angular/material' as mat;
-
-@use 'styles/material';
 @use 'styles/components';
 @use 'styles/modals';
-@use 'styles/animations/menu';
-@use 'styles/controls/editor';
-@use 'styles/controls/form-control';
-@use 'styles/controls/form-select';
+@use 'styles/menu';
+@use 'styles/editor';
+@use 'styles/form-control';
+@use 'styles/form-select';
 
 @use 'tailwindcss';
 
