@@ -15,7 +15,8 @@ import {
   required,
 } from '@angular/forms/signals';
 import { LucideCheck, LucideFlag, LucideTrash2 } from '@lucide/angular';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
@@ -63,9 +64,8 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
     AvatarComponent,
     ChipListboxComponent,
     ChipOptionComponent,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuItem,
+    DropdownMenuComponent,
+    MenuItemComponent,
     StrokedButtonComponent,
     TooltipDirective,
     FormSelectTagsComponent,
