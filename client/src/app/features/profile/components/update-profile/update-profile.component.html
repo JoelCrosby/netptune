@@ -1,4 +1,4 @@
-<form class="flex flex-row justify-start max-[1036px]:flex-col-reverse px-0">
+<form class="flex flex-row justify-start max-[1036px]:flex-col-reverse px-0 gap-24">
   <div class="w-full max-w-[480px]">
     <app-form-input [formField]="profileForm.firstname" label="Firstname" />
     <app-form-input [formField]="profileForm.lastname" label="Lastname" />
@@ -15,45 +15,8 @@
     </button>
   </div>
 
-  <div class="w-full max-[1036px]:max-w-[480px] max-[1036px]:mb-16">
-    <div class="flex flex-col w-[180px] items-center my-[1.4rem] mx-auto">
-      @if (editProfilePicture()) {
-        <img [width]="180" [src]="profileForm.pictureUrl()" alt="profile-image" />
-      } @else {
-        @if (profileForm.pictureUrl()) {
-          <img
-            crossorigin="anonymous"
-            class="mx-auto rounded-full h-[180px] w-[180px]"
-            [src]="profileForm.pictureUrl()"
-            alt="Profile Image"
-            height="180"
-            width="180"
-            />
-          <button
-            class="my-[1.4rem] mx-auto"
-            app-stroked-button
-            (click)="onChangePictureClicked()"
-            >
-            Change Picture
-          </button>
-        } @else {
-          <img
-            crossorigin="anonymous"
-            class="mx-auto rounded-full h-[180px] w-[180px]"
-            src="https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png"
-            alt="Placeholder Profile Image"
-            height="180"
-            width="180"
-            />
-          <button
-            class="my-[1.4rem] mx-auto"
-            app-stroked-button
-            (click)="onChangePictureClicked()"
-            >
-            Change Picture
-          </button>
-        }
-      }
-    </div>
-  </div>
+  <app-update-profile-image
+    [pictureUrl]="profileForm.pictureUrl().value()"
+    (changePictureClicked)="onChangePictureClicked()"
+    />
 </form>
