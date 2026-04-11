@@ -16,7 +16,7 @@ const ARROW_CLASSES: Record<TooltipPosition, string> = {
   template: `
     <div class="pointer-events-none" role="tooltip">
       <div
-        class="relative rounded-sm px-2 py-1 text-sm font-medium whitespace-nowrap bg-black text-white/70 shadow-md dark:bg-white dark:text-black/70">
+        class="relative rounded-sm bg-black px-2 py-1 text-sm font-medium whitespace-nowrap text-white/90 shadow-md dark:bg-white dark:text-black/70">
         {{ text() }}
         <span class="absolute border-solid" [class]="arrowClass()"></span>
       </div>

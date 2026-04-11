@@ -42,6 +42,7 @@ import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
+import { LucideDelete, LucideFileDown, LucideFileUp } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -87,17 +88,17 @@ export class BoardGroupsViewComponent implements OnDestroy {
     {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
-      icon: 'file_upload',
+      icon: LucideFileUp,
     },
     {
       label: 'Export Board Tasks',
       click: () => this.onExportTasksClicked(),
-      icon: 'file_download',
+      icon: LucideFileDown,
     },
     {
       label: 'Delete Board',
       click: () => this.onDeleteBoardClicked(),
-      icon: 'delete',
+      icon: LucideDelete,
     },
   ];
 

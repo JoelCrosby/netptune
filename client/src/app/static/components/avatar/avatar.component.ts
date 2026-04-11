@@ -1,16 +1,37 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
-import { MatTooltip } from '@angular/material/tooltip';
 
-import { AvatarPipe } from '../../pipes/avatar.pipe';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { AvatarFontSizePipe } from '../../pipes/avatar-font-size.pipe';
+import { AvatarPipe } from '../../pipes/avatar.pipe';
 import { PxPipe } from '../../pipes/px.pipe';
 
 @Component({
   selector: 'app-avatar',
-  templateUrl: './avatar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatTooltip, AvatarPipe, AvatarFontSizePipe, PxPipe],
+  imports: [TooltipDirective, AvatarPipe, AvatarFontSizePipe, PxPipe],
+  template: `<div
+    class="font-avatar flex flex-col items-center justify-center overflow-hidden border border-2 border-white/80 text-xs font-medium tracking-[0.8px] whitespace-nowrap select-none"
+    [style.height]="size() | px"
+    [style.width]="size() | px"
+    [style.background-color]="imageUrl() ? null : backgroundColor"
+    [style.color]="color"
+    [style.border-radius]="borderRadius()"
+    [class.avatar-border]="border()"
+    [appTooltip]="tooltip() && name() ? name() : ''"
+    [style.font-size]="size() | avatarFontSize">
+    @if (imageUrl()) {
+      <img
+        crossorigin="anonymous"
+        class="rounded-full object-cover"
+        [width]="size()"
+        [height]="size()"
+        [src]="imageUrl()"
+        [alt]="name()" />
+    } @else {
+      {{ name() | avatar }}
+    }
+  </div> `,
 })
 export class AvatarComponent {
   readonly name = input<string | null>();
