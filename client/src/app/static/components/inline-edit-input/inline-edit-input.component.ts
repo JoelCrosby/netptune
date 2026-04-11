@@ -16,13 +16,31 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-inline-edit-input',
-  templateUrl: './inline-edit-input.component.html',
-  styleUrls: ['./inline-edit-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   host: {
     '[class.edit-active]': 'isEditActive()',
   },
+  template: `
+    <div class="w-full rounded">
+      @if (isEditActive()) {
+        <input
+          #input
+          type="text"
+          class="inline-edit-input box-border w-full border-0 bg-transparent p-1 text-[inherit] transition-all duration-200 [font:inherit]"
+          [value]="value()"
+          [readonly]="readonly()"
+          [disabled]="disabled()"
+          [class.active-border]="activeBorder()"
+          (input)="onInput($event)"
+          (keyup.enter)="onSubmit(input.value)" />
+      } @else {
+        <div class="border-2 border-transparent p-1 [font:inherit]">
+          {{ value() }}
+        </div>
+      }
+    </div>
+  `,
 })
 export class InlineEditInputComponent {
   private elementRef = inject(ElementRef);

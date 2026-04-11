@@ -16,7 +16,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
-  styleUrls: ['./move-tasks-dialog.component.scss'],
+  styleUrls: ['./move-tasks-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,

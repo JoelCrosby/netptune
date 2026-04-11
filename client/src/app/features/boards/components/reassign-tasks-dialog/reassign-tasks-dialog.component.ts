@@ -17,7 +17,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
 @Component({
   selector: 'app-reassign-tasks-dialog',
-  styleUrls: ['./reassign-tasks-dialog.component.scss'],
+  styleUrls: ['./reassign-tasks-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,

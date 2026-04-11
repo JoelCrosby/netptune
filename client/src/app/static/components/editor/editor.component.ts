@@ -33,7 +33,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-editor',
   template: '<div class="editor" #editorJs></div>',
-  styleUrls: ['./editor.component.scss'],
+  styleUrls: ['./editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
