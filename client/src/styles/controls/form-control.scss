@@ -66,10 +66,6 @@
       opacity: .6;
     }
   }
-
-  .mat-icon {
-    padding: 0 .8rem;
-  }
 }
 
 .form-error {
@@ -97,10 +93,6 @@
 
   &.invalid {
     border-color: var(--warn) !important;
-  }
-
-  mat-icon {
-    color: rgba(var(--foreground-rgb), .1) !important;
   }
 }
 

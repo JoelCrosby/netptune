@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { LucideChartColumnBig } from '@lucide/angular';
 import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
@@ -11,7 +11,7 @@ import { CardTitleComponent } from '@static/components/card/card-title.component
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardHeaderImageComponent,
-    MatIcon,
+    LucideChartColumnBig,
     CardHeaderComponent,
     CardTitleComponent,
     CardSubtitleComponent,
@@ -20,7 +20,7 @@ import { CardTitleComponent } from '@static/components/card/card-title.component
     class="bg-card border-border flex min-h-38 min-w-72 overflow-hidden rounded-sm border p-6">
     <app-card-header-image
       [style.background-color]="board().metaInfo.color || 'inherit'">
-      <mat-icon class="material-icons-outlined"> table_chart </mat-icon>
+      <svg lucideChartColumnBig></svg>
     </app-card-header-image>
     <app-card-header>
       <app-card-title>{{ board().name }}</app-card-title>

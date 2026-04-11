@@ -24,7 +24,7 @@ export class SettingsComponent {
   settings = this.store.selectSignal(selectSettings);
 
   settingsFormModel = signal({
-    theme: this.settings().theme ?? 'LIGHT-THEME',
+    theme: this.settings().theme ?? 'light',
   });
 
   settingsForm = form(this.settingsFormModel, (schema) => {
@@ -32,8 +32,8 @@ export class SettingsComponent {
   });
 
   themes = [
-    { value: 'LIGHT-THEME', label: 'Light' },
-    { value: 'DARK-THEME', label: 'Dark' },
+    { value: 'light', label: 'Light' },
+    { value: 'dark', label: 'Dark' },
   ];
 
   onThemeSelect(theme: string) {

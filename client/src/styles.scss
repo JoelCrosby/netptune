@@ -5,7 +5,6 @@
 @use 'styles/components';
 @use 'styles/lists';
 @use 'styles/forms';
-@use 'styles/containers';
 @use 'styles/modals';
 @use 'styles/animations/menu';
 @use 'styles/controls/editor';
@@ -14,8 +13,6 @@
 
 // Tailwind (theme + utilities only — preflight skipped to avoid conflicting with Angular Material)
 @use 'tailwindcss';
-
-@custom-variant dark (&:where(.dark-theme, .dark-theme *));
 
 @theme inline {
   --color-primary: var(--primary);
@@ -52,7 +49,9 @@
   --border-radius-small: 3px;
 }
 
-.light-theme {
+.light {
+  color-scheme: light;
+
   --background-rgb: 255, 255, 255;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 0, 0, 0;
@@ -101,11 +100,11 @@
   --editor-code-background: #fbfbfb;
   --editor-link-border: #c9c9cc7a;
   --editor-link-background-color: #fff;
-
-  color-scheme: light;
 }
 
-.dark-theme {
+.dark {
+  color-scheme: dark;
+
   --background-rgb: 0, 0, 0;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
@@ -153,6 +152,4 @@
   --editor-link-background-color: #2f2f2f;
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
-
-  color-scheme: dark;
 }
