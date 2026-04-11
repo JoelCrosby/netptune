@@ -22,18 +22,16 @@ import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 
-import { FormField, form, required } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { LucideGripVertical, LucidePlus } from '@lucide/angular';
+import { form, FormField, required } from '@angular/forms/signals';
 import { MatInput } from '@angular/material/input';
+import { LucideGripVertical, LucidePlus } from '@lucide/angular';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-task-inline',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatButton,
     LucidePlus,
     LucideGripVertical,
     CheckboxComponent,
@@ -55,12 +53,11 @@ import { DocumentService } from '@static/services/document.service';
       class="flex max-h-[40px] min-h-[40px] w-full flex-row justify-center rounded-sm">
       @if (!isEditActive()) {
         <button
-          mat-button
           disableRipple="true"
-          class="text-primary hover:bg-primary/10 flex w-full flex-row justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium"
+          class="text-primary hover:bg-primary/10 flex w-full cursor-pointer flex-row items-center justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium"
           (click)="addTaskClicked()">
           <svg lucidePlus class="text-primary h-4 w-4"></svg>
-          <span class="text-primary mx-4 my-auto">Add Task</span>
+          <span class="text-primary text-md mx-4">Add Task</span>
         </button>
       } @else {
         <div class="flex w-full flex-row items-center gap-3">

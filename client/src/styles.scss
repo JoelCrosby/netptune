@@ -3,16 +3,21 @@
 
 @use 'styles/material';
 @use 'styles/components';
-@use 'styles/lists';
-@use 'styles/forms';
 @use 'styles/modals';
 @use 'styles/animations/menu';
 @use 'styles/controls/editor';
 @use 'styles/controls/form-control';
 @use 'styles/controls/form-select';
 
-// Tailwind (theme + utilities only — preflight skipped to avoid conflicting with Angular Material)
 @use 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --border-radius: 8px;
+  --border-radius-small: 3px;
+}
+
 
 @theme inline {
   --color-primary: var(--primary);
@@ -42,11 +47,6 @@
 
   --font-overpass: 'Overpass', sans-serif;
   --font-avatar: 'Roboto Mono', 'Roboto', sans-serif;
-}
-
-:root {
-  --border-radius: 8px;
-  --border-radius-small: 3px;
 }
 
 .light {
