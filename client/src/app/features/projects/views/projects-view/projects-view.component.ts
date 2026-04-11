@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectProjectsLoading } from '@core/store/projects/projects.selectors';
@@ -15,7 +15,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     ProjectListComponent,
   ],
 })

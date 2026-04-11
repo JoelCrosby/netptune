@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
@@ -73,7 +73,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     PageContainerComponent,
     PageHeaderComponent,
     BoardGroupHeaderComponent,
-    MatProgressSpinner,
+    SpinnerComponent,
     CdkDropList,
     ScrollShadowDirective,
     BoardGroupComponent,
