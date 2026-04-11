@@ -1,6 +1,6 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import {
   MatMenu,
   MatMenuContent,
@@ -23,7 +23,7 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
   imports: [
     ListComponent,
     UserListItemComponent,
-    MatIconButton,
+    IconButtonComponent,
     CdkDragHandle,
     TooltipDirective,
     MatMenuTrigger,
@@ -40,7 +40,7 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
           <button
             class="flex-none w-10"
             cdkDragHandle
-            mat-icon-button
+            app-icon-button
             aria-label="more"
             appTooltip="click for more options. click and hold to drag task"
             [matMenuTriggerData]="{ user: user }"

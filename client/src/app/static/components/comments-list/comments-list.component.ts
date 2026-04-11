@@ -10,7 +10,7 @@ import { CommentViewModel } from '@core/models/comment';
 
 import { FormField, form, required } from '@angular/forms/signals';
 import { LucideEllipsis, LucideMessageCircle, LucideTrash2 } from '@lucide/angular';
-import { MatIconButton } from '@angular/material/button';
+import { IconButtonComponent } from '../button/icon-button.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
@@ -24,7 +24,7 @@ import { FormInputComponent } from '../form-input/form-input.component';
   imports: [
     AvatarComponent,
     FormInputComponent,
-    MatIconButton,
+    IconButtonComponent,
     DropdownMenuComponent,
     MenuItemComponent,
     LucideEllipsis,

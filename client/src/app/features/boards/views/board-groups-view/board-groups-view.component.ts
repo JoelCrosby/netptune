@@ -15,7 +15,7 @@ import {
   OnDestroy,
   viewChild,
 } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
@@ -83,7 +83,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     LucideX,
     TooltipDirective,
     InlineEditInputComponent,
-    MatIconButton,
+    IconButtonComponent,
     CreateBoardGroupComponent,
   ],
 })
