@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
-import { CardComponent } from '@static/components/card/card.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { CardContentComponent } from '@static/components/card/card-content.component';
 import { CardActionsComponent } from '@static/components/card/card-actions.component';
-import { MatButton } from '@angular/material/button';
+import { CardContentComponent } from '@static/components/card/card-content.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
+import { CardComponent } from '@static/components/card/card.component';
 
 @Component({
   selector: 'app-create-workspace-list-item',
@@ -15,7 +15,7 @@ import { MatButton } from '@angular/material/button';
     CardTitleComponent,
     CardContentComponent,
     CardActionsComponent,
-    MatButton,
+    StrokedButtonComponent,
   ],
   template: `
     <app-card class="create-workspace-card">
@@ -28,7 +28,7 @@ import { MatButton } from '@angular/material/button';
 
         <app-card-actions>
           <button
-            mat-stroked-button
+            app-stroked-button
             color="primary"
             (click)="openWorkspaceDialog()">
             Create Workspace

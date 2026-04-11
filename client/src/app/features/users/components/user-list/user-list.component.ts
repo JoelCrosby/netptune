@@ -1,12 +1,6 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import {
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-  MatMenuTrigger,
-} from '@angular/material/menu';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { DialogService } from '@core/services/dialog.service';
@@ -16,6 +10,8 @@ import { LucideGripVertical, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 
 @Component({
   selector: 'app-user-list',
@@ -26,12 +22,10 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
     IconButtonComponent,
     CdkDragHandle,
     TooltipDirective,
-    MatMenuTrigger,
     LucideGripVertical,
     LucideTrash2,
-    MatMenu,
-    MatMenuContent,
-    MatMenuItem,
+    DropdownMenuComponent,
+    MenuItemComponent,
   ],
   template: `
     <app-list>
@@ -43,22 +37,19 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
             app-icon-button
             aria-label="more"
             appTooltip="click for more options. click and hold to drag task"
-            [matMenuTriggerData]="{ user: user }"
-            [matMenuTriggerFor]="menu"
+            (click)="menu.toggle($any($event.currentTarget))"
           >
             <svg lucideGripVertical class="h-4 w-4 text-foreground/30"></svg>
           </button>
 
-          <mat-menu #menu="matMenu">
-            <ng-template matMenuContent>
-              @if (!user.isWorkspaceOwner) {
-                <button mat-menu-item (click)="onRemoveClicked(user)">
-                  <svg lucideTrash2 class="h-4 w-4"></svg>
-                  <span>Remove user from workspace</span>
-                </button>
-              }
-            </ng-template>
-          </mat-menu>
+          <app-dropdown-menu #menu xPosition="before">
+            @if (!user.isWorkspaceOwner) {
+              <button app-menu-item (click)="onRemoveClicked(user); menu.close()">
+                <svg lucideTrash2 class="h-4 w-4"></svg>
+                <span>Remove user from workspace</span>
+              </button>
+            }
+          </app-dropdown-menu>
         </app-user-list-item>
       }
     </app-list>
