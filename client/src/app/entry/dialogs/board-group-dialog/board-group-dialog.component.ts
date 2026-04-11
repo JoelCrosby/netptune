@@ -21,7 +21,6 @@ export interface BoardGroupDialogData {
 
 @Component({
   selector: 'app-board-group-dialog',
-  templateUrl: './board-group-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormField,
@@ -31,6 +30,22 @@ export interface BoardGroupDialogData {
     StrokedButtonComponent,
     DialogCloseDirective,
   ],
+  template: `<h1 mat-dialog-title>Add Group</h1>
+
+    <div app-dialog-content>
+      <form (submit)="onSubmit($event)">
+        <app-form-input
+          [formField]="groupForm.group"
+          label="Group Name"
+          maxLength="128">
+        </app-form-input>
+      </form>
+    </div>
+
+    <div app-dialog-actions align="end">
+      <button app-stroked-button app-dialog-close>Close</button>
+      <button app-flat-button (click)="onSubmit($event)">Add Group</button>
+    </div> `,
 })
 export class BoardGroupDialogComponent {
   private store = inject(Store);

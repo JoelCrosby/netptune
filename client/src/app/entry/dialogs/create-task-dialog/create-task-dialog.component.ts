@@ -25,7 +25,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
-  templateUrl: './create-task-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormField,
@@ -37,6 +36,34 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
+  template: `<h1 mat-dialog-title>Add new Task</h1>
+
+    <form app-dialog-content>
+      <app-form-input
+        [formField]="taskForm.name"
+        label="Summary"
+        maxLength="1024">
+      </app-form-input>
+
+      <app-form-textarea
+        [formField]="taskForm.description"
+        label="Description"
+        maxLength="4096">
+      </app-form-textarea>
+
+      <app-form-select [formField]="taskForm.project" label="Project">
+        @for (project of projects(); track project.id) {
+          <app-form-select-option [value]="project.id">
+            {{ project.name }}
+          </app-form-select-option>
+        }
+      </app-form-select>
+    </form>
+
+    <div app-dialog-actions align="end">
+      <button app-stroked-button (click)="close()">Close</button>
+      <button app-flat-button (click)="saveClicked()">Save Task</button>
+    </div> `,
 })
 export class CreateTaskDialogComponent {
   private store = inject(Store);

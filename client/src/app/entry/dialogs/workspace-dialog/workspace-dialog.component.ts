@@ -36,7 +36,6 @@ import { firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-workspace-dialog',
-  templateUrl: './workspace-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormInputComponent,
@@ -48,6 +47,38 @@ import { firstValueFrom, map } from 'rxjs';
     DialogCloseDirective,
     FormField,
   ],
+  template: `<h1 mat-dialog-title>
+      {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace' }}
+    </h1>
+
+    <form app-dialog-content class="form-auth">
+      <app-form-input
+        [formField]="dialogForm.name"
+        label="Name"
+        maxLength="1024" />
+
+      <app-form-input
+        [formField]="dialogForm.identifier"
+        label="Identifier"
+        maxLength="1024"
+        [icon]="identifierIcon()"
+        [loading]="dialogForm.identifier().pending()"
+        [hint]="dialogForm.identifier().errors()[0]?.message" />
+
+      <app-form-textarea
+        [formField]="dialogForm.description"
+        label="Description"
+        maxLength="4096" />
+
+      <app-color-select [formField]="dialogForm.color" label="Color" />
+    </form>
+
+    <div app-dialog-actions align="end">
+      <button app-stroked-button app-dialog-close>Close</button>
+      <button app-flat-button (click)="getResult()">
+        {{ isEditMode ? 'Save Changes' : 'Save Workspace' }}
+      </button>
+    </div> `,
 })
 export class WorkspaceDialogComponent {
   private store = inject(Store);

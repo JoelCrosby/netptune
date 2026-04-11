@@ -13,6 +13,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { DialogContentComponent } from '@app/static/components/dialog-content/dialog-content.component';
 
 export interface ConfirmDialogOptions {
   acceptLabel?: string;
@@ -28,7 +29,6 @@ export interface ConfirmDialogOptions {
 
 @Component({
   selector: 'app-confirm-dialog',
-  templateUrl: './confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideDynamicIcon,
@@ -37,7 +37,69 @@ export interface ConfirmDialogOptions {
     FlatButtonComponent,
     StrokedButtonComponent,
     FormField,
+    DialogContentComponent,
   ],
+  template: `<h1 class="mb-6 text-xl font-semibold">{{ data.title }}</h1>
+
+    @if (data.message || data.confirmationCheckboxLabel) {
+      <app-dialog-content>
+        <div class="flex flex-col items-center">
+          @if (data.icon) {
+            <svg
+              [lucideIcon]="data.icon"
+              class="mx-auto my-[0.4rem] h-[4rem] w-[4rem]"></svg>
+          }
+        </div>
+        @if (data.message) {
+          <p
+            [innerHTML]="data.message"
+            [class.m-0]="!data.messageExtended && !data.icon">
+            {{ data.message }}
+          </p>
+          @if (data.messageExtended) {
+            <p>{{ data.messageExtended }}</p>
+          }
+        }
+        @if (data.confirmationCheckboxLabel) {
+          <mat-checkbox
+            [class.mt-8]="data.message"
+            [class.ml-8]="data.message"
+            [formField]="confirmForm.confirmationChecked">
+            {{ data.confirmationCheckboxLabel }}
+          </mat-checkbox>
+        }
+      </app-dialog-content>
+    }
+
+    <div app-dialog-actions align="end">
+      @if (data.isInfoMessage) {
+        <button
+          app-stroked-button
+          cdkFocusInitial
+          (click)="dialogRef.close(false)">
+          Ok
+        </button>
+      } @else {
+        @if (data.cancelLabel) {
+          <button
+            app-stroked-button
+            cdkFocusInitial
+            (click)="dialogRef.close(false)">
+            {{ data.cancelLabel }}
+          </button>
+        }
+        <button
+          app-flat-button
+          [color]="data.color === 'warn' ? 'warn' : 'primary'"
+          (click)="dialogRef.close(true)"
+          [disabled]="
+            !!data.confirmationCheckboxLabel &&
+            !confirmForm.confirmationChecked().value()
+          ">
+          {{ data.acceptLabel }}
+        </button>
+      }
+    </div> `,
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);
