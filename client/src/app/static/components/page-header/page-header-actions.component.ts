@@ -31,7 +31,9 @@ import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
         </button>
         <app-dropdown-menu #menu xPosition="before">
           @for (action of overflowActions(); track action) {
-            <button app-menu-item (click)="action.click && action.click(); menu.close()">
+            <button
+              app-menu-item
+              (click)="action.click && action.click(); menu.close()">
               @if (action.icon) {
                 <svg
                   [lucideIcon]="action.icon"

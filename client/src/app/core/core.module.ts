@@ -69,7 +69,7 @@ import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: RouterStateSerializer, useClass: CustomSerializer },
     provideHttpClient(withInterceptorsFromDi()),
-{ provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
+    { provide: DEFAULT_DIALOG_CONFIG, useValue: {} },
   ],
 })
 export class CoreModule {

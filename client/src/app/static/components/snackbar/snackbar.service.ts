@@ -9,7 +9,11 @@ export class SnackbarService {
 
   private nextId = 0;
 
-  open(message: string, action?: string, config?: SnackbarConfig): SnackbarItem {
+  open(
+    message: string,
+    action?: string,
+    config?: SnackbarConfig
+  ): SnackbarItem {
     const item: SnackbarItem = {
       id: this.nextId++,
       message,
@@ -27,12 +31,19 @@ export class SnackbarService {
     return item;
   }
 
-  success(message: string, config?: Omit<SnackbarConfig, 'type'>): SnackbarItem {
+  success(
+    message: string,
+    config?: Omit<SnackbarConfig, 'type'>
+  ): SnackbarItem {
     return this.open(message, undefined, { ...config, type: 'success' });
   }
 
   error(message: string, config?: Omit<SnackbarConfig, 'type'>): SnackbarItem {
-    return this.open(message, undefined, { ...config, type: 'error', duration: config?.duration ?? 5000 });
+    return this.open(message, undefined, {
+      ...config,
+      type: 'error',
+      duration: config?.duration ?? 5000,
+    });
   }
 
   warn(message: string, config?: Omit<SnackbarConfig, 'type'>): SnackbarItem {

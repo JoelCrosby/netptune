@@ -8,18 +8,18 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
   selector: 'app-task-dates',
   imports: [PrettyDatePipe, MatTooltipModule, FromNowPipe],
   template: `
-    <div class="flex flex-row items-center mr-auto gap-4">
+    <div class="mr-auto flex flex-row items-center gap-4">
       <div
-        class="text-sm cursor-pointer mr-2"
+        class="mr-2 cursor-pointer text-sm"
         [matTooltip]="task().createdAt | prettyDate">
-        <span class="opacity-60 text-xs font-normal mr-1">Created</span>
+        <span class="mr-1 text-xs font-normal opacity-60">Created</span>
         <span class="font-medium">{{ task().createdAt | fromNow }}</span>
       </div>
       <div
-        class="text-sm cursor-pointer mr-2"
+        class="mr-2 cursor-pointer text-sm"
         [matTooltip]="task().updatedAt | prettyDate">
-        <span class="opacity-60 text-xs font-normal mr-1">Updated</span>
-        <span class="font-medium mr-2">{{ task().updatedAt | fromNow }}</span>
+        <span class="mr-1 text-xs font-normal opacity-60">Updated</span>
+        <span class="mr-2 font-medium">{{ task().updatedAt | fromNow }}</span>
       </div>
     </div>
   `,

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+} from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';

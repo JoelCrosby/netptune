@@ -14,7 +14,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
-import { LucideChevronDown, LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
+import {
+  LucideChevronDown,
+  LucideDynamicIcon,
+  LucideIconInput,
+} from '@lucide/angular';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';

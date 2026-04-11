@@ -30,7 +30,14 @@ export interface ConfirmDialogOptions {
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon, MatCheckbox, DialogActionsDirective, FlatButtonComponent, StrokedButtonComponent, FormField],
+  imports: [
+    MatIcon,
+    MatCheckbox,
+    DialogActionsDirective,
+    FlatButtonComponent,
+    StrokedButtonComponent,
+    FormField,
+  ],
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);
