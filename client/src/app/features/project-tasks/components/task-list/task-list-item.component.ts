@@ -10,7 +10,7 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import { Store } from '@ngrx/store';
 import { TaskStatus } from '@core/enums/project-task-status';
 import * as actions from '@core/store/tasks/tasks.actions';
-import { MatIconButton } from '@angular/material/button';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import {
   LucideArchiveRestore,
   LucideCheck,
@@ -27,7 +27,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   selector: 'app-task-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIconButton,
+    IconButtonComponent,
     LucideEllipsisVertical,
     LucideFlag,
     LucideCheck,
@@ -44,7 +44,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       [class.flagged]="task().isFlagged">
       <button
         class="w-10 flex-none"
-        mat-icon-button
+        app-icon-button
         aria-label="more"
         (click)="menu.toggle($any($event.currentTarget))">
         <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
