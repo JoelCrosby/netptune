@@ -12,12 +12,6 @@ import { TaskStatus } from '@core/enums/project-task-status';
 import * as actions from '@core/store/tasks/tasks.actions';
 import { MatIconButton } from '@angular/material/button';
 import {
-  MatMenuTrigger,
-  MatMenu,
-  MatMenuContent,
-  MatMenuItem,
-} from '@angular/material/menu';
-import {
   LucideArchiveRestore,
   LucideCheck,
   LucideEllipsisVertical,
@@ -26,13 +20,14 @@ import {
 } from '@lucide/angular';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 
 @Component({
   selector: 'app-task-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatIconButton,
-    MatMenuTrigger,
     LucideEllipsisVertical,
     LucideFlag,
     LucideCheck,
@@ -40,37 +35,38 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     LucideTrash2,
     MatCheckbox,
     AvatarComponent,
-    MatMenu,
-    MatMenuContent,
-    MatMenuItem,
+    DropdownMenuComponent,
+    MenuItemComponent,
   ],
   template: `
     <div
       class="bg-card flex h-10 cursor-pointer items-center overflow-hidden transition-colors duration-200 ease-in-out"
-      [class.flagged]="task().isFlagged">
+      [class.flagged]="task().isFlagged"
+    >
       <button
         class="w-10 flex-none"
         mat-icon-button
         aria-label="more"
-        [matMenuTriggerData]="{ task: task() }"
-        [matMenuTriggerFor]="menu">
-        <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
+        (click)="menu.toggle($any($event.currentTarget))"
+      >
+        <svg lucideEllipsisVertical class="h-4 w-4 text-foreground/30"></svg>
       </button>
 
       <mat-checkbox class="w-8 flex-none" color="primary"></mat-checkbox>
 
       <div class="w-[100px] flex-none">
-        <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
+        <div class="inline rounded bg-foreground/10 px-1.5 py-0.5 text-sm">
           {{ task().systemId }}
         </div>
       </div>
 
       <div
-        class="flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap"
+        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
         aria-hidden="false"
         role="button"
         tabindex=""
-        (click)="titleClicked()">
+        (click)="titleClicked()"
+      >
         {{ task().name }}
       </div>
 
@@ -87,29 +83,28 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
           class="w-[38px] flex-none"
           size="24"
           [name]="assignee.displayName"
-          [imageUrl]="assignee.pictureUrl">
+          [imageUrl]="assignee.pictureUrl"
+        >
         </app-avatar>
       }
     </div>
 
-    <mat-menu #menu="matMenu">
-      <ng-template matMenuContent let-task="task">
-        <button mat-menu-item (click)="markCompleteClicked(task)">
-          <svg lucideCheck class="h-4 w-4"></svg>
-          <span>Mark Complete</span>
-        </button>
+    <app-dropdown-menu #menu xPosition="after">
+      <button app-menu-item (click)="markCompleteClicked(task()); menu.close()">
+        <svg lucideCheck class="h-4 w-4"></svg>
+        <span>Mark Complete</span>
+      </button>
 
-        <button mat-menu-item (click)="moveToBacklogClicked(task)">
-          <svg lucideArchiveRestore class="h-4 w-4"></svg>
-          <span>Move to Backlog</span>
-        </button>
+      <button app-menu-item (click)="moveToBacklogClicked(task()); menu.close()">
+        <svg lucideArchiveRestore class="h-4 w-4"></svg>
+        <span>Move to Backlog</span>
+      </button>
 
-        <button mat-menu-item (click)="deleteClicked(task)">
-          <svg lucideTrash2 class="h-4 w-4"></svg>
-          <span>Delete</span>
-        </button>
-      </ng-template>
-    </mat-menu>
+      <button app-menu-item (click)="deleteClicked(task()); menu.close()">
+        <svg lucideTrash2 class="h-4 w-4"></svg>
+        <span>Delete</span>
+      </button>
+    </app-dropdown-menu>
   `,
 })
 export class TaskListItemComponent {
@@ -125,18 +120,6 @@ export class TaskListItemComponent {
       autoFocus: false,
       panelClass: 'app-modal-class',
     });
-  }
-
-  moveTask(task: TaskViewModel, sortOrder: number) {
-    this.store.dispatch(
-      actions.editProjectTask({
-        identifier: `[workspace] ${this.task().workspaceKey}`,
-        task: {
-          ...task,
-          sortOrder,
-        },
-      })
-    );
   }
 
   deleteClicked(task: TaskViewModel) {
