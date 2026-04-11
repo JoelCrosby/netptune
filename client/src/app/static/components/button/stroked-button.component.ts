@@ -16,7 +16,7 @@ export class StrokedButtonComponent {
 
   @HostBinding('class') get className(): string {
     const base =
-      'inline-flex items-center justify-center gap-2 px-4 h-9 min-w-16 rounded-sm text-sm font-medium tracking-wide cursor-pointer select-none transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+      'inline-flex items-center justify-center gap-2 px-4 h-10 min-w-16 rounded-sm text-sm font-medium tracking-wide cursor-pointer select-none transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
 
     const colors: Record<string, string> = {
       primary:

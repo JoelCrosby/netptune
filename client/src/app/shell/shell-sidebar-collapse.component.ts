@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { ShellService } from './shell.service';
 
 @Component({
@@ -11,8 +11,8 @@ import { ShellService } from './shell.service';
       [class.px-8]="shell.sideNavExpanded()"
       [class.justify-start]="shell.sideNavExpanded()"
       (click)="shell.toggleSidebar()"
-      [matTooltip]="shell.sideNavExpanded() ? '' : 'Expand'"
-      matTooltipPosition="right"
+      [appTooltip]="shell.sideNavExpanded() ? '' : 'Expand'"
+      appTooltipPosition="right"
       role="button">
       <mat-icon mat-list-icon class="material-icons-round">
         {{
@@ -27,7 +27,7 @@ import { ShellService } from './shell.service';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatTooltip, MatIcon],
+  imports: [TooltipDirective, MatIcon],
 })
 export class ShellSidebarCollapseComponent {
   shell = inject(ShellService);

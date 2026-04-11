@@ -9,21 +9,21 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { LucideX } from '@lucide/angular';
-import { MatTooltip } from '@angular/material/tooltip';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { selectTags } from '@core/store/tags/tags.selectors';
+import { LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { TagsInputComponent } from '../tags-input/tags-input.component';
 import { DocumentService } from '@static/services/document.service';
+import { TagsInputComponent } from '../tags-input/tags-input.component';
 
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TagsInputComponent, MatTooltip, LucideX],
+  imports: [TagsInputComponent, TooltipDirective, LucideX],
 })
 export class TagsComponent {
   private store = inject(Store);

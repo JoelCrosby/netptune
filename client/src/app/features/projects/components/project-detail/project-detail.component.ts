@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import {
   disabled,
-  FormField,
   form,
+  FormField,
   maxLength,
   required,
 } from '@angular/forms/signals';
-import { MatButton } from '@angular/material/button';
+import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import {
   clearProjectDetail,
@@ -28,9 +28,57 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 
 @Component({
   selector: 'app-project-detail',
-  templateUrl: './project-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormInputComponent, FormTextAreaComponent, MatButton, FormField],
+  imports: [
+    FormInputComponent,
+    FormTextAreaComponent,
+    FlatButtonComponent,
+    FormField,
+  ],
+  template: `@if (project(); as project) {
+    <div>
+      <form class="w-full max-w-[512px]" (submit)="updateClicked($event)">
+        <app-form-input
+          [formField]="projectForm.name"
+          label="Name"
+          maxLength="1024">
+        </app-form-input>
+        <app-form-textarea
+          [formField]="projectForm.description"
+          label="Description"
+          rows="6">
+        </app-form-textarea>
+        <div class="border-border my-8 border-b-2"></div>
+        <div class="flex items-center">
+          <app-form-input
+            [formField]="projectForm.key"
+            label="Project ID"
+            class="w-[120px]"
+            maxLength="6">
+          </app-form-input>
+          <div>
+            <small class="block px-[1.4rem] opacity-60">
+              The Project ID is displayed as the first part of task's ID
+            </small>
+            <small class="block px-[1.4rem] opacity-60">
+              max 6 characters. should be unique to workspace
+            </small>
+          </div>
+        </div>
+        <app-form-input
+          [formField]="projectForm.repositoryUrl"
+          label="Repository URL"
+          maxLength="1024">
+        </app-form-input>
+        <button
+          app-flat-button
+          color="primary"
+          [disabled]="projectForm().disabled()">
+          Save Changes
+        </button>
+      </form>
+    </div>
+  } `,
 })
 export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);
