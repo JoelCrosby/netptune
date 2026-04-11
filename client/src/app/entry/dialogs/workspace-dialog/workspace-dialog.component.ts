@@ -16,7 +16,8 @@ import {
   required,
   validateAsync,
 } from '@angular/forms/signals';
-import { ButtonComponent } from '@static/components/button/button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
@@ -42,7 +43,8 @@ import { firstValueFrom, map } from 'rxjs';
     FormTextAreaComponent,
     ColorSelectComponent,
     DialogActionsDirective,
-    ButtonComponent,
+    FlatButtonComponent,
+    StrokedButtonComponent,
     DialogCloseDirective,
     FormField,
   ],

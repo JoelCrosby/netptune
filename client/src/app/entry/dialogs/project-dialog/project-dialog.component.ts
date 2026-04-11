@@ -6,7 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
-import { ButtonComponent } from '@static/components/button/button.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AddProjectRequest } from '@core/models/project';
 import { createProject } from '@core/store/projects/projects.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -23,7 +24,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FormInputComponent,
     FormTextAreaComponent,
     DialogActionsDirective,
-    ButtonComponent,
+    FlatButtonComponent,
+    StrokedButtonComponent,
   ],
   template: `
     <h1 mat-dialog-title>Create Project</h1>
@@ -49,10 +51,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     </form>
 
     <div app-dialog-actions align="end">
-      <app-button variant="outlined" (click)="close()">Close</app-button>
-      <app-button variant="filled" (click)="getResult()"
-        >Create Project</app-button
-      >
+      <button app-stroked-button (click)="close()">Close</button>
+      <button app-flat-button (click)="getResult()">Create Project</button>
     </div>
   `,
 })
