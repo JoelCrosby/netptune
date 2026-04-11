@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { ShellService } from './shell.service';
 
@@ -14,20 +14,18 @@ import { ShellService } from './shell.service';
       [appTooltip]="shell.sideNavExpanded() ? '' : 'Expand'"
       appTooltipPosition="right"
       role="button">
-      <mat-icon mat-list-icon class="material-icons-round">
-        {{
-          shell.sideNavExpanded()
-            ? 'keyboard_arrow_left'
-            : 'keyboard_arrow_right'
-        }}
-      </mat-icon>
+      @if (shell.sideNavExpanded()) {
+        <svg lucideChevronLeft class="h-5 w-5"></svg>
+      } @else {
+        <svg lucideChevronRight class="h-5 w-5"></svg>
+      }
       @if (shell.sideNavExpanded()) {
         <p>Collapse</p>
       }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TooltipDirective, MatIcon],
+  imports: [TooltipDirective, LucideChevronLeft, LucideChevronRight],
 })
 export class ShellSidebarCollapseComponent {
   shell = inject(ShellService);
