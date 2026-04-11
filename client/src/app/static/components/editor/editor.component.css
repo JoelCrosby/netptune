@@ -1,0 +1,33 @@
+.editor {
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.editor h1,
+.editor h2,
+.editor h3,
+.editor h4,
+.editor h5,
+.editor .link-tool__title {
+  font-family: 'Overpass', 'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans, Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.editor h1 {
+  font-size: 1.3rem;
+}
+
+.editor h2 {
+  font-size: 1.2rem;
+}
+
+.editor h3 {
+  font-size: 1.15rem;
+}
+
+.editor h4 {
+  font-size: 1.1rem;
+}
+
+.editor h5 {
+  font-size: 1rem;
+}

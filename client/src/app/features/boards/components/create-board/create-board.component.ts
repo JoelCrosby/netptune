@@ -40,7 +40,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-create-board',
   templateUrl: './create-board.component.html',
-  styleUrls: ['./create-board.component.scss'],
+  styleUrls: ['./create-board.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
