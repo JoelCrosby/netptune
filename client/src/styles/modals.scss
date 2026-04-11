@@ -1,3 +1,14 @@
+.app-modal-class {
+  transition: max-height .3s ease-out;
+  height: auto;
+  max-height: 40vh;
+}
+
+.app-modal-class.content-loaded {
+  max-height: 80vh;
+}
+
+
 @media only screen and (max-width: 600px) {
   .app-modal-class {
     height: 100vh !important;

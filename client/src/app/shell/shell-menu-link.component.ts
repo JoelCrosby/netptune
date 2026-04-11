@@ -21,7 +21,7 @@ interface ShellMenuLink {
   imports: [RouterLinkActive, RouterLink, TooltipDirective, MatIcon],
   host: { class: 'block w-full' },
   template: ` <a
-    class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded-sm py-4 text-sm font-medium text-white/70 select-none"
+    class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden py-4 text-sm font-medium text-white/70 select-none"
     [routerLink]="link().value"
     [class.px-6]="shell.sideNavExpanded()"
     [class.justify-start]="shell.sideNavExpanded()"
