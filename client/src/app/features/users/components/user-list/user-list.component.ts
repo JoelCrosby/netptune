@@ -1,18 +1,18 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { LucideGripVertical, LucideTrash2 } from '@lucide/angular';
 import {
   MatMenu,
   MatMenuContent,
   MatMenuItem,
   MatMenuTrigger,
 } from '@angular/material/menu';
-import { MatTooltip } from '@angular/material/tooltip';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { DialogService } from '@core/services/dialog.service';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import { selectAllUsers } from '@core/store/users/users.selectors';
+import { LucideGripVertical, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';
 
@@ -24,7 +24,7 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
     UserListItemComponent,
     MatIconButton,
     CdkDragHandle,
-    MatTooltip,
+    TooltipDirective,
     MatMenuTrigger,
     LucideGripVertical,
     LucideTrash2,

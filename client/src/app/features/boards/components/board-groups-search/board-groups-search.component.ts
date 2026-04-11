@@ -11,18 +11,51 @@ import {
   minLength,
   required,
 } from '@angular/forms/signals';
-import { LucideSearch, LucideX } from '@lucide/angular';
-import { MatTooltip } from '@angular/material/tooltip';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
+import { LucideSearch, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-groups-search',
-  templateUrl: './board-groups-search.component.html',
   styleUrls: ['./board-groups-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideX, LucideSearch, MatTooltip, FormField],
+  imports: [LucideX, LucideSearch, TooltipDirective, FormField],
+  template: `<div
+    class="board-groups-search-input"
+    [class.invalid]="
+      termForm.term().value() &&
+      termForm.term().touched() &&
+      termForm.term().invalid()
+    "
+    [class.active]="
+      termForm.term().value() &&
+      termForm.term().touched() &&
+      termForm.term().valid()
+    ">
+    <input
+      type="text"
+      placeholder="Search"
+      [formField]="termForm.term"
+      (keydown.enter)="onSubmit()" />
+
+    @if (termForm.term().value()) {
+      <svg
+        lucideX
+        aria-hidden="false"
+        aria-label="Clear Search Icon"
+        class="clear-search h-4 w-4"
+        appTooltip="Clear search term"
+        (click)="onClearClicked()"></svg>
+    } @else {
+      <svg
+        lucideSearch
+        aria-hidden="false"
+        aria-label="Search Icon"
+        class="h-4 w-4"></svg>
+    }
+  </div> `,
 })
 export class BoardGroupsSearchComponent {
   private store = inject(Store);

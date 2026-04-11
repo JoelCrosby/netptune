@@ -16,13 +16,13 @@ import {
 import {
   debounce,
   disabled,
-  FormField,
   form,
+  FormField,
   maxLength,
   required,
 } from '@angular/forms/signals';
 import { MatInput } from '@angular/material/input';
-import { MatTooltip } from '@angular/material/tooltip';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import {
   createProjectTask,
   setInlineTaskContent,
@@ -43,17 +43,45 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-board-group-task-inline',
-  templateUrl: './board-group-task-inline.component.html',
   styleUrls: ['./board-group-task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatInput,
     CdkTextareaAutosize,
-    MatTooltip,
+    TooltipDirective,
     SpinnerComponent,
     FormField,
     A11yModule,
   ],
+  template: `<div
+    class="inline-task-container"
+    [class.create-in-progress]="loading()"
+    [class.active]="!loading()"
+    #taskInlineContainer>
+    <textarea
+      class="inline-task-textarea"
+      #textarea
+      matInput
+      [formField]="taskForm.name"
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="2"
+      cdkAutosizeMaxRows="12"
+      #autosize="cdkTextareaAutosize"
+      (keydown.enter)="onSubmit($event)"
+      [cdkTrapFocusAutoCapture]="true"
+      [cdkTrapFocus]="true"
+      placeholder="What do you need to get done?">
+    </textarea>
+    <div class="inline-task-footer">
+      @if (message(); as message) {
+        <div class="inline-task-info-message" [appTooltip]="message">!</div>
+      }
+
+      @if (loading()) {
+        <app-spinner diameter="1.4rem"> </app-spinner>
+      }
+    </div>
+  </div> `,
 })
 export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private document = inject(DocumentService);
