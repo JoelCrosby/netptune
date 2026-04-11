@@ -1,7 +1,8 @@
+import { CdkPortal } from '@angular/cdk/portal';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   computed,
   effect,
   inject,
@@ -16,24 +17,100 @@ import { debounce, form, FormField } from '@angular/forms/signals';
 import { AppUser } from '@core/models/appuser';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
-import { DocumentService } from '@static/services/document.service';
-import { KeyboardService } from '@static/services/keyboard.service';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { UserSelectOptionComponent } from './user-select-option.component';
 
 type User = AssigneeViewModel | AppUser;
 
 @Component({
   selector: 'app-user-select',
-  templateUrl: './user-select.component.html',
-  styleUrls: ['./user-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AvatarComponent, AutofocusDirective, FormField],
+  imports: [
+    AvatarComponent,
+    AutofocusDirective,
+    FormField,
+    CdkPortal,
+    UserSelectOptionComponent,
+  ],
+  styles: [
+    `
+      @keyframes menu-in {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .menu-panel {
+        animation: menu-in 120ms ease-out;
+        transform-origin: top;
+      }
+    `,
+  ],
+  template: `
+    <button
+      class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none"
+      [class.flex-col]="compact()"
+      #origin
+      (click)="toggle(origin)">
+      @for (user of value(); track user.id) {
+        <div
+          class="flex flex-row items-center gap-1.5 rounded transition-colors">
+          <app-avatar
+            [imageUrl]="user.pictureUrl"
+            [name]="user.displayName"
+            size="24" />
+          @if (!compact()) {
+            <small class="text-sm font-medium tracking-tight">{{
+              user.displayName
+            }}</small>
+          }
+        </div>
+      }
+      @if (!value().length) {
+        <span class="truncate text-sm font-medium tracking-tight">{{
+          label()
+        }}</span>
+      }
+    </button>
+
+    <ng-template cdkPortal>
+      <div
+        class="menu-panel bg-card border-border flex flex-col overflow-hidden rounded border shadow-lg">
+        @if (options()?.length) {
+          <input
+            appAutofocus
+            class="border-border bg-secondary text-foreground sticky top-0 m-2 rounded border px-2 py-1.5 text-sm focus:outline-none"
+            placeholder="Search.."
+            [formField]="searchForm.term"
+            (click)="$event.stopPropagation()" />
+        }
+        <div class="max-h-[216px] overflow-y-auto p-1">
+          @for (option of filteredOptions(); track option.id) {
+            <app-user-select-option
+              [option]="option"
+              [active]="isActive(option)"
+              [selected]="isSelected(option)"
+              (clicked)="select($event)" />
+          } @empty {
+            <div
+              class="text-muted-foreground flex h-9 items-center px-2 text-sm">
+              {{ noResults() }}
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  `,
 })
 export class UserSelectComponent {
-  private document = inject(DocumentService);
-  private keyboard = inject(KeyboardService);
-  readonly dropdownElementRef = viewChild.required<ElementRef>('dropdown');
+  private overlay = inject(Overlay);
+  private readonly portal = viewChild.required(CdkPortal);
 
   readonly options = input<AppUser[] | null>([]);
   readonly value = model<User[]>([]);
@@ -46,51 +123,83 @@ export class UserSelectComponent {
 
   isOpen = signal(false);
   selected = signal<AppUser | null>(null);
+  filteredOptions = signal<AppUser[]>(this.options() ?? []);
 
-  filterdOptions = signal<AppUser[]>(this.options() ?? []);
-  valueIdSet = computed(() => {
-    const ids = this.value().map((v) => v.id);
-    return new Set<string>(ids);
-  });
+  valueIdSet = computed(() => new Set<string>(this.value().map((v) => v.id)));
 
-  searchFormModel = signal({
-    term: '',
-  });
-
+  searchFormModel = signal({ term: '' });
   searchForm = form(this.searchFormModel, (schema) => {
     debounce(schema.term, 300);
   });
 
+  private overlayRef?: OverlayRef;
+
   constructor() {
-    effect(() => {
-      const el = this.document.documentClicked();
-      untracked(() => this.handleDocumentClick(el));
-    });
-
-    effect(() => {
-      const event = this.keyboard.keyDown();
-
-      untracked(() => {
-        if (event && this.isOpen()) {
-          this.handleKeyDown(event);
-        }
-      });
-    });
-
     effect(() => {
       const term = this.searchForm.term().value();
       untracked(() => this.search(term));
     });
   }
 
-  handleDocumentClick(event: EventTarget) {
-    if (!this.isOpen()) {
-      return;
+  toggle(origin: HTMLElement) {
+    if (this.overlayRef?.hasAttached()) {
+      this.close();
+    } else {
+      this.open(origin);
+    }
+  }
+
+  open(origin: HTMLElement) {
+    this.isOpen.set(true);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(origin)
+        .withPush(false)
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+            offsetY: 4,
+          },
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+            offsetY: -4,
+          },
+        ]),
+      width: this.compact() ? '200px' : `${origin.offsetWidth}px`,
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+    });
+
+    this.overlayRef.attach(this.portal());
+    this.overlayRef.backdropClick().subscribe(() => this.close());
+    this.overlayRef
+      .keydownEvents()
+      .subscribe((event) => this.handleKeyDown(event));
+  }
+
+  close() {
+    this.searchForm.term().value.set('');
+    this.isOpen.set(false);
+    this.overlayRef?.detach();
+    this.closed.emit();
+  }
+
+  select(option: AppUser) {
+    this.selected.set(option);
+
+    if (this.isOpen()) {
+      this.selectChange.emit(option);
     }
 
-    if (!this.dropdownElementRef().nativeElement.contains(event)) {
-      this.close();
-    }
+    this.selected.set(null);
   }
 
   handleKeyDown(event: KeyboardEvent) {
@@ -99,16 +208,19 @@ export class UserSelectComponent {
         this.selectPreviousOption();
         break;
       case 'ArrowDown':
-        this.selectNextOptiom();
+        this.selectNextOption();
         break;
       case 'Enter':
-        this.select();
+        this.confirmKeyboardSelection();
+        break;
+      case 'Escape':
+        this.close();
         break;
     }
   }
 
-  selectNextOptiom() {
-    const options = this.filterdOptions();
+  selectNextOption() {
+    const options = this.filteredOptions();
 
     if (!this.selected()) {
       this.selected.set((options.length && options[0]) || null);
@@ -116,20 +228,14 @@ export class UserSelectComponent {
       const currentIndex = options.findIndex(
         (opt) => opt.id === this.selected()?.id
       );
-
-      if (options.length === currentIndex + 1) {
-        return;
+      if (options.length !== currentIndex + 1) {
+        this.selected.set(options[currentIndex + 1]);
       }
-
-      this.selected.set(options[currentIndex + 1]);
     }
-
-    this.filterdOptions.set(options);
   }
 
   selectPreviousOption() {
-    const options = this.filterdOptions();
-
+    const options = this.filteredOptions();
     const optionsValue = this.options();
     if (!optionsValue) return;
 
@@ -139,58 +245,22 @@ export class UserSelectComponent {
       const currentIndex = options.findIndex(
         (opt) => opt.id === this.selected()?.id
       );
-
-      if (currentIndex === 0) return;
-
-      this.selected.set(optionsValue[currentIndex - 1]);
-    }
-
-    this.filterdOptions.set(options);
-  }
-
-  open(event: Event, dropdown: HTMLElement, origin: HTMLElement) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    this.isOpen.set(true);
-
-    if (this.compact()) {
-      dropdown.style.width = '200px';
-      dropdown.style.left = '80px';
-      dropdown.style.top = '0px';
-    } else {
-      dropdown.style.width = `${origin.offsetWidth}px`;
-      dropdown.style.left = '0';
-      dropdown.style.top = '42px';
+      if (currentIndex !== 0) {
+        this.selected.set(optionsValue[currentIndex - 1]);
+      }
     }
   }
 
-  close() {
-    this.searchForm.term().value.set('');
-    this.isOpen.set(false);
-
-    this.closed.emit();
-  }
-
-  select(option: AppUser | null = null) {
-    this.selected.set(option ?? this.selected());
+  confirmKeyboardSelection() {
     const selected = this.selected();
-
     if (this.isOpen() && selected) {
       this.selectChange.emit(selected);
+      this.selected.set(null);
     }
-
-    this.selected.set(null);
   }
 
   isActive(option: AppUser) {
-    const selected = this.selected();
-
-    if (!selected) {
-      return false;
-    }
-
-    return option.id === selected.id;
+    return option.id === this.selected()?.id;
   }
 
   isSelected(option: AppUser) {
@@ -202,10 +272,12 @@ export class UserSelectComponent {
     if (!options) return;
 
     if (!value) {
-      this.filterdOptions.set(options);
+      this.filteredOptions.set(options);
     } else {
-      this.filterdOptions.set(filterObjectArray(options, 'displayName', value));
-      this.selectNextOptiom();
+      this.filteredOptions.set(
+        filterObjectArray(options, 'displayName', value)
+      );
+      this.selectNextOption();
     }
   }
 }

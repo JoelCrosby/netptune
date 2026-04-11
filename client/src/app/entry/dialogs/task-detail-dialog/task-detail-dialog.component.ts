@@ -44,7 +44,7 @@ import { EditorComponent } from '@static/components/editor/editor.component';
 import { InlineTextAreaComponent } from '@static/components/inline-text-area/inline-text-area.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { UserSelectComponent } from '@static/components/user-select/user-select.component';
+import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 
