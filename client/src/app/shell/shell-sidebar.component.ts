@@ -7,6 +7,13 @@ import {
 import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { Store } from '@ngrx/store';
+import {
+  LucideBarChart2,
+  LucideCheckSquare,
+  LucideSettings,
+  LucideTable2,
+  LucideUsers,
+} from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
 import { ShellMenuLinkComponent } from './shell-menu-link.component';
@@ -68,14 +75,14 @@ export class ShellSidebarComponent {
   shell = inject(ShellService);
 
   links = [
-    { label: 'Projects', value: ['./projects'], icon: 'assessment' },
-    { label: 'Tasks', value: ['./tasks'], icon: 'check_box' },
-    { label: 'Boards', value: ['./boards'], icon: 'table_chart' },
-    { label: 'Users', value: ['./users'], icon: 'supervised_user_circle' },
+    { label: 'Projects', value: ['./projects'], icon: LucideBarChart2 },
+    { label: 'Tasks', value: ['./tasks'], icon: LucideCheckSquare },
+    { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
+    { label: 'Users', value: ['./users'], icon: LucideUsers },
   ];
 
   bottomLinks = [
-    { label: 'Settings', value: ['./settings'], icon: 'settings_applications' },
+    { label: 'Settings', value: ['./settings'], icon: LucideSettings },
   ];
 
   user = this.store.selectSignal(selectCurrentUser);
