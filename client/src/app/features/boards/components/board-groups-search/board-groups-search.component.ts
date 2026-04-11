@@ -11,7 +11,7 @@ import {
   minLength,
   required,
 } from '@angular/forms/signals';
-import { MatIcon } from '@angular/material/icon';
+import { LucideSearch, LucideX } from '@lucide/angular';
 import { MatTooltip } from '@angular/material/tooltip';
 import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
 import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store';
   templateUrl: './board-groups-search.component.html',
   styleUrls: ['./board-groups-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIcon, MatTooltip, FormField],
+  imports: [LucideX, LucideSearch, MatTooltip, FormField],
 })
 export class BoardGroupsSearchComponent {
   private store = inject(Store);

@@ -25,7 +25,7 @@ import { Store } from '@ngrx/store';
 import { FormField, form, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatIcon } from '@angular/material/icon';
+import { LucideGripVertical, LucidePlus } from '@lucide/angular';
 import { MatInput } from '@angular/material/input';
 import { DocumentService } from '@static/services/document.service';
 
@@ -34,7 +34,7 @@ import { DocumentService } from '@static/services/document.service';
   templateUrl: './task-inline.component.html',
   styleUrls: ['./task-inline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButton, MatIcon, MatCheckbox, MatInput, FormField],
+  imports: [MatButton, LucidePlus, LucideGripVertical, MatCheckbox, MatInput, FormField],
 })
 export class TaskInlineComponent {
   private store = inject(Store);

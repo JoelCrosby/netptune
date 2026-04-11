@@ -14,7 +14,7 @@ import {
   minLength,
   required,
 } from '@angular/forms/signals';
-import { MatIcon } from '@angular/material/icon';
+import { LucideCheck, LucideFlag, LucideTrash2 } from '@lucide/angular';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
@@ -54,7 +54,9 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
   styleUrls: ['./task-detail-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIcon,
+    LucideCheck,
+    LucideFlag,
+    LucideTrash2,
     ActivityMenuComponent,
     InlineTextAreaComponent,
     UserSelectComponent,

@@ -4,9 +4,10 @@
   <div app-dialog-content>
     <div class="flex flex-col items-center">
       @if (data.icon) {
-        <mat-icon class="material-icons-outlined my-[0.4rem] mx-auto text-[4rem] h-[4rem] w-[4rem]">
-          {{ data.icon }}
-        </mat-icon>
+        <svg
+          [lucideIcon]="data.icon"
+          class="my-[0.4rem] mx-auto h-[4rem] w-[4rem]"
+        ></svg>
       }
     </div>
     @if (data.message) {

@@ -5,7 +5,15 @@ import {
   input,
   output,
 } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import {
+  LucideCircleCheck,
+  LucideCircleX,
+  LucideDynamicIcon,
+  LucideIconInput,
+  LucideInfo,
+  LucideTriangleAlert,
+  LucideX,
+} from '@lucide/angular';
 import { SnackbarItem, SnackbarType } from './snackbar.models';
 import { SnackbarService } from './snackbar.service';
 
@@ -17,18 +25,18 @@ const TYPE_STYLES: Record<SnackbarType, string> = {
   info: 'bg-[#1a2a3a] text-blue-300 border-blue-800',
 };
 
-const TYPE_ICONS: Record<SnackbarType, string> = {
-  default: '',
-  success: 'check_circle',
-  error: 'error',
-  warn: 'warning',
-  info: 'info',
+const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
+  default: null,
+  success: LucideCircleCheck,
+  error: LucideCircleX,
+  warn: LucideTriangleAlert,
+  info: LucideInfo,
 };
 
 @Component({
   selector: 'app-snackbar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIconModule],
+  imports: [LucideDynamicIcon, LucideX],
   template: `
     <div
       class="flex max-w-[480px] min-w-[280px] items-center gap-3 rounded-[var(--radius-sm)] border px-4 py-3 text-sm leading-tight font-medium shadow-lg"
@@ -36,10 +44,10 @@ const TYPE_ICONS: Record<SnackbarType, string> = {
       role="status"
       aria-live="polite">
       @if (icon()) {
-        <mat-icon
-          class="h-[1.1rem] w-[1.1rem] shrink-0 text-[1.1rem] leading-none"
-          >{{ icon() }}</mat-icon
-        >
+        <svg
+          [lucideIcon]="icon()!"
+          class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"
+          ></svg>
       }
 
       <span class="flex-1">{{ item().message }}</span>
@@ -56,9 +64,7 @@ const TYPE_ICONS: Record<SnackbarType, string> = {
         class="shrink-0 leading-none opacity-50 transition-opacity hover:opacity-100"
         aria-label="Dismiss"
         (click)="snackbarService.dismiss(item().id)">
-        <mat-icon class="h-[1rem] w-[1rem] text-[1rem] leading-none"
-          >close</mat-icon
-        >
+        <svg lucideX class="h-[1rem] w-[1rem] leading-none"></svg>
       </button>
     </div>
   `,

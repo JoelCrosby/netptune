@@ -23,7 +23,7 @@ import {
   MatChipRemove,
   MatChipRow,
 } from '@angular/material/chips';
-import { MatIcon } from '@angular/material/icon';
+import { LucideX } from '@lucide/angular';
 import { MatLabel } from '@angular/material/input';
 import { filterStringArray } from '@core/util/arrays';
 
@@ -41,7 +41,7 @@ export interface AutocompleteChipsSelectionChanged {
     MatLabel,
     MatChipGrid,
     MatChipRow,
-    MatIcon,
+    LucideX,
     MatChipRemove,
     MatAutocompleteTrigger,
     MatChipInput,

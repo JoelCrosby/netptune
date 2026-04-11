@@ -11,14 +11,14 @@
       [matMenuTriggerData]="{ user: user }"
       [matMenuTriggerFor]="menu"
     >
-      <mat-icon class="app-list-drag-icon"> drag_indicator </mat-icon>
+      <svg lucideGripVertical class="app-list-drag-icon h-4 w-4"></svg>
     </button>
 
     <mat-menu #menu="matMenu">
       <ng-template matMenuContent>
         @if (!user.isWorkspaceOwner) {
         <button mat-menu-item (click)="onRemoveClicked(user)">
-          <mat-icon class="material-icons-outlined"> delete </mat-icon>
+          <svg lucideTrash2 class="h-4 w-4"></svg>
           <span>Remove user from workspace</span>
         </button>
         }

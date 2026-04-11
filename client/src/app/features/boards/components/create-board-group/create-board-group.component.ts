@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { MatIcon } from '@angular/material/icon';
+import { LucidePlus } from '@lucide/angular';
 import { selectBoardIdAndIdentifier } from '@boards/store/groups/board-groups.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
   templateUrl: './create-board-group.component.html',
   styleUrls: ['./create-board-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatRipple, MatIcon],
+  imports: [MatRipple, LucidePlus],
 })
 export class CreateBoardGroupComponent {
   private dialog = inject(DialogService);

@@ -11,7 +11,7 @@ import { FormField, form } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatIcon } from '@angular/material/icon';
+import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 export interface ConfirmDialogOptions {
@@ -23,7 +23,7 @@ export interface ConfirmDialogOptions {
   confirmationCheckboxLabel?: string;
   color?: ThemePalette;
   isInfoMessage?: boolean;
-  icon?: string;
+  icon?: LucideIconInput;
 }
 
 @Component({
@@ -31,7 +31,7 @@ export interface ConfirmDialogOptions {
   templateUrl: './confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatIcon,
+    LucideDynamicIcon,
     MatCheckbox,
     DialogActionsDirective,
     FlatButtonComponent,

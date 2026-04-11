@@ -39,12 +39,12 @@
                   [matMenuTriggerFor]="commentMenu"
                   [matMenuTriggerData]="{comment: comment}"
                   >
-                  <mat-icon>more_horiz</mat-icon>
+                  <svg lucideEllipsis class="h-4 w-4"></svg>
                 </button>
                 <mat-menu #commentMenu="matMenu">
                   <ng-template matMenuContent let-comment="comment">
                     <button mat-menu-item (click)="deleteComment.emit(comment)">
-                      <mat-icon>delete</mat-icon>
+                      <svg lucideTrash2 class="h-4 w-4"></svg>
                       <span>Delete Comment</span>
                     </button>
                   </ng-template>

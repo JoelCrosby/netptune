@@ -1,7 +1,7 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { LucideGripVertical, LucideTrash2 } from '@lucide/angular';
 import {
   MatMenu,
   MatMenuContent,
@@ -26,7 +26,8 @@ import { UserListItemComponent } from '../user-list-item/user-list-item.componen
     CdkDragHandle,
     MatTooltip,
     MatMenuTrigger,
-    MatIcon,
+    LucideGripVertical,
+    LucideTrash2,
     MatMenu,
     MatMenuContent,
     MatMenuItem,
