@@ -18,7 +18,7 @@ function getClosestDialog<TResult, TComponent>(
 ) {
   let parent: HTMLElement | null = element.nativeElement.parentElement;
 
-  while (parent && !parent.classList.contains('mat-mdc-dialog-container')) {
+  while (parent && !parent.classList.contains('app-modal-class')) {
     parent = parent.parentElement;
   }
 
