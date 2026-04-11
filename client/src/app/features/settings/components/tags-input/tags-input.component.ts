@@ -10,9 +10,18 @@ import {
 
 @Component({
   selector: 'app-tags-input',
-  templateUrl: './tags-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
+  template: `<div class="nept-form-control">
+    <div class="form-control-input">
+      <input
+        #input
+        type="text"
+        class="form-control"
+        [(value)]="value"
+        (keydown.enter)="onSubmit($event)" />
+    </div>
+  </div> `,
 })
 export class TagsInputComponent implements AfterViewInit {
   readonly value = model<string | null>(null);
