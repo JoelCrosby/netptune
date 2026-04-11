@@ -48,12 +48,12 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
         <div
           class="border-foreground/10 bg-card flex flex-col justify-start border-t p-[.4rem]">
           <a
-            class="text-foreground hover:bg-hover my-[.2rem] block h-6 cursor-pointer rounded-sm px-[.4rem] py-[.2rem] text-sm leading-6 tracking-[.225px]"
+            class="text-foreground hover:bg-hover my-[.2rem] block cursor-pointer rounded-sm px-[.4rem] py-2 text-sm leading-6 tracking-[.225px]"
             [routerLink]="['/workspaces']">
             Workspaces
           </a>
           <div
-            class="text-foreground hover:bg-hover my-[.2rem] block h-6 cursor-pointer rounded-sm px-[.4rem] py-[.2rem] text-sm leading-6 tracking-[.225px]"
+            class="text-foreground hover:bg-hover my-[.2rem] block cursor-pointer rounded-sm px-[.4rem] py-2 text-sm leading-6 tracking-[.225px]"
             (click)="logout.emit()">
             Logout
           </div>
