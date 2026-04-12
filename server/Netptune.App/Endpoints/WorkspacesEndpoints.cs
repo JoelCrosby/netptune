@@ -14,15 +14,15 @@ public static class WorkspacesEndpoints
             .RequireAuthorization();
 
         group.MapGet("/", HandleGetWorkspaces);
-        group.MapGet("/{key}", HandleGetWorkspace);
-        group.MapPut("/", HandlePut);
+        group.MapGet("/{key}", HandleGetWorkspace).RequireAuthorization(NetptunePermissions.Workspace.Read);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Workspace.Update);
         group.MapPost("/", HandlePost);
-        group.MapDelete("/{key}", HandleDelete);
-        group.MapDelete("/permanent/{key}", HandleDeletePermanent);
+        group.MapDelete("/{key}", HandleDelete).RequireAuthorization(NetptunePermissions.Workspace.Delete);
+        group.MapDelete("/permanent/{key}", HandleDeletePermanent).RequireAuthorization(NetptunePermissions.Workspace.DeletePermanent);
         group.MapGet("/all", HandleGetAllWorkspaces);
         group.MapGet("/is-unique/{slug}", HandleIsSlugUnique);
 
-        return group;
+        return builder;
     }
 
     public static async Task<IResult> HandleGetWorkspaces(
@@ -40,7 +40,7 @@ public static class WorkspacesEndpoints
         string key)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
-            context.User, key, NetptunePolicies.Workspace);
+            context.User, key, NetptunePermissions.Workspace.Read);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
@@ -58,7 +58,7 @@ public static class WorkspacesEndpoints
         UpdateWorkspaceRequest request)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
-            context.User, request.Slug!, NetptunePolicies.Workspace);
+            context.User, request.Slug!, NetptunePermissions.Workspace.Update);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
@@ -83,7 +83,7 @@ public static class WorkspacesEndpoints
         string key)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
-            context.User, key, NetptunePolicies.Workspace);
+            context.User, key, NetptunePermissions.Workspace.Delete);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
@@ -101,7 +101,7 @@ public static class WorkspacesEndpoints
         string key)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
-            context.User, key, NetptunePolicies.Workspace);
+            context.User, key, NetptunePermissions.Workspace.DeletePermanent);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 

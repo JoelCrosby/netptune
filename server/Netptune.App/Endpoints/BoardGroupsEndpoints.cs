@@ -9,13 +9,12 @@ public static class BoardGroupsEndpoints
 {
     public static RouteGroupBuilder MapBoardGroupsEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("boardgroups")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("boardgroups");
 
-        group.MapGet("/{id}", HandleGet);
-        group.MapPut("/", HandlePut);
-        group.MapPost("/", HandlePost);
-        group.MapDelete("/{id}", HandleDelete);
+        group.MapGet("/{id}", HandleGet).RequireAuthorization(NetptunePermissions.BoardGroups.Read);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.BoardGroups.Update);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.BoardGroups.Create);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.BoardGroups.Delete);
 
         return group;
     }

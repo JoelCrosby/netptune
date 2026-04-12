@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
 using Netptune.Core.Models;
@@ -8,6 +9,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+
 
 namespace Netptune.Repositories;
 
@@ -28,6 +30,23 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         return result?.Users.ToList() ?? new List<AppUser>();
     }
 
+    public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false)
+    {
+        return Context.WorkspaceAppUsers
+            .Include(x => x.User)
+            .Where(x => x.Workspace.Slug == workspaceKey)
+            .IsReadonly(isReadonly)
+            .ToListAsync();
+    }
+
+    public Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(x => x.UserId == userId && x.Workspace.Slug == workspaceKey)
+            .Select(x => (WorkspaceRole?)x.Role)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId)
     {
         if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));
@@ -36,24 +55,48 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         {
             WorkspaceId = workspaceId,
             UserId = userId,
+            Role = WorkspaceRole.Member,
         };
 
         var result = await Context.WorkspaceAppUsers.AddAsync(invite);
+
+        await SeedDefaultPermissionsAsync(userId, workspaceId, WorkspaceRole.Member);
 
         return result.Entity;
     }
 
     public async Task<List<WorkspaceAppUser>> InviteUsersToWorkspace(IEnumerable<string> userIds, int workspaceId)
     {
-        var invites = userIds.Select(userId => new WorkspaceAppUser
+        var idList = userIds.ToList();
+
+        var defaultPermissions = WorkspaceRolePermissions
+            .GetDefaultPermissions(WorkspaceRole.Member)
+            .ToList();
+
+        var invites = idList.Select(userId => new WorkspaceAppUser
         {
             WorkspaceId = workspaceId,
             UserId = userId,
+            Role = WorkspaceRole.Member,
+            Permissions = defaultPermissions,
         }).ToList();
 
         await Context.WorkspaceAppUsers.AddRangeAsync(invites);
 
         return invites;
+    }
+
+    private async Task SeedDefaultPermissionsAsync(string userId, int workspaceId, WorkspaceRole role)
+    {
+        var user = await Context.WorkspaceAppUsers
+            .Where(x => x.UserId == userId && x.WorkspaceId == workspaceId)
+            .FirstOrDefaultAsync();
+
+        var defaultPermissions = WorkspaceRolePermissions
+            .GetDefaultPermissions(role)
+            .ToList();
+
+        user?.Permissions = defaultPermissions;
     }
 
     public async Task<List<WorkspaceAppUser>> RemoveUsersFromWorkspace(IEnumerable<string> userIds, int workspaceId)

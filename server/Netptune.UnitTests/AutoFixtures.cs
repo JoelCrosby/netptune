@@ -37,7 +37,7 @@ public static class AutoFixtures
 
     public static WorkspaceAppUser WorkspaceAppUser => Fixture
         .Build<WorkspaceAppUser>()
-        .Without(p => p.User)
+        .With(p => p.User, AppUser)
         .Without(p => p.Workspace)
         .Create();
 

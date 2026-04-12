@@ -9,19 +9,18 @@ public static class TasksEndpoints
 {
     public static RouteGroupBuilder MapTasksEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("tasks")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("tasks");
 
-        group.MapGet("/", HandleGetTasks);
-        group.MapGet("/{id}", HandleGetTask);
-        group.MapGet("/detail", HandleGetTaskDetail);
-        group.MapPut("/", HandlePut);
-        group.MapPost("/", HandlePost);
-        group.MapDelete("/", HandleDelete);
-        group.MapDelete("/{id}", HandleDeleteById);
-        group.MapPost("/move-task-in-group", HandleMoveTaskInGroup);
-        group.MapPost("/move-tasks-to-group", HandleMoveTasksToGroup);
-        group.MapPost("/reassign-tasks", HandleReassignTasks);
+        group.MapGet("/", HandleGetTasks).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapGet("/{id}", HandleGetTask).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapGet("/detail", HandleGetTaskDetail).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Tasks.Update);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tasks.Create);
+        group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tasks.Delete);
+        group.MapDelete("/{id}", HandleDeleteById).RequireAuthorization(NetptunePermissions.Tasks.Delete);
+        group.MapPost("/move-task-in-group", HandleMoveTaskInGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
+        group.MapPost("/move-tasks-to-group", HandleMoveTasksToGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
+        group.MapPost("/reassign-tasks", HandleReassignTasks).RequireAuthorization(NetptunePermissions.Tasks.Reassign);
 
         return group;
     }

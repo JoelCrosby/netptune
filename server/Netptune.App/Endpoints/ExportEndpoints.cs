@@ -7,11 +7,12 @@ public static class ExportEndpoints
 {
     public static RouteGroupBuilder MapExportEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("export")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("export");
 
-        group.MapGet("/tasks/export-workspace", HandleExportWorkspaceTasks);
-        group.MapGet("/tasks/export-board/{boardId}", HandleExportBoardTasks);
+        group.MapGet("/tasks/export-workspace", HandleExportWorkspaceTasks)
+            .RequireAuthorization(NetptunePermissions.Export.Tasks);
+        group.MapGet("/tasks/export-board/{boardId}", HandleExportBoardTasks)
+            .RequireAuthorization(NetptunePermissions.Export.Tasks);
 
         return group;
     }

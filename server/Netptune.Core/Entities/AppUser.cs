@@ -45,23 +45,6 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
         };
     }
 
-    public WorkspaceUserViewModel ToWorkspaceViewModel(string workspaceOwnerId)
-    {
-        return new()
-        {
-            Id = Id,
-            Firstname = Firstname,
-            Lastname = Lastname,
-            PictureUrl = PictureUrl,
-            DisplayName = DisplayName,
-            Email = Email!,
-            UserName = UserName!,
-            LastLoginTime = LastLoginTime,
-            RegistrationDate = RegistrationDate,
-            IsWorkspaceOwner = workspaceOwnerId == Id,
-        };
-    }
-
     #region NavigationProperties
 
     [JsonIgnore]

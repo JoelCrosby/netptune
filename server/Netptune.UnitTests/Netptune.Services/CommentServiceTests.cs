@@ -17,7 +17,7 @@ namespace Netptune.UnitTests.Netptune.Services;
 
 public class CommentServiceTests
 {
-    private readonly Fixture Fixture = new();
+    private readonly Fixture Fixture = new ();
 
     private readonly CommentService Service;
 
@@ -32,11 +32,16 @@ public class CommentServiceTests
     [Fact]
     public async Task AddCommentToTask_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Create<AddCommentRequest>();
+        var request = Fixture
+            .Build<AddCommentRequest>().With(x => x.SystemId, "key-2")
+            .Create();
+
+        var viewModel = Fixture.Build<CommentViewModel>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(10);
+        UnitOfWork.Comments.GetCommentViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(2);
 
         var result = await Service.AddCommentToTask(request);

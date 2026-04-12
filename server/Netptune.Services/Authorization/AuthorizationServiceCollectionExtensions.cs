@@ -13,6 +13,8 @@ public static class AuthorizationServiceCollectionExtensions
 {
     public static void AddNeptuneAuthorization(this IServiceCollection services)
     {
+        services.AddSingleton<IAuthorizationPolicyProvider, NetptuneAuthorizationPolicyProvider>();
+
         services.AddAuthorizationBuilder()
             .SetDefaultPolicy(new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
@@ -28,7 +30,7 @@ public static class AuthorizationServiceCollectionExtensions
                 .Build());
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
-        services.AddScoped<IAuthorizationHandler, WorkspaceResourceAuthorizationHandler>();
+        services.AddScoped<IAuthorizationHandler, WorkspacePermissionResourceAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, GithubAuthorizationHandler>();
     }
 }

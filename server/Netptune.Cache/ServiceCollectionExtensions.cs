@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IUserCache, UserCache>();
         services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();
+        services.AddScoped<IWorkspacePermissionCache, WorkspacePermissionCache>();
         services.AddScoped<IInviteCache, InviteCache>();
         services.AddScoped<IWorkspaceCache, WorkspaceCache>();
     }

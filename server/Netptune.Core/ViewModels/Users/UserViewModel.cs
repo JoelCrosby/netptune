@@ -1,3 +1,5 @@
+using Netptune.Core.Authorization;
+
 namespace Netptune.Core.ViewModels.Users;
 
 public class UserViewModel
@@ -12,9 +14,9 @@ public class UserViewModel
 
     public string DisplayName { get; init; } = null!;
 
-    public string Email { get; init; } = null!;
+    public string? Email { get; init; }
 
-    public string UserName { get; init; } = null!;
+    public string? UserName { get; init; }
 
     public DateTime? LastLoginTime { get; init; }
 
@@ -23,5 +25,5 @@ public class UserViewModel
 
 public class WorkspaceUserViewModel : UserViewModel
 {
-    public bool IsWorkspaceOwner { get; init; }
+    public WorkspaceRole Role { get; init; }
 }

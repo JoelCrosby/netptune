@@ -13,7 +13,7 @@ public interface IUserService
 
     Task<UserViewModel?> GetByEmail(string email);
 
-    Task<List<WorkspaceUserViewModel>?> GetWorkspaceUsers();
+    Task<List<WorkspaceUserViewModel>> GetWorkspaceUsers();
 
     Task<ClientResponse<UserViewModel>> Update(UpdateUserRequest request);
 

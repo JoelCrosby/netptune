@@ -12,11 +12,14 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import { selectAuthTokenWithWorkspaceId } from '../auth/store/auth.selectors';
+import { WorkspaceService } from '../services/workspace.service';
+import { Logger } from '../util/logger';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private store = inject(Store);
   private router = inject(Router);
+  private workspaceService = inject(WorkspaceService);
 
   intercept<T>(
     req: HttpRequest<T>,
@@ -26,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       first(),
       switchMap(({ token, workspaceId }) => {
         if (!this.isApiRequest(req)) {
-          console.log('NOT API: ', req.url);
+          Logger.warn('NOT API: ', req.url);
 
           return next.handle(req);
         }
@@ -35,8 +38,10 @@ export class AuthInterceptor implements HttpInterceptor {
           url: environment.apiEndpoint + req.url,
         });
 
-        const workspaceRoute = this.getWorkspaceRoute();
+        const workspaceRoute = this.workspaceService.getWorkspaceRoute();
         const workspaceHeader = workspaceId ?? workspaceRoute;
+
+        console.log({ workspaceRoute, workspaceHeader });
 
         if (token) {
           req = req.clone({
@@ -69,20 +74,5 @@ export class AuthInterceptor implements HttpInterceptor {
 
   isApiRequest<T>(req: HttpRequest<T>): boolean {
     return req.url.startsWith('api/');
-  }
-
-  getWorkspaceRoute(): string | null {
-    const url = window.location.pathname;
-    const parts = url.split('/').filter((p) => !!p);
-
-    if (parts.length >= 1) {
-      const workspace = parts[0];
-
-      if (workspace !== 'workspaces') {
-        return workspace;
-      }
-    }
-
-    return null;
   }
 }

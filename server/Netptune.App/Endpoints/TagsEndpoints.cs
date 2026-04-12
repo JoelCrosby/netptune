@@ -11,16 +11,15 @@ public static class TagsEndpoints
 {
     public static RouteGroupBuilder MapTagsEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("tags")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("tags");
 
-        group.MapPost("/", HandlePost);
-        group.MapPost("/task", HandlePostTaskTag);
-        group.MapGet("/task/{systemId}", HandleGetTagsForTask);
-        group.MapGet("/workspace", HandleGetTagsForWorkspace);
-        group.MapDelete("/", HandleDelete);
-        group.MapDelete("/task", HandleDeleteFromTask);
-        group.MapPatch("/", HandleUpdateTag);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tags.Create);
+        group.MapPost("/task", HandlePostTaskTag).RequireAuthorization(NetptunePermissions.Tags.Assign);
+        group.MapGet("/task/{systemId}", HandleGetTagsForTask).RequireAuthorization(NetptunePermissions.Tags.Read);
+        group.MapGet("/workspace", HandleGetTagsForWorkspace).RequireAuthorization(NetptunePermissions.Tags.Read);
+        group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tags.Delete);
+        group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign);
+        group.MapPatch("/", HandleUpdateTag).RequireAuthorization(NetptunePermissions.Tags.Update);
 
         return group;
     }

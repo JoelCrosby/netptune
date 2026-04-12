@@ -10,11 +10,11 @@ public static class UsersEndpoints
     {
         var group = builder.MapGroup("users");
 
-        group.MapGet("/", HandleGetWorkspaceUsers).RequireAuthorization(NetptunePolicies.Workspace);
+        group.MapGet("/", HandleGetWorkspaceUsers).RequireAuthorization(NetptunePermissions.Members.Read);
         group.MapGet("/{id}", HandleGetUser);
-        group.MapPut("/{id}", HandleUpdateUser);
-        group.MapPost("/invite", HandleInvite).RequireAuthorization(NetptunePolicies.Workspace);
-        group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePolicies.Workspace);
+        group.MapPut("/{id}", HandleUpdateUser).RequireAuthorization(NetptunePermissions.Members.UpdateProfile);
+        group.MapPost("/invite", HandleInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
+        group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePermissions.Members.Remove);
         group.MapGet("/get-by-email", HandleGetUserByEmail);
         group.MapGet("/all", HandleGetAll);
 

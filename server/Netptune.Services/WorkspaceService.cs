@@ -1,6 +1,8 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
@@ -55,10 +57,16 @@ public class WorkspaceService : IWorkspaceService
 
             await UnitOfWork.CompleteAsync();
 
-            workspace.WorkspaceUsers.Add(new()
+            var permissions = WorkspaceRolePermissions
+                .GetDefaultPermissions(WorkspaceRole.Owner)
+                .ToList();
+
+            workspace.WorkspaceUsers.Add(new WorkspaceAppUser
             {
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
+                Role = WorkspaceRole.Owner,
+                Permissions = permissions,
             });
 
             var projectKey = await UnitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);

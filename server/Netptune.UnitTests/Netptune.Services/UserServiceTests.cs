@@ -127,10 +127,10 @@ public class UserServiceTests
         const string workspaceKey = "workspaceKey";
 
         var workspace = AutoFixtures.Workspace;
-        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var users = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetWorkspaceUsers(workspaceKey, Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns(users);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
         var result = await Service.GetWorkspaceUsers();
@@ -143,15 +143,14 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
 
-        var users = new List<AppUser> { AutoFixtures.AppUser };
+        var users = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetWorkspaceUsers(workspaceKey, Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns([]);
 
         var result = await Service.GetWorkspaceUsers();
 
-        result.Should().BeNull();
+        result.Should().BeEmpty();
     }
 
     [Fact]

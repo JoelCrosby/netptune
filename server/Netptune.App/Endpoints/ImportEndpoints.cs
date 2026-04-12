@@ -7,10 +7,10 @@ public static class ImportEndpoints
 {
     public static RouteGroupBuilder MapImportEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("import")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("import");
 
-        group.MapPost("/tasks/{boardId}", HandleImportWorkspaceTasks);
+        group.MapPost("/tasks/{boardId}", HandleImportWorkspaceTasks)
+            .RequireAuthorization(NetptunePermissions.Import.Tasks);
 
         return group;
     }

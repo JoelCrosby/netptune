@@ -65,16 +65,14 @@ public class UserService : IUserService
         return MapUsers(users);
     }
 
-    public async Task<List<WorkspaceUserViewModel>?> GetWorkspaceUsers()
+    public async Task<List<WorkspaceUserViewModel>> GetWorkspaceUsers()
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey);
+        var workspaceAppUsers = await UserRepository.GetWorkspaceAppUsers(workspaceKey, true);
 
-        if (workspace is null) return null;
+        if (workspaceAppUsers.Count == 0) return [];
 
-        var users = await UserRepository.GetWorkspaceUsers(workspaceKey, true);
-
-        return MapWorkspaceUsers(users, workspace.OwnerId!);
+        return workspaceAppUsers.ConvertAll(user => user.ToWorkspaceViewModel());
     }
 
     public async Task<ClientResponse<InviteUserResponse>> InviteUsersToWorkspace(IEnumerable<string> emails)
@@ -219,10 +217,5 @@ public class UserService : IUserService
     private static List<UserViewModel> MapUsers(List<AppUser> users)
     {
         return users.ConvertAll(user => user.ToViewModel());
-    }
-
-    private static List<WorkspaceUserViewModel> MapWorkspaceUsers(List<AppUser> users, string workspaceOwnerId)
-    {
-        return users.ConvertAll(user => user.ToWorkspaceViewModel(workspaceOwnerId));
     }
 }

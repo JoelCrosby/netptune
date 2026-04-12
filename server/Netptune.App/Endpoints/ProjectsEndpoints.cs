@@ -8,14 +8,13 @@ public static class ProjectsEndpoints
 {
     public static RouteGroupBuilder MapProjectsEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("projects")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("projects");
 
-        group.MapGet("/", HandleGetProjects);
-        group.MapGet("/{key}", HandleGetProject);
-        group.MapPut("/", HandlePut);
-        group.MapPost("/", HandlePost);
-        group.MapDelete("/{id}", HandleDelete);
+        group.MapGet("/", HandleGetProjects).RequireAuthorization(NetptunePermissions.Projects.Read);
+        group.MapGet("/{key}", HandleGetProject).RequireAuthorization(NetptunePermissions.Projects.Read);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Projects.Update);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Projects.Create);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Projects.Delete);
 
         return group;
     }

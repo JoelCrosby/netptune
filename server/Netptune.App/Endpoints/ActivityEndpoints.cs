@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services;
 
@@ -9,10 +10,9 @@ public static class ActivityEndpoints
 {
     public static RouteGroupBuilder MapActivityEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("activity")
-            .RequireAuthorization();
+        var group = builder.MapGroup("activity");
 
-        group.MapGet("/{entityType}/{id}", HandleGet);
+        group.MapGet("/{entityType}/{id}", HandleGet).RequireAuthorization(NetptunePermissions.Activity.Read);
 
         return group;
     }

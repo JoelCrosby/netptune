@@ -1,3 +1,4 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Models;
 using Netptune.Core.Relationships;
@@ -14,6 +15,10 @@ public interface IUserRepository : IRepository<AppUser, string>
     Task<List<AppUser>> GetByEmailRange(IEnumerable<string> emails, bool isReadonly = false);
 
     Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false);
+
+    Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false);
+
+    Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey);
 
     Task<WorkspaceAppUser> InviteUserToWorkspace(string userId, int workspaceId);
 

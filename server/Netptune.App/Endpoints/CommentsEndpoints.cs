@@ -8,12 +8,11 @@ public static class CommentsEndpoints
 {
     public static RouteGroupBuilder MapCommentsEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("comments")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("comments");
 
-        group.MapGet("/task/{systemId}", HandleGetCommentsForTask);
-        group.MapPost("/task", HandlePostTaskComment);
-        group.MapDelete("/{id}", HandleDelete);
+        group.MapGet("/task/{systemId}", HandleGetCommentsForTask).RequireAuthorization(NetptunePermissions.Comments.Read);
+        group.MapPost("/task", HandlePostTaskComment).RequireAuthorization(NetptunePermissions.Comments.Create);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.DeleteOwn);
 
         return group;
     }

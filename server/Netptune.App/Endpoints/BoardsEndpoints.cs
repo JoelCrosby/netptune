@@ -8,17 +8,16 @@ public static class BoardsEndpoints
 {
     public static RouteGroupBuilder MapBoardsEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("boards")
-            .RequireAuthorization(NetptunePolicies.Workspace);
+        var group = builder.MapGroup("boards");
 
-        group.MapGet("/{id}", HandleGet);
-        group.MapGet("/workspace", HandleGetBoardsInWorkspace);
-        group.MapGet("/project/{projectId}", HandleGetBoardsInProject);
-        group.MapGet("/view/{identifier}", HandleGetBoardView);
-        group.MapPut("/", HandlePut);
-        group.MapPost("/", HandlePost);
-        group.MapDelete("/{id}", HandleDelete);
-        group.MapGet("/is-unique/{identifier}", HandleIsSlugUnique);
+        group.MapGet("/{id}", HandleGet).RequireAuthorization(NetptunePermissions.Boards.Read);
+        group.MapGet("/workspace", HandleGetBoardsInWorkspace).RequireAuthorization(NetptunePermissions.Boards.Read);
+        group.MapGet("/project/{projectId}", HandleGetBoardsInProject).RequireAuthorization(NetptunePermissions.Boards.Read);
+        group.MapGet("/view/{identifier}", HandleGetBoardView).RequireAuthorization(NetptunePermissions.Boards.Read);
+        group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Boards.Update);
+        group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Boards.Create);
+        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Boards.Delete);
+        group.MapGet("/is-unique/{identifier}", HandleIsSlugUnique).RequireAuthorization(NetptunePermissions.Boards.Read);
 
         return group;
     }

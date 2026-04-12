@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
@@ -18,6 +19,7 @@ using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -165,10 +167,16 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (invite is {})
         {
-            await UnitOfWork.WorkspaceUsers.AddAsync(new()
+            var permissions = WorkspaceRolePermissions
+                .GetDefaultPermissions(WorkspaceRole.Member)
+                .ToList();
+
+            await UnitOfWork.WorkspaceUsers.AddAsync(new WorkspaceAppUser
             {
                 UserId = user.Id,
                 WorkspaceId = invite.WorkspaceId,
+                Role = WorkspaceRole.Member,
+                Permissions = permissions,
             });
 
             await UnitOfWork.CompleteAsync();

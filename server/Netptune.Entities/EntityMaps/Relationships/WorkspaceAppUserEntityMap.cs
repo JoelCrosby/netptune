@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
@@ -25,5 +27,15 @@ public class WorkspaceAppUserEntityMap : KeyedEntityMap<WorkspaceAppUser, int>
             .HasOne(workspaceUser => workspaceUser.User)
             .WithMany(user => user.WorkspaceUsers)
             .HasForeignKey(workspaceUser => workspaceUser.UserId);
+
+        builder
+            .Property(workspaceUser => workspaceUser.Role)
+            .HasConversion<int>()
+            .HasDefaultValue(WorkspaceRole.Member);
+
+        builder
+            .Property(workspaceUser => workspaceUser.Permissions)
+            .HasColumnType("jsonb")
+            .HasMaxLength(4096);
     }
 }

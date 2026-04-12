@@ -9,12 +9,12 @@ public static class StorageEndpoints
 {
     public static RouteGroupBuilder MapStorageEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("storage")
-            .RequireAuthorization();
+        var group = builder.MapGroup("storage");
 
-        group.MapPost("/profile-picture", HandleUploadProfilePicture);
+        group.MapPost("/profile-picture", HandleUploadProfilePicture)
+            .RequireAuthorization(NetptunePermissions.Storage.UploadProfilePicture);
         group.MapPost("/media", HandleUploadMedia)
-            .RequireAuthorization(NetptunePolicies.Workspace);
+            .RequireAuthorization(NetptunePermissions.Storage.UploadMedia);
 
         return group;
     }
