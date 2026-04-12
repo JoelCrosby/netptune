@@ -50,7 +50,7 @@ import { DocumentService } from '@static/services/document.service';
   ],
   template: `
     <div
-      class="flex max-h-[40px] min-h-[40px] w-full flex-row justify-center rounded-sm">
+      class="flex max-h-10 min-h-10 w-full flex-row justify-center rounded-sm">
       @if (!isEditActive()) {
         <button
           disableRipple="true"

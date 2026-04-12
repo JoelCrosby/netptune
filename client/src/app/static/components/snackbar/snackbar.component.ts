@@ -39,7 +39,7 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
   imports: [LucideDynamicIcon, LucideX],
   template: `
     <div
-      class="flex max-w-[480px] min-w-[280px] items-center gap-3 rounded-[var(--radius-sm)] border px-4 py-3 text-sm leading-tight font-medium shadow-lg"
+      class="flex max-w-120 min-w-70 items-center gap-3 rounded-sm border px-4 py-3 text-sm leading-tight font-medium shadow-lg"
       [class]="typeStyles()"
       role="status"
       aria-live="polite">
@@ -63,7 +63,7 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
         class="shrink-0 leading-none opacity-50 transition-opacity hover:opacity-100"
         aria-label="Dismiss"
         (click)="snackbarService.dismiss(item().id)">
-        <svg lucideX class="h-[1rem] w-[1rem] leading-none"></svg>
+        <svg lucideX class="h-4 w-4 leading-none"></svg>
       </button>
     </div>
   `,
