@@ -48,5 +48,6 @@
   border-radius: 0.4rem;
   gap: .4rem;
   padding: .4rem;
-  box-shadow: 0 2px 4px -1px black, 0 4px 5px 0 black, 0 1px 10px 0 black;
+      --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }

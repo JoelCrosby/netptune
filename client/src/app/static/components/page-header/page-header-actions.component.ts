@@ -9,6 +9,7 @@ import { LucideDynamicIcon, LucideEllipsis } from '@lucide/angular';
 import { FlatButtonComponent } from '../button/flat-button.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
+import { StrokedButtonComponent } from '../button/stroked-button.component';
 
 @Component({
   selector: 'app-page-header-actions',
@@ -24,7 +25,7 @@ import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
       }
       @if (overflowActions().length) {
         <button
-          app-flat-button
+          app-stroked-button
           aria-label="Actions"
           (click)="menu.toggle($any($event.currentTarget))">
           <svg lucideEllipsis></svg>
@@ -58,6 +59,7 @@ import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
     LucideEllipsis,
     LucideDynamicIcon,
     FlatButtonComponent,
+    StrokedButtonComponent,
     DropdownMenuComponent,
     MenuItemComponent,
   ],
