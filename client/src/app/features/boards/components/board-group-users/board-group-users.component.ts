@@ -12,17 +12,15 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     <div class="inline-flex flex-row-reverse items-center">
       @for (user of users(); track trackByUsers($index, user)) {
         <div
-          class="inline-block rounded-full cursor-pointer p-0.5 bg-background border-2 hover:z-[100] [&:not(:last-child)]:-ml-3"
+          class="bg-background inline-block cursor-pointer rounded-full border-2 p-0.5 hover:z-[100] [&:not(:last-child)]:-ml-3"
           [class.border-transparent]="!user.selected"
           [class.border-primary]="user.selected"
-          [style.z-index]="user.selected ? 99 : null"
-        >
+          [style.z-index]="user.selected ? 99 : null">
           <app-avatar
             [name]="user.displayName"
             [imageUrl]="user.pictureUrl"
             [borderRadius]="user.pictureUrl ? 0 : '50%'"
-            (click)="onUserClicked(user)"
-          >
+            (click)="onUserClicked(user)">
           </app-avatar>
         </div>
       }

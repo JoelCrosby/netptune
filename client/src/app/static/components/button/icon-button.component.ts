@@ -21,7 +21,8 @@ export class IconButtonComponent {
     const colors: Record<string, string> = {
       primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
       warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
-      default: 'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+      default:
+        'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
     };
 
     return `${base} ${colors[this.color()]}`;

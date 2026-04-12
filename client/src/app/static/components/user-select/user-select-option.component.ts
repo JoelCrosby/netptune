@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { AppUser } from '@core/models/appuser';
 import { AvatarComponent } from '../avatar/avatar.component';
 
@@ -8,14 +13,17 @@ import { AvatarComponent } from '../avatar/avatar.component';
   imports: [AvatarComponent],
   template: `
     <div
-      class="h-9 flex items-center gap-2 px-2 cursor-pointer text-sm rounded-sm my-0.5"
+      class="my-0.5 flex h-9 cursor-pointer items-center gap-2 rounded-sm px-2 text-sm"
       [class]="
         active() || selected()
           ? 'bg-primary text-primary-foreground'
           : 'hover:bg-accent text-foreground'
       "
       (click)="clicked.emit(option())">
-      <app-avatar [imageUrl]="option().pictureUrl" [name]="option().displayName" size="24" />
+      <app-avatar
+        [imageUrl]="option().pictureUrl"
+        [name]="option().displayName"
+        size="24" />
       <span>{{ option().displayName }}</span>
     </div>
   `,

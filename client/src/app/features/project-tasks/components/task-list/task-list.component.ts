@@ -21,13 +21,11 @@ import { TaskInlineComponent } from '../task-inline/task-inline.component';
       [items]="tasks()"
       [itemSize]="43"
       viewportClass="h-[calc(100vh-262px)] min-h-16"
-      [trackBy]="trackByTask"
-    >
+      [trackBy]="trackByTask">
       <ng-template #item let-task>
         <app-task-list-item
           class="mb-[3px] block overflow-hidden rounded-sm"
-          [task]="task"
-        />
+          [task]="task" />
       </ng-template>
 
       <ng-template #listFooter>
@@ -40,7 +38,8 @@ import { TaskInlineComponent } from '../task-inline/task-inline.component';
           <div class="flex h-full flex-col items-center justify-center">
             <i class="far fa-compass my-8 text-[6rem]"></i>
             <h4 class="mx-16 mb-12 text-center text-sm font-normal">
-              There are currently no tasks. Use the Create Task button above to create a task
+              There are currently no tasks. Use the Create Task button above to
+              create a task
             </h4>
           </div>
         </div>

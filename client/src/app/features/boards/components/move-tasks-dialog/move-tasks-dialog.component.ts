@@ -30,7 +30,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     <p>Select the group you wish to move the selected tasks to</p>
 
     <div app-dialog-content>
-      <div class="flex flex-row flex-wrap my-8 justify-between">
+      <div class="my-8 flex flex-row flex-wrap justify-between">
         @for (group of groups(); track group.id) {
           <button
             app-stroked-button
@@ -39,9 +39,11 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
             [class.text-foreground]="selected() === group.id"
             [class.bg-primary/25]="selected() === group.id"
             (click)="onGroupClicked(group.id)">
-            <div class="flex flex-col justify-around items-center gap-[0.2rem] w-full">
+            <div
+              class="flex w-full flex-col items-center justify-around gap-[0.2rem]">
               <span>{{ group.name }}</span>
-              <div class="h-[0.2rem] w-full rounded-full bg-[rgba(var(--foreground-rgb),0.1)] [.selected_&]:bg-primary/40"></div>
+              <div
+                class="[.selected_&]:bg-primary/40 h-[0.2rem] w-full rounded-full bg-[rgba(var(--foreground-rgb),0.1)]"></div>
             </div>
           </button>
         }

@@ -46,8 +46,7 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
       @if (icon()) {
         <svg
           [lucideIcon]="icon()!"
-          class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"
-          ></svg>
+          class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"></svg>
       }
 
       <span class="flex-1">{{ item().message }}</span>

@@ -51,10 +51,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
     <div app-dialog-actions align="end">
       <button app-stroked-button (click)="dialogRef.close()">Cancel</button>
-      <button
-        app-flat-button
-        [disabled]="!selectedFile()"
-        (click)="onUpload()">
+      <button app-flat-button [disabled]="!selectedFile()" (click)="onUpload()">
         Upload
       </button>
     </div>

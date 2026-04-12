@@ -22,8 +22,7 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
         label="Theme"
         placeholder="Select Theme"
         [formField]="settingsForm.theme"
-        (changed)="onThemeSelect($event)"
-      >
+        (changed)="onThemeSelect($event)">
         @for (theme of themes; track theme.value) {
           <app-form-select-option [value]="theme.value">
             {{ theme.label }}

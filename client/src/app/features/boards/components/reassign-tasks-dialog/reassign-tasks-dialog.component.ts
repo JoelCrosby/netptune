@@ -32,7 +32,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     <p>Select the user you wish to assign the selected tasks to</p>
 
     <div app-dialog-content>
-      <div class="flex flex-row flex-wrap m-8 justify-center">
+      <div class="m-8 flex flex-row flex-wrap justify-center">
         @for (user of users(); track user) {
           <button
             app-stroked-button
