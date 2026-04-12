@@ -1,3 +1,7 @@
+@use 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 @use 'styles/components';
 @use 'styles/modals';
 @use 'styles/menu';
@@ -5,15 +9,10 @@
 @use 'styles/form-control';
 @use 'styles/form-select';
 
-@use 'tailwindcss';
-
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
   --border-radius: 8px;
   --border-radius-small: 3px;
 }
-
 
 @theme inline {
   --color-primary: var(--primary);
@@ -148,8 +147,4 @@
   --editor-link-background-color: #2f2f2f;
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
-}
-
-cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
-  padding-right: 0.4rem;
 }

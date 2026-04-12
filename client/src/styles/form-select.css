@@ -1,0 +1,52 @@
+.netp-form-select {
+  cursor: pointer;
+}
+
+.netp-form-select input {
+  cursor: pointer;
+}
+
+.netp-form-select input::selection {
+  background: transparent;
+}
+
+.netp-form-select .arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nept-form-select-option {
+  cursor: pointer;
+  border-radius: .2rem;
+  padding: .4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+.nept-form-select-option:hover {
+  background-color: var(--hover);
+}
+
+.nept-form-select-option:hover.selected {
+  background-color: var(--primary-selected-hover);
+}
+
+.nept-form-select-option.selected {
+  background-color: var(--primary-selected);
+}
+
+.form-select-dropdown {
+  border: 1px solid var(--border);
+  background-color: var(--seconday-background);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 0.4rem;
+  gap: .4rem;
+  padding: .4rem;
+  box-shadow: 0 2px 4px -1px black, 0 4px 5px 0 black, 0 1px 10px 0 black;
+}

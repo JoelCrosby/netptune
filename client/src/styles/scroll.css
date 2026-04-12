@@ -18,3 +18,7 @@
   scrollbar-color: var(--scrollbar-foreground) transparent;
   scrollbar-width: auto;
 }
+
+cdk-virtual-scroll-viewport .cdk-virtual-scroll-content-wrapper {
+  padding-right: 0.4rem;
+}
