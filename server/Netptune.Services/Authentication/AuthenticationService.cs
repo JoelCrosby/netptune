@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 using Flurl;
@@ -88,7 +89,34 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await UserManager.UpdateAsync(appUser);
 
-        return LoginResult.Success(GenerateToken(appUser));
+        return LoginResult.Success(await GenerateTicket(appUser));
+    }
+
+    public async Task<LoginResult> Refresh(RefreshTokenRequest request)
+    {
+        var hasedToken = HashToken(request.RefreshToken);
+        var existing = await UnitOfWork.RefreshTokens.GetByTokenAsync(hasedToken);
+
+        if (existing is null || !existing.IsActive)
+        {
+            return LoginResult.Failed("Invalid or expired refresh token");
+        }
+
+        var appUser = await UserManager.FindByIdAsync(existing.UserId);
+
+        if (appUser is null)
+        {
+            return LoginResult.Failed("Invalid or expired refresh token");
+        }
+
+        await UnitOfWork.RefreshTokens.RevokeAsync(hasedToken);
+        await UnitOfWork.RefreshTokens.RemoveExpiredAsync(appUser.Id);
+
+        var ticket = await GenerateTicket(appUser);
+
+        await UnitOfWork.CompleteAsync();
+
+        return LoginResult.Success(ticket);
     }
 
     public async Task<LoginResult> LogInViaProvider()
@@ -119,7 +147,9 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await UserManager.UpdateAsync(user);
 
-        return LoginResult.Success(GenerateToken(user));
+        var ticket = await GenerateTicket(user);
+
+        return LoginResult.Success(ticket);
     }
 
     public async Task<RegisterResult> Register(RegisterRequest model)
@@ -210,7 +240,9 @@ public class NetptuneAuthService : INetptuneAuthService
         await LogNewlyRegisteredUserIn(appUser);
         await SendWelcomeEmail(appUser);
 
-        return RegisterResult.Success(GenerateToken(appUser));
+        var ticket = await GenerateTicket(appUser);
+
+        return RegisterResult.Success(ticket);
     }
 
     public async Task<RegisterResult> ConfirmEmail(string userId, string code)
@@ -228,7 +260,9 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (!result.Succeeded) return RegisterResult.Failed();
 
-        return RegisterResult.Success(GenerateToken(user));
+        var ticket = await GenerateTicket(user);
+
+        return RegisterResult.Success(ticket);
     }
 
     public async Task<ClientResponse> RequestPasswordReset(RequestPasswordResetRequest request)
@@ -278,7 +312,9 @@ public class NetptuneAuthService : INetptuneAuthService
 
         await LogUserIn(user);
 
-        return LoginResult.Success(GenerateToken(user));
+        var ticket = await GenerateTicket(user);
+
+        return LoginResult.Success(ticket);
     }
 
     public async Task<ClientResponse> ChangePassword(ChangePasswordRequest request)
@@ -368,20 +404,47 @@ public class NetptuneAuthService : INetptuneAuthService
         return DateTime.Now.AddDays(Convert.ToDouble(ExpireDays));
     }
 
-    private AuthenticationTicket GenerateToken(AppUser appUser)
+    private async Task<AuthenticationTicket> GenerateTicket(AppUser appUser)
     {
         var expireDays = GetExpireDays();
+        var refreshToken = await CreateRefreshToken(appUser.Id);
 
         return new AuthenticationTicket
         {
             Token = GenerateJwtToken(appUser, expireDays),
+            RefreshToken = refreshToken,
             UserId = appUser.Id,
             EmailAddress = appUser.Email!,
             DisplayName = appUser.DisplayName,
-            Issued = DateTime.Now,
+            Issued = DateTime.UtcNow,
             Expires = expireDays,
             PictureUrl = appUser.PictureUrl,
         };
+    }
+
+    private async Task<string> CreateRefreshToken(string userId)
+    {
+        var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        var hashedToken = HashToken(token);
+
+        var refreshToken = new RefreshToken
+        {
+            Token = hashedToken,
+            UserId = userId,
+            Created = DateTime.UtcNow,
+            Expires = DateTime.UtcNow.AddDays(30),
+        };
+
+        await UnitOfWork.RefreshTokens.AddAsync(refreshToken);
+        await UnitOfWork.CompleteAsync();
+
+        return token;
+    }
+
+    private static string HashToken(string token)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        return Convert.ToHexString(bytes);
     }
 
     private string GenerateJwtToken(AppUser user, DateTime expires)

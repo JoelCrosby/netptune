@@ -4,6 +4,8 @@ public class AuthenticationTicket : CurrentUserResponse
 {
     public object Token { get; set; } = null!;
 
+    public string RefreshToken { get; set; } = null!;
+
     public DateTime Issued { get; set; }
 
     public DateTime Expires { get; set; }

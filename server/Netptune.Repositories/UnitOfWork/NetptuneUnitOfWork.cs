@@ -21,6 +21,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IReactionRepository Reactions { get; }
     public ITagRepository Tags { get; }
     public IActivityLogRepository ActivityLogs { get; }
+    public IRefreshTokenRepository RefreshTokens { get; }
 
     public NetptuneUnitOfWork(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
     {
@@ -37,5 +38,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Reactions = new ReactionRepository(context, connectionFactory);
         Tags = new TagRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
+        RefreshTokens = new RefreshTokenRepository(context, connectionFactory);
     }
 }

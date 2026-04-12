@@ -10,6 +10,8 @@ public interface INetptuneAuthService
 {
     Task<LoginResult> LogIn(TokenRequest model);
 
+    Task<LoginResult> Refresh(RefreshTokenRequest request);
+
     Task<LoginResult> LogInViaProvider();
 
     Task<RegisterResult> Register(RegisterRequest model);

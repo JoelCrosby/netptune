@@ -11,6 +11,9 @@ namespace Netptune.Entities.Contexts;
 
 public class DataContext : IdentityDbContext<AppUser>
 {
+    // Auth
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
     // Core data models
     public DbSet<Project> Projects { get; set; } = null!;
     public DbSet<Workspace> Workspaces { get; set; } = null!;

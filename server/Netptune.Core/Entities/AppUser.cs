@@ -68,5 +68,8 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
     [JsonIgnore]
     public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();
 
+    [JsonIgnore]
+    public ICollection<RefreshToken> RefreshTokens { get; init; } = new HashSet<RefreshToken>();
+
     #endregion
 }

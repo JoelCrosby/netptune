@@ -30,4 +30,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     ITagRepository Tags { get; }
 
     IActivityLogRepository ActivityLogs { get; }
+
+    IRefreshTokenRepository RefreshTokens { get; }
 }

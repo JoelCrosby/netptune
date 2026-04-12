@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Services.Authentication;
@@ -24,6 +25,7 @@ public static class AuthEndpoints
         group.MapPatch("/change-password", HandleChangePassword).RequireAuthorization();
         group.MapGet("/current-user", HandleCurrentUser).AllowAnonymous();
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
+        group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/provider-login-redirect", HandleProviderLoginRedirect)
             .RequireAuthorization(AuthenticationSchemes.Github);
@@ -38,6 +40,17 @@ public static class AuthEndpoints
         TokenRequest request)
     {
         var result = await authenticationService.LogIn(request);
+
+        if (!result.IsSuccess) return Results.Unauthorized();
+
+        return Results.Ok(result.Ticket);
+    }
+
+    public static async Task<IResult> HandleRefresh(
+        INetptuneAuthService authenticationService,
+        RefreshTokenRequest request)
+    {
+        var result = await authenticationService.Refresh(request);
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
