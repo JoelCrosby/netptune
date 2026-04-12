@@ -1,19 +1,16 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as actions from './layout.actions';
-import { MatDrawerMode } from '@angular/material/sidenav';
 
 const initialState: LayoutState = {
   sideNavOpen: false,
   sideMenuOpen: true,
   isMobileView: false,
-  sideNavMode: 'side' as MatDrawerMode,
 };
 
 export interface LayoutState {
   sideNavOpen: boolean;
   sideMenuOpen: boolean;
   isMobileView: boolean;
-  sideNavMode: MatDrawerMode;
 }
 
 const reducer = createReducer(
@@ -72,7 +69,6 @@ const reducer = createReducer(
     (state, { isMobileView }): LayoutState => ({
       ...state,
       isMobileView,
-      sideNavMode: (isMobileView ? 'over' : 'side') as MatDrawerMode,
     })
   )
 );

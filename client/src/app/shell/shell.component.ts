@@ -1,18 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  viewChild,
-} from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { toggleSideMenu } from '@core/store/layout/layout.actions';
-import {
-  selectSideMenuMode,
-  selectSideMenuOpen,
-} from '@core/store/layout/layout.selectors';
+import { selectSideMenuOpen } from '@core/store/layout/layout.selectors';
 import { Store } from '@ngrx/store';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
@@ -41,12 +32,10 @@ export class ShellComponent {
   private router = inject(Router);
 
   shell = inject(ShellService);
-  sideNav = viewChild.required(MatSidenav);
 
   authenticated = this.store.selectSignal(selectIsAuthenticated);
 
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
-  sideMenuMode = this.store.selectSignal(selectSideMenuMode);
 
   onSidenavClosedStart() {
     this.store.dispatch(toggleSideMenu());

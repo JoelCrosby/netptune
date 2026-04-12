@@ -15,5 +15,3 @@ rules:
     - 0
   clean-import-paths:
     - 0
-  material-theme:
-    - 0
