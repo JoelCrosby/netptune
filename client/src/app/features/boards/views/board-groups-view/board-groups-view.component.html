@@ -34,7 +34,7 @@
       <div
         cdkDropList
         appScrollShadow
-        class="board-groups custom-scroll flex w-full flex-1 flex-row overflow-x-scroll pb-4 max-h-[calc(100vh-180px)] max-[600px]:max-h-[calc(100vh-154px)]"
+        class="board-groups rounded-lg overflow-hidden custom-scroll flex w-full flex-1 flex-row overflow-x-scroll pb-4 max-h-[calc(100vh-180px)] max-[600px]:max-h-[calc(100vh-154px)]"
         cdkDropListOrientation="horizontal"
         (cdkDropListDropped)="drop($event)"
         [cdkDropListData]="groups"
@@ -42,7 +42,7 @@
         @for (group of groups; track trackBoardGroup($index, group)) {
           <app-board-group
             cdkDrag
-            class="board-group mr-4 flex w-[300px] flex-none flex-col overflow-hidden rounded-[.4rem]"
+            class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
             [cdkDragData]="group"
             [group]="group"
             [siblingIds]="getsiblingIds(group, groups)"
@@ -51,7 +51,7 @@
             <span
               cdkDragHandle
               class="group/header flex cursor-pointer flex-row items-center justify-between uppercase">
-              <div class="flex h-[50px] w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px] text-foreground/60">
+              <div class="flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px] text-foreground/60">
                 @if (group.type === 2) {
                   <svg
                     lucideCheck
@@ -60,7 +60,7 @@
                     ></svg>
                 }
                 <app-inline-edit-input
-                  class="ml-[.2rem] w-full rounded-sm px-1.5 py-1 transition-colors duration-200 hover:bg-primary/[.06]"
+                  class="ml-[.2rem] w-full rounded-sm px-1.5 py-1 transition-colors duration-200 hover:bg-primary/6"
                   [size]="group.name.length"
                   [value]="group.name"
                   (submitted)="onGroupNameSubmitted($event, group)"
@@ -78,7 +78,7 @@
             </span>
           </app-board-group>
         }
-        <app-create-board-group class="board-group mr-4 flex w-[300px] flex-none flex-col overflow-hidden rounded-[.4rem]" />
+        <app-create-board-group class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
       </div>
     }
   }

@@ -62,14 +62,14 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     StrokedButtonComponent,
   ],
   template: `<div
-    class="relative flex h-full flex-1 flex-col rounded-[var(--border-radius)] border border-[var(--border)] bg-[var(--board-group)]">
+    class="border-border bg-board-group relative flex h-full flex-1 flex-col rounded border">
     <ng-content />
 
     <div #container class="h-full flex-1">
       <div
         cdkDropList
         appScrollShadowVertical
-        class="board-task-list custom-scroll flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
+        class="custom-scroll board-task-list flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
         [id]="dragListId()"
         [cdkDropListConnectedTo]="siblingIds()"
         (cdkDropListDropped)="drop($event)"

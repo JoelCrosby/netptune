@@ -31,7 +31,7 @@ import {
         </h4>
       }
       <div
-        class="bg-board-group mb-5 flex h-full min-h-[196px] flex-1 flex-col overflow-hidden rounded-sm p-2.5">
+        class="bg-board-group mb-5 flex h-full min-h-49 flex-1 flex-col overflow-hidden rounded p-2.5">
         @if (items() !== undefined) {
           @if (items()?.length) {
             <cdk-virtual-scroll-viewport

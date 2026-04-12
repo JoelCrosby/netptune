@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormToggleComponent } from '@static/components/form-toggle/form-toggle.component';
+import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 
 @Component({
   selector: 'app-workspace-settings',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormToggleComponent],
+  imports: [FlatButtonComponent],
   template: `<h3 class="font-overpass text-[1.4rem] font-normal">Workspace</h3>
 
-    <app-form-toggle label="Public" /> `,
+    <div class="mt-4 flex flex-col items-start gap-4">
+      <button app-flat-button>Mark Workspace as Public</button>
+    </div>`,
 })
 export class WorkspaceSettings {}

@@ -47,7 +47,7 @@ import { DocumentService } from '@static/services/document.service';
       @if (!isEditActive()) {
         <button
           disableRipple="true"
-          class="text-primary hover:bg-primary/10 flex w-full cursor-pointer flex-row items-center justify-start rounded-none px-[2.3rem] text-[.8rem] font-medium"
+          class="text-primary hover:bg-primary/10 flex w-full cursor-pointer flex-row items-center justify-start rounded-none rounded-sm px-[2.3rem] text-[.8rem] font-medium"
           (click)="addTaskClicked()">
           <svg lucidePlus class="text-primary h-4 w-4"></svg>
           <span class="text-primary text-md mx-4">Add Task</span>

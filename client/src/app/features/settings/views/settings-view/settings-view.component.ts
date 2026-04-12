@@ -6,7 +6,6 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { WorkspaceSettings } from '@settings/components/workspace-settings/workspace-settings.component';
 
 @Component({
-  templateUrl: './settings-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -15,5 +14,18 @@ import { WorkspaceSettings } from '@settings/components/workspace-settings/works
     TagsComponent,
     WorkspaceSettings,
   ],
+  template: `<app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-header title="Settings" />
+
+    <app-settings />
+
+    <div class="border-border my-8 border-b-2"></div>
+
+    <app-tags />
+
+    <div class="border-border my-8 border-b-2"></div>
+
+    <app-workspace-settings />
+  </app-page-container> `,
 })
 export class SettingsViewComponent {}

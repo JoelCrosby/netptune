@@ -18,7 +18,8 @@ import { CardComponent } from '@static/components/card/card.component';
     StrokedButtonComponent,
   ],
   template: `
-    <app-card class="create-workspace-card">
+    <app-card
+      class="text-foreground/80 flex flex-col border-none bg-transparent shadow-none">
       <app-card-title>Create a new Workspace</app-card-title>
       <app-card-content>
         <p class="card-text">
@@ -35,9 +36,9 @@ import { CardComponent } from '@static/components/card/card.component';
           </button>
         </app-card-actions>
       </app-card-content>
-      <div class="card-footer">
+      <div class="text-lg">
         <small class="text-muted"
-          >Created with <span class="text-red">❤</span> by Joel</small
+          >Created with <span class="text-red-500">❤</span> by Joel</small
         >
       </div>
     </app-card>

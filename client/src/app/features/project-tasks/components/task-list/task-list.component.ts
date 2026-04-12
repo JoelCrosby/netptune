@@ -17,14 +17,13 @@ import { TaskInlineComponent } from '../task-inline/task-inline.component';
   imports: [ListComponent, TaskListItemComponent, TaskInlineComponent],
   template: `
     <app-list
-      header="Tasks"
       [items]="tasks()"
       [itemSize]="43"
       viewportClass="h-[calc(100vh-262px)] min-h-16"
       [trackBy]="trackByTask">
       <ng-template #item let-task>
         <app-task-list-item
-          class="mb-[3px] block overflow-hidden rounded-sm"
+          class="mb-0.75 block overflow-hidden rounded-sm"
           [task]="task" />
       </ng-template>
 

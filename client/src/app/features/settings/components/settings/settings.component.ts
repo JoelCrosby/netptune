@@ -14,11 +14,13 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 @Component({
   selector: 'app-settings',
   template: `
-    <h3 class="font-overpass text-[1.4rem] font-normal">User Preferences</h3>
+    <h3 class="font-overpass mb-4 text-[1.4rem] font-normal">
+      User Preferences
+    </h3>
 
     @if (settings(); as settings) {
       <app-form-select
-        class="w-[400px]"
+        class="w-100"
         label="Theme"
         placeholder="Select Theme"
         [formField]="settingsForm.theme"

@@ -2,6 +2,7 @@
 
 @import "./styles/components";
 @import "./styles/modals";
+@import "./styles/scroll";
 @import "./styles/menu";
 @import "./styles/editor";
 @import "./styles/form-control";

@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 })
 export class CardTitleComponent {
   @HostBinding('class') className =
-    'justify-between mb-[12px] text-2xl font-medium font-overpass text-foreground flex flex-row justify-between';
+    'mb-3 text-2xl font-medium font-overpass text-foreground flex flex-row justify-between';
 }
