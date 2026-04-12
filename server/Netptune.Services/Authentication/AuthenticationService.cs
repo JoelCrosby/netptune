@@ -401,7 +401,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
     private DateTime GetExpireDays()
     {
-        return DateTime.Now.AddDays(Convert.ToDouble(ExpireDays));
+        return DateTime.UtcNow.AddDays(Convert.ToDouble(ExpireDays));
     }
 
     private async Task<AuthenticationTicket> GenerateTicket(AppUser appUser)

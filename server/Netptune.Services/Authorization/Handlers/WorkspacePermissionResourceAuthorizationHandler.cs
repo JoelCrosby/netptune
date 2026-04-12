@@ -19,6 +19,12 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WorkspacePermissionRequirement requirement)
     {
+        if (context.User.Identity?.IsAuthenticated != true)
+        {
+            context.Fail();
+            return;
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
 
         var userId = Identity.GetCurrentUserId();

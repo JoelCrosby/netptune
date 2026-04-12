@@ -195,6 +195,7 @@ public static class AuthEndpoints
                 expires = result.Ticket?.Expires,
                 issued = result.Ticket?.Issued,
                 token = result.Ticket?.Token,
+                refreshToken = result.Ticket?.RefreshToken,
                 displayName = result.Ticket?.DisplayName,
                 email = result.Ticket?.EmailAddress,
                 pictureUrl = result.Ticket?.PictureUrl,
