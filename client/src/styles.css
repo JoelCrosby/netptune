@@ -1,13 +1,13 @@
-@use 'tailwindcss';
+@import "tailwindcss";
+
+@import "./styles/components";
+@import "./styles/modals";
+@import "./styles/menu";
+@import "./styles/editor";
+@import "./styles/form-control";
+@import "./styles/form-select";
 
 @custom-variant dark (&:where(.dark, .dark *));
-
-@use 'styles/components';
-@use 'styles/modals';
-@use 'styles/menu';
-@use 'styles/editor';
-@use 'styles/form-control';
-@use 'styles/form-select';
 
 :root {
   --border-radius: 8px;
