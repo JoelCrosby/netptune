@@ -2,6 +2,7 @@ using System.Net;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
+using Netptune.Services.Authorization;
 using Netptune.Services.Authorization.Requirements;
 
 using Testcontainers.Nats;
@@ -50,6 +52,9 @@ public sealed class NetptuneFixture : IAsyncLifetime
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddTransient<IPolicyEvaluator>(serviceProvider => new TestPolicyEvaluator(
+                        ActivatorUtilities.CreateInstance<PolicyEvaluator>(serviceProvider)));
+
                     services.Replace<IStorageService, TestStorageService>();
 
                     services.AddAuthorization(options =>

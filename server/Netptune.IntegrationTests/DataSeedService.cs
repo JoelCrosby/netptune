@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -88,6 +89,7 @@ internal sealed class DataSeedService : IHostedService
         var workspaceUsers = new Faker<WorkspaceAppUser>()
             .RuleFor(p => p.User, f => users.ElementAt(f.IndexFaker))
             .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
+            .RuleFor(p => p.Permissions, _ => WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Owner).ToList())
             .Generate(users.Count);
 
         var projects = new Faker<Project>()

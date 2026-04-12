@@ -2,10 +2,11 @@ namespace Netptune.Core.Responses.Common;
 
 public readonly struct ClientResponse
 {
-    public bool IsSuccess { get; }
-    public string? Message { get; }
+    public bool IsSuccess { get; init; }
+    public string? Message { get; init; }
     private readonly ResponseType ResponseType;
 
+    // ReSharper disable once UnusedMember.Global
     public ClientResponse(bool isSuccess, string? message, ResponseType responseType =  ResponseType.Default)
     {
         IsSuccess = isSuccess;
@@ -15,7 +16,10 @@ public readonly struct ClientResponse
 
     public bool IsNotFound => ResponseType == ResponseType.NotFound;
 
-    public static readonly ClientResponse Success = new (true, null);
+    public static readonly ClientResponse Success = new ()
+    {
+        IsSuccess = true,
+    };
 
     public static ClientResponse Failed(string? message = null)
     {
