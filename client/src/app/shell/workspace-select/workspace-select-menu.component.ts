@@ -17,7 +17,7 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
       <div
         class="border-border bg-card menu-scale-in flex h-full origin-top flex-col overflow-x-hidden border text-left">
         @if (!workspaces().length) {
-          <div class="flex h-[38px] items-center px-2 font-[inherit] text-sm">
+          <div class="flex h-9.5 items-center px-2 font-[inherit] text-sm">
             No results found...
           </div>
         }
@@ -31,14 +31,14 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
             autocomplete="off" />
         }
         <div
-          class="custom-scroll max-h-[216px] overflow-y-auto py-[.4rem] pl-[.4rem] [scrollbar-gutter:stable]">
+          class="custom-scroll max-h-54 overflow-y-auto py-[.4rem] pl-[.4rem] [scrollbar-gutter:stable]">
           @for (option of filteredOptions(); track option.id) {
             <div
-              class="hover:bg-hover my-[.2rem] flex h-[38px] cursor-pointer items-center rounded-sm px-2 font-[inherit] text-sm"
+              class="hover:bg-hover my-[.2rem] flex h-9.5 cursor-pointer items-center rounded-sm px-2 font-[inherit] text-sm"
               [class.bg-primary]="option.id === selected()?.id"
               (click)="optionSelect.emit(option)">
               <app-workspace-badge
-                class="mr-[14px]"
+                class="mr-3.5"
                 [color]="option.metaInfo?.color"
                 [letter]="option.name[0]" />
               <span>{{ option.name }}</span>

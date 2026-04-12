@@ -49,7 +49,7 @@ import { DocumentService } from '@static/services/document.service';
     [class.border-primary]="!loading()"
     #taskInlineContainer>
     <textarea
-      class="text-foreground bg-card w-full resize-none border-0 [font-family:inherit] text-sm tracking-[0.1px] outline-none"
+      class="text-foreground bg-card w-full resize-none border-0 font-[inherit] text-sm tracking-[0.1px] outline-none"
       #textarea
       [formField]="taskForm.name"
       (keydown.enter)="onSubmit($event)"

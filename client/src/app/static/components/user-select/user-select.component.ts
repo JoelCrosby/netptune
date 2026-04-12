@@ -90,7 +90,7 @@ type User = AssigneeViewModel | AppUser;
             [formField]="searchForm.term"
             (click)="$event.stopPropagation()" />
         }
-        <div class="max-h-[216px] overflow-y-auto p-1">
+        <div class="max-h-54 overflow-y-auto p-1">
           @for (option of filteredOptions(); track option.id) {
             <app-user-select-option
               [option]="option"

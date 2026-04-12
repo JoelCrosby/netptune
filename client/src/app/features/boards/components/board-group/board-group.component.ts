@@ -95,7 +95,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
         }
 
         @if (showAddButton()) {
-          <div class="h-[46px] p-[.3rem]">
+          <div class="h-11.5 p-[.3rem]">
             <button
               app-stroked-button
               color="primary"
@@ -105,7 +105,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
             </button>
           </div>
         } @else {
-          <div class="h-[46px] min-h-[46px] w-full">{{ ' ' }}</div>
+          <div class="h-11.5 min-h-11.5 w-full">{{ ' ' }}</div>
         }
       </div>
     </div>
