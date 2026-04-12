@@ -18,6 +18,11 @@ headlamp:
   oauth2:
     allowed_email_domain: "live.co.uk"
 
+pgadmin:
+  enabled: true
+  image: "dpage/pgadmin4:latest"
+  host: "pgadmin.netptune.co.uk"
+
 otelCollector:
   enabled: true
   image: "otel/opentelemetry-collector-contrib:latest"
@@ -51,6 +56,12 @@ secrets:
   grafana:
     admin_password: ""
   headlamp:
+    github_client_id: ""
+    github_client_secret: ""
+    cookie_secret: ""
+  pgadmin:
+    admin_email: ""
+    admin_password: ""
     github_client_id: ""
     github_client_secret: ""
     cookie_secret: ""

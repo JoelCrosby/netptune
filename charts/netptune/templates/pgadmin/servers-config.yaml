@@ -1,0 +1,27 @@
+{{- if .Values.pgadmin.enabled }}
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "pgadmin-servers-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "pgadmin"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "netptune",
+          "Group": "Servers",
+          "Host": "postgres-service",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "{{ .Values.config.postgres.POSTGRES_USER }}",
+          "SSLMode": "prefer",
+          "PassFile": "/pgpass"
+        }
+      }
+    }
+{{- end }}
