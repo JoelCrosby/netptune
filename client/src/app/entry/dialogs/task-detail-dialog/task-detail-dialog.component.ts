@@ -2,6 +2,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   OnDestroy,
@@ -150,6 +151,7 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
                 <app-form-select-tags
                   class="tags-autocomplete"
                   placeholder="Add a Tag..."
+                  [value]="selectedTags()"
                   (changed)="onTagsSelectionChanged($event)">
                   @for (tag of tags(); track tag) {
                     <app-form-select-tags-option [value]="tag">
@@ -174,7 +176,7 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
               >Description</label
             >
             <app-editor
-              class="border-foreground/30 mt-2 flex max-h-[calc(100vh_-_960px)] overflow-y-auto rounded-sm border border-2 px-4 py-1"
+              class="border-foreground/30 mt-2 flex max-h-[calc(100vh-960px)] overflow-y-auto rounded-sm border-2 px-4 py-1"
               aria-labelledby="description"
               [formField]="taskForm.description"
               placeholder="Add a Description..."
@@ -187,7 +189,7 @@ import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
         <app-task-dates [task]="task" />
       </div>
     } @else {
-      <div class="flex h-[974px] flex-col items-center justify-center">
+      <div class="flex h-243.5 flex-col items-center justify-center">
         <app-spinner diameter="64" />
       </div>
     }
@@ -239,6 +241,7 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   task = this.store.selectSignal(TaskSelectors.selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
+  selectedTags = computed(() => this.task()?.tags ?? []);
 
   taskFormModel = signal({
     name: '',
