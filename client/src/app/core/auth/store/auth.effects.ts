@@ -58,7 +58,8 @@ export class AuthEffects implements OnInitEffects {
           actions.registerFail,
           actions.confirmEmailSuccess,
           actions.confirmEmailFail,
-          actions.currentUserSuccess
+          actions.currentUserSuccess,
+          actions.refreshTokenSuccess
         ),
         concatLatestFrom(() => this.store.select(selectAuthFeature)),
         tap(([_, settings]) => {

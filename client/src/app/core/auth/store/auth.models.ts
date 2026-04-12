@@ -50,6 +50,7 @@ export interface UserToken extends UserResponse {
   [key: string]: unknown;
   expires: Date;
   token: string;
+  refreshToken: string;
 }
 
 export interface AuthCodeRequest {

@@ -27,6 +27,7 @@ export const authProvider: ResolveFn<boolean> = (
 
   const displayName = route.queryParamMap.get('displayName') ?? '';
   const pictureUrl = route.queryParamMap.get('pictureUrl') ?? '';
+  const refreshToken = route.queryParamMap.get('refreshToken') ?? '';
 
   if (!token || !email || !userId) {
     return of(false);
@@ -36,6 +37,7 @@ export const authProvider: ResolveFn<boolean> = (
     expires,
     issued,
     token,
+    refreshToken,
     email,
     userId,
     displayName,

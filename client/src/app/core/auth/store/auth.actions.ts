@@ -123,6 +123,13 @@ export const clearError = createAction(
   props<{ error: AuthErrorKey }>()
 );
 
+// Refresh Token
+
+export const refreshTokenSuccess = createAction(
+  '[Auth] Refresh Token Succeeded',
+  props<{ token: UserToken }>()
+);
+
 // Clear User Info
 
 export const clearUserInfo = createAction('[Auth] Clear User Info');

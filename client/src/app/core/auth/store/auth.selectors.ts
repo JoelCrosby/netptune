@@ -39,11 +39,17 @@ export const selectAuthToken = createSelector(
   (token?: UserToken) => token?.token
 );
 
+export const selectRefreshToken = createSelector(
+  selectUserToken,
+  (token?: UserToken) => token?.refreshToken
+);
+
 export const selectAuthTokenWithWorkspaceId = createSelector(
   selectUserToken,
   selectCurrentWorkspaceIdentifier,
   (token: UserToken | undefined, workspaceId: string | undefined) => ({
     token: token?.token,
+    refreshToken: token?.refreshToken,
     workspaceId,
   })
 );

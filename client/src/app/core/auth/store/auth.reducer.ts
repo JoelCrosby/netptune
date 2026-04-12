@@ -56,6 +56,14 @@ const reducer = createReducer(
     })
   ),
   on(
+    actions.refreshTokenSuccess,
+    (state, { token }): AuthState => ({
+      ...state,
+      isAuthenticated: true,
+      token,
+    })
+  ),
+  on(
     actions.clearError,
     (state): AuthState => ({
       ...state,

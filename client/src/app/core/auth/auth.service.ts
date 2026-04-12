@@ -45,4 +45,8 @@ export class AuthService {
       params: { ...request },
     });
   }
+
+  refresh(refreshToken: string) {
+    return this.http.post<UserToken>('api/auth/refresh', { refreshToken });
+  }
 }
