@@ -52,7 +52,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
       <app-checkbox class="w-8 flex-none"></app-checkbox>
 
-      <div class="w-[100px] flex-none">
+      <div class="w-25 flex-none">
         <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
           {{ task().systemId }}
         </div>
@@ -77,7 +77,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
       @for (assignee of task().assignees; track assignee.id) {
         <app-avatar
-          class="w-[38px] flex-none"
+          class="w-9.5 flex-none"
           size="24"
           [name]="assignee.displayName"
           [imageUrl]="assignee.pictureUrl">

@@ -27,7 +27,7 @@ import { DocumentService } from '@static/services/document.service';
         <input
           #input
           type="text"
-          class="inline-edit-input box-border w-full border-0 bg-transparent p-1 text-[inherit] transition-all duration-200 [font:inherit]"
+          class="inline-edit-input box-border w-full border-0 bg-transparent p-1 text-inherit transition-all duration-200 [font:inherit]"
           [value]="value()"
           [readonly]="readonly()"
           [disabled]="disabled()"

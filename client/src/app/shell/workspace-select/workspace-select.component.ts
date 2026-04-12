@@ -55,7 +55,7 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
 
       <div
         #selectmenu
-        class="absolute top-[55px] left-0 overflow-hidden rounded-sm shadow-[0_2px_4px_-1px_rgb(0_0_0/20%),0_4px_5px_0_rgb(0_0_0/14%),0_1px_10px_0_rgb(0_0_0/12%)]">
+        class="absolute top-13.75 left-0 overflow-hidden rounded-sm shadow-[0_2px_4px_-1px_rgb(0_0_0/20%),0_4px_5px_0_rgb(0_0_0/14%),0_1px_10px_0_rgb(0_0_0/12%)]">
         <app-workspace-select-menu
           [isOpen]="isOpen()"
           [filteredOptions]="filteredOptions()"

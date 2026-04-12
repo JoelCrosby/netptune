@@ -25,7 +25,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
   selector: 'app-shell-sidebar',
   template: `
     <div
-      class="border-side-bar-border bg-side-bar fixed top-[0] flex h-screen w-[72px] flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
+      class="border-side-bar-border bg-side-bar fixed top-0 flex h-screen w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
       [class.w-[248px]]="shell.sideNavExpanded()">
       <app-shell-menu-link-list>
         <app-workspace-select
@@ -38,7 +38,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
         }
       </app-shell-menu-link-list>
 
-      <div class="flex-[1]"></div>
+      <div class="flex-1"></div>
 
       <app-shell-menu-link-list>
         @for (link of bottomLinks; track link.value) {
