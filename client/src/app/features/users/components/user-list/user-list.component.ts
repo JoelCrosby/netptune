@@ -32,19 +32,20 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       @for (user of users(); track user.id) {
         <app-user-list-item [user]="user">
           <button
-            class="flex-none w-10"
+            class="w-10 flex-none"
             cdkDragHandle
             app-icon-button
             aria-label="more"
             appTooltip="click for more options. click and hold to drag task"
-            (click)="menu.toggle($any($event.currentTarget))"
-          >
-            <svg lucideGripVertical class="h-4 w-4 text-foreground/30"></svg>
+            (click)="menu.toggle($any($event.currentTarget))">
+            <svg lucideGripVertical class="text-foreground/30 h-4 w-4"></svg>
           </button>
 
           <app-dropdown-menu #menu xPosition="before">
             @if (!user.isWorkspaceOwner) {
-              <button app-menu-item (click)="onRemoveClicked(user); menu.close()">
+              <button
+                app-menu-item
+                (click)="onRemoveClicked(user); menu.close()">
                 <svg lucideTrash2 class="h-4 w-4"></svg>
                 <span>Remove user from workspace</span>
               </button>

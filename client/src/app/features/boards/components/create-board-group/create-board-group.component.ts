@@ -12,10 +12,9 @@ import { Store } from '@ngrx/store';
     <div
       role="button"
       tabindex="0"
-      class="flex flex-1 flex-col h-full items-center justify-center cursor-pointer m-[0.9rem] p-[0.6rem] rounded bg-background border-4 border-dashed border-border/5 text-[rgba(var(--foreground-rgb),.4)] text-sm font-medium tracking-[0.125px] transition-[background-color,margin,color] duration-200 ease-in-out hover:m-[0.4rem] hover:border-solid hover:bg-primary/[.08] hover:text-primary/80"
+      class="bg-background border-border/5 hover:bg-primary/[.08] hover:text-primary/80 m-[0.9rem] flex h-full flex-1 cursor-pointer flex-col items-center justify-center rounded border-4 border-dashed p-[0.6rem] text-sm font-medium tracking-[0.125px] text-[rgba(var(--foreground-rgb),.4)] transition-[background-color,margin,color] duration-200 ease-in-out hover:m-[0.4rem] hover:border-solid"
       (click)="onClick()"
-      matRipple
-    >
+      matRipple>
       <svg lucidePlus class="h-4 w-4"></svg>
       <span class="ml-[0.4rem]">Create Group</span>
     </div>

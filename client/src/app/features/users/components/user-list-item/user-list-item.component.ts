@@ -14,22 +14,26 @@ import { ListItemComponent } from '@static/components/list/list-item.component';
 
       <app-checkbox class="my-auto flex-none"></app-checkbox>
 
-      <div class="flex flex-none w-14 items-center justify-center">
-        <app-avatar [imageUrl]="user().pictureUrl" [name]="user().displayName" [size]="26" />
+      <div class="flex w-14 flex-none items-center justify-center">
+        <app-avatar
+          [imageUrl]="user().pictureUrl"
+          [name]="user().displayName"
+          [size]="26" />
       </div>
 
-      <div class="flex-none w-[180px] overflow-hidden text-ellipsis whitespace-nowrap text-sm">
+      <div
+        class="w-[180px] flex-none overflow-hidden text-sm text-ellipsis whitespace-nowrap">
         {{ user().displayName }}
       </div>
 
       <div
-        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-foreground/60"
-      >
+        class="text-foreground/60 flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
         {{ user().email }}
       </div>
 
       @if (user().isWorkspaceOwner) {
-        <div class="mr-1.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-sm text-primary">
+        <div
+          class="bg-primary/10 text-primary mr-1.5 rounded-full px-1.5 py-0.5 text-sm">
           Owner
         </div>
       }

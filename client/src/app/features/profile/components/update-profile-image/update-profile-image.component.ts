@@ -15,7 +15,10 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       <img
         crossorigin="anonymous"
         class="mx-auto h-[180px] w-[180px] rounded-full object-cover"
-        [src]="pictureUrl() || 'https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png'"
+        [src]="
+          pictureUrl() ||
+          'https://netptune.s3.eu-west-2.amazonaws.com/common/placeholder/no_profile.png'
+        "
         alt="Profile Image"
         height="180"
         width="180" />

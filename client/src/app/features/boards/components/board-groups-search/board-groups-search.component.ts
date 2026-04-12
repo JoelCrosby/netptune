@@ -23,14 +23,21 @@ import { Store } from '@ngrx/store';
   imports: [LucideX, LucideSearch, TooltipDirective, FormField],
   template: `
     <div
-      class="flex flex-row items-center pr-[0.4rem] border-2 border-solid rounded border-[rgba(var(--foreground-rgb),.1)] bg-secondary-background transition-colors duration-[240ms] ease-out [&_svg]:text-[rgba(var(--foreground-rgb),.1)] focus-within:bg-transparent focus-within:border-primary [&.active]:bg-transparent [&.active]:border-primary [&.invalid]:border-warn"
-      [class.invalid]="termForm.term().value() && termForm.term().touched() && termForm.term().invalid()"
-      [class.active]="termForm.term().value() && termForm.term().touched() && termForm.term().valid()"
-    >
+      class="bg-secondary-background focus-within:border-primary [&.active]:border-primary [&.invalid]:border-warn flex flex-row items-center rounded border-2 border-solid border-[rgba(var(--foreground-rgb),.1)] pr-[0.4rem] transition-colors duration-[240ms] ease-out focus-within:bg-transparent [&_svg]:text-[rgba(var(--foreground-rgb),.1)] [&.active]:bg-transparent"
+      [class.invalid]="
+        termForm.term().value() &&
+        termForm.term().touched() &&
+        termForm.term().invalid()
+      "
+      [class.active]="
+        termForm.term().value() &&
+        termForm.term().touched() &&
+        termForm.term().valid()
+      ">
       <input
         type="text"
         placeholder="Search"
-        class="appearance-none border-0 bg-transparent text-inherit px-[0.8rem] py-0 outline-none leading-[33px] text-[15px] font-medium [font-family:inherit] w-[180px] transition-[width] duration-[140ms] ease-out [&:placeholder-shown:not(:focus)]:w-[80px] placeholder:opacity-60"
+        class="w-[180px] appearance-none border-0 bg-transparent px-[0.8rem] py-0 [font-family:inherit] text-[15px] leading-[33px] font-medium text-inherit transition-[width] duration-[140ms] ease-out outline-none placeholder:opacity-60 [&:placeholder-shown:not(:focus)]:w-[80px]"
         [formField]="termForm.term"
         (keydown.enter)="onSubmit()" />
 
@@ -39,7 +46,7 @@ import { Store } from '@ngrx/store';
           lucideX
           aria-hidden="false"
           aria-label="Clear Search Icon"
-          class="h-4 w-4 cursor-pointer hover:!text-primary"
+          class="hover:!text-primary h-4 w-4 cursor-pointer"
           appTooltip="Clear search term"
           (click)="onClearClicked()"></svg>
       } @else {

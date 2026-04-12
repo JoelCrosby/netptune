@@ -56,17 +56,27 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
 
 @Component({
   templateUrl: './board-groups-view.component.html',
-  styles: [`
-    .cdk-drag-placeholder { opacity: 0; }
-    .cdk-drag-animating { transition: transform .25s cubic-bezier(0, 0, .2, 1); }
-    .cdk-drag-preview {
-      box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
-      transition: box-shadow .3s cubic-bezier(0, 0, .2, 1);
-    }
-    .board-groups.cdk-drop-list-dragging .board-group:not(.cdk-drag-placeholder) {
-      transition: transform .5s cubic-bezier(0, 0, .2, 1);
-    }
-  `],
+  styles: [
+    `
+      .cdk-drag-placeholder {
+        opacity: 0;
+      }
+      .cdk-drag-animating {
+        transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+      }
+      .cdk-drag-preview {
+        box-shadow:
+          0 5px 5px -3px rgba(0, 0, 0, 0.2),
+          0 8px 10px 1px rgba(0, 0, 0, 0.14),
+          0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.3s cubic-bezier(0, 0, 0.2, 1);
+      }
+      .board-groups.cdk-drop-list-dragging
+        .board-group:not(.cdk-drag-placeholder) {
+        transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
   imports: [
