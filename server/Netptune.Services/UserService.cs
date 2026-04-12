@@ -175,43 +175,48 @@ public class UserService : IUserService
 
     private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)
     {
-        var emailModels = emails.Select(email =>
-        {
-            var key = Guid.NewGuid()
-                .ToString()
-                .Replace("-", "")
-                .ToLowerInvariant();
+        var emailList = emails.ToList();
 
+        var key = Guid.NewGuid()
+            .ToString()
+            .Replace("-", "")
+            .ToLowerInvariant();
+
+        foreach (var email in emailList)
+        {
             InviteCache.Create(key, new()
             {
                 Email = email,
                 WorkspaceId = workspace.Id,
             });
+        }
 
-            var uri = Hosting.ClientOrigin
-                .AppendPathSegments("auth", "register")
-                .SetQueryParam("code", key, true)
-                .SetQueryParam("refer", "invite");
 
-            return new SendEmailModel
-            {
-                SendTo = new()
-                {
-                    Address = email,
-                    DisplayName = email,
-                },
-                Name = email,
-                Action = "Go to Workspace",
-                Link = uri,
-                Reason = "workspace invite",
-                Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
-                Subject = "Netptune workspace invitation.",
-                PreHeader = $"Hi you've been invited to join the {workspace.Name} in Netptune.",
-                RawTextContent = $"Hi you've been invited to join the {workspace.Name} in Netptune. Click the link below to start. \n\n {uri}",
-            };
-        });
+        var uri = Hosting.ClientOrigin
+            .AppendPathSegments("auth", "register")
+            .SetQueryParam("code", key, true)
+            .SetQueryParam("refer", "invite");
 
-        return Email.Send(emailModels);
+        var sendTo = emailList.Select(e => new SendTo
+        {
+            Address = e,
+            DisplayName = e,
+        }).ToList();
+
+        var message = new SendMultipleEmailModel
+        {
+            SendTo = sendTo,
+            Name = "-name-",
+            Action = "Go to Workspace",
+            Link = uri,
+            Reason = "workspace invite",
+            Message = "Hi you've been invited to join the -workspace- workspace in Netptune.",
+            Subject = "Netptune workspace invitation.",
+            PreHeader = "Hi you've been invited to join the -workspace- in Netptune.",
+            RawTextContent = $"Hi you've been invited to join the -workspace- in Netptune. Click the link below to start. \n\n {uri}",
+        };
+
+        return Email.Send(message);
     }
 
     private static List<UserViewModel> MapUsers(List<AppUser> users)

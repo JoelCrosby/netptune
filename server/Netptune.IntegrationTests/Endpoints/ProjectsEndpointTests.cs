@@ -68,7 +68,7 @@ public sealed class ProjectsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
@@ -108,7 +108,7 @@ public sealed class ProjectsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload!.Description.Should().Be(request.Description);
     }
@@ -139,7 +139,7 @@ public sealed class ProjectsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -151,6 +151,6 @@ public sealed class ProjectsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 }

@@ -55,7 +55,7 @@ public sealed class CommentsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Body.Should().Be(request.Comment);
     }
 
@@ -81,7 +81,7 @@ public sealed class CommentsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -93,6 +93,6 @@ public sealed class CommentsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 }

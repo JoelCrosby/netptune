@@ -58,7 +58,7 @@ public sealed class BoardGroupsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
@@ -97,7 +97,7 @@ public sealed class BoardGroupsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.SortOrder.Should().Be(request.SortOrder);
         result.Payload.Type.Should().Be(request.Type);
@@ -128,7 +128,7 @@ public sealed class BoardGroupsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -140,6 +140,6 @@ public sealed class BoardGroupsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 }

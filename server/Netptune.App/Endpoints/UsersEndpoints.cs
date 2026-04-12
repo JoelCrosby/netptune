@@ -26,8 +26,6 @@ public static class UsersEndpoints
     {
         var result = await userService.GetWorkspaceUsers();
 
-        if (result is null) return Results.NotFound();
-
         return Results.Ok(result);
     }
 

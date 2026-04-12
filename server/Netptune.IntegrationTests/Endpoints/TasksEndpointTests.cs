@@ -99,7 +99,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Status.Should().Be(request.Status);
@@ -157,7 +157,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Status.Should().Be(request.Status);
@@ -189,7 +189,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -222,7 +222,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -243,7 +243,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -262,7 +262,7 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -282,6 +282,6 @@ public sealed class TasksEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 }

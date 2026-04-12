@@ -46,6 +46,6 @@ public sealed class ImportEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskImportResult>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 }

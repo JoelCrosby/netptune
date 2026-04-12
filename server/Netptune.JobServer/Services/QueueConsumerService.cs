@@ -38,7 +38,7 @@ public sealed class QueueConsumerService : BackgroundService
                     continue;
                 }
 
-                var message = (IEventMessage) JsonSerializer.Deserialize(eventMessage.Payload, messageType)!;
+                var message = JsonSerializer.Deserialize(eventMessage.Payload, messageType)!;
 
                 Logger.LogInformation("[QueueConsumer] received message type of {Type} {Payload}", eventMessage.Type, eventMessage.Payload);
 

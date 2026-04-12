@@ -67,7 +67,7 @@ public sealed class TagsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TagViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.NewValue);
@@ -101,7 +101,7 @@ public sealed class TagsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TagViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Tag);
     }
 
@@ -128,7 +128,7 @@ public sealed class TagsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TagViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Tag);
     }
 
@@ -166,7 +166,7 @@ public sealed class TagsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public sealed class TagsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]

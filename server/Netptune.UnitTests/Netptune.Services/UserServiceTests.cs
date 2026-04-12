@@ -143,8 +143,6 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
 
-        var users = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns([]);
 
@@ -236,7 +234,7 @@ public class UserServiceTests
         var emails = new List<string> { "user@email.com" };
         await Service.InviteUsersToWorkspace(emails);
 
-        await Email.Received(1).Send(Arg.Any<IEnumerable<SendEmailModel>>());
+        await Email.Received(1).Send(Arg.Any<SendMultipleEmailModel>());
     }
 
     [Fact]

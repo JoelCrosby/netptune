@@ -87,7 +87,7 @@ public sealed class WorkspacesEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkspaceViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
     }
 
@@ -129,7 +129,7 @@ public sealed class WorkspacesEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkspaceViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
@@ -162,7 +162,7 @@ public sealed class WorkspacesEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
         result.Payload!.IsUnique.Should().BeTrue();
     }
@@ -176,7 +176,7 @@ public sealed class WorkspacesEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
         result.Payload!.IsUnique.Should().BeFalse();
     }

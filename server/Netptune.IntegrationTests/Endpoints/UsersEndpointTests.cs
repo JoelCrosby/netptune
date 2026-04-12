@@ -103,7 +103,7 @@ public sealed class UsersEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<UserViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Firstname.Should().Be(request.Firstname);
         result.Payload.Lastname.Should().Be(request.Lastname);
         result.Payload.PictureUrl.Should().Be(request.PictureUrl);
@@ -140,7 +140,7 @@ public sealed class UsersEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<InviteUserResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Emails.Should().ContainSingle(request.EmailAddresses.First());
     }
 
@@ -158,7 +158,7 @@ public sealed class UsersEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<RemoveUsersWorkspaceResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Emails.Should().ContainSingle(request.EmailAddresses.First());
     }
 }

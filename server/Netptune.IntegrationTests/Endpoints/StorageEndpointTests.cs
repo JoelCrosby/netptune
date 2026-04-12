@@ -38,7 +38,7 @@ public sealed class StorageEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
     [Fact]
     public async Task UploadMedia_ShouldReturnCorrectly_WhenInputValid()
@@ -59,6 +59,6 @@ public sealed class StorageEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<UploadResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 }

@@ -9,17 +9,7 @@ public abstract class ServiceBase<TResult> where TResult : class
         return ClientResponse<TResult>.Success(payload, message);
     }
 
-    protected ClientResponse<TResult> Success<TType>(TResult payload, string? message = null)
-    {
-        return ClientResponse<TResult>.Success(payload, message);
-    }
-
     protected ClientResponse<TResult> Success(string? message = null)
-    {
-        return ClientResponse<TResult>.Success(message);
-    }
-
-    protected ClientResponse<TResult> Success<TType>(string? message = null)
     {
         return ClientResponse<TResult>.Success(message);
     }

@@ -95,7 +95,7 @@ public class AuthenticationServiceTests
 
         UserManager.FindByEmailAsync(request.Email).Returns(user);
         SignInManager.CheckPasswordSignInAsync(user, request.Password, false)
-            .Returns(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            .Returns(SignInResult.Success);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
 
         var result = await Service.LogIn(request);
@@ -140,7 +140,7 @@ public class AuthenticationServiceTests
 
         UserManager.FindByEmailAsync(request.Email).Returns(user);
         SignInManager.CheckPasswordSignInAsync(user, request.Password, false)
-            .Returns(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+            .Returns(SignInResult.Failed);
 
         var result = await Service.LogIn(request);
 
@@ -156,7 +156,7 @@ public class AuthenticationServiceTests
 
         UserManager.FindByEmailAsync(request.Email).Returns(user);
         SignInManager.CheckPasswordSignInAsync(user, request.Password, false)
-            .Returns(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            .Returns(SignInResult.Success);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
 
         await Service.LogIn(request);
@@ -615,7 +615,7 @@ public class AuthenticationServiceTests
         var result = await Service.CurrentUser();
 
         result.Should().NotBeNull();
-        result!.EmailAddress.Should().Be(user.Email);
+        result.EmailAddress.Should().Be(user.Email);
         result.UserId.Should().Be(user.Id);
     }
 

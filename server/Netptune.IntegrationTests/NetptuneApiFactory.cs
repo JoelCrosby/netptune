@@ -12,7 +12,6 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
-using Netptune.Services.Authorization;
 using Netptune.Services.Authorization.Requirements;
 
 using Testcontainers.Nats;

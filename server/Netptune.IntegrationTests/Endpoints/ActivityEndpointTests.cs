@@ -22,7 +22,7 @@ public class ActivityEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<ActivityViewModel>>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeEmpty();
     }
 }

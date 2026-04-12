@@ -84,11 +84,11 @@ public static class NetptunePermissions
 
     public static class Export
     {
-        public const string Tasks = "export.tasks";
+        public const string ProjectTasks = "export.tasks";
     }
 
     public static class Import
     {
-        public const string Tasks = "import.tasks";
+        public const string ProjectTasks = "import.tasks";
     }
 }

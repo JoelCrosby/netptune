@@ -27,7 +27,6 @@ public static class ProjectTaskStatusExtensions
             ProjectTaskStatus.InActive => BoardGroupType.Todo,
             ProjectTaskStatus.Complete => BoardGroupType.Done,
             ProjectTaskStatus.AwaitingClassification => BoardGroupType.Todo,
-            ProjectTaskStatus.UnAssigned => BoardGroupType.Backlog,
             _ => BoardGroupType.Backlog,
         };
     }

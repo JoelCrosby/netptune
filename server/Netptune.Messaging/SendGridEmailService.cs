@@ -54,44 +54,46 @@ public class SendGridEmailService : IEmailService
         }
     }
 
-    public Task Send(IEnumerable<SendEmailModel> models)
+    public Task Send(SendMultipleEmailModel model)
     {
-        EventPublisher.Dispatch(models);
+        EventPublisher.Dispatch(model);
 
         return Task.CompletedTask;
     }
 
-    public async Task EnqueueSend(IEnumerable<SendEmailModel> models)
+    public async Task EnqueueSend(SendMultipleEmailModel model)
     {
         var client = new SendGridClient(Options.SendGridApiKey);
 
-        var modelList = models.ToList();
-
-        var subjects = modelList.ConvertAll(model => model.Subject);
+        var subjects = new List<string> { model.Subject };
 
         var from = new EmailAddress(Options.DefaultFromAddress, Options.DefaultFromDisplayName);
-        var to = modelList.ConvertAll(model => new EmailAddress(model.SendTo.Address, model.SendTo.DisplayName));
 
-        var firstEmail = modelList.FirstOrDefault() ?? throw new ArgumentNullException(nameof(modelList), "models enumerable was empty.");
-
-        var substitutions = modelList.ConvertAll(model => new Dictionary<string, string>
+        var substitution = new Dictionary<string, string>
         {
             {"-name-", model.Name},
             {"-action-", model.Action ?? String.Empty},
             {"-pre-header-", model.PreHeader ?? String.Empty},
             {"-link-", model.Link ?? String.Empty},
-        });
+        };
 
-        var plainTextContent = firstEmail.RawTextContent;
+        var substitutions = new List<Dictionary<string, string>>
+        {
+            substitution,
+        };
+
+        var plainTextContent = model.RawTextContent;
+
+        var to = model.SendTo.Select(t => new EmailAddress(t.Address, t.DisplayName)).ToList();
 
         var htmlContent = await EmailRenderer.Render(new SendEmailModel
         {
-            Message = firstEmail.Message,
-            Subject = firstEmail.Subject,
-            Reason = firstEmail.Reason,
+            Message = model.Message,
+            Subject = model.Subject,
+            Reason = model.Reason,
             Name = "-name-",
             Action = "-action-",
-            RawTextContent = firstEmail.RawTextContent,
+            RawTextContent = model.RawTextContent,
             PreHeader = "-pre-header-",
             Link = "-link-",
         });

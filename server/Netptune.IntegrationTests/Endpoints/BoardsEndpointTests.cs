@@ -56,7 +56,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
@@ -92,7 +92,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload!.Identifier.Should().Be(request.Identifier);
     }
@@ -119,7 +119,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
@@ -131,7 +131,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
     }
 
@@ -181,7 +181,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.IsUnique.Should().BeFalse();
     }
 
@@ -194,7 +194,7 @@ public sealed class BoardsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<IsSlugUniqueResponse>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload!.IsUnique.Should().BeTrue();
     }
 }
