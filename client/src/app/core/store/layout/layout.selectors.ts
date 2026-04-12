@@ -16,8 +16,3 @@ export const selectIsMobileView = createSelector(
   selectLayoutFeature,
   (state: LayoutState) => state.isMobileView
 );
-
-export const selectSideMenuMode = createSelector(
-  selectLayoutFeature,
-  (state: LayoutState) => state.sideNavMode
-);

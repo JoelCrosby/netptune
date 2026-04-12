@@ -23,7 +23,6 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 
 import { form, FormField, required } from '@angular/forms/signals';
-import { MatInput } from '@angular/material/input';
 import { LucideGripVertical, LucidePlus } from '@lucide/angular';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DocumentService } from '@static/services/document.service';
@@ -31,13 +30,7 @@ import { DocumentService } from '@static/services/document.service';
 @Component({
   selector: 'app-task-inline',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    LucidePlus,
-    LucideGripVertical,
-    CheckboxComponent,
-    MatInput,
-    FormField,
-  ],
+  imports: [LucidePlus, LucideGripVertical, CheckboxComponent, FormField],
   styles: [
     `
       .inline-task-input:-webkit-autofill,

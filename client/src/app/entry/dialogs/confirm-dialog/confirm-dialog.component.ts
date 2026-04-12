@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 import { FormField, form } from '@angular/forms/signals';
 import { CheckboxComponent } from '@app/static/components/checkbox/checkbox.component';
@@ -22,7 +21,7 @@ export interface ConfirmDialogOptions {
   messageExtended?: string;
   title?: string;
   confirmationCheckboxLabel?: string;
-  color?: ThemePalette;
+  color?: 'primary' | 'accent' | 'warn' | undefined;
   isInfoMessage?: boolean;
   icon?: LucideIconInput;
 }
@@ -47,7 +46,7 @@ export interface ConfirmDialogOptions {
           @if (data.icon) {
             <svg
               [lucideIcon]="data.icon"
-              class="mx-auto my-[0.4rem] h-[4rem] w-[4rem]"></svg>
+              class="mx-auto my-[0.4rem] h-16 w-16"></svg>
           }
         </div>
         @if (data.message) {
