@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "css"
         },
         "@schematics/angular:application": {
           "strict": true
@@ -38,15 +38,9 @@
               "src/assets/favicon-32x32.png"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
-            "scripts": [],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src",
-                "src/styles"
-              ]
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -128,9 +122,10 @@
     },
     "@schematics/angular:component": {
       "prefix": "app",
-      "style": "scss",
+      "style": "none",
       "skipTests": true,
-      "type": "component"
+      "type": "component",
+      "inlineTemplate": true
     },
     "@schematics/angular:class": {
       "skipTests": true
