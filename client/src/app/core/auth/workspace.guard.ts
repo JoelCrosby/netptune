@@ -7,7 +7,9 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, first, map, switchMap } from 'rxjs/operators';
 
-export const workspaceGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+export const workspaceGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot
+) => {
   const store = inject(Store);
   const http = inject(HttpClient);
   const router = inject(Router);

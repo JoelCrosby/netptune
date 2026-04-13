@@ -29,7 +29,9 @@ export const workspaceResovler: ResolveFn<Workspace> = (
 
       return http
         .get<Workspace>(url)
-        .pipe(tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace }))));
+        .pipe(
+          tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
+        );
     })
   );
 };

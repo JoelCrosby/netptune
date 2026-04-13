@@ -134,7 +134,12 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   });
 
   showAddButton = computed(() => {
-    return this.isAuthenticated() && this.focused() && !this.isDragging() && !this.isInlineActive();
+    return (
+      this.isAuthenticated() &&
+      this.focused() &&
+      !this.isDragging() &&
+      !this.isInlineActive()
+    );
   });
 
   ngAfterViewInit() {
