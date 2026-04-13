@@ -25,13 +25,15 @@ import { LucidePanelsTopLeft } from '@lucide/angular';
         [actions]="actions()"
         (delete)="onDeleteClicked()">
         <div class="flex flex-col">
-          <h5 class="mt-4 mb-[0.4rem]">Repository</h5>
+          @if (project().repositoryUrl) {
+            <h5 class="mt-4 mb-[0.4rem]">Repository</h5>
 
-          <a
-            [href]="project().repositoryUrl"
-            class="block max-w-full overflow-hidden py-[0.6rem] text-ellipsis whitespace-nowrap underline">
-            {{ project().repositoryUrl }}
-          </a>
+            <a
+              [href]="project().repositoryUrl"
+              class="block max-w-full overflow-hidden py-[0.6rem] text-ellipsis whitespace-nowrap underline">
+              {{ project().repositoryUrl }}
+            </a>
+          }
         </div>
       </app-card-list-item>
     </a>
