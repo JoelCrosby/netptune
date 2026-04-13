@@ -60,12 +60,11 @@ export interface ConfirmDialogOptions {
           }
         }
         @if (data.confirmationCheckboxLabel) {
-          <app-checkbox
-            [class.mt-8]="data.message"
-            [class.ml-8]="data.message"
-            [formField]="confirmForm.confirmationChecked">
-            {{ data.confirmationCheckboxLabel }}
-          </app-checkbox>
+          <div class="bg-warn/20 border-warn/40 my-4 rounded border px-4 py-2">
+            <app-checkbox [formField]="confirmForm.confirmationChecked">
+              {{ data.confirmationCheckboxLabel }}
+            </app-checkbox>
+          </div>
         }
       </app-dialog-content>
     }

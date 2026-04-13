@@ -13,4 +13,6 @@ public class WorkspaceViewModel
     public string Slug { get; set; } = null!;
 
     public WorkspaceMeta? MetaInfo { get; set; }
+
+    public bool IsPublic { get; set; }
 }

@@ -23,6 +23,7 @@ public static class NetptuneServicesConfiguration
 
         services.AddTransient<IHostingService, HostingService>();
 
+        services.AddTransient<IPublicWorkspaceService, PublicWorkspaceService>();
         services.AddTransient<IProjectService, ProjectService>();
         services.AddTransient<ITaskService, TaskService>();
         services.AddTransient<IUserService, UserService>();

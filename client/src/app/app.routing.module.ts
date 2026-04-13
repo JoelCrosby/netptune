@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { authGuard } from '@core/auth/auth.guard';
+import { workspaceGuard } from '@core/auth/workspace.guard';
 import { workspaceResovler } from '@core/resolvers/workspace-resolver';
 import { ShellComponent } from './shell/shell.component';
 
@@ -31,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: ':workspace',
-    canActivate: [authGuard],
+    canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
     component: ShellComponent,
     children: [
@@ -43,26 +44,22 @@ const routes: Routes = [
       {
         path: 'projects',
         loadChildren: () => import('./features/projects/projects.module').then((m) => m.ProjectsModule),
-        canActivate: [authGuard],
         data: { title: 'Projects' },
       },
       {
         path: 'projects-tasks',
         loadChildren: () => import('./features/project-tasks/project-tasks.module').then((m) => m.ProjectTasksModule),
-        canActivate: [authGuard],
         data: { title: 'Tasks' },
       },
       {
         path: 'tasks',
         loadChildren: () => import('./features/project-tasks/project-tasks.module').then((m) => m.ProjectTasksModule),
-        canActivate: [authGuard],
         runGuardsAndResolvers: 'always',
         data: { title: 'Tasks' },
       },
       {
         path: 'boards',
         loadChildren: () => import('./features/boards/boards.module').then((m) => m.BoardsModule),
-        canActivate: [authGuard],
         runGuardsAndResolvers: 'always',
         data: { title: 'Boards' },
       },

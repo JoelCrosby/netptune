@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { setCurrentWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { first, switchMap, tap } from 'rxjs/operators';
 
 export const workspaceResovler: ResolveFn<Workspace> = (
   next: ActivatedRouteSnapshot
@@ -19,9 +20,16 @@ export const workspaceResovler: ResolveFn<Workspace> = (
     return throwError(() => new Error('workspace key null'));
   }
 
-  return http
-    .get<Workspace>(`api/workspaces/${workspaceKey}`)
-    .pipe(
-      tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
-    );
+  return store.select(selectIsAuthenticated).pipe(
+    first(),
+    switchMap((isAuthenticated) => {
+      const url = isAuthenticated
+        ? `api/workspaces/${workspaceKey}`
+        : `api/public/workspaces/${workspaceKey}`;
+
+      return http
+        .get<Workspace>(url)
+        .pipe(tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace }))));
+    })
+  );
 };

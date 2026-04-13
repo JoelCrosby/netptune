@@ -8,6 +8,8 @@ import { DialogService } from '@core/services/dialog.service';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { netptunePermissions } from '@core/auth/permissions';
+import { selectHasPermission } from '@core/auth/store/auth.selectors';
 
 @Component({
   templateUrl: './boards-view.component.html',
@@ -24,6 +26,10 @@ export class BoardsViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectBoardsLoading);
+
+  canCreateBoards = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.boards.create)
+  );
 
   constructor() {
     this.store.dispatch(loadBoards());

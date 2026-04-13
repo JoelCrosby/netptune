@@ -5,4 +5,5 @@ export interface UpdateWorkspaceRequest {
   name?: string;
   description?: string;
   metaInfo: WorkspaceMeta;
+  isPublic?: boolean;
 }

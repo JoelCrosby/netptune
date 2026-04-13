@@ -17,6 +17,8 @@ public record Workspace : AuditableEntity<int>
 
     public WorkspaceMeta? MetaInfo { get; set; }
 
+    public bool IsPublic { get; set; }
+
     #region NavigationProperties
 
     [JsonIgnore]
@@ -44,6 +46,7 @@ public record Workspace : AuditableEntity<int>
             Description = Description,
             Slug = Slug,
             MetaInfo = MetaInfo,
+            IsPublic = IsPublic,
         };
     }
 

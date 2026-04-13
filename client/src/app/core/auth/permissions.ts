@@ -67,5 +67,7 @@ export const netptunePermissions = {
   },
 } as const;
 
-type PermissionGroup = (typeof netptunePermissions)[keyof typeof netptunePermissions];
-export type Permission = PermissionGroup[keyof PermissionGroup];
+type Values<T> = T[keyof T];
+export type Permission = Values<{
+  [K in keyof typeof netptunePermissions]: Values<(typeof netptunePermissions)[K]>;
+}>;

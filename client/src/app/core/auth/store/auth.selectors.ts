@@ -2,6 +2,7 @@ import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse, UserToken } from './auth.models';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { Permission } from '../permissions';
 
 export const selectLoginLoading = createSelector(
   selectAuthFeature,
@@ -99,3 +100,14 @@ export const selectShowLoginError = createSelector(
   selectAuthFeature,
   (state: AuthState) => !!state.loginError
 );
+
+export const selectCurrentUserPermissions = createSelector(
+  selectCurrentUser,
+  (user?: UserResponse) => user?.permissions ?? []
+);
+
+export const selectHasPermission = (permission: Permission) =>
+  createSelector(
+    selectCurrentUserPermissions,
+    (permissions) => permissions.includes(permission)
+  );

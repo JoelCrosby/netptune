@@ -14,6 +14,7 @@ import {
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
 import { selectIsInlineActive } from '@boards/store/groups/board-groups.selectors';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
 import {
@@ -77,6 +78,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
         @for (task of group().tasks; track trackGroupTask($index, task)) {
           <app-board-group-card
             cdkDrag
+            [cdkDragDisabled]="!isAuthenticated()"
             class="board-group-task-card"
             [cdkDragData]="task"
             [task]="task"
@@ -122,6 +124,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   readonly container = viewChild.required<ElementRef>('container');
 
   focused = signal(false);
+  isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   isDragging = this.store.selectSignal(BoardGroupSelectors.selectIsDragging);
   isInlineActive = computed(() => {
     const groupId = this.group().id;
@@ -131,7 +134,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   });
 
   showAddButton = computed(() => {
-    return this.focused() && !this.isDragging() && !this.isInlineActive();
+    return this.isAuthenticated() && this.focused() && !this.isDragging() && !this.isInlineActive();
   });
 
   ngAfterViewInit() {

@@ -190,6 +190,7 @@ public class WorkspaceService : IWorkspaceService
         result.Description = request.Description ?? result.Description;
         result.ModifiedByUserId = userId;
         result.MetaInfo = request.MetaInfo ?? result.MetaInfo;
+        result.IsPublic = request.IsPublic ?? result.IsPublic;
         result.UpdatedAt = DateTime.UtcNow;
 
         await UnitOfWork.CompleteAsync();

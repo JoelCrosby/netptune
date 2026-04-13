@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Services;
+using Netptune.Core.UnitOfWork;
 using Netptune.Services.Authorization.Requirements;
 
 namespace Netptune.Services.Authorization.Handlers;
@@ -10,29 +11,52 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
 {
     private readonly IIdentityService Identity;
     private readonly IWorkspacePermissionCache Cache;
+    private readonly INetptuneUnitOfWork UnitOfWork;
 
-    public WorkspacePermissionResourceAuthorizationHandler(IIdentityService identity, IWorkspacePermissionCache cache)
+    public WorkspacePermissionResourceAuthorizationHandler(
+        IIdentityService identity,
+        IWorkspacePermissionCache cache,
+        INetptuneUnitOfWork unitOfWork)
     {
         Identity = identity;
         Cache = cache;
+        UnitOfWork = unitOfWork;
     }
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, WorkspacePermissionRequirement requirement)
     {
-        if (context.User.Identity?.IsAuthenticated != true)
+        var workspaceKey = Identity.TryGetWorkspaceKey();
+
+        if (context.User.Identity?.IsAuthenticated == true)
+        {
+            var userId = Identity.GetCurrentUserId();
+            var permissions = await Cache.GetUserPermissions(userId, workspaceKey);
+
+            if (permissions?.Contains(requirement.Permission) == true)
+            {
+                context.Succeed(requirement);
+            }
+
+            return;
+        }
+
+        // Unauthenticated — only allow read permissions on public workspaces.
+        if (!IsReadPermission(requirement.Permission))
         {
             context.Fail();
             return;
         }
 
-        var workspaceKey = Identity.GetWorkspaceKey();
+        if (workspaceKey is null) return;
 
-        var userId = Identity.GetCurrentUserId();
-        var permissions = await Cache.GetUserPermissions(userId, workspaceKey);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, isReadonly: true);
 
-        if (permissions?.Contains(requirement.Permission) == true)
+        if (workspace?.IsPublic == true)
         {
             context.Succeed(requirement);
         }
     }
+
+    private static bool IsReadPermission(string permission) =>
+        permission.EndsWith(".read", StringComparison.OrdinalIgnoreCase);
 }

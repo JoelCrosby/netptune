@@ -48,6 +48,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
         if (token) {
           req = this.cloneWithToken(req, token, workspaceHeader);
+        } else if (workspaceHeader) {
+          req = req.clone({
+            headers: req.headers.set('workspace', workspaceHeader),
+          });
         }
 
         return next.handle(req).pipe(

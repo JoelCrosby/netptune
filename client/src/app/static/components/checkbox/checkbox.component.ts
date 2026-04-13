@@ -13,16 +13,10 @@ import { LucideCheck } from '@lucide/angular';
   imports: [LucideCheck],
   template: `
     <label
-      class="flex cursor-pointer items-center justify-center"
+      class="flex cursor-pointer items-center justify-center gap-4"
       [class.cursor-not-allowed]="disabled()">
-      <input
-        type="checkbox"
-        class="sr-only"
-        [checked]="checked()"
-        [disabled]="disabled()"
-        (change)="onChanged($event)" />
       <div
-        class="flex h-4 w-4 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
+        class="flex min-h-4 min-w-4 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
         [class.border-primary]="checked()"
         [class.bg-primary]="checked()"
         [class.border-foreground]="!checked()"
@@ -32,6 +26,17 @@ import { LucideCheck } from '@lucide/angular';
           <svg lucideCheck class="h-2.5 w-2.5 text-white"></svg>
         }
       </div>
+
+      <span class="select-none" [class.opacity-50]="disabled()">
+        <ng-content />
+      </span>
+
+      <input
+        type="checkbox"
+        class="sr-only"
+        [checked]="checked()"
+        [disabled]="disabled()"
+        (change)="onChanged($event)" />
     </label>
   `,
 })

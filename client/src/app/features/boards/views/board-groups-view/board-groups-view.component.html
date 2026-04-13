@@ -15,8 +15,8 @@
   @if (boardGroupsLoaded()) {
     <app-page-header
       [title]="boardName()"
-      [titleEditable]="true"
-      [overflowActions]="secondaryActions"
+      [titleEditable]="isAuthenticated()"
+      [overflowActions]="isAuthenticated() ? secondaryActions : []"
       [backLink]="['../../boards']"
       (titleSubmitted)="onTitleSubmitted($event)"
       backLabel="Back to boards"
@@ -42,6 +42,7 @@
         @for (group of groups; track trackBoardGroup($index, group)) {
           <app-board-group
             cdkDrag
+            [cdkDragDisabled]="!isAuthenticated()"
             class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
             [cdkDragData]="group"
             [group]="group"
@@ -63,22 +64,27 @@
                   class="ml-[.2rem] w-full rounded-sm px-1.5 py-1 transition-colors duration-200 hover:bg-primary/6"
                   [size]="group.name.length"
                   [value]="group.name"
+                  [disabled]="!isAuthenticated()"
                   (submitted)="onGroupNameSubmitted($event, group)"
                   >
                 </app-inline-edit-input>
                 <span class="ml-[.2rem] font-bold text-foreground/30">{{ group.tasks.length }}</span>
               </div>
-              <button
-                app-icon-button
-                class="mx-[.2rem] invisible group-hover/header:visible"
-                (click)="onDeleteGroupClicked(group)"
-                >
-                <svg lucideX class="h-4 w-4 text-foreground/40"></svg>
-              </button>
+              @if (isAuthenticated()) {
+                <button
+                  app-icon-button
+                  class="mx-[.2rem] invisible group-hover/header:visible"
+                  (click)="onDeleteGroupClicked(group)"
+                  >
+                  <svg lucideX class="h-4 w-4 text-foreground/40"></svg>
+                </button>
+              }
             </span>
           </app-board-group>
         }
-        <app-create-board-group class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
+        @if (isAuthenticated()) {
+          <app-create-board-group class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
+        }
       </div>
     }
   }

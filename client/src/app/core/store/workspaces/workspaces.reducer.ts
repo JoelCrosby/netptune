@@ -66,6 +66,10 @@ const reducer = createReducer(
       adapter.upsertOne(workspace, {
         ...state,
         loadingEdit: false,
+        currentWorkspace:
+          state.currentWorkspace?.slug === workspace.slug
+            ? workspace
+            : state.currentWorkspace,
       })
   ),
 

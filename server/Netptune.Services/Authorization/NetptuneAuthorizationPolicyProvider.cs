@@ -29,7 +29,6 @@ public class NetptuneAuthorizationPolicyProvider : IAuthorizationPolicyProvider
         }
 
         return new AuthorizationPolicyBuilder()
-            .RequireAuthenticatedUser()
             .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
             .AddRequirements(new WorkspaceRequirement(), new WorkspacePermissionRequirement(policyName))
             .Build();

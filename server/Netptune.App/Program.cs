@@ -127,6 +127,7 @@ apiGroup.MapTagsEndpoints();
 apiGroup.MapTasksEndpoints();
 apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
+apiGroup.MapPublicEndpoints();
 
 app.MapDefaultEndpoints();
 

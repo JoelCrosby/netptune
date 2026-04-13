@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -8,6 +7,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
@@ -19,6 +19,7 @@ import {
 } from 'rxjs/operators';
 import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './workspaces.actions';
+import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable()
@@ -117,6 +118,38 @@ export class WorkspacesEffects implements OnInitEffects {
     );
   });
 
+  toggleWorkspaceIsPublic$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.toggleWorkspaceIsPublic),
+      concatLatestFrom(() => this.store.select(selectCurrentWorkspace)),
+      filter(([_, workspace]) => !!workspace?.slug),
+      map(([action, workspace]) => ({
+        isPublic: action.isPublic,
+        slug: workspace!.slug!,
+        metaInfo: workspace!.metaInfo ?? {},
+      })),
+      switchMap((request) => {
+        const confirmation = request.isPublic
+          ? MARK_WORKSPACE_AS_PUBLIC_CONFIRMATION
+          : MARK_WORKSPACE_AS_PRIVATE_CONFIRMATION;
+
+        return this.confirmation.open(confirmation).pipe(
+          switchMap((result) => {
+            if (!result) return of({ type: 'NO_ACTION' });
+
+            return this.workspacesService.put(request).pipe(
+              unwrapClientReposne(),
+              map((workspace) => actions.editWorkspaceSuccess({ workspace })),
+              catchError((error: HttpErrorResponse) =>
+                of(actions.editWorkspaceFail({ error }))
+              )
+            );
+          })
+        );
+      })
+    );
+  });
+
   isSlugUnique$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.isSlugUniue),
@@ -143,4 +176,24 @@ const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
   message: 'Are you sure you want to delete this Workspace?',
   title: 'Delete Workspace',
   color: 'warn',
+};
+
+const MARK_WORKSPACE_AS_PUBLIC_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Mark as Public',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to mark this Workspace as public?',
+  title: 'Mark Workspace as Public',
+  color: 'warn',
+  confirmationCheckboxLabel:
+    'I understand that this action will make all the content of the Workspace visible to everyone.',
+};
+
+const MARK_WORKSPACE_AS_PRIVATE_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Mark as Private',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to mark this Workspace as private?',
+  title: 'Mark Workspace as Private',
+  color: 'warn',
+  confirmationCheckboxLabel:
+    'I understand that this action will make all the content of the Workspace only visible to its members.',
 };

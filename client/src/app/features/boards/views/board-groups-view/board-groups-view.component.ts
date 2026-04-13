@@ -49,6 +49,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -103,6 +104,8 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   readonly importTasksInput =
     viewChild.required<ElementRef>('importTasksInput');
+
+  isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
   groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
   board = this.store.selectSignal(selectSelectedBoard);

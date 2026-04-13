@@ -42,6 +42,7 @@ export const authProvider: ResolveFn<boolean> = (
     userId,
     displayName,
     pictureUrl,
+    permissions: [],
   };
 
   store.dispatch(loginSuccess({ token: userToken }));

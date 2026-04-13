@@ -1,10 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   output,
 } from '@angular/core';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import {
+  selectCurrentUser,
+  selectHasPermission,
+} from '@core/auth/store/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { Store } from '@ngrx/store';
 import {
@@ -20,6 +24,7 @@ import { ShellMenuLinkComponent } from './shell-menu-link.component';
 import { ShellSidebarCollapseComponent } from './shell-sidebar-collapse.component';
 import { ShellService } from './shell.service';
 import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
+import { netptunePermissions } from '../core/auth/permissions';
 
 @Component({
   selector: 'app-shell-sidebar',
@@ -28,12 +33,14 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
       class="border-side-bar-border bg-side-bar fixed top-0 flex h-screen w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
       [class.w-[248px]]="shell.sideNavExpanded()">
       <app-shell-menu-link-list>
-        <app-workspace-select
-          idKey="id"
-          labelKey="name"
-          (selectChange)="onWorkspaceChange($event)">
-        </app-workspace-select>
-        @for (link of links; track link.value) {
+        @if (canReadWorkspace()) {
+          <app-workspace-select
+            idKey="id"
+            labelKey="name"
+            (selectChange)="onWorkspaceChange($event)">
+          </app-workspace-select>
+        }
+        @for (link of links(); track link.value) {
           <app-shell-menu-link [link]="link" />
         }
       </app-shell-menu-link-list>
@@ -41,7 +48,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
       <div class="flex-1"></div>
 
       <app-shell-menu-link-list>
-        @for (link of bottomLinks; track link.value) {
+        @for (link of bottomLinks(); track link.value) {
           <app-shell-menu-link [link]="link" />
         }
         @if (user(); as user) {
@@ -74,16 +81,42 @@ export class ShellSidebarComponent {
 
   shell = inject(ShellService);
 
-  links = [
-    { label: 'Projects', value: ['./projects'], icon: LucideBarChart2 },
-    { label: 'Tasks', value: ['./tasks'], icon: LucideCheckSquare },
-    { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
-    { label: 'Users', value: ['./users'], icon: LucideUsers },
-  ];
+  canReadMembers = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.members.read)
+  );
 
-  bottomLinks = [
-    { label: 'Settings', value: ['./settings'], icon: LucideSettings },
-  ];
+  canReadWorkspace = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.workspace.read)
+  );
+
+  links = computed(() => {
+    const links = [];
+
+    if (this.canReadMembers()) {
+      links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
+    }
+
+    return [
+      { label: 'Projects', value: ['./projects'], icon: LucideBarChart2 },
+      {
+        label: 'Tasks',
+        value: ['./tasks'],
+        icon: LucideCheckSquare,
+      },
+      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
+      ...links,
+    ];
+  });
+
+  bottomLinks = computed(() => {
+    if (this.canReadWorkspace()) {
+      return [
+        { label: 'Settings', value: ['./settings'], icon: LucideSettings },
+      ];
+    }
+
+    return [];
+  });
 
   user = this.store.selectSignal(selectCurrentUser);
 

@@ -102,3 +102,10 @@ export const isSlugUniueFail = createAction(
   '[Workspaces] Is Slug Unique Fail',
   props<{ error: HttpErrorResponse }>()
 );
+
+// Toogle IsPublic
+
+export const toggleWorkspaceIsPublic = createAction(
+  '[Workspaces] Toggle Workspace IsPublic',
+  props<{ isPublic: boolean }>()
+);

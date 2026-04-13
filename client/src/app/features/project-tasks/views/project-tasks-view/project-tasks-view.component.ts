@@ -4,7 +4,7 @@ import {
   OnDestroy,
   inject,
 } from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { selectHasPermission } from '@core/auth/store/auth.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
@@ -17,6 +17,8 @@ import { Store } from '@ngrx/store';
 import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { netptunePermissions } from '@core/auth/permissions';
 
 @Component({
   templateUrl: './project-tasks-view.component.html',
@@ -35,6 +37,9 @@ export class ProjectTasksViewComponent implements OnDestroy {
 
   loading = this.store.selectSignal(selectTasksLoading);
   workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
+  canCreateTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.create)
+  );
 
   secondaryActions: HeaderAction[] = [
     {
