@@ -22,6 +22,8 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { netptunePermissions } from '@app/core/auth/permissions';
 
 @Component({
   selector: 'app-task-list-item',
@@ -41,16 +43,19 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   template: `
     <div
       class="bg-card flex h-10 cursor-pointer items-center gap-2 overflow-hidden transition-colors duration-200 ease-in-out"
+      [class.pl-4]="!showMenu()"
       [class.flagged]="task().isFlagged">
-      <button
-        class="w-10 flex-none"
-        app-icon-button
-        aria-label="more"
-        (click)="menu.toggle($any($event.currentTarget))">
-        <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
-      </button>
+      @if (canDelete()) {
+        <button
+          class="w-10 flex-none"
+          app-icon-button
+          aria-label="more"
+          (click)="menu.toggle($any($event.currentTarget))">
+          <svg lucideEllipsisVertical class="text-foreground/30 h-4 w-4"></svg>
+        </button>
 
-      <app-checkbox class="w-8 flex-none"></app-checkbox>
+        <app-checkbox class="w-8 flex-none"></app-checkbox>
+      }
 
       <div class="w-25 flex-none">
         <div class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
@@ -110,6 +115,13 @@ export class TaskListItemComponent {
   private dialog = inject(DialogService);
 
   readonly task = input.required<TaskViewModel>();
+  readonly canDelete = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.delete)
+  );
+
+  readonly showMenu = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.delete)
+  );
 
   titleClicked() {
     this.dialog.open(TaskDetailDialogComponent, {

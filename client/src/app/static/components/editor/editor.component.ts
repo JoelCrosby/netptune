@@ -49,6 +49,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   readonly el = viewChild.required<ElementRef>('editorJs');
 
   readonly placeholder = input('');
+  readonly isReadOnly = input(false);
   readonly loaded = output();
 
   editor!: EditorJS;
@@ -93,6 +94,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
       placeholder: this.placeholder(),
       holder: this.el().nativeElement,
       minHeight: 100,
+      readOnly: this.isReadOnly(),
       tools: {
         header: Header,
         list: List,

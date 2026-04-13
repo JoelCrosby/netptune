@@ -1,5 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { selectAuthTokenWithWorkspaceId } from '@core/auth/store/auth.selectors';
+import {
+  selectAuthTokenWithWorkspaceId,
+  selectIsAuthenticated,
+} from '@core/auth/store/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
@@ -9,10 +12,15 @@ import { Store } from '@ngrx/store';
 })
 export class SseService {
   private store = inject(Store);
-
   private eventSource: EventSource | null = null;
 
+  private readonly isAuthenticated = this.store.selectSignal(
+    selectIsAuthenticated
+  );
+
   connect(group: string, onEvent: () => void): void {
+    if (!this.isAuthenticated()) return;
+
     this.disconnect();
 
     const tokenSignal = this.store.selectSignal(selectAuthTokenWithWorkspaceId);

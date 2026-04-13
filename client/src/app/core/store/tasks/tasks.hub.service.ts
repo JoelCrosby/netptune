@@ -74,8 +74,6 @@ export class ProjectTasksHubService {
     groupId: string,
     task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
   ) {
-    console.log('task.hub.service put');
-
     return this.http.put<ClientResponse<TaskViewModel>>('api/tasks', task, {
       headers: { 'X-Group': groupId },
     });

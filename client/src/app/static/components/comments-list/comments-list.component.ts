@@ -23,7 +23,6 @@ import { FormInputComponent } from '../form-input/form-input.component';
 
 @Component({
   selector: 'app-comments-list',
-  templateUrl: './comments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
@@ -36,11 +35,83 @@ import { FormInputComponent } from '../form-input/form-input.component';
     FromNowPipe,
     FormField,
   ],
+  template: `
+    <div>
+      @if (canCreate() && user(); as user) {
+        <div class="my-4 flex flex-row items-center gap-4">
+          <app-avatar
+            size="56"
+            [name]="user.displayName"
+            [imageUrl]="user.pictureUrl">
+          </app-avatar>
+          <form class="flex-1" (submit)="submit($event)">
+            <app-form-input
+              [formField]="commentForm.comment"
+              placeholder="Add Comment"
+              [icon]="lucideMessageCircle"
+              [noMargin]="true">
+            </app-form-input>
+          </form>
+        </div>
+      }
+      <div class="mb-4 flex flex-col" [class.ml-12]="canCreate()">
+        @for (comment of comments(); track comment.id) {
+          <div
+            class="group mb-1 flex min-h-12 flex-row items-center gap-4 rounded-md p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+            <app-avatar
+              size="32"
+              class=""
+              [name]="comment.userDisplayName"
+              [imageUrl]="comment.userDisplayImage">
+            </app-avatar>
+
+            <div class="flex flex-1 flex-col">
+              <span class="mb-1 flex flex-row items-center font-medium">
+                {{ comment.userDisplayName }}
+                <small class="ml-[0.6rem] flex-1 opacity-60">
+                  {{ comment.createdAt | fromNow }}
+                </small>
+              </span>
+              <span class="text-sm font-normal">
+                {{ comment.body }}
+              </span>
+            </div>
+
+            @if (
+              canDeleteAny() ||
+              (canDelete() &&
+                (comment.userId === user()?.userId || canDeleteAny()))
+            ) {
+              <div class="hidden w-10 group-hover:block">
+                <button
+                  app-icon-button
+                  aria-label="Comment Actions"
+                  (click)="commentMenu.toggle($any($event.currentTarget))">
+                  <svg lucideEllipsis class="h-4 w-4"></svg>
+                </button>
+                <app-dropdown-menu #commentMenu xPosition="before">
+                  <button
+                    app-menu-item
+                    (click)="deleteComment.emit(comment); commentMenu.close()">
+                    <svg lucideTrash2 class="h-4 w-4"></svg>
+                    <span>Delete Comment</span>
+                  </button>
+                </app-dropdown-menu>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  `,
 })
 export class CommentsListComponent {
   lucideMessageCircle = LucideMessageCircle;
-  readonly user = input.required<UserResponse>();
+  readonly user = input<UserResponse>();
   readonly comments = input.required<CommentViewModel[] | null>();
+  readonly canDelete = input<boolean>(false);
+  readonly canDeleteAny = input<boolean>(false);
+  readonly canCreate = input<boolean>(false);
 
   readonly deleteComment = output<CommentViewModel>();
   readonly commentSubmit = output<string>();

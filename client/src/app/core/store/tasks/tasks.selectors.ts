@@ -31,6 +31,17 @@ export const selectDetailTask = createSelector(
   (state: TasksState) => state.detailTask
 );
 
+export const selectRequiredDetailTask = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => {
+    if (!state.detailTask) {
+      throw new Error('No task selected');
+    }
+
+    return state.detailTask;
+  }
+);
+
 export const selectComments = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.comments

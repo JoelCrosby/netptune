@@ -8,6 +8,8 @@ import { Store } from '@ngrx/store';
 import { ProjectListComponent } from '@projects/components/project-list/project-list.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
 
 @Component({
   templateUrl: './projects-view.component.html',
@@ -24,6 +26,9 @@ export class ProjectsViewComponent {
   store = inject(Store);
 
   loading = this.store.selectSignal(selectProjectsLoading);
+  canCreateProjects = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.projects.create)
+  );
 
   constructor() {
     this.store.dispatch(loadProjects());

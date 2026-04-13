@@ -53,7 +53,7 @@ export class FormSelectComponent<TValue>
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly required = input<boolean>(false);
-  readonly readonly = input<boolean>(false);
+  readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
   readonly pending = input<boolean>(false);

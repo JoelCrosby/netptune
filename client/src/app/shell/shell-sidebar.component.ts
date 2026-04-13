@@ -33,13 +33,11 @@ import { netptunePermissions } from '../core/auth/permissions';
       class="border-side-bar-border bg-side-bar fixed top-0 flex h-screen w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
       [class.w-[248px]]="shell.sideNavExpanded()">
       <app-shell-menu-link-list>
-        @if (canReadWorkspace()) {
-          <app-workspace-select
-            idKey="id"
-            labelKey="name"
-            (selectChange)="onWorkspaceChange($event)">
-          </app-workspace-select>
-        }
+        <app-workspace-select
+          idKey="id"
+          labelKey="name"
+          (selectChange)="onWorkspaceChange($event)">
+        </app-workspace-select>
         @for (link of links(); track link.value) {
           <app-shell-menu-link [link]="link" />
         }

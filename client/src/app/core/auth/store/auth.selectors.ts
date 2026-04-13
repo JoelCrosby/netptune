@@ -107,7 +107,16 @@ export const selectCurrentUserPermissions = createSelector(
 );
 
 export const selectHasPermission = (permission: Permission) =>
-  createSelector(
-    selectCurrentUserPermissions,
-    (permissions) => permissions.includes(permission)
+  createSelector(selectCurrentUserPermissions, (permissions) =>
+    permissions.includes(permission)
   );
+
+export const selectPermissions = createSelector(
+  selectCurrentUserPermissions,
+  (permissions) => ({
+    ...permissions,
+    has: (permission: Permission) => {
+      return permissions.includes(permission);
+    },
+  })
+);

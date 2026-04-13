@@ -25,10 +25,78 @@ import { FormSelectTagsService } from './form-select-tags.service';
 
 @Component({
   selector: 'app-form-select-tags',
-  templateUrl: './form-select-tags.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectTagsService],
   imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
+  template: `<div class="nept-form-control">
+    @if (label()) {
+      <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+      <label class="form-control-label">{{ label() }}</label>
+    }
+
+    <div
+      #dropreference
+      class="form-control-input cursor-text! flex-wrap!"
+      [class.invalid]="touched() && invalid()"
+      [class.active]="value().length > 0 && pending()"
+      (click)="!isReadonly() && onTriggerClick($event)">
+      <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1 px-3 py-1">
+        @for (option of selectedOptions(); track option.value()) {
+          <span
+            class="bg-primary-selected/40 inline-flex items-center gap-2 rounded-sm px-1.5 py-0.5 font-medium whitespace-nowrap">
+            {{ option.viewValue }}
+
+            @if (!isReadonly()) {
+              <button
+                type="button"
+                class="cursor-pointer border-0! bg-transparent! p-0! text-sm leading-none text-inherit opacity-70 hover:opacity-100"
+                (click)="removeValue(option.value(), $event)"
+                aria-label="Remove">
+                &times;
+              </button>
+            }
+          </span>
+        }
+
+        <input
+          #searchInput
+          class="w-auto! min-w-15 flex-1"
+          [placeholder]="selectedOptions().length === 0 ? placeholder() : ''"
+          [disabled]="disabled()"
+          [readOnly]="isReadonly()"
+          (input)="onSearchInput($event)"
+          (keydown)="onKeyDown($event)"
+          (blur)="onBlur()"
+          autocomplete="off" />
+      </div>
+
+      @if (icon()) {
+        <svg
+          [lucideIcon]="icon()!"
+          class="mr-3"
+          size="20"
+          aria-hidden="true"></svg>
+      }
+
+      @if (!isReadonly()) {
+        <svg
+          lucideChevronDown
+          size="20"
+          aria-hidden="true"
+          class="mr-3 flex! items-center justify-center"></svg>
+      }
+
+      <app-form-select-dropdown [reference]="dropreference">
+        <div class="form-select-dropdown menu-scale-in">
+          <ng-content select="app-form-select-tags-option" />
+        </div>
+      </app-form-select-dropdown>
+    </div>
+
+    @if (hint()) {
+      <small class="form-control-hint">{{ hint() }}</small>
+    }
+  </div> `,
 })
 export class FormSelectTagsComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue[]>
@@ -52,7 +120,7 @@ export class FormSelectTagsComponent<TValue>
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly required = input<boolean>(false);
-  readonly readonly = input<boolean>(false);
+  readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
   readonly pending = input<boolean>(false);

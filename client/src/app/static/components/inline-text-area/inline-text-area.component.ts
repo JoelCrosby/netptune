@@ -27,11 +27,12 @@ import { DocumentService } from '@static/services/document.service';
   },
   template: `
     <div
-      class="hover:bg-hover font-overpass my-4 flex w-full rounded text-3xl transition">
+      class="hover:bg-hover font-overpass my-4 flex w-full rounded text-3xl transition"
+      [class.hover:bg-hover]="!isReadonly()">
       <div
         #div
-        (click)="onClicked()"
-        class="inline-text-area-label whitespace-[inherit] w-full rounded p-3 leading-[1.5] text-[inherit] transition-colors duration-200 [font:inherit]">
+        (click)="!isReadonly() && onClicked()"
+        class="inline-text-area-label whitespace-[inherit] w-full rounded p-3 leading-normal text-inherit transition-colors duration-200 [font:inherit]">
         {{ value() }}
       </div>
     </div>
@@ -51,7 +52,7 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
   readonly disabledReasons = input<
     readonly WithOptionalFieldTree<DisabledReason>[]
   >([]);
-  readonly readonly = input<boolean>(false);
+  readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
   readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
@@ -71,10 +72,8 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
 
       if (this.isContentEditable()) {
         element.nativeElement.setAttribute('contenteditable', 'true');
-        console.log("element.setAttribute('contenteditable', 'true');");
       } else {
         element.nativeElement.setAttribute('contenteditable', 'false');
-        console.log("element.setAttribute('contenteditable', 'false');");
       }
 
       this.cd.markForCheck();
@@ -89,11 +88,7 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
   }
 
   handleDocumentClick(target: EventTarget) {
-    console.log('handleDocumentClick: ', target);
-
     const element = this.elementRef();
-
-    console.log('handleDocumentClick', element);
 
     if (!element) return;
 
@@ -105,11 +100,6 @@ export class InlineTextAreaComponent implements FormValueControl<string> {
   }
 
   onClicked() {
-    console.log(
-      'Element Clicked | isContentEditable:',
-      this.isContentEditable()
-    );
-
     if (!this.isContentEditable()) {
       this.isContentEditable.set(true);
     }

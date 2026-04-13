@@ -11,17 +11,19 @@ import {
   viewChild,
 } from '@angular/core';
 import { debounce, form } from '@angular/forms/signals';
+import { selectIsAuthenticated } from '@app/core/auth/store/auth.selectors';
+import { ShellService } from '@app/shell/shell.service';
 import { logout } from '@core/auth/store/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import {
   selectAllWorkspaces,
+  selectCurrentWorkspace,
   selectCurrentWorkspaceId,
 } from '@core/store/workspaces/workspaces.selectors';
 import { filterObjectArray } from '@core/util/arrays';
 import { Store } from '@ngrx/store';
 import { DocumentService } from '@static/services/document.service';
 import { KeyboardService } from '@static/services/keyboard.service';
-import { ShellService } from '@app/shell/shell.service';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
 import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component';
 
@@ -38,7 +40,7 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
         [class.text-left]="shell.sideNavExpanded()"
         [class.justify-center]="shell.sideNavCollapsed()"
         [class.mx-auto]="shell.sideNavCollapsed()"
-        (click)="open(selectmenu, origin)"
+        (click)="isAuthenticated() === true && open(selectmenu, origin)"
         #origin>
         @if (currentWorkspace(); as workspace) {
           <app-workspace-badge
@@ -83,7 +85,10 @@ export class WorkspaceSelectComponent {
   readonly closed = output();
 
   readonly workspaces = this.store.selectSignal(selectAllWorkspaces);
+  readonly currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
   readonly workspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+
+  readonly isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
   filteredOptions = computed(() => {
     const options = this.workspaces();
@@ -92,13 +97,6 @@ export class WorkspaceSelectComponent {
       return options;
     }
     return filterObjectArray(options, 'name', term);
-  });
-
-  currentWorkspace = computed(() => {
-    const workspaces = this.workspaces();
-    const workspaceId = this.workspaceId();
-
-    return workspaces.find((w) => w.id === workspaceId);
   });
 
   searchFormModel = signal({

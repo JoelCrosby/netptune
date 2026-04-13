@@ -25,7 +25,7 @@ import { NgClass } from '@angular/common';
     NgClass,
   ],
   template: `<app-card
-    class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-[8px] text-[14px] tracking-[.1px]"
+    class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-2! text-[14px] tracking-[.1px]"
     [ngClass]="flaggedClasses()"
     [class.selected]="task().selected">
     <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
@@ -33,7 +33,7 @@ import { NgClass } from '@angular/common';
     <div class="mt-4 flex flex-row flex-wrap">
       @for (tag of task().tags; track tag) {
         <div
-          class="bg-primary/10 my-[.2rem] mr-[.2rem] ml-[0] rounded-[4px] px-[.4rem] py-[.2rem]">
+          class="bg-primary/10 my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem]">
           {{ tag }}
         </div>
       }

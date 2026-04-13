@@ -12,17 +12,20 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 import { Store } from '@ngrx/store';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { LucidePanelsTopLeft } from '@lucide/angular';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-project-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, CardListItemComponent],
   template: `
-    <a [routerLink]="['.', project().key]">
+    <a [routerLink]="canUpdateProjects() ? ['.', project().key] : null">
       <app-card-list-item
         [title]="project().name"
         [description]="project().description"
         [actions]="actions()"
+        [canDelete]="candDeleteProjects()"
         (delete)="onDeleteClicked()">
         <div class="flex flex-col">
           @if (project().repositoryUrl) {
@@ -44,6 +47,14 @@ export class ProjectListItemComponent {
   readonly project = input.required<ProjectViewModel>();
 
   workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
+
+  candDeleteProjects = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.projects.delete)
+  );
+
+  canUpdateProjects = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.projects.update)
+  );
 
   actions = computed(() => {
     const identifier = this.workspaceId();

@@ -27,13 +27,16 @@ import { CardComponent } from './card.component';
     <app-card>
       <app-card-title>
         {{ title() }}
-        <button
-          app-flat-button
-          color="ghost"
-          type="button"
-          (click)="delete.emit()">
-          <svg lucideX [size]="28"></svg>
-        </button>
+
+        @if (canDelete()) {
+          <button
+            app-flat-button
+            color="ghost"
+            type="button"
+            (click)="delete.emit()">
+            <svg lucideX [size]="28"></svg>
+          </button>
+        }
       </app-card-title>
       <app-card-content>
         <small>{{ description() }}</small>
@@ -52,6 +55,7 @@ export class CardListItemComponent {
   readonly subText = input<string>();
   readonly subTextLabel = input<string>();
   readonly actions = input<HeaderAction[]>([]);
+  readonly canDelete = input<boolean>(false);
 
   readonly delete = output();
 }

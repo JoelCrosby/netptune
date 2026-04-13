@@ -192,8 +192,6 @@ export class RegisterComponent implements OnDestroy {
   register(event: Event) {
     event.preventDefault();
 
-    console.log('register: ', event);
-
     const firstname = this.registerForm.firstname().value();
     const lastname = this.registerForm.lastname().value();
     const email = this.registerForm.email().value();

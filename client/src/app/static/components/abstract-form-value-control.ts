@@ -18,7 +18,7 @@ export class AbstractFormValueControl implements FormValueControl<string> {
   readonly disabledReasons = input<
     readonly WithOptionalFieldTree<DisabledReason>[]
   >([]);
-  readonly readonly = input<boolean>(false);
+  readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
   readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);

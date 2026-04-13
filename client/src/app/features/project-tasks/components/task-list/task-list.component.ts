@@ -12,6 +12,8 @@ import { TaskListItemComponent } from './task-list-item.component';
 import { TaskInlineComponent } from '../task-inline/task-inline.component';
 import { LucideListChecks, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-task-list',
@@ -37,11 +39,16 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
       </ng-template>
 
       <ng-template #listFooter>
-        <app-task-inline [siblings]="tasks()" />
+        @if (canCreate()) {
+          <app-task-inline [siblings]="tasks()" />
+        }
       </ng-template>
 
       <ng-template #listEmpty>
-        <app-task-inline />
+        @if (canCreate()) {
+          <app-task-inline />
+        }
+
         <div class="flex justify-center">
           <div
             class="my-16 flex h-full flex-col items-center justify-center gap-2">
@@ -49,14 +56,17 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
             <h4 class="mx-16 text-center font-normal">
               There are currently no tasks.
             </h4>
-            <p class="text-foreground/70 mb-4 text-center text-sm">
-              Use the Create Task button to create your first task and get
-              started.
-            </p>
-            <button app-flat-button>
-              <svg size="20" lucidePlus></svg>
-              <span>Create Task</span>
-            </button>
+
+            @if (canCreate()) {
+              <p class="text-foreground/70 mb-4 text-center text-sm">
+                Use the Create Task button to create your first task and get
+                started.
+              </p>
+              <button app-flat-button>
+                <svg size="20" lucidePlus></svg>
+                <span>Create Task</span>
+              </button>
+            }
           </div>
         </div>
       </ng-template>
@@ -66,7 +76,10 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
 export class TaskListComponent {
   private store = inject(Store);
 
-  tasks = this.store.selectSignal(selectTasks);
-
+  readonly tasks = this.store.selectSignal(selectTasks);
   readonly trackByTask: TrackByFunction<TaskViewModel> = (_, task) => task.id;
+
+  readonly canCreate = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.create)
+  );
 }
