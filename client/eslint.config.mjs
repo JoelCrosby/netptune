@@ -4,33 +4,22 @@ import angular from 'angular-eslint';
 import typescript from 'typescript-eslint';
 import ngrx from '@ngrx/eslint-plugin/v9';
 
-// 'plugin:@angular-eslint/recommended',
-// 'plugin:@angular-eslint/template/process-inline-templates',
-// 'eslint:recommended',
-// 'plugin:@typescript-eslint/recommended',
-// 'plugin:@typescript-eslint/recommended-requiring-type-checking',
-// 'plugin:prettier/recommended'
-
 export default defineConfig([
   globalIgnores(['projects/**/*', '**/*.js']),
   {
     files: ['**/*.ts'],
 
     extends: [
-       eslint.configs.recommended,
-      // Apply the recommended TypeScript rules
+      eslint.configs.recommended,
       ...typescript.configs.recommended,
-      // Optionally apply stylistic rules from typescript-eslint that improve code consistency
       ...typescript.configs.stylistic,
-      // Apply the recommended Angular rules
       ...angular.configs.tsRecommended,
-      // Apply ngrx rules
       ...ngrx.configs.all
     ],
 
     languageOptions: {
       ecmaVersion: 'latest',
-      sourceType: 'script',
+      sourceType: 'module',
 
       parserOptions: {
         project: ['tsconfig.json'],
