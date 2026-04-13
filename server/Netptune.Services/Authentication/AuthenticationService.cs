@@ -38,6 +38,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IWorkspaceService WorkspaceService;
+    private readonly IWorkspacePermissionCache WorkspacePermissionCache;
 
     private readonly string Issuer;
     private readonly string SecurityKey;
@@ -53,8 +54,8 @@ public class NetptuneAuthService : INetptuneAuthService
         IInviteCache inviteCache,
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
-        IWorkspaceService workspaceService
-    )
+        IWorkspaceService workspaceService,
+        IWorkspacePermissionCache workspacePermissionCache)
     {
         SignInManager = signInManager;
         UserManager = userManager;
@@ -64,6 +65,7 @@ public class NetptuneAuthService : INetptuneAuthService
         Identity = identity;
         UnitOfWork = unitOfWork;
         WorkspaceService = workspaceService;
+        WorkspacePermissionCache = workspacePermissionCache;
 
         Issuer = configuration.GetRequiredValue("Tokens:Issuer");
         ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
@@ -342,12 +344,17 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (user is null) return null;
 
+        var workspace = Identity.TryGetWorkspaceKey();
+        var permissions = await WorkspacePermissionCache.GetUserPermissions(user.Id, workspace);
+        var permissionList = permissions?.ToList() ?? [];
+
         return new CurrentUserResponse
         {
             DisplayName = user.DisplayName,
             EmailAddress = user.Email!,
             PictureUrl = user.PictureUrl,
             UserId = user.Id,
+            Permissions = permissionList,
         };
     }
 

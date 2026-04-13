@@ -30,9 +30,11 @@ public class WorkspacePermissionCache : EntityCache<HashSet<string>?, WorkspaceU
         return $"workspace-permissions:{key.WorkspaceKey}:{key.UserId}";
     }
 
-    public Task<HashSet<string>?> GetUserPermissions(string userId, string workspaceKey)
+    public async Task<HashSet<string>?> GetUserPermissions(string userId, string? workspaceKey)
     {
-        return Get(new WorkspaceUserKey
+        if (workspaceKey is null) return null;
+
+        return await Get(new WorkspaceUserKey
         {
             UserId = userId,
             WorkspaceKey = workspaceKey,

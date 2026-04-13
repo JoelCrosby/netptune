@@ -16,5 +16,7 @@ public interface IIdentityService
 
     string GetWorkspaceKey();
 
+    string? TryGetWorkspaceKey();
+
     Task<int> GetWorkspaceId();
 }

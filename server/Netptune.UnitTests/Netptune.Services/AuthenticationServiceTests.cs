@@ -36,6 +36,7 @@ public class AuthenticationServiceTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IWorkspaceService WorkspaceService = Substitute.For<IWorkspaceService>();
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
+    private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
 
     public AuthenticationServiceTests()
     {
@@ -81,7 +82,8 @@ public class AuthenticationServiceTests
             InviteCache,
             Identity,
             UnitOfWork,
-            WorkspaceService
+            WorkspaceService,
+            WorkspacePermissionCache
         );
     }
 

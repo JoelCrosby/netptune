@@ -64,6 +64,20 @@ public class IdentityService : IIdentityService
         throw new Exception("request context did not contain a 'workspace' header.");
     }
 
+    public string? TryGetWorkspaceKey()
+    {
+        var context = Context.HttpContext;
+
+        if  (context is null) return null;
+
+        if (context.Request.Headers.TryGetValue("workspace", out var workspace))
+        {
+            return workspace!;
+        }
+
+        return null;
+    }
+
     public async Task<int> GetWorkspaceId()
     {
         var id = await WorkspaceCache.GetIdBySlug(GetWorkspaceKey());

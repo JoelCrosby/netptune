@@ -9,4 +9,6 @@ public class CurrentUserResponse
     public string DisplayName { get; set; } = null!;
 
     public string? PictureUrl { get; set; }
+
+    public List<string> Permissions { get; set; }
 }
