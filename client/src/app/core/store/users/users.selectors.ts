@@ -18,6 +18,16 @@ export const selectUsersLoading = createSelector(
   (state: UsersState) => state.loading && !state.loaded
 );
 
+export const selectUserDetail = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.userDetail
+);
+
+export const selectUserDetailLoading = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.userDetailLoading
+);
+
 export const selectUsersLoaded = createSelector(
   selectUsersFeature,
   (state: UsersState) => state.loaded

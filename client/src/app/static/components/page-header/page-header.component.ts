@@ -37,7 +37,7 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
       }
 
       <div
-        class="flex flex-col justify-between max-[600px]:mt-1 max-[600px]:flex-1">
+        class="flex flex-col justify-between gap-8 max-[600px]:mt-1 max-[600px]:flex-1">
         <div class="h-6">
           <app-page-header-back-link
             [backLink]="backLink()"

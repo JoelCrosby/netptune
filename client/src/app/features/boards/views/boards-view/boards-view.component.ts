@@ -12,7 +12,6 @@ import { netptunePermissions } from '@core/auth/permissions';
 import { selectHasPermission } from '@core/auth/store/auth.selectors';
 
 @Component({
-  templateUrl: './boards-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -20,6 +19,28 @@ import { selectHasPermission } from '@core/auth/store/auth.selectors';
     SpinnerComponent,
     BoardsGridComponent,
   ],
+  template: `<app-page-container
+    [verticalPadding]="false"
+    [fullHeight]="true"
+    [centerPage]="true"
+    [marginBottom]="true">
+    @if (canCreateBoards()) {
+      <app-page-header
+        title="Boards"
+        actionTitle="Create Board"
+        (actionClick)="onCreateBoardClicked()" />
+    } @else {
+      <app-page-header title="Boards" />
+    }
+
+    @if (loading()) {
+      <div class="flex h-full flex-col items-center justify-center">
+        <app-spinner diameter="32px" />
+      </div>
+    } @else {
+      <app-boards-grid />
+    }
+  </app-page-container> `,
 })
 export class BoardsViewComponent {
   private dialog = inject(DialogService);

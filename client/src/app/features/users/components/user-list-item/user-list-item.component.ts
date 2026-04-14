@@ -1,15 +1,24 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { netptunePermissions } from '@core/auth/permissions';
+import { selectHasPermission } from '@core/auth/store/auth.selectors';
+import { ListLinkItemComponent } from '@static/components/list/list-link-item.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { ListItemComponent } from '@static/components/list/list-item.component';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 
 @Component({
   selector: 'app-user-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CheckboxComponent, AvatarComponent, ListItemComponent],
+  imports: [CheckboxComponent, AvatarComponent, ListLinkItemComponent],
   template: `
-    <app-list-item>
+    <app-list-link-item [link]="routerLink()">
       <ng-content />
 
       <app-checkbox class="my-auto flex-none"></app-checkbox>
@@ -22,7 +31,7 @@ import { ListItemComponent } from '@static/components/list/list-item.component';
       </div>
 
       <div
-        class="w-[180px] flex-none overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+        class="w-45 flex-none overflow-hidden text-sm text-ellipsis whitespace-nowrap">
         {{ user().displayName }}
       </div>
 
@@ -37,9 +46,18 @@ import { ListItemComponent } from '@static/components/list/list-item.component';
           Owner
         </div>
       }
-    </app-list-item>
+    </app-list-link-item>
   `,
 })
 export class UserListItemComponent {
   readonly user = input.required<WorkspaceAppUser>();
+  private store = inject(Store);
+
+  canReadUsers = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.members.read)
+  );
+
+  routerLink = computed(() => {
+    return this.canReadUsers() ? ['.', this.user().id] : null;
+  });
 }

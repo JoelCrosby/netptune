@@ -9,6 +9,10 @@ import { ClientResponse } from '@core/models/client-response';
 export class UsersService {
   private http = inject(HttpClient);
 
+  getUser(userId: string) {
+    return this.http.get<WorkspaceAppUser>(`api/users/${userId}`);
+  }
+
   getUsersInWorkspace() {
     return this.http.get<WorkspaceAppUser[]>(`api/users`);
   }

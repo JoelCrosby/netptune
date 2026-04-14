@@ -22,6 +22,7 @@ public class UserService : IUserService
     private readonly IEmailService Email;
     private readonly IHostingService Hosting;
     private readonly IWorkspaceUserCache WorkspaceUserCache;
+    private readonly IWorkspacePermissionCache PermissionCache;
     private readonly IInviteCache InviteCache;
     private readonly IUserRepository UserRepository;
     private readonly IWorkspaceRepository WorkspaceRepository;
@@ -32,7 +33,8 @@ public class UserService : IUserService
         IEmailService email,
         IHostingService hosting,
         IWorkspaceUserCache workspaceUserCache,
-        IInviteCache inviteCache)
+        IInviteCache inviteCache,
+            IWorkspacePermissionCache permissionCache )
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
@@ -42,20 +44,19 @@ public class UserService : IUserService
         InviteCache = inviteCache;
         UserRepository = unitOfWork.Users;
         WorkspaceRepository = unitOfWork.Workspaces;
+        PermissionCache = permissionCache;
     }
 
     public async Task<UserViewModel?> Get(string userId)
     {
         var user = await UserRepository.GetAsync(userId, true);
-
-        return user?.ToViewModel();
+        return await ToViewModel(user);
     }
 
     public async Task<UserViewModel?> GetByEmail(string email)
     {
         var user = await UserRepository.GetByEmail(email, true);
-
-        return user?.ToViewModel();
+        return await ToViewModel(user);
     }
 
     public async Task<List<UserViewModel>> GetAll()
@@ -222,5 +223,15 @@ public class UserService : IUserService
     private static List<UserViewModel> MapUsers(List<AppUser> users)
     {
         return users.ConvertAll(user => user.ToViewModel());
+    }
+
+    private async Task<UserViewModel?> ToViewModel(AppUser? user)
+    {
+        if (user is null) return null;
+
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var permissions = await PermissionCache.GetUserPermissions(user.Id, workspaceKey);
+
+        return user.ToViewModel(permissions);
     }
 }

@@ -96,12 +96,12 @@ export class ShellSidebarComponent {
 
     return [
       { label: 'Projects', value: ['./projects'], icon: LucideBarChart2 },
+      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
       {
         label: 'Tasks',
         value: ['./tasks'],
         icon: LucideCheckSquare,
       },
-      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
       ...links,
     ];
   });

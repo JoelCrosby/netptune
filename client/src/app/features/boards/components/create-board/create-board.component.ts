@@ -10,12 +10,13 @@ import {
 } from '@angular/core';
 import {
   disabled,
-  FormField,
   form,
+  FormField,
   required,
   validateAsync,
 } from '@angular/forms/signals';
-import { ButtonComponent } from '@static/components/button/button.component';
+import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { createBoard } from '@boards/store/boards/boards.actions';
 import { BoardsService } from '@boards/store/boards/boards.service';
 import { Board } from '@core/models/board';
@@ -25,13 +26,13 @@ import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { colorDictionary } from '@core/util/colors/colors';
 import { Logger } from '@core/util/logger';
 import { toUrlSlug } from '@core/util/strings';
-import { Store } from '@ngrx/store';
 import { LucideCheck } from '@lucide/angular';
+import { Store } from '@ngrx/store';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
+import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom } from 'rxjs';
@@ -73,10 +74,10 @@ import { map } from 'rxjs/operators';
     </form>
 
     <div app-dialog-actions align="end">
-      <app-button variant="outlined" app-dialog-close>Close</app-button>
-      <app-button variant="filled" (click)="getResult()">{{
-        isEditMode ? 'Save Changes' : 'Create Board'
-      }}</app-button>
+      <button app-stroked-button app-dialog-close>Close</button>
+      <button app-flat-button (click)="getResult()">
+        {{ isEditMode ? 'Save Changes' : 'Create Board' }}
+      </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,9 +88,10 @@ import { map } from 'rxjs/operators';
     FormSelectOptionComponent,
     ColorSelectComponent,
     DialogActionsDirective,
-    ButtonComponent,
     DialogCloseDirective,
     FormField,
+    StrokedButtonComponent,
+    FlatButtonComponent,
   ],
 })
 export class CreateBoardComponent {

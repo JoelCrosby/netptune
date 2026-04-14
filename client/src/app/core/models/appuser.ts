@@ -13,6 +13,7 @@ export interface AppUser {
   registrationDate: Date;
   token: string;
   tasks: ProjectTask[];
+  permissions: string[];
 }
 
 export interface WorkspaceAppUser extends AppUser {

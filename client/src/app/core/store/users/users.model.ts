@@ -6,11 +6,15 @@ export const adapter = createEntityAdapter<WorkspaceAppUser>({
   selectId: (user: WorkspaceAppUser) => user.email,
 });
 
-export const initialState: AsyncEntityState<WorkspaceAppUser> =
-  adapter.getInitialState({
-    loading: true,
-    loaded: false,
-    loadingCreate: false,
-  });
+export const initialState: UsersState = adapter.getInitialState({
+  loading: true,
+  loaded: false,
+  loadingCreate: false,
+  userDetailLoading: true,
+});
 
-export type UsersState = AsyncEntityState<WorkspaceAppUser>;
+export interface UsersState extends AsyncEntityState<WorkspaceAppUser> {
+  userDetail?: WorkspaceAppUser;
+  userDetailLoading: boolean;
+  userDetailLoadingError?: Error;
+}

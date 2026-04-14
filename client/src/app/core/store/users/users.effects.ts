@@ -32,6 +32,20 @@ export class UsersEffects {
     );
   });
 
+  loadUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadUser),
+      switchMap(({ userId }) =>
+        this.usersService.getUser(userId).pipe(
+          map((user) => actions.loadUserSuccess({ user })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadUserFail({ error }))
+          )
+        )
+      )
+    );
+  });
+
   onWorkspaceSelected$ = createEffect(() => {
     return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
   });

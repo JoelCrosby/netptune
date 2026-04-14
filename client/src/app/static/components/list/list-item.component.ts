@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   host: { class: 'block' },
   template: `
     <div
-      class="bg-card mb-[3px] flex h-10 items-center overflow-hidden rounded-sm transition-colors duration-200 ease-in-out">
+      class="bg-card mb-0.75 flex h-10 items-center overflow-hidden rounded-sm transition-colors duration-200 ease-in-out">
       <ng-content />
     </div>
   `,

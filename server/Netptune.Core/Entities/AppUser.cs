@@ -29,7 +29,7 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
         return $"{Firstname} {Lastname}";
     }
 
-    public UserViewModel ToViewModel()
+    public UserViewModel ToViewModel(HashSet<string>? permissions = null)
     {
         return new()
         {
@@ -42,6 +42,7 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
             UserName = UserName!,
             LastLoginTime = LastLoginTime,
             RegistrationDate = RegistrationDate,
+            Permissions = permissions?.ToList() ?? [],
         };
     }
 

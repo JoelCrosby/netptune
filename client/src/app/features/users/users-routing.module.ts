@@ -1,8 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersViewComponent } from './views/users-view/users-view.component';
+import { UserDetailViewComponent } from './views/user-detail-view/user-detail-view.component';
+import { userDetailGuard } from './guards/user-detail.guard';
 
-const routes: Routes = [{ path: '**', component: UsersViewComponent }];
+const routes: Routes = [
+  { path: '', component: UsersViewComponent },
+  {
+    path: ':id',
+    component: UserDetailViewComponent,
+    canActivate: [userDetailGuard],
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
