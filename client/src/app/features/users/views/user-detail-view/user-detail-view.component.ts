@@ -18,11 +18,7 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
     UserDetailComponent,
   ],
   template: `
-    <app-page-container
-      [verticalPadding]="false"
-      [fullHeight]="true"
-      [centerPage]="true"
-      [marginBottom]="true">
+    <app-page-container [verticalPadding]="false" [centerPage]="true">
       <app-page-header
         [title]="user()?.displayName"
         backLabel="Back to Users"

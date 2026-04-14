@@ -16,14 +16,17 @@ import { LucideCheck } from '@lucide/angular';
       class="flex cursor-pointer items-center justify-center gap-4"
       [class.cursor-not-allowed]="disabled()">
       <div
-        class="flex min-h-4 min-w-4 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
+        class="flex min-h-5 min-w-5 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
         [class.border-primary]="checked()"
         [class.bg-primary]="checked()"
         [class.border-foreground]="!checked()"
         [class.border-opacity-40]="!checked()"
         [class.opacity-50]="disabled()">
         @if (checked()) {
-          <svg lucideCheck class="h-2.5 w-2.5 text-white"></svg>
+          <svg
+            lucideCheck
+            strokeWidth="4"
+            class="h-4 w-4 text-white dark:text-black"></svg>
         }
       </div>
 

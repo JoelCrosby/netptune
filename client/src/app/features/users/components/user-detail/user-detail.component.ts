@@ -27,7 +27,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
         <h2 class="text-foreground pl-1 text-2xl">Permissions</h2>
 
-        <div class="bg-board-group w-full rounded p-2">
+        <div class="bg-board-group mb-64 w-full rounded p-2">
           <app-permission-list [permissions]="permissions()" />
         </div>
       </div>

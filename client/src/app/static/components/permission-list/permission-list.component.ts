@@ -9,19 +9,24 @@ import {
   PermissionMeta,
 } from '@core/auth/permission-items';
 import { LucideDynamicIcon } from '@lucide/angular';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
+
+interface PermissionItem extends PermissionMeta {
+  granted: boolean;
+}
 
 interface PermissionGroup {
   heading: string;
-  items: PermissionMeta[];
+  items: PermissionItem[];
 }
 
 @Component({
   selector: 'app-permission-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, CheckboxComponent],
   host: {
     class:
-      'block w-full bg-board-group overflow-auto max-h-[calc(100vh-600px)] custom-scroll rounded border-border/60 border',
+      'block w-full bg-board-group overflow-auto  custom-scroll rounded border-border/60 border',
   },
   template: `
     <div class="flex w-full flex-col">
@@ -34,11 +39,12 @@ interface PermissionGroup {
           <div class="flex w-full flex-col">
             @for (item of group.items; track item.key) {
               <div
-                class="border-border flex h-14 w-full items-center gap-3 border-b px-4">
-                <svg
-                  [lucideIcon]="item.icon"
-                  class="text-foreground/40 h-6 w-6 shrink-0"></svg>
-                <span class="text-sm">{{ item.label }}</span>
+                class="border-border flex h-14 w-full items-center gap-3 border-b px-4"
+                [class.opacity-40]="!item.granted">
+                <svg [lucideIcon]="item.icon" class="h-6 w-6 shrink-0"></svg>
+                <span class="flex-1 text-sm">{{ item.label }}</span>
+
+                <app-checkbox [checked]="item.granted" [disabled]="true" />
               </div>
             }
           </div>
@@ -59,14 +65,12 @@ export class PermissionListComponent {
     )) {
       const items = Object.values(
         groupValue as Record<string, PermissionMeta>
-      ).filter((meta) => permSet.has(meta.key));
+      ).map((meta) => ({ ...meta, granted: permSet.has(meta.key) }));
 
-      if (items.length > 0) {
-        groups.push({
-          heading: groupKey.replace(/([A-Z])/g, ' $1').trim(),
-          items,
-        });
-      }
+      groups.push({
+        heading: groupKey.replace(/([A-Z])/g, ' $1').trim(),
+        items,
+      });
     }
 
     return groups;
