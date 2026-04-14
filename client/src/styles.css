@@ -15,6 +15,7 @@
   --border-radius-small: 3px;
 }
 
+
 @theme inline {
   --color-primary: var(--primary);
   --color-primary-selected: var(--primary-selected);
@@ -149,3 +150,8 @@
 
   --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
 }
+
+html {
+  background-color: var(--background);
+}
+
