@@ -32,6 +32,7 @@ public class UserServiceTests
     private readonly IEmailService Email = Substitute.For<IEmailService>();
     private readonly IHostingService Hosting = Substitute.For<IHostingService>();
     private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
+    private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
 
     public UserServiceTests()
     {
@@ -41,7 +42,8 @@ public class UserServiceTests
             Email,
             Hosting,
             Cache,
-            InviteCache
+            InviteCache,
+            WorkspacePermissionCache
         );
     }
 
