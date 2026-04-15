@@ -33,6 +33,12 @@ export default createHandler(() => (
             type="image/webp"
           />
 
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"token": "e6aa958973eb4605b393ae59a5e7752a"}'
+          />
+
           <title>
             Netptune | Open source project management for teams who need real control over their
             tools and data.
