@@ -21,6 +21,9 @@ spec:
     - hosts:
         - "{{ .Values.ingress.host }}"
       secretName: "netptune-tls"
+    - hosts:
+        - "{{ .Values.ingress.appHost }}"
+      secretName: "netptune-app-tls"
   {{- end }}
   rules:
     - host: "{{ .Values.ingress.host }}"
@@ -33,6 +36,16 @@ spec:
                 name: "api-service"
                 port:
                   number: {{ .Values.parameters.api.port_http | int }}
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: "website-service"
+                port:
+                  number: 80
+    - host: "{{ .Values.ingress.appHost }}"
+      http:
+        paths:
           - path: "/"
             pathType: "Prefix"
             backend:

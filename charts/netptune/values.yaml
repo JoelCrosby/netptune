@@ -1,6 +1,7 @@
 ingress:
   enabled: true
   host: "netptune.co.uk"
+  appHost: "app.netptune.co.uk"
   tls:
     enabled: true
     email: ""
@@ -42,6 +43,11 @@ loki:
   enabled: true
   image: "grafana/loki:latest"
   promtailImage: "grafana/promtail:latest"
+website:
+  enabled: true
+  image: "ghcr.io/joelcrosby/netptune-website:latest"
+  host: "www.netptune.co.uk"
+
 parameters:
   jobs:
     port_http: 8080

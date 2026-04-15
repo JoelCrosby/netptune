@@ -22,16 +22,16 @@ export default function CtaSection() {
           <Button
             variant="outline"
             size="lg"
-            href="#"
-            class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-white dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
+            href="/docs"
+            class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-neutral-600 dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
           >
             Read the docs
           </Button>
           <Button
             variant="outline"
             size="lg"
-            href="#"
-            class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-white dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
+            href="https://app.netptune.co.uk/auth/login"
+            class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-neutral-600 dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
           >
             Get started free
           </Button>

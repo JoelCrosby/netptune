@@ -52,7 +52,7 @@ export default function Nav() {
             <Star size={14} />
             <span class="hidden sm:block">Star on GitHub</span>
           </Button>
-          <Button variant="primary" size="sm" href="https://netptune.co.uk/">
+          <Button variant="primary" size="sm" href="https://app.netptune.co.uk/get-started">
             Get started free
           </Button>
         </div>
