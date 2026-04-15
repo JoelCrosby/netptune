@@ -64,6 +64,7 @@ builder.Services.AddNeptuneAuthentication(options =>
     options.SecurityKey = configuration.GetEnvironmentVariable("NETPTUNE_SIGNING_KEY");
     options.GitHubClientId = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
     options.GitHubSecret = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
+    options.GitHubCallback = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK");
 });
 
 builder.AddNetptuneCache(options =>
