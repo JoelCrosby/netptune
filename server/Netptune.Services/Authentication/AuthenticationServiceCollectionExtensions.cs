@@ -105,7 +105,7 @@ public static class AuthenticationServiceCollectionExtensions
         {
             options.ClientId = authenticationOptions.GitHubClientId;
             options.ClientSecret = authenticationOptions.GitHubSecret;
-            options.CallbackPath = "/api/auth/github-callback";
+            options.CallbackPath = authenticationOptions.GitHubCallback;
             options.Scope.Add("read:user");
             options.Scope.Add("urn:github:name");
             options.Scope.Add("user:email");

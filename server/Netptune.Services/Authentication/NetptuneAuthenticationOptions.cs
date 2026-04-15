@@ -18,4 +18,7 @@ public class NetptuneAuthenticationOptions
 
     [Required]
     public string GitHubSecret { get; set; } = null!;
+
+    [Required]
+    public PathString GitHubCallback { get; set; } = null!;
 }
