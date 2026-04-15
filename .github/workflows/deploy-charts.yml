@@ -50,7 +50,7 @@ jobs:
             --set "secrets.api.signing_key=${{ secrets.SIGNING_KEY }}" \
             --set "secrets.api.github_client_id=${{ secrets.APP_GITHUB_CLIENT_ID }}" \
             --set "secrets.api.github_secret=${{ secrets.APP_GITHUB_SECRET }}" \
-            --set "secrets.api.github_callback=${{ secrets.GITHUB_CALLBACK }}" \
+            --set "secrets.api.github_callback=${{ secrets.APP_GITHUB_CALLBACK }}" \
             --set "secrets.api.sendgrid_api_key=${{ secrets.SENDGRID_API_KEY }}" \
             --set "secrets.api.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
             --set "secrets.api.s3_region=${{ secrets.S3_REGION }}" \
