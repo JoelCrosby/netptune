@@ -46,6 +46,13 @@ spec:
     - host: "{{ .Values.ingress.appHost }}"
       http:
         paths:
+          - path: "/api/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: "api-service"
+                port:
+                  number: {{ .Values.parameters.api.port_http | int }}
           - path: "/"
             pathType: "Prefix"
             backend:
