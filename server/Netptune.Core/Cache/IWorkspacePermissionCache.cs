@@ -1,8 +1,9 @@
 using Netptune.Core.Cache.Common;
+using Netptune.Core.Models;
 
 namespace Netptune.Core.Cache;
 
-public interface IWorkspacePermissionCache : IEntityCache<HashSet<string>?, WorkspaceUserKey>
+public interface IWorkspacePermissionCache : IEntityCache<UserPermissions?, WorkspaceUserKey>
 {
-    Task<HashSet<string>?> GetUserPermissions(string userId, string? workspaceKey);
+    Task<UserPermissions?> GetUserPermissions(string userId, string? workspaceKey);
 }

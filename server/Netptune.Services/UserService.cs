@@ -174,6 +174,46 @@ public class UserService : IUserService
         return updatedUser.ToViewModel();
     }
 
+    public async Task<ClientResponse<List<string>>> ToggleUserPermission(ToggleUserPermissionRequest request)
+    {
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var workspace = await WorkspaceRepository.GetBySlug(workspaceKey, true);
+
+        if (workspace is null)
+        {
+            return ClientResponse<List<string>>.Failed("workspace not found");
+        }
+
+        var workspaceUser = await UnitOfWork.WorkspaceUsers.GetUserPermissions(request.UserId, workspaceKey, false);
+
+        if (workspaceUser is null)
+        {
+            return ClientResponse<List<string>>.Failed("user is not a member of this workspace");
+        }
+
+        var permissions = workspaceUser.Permissions;
+
+        if (permissions.Contains(request.Permission))
+        {
+            permissions.Remove(request.Permission);
+        }
+        else
+        {
+            permissions.Add(request.Permission);
+        }
+
+        await UnitOfWork.WorkspaceUsers.SetUserPermissions(request.UserId, workspace.Id, permissions);
+        await UnitOfWork.CompleteAsync();
+
+        PermissionCache.Remove(new()
+        {
+            UserId = request.UserId,
+            WorkspaceKey = workspaceKey,
+        });
+
+        return ClientResponse<List<string>>.Success([.. permissions]);
+    }
+
     private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)
     {
         var emailList = emails.ToList();
@@ -230,8 +270,10 @@ public class UserService : IUserService
         if (user is null) return null;
 
         var workspaceKey = Identity.GetWorkspaceKey();
-        var permissions = await PermissionCache.GetUserPermissions(user.Id, workspaceKey);
+        var workspaceUser = await PermissionCache.GetUserPermissions(user.Id, workspaceKey);
 
-        return user.ToViewModel(permissions);
+        if (workspaceUser is null) return null;
+
+        return user.ToViewModel(workspaceUser.Permissions);
     }
 }

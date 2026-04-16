@@ -52,6 +52,22 @@ const reducer = createReducer(
         loading: false,
         loaded: true,
       })
+  ),
+  on(
+    actions.toggleUserPermission,
+    (state): UsersState => ({ ...state, loading: true })
+  ),
+  on(
+    actions.toggleUserPermissionSuccess,
+    (state): UsersState => ({ ...state, loading: false })
+  ),
+  on(
+    actions.toggleUserPermissionFail,
+    (state, { error }): UsersState => ({
+      ...state,
+      loading: false,
+      loadingError: error,
+    })
   )
 );
 

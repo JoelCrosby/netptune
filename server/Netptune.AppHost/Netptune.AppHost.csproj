@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.2.2" />
     <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.2.2" />
     <PackageReference Include="Aspire.Hosting.Nats" Version="13.2.2" />
     <PackageReference Include="Aspire.Hosting.Kubernetes" Version="13.2.1-preview.1.26180.6" />

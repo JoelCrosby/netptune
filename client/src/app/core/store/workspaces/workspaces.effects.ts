@@ -21,6 +21,7 @@ import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
+import { currentUser } from '@app/core/auth/store/auth.actions';
 
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {
@@ -49,6 +50,13 @@ export class WorkspacesEffects implements OnInitEffects {
     },
     { dispatch: false }
   );
+
+  setCurrentWorkspace$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.setCurrentWorkspace),
+      map(() => currentUser())
+    );
+  });
 
   loadWorkspaces$ = createEffect(
     ({ throttle = 800, scheduler = asyncScheduler } = {}) => {

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -15,7 +16,7 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
     {
     }
 
-    public async Task<HashSet<string>?> GetUserPermissions(string userId, string workspaceKey)
+    public async Task<UserPermissions?> GetUserPermissions(string userId, string workspaceKey, bool isReadOnly = true)
     {
         var isMember = await Context.WorkspaceAppUsers
             .AnyAsync(x => x.UserId == userId && x.Workspace.Slug == workspaceKey);
@@ -25,12 +26,23 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
             return null;
         }
 
-        var permissions = await Context.WorkspaceAppUsers
+        var workspaceUser = await Context.WorkspaceAppUsers
             .Where(p => p.UserId == userId && p.Workspace.Slug == workspaceKey)
-            .Select(p => p.Permissions)
+            .Select(p => new {  p.Role, p.Permissions })
+            .IsReadonly(isReadOnly)
             .SingleOrDefaultAsync();
 
-        return permissions?.ToHashSet() ?? [];
+        if (workspaceUser is null) return null;
+
+        var permissionSet = workspaceUser.Permissions.ToHashSet();
+
+        return new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Permissions = permissionSet,
+            Role = workspaceUser.Role,
+        };
     }
 
     public async Task SetUserPermissions(string userId, int workspaceId, IEnumerable<string> permissions)

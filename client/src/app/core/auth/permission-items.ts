@@ -21,6 +21,7 @@ import {
   LucideTags,
   LucideTrash2,
   LucideUpload,
+  LucideUserLock,
   LucideUserMinus,
   LucideUserPlus,
   LucideUsers,
@@ -80,6 +81,11 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'members.update_profile',
       label: 'Edit Member Profiles',
       icon: LucideUserX,
+    },
+    updatePermissions: {
+      key: 'members.update_permission',
+      label: 'Update Member Permissions',
+      icon: LucideUserLock,
     },
   },
   projects: {

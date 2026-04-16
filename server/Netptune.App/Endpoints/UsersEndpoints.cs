@@ -15,6 +15,7 @@ public static class UsersEndpoints
         group.MapPut("/{id}", HandleUpdateUser).RequireAuthorization(NetptunePermissions.Members.UpdateProfile);
         group.MapPost("/invite", HandleInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
         group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePermissions.Members.Remove);
+        group.MapPost("/toggle-permission", HandleTogglePermission).RequireAuthorization(NetptunePermissions.Members.UpdatePermission);
         group.MapGet("/get-by-email", HandleGetUserByEmail);
         group.MapGet("/all", HandleGetAll);
 
@@ -84,6 +85,17 @@ public static class UsersEndpoints
         IUserService userService)
     {
         var result = await userService.GetAll();
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleTogglePermission(
+        IUserService userService,
+        ToggleUserPermissionRequest request)
+    {
+        var result = await userService.ToggleUserPermission(request);
+
+        if (!result.IsSuccess) return Results.BadRequest(result.Message);
 
         return Results.Ok(result);
     }

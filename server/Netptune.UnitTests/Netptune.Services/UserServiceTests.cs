@@ -2,9 +2,11 @@
 
 using FluentAssertions;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
+using Netptune.Core.Models;
 using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -51,8 +53,17 @@ public class UserServiceTests
     public async Task Get_ShouldReturnCorrectly_WhenInputValid()
     {
         var user = AutoFixtures.AppUser;
+        const string workspaceKey = "workspaceKey";
 
         UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>()).Returns(user);
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
+        {
+            Permissions = [],
+            Role = WorkspaceRole.Owner,
+            UserId = user.Id,
+            WorkspaceKey = workspaceKey,
+        });
 
         var result = await Service.Get("userId");
 
@@ -67,6 +78,7 @@ public class UserServiceTests
             UserName = user.UserName!,
             LastLoginTime = user.LastLoginTime,
             RegistrationDate = user.RegistrationDate,
+            Permissions = [],
         });
     }
 
@@ -84,8 +96,17 @@ public class UserServiceTests
     public async Task GetByEmail_ShouldReturnCorrectly_WhenInputValid()
     {
         var user = AutoFixtures.AppUser;
+        const string workspaceKey = "workspaceKey";
 
         UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>()).Returns(user);
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
+        {
+            Permissions = [],
+            Role = WorkspaceRole.Owner,
+            UserId = user.Id,
+            WorkspaceKey = workspaceKey,
+        });
 
         var result = await Service.GetByEmail("email");
 
@@ -100,6 +121,7 @@ public class UserServiceTests
             UserName = user.UserName!,
             LastLoginTime = user.LastLoginTime,
             RegistrationDate = user.RegistrationDate,
+            Permissions = [],
         });
     }
 
@@ -475,5 +497,168 @@ public class UserServiceTests
         var result = await Service.Update(request);
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    // ToggleUserPermission
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldAddPermission_WhenNotAlreadyGranted()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string userId = "userId";
+        const string permission = "tasks.read";
+
+        var workspace = AutoFixtures.Workspace;
+        var userPermissions = new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+
+        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
+        var result = await Service.ToggleUserPermission(request);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().Contain(permission);
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldRemovePermission_WhenAlreadyGranted()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string userId = "userId";
+        const string permission = "tasks.read";
+
+        var workspace = AutoFixtures.Workspace;
+        var userPermissions = new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [permission],
+        };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+
+        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
+        var result = await Service.ToggleUserPermission(request);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotContain(permission);
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+
+        var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
+        var result = await Service.ToggleUserPermission(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldReturnFailure_WhenUserNotInWorkspace()
+    {
+        const string workspaceKey = "workspaceKey";
+
+        var workspace = AutoFixtures.Workspace;
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(Arg.Any<string>(), workspaceKey, false).ReturnsNull();
+
+        var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
+        var result = await Service.ToggleUserPermission(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldCallSetUserPermissions_WhenSuccessful()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string userId = "userId";
+
+        var workspace = AutoFixtures.Workspace;
+        var userPermissions = new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+
+        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
+        await Service.ToggleUserPermission(request);
+
+        await UnitOfWork.WorkspaceUsers.Received(1).SetUserPermissions(userId, workspace.Id, Arg.Any<IEnumerable<string>>());
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldCallCompleteAsync_WhenSuccessful()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string userId = "userId";
+
+        var workspace = AutoFixtures.Workspace;
+        var userPermissions = new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+
+        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
+        await Service.ToggleUserPermission(request);
+
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task ToggleUserPermission_ShouldClearPermissionCache_WhenSuccessful()
+    {
+        const string workspaceKey = "workspaceKey";
+        const string userId = "userId";
+
+        var workspace = AutoFixtures.Workspace;
+        var userPermissions = new UserPermissions
+        {
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        };
+
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+
+        var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
+        await Service.ToggleUserPermission(request);
+
+        var expectedKey = new WorkspaceUserKey { UserId = userId, WorkspaceKey = workspaceKey };
+        WorkspacePermissionCache.Received(1).Remove(Arg.Is<WorkspaceUserKey>(k => k == expectedKey));
     }
 }

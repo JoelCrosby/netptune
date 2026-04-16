@@ -7,11 +7,7 @@
   <Folder Name="/Solution Items/">
     <File Path="../.dockerignore" />
     <File Path="../.editorconfig" />
-    <File Path="../.github/workflows/build-deploy.yml" />
     <File Path="../.gitignore" />
-    <File Path="../docker-compose.yml" />
-    <File Path="../Dockerfile" />
-    <File Path="../jobs.Dockerfile" />
     <File Path="../LICENSE.txt" />
     <File Path="../netptune-client.code-workspace" />
     <File Path="../netptune-server.code-workspace" />

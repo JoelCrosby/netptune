@@ -20,4 +20,6 @@ public interface IUserService
     Task<ClientResponse<InviteUserResponse>> InviteUsersToWorkspace(IEnumerable<string> emails);
 
     Task<ClientResponse<RemoveUsersWorkspaceResponse>> RemoveUsersFromWorkspace(IEnumerable<string> emails);
+
+    Task<ClientResponse<List<string>>> ToggleUserPermission(ToggleUserPermissionRequest request);
 }

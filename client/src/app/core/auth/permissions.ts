@@ -11,6 +11,7 @@ export const netptunePermissions = {
     invite: 'members.invite',
     remove: 'members.remove',
     updateProfile: 'members.update_profile',
+    updatePermissions: 'members.update_permission',
   },
   projects: {
     read: 'projects.read',

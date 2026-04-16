@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
+using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
@@ -609,10 +611,19 @@ public class AuthenticationServiceTests
         var user = AutoFixtures.AppUser;
         var httpContext = Substitute.For<HttpContext>();
         var principal = new System.Security.Claims.ClaimsPrincipal();
+        const string workspaceKey = "workspace-key";
 
         httpContext.User.Returns(principal);
         ContextAccessor.HttpContext.Returns(httpContext);
         UserManager.GetUserAsync(principal).Returns(user);
+        Identity.TryGetWorkspaceKey().Returns(workspaceKey);
+        WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
+        {
+           Permissions = [],
+           Role = WorkspaceRole.Owner,
+           UserId = user.Id,
+           WorkspaceKey = workspaceKey,
+        });
 
         var result = await Service.CurrentUser();
 
