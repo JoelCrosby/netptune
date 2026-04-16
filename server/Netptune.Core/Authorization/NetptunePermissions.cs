@@ -17,6 +17,7 @@ public static class NetptunePermissions
         public const string Invite = "members.invite";
         public const string Remove = "members.remove";
         public const string UpdateProfile = "members.update_profile";
+        public const string UpdatePermission = "members.update_permission";
     }
 
     public static class Projects

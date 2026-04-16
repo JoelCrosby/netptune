@@ -21,11 +21,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
   ],
   template: `
     <div class="mt-4 flex items-center gap-2">
-      @for (
-        action of actions();
-        track action.routerLink;
-        let isFirst = $first
-      ) {
+      @for (action of actions(); track $index; let isFirst = $first) {
         @if (action.isLink) {
           @if (isFirst) {
             <a

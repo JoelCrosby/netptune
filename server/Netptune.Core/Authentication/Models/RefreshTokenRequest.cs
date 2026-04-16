@@ -2,5 +2,5 @@ namespace Netptune.Core.Authentication.Models;
 
 public class RefreshTokenRequest
 {
-    public string RefreshToken { get; init; } = null!;
+    public required string RefreshToken { get; init; }
 }

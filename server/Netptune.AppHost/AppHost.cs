@@ -14,6 +14,7 @@ builder
 var postgres = builder
     .AddPostgres("postgres")
     .WithDataVolume()
+    .WithPgWeb()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var postgresdb = postgres.AddDatabase("postgresdb", "netptune");
@@ -22,10 +23,12 @@ var nats = builder
     .AddNats("nats")
     .WithJetStream()
     .WithDataVolume()
+    .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var cache = builder
     .AddValkey("cache")
+    .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var jobs = builder

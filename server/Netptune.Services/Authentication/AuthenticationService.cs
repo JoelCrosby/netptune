@@ -345,8 +345,9 @@ public class NetptuneAuthService : INetptuneAuthService
         if (user is null) return null;
 
         var workspace = Identity.TryGetWorkspaceKey();
-        var permissions = await WorkspacePermissionCache.GetUserPermissions(user.Id, workspace);
-        var permissionList = permissions?.ToList() ?? [];
+        var workspaceUser = await WorkspacePermissionCache.GetUserPermissions(user.Id, workspace);
+
+        if (workspaceUser is null) return null;
 
         return new CurrentUserResponse
         {
@@ -354,7 +355,7 @@ public class NetptuneAuthService : INetptuneAuthService
             EmailAddress = user.Email!,
             PictureUrl = user.PictureUrl,
             UserId = user.Id,
-            Permissions = permissionList,
+            UserPermissions = workspaceUser,
         };
     }
 

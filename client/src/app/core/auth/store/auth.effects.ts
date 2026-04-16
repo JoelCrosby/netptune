@@ -71,17 +71,6 @@ export class AuthEffects implements OnInitEffects {
     { dispatch: false }
   );
 
-  fetchCurrentUser$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(
-        actions.loginSuccess,
-        actions.registerSuccess,
-        actions.confirmEmailSuccess
-      ),
-      map(() => actions.currentUser())
-    );
-  });
-
   currentUser$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(

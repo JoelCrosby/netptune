@@ -2,14 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  inject,
 } from '@angular/core';
+import { selectUserDetail } from '@app/core/store/users/users.selectors';
 import {
   netptunePermissionLabels,
   PermissionMeta,
 } from '@core/auth/permission-items';
 import { LucideDynamicIcon } from '@lucide/angular';
+import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { toggleUserPermission } from '@app/core/store/users/users.actions';
 
 interface PermissionItem extends PermissionMeta {
   granted: boolean;
@@ -44,7 +49,10 @@ interface PermissionGroup {
                 <svg [lucideIcon]="item.icon" class="h-6 w-6 shrink-0"></svg>
                 <span class="flex-1 text-sm">{{ item.label }}</span>
 
-                <app-checkbox [checked]="item.granted" [disabled]="true" />
+                <app-checkbox
+                  [checked]="item.granted"
+                  [disabled]="enabled()"
+                  (changed)="onChanged(item)" />
               </div>
             }
           </div>
@@ -54,7 +62,14 @@ interface PermissionGroup {
   `,
 })
 export class PermissionListComponent {
-  readonly permissions = input.required<string[]>();
+  readonly store = inject(Store);
+
+  user = this.store.selectSignal(selectUserDetail);
+  permissions = computed(() => this.user()?.permissions || []);
+
+  enabled = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.members.updatePermissions)
+  );
 
   readonly groups = computed<PermissionGroup[]>(() => {
     const permSet = new Set(this.permissions());
@@ -75,4 +90,17 @@ export class PermissionListComponent {
 
     return groups;
   });
+
+  onChanged(permission: PermissionItem) {
+    const userId = this.user()?.id;
+
+    if (!userId) return;
+
+    this.store.dispatch(
+      toggleUserPermission({
+        permission: permission.key,
+        userId,
+      })
+    );
+  }
 }

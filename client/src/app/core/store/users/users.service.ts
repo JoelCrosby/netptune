@@ -28,4 +28,11 @@ export class UsersService {
       emailAddresses,
     });
   }
+
+  toggleUserPermission(userId: string, permission: string) {
+    return this.http.post<ClientResponse>(`api/users/toggle-permission`, {
+      userId,
+      permission,
+    });
+  }
 }

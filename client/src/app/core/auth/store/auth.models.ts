@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Permission } from '../permissions';
+import { UserPermissions } from '@app/core/models/user-permissions';
 
 export const authFeatureKey = 'auth';
 
@@ -45,7 +45,7 @@ export interface UserResponse {
   email: string;
   displayName: string;
   pictureUrl: string;
-  permissions: Permission[];
+  userPermissions?: UserPermissions;
 }
 
 export interface UserToken extends UserResponse {

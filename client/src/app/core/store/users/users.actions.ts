@@ -64,3 +64,20 @@ export const removeUsersFromWorkspaceFail = createAction(
   '[Users] Remove users from workspace Fail',
   props<{ error: HttpErrorResponse | Error }>()
 );
+
+// Toggle user permission
+
+export const toggleUserPermission = createAction(
+  '[Users] Toggle User Permission',
+  props<{ userId: string; permission: string }>()
+);
+
+export const toggleUserPermissionSuccess = createAction(
+  '[Users] Toggle User Permission Success',
+  props<{ userId: string; permission: string }>()
+);
+
+export const toggleUserPermissionFail = createAction(
+  '[Users] Toggle User Permission Fail',
+  props<{ error: HttpErrorResponse | Error }>()
+);

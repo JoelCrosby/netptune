@@ -1,12 +1,20 @@
 namespace Netptune.Core.Authentication.Models;
 
-public class AuthenticationTicket : CurrentUserResponse
+public class AuthenticationTicket
 {
-    public object Token { get; set; } = null!;
+    public required string UserId { get; init; }
 
-    public string RefreshToken { get; set; } = null!;
+    public required string EmailAddress { get; init; }
 
-    public DateTime Issued { get; set; }
+    public required string DisplayName { get; init; }
 
-    public DateTime Expires { get; set; }
+    public string? PictureUrl { get; init; }
+
+    public required object Token { get; init; }
+
+    public required string RefreshToken { get; init; }
+
+    public DateTime Issued { get; init; }
+
+    public DateTime Expires { get; init; }
 }

@@ -2,9 +2,9 @@ namespace Netptune.Core.Authentication.Models;
 
 public class RegisterRequest : TokenRequest
 {
-    public string Firstname { get; init; } = null!;
+    public required string Firstname { get; init; }
 
-    public string Lastname { get; init; } = null!;
+    public required string Lastname { get; init; }
 
     public string? InviteCode { get; init; }
 

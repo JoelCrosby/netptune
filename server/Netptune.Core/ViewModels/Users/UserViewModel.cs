@@ -22,7 +22,7 @@ public class UserViewModel
 
     public DateTime? RegistrationDate { get; init; }
 
-    public List<string> Permissions { get; init; }
+    public List<string>? Permissions { get; init; }
 }
 
 public class WorkspaceUserViewModel : UserViewModel

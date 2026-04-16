@@ -1,14 +1,16 @@
+using Netptune.Core.Models;
+
 namespace Netptune.Core.Authentication.Models;
 
 public class CurrentUserResponse
 {
-    public string UserId { get; set; } = null!;
+    public required string UserId { get; init; }
 
-    public string EmailAddress { get; set; } = null!;
+    public required string EmailAddress { get; init; }
 
-    public string DisplayName { get; set; } = null!;
+    public required string DisplayName { get; init; }
 
-    public string? PictureUrl { get; set; }
+    public string? PictureUrl { get; init; }
 
-    public List<string> Permissions { get; set; }
+    public required UserPermissions UserPermissions { get; init; }
 }

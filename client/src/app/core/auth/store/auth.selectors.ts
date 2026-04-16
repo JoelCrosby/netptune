@@ -3,6 +3,7 @@ import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse, UserToken } from './auth.models';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Permission } from '../permissions';
+import { WorkspaceRole } from '@app/core/enums/workspace-role';
 
 export const selectLoginLoading = createSelector(
   selectAuthFeature,
@@ -103,20 +104,26 @@ export const selectShowLoginError = createSelector(
 
 export const selectCurrentUserPermissions = createSelector(
   selectCurrentUser,
-  (user?: UserResponse) => user?.permissions ?? []
+  (user?: UserResponse) => user?.userPermissions
 );
 
 export const selectHasPermission = (permission: Permission) =>
-  createSelector(selectCurrentUserPermissions, (permissions) =>
-    permissions.includes(permission)
-  );
+  createSelector(selectCurrentUserPermissions, (userPermissions) => {
+    const role = userPermissions?.role;
+
+    if (role === WorkspaceRole.owner || role === WorkspaceRole.admin) {
+      return true;
+    }
+
+    return userPermissions?.permissions.includes(permission) ?? false;
+  });
 
 export const selectPermissions = createSelector(
   selectCurrentUserPermissions,
-  (permissions) => ({
-    ...permissions,
+  (userPermissions) => ({
+    ...userPermissions?.permissions,
     has: (permission: Permission) => {
-      return permissions.includes(permission);
+      return userPermissions?.permissions.includes(permission);
     },
   })
 );

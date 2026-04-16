@@ -3,11 +3,12 @@ using Microsoft.Extensions.Logging;
 using Netptune.Cache.Common;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
+using Netptune.Core.Models;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Cache;
 
-public class WorkspacePermissionCache : EntityCache<HashSet<string>?, WorkspaceUserKey>, IWorkspacePermissionCache
+public class WorkspacePermissionCache : EntityCache<UserPermissions?, WorkspaceUserKey>, IWorkspacePermissionCache
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
 
@@ -20,7 +21,7 @@ public class WorkspacePermissionCache : EntityCache<HashSet<string>?, WorkspaceU
         UnitOfWork = unitOfWork;
     }
 
-    protected override Task<HashSet<string>?> GetEntity(WorkspaceUserKey key)
+    protected override Task<UserPermissions?> GetEntity(WorkspaceUserKey key)
     {
         return UnitOfWork.WorkspaceUsers.GetUserPermissions(key.UserId, key.WorkspaceKey);
     }
@@ -30,7 +31,7 @@ public class WorkspacePermissionCache : EntityCache<HashSet<string>?, WorkspaceU
         return $"workspace-permissions:{key.WorkspaceKey}:{key.UserId}";
     }
 
-    public async Task<HashSet<string>?> GetUserPermissions(string userId, string? workspaceKey)
+    public async Task<UserPermissions?> GetUserPermissions(string userId, string? workspaceKey)
     {
         if (workspaceKey is null) return null;
 

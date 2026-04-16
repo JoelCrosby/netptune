@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -30,9 +31,20 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
         if (context.User.Identity?.IsAuthenticated == true)
         {
             var userId = Identity.GetCurrentUserId();
-            var permissions = await Cache.GetUserPermissions(userId, workspaceKey);
+            var workspaceUser = await Cache.GetUserPermissions(userId, workspaceKey);
 
-            if (permissions?.Contains(requirement.Permission) == true)
+            if (workspaceUser is null)
+            {
+                context.Fail();
+                return;
+            }
+
+            if (workspaceUser.Role is WorkspaceRole.Owner or WorkspaceRole.Admin)
+            {
+                context.Succeed(requirement);
+            }
+
+            if (workspaceUser.Permissions.Contains(requirement.Permission) == true)
             {
                 context.Succeed(requirement);
             }
@@ -57,6 +69,8 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
         }
     }
 
-    private static bool IsReadPermission(string permission) =>
-        permission.EndsWith(".read", StringComparison.OrdinalIgnoreCase);
+    private static bool IsReadPermission(string permission)
+    {
+        return permission.EndsWith(".read", StringComparison.OrdinalIgnoreCase);
+    }
 }

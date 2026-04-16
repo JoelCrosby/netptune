@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
 import { selectUserDetail } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
@@ -28,7 +23,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
         <h2 class="text-foreground pl-1 text-2xl">Permissions</h2>
 
         <div class="bg-board-group mb-64 w-full rounded p-2">
-          <app-permission-list [permissions]="permissions()" />
+          <app-permission-list />
         </div>
       </div>
     } @else {
@@ -39,5 +34,4 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 export class UserDetailComponent {
   readonly store = inject(Store);
   user = this.store.selectSignal(selectUserDetail);
-  permissions = computed(() => this.user()?.permissions || []);
 }
