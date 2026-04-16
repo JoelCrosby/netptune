@@ -1,40 +1,44 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
+import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { DialogService } from '@core/services/dialog.service';
-import { loadBuildInfo } from '@core/store/meta/meta.actions';
-import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
-  templateUrl: './workspaces-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
     SpinnerComponent,
     WorkspaceListComponent,
+    BuildNumberComponent,
   ],
+  template: `<app-page-container [marginBottom]="true" [centerPage]="true">
+    <app-page-header
+      title="Workspaces"
+      actionTitle="Create Workspace"
+      (actionClick)="openWorkspaceDialog()" />
+
+    @if (loading()) {
+      <div class="flex h-full flex-col items-center justify-center">
+        <app-spinner diameter="32px" />
+      </div>
+    } @else {
+      <app-workspace-list />
+      <app-build-number />
+    }
+  </app-page-container> `,
 })
-export class WorkspacesViewComponent implements OnInit {
+export class WorkspacesViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
-  buildInfo = this.store.selectSignal(selectBuildInfo);
   loading = this.store.selectSignal(selectWorkspacesLoading);
-
-  ngOnInit() {
-    this.store.dispatch(loadBuildInfo());
-  }
 
   openWorkspaceDialog() {
     this.dialog.open(WorkspaceDialogComponent, {
