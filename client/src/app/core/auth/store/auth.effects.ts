@@ -25,6 +25,7 @@ import {
 import { AuthService } from '../auth.service';
 import * as actions from './auth.actions';
 import { selectIsAuthenticated } from './auth.selectors';
+import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
 
 export const AUTH_KEY = 'AUTH';
 
@@ -76,8 +77,11 @@ export class AuthEffects implements OnInitEffects {
       return this.actions$.pipe(
         ofType(actions.currentUser),
         debounceTime(debounce, scheduler),
-        concatLatestFrom(() => this.store.select(selectIsAuthenticated)),
-        filter(([_, auth]) => auth),
+        concatLatestFrom(() => [
+          this.store.select(selectIsAuthenticated),
+          this.store.select(selectCurrentWorkspace),
+        ]),
+        filter(([_, auth, worksapce]) => !!auth && !!worksapce),
         switchMap(() =>
           this.authService.currentUser().pipe(
             map((user) => actions.currentUserSuccess({ user })),
