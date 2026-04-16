@@ -24,6 +24,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { LoginGithubComponent } from './login-github.component';
+import { selectBuildInfo } from '@app/core/store/meta/meta.selectors';
+import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +40,7 @@ import { LoginGithubComponent } from './login-github.component';
     FormField,
     LoginGithubComponent,
     ButtonLinkComponent,
+    BuildNumberComponent,
   ],
   template: `<app-auth-page-container>
     <form
@@ -118,6 +121,7 @@ import { LoginGithubComponent } from './login-github.component';
 
       <app-login-github />
     </form>
+    <app-build-number />
   </app-auth-page-container> `,
 })
 export class LoginComponent {
@@ -125,6 +129,7 @@ export class LoginComponent {
 
   loading = this.store.selectSignal(selectLoginLoading);
   showLoginError = this.store.selectSignal(selectShowLoginError);
+  buildInfo = this.store.selectSignal(selectBuildInfo);
 
   loginFormModel = signal({
     email: '',
