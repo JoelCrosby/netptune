@@ -14,4 +14,6 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
     Task<List<Workspace>> GetUserWorkspaces(string userId);
 
     Task<bool> Exists(string slug);
+
+    Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids);
 }

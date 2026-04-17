@@ -45,6 +45,26 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
         };
     }
 
+    public Task<List<string>> GetWorkspaceUserIds(int workspaceId)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(u => u.WorkspaceId == workspaceId)
+            .Select(u => u.UserId)
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<int, List<string>>> GetWorkspaceUserIdsByWorkspaceIds(IEnumerable<int> workspaceIds)
+    {
+        var rows = await Context.WorkspaceAppUsers
+            .Where(u => workspaceIds.Contains(u.WorkspaceId))
+            .Select(u => new { u.WorkspaceId, u.UserId })
+            .ToListAsync();
+
+        return rows
+            .GroupBy(u => u.WorkspaceId)
+            .ToDictionary(g => g.Key, g => g.Select(u => u.UserId).ToList());
+    }
+
     public async Task SetUserPermissions(string userId, int workspaceId, IEnumerable<string> permissions)
     {
         var existing = await Context.WorkspaceAppUsers

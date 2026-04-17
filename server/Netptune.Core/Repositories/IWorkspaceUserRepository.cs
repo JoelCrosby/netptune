@@ -9,4 +9,8 @@ public interface IWorkspaceUserRepository : IRepository<WorkspaceAppUser, int>
     Task<UserPermissions?> GetUserPermissions(string userId, string workspaceKey, bool isReadOnly = true);
 
     Task SetUserPermissions(string userId, int workspaceId, IEnumerable<string> permissions);
+
+    Task<List<string>> GetWorkspaceUserIds(int workspaceId);
+
+    Task<Dictionary<int, List<string>>> GetWorkspaceUserIdsByWorkspaceIds(IEnumerable<int> workspaceIds);
 }
