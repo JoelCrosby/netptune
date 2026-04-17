@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Services;
@@ -25,10 +26,11 @@ public class BoardServiceUnitTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public BoardServiceUnitTests()
     {
-        Service = new(UnitOfWork, Identity);
+        Service = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]

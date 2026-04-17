@@ -7,6 +7,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
@@ -17,12 +18,14 @@ public class BoardService : IBoardService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService IdentityService;
     private readonly IBoardRepository Boards;
+    private readonly IActivityLogger Activity;
 
-    public BoardService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+    public BoardService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
         Boards = unitOfWork.Boards;
+        Activity = activity;
     }
 
     public async Task<ClientResponse<BoardViewModel>> GetBoard(int id)
@@ -115,6 +118,13 @@ public class BoardService : IBoardService
 
         await UnitOfWork.CompleteAsync();
 
+        Activity.Log(options =>
+        {
+            options.EntityId = result.Id;
+            options.EntityType = EntityType.Board;
+            options.Type = ActivityType.Modify;
+        });
+
         var payload = result.ToViewModel();
 
         return payload;
@@ -173,6 +183,13 @@ public class BoardService : IBoardService
 
         await UnitOfWork.CompleteAsync();
 
+        Activity.Log(options =>
+        {
+            options.EntityId = result.Id;
+            options.EntityType = EntityType.Board;
+            options.Type = ActivityType.Create;
+        });
+
         return result.ToViewModel();
     }
 
@@ -186,6 +203,13 @@ public class BoardService : IBoardService
         board.Delete(userId);
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = board.Id;
+            options.EntityType = EntityType.Board;
+            options.Type = ActivityType.Delete;
+        });
 
         return ClientResponse.Success;
     }

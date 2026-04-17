@@ -5,6 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services;
 
@@ -23,10 +24,11 @@ public class BoardGroupServiceTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public BoardGroupServiceTests()
     {
-        Service = new(UnitOfWork, Identity);
+        Service = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]

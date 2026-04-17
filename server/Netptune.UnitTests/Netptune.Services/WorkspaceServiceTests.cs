@@ -7,6 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Services;
@@ -27,10 +28,11 @@ public class WorkspaceServiceTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IWorkspaceUserCache Cache = Substitute.For<IWorkspaceUserCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public WorkspaceServiceTests()
     {
-        Service = new(UnitOfWork, Identity, Cache);
+        Service = new(UnitOfWork, Identity, Cache, Activity);
     }
 
     [Fact]

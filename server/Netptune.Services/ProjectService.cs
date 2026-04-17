@@ -1,8 +1,10 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
@@ -14,12 +16,14 @@ public class ProjectService : ServiceBase<ProjectViewModel>, IProjectService
     private readonly IProjectRepository ProjectRepository;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService IdentityService;
+    private readonly IActivityLogger Activity;
 
-    public ProjectService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+    public ProjectService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity)
     {
         ProjectRepository = unitOfWork.Projects;
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
+        Activity = activity;
     }
 
     public Task<ClientResponse<ProjectViewModel>> Create(AddProjectRequest request)
@@ -59,6 +63,13 @@ public class ProjectService : ServiceBase<ProjectViewModel>, IProjectService
                 return Failed("Project not found");
             }
 
+            Activity.Log(options =>
+            {
+                options.EntityId = project.Id;
+                options.EntityType = EntityType.Project;
+                options.Type = ActivityType.Create;
+            });
+
             return result;
         });
     }
@@ -76,6 +87,13 @@ public class ProjectService : ServiceBase<ProjectViewModel>, IProjectService
         project.Delete(userId);
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = project.Id;
+            options.EntityType = EntityType.Project;
+            options.Type = ActivityType.Delete;
+        });
 
         return ClientResponse.Success;
     }
@@ -113,6 +131,13 @@ public class ProjectService : ServiceBase<ProjectViewModel>, IProjectService
         project.ModifiedByUserId = user.Id;
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = project.Id;
+            options.EntityType = EntityType.Project;
+            options.Type = ActivityType.Modify;
+        });
 
         return project.ToViewModel();
     }
