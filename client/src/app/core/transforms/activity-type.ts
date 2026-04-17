@@ -24,6 +24,18 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'modified description';
     case ActivityType.modifyStatus:
       return 'changed status';
+    case ActivityType.invite:
+      return 'invited';
+    case ActivityType.remove:
+      return 'removed';
+    case ActivityType.permissionChanged:
+      return 'changed permissions';
+    case ActivityType.unassign:
+      return 'unassigned';
+    case ActivityType.addTag:
+      return 'added tag';
+    case ActivityType.removeTag:
+      return 'removed tag';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }
