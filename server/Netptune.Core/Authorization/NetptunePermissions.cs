@@ -77,6 +77,12 @@ public static class NetptunePermissions
         public const string Read = "activity.read";
     }
 
+    public static class Notifications
+    {
+        public const string Read = "notifications.read";
+        public const string Update = "notifications.update";
+    }
+
     public static class Storage
     {
         public const string UploadProfilePicture = "storage.upload_profile_picture";
