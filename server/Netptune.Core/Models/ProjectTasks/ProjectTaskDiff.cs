@@ -22,7 +22,14 @@ public record ProjectTaskDiff
 
     private ValueDiff<ProjectTaskStatus> Status = null!;
 
-    private ValueDiff<string> Assignee = null!;
+    private AssigneeDiff Assignees = null!;
+
+    private record AssigneeDiff
+    {
+        public bool Modified;
+        public List<string> Added = [];
+        public List<string> Removed = [];
+    }
 
     public static ProjectTaskDiff Create(TaskViewModel old, TaskViewModel updated)
     {
@@ -38,10 +45,10 @@ public record ProjectTaskDiff
         var statusChanged = updated.Status != old.Status;
         var statusValue = updated.Status;
 
-        // TODO: Implement change detection for multiple assignees
-
-        var assigneeChanged = false; // updated.AssigneeId != old.AssigneeId && !string.IsNullOrEmpty(old.AssigneeId);
-        var assigneeValue = string.Empty; // updated.AssigneeId;
+        var oldAssigneeIds = old.Assignees.Select(a => a.Id).ToHashSet();
+        var newAssigneeIds = updated.Assignees.Select(a => a.Id).ToHashSet();
+        var addedAssignees = newAssigneeIds.Except(oldAssigneeIds).ToList();
+        var removedAssignees = oldAssigneeIds.Except(newAssigneeIds).ToList();
 
         return new ProjectTaskDiff
         {
@@ -65,10 +72,11 @@ public record ProjectTaskDiff
                 Modified = statusChanged,
                 NewValue = statusValue,
             },
-            Assignee = new ValueDiff<string>
+            Assignees = new AssigneeDiff
             {
-                Modified = assigneeChanged,
-                NewValue = assigneeValue,
+                Modified = addedAssignees.Count > 0 || removedAssignees.Count > 0,
+                Added = addedAssignees,
+                Removed = removedAssignees,
             },
         };
     }
@@ -115,17 +123,35 @@ public record ProjectTaskDiff
             });
         }
 
-        if (Assignee.Modified)
+        foreach (var assigneeId in Assignees.Added)
         {
+            if (!Assignees.Modified)
+            {
+                continue;
+            }
+
             activity.LogWith<AssignActivityMeta>(options =>
             {
                 options.EntityId = entityId;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.Assign;
-                options.Meta = new AssignActivityMeta
-                {
-                    AssigneeId = Assignee.NewValue,
-                };
+                options.Meta = new AssignActivityMeta { AssigneeId = assigneeId };
+            });
+        }
+
+        foreach (var assigneeId in Assignees.Removed)
+        {
+            if (!Assignees.Modified)
+            {
+                continue;
+            }
+
+            activity.LogWith<AssignActivityMeta>(options =>
+            {
+                options.EntityId = entityId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.Unassign;
+                options.Meta = new AssignActivityMeta { AssigneeId = assigneeId };
             });
         }
     }
