@@ -20,9 +20,14 @@ headlamp:
     allowed_email_domain: "live.co.uk"
 
 pgadmin:
-  enabled: true
+  enabled: false
   image: "dpage/pgadmin4:latest"
   host: "pgadmin.netptune.co.uk"
+
+pgweb:
+  enabled: true
+  image: "sosedoff/pgweb:latest"
+  host: "pgweb.netptune.co.uk"
 
 otelCollector:
   enabled: true
@@ -65,9 +70,7 @@ secrets:
     github_client_id: ""
     github_client_secret: ""
     cookie_secret: ""
-  pgadmin:
-    admin_email: ""
-    admin_password: ""
+  pgweb:
     github_client_id: ""
     github_client_secret: ""
     cookie_secret: ""
