@@ -29,6 +29,7 @@ import { ProjectTasksEffects } from './store/tasks/tasks.effects';
 import { UsersEffects } from './store/users/users.effects';
 import { WorkspacesEffects } from './store/workspaces/workspaces.effects';
 import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
+import { NavigationService } from './services/navigation.service';
 
 @NgModule({
   imports: [
@@ -75,11 +76,15 @@ import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
   ],
 })
 export class CoreModule {
+  navigation = inject(NavigationService);
+
   constructor() {
     const parentModule = inject(CoreModule, { optional: true, skipSelf: true });
 
     if (parentModule) {
       throw new Error('CoreModule is already loaded. Import only in AppModule');
     }
+
+    this.navigation.listen();
   }
 }

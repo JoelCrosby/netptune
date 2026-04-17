@@ -43,17 +43,6 @@ public class NotificationRepository : Repository<DataContext, Notification, int>
             .CountAsync(n => !n.IsDeleted && n.UserId == userId && n.WorkspaceId == workspaceId && !n.IsRead);
     }
 
-    public async Task MarkAsRead(int id, string userId)
-    {
-        var notification = await Entities
-            .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
-
-        if (notification is not null)
-        {
-            notification.IsRead = true;
-        }
-    }
-
     public async Task MarkAllAsRead(string userId, int workspaceId)
     {
         await Entities

@@ -15,8 +15,6 @@ import {
   OnDestroy,
   viewChild,
 } from '@angular/core';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
@@ -35,6 +33,7 @@ import {
   selectBoardIdentifier,
   selectSelectedBoard,
 } from '@boards/store/groups/board-groups.selectors';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { importTasks } from '@core/store/tasks/tasks.actions';
@@ -49,10 +48,11 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
 @Component({

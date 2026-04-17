@@ -17,9 +17,7 @@
       [title]="boardName()"
       [titleEditable]="isAuthenticated()"
       [overflowActions]="isAuthenticated() ? secondaryActions : []"
-      [backLink]="['../../boards']"
       (titleSubmitted)="onTitleSubmitted($event)"
-      backLabel="Back to boards"
       >
       <app-board-group-header />
     </app-page-header>

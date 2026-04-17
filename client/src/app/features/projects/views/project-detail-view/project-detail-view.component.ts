@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { selectProjectDetailLoading } from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { ProjectDetailComponent } from '@projects/components/project-detail/project-detail.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +19,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     [fullHeight]="true"
     [centerPage]="true"
     [marginBottom]="true">
-    <app-page-header
-      title="Project"
-      backLabel="Back to projects"
-      [backLink]="['../../projects']" />
+    <app-page-header title="Project" />
 
     @if (loading()) {
       <div class="flex h-full flex-col items-center justify-center">

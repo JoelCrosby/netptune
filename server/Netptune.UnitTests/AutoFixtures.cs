@@ -2,6 +2,8 @@
 using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Projects;
@@ -110,6 +112,19 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskTags)
         .WithoutWorkspace()
         .With(p => p.Owner, AppUser)
+        .Create();
+
+    public static ActivityAncestors ActivityAncestors => Fixture
+        .Build<ActivityAncestors>()
+        .Create();
+
+    public static Notification Notification => Fixture
+        .Build<Notification>()
+        .Without(p => p.User)
+        .Without(p => p.ActivityLog)
+        .Without(p => p.Workspace)
+        .WithoutAuditable()
+        .With(p => p.IsRead, false)
         .Create();
 
     public static List<BoardGroup> BoardGroups => new() { BoardGroup.WithTasks() };

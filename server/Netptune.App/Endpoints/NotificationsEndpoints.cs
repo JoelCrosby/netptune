@@ -1,7 +1,6 @@
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
-using Netptune.Core.UnitOfWork;
 
 namespace Netptune.App.Endpoints;
 
@@ -34,45 +33,28 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IIdentityService identity, INetptuneUnitOfWork unitOfWork)
+    private static async Task<IResult> HandleGet(INotificationService notifications)
     {
-        var userId = identity.GetCurrentUserId();
-        var workspaceId = await identity.GetWorkspaceId();
-        var notifications = await unitOfWork.Notifications.GetUserNotifications(userId, workspaceId);
-
-        return Results.Ok(notifications);
+        var result = await notifications.GetUserNotifications();
+        return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleGetUnreadCount(IIdentityService identity, INetptuneUnitOfWork unitOfWork)
+    private static async Task<IResult> HandleGetUnreadCount(INotificationService notifications)
     {
-        var userId = identity.GetCurrentUserId();
-        var workspaceId = await identity.GetWorkspaceId();
-        var count = await unitOfWork.Notifications.GetUnreadCount(userId, workspaceId);
-
-        return Results.Ok(count);
+        var result = await notifications.GetUnreadCount();
+        return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkRead(
-        int id,
-        IIdentityService identity,
-        INetptuneUnitOfWork unitOfWork)
+    private static async Task<IResult> HandleMarkRead(int id, INotificationService notifications)
     {
-        var userId = identity.GetCurrentUserId();
-        await unitOfWork.Notifications.MarkAsRead(id, userId);
-        await unitOfWork.CompleteAsync();
-
-        return Results.Ok();
+        var result = await notifications.MarkAsRead(id);
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkAllRead(
-        IIdentityService identity,
-        INetptuneUnitOfWork unitOfWork)
+    private static async Task<IResult> HandleMarkAllRead(INotificationService notifications)
     {
-        var userId = identity.GetCurrentUserId();
-        var workspaceId = await identity.GetWorkspaceId();
-        await unitOfWork.Notifications.MarkAllAsRead(userId, workspaceId);
-
-        return Results.Ok();
+        var result = await notifications.MarkAllAsRead();
+        return Results.Ok(result);
     }
 
     private static async Task HandleSse(

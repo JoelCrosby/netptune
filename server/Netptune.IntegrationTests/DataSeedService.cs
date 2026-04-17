@@ -207,6 +207,26 @@ internal sealed class DataSeedService : IHostedService
             await context.ProjectTaskTags.AddRangeAsync(taskTags, ct);
 
             await context.SaveChangesAsync(ct);
+
+            var netptuneWorkspace = workspaces.First(w => w.Slug == "netptune");
+            var netptuneUser = workspaceUsers.First(wu => wu.Workspace == netptuneWorkspace).User;
+
+            var notifications = activityLogs.Take(20).Select((log, i) => new Notification
+            {
+                User = netptuneUser,
+                ActivityLog = log,
+                Workspace = netptuneWorkspace,
+                IsRead = i % 3 == 0,
+                Link = $"/{netptuneWorkspace.Slug}/tasks",
+                EntityType = log.EntityType,
+                ActivityType = log.Type,
+                CreatedByUserId = log.UserId,
+                OwnerId = log.UserId,
+            }).ToList();
+
+            await context.Notifications.AddRangeAsync(notifications, ct);
+
+            await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);
         }
         catch

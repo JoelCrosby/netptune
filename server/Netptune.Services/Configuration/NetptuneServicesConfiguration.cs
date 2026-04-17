@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Services;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
@@ -31,6 +32,7 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<IBoardService, BoardService>();
         services.AddTransient<IBoardGroupService, BoardGroupService>();
         services.AddTransient<ICommentService, CommentService>();
+        services.AddTransient<INotificationService, NotificationService>();
         services.AddTransient<ITagService, TagService>();
         services.AddTransient<IActivityService, ActivityService>();
 

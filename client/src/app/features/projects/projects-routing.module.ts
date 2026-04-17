@@ -10,6 +10,7 @@ const routes: Routes = [
     path: ':id',
     component: ProjectDetailViewComponent,
     canActivate: [projectDetailGuard],
+    data: { back: 'Back to Projects' },
   },
 ];
 

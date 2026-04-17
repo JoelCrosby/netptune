@@ -1,8 +1,8 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   selectUserDetail,
   selectUserDetailLoading,
 } from '@core/store/users/users.selectors';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -19,10 +19,7 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
   ],
   template: `
     <app-page-container [verticalPadding]="false" [centerPage]="true">
-      <app-page-header
-        [title]="user()?.displayName"
-        backLabel="Back to Users"
-        [backLink]="['../../users']" />
+      <app-page-header [title]="user()?.displayName" />
 
       @if (loading()) {
         <div class="flex h-full flex-col items-center justify-center">
