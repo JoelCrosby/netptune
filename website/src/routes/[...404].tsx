@@ -1,25 +1,35 @@
-import { A } from '@solidjs/router';
+import { ArrowLeft } from 'lucide-solid';
+import Nav from '~/components/Nav';
+import Footer from '~/components/Footer';
+import Button from '~/components/Button';
 
 export default function NotFound() {
   return (
-    <main class="mx-auto p-4 text-center text-gray-700">
-      <h1 class="max-6-xs my-16 text-6xl font-thin text-sky-700 uppercase">Not Found</h1>
-      <p class="mt-8">
-        Visit{' '}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
-          solidjs.com
-        </a>{' '}
-        to learn how to build Solid apps.
-      </p>
-      <p class="my-4">
-        <A href="/" class="text-sky-600 hover:underline">
-          Home
-        </A>
-        {' - '}
-        <A href="/about" class="text-sky-600 hover:underline">
-          About Page
-        </A>
-      </p>
-    </main>
+    <div class="bg-white dark:bg-black">
+      <Nav />
+      <main>
+        <section class="relative overflow-hidden bg-white px-6 py-32 dark:bg-black">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.2),transparent)]" />
+
+          <div class="relative mx-auto max-w-2xl text-center">
+            <p class="mb-4 text-8xl font-bold text-brand">404</p>
+
+            <h1 class="mb-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
+              Page not found
+            </h1>
+
+            <p class="mb-10 text-lg leading-relaxed text-slate-500 dark:text-white/55">
+              The page you're looking for doesn't exist or has been moved.
+            </p>
+
+            <Button variant="outline" size="lg" href="/">
+              <ArrowLeft size={16} />
+              Back to home
+            </Button>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

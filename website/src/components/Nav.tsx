@@ -48,10 +48,12 @@ export default function Nav() {
 
         <div class="flex shrink-0 items-center gap-2">
           <ThemeToggle />
-          <Button variant="outline" size="sm" href="https://github.com/JoelCrosby/netptune">
-            <Star size={14} />
-            <span class="hidden sm:block">Star on GitHub</span>
-          </Button>
+          <div class="hidden sm:block">
+            <Button variant="outline" size="sm" href="https://github.com/JoelCrosby/netptune">
+              <Star size={14} />
+              <span class="hidden sm:block">Star on GitHub</span>
+            </Button>
+          </div>
           <Button variant="primary" size="sm" href="https://app.netptune.co.uk/get-started">
             Get started free
           </Button>

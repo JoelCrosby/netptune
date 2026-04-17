@@ -34,8 +34,13 @@
 
 html {
   color-scheme: 'light';
+  @apply bg-white dark:bg-black;
 }
 
 .dark {
   color-scheme: 'dark';
+}
+
+main {
+  min-height: calc(100vh - 64px - 502px - 1px);
 }
