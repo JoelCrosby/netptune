@@ -6,7 +6,7 @@ import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProgressBarComponent],
   template: `<div
-    class="flex h-screen flex-col"
+    class="flex flex-col"
     [class.mx-auto]="centerPage()"
     [class.w-full]="centerPage()"
     [class.max-w-[1200px]]="centerPage()">

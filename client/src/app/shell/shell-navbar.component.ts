@@ -10,7 +10,7 @@ import { NotificationBellComponent } from '@app/entry/components/notification-be
   imports: [PageHeaderBackLinkComponent, NotificationBellComponent],
   template: `
     <div
-      class="w-inherit bg-background border-border fixed top-0 z-10 flex h-15 items-center justify-between border-b px-4">
+      class="bg-background border-border z-10 flex h-full items-center justify-between border-b px-4">
       <div class="h-6">
         <app-page-header-back-link />
       </div>

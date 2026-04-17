@@ -14,19 +14,16 @@ import { ShellNavbarComponent } from './shell-navbar.component';
   providers: [ShellService],
   imports: [RouterOutlet, ShellSidebarComponent, ShellNavbarComponent],
   template: `
-    <div class="bg-background flex h-full flex-col">
+    <div
+      class="bg-background grid h-screen w-screen grid-cols-[247px_auto] grid-rows-[60px_auto] gap-[1px]">
       @if (sideMenuOpen()) {
-        <app-shell-sidebar (workspaceChange)="onWorkspaceChange($event)" />
+        <app-shell-sidebar
+          class="col-start-1 row-span-2 row-start-1"
+          (workspaceChange)="onWorkspaceChange($event)" />
       }
-      <app-shell-navbar
-        class="w-full [transition:margin_.2s_ease-in-out]"
-        [class.ml-[248px]]="shell.sideNavExpanded()"
-        [class.ml-[72px]]="sideMenuOpen()" />
+      <app-shell-navbar />
 
-      <main
-        class="mt-15 h-dvh [transition:margin-left_.2s_ease-in-out]"
-        [class.ml-[248px]]="shell.sideNavExpanded()"
-        [class.ml-[72px]]="sideMenuOpen()">
+      <main class="col-start-2 row-start-2 overflow-auto">
         <router-outlet />
       </main>
     </div>
