@@ -65,4 +65,12 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     {
         return Entities.AnyAsync(workspace => workspace.Slug == slug);
     }
+
+    public Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids)
+    {
+        return Entities
+            .Where(w => ids.Contains(w.Id) && !w.IsDeleted)
+            .Select(w => new { w.Id, w.Slug })
+            .ToDictionaryAsync(w => w.Id, w => w.Slug);
+    }
 }
