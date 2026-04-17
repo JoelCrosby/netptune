@@ -2,12 +2,14 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 
@@ -19,19 +21,34 @@ public class WorkspaceService : IWorkspaceService
     private readonly IIdentityService Identity;
     private readonly IWorkspaceUserCache Cache;
     private readonly IWorkspaceRepository WorkspaceRepository;
+    private readonly IActivityLogger Activity;
 
-    public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IWorkspaceUserCache cache)
+    public WorkspaceService(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IWorkspaceUserCache cache, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Cache = cache;
         WorkspaceRepository = unitOfWork.Workspaces;
+        Activity = activity;
     }
 
     public async Task<ClientResponse<WorkspaceViewModel>> Create(AddWorkspaceRequest request)
     {
         var user = await Identity.GetCurrentUser();
-        return await Create(request, user);
+        var result = await Create(request, user);
+
+        if (result.IsSuccess && result.Payload is {} workspace)
+        {
+            Activity.Log(options =>
+            {
+                options.EntityId = workspace.Id;
+                options.WorkspaceId = workspace.Id;
+                options.EntityType = EntityType.Workspace;
+                options.Type = ActivityType.Create;
+            });
+        }
+
+        return result;
     }
 
     public Task<ClientResponse<WorkspaceViewModel>> CreateNewUserWorkspace(AddWorkspaceRequest request, AppUser newUser)
@@ -115,6 +132,14 @@ public class WorkspaceService : IWorkspaceService
 
         await UnitOfWork.CompleteAsync();
 
+        Activity.Log(options =>
+        {
+            options.EntityId = workspace.Id;
+            options.WorkspaceId = workspace.Id;
+            options.EntityType = EntityType.Workspace;
+            options.Type = ActivityType.Delete;
+        });
+
         return ClientResponse.Success;
     }
 
@@ -128,6 +153,7 @@ public class WorkspaceService : IWorkspaceService
         }
 
         var userId = Identity.GetCurrentUserId();
+        var workspaceId = workspace.Id;
 
         Cache.Remove(new()
         {
@@ -138,7 +164,6 @@ public class WorkspaceService : IWorkspaceService
         await UnitOfWork.Transaction(async () =>
         {
             var u = UnitOfWork;
-            var workspaceId = workspace.Id;
 
             var taskIds = await u.Tasks.GetAllIdsInWorkspace(workspaceId, true);
             await u.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
@@ -194,6 +219,14 @@ public class WorkspaceService : IWorkspaceService
         result.UpdatedAt = DateTime.UtcNow;
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = result.Id;
+            options.WorkspaceId = result.Id;
+            options.EntityType = EntityType.Workspace;
+            options.Type = ActivityType.Modify;
+        });
 
         return ClientResponse<Workspace>.Success(result);
     }

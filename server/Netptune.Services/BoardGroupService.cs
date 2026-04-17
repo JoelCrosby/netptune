@@ -4,6 +4,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -16,13 +17,15 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
     private readonly IIdentityService IdentityService;
     private readonly IBoardGroupRepository BoardGroups;
     private readonly IBoardRepository Boards;
+    private readonly IActivityLogger Activity;
 
-    public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+    public BoardGroupService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
         Boards = unitOfWork.Boards;
         BoardGroups = unitOfWork.BoardGroups;
+        Activity = activity;
     }
 
     public Task<BoardGroup?> GetBoardGroup(int id)
@@ -43,6 +46,13 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
         result.SortOrder = request.SortOrder ?? result.SortOrder;
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = result.Id;
+            options.EntityType = EntityType.BoardGroup;
+            options.Type = ActivityType.Modify;
+        });
 
         return result.ToViewModel();
     }
@@ -73,6 +83,13 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
 
         await UnitOfWork.CompleteAsync();
 
+        Activity.Log(options =>
+        {
+            options.EntityId = result.Id;
+            options.EntityType = EntityType.BoardGroup;
+            options.Type = ActivityType.Create;
+        });
+
         return Success(result.ToViewModel());
     }
 
@@ -86,6 +103,13 @@ public class BoardGroupService : ServiceBase<BoardGroupViewModel>, IBoardGroupSe
         boardGroup.Delete(userId);
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = boardGroup.Id;
+            options.EntityType = EntityType.BoardGroup;
+            options.Type = ActivityType.Delete;
+        });
 
         return ClientResponse.Success;
     }
