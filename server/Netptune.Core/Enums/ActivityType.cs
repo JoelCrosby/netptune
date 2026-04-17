@@ -13,6 +13,12 @@ public enum ActivityType
     ModifyName = 9,
     ModifyDescription = 10,
     ModifyStatus = 11,
+    Invite = 12,
+    Remove = 13,
+    PermissionChanged = 14,
+    Unassign = 15,
+    AddTag = 16,
+    RemoveTag = 17,
 }
 
 public enum ActivitySubType
