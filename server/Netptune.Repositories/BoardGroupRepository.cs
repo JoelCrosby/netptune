@@ -107,7 +107,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             var lastTag = lastTask?.Tags.LastOrDefault();
             var lastAssignee = lastTask?.Assignees.LastOrDefault();
 
-            if (lastTask?.Id is { } && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
+            if (lastTask?.Id is not null && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
             {
                 if (lastTag != row.Tag && row.Tag is not null)
                 {
@@ -134,7 +134,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     Name = row.Task_Name,
                     Status = row.Task_Status,
                     SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                    Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
+                    Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
                     IsFlagged = row.Task_Is_Flagged,
                     SortOrder = row.Task_Sort_Order,
                     ProjectId = row.Project_Id,
@@ -173,7 +173,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                         Name = row.Task_Name,
                         Status = row.Task_Status,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                        Tags = row.Tag is { } ? new List<string> { row.Tag } : new List<string>(),
+                        Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
                         IsFlagged = row.Task_Is_Flagged,
                         SortOrder = row.Task_Sort_Order,
                         ProjectId = row.Project_Id,

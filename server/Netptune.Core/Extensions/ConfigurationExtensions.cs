@@ -82,7 +82,7 @@ public static class ConfigurationExtensions
     {
         return configuration.GetRequiredSection("CorsOrigins")
             .AsEnumerable()
-            .Where(pair => pair.Value is { })
+            .Where(pair => pair.Value is not null)
             .Select(pair => pair.Value)
             .ToArray()!;
     }

@@ -244,7 +244,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         {
             var isValid = Enum.TryParse(typeof(ProjectTaskStatus), input, true, out var status);
 
-            return isValid && status is {} ? (ProjectTaskStatus)status : ProjectTaskStatus.New;
+            return isValid && status is not null ? (ProjectTaskStatus)status : ProjectTaskStatus.New;
         }
 
         return (row, i) => new ProjectTask

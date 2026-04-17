@@ -165,7 +165,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         var invite = await GetWorkspaceInvite();
 
-        if (model.InviteCode is {} && invite is null)
+        if (model.InviteCode is not null && invite is null)
         {
             return RegisterResult.Failed("Invite code is invalid/expired.");
         }
@@ -197,7 +197,7 @@ public class NetptuneAuthService : INetptuneAuthService
             _ => await UserManager.CreateAsync(user, model.Password!),
         };
 
-        if (invite is {})
+        if (invite is not null)
         {
             var permissions = WorkspaceRolePermissions
                 .GetDefaultPermissions(WorkspaceRole.Member)

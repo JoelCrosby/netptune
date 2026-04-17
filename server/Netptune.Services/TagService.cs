@@ -86,7 +86,7 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
             {
                 var existingTag = await UnitOfWork.Tags.GetByValue(trimmedTag, workspaceId.Value);
 
-                if (existingTag is {}) return existingTag;
+                if (existingTag is not null) return existingTag;
 
                 var entity = new Tag
                 {
