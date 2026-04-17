@@ -11,6 +11,7 @@ using Netptune.Core.Models.Import;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Common;
 using Netptune.Core.Services.Import;
 using Netptune.Core.UnitOfWork;
@@ -21,11 +22,13 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService IdentityService;
+    private readonly IActivityLogger Activity;
 
-    public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService)
+    public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
+        Activity = activity;
     }
 
     public async Task<ClientResponse<TaskImportResult>> ImportWorkspaceTasks(string boardId, Stream stream)
@@ -214,6 +217,15 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
             await UnitOfWork.CompleteAsync();
         }, true);
+
+        var taskIds = tasks.ConvertAll(t => t.Id);
+
+        Activity.LogMany(options =>
+        {
+            options.EntityIds = taskIds;
+            options.EntityType = EntityType.Task;
+            options.Type = ActivityType.Create;
+        });
 
         return Success();
     }
