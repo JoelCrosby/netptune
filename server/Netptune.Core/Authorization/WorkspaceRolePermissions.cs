@@ -14,6 +14,8 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Comments.Read,
         NetptunePermissions.Tags.Read,
         NetptunePermissions.Activity.Read,
+        NetptunePermissions.Notifications.Read,
+        NetptunePermissions.Notifications.Update,
         NetptunePermissions.Storage.UploadProfilePicture,
         NetptunePermissions.Export.ProjectTasks,
     };

@@ -54,6 +54,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 builder.Services.AddSingleton<BuildInfo>();
 builder.Services.AddSingleton<IBoardEventService, BoardEventService>();
+builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
 builder.Services.AddNeptuneAuthorization();
@@ -114,6 +115,7 @@ app.UseAuthorization();
 var apiGroup = app.MapGroup("/api");
 
 apiGroup.MapBoardEventsEndpoints();
+apiGroup.MapNotificationsEndpoints();
 apiGroup.MapActivityEndpoints();
 apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
