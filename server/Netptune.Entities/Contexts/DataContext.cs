@@ -28,6 +28,8 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
 
+    public DbSet<Notification> Notifications { get; set; } = null!;
+
     // relational data models
     public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; } = null!;
     public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;

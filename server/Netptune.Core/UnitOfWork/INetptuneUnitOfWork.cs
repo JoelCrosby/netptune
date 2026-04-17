@@ -31,5 +31,7 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IActivityLogRepository ActivityLogs { get; }
 
+    INotificationRepository Notifications { get; }
+
     IRefreshTokenRepository RefreshTokens { get; }
 }
