@@ -1,26 +1,36 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
+import { NavigationService } from '@app/core/services/navigation.service';
 import { LucideArrowLeft } from '@lucide/angular';
 
 @Component({
   selector: 'app-page-header-back-link',
   template: `
-    @if (backLink()) {
+    @if (show()) {
       <a
         class="text-foreground/70 hover:text-foreground inline-flex cursor-pointer items-center text-sm font-medium tracking-[0.225px] transition"
-        [routerLink]="backLink()">
+        (click)="location.back()">
         <svg
           lucideArrowLeft
           class="mr-[0.4rem] h-4 w-4"
           aria-hidden="true"></svg>
-        <span> {{ backLabel() || 'Go back' }} </span>
+        <span> {{ show() || 'Go back' }} </span>
       </a>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, LucideArrowLeft],
+  imports: [LucideArrowLeft],
 })
 export class PageHeaderBackLinkComponent {
-  readonly backLink = input<string[] | number[] | null>();
-  readonly backLabel = input<string | null>();
+  location = inject(Location);
+  navigation = inject(NavigationService);
+
+  show = computed(() => {
+    return this.navigation.back();
+  });
 }

@@ -10,7 +10,5 @@ public interface INotificationRepository : IRepository<Notification, int>
 
     Task<int> GetUnreadCount(string userId, int workspaceId);
 
-    Task MarkAsRead(int id, string userId);
-
     Task MarkAllAsRead(string userId, int workspaceId);
 }

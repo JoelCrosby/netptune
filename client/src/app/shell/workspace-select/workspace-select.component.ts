@@ -33,7 +33,7 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
   template: `
     <div class="relative" #dropdown>
       <button
-        class="hover:bg-side-bar-active/60 border-side-bar-border transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded-sm border-b py-4 text-sm font-medium text-white/70"
+        class="hover:bg-side-bar-active/60 border-side-bar-border transition:background-color flex h-15 w-full cursor-pointer items-center justify-center gap-4 overflow-hidden border-b py-4 text-sm font-medium text-white/70"
         [class.px-6]="shell.sideNavExpanded()"
         [class.justify-start]="shell.sideNavExpanded()"
         [class.w-full]="shell.sideNavExpanded()"

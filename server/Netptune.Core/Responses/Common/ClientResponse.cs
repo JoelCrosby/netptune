@@ -29,7 +29,7 @@ public readonly struct ClientResponse
     public static readonly ClientResponse NotFound = new(false, null,  ResponseType.NotFound);
 }
 
-public readonly struct ClientResponse<TPayload> where TPayload : class
+public readonly struct ClientResponse<TPayload>
 {
     public bool IsSuccess { get; init; }
     public TPayload? Payload { get; init; }
@@ -38,7 +38,7 @@ public readonly struct ClientResponse<TPayload> where TPayload : class
 
     private ClientResponse(
         bool isSuccess,
-        TPayload? payload = null,
+        TPayload? payload = default,
         string? message = null,
         ResponseType? responseType = null)
     {
@@ -57,7 +57,7 @@ public readonly struct ClientResponse<TPayload> where TPayload : class
 
     public static ClientResponse<TPayload> Failed(string? message = null)
     {
-        return new(false, null, message);
+        return new(false, default, message);
     }
 
     public static ClientResponse<TPayload> Success(TPayload payload, string? message = null)
@@ -70,7 +70,7 @@ public readonly struct ClientResponse<TPayload> where TPayload : class
         return new(false, payload, message);
     }
 
-    public static readonly ClientResponse<TPayload> NotFound = new (false, null, null, ResponseType.NotFound);
+    public static readonly ClientResponse<TPayload> NotFound = new (false, default, null, ResponseType.NotFound);
 
     public static implicit operator ClientResponse<TPayload>(TPayload payload) => new (isSuccess: true, payload: payload, message: null);
 }

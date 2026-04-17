@@ -39,7 +39,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
   template: `<button
       app-stroked-button
       appTooltip="Show activity"
-      class="board-filter-button"
       (click)="toggleMenu()">
       <svg lucideActivity aria-hidden="false" aria-label="Show activity"></svg>
     </button>

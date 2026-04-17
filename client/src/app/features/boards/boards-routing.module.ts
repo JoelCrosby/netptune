@@ -9,6 +9,9 @@ const routes: Routes = [
     path: ':id',
     component: BoardGroupsViewComponent,
     runGuardsAndResolvers: 'always',
+    data: {
+      back: 'Back to Boards',
+    },
   },
   { path: '**', component: BoardsViewComponent },
 ];

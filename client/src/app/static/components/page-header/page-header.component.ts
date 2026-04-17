@@ -12,7 +12,6 @@ import { LucideMenu } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '../button/flat-button.component';
 import { PageHeaderActionsComponent } from './page-header-actions.component';
-import { PageHeaderBackLinkComponent } from './page-header-back-link.component';
 import { PageHeaderTitleComponent } from './page-header-title.component';
 
 @Component({
@@ -21,7 +20,6 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
   imports: [
     LucideMenu,
     FlatButtonComponent,
-    PageHeaderBackLinkComponent,
     PageHeaderTitleComponent,
     PageHeaderActionsComponent,
   ],
@@ -38,12 +36,6 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
 
       <div
         class="flex flex-col justify-between gap-8 max-[600px]:mt-1 max-[600px]:flex-1">
-        <div class="h-6">
-          <app-page-header-back-link
-            [backLink]="backLink()"
-            [backLabel]="backLabel()" />
-        </div>
-
         <app-page-header-title
           [title]="title()"
           [titleEditable]="titleEditable()"
@@ -66,8 +58,6 @@ export class PageHeaderComponent {
   readonly title = input<string | null>();
   readonly titleEditable = input(false);
   readonly actionTitle = input<string | null>();
-  readonly backLink = input<string[] | number[] | null>();
-  readonly backLabel = input<string | null>();
   readonly secondaryActions = input<HeaderAction[]>([]);
   readonly overflowActions = input<HeaderAction[]>([]);
 

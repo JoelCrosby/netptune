@@ -10,6 +10,7 @@ const routes: Routes = [
     path: ':id',
     component: UserDetailViewComponent,
     canActivate: [userDetailGuard],
+    data: { back: 'Back to Users' },
   },
 ];
 

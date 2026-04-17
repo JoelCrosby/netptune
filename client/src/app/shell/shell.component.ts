@@ -7,19 +7,24 @@ import { selectSideMenuOpen } from '@core/store/layout/layout.selectors';
 import { Store } from '@ngrx/store';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
+import { ShellNavbarComponent } from './shell-navbar.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ShellService],
-  imports: [RouterOutlet, ShellSidebarComponent],
+  imports: [RouterOutlet, ShellSidebarComponent, ShellNavbarComponent],
   template: `
-    <div class="bg-background h-full">
+    <div class="bg-background flex h-full flex-col">
       @if (sideMenuOpen()) {
         <app-shell-sidebar (workspaceChange)="onWorkspaceChange($event)" />
       }
+      <app-shell-navbar
+        class="w-full [transition:margin_.2s_ease-in-out]"
+        [class.ml-[248px]]="shell.sideNavExpanded()"
+        [class.ml-[72px]]="sideMenuOpen()" />
 
       <main
-        class="h-screen [transition:margin-left_.2s_ease-in-out]"
+        class="mt-15 h-dvh [transition:margin-left_.2s_ease-in-out]"
         [class.ml-[248px]]="shell.sideNavExpanded()"
         [class.ml-[72px]]="sideMenuOpen()">
         <router-outlet />
@@ -32,9 +37,7 @@ export class ShellComponent {
   private router = inject(Router);
 
   shell = inject(ShellService);
-
   authenticated = this.store.selectSignal(selectIsAuthenticated);
-
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
 
   onSidenavClosedStart() {

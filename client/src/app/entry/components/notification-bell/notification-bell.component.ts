@@ -5,6 +5,7 @@ import {
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
+  effect,
   inject,
   viewChild,
 } from '@angular/core';
@@ -26,6 +27,7 @@ import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
+import { loadNotifications } from '@core/store/notifications/notifications.actions';
 
 @Component({
   selector: 'app-notification-bell',
@@ -41,7 +43,7 @@ import { NotificationViewModel } from '@core/models/view-models/notification-vie
     <button
       app-stroked-button
       appTooltip="Notifications"
-      class="board-filter-button relative"
+      class="relative"
       (click)="toggleMenu()">
       <svg lucideBell aria-hidden="false" aria-label="Notifications"></svg>
       @if (unreadCount() > 0) {
@@ -69,13 +71,18 @@ import { NotificationViewModel } from '@core/models/view-models/notification-vie
         <div class="border-border/50 mb-2 border-t"></div>
 
         @if (loaded()) {
-          @for (notification of notifications(); track notification.id; let last = $last) {
+          @for (
+            notification of notifications();
+            track notification.id;
+            let last = $last
+          ) {
             <div
               class="hover:bg-accent flex min-w-80 cursor-pointer flex-row items-center px-[1.2rem] py-[0.6rem] text-sm"
               [class.opacity-50]="notification.isRead"
               (click)="onNotificationClick(notification)">
               @if (!notification.isRead) {
-                <span class="bg-primary mr-2 h-2 w-2 shrink-0 rounded-full"></span>
+                <span
+                  class="bg-primary mr-2 h-2 w-2 shrink-0 rounded-full"></span>
               } @else {
                 <span class="mr-2 h-2 w-2 shrink-0"></span>
               }
@@ -130,8 +137,17 @@ export class NotificationBellComponent implements OnDestroy {
   readonly activityTypeToString = activityTypeToString;
   readonly fromNow = fromNow;
 
-  private readonly menuTemplate = viewChild.required<TemplateRef<unknown>>('menuTemplate');
+  private readonly menuTemplate =
+    viewChild.required<TemplateRef<unknown>>('menuTemplate');
   private overlayRef?: OverlayRef;
+
+  constructor() {
+    this.store.dispatch(loadNotifications());
+
+    effect(() => {
+      console.log({ notifications: this.notifications() });
+    });
+  }
 
   toggleMenu() {
     if (this.overlayRef?.hasAttached()) {
@@ -143,7 +159,6 @@ export class NotificationBellComponent implements OnDestroy {
 
   private openMenu() {
     const el = this.el.nativeElement.querySelector('button') as HTMLElement;
-
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(el)
@@ -181,7 +196,9 @@ export class NotificationBellComponent implements OnDestroy {
 
   onNotificationClick(notification: NotificationViewModel) {
     if (!notification.isRead) {
-      this.store.dispatch(notificationActions.markAsRead({ id: notification.id }));
+      this.store.dispatch(
+        notificationActions.markAsRead({ id: notification.id })
+      );
     }
 
     if (notification.link) {
