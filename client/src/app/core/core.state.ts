@@ -32,6 +32,8 @@ import { usersReducer } from './store/users/users.reducer';
 import { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 import { activityReducer } from './store/activity/activity.reducer';
+import { NotificationsState } from './store/notifications/notifications.model';
+import { notificationsReducer } from './store/notifications/notifications.reducer';
 
 export const reducers: ActionReducerMap<Partial<AppState>> = {
   auth: authReducer,
@@ -46,6 +48,7 @@ export const reducers: ActionReducerMap<Partial<AppState>> = {
   users: usersReducer,
   tags: tagsReducer,
   hub: hubContextReducer,
+  notifications: notificationsReducer,
 };
 
 export const metaReducers: MetaReducer<Partial<AppState>>[] = [
@@ -72,6 +75,7 @@ export const selectTasksFeature = selectFeature<TasksState>('tasks');
 export const selectUsersFeature = selectFeature<UsersState>('users');
 export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
+export const selectNotificationsFeature = selectFeature<NotificationsState>('notifications');
 
 export interface AppState {
   auth: AuthState;
@@ -86,4 +90,5 @@ export interface AppState {
   users: UsersState;
   tags: TagsState;
   hub: HubContextState;
+  notifications: NotificationsState;
 }

@@ -25,6 +25,7 @@ import { ShellSidebarCollapseComponent } from './shell-sidebar-collapse.componen
 import { ShellService } from './shell.service';
 import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
 import { netptunePermissions } from '../core/auth/permissions';
+import { NotificationBellComponent } from '@entry/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-shell-sidebar',
@@ -49,6 +50,9 @@ import { netptunePermissions } from '../core/auth/permissions';
         @for (link of bottomLinks(); track link.value) {
           <app-shell-menu-link [link]="link" />
         }
+        <div class="flex justify-center py-2">
+          <app-notification-bell />
+        </div>
         @if (user(); as user) {
           <app-shell-menu-link
             [link]="{ label: 'Profile', value: ['./profile'] }">
@@ -72,6 +76,7 @@ import { netptunePermissions } from '../core/auth/permissions';
     ShellMenuLinkComponent,
     ShellMenuLinkListComponent,
     ShellSidebarCollapseComponent,
+    NotificationBellComponent,
   ],
 })
 export class ShellSidebarComponent {

@@ -19,6 +19,7 @@ import { metaReducers, reducers } from './core.state';
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { CustomSerializer } from './router/custom-serializer';
 import { ActivityEffects } from './store/activity/activity.effects';
+import { NotificationsEffects } from './store/notifications/notifications.effects';
 import { LayoutEffects } from './store/layout/layout.effects';
 import { MetaEffects } from './store/meta/meta.effects';
 import { ProjectsEffects } from './store/projects/projects.effects';
@@ -49,6 +50,7 @@ import { DEFAULT_DIALOG_CONFIG } from '@angular/cdk/dialog';
       AuthEffects,
       MetaEffects,
       ActivityEffects,
+      NotificationsEffects,
       LayoutEffects,
       SettingsEffects,
       WorkspacesEffects,
