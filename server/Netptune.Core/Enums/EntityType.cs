@@ -9,4 +9,5 @@ public enum EntityType
     BoardGroup = 4,
     Task = 5,
     Comment,
+    Tag,
 }
