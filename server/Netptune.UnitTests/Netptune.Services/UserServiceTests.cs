@@ -11,6 +11,7 @@ using Netptune.Core.Models.Messaging;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Services;
@@ -35,6 +36,7 @@ public class UserServiceTests
     private readonly IHostingService Hosting = Substitute.For<IHostingService>();
     private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public UserServiceTests()
     {
@@ -45,7 +47,8 @@ public class UserServiceTests
             Hosting,
             Cache,
             InviteCache,
-            WorkspacePermissionCache
+            WorkspacePermissionCache,
+            Activity
         );
     }
 
