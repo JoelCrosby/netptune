@@ -4,6 +4,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 
@@ -14,12 +15,14 @@ public class CommentService : ICommentService
     private readonly ICommentRepository Comments;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IActivityLogger Activity;
 
-    public CommentService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public CommentService(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Comments = unitOfWork.Comments;
+        Activity = activity;
     }
 
     public async Task<ClientResponse<CommentViewModel>> AddCommentToTask(AddCommentRequest request)
@@ -53,6 +56,13 @@ public class CommentService : ICommentService
             return ClientResponse<CommentViewModel>.Failed("add comment failed");
         }
 
+        Activity.Log(options =>
+        {
+            options.EntityId = comment.Id;
+            options.EntityType = EntityType.Comment;
+            options.Type = ActivityType.Create;
+        });
+
         return result;
     }
 
@@ -78,8 +88,17 @@ public class CommentService : ICommentService
             return ClientResponse.NotFound;
         }
 
+        var commentId = comment.Id;
+
         await Comments.DeletePermanent(comment.Id);
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = commentId;
+            options.EntityType = EntityType.Comment;
+            options.Type = ActivityType.Delete;
+        });
 
         return ClientResponse.Success;
     }

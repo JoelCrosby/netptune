@@ -1,9 +1,12 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events.Tags;
 using Netptune.Core.Extensions;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
@@ -14,11 +17,13 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IActivityLogger Activity;
 
-    public TagService(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public TagService(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        Activity = activity;
     }
 
     public async Task<ClientResponse<TagViewModel>> Create(AddTagRequest request)
@@ -49,6 +54,13 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         await UnitOfWork.CompleteAsync();
 
         var result = await UnitOfWork.Tags.GetViewModel(tag.Id);
+
+        Activity.Log(options =>
+        {
+            options.EntityId = tag.Id;
+            options.EntityType = EntityType.Tag;
+            options.Type = ActivityType.Create;
+        });
 
         return Success(result!);
     }
@@ -98,6 +110,18 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
 
             await UnitOfWork.CompleteAsync();
 
+            Activity.LogWith<TagActivityMeta>(options =>
+            {
+                options.EntityId = taskId.Value;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.AddTag;
+                options.Meta = new TagActivityMeta
+                {
+                    TagId = tag.Id,
+                    TagName = tag.Name,
+                };
+            });
+
             var response = await UnitOfWork.Tags.GetViewModel(tag.Id);
 
             return Success(response!);
@@ -132,9 +156,17 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         if (workspaceId is null) return ClientResponse.Failed();
 
         var tags = await UnitOfWork.Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Tags);
+        var tagIds = tags.ConvertAll(t => t.Id);
 
         await UnitOfWork.Tags.DeletePermanent(tags);
         await UnitOfWork.CompleteAsync();
+
+        Activity.LogMany(options =>
+        {
+            options.EntityIds = tagIds;
+            options.EntityType = EntityType.Tag;
+            options.Type = ActivityType.Delete;
+        });
 
         return ClientResponse.Success;
     }
@@ -153,8 +185,25 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
             return ClientResponse.Failed($"workspace with key {workspaceKey} does not exist");
         }
 
+        var tag = await UnitOfWork.Tags.GetByValue(request.Tag, workspaceId.Value);
+
         await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Tag);
         await UnitOfWork.CompleteAsync();
+
+        if (tag is not null)
+        {
+            Activity.LogWith<TagActivityMeta>(options =>
+            {
+                options.EntityId = taskId.Value;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.RemoveTag;
+                options.Meta = new TagActivityMeta
+                {
+                    TagId = tag.Id,
+                    TagName = tag.Name,
+                };
+            });
+        }
 
         return ClientResponse.Success;
     }
@@ -179,6 +228,13 @@ public class TagService : ServiceBase<TagViewModel>, ITagService
         tag.Name = request.NewValue.Trim();
 
         await UnitOfWork.CompleteAsync();
+
+        Activity.Log(options =>
+        {
+            options.EntityId = tag.Id;
+            options.EntityType = EntityType.Tag;
+            options.Type = ActivityType.ModifyName;
+        });
 
         var result = tag.ToViewModel();
 

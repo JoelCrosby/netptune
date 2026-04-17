@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Services;
@@ -25,10 +26,11 @@ public class TagServiceTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public TagServiceTests()
     {
-        Service = new(UnitOfWork, Identity);
+        Service = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
@@ -322,19 +324,27 @@ public class TagServiceTests
     [Fact]
     public async Task DeleteFromTask_ShouldCallCompleteAsync_WhenValidId()
     {
+
         var request = Fixture.Create<DeleteTagFromTaskRequest>() with
         {
             SystemId = "task-id",
             Tag = "tag",
         };
 
+        var tag = AutoFixtures.Tag with
+        {
+            Id = 1,
+            Name = request.Tag,
+        };
+
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
+        UnitOfWork.Tags.GetByValue(request.Tag, 1).Returns(tag);
 
         await Service.DeleteFromTask(request);
 
-        await UnitOfWork.Received(1).Tags.DeleteTagFromTask(1, 1, request.Tag);
+        await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag);
         await UnitOfWork.Received(1).CompleteAsync();
     }
 
