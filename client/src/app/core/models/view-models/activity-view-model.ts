@@ -25,4 +25,10 @@ export enum ActivityType {
   modifyName = 9,
   modifyDescription = 10,
   modifyStatus = 11,
+  invite = 12,
+  remove = 13,
+  permissionChanged = 14,
+  unassign = 15,
+  addTag = 16,
+  removeTag = 17,
 }

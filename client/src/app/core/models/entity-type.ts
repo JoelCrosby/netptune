@@ -6,4 +6,5 @@ export enum EntityType {
   boardGroup = 4,
   task = 5,
   comment,
+  tag,
 }
