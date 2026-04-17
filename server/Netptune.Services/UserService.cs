@@ -2,6 +2,8 @@ using Flurl;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events.Users;
 using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
@@ -10,6 +12,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
@@ -26,6 +29,7 @@ public class UserService : IUserService
     private readonly IInviteCache InviteCache;
     private readonly IUserRepository UserRepository;
     private readonly IWorkspaceRepository WorkspaceRepository;
+    private readonly IActivityLogger Activity;
 
     public UserService(
         INetptuneUnitOfWork unitOfWork,
@@ -34,7 +38,8 @@ public class UserService : IUserService
         IHostingService hosting,
         IWorkspaceUserCache workspaceUserCache,
         IInviteCache inviteCache,
-            IWorkspacePermissionCache permissionCache )
+        IWorkspacePermissionCache permissionCache,
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
@@ -45,6 +50,7 @@ public class UserService : IUserService
         UserRepository = unitOfWork.Users;
         WorkspaceRepository = unitOfWork.Workspaces;
         PermissionCache = permissionCache;
+        Activity = activity;
     }
 
     public async Task<UserViewModel?> Get(string userId)
@@ -106,6 +112,18 @@ public class UserService : IUserService
 
         await SendUserInviteEmails(usersToInvite, workspace);
 
+        Activity.LogWith<UserMembershipActivityMeta>(options =>
+        {
+            options.EntityId = workspace.Id;
+            options.WorkspaceId = workspace.Id;
+            options.EntityType = EntityType.Workspace;
+            options.Type = ActivityType.Invite;
+            options.Meta = new UserMembershipActivityMeta
+            {
+                Emails = usersToInvite.ToList(),
+            };
+        });
+
         return new InviteUserResponse
         {
             Emails = usersToInvite.ToList(),
@@ -153,6 +171,18 @@ public class UserService : IUserService
 
         await UnitOfWork.CompleteAsync();
 
+        Activity.LogWith<UserMembershipActivityMeta>(options =>
+        {
+            options.EntityId = workspace.Id;
+            options.WorkspaceId = workspace.Id;
+            options.EntityType = EntityType.Workspace;
+            options.Type = ActivityType.Remove;
+            options.Meta = new UserMembershipActivityMeta
+            {
+                Emails = removeUserEmails,
+            };
+        });
+
         return new RemoveUsersWorkspaceResponse
         {
             Emails = removeUserEmails,
@@ -192,14 +222,17 @@ public class UserService : IUserService
         }
 
         var permissions = workspaceUser.Permissions;
+        bool granted;
 
         if (permissions.Contains(request.Permission))
         {
             permissions.Remove(request.Permission);
+            granted = false;
         }
         else
         {
             permissions.Add(request.Permission);
+            granted = true;
         }
 
         await UnitOfWork.WorkspaceUsers.SetUserPermissions(request.UserId, workspace.Id, permissions);
@@ -209,6 +242,20 @@ public class UserService : IUserService
         {
             UserId = request.UserId,
             WorkspaceKey = workspaceKey,
+        });
+
+        Activity.LogWith<UserPermissionActivityMeta>(options =>
+        {
+            options.EntityId = workspace.Id;
+            options.WorkspaceId = workspace.Id;
+            options.EntityType = EntityType.Workspace;
+            options.Type = ActivityType.PermissionChanged;
+            options.Meta = new UserPermissionActivityMeta
+            {
+                TargetUserId = request.UserId,
+                Permission = request.Permission,
+                Granted = granted,
+            };
         });
 
         return ClientResponse<List<string>>.Success([.. permissions]);
