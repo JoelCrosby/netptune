@@ -160,7 +160,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
             result.IsFlagged = request.IsFlagged ?? result.IsFlagged;
             result.OwnerId = request.OwnerId ?? result.OwnerId;
 
-            if (request.AssigneeIds is {})
+            if (request.AssigneeIds is not null)
             {
                 result.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
                         result.Id,
@@ -412,7 +412,7 @@ public class TaskService : ServiceBase<TaskViewModel>, ITaskService
                 .ProjectTasksInGroups
                 .GetProjectTaskInGroup(request.TaskId, request.OldGroupId);
 
-            if (itemToRemove is { })
+            if (itemToRemove is not null)
             {
                 await UnitOfWork.ProjectTasksInGroups.DeletePermanent(itemToRemove.Id);
             }

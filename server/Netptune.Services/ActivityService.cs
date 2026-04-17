@@ -36,7 +36,7 @@ public class ActivityService : ServiceBase<ActivityViewModel>, IActivityService
 
             var assigneeId = element.GetString();
 
-            if (assigneeId is {} && avatarMap.TryGetValue(assigneeId, out var avatar))
+            if (assigneeId is not null && avatarMap.TryGetValue(assigneeId, out var avatar))
             {
                 activity.Assignee = avatar;
             }

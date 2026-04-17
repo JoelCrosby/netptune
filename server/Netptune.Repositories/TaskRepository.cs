@@ -260,7 +260,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             var lastAssignee = lastTask?.Assignees.FirstOrDefault();
             var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
 
-            if (lastTask?.SystemId is {} && systemId == lastTask.SystemId)
+            if (lastTask?.SystemId is not null && systemId == lastTask.SystemId)
             {
                 if (lastTag != row.Tag && row.Tag is not null)
                 {

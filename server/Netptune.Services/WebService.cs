@@ -37,7 +37,7 @@ public class WebService : IWebService
             var tagContent = tag.Attributes["content"];
             var tagProperty = tag.Attributes["property"];
 
-            if (tagName is {} && tagContent is {})
+            if (tagName is not null && tagContent is not null)
             {
                 switch (tagName.Value.ToLower())
                 {
@@ -67,7 +67,7 @@ public class WebService : IWebService
                         break;
                 }
             }
-            else if (tagProperty is {} && tagContent is {})
+            else if (tagProperty is not null && tagContent is not null)
             {
                 switch (tagProperty.Value.ToLower())
                 {

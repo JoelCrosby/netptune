@@ -114,7 +114,7 @@ public class RedisCache : ICacheProvider
     {
         var value = GetValue<TValue>(key);
 
-        if (value is { })
+        if (value is not null)
         {
             return value;
         }
@@ -128,7 +128,7 @@ public class RedisCache : ICacheProvider
     {
         var value = await GetValueAsync<TValue>(key);
 
-        if (value is { })
+        if (value is not null)
         {
             return value;
         }
