@@ -30,7 +30,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
   selector: 'app-shell-sidebar',
   template: `
     <div
-      class="border-side-bar-border bg-side-bar fixed top-0 flex h-screen w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
+      class="border-side-bar-border bg-side-bar z-10 flex h-full w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
       [class.w-[248px]]="shell.sideNavExpanded()">
       <app-shell-menu-link-list>
         <app-workspace-select

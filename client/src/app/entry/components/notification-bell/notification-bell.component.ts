@@ -1,3 +1,5 @@
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,31 +11,29 @@ import {
   inject,
   viewChild,
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
 import { Router } from '@angular/router';
+import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { activityTypeToString } from '@core/transforms/activity-type';
-import { fromNow } from '@core/util/dates';
+import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import * as notificationActions from '@core/store/notifications/notifications.actions';
+import { loadNotifications } from '@core/store/notifications/notifications.actions';
 import {
   selectNotifications,
   selectNotificationsLoaded,
   selectUnreadCount,
 } from '@core/store/notifications/notifications.selectors';
+import { activityTypeToString } from '@core/transforms/activity-type';
+import { fromNow } from '@core/util/dates';
 import { LucideBell } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
-import { loadNotifications } from '@core/store/notifications/notifications.actions';
 
 @Component({
   selector: 'app-notification-bell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    StrokedButtonComponent,
+    IconButtonComponent,
     TooltipDirective,
     LucideBell,
     AvatarComponent,
@@ -41,9 +41,10 @@ import { loadNotifications } from '@core/store/notifications/notifications.actio
   ],
   template: `
     <button
-      app-stroked-button
+      app-icon-button
       appTooltip="Notifications"
-      class="relative"
+      appTooltipPosition="bottom"
+      class="text-foreground/80 relative"
       (click)="toggleMenu()">
       <svg lucideBell aria-hidden="false" aria-label="Notifications"></svg>
       @if (unreadCount() > 0) {
@@ -56,12 +57,12 @@ import { loadNotifications } from '@core/store/notifications/notifications.actio
 
     <ng-template #menuTemplate>
       <div
-        class="custom-scroll border-border bg-background mt-[0.4rem] max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded-[0.4rem] border p-1 py-3 shadow-lg">
+        class="custom-scroll border-border bg-background mt-[0.4rem] mr-4 max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded-[0.4rem] border py-3 shadow-lg">
         <div class="flex items-center justify-between px-[1.2rem] pb-2">
           <span class="text-sm font-semibold">Notifications</span>
           @if (unreadCount() > 0) {
             <button
-              class="text-muted-foreground hover:text-foreground text-xs underline"
+              class="text-muted-foreground hover:text-primary text-xs underline transition-colors"
               (click)="markAllAsRead()">
               Mark all as read
             </button>
@@ -77,7 +78,7 @@ import { loadNotifications } from '@core/store/notifications/notifications.actio
             let last = $last
           ) {
             <div
-              class="hover:bg-accent flex min-w-80 cursor-pointer flex-row items-center px-[1.2rem] py-[0.6rem] text-sm"
+              class="hover:bg-hover flex min-w-80 cursor-pointer flex-row items-center px-[1.2rem] py-[0.6rem] text-sm"
               [class.opacity-50]="notification.isRead"
               (click)="onNotificationClick(notification)">
               @if (!notification.isRead) {
