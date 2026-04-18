@@ -1,5 +1,4 @@
 using Netptune.Core.Entities;
-using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
@@ -24,6 +23,4 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
     Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier);
 
     Task<List<int>> GetTaskIdsInBoard(string boardIdentifier);
-
-    Task<ActivityAncestors> GetAncestors(int taskId);
 }

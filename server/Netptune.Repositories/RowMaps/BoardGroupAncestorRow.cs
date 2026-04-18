@@ -1,9 +1,7 @@
 namespace Netptune.Repositories.RowMaps;
 
-public class TaskAncestorRow
+public class BoardGroupAncestorRow
 {
-    public int Task_id { get; set; }
-
     public int Board_group_id { get; set; }
 
     public int Board_id { get; set; }
@@ -17,6 +15,4 @@ public class TaskAncestorRow
     public int Workspace_id { get; set; }
 
     public string? Workspace_key { get; set; }
-
-    public int Task_scope_id { get; set; }
 }

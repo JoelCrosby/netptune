@@ -34,4 +34,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     INotificationRepository Notifications { get; }
 
     IRefreshTokenRepository RefreshTokens { get; }
+
+    IAncestorRepository Ancestors { get; }
 }
