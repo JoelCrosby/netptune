@@ -18,29 +18,19 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
 
     public async Task<UserPermissions?> GetUserPermissions(string userId, string workspaceKey, bool isReadOnly = true)
     {
-        var isMember = await Context.WorkspaceAppUsers
-            .AnyAsync(x => x.UserId == userId && x.Workspace.Slug == workspaceKey);
-
-        if (!isMember)
-        {
-            return null;
-        }
-
         var workspaceUser = await Context.WorkspaceAppUsers
             .Where(p => p.UserId == userId && p.Workspace.Slug == workspaceKey)
-            .Select(p => new {  p.Role, p.Permissions })
+            .Select(p => new { p.Role, p.Permissions })
             .IsReadonly(isReadOnly)
             .SingleOrDefaultAsync();
 
         if (workspaceUser is null) return null;
 
-        var permissionSet = workspaceUser.Permissions.ToHashSet();
-
         return new UserPermissions
         {
             UserId = userId,
             WorkspaceKey = workspaceKey,
-            Permissions = permissionSet,
+            Permissions = workspaceUser.Permissions.ToHashSet(),
             Role = workspaceUser.Role,
         };
     }
@@ -48,6 +38,7 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
     public Task<List<string>> GetWorkspaceUserIds(int workspaceId)
     {
         return Context.WorkspaceAppUsers
+            .AsNoTracking()
             .Where(u => u.WorkspaceId == workspaceId)
             .Select(u => u.UserId)
             .ToListAsync();
@@ -56,6 +47,7 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
     public async Task<Dictionary<int, List<string>>> GetWorkspaceUserIdsByWorkspaceIds(IEnumerable<int> workspaceIds)
     {
         var rows = await Context.WorkspaceAppUsers
+            .AsNoTracking()
             .Where(u => workspaceIds.Contains(u.WorkspaceId))
             .Select(u => new { u.WorkspaceId, u.UserId })
             .ToListAsync();
