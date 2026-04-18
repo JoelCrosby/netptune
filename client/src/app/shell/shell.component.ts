@@ -23,7 +23,7 @@ import { ShellNavbarComponent } from './shell-navbar.component';
   `,
   template: `
     <div
-      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] gap-px transition-all"
+      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] transition-all"
       [class.expanded]="shell.sideNavExpanded()"
       [class.collapsed]="shell.sideNavCollapsed()">
       @if (sideMenuOpen()) {

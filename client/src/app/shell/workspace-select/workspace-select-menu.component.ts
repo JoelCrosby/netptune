@@ -15,7 +15,7 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
   template: `
     @if (isOpen()) {
       <div
-        class="border-border bg-card menu-scale-in flex h-full origin-top flex-col overflow-x-hidden border text-left">
+        class="border-border menu-scale-in flex h-full w-61.5 origin-top flex-col overflow-x-hidden rounded-sm border bg-white text-left shadow-xl dark:bg-neutral-950 dark:shadow-black/60">
         @if (!workspaces().length) {
           <div class="flex h-9.5 items-center px-2 font-[inherit] text-sm">
             No results found...
