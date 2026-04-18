@@ -45,4 +45,5 @@
   "js/ts.preferences.importModuleSpecifier": "shortest",
   "js/ts.updateImportsOnFileMove.enabled": "always",
   "files.insertFinalNewline": true,
+  "css.validate": false
 }

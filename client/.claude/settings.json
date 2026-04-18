@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(dotnet test *)",
-      "Bash(dotnet list *)"
+      "Bash(dotnet list *)",
+      "Bash(grep -E \"\\\\.\\(ts|html\\)$\")",
+      "Bash(grep -E \"\\(Project|Task\\)\\\\.cs$\")",
+      "Bash(dotnet build *)"
     ]
   }
 }
