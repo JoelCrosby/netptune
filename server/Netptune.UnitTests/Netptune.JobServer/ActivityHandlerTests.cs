@@ -110,10 +110,12 @@ public class ActivityHandlerTests
         await Handler.Handle(message, CancellationToken.None);
 
         await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Is<IEnumerable<Notification>>(notifications =>
+            // ReSharper disable PossibleMultipleEnumeration
             notifications.Count() == 2 &&
             notifications.All(n => n.UserId != ActorUserId) &&
             notifications.Any(n => n.UserId == OtherUserId1) &&
             notifications.Any(n => n.UserId == OtherUserId2)));
+            // ReSharper enable PossibleMultipleEnumeration
     }
 
     [Fact]
