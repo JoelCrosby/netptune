@@ -36,15 +36,15 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         @for (user of users(); track user) {
           <button
             app-stroked-button
-            class="mx-4 w-full max-w-[200px]"
+            class="mx-4 w-full max-w-50"
             [class.selected]="selected === user.id"
             [class.text-foreground]="selected === user.id"
             [class.bg-primary/25]="selected === user.id"
             (click)="onUserClicked(user.id)">
             <div class="flex flex-1 flex-row items-center gap-[0.8rem]">
               <app-avatar
-                class="shrink-0 basis-[24px]"
-                size="24"
+                class="shrink-0 basis-6"
+                size="sm"
                 [name]="user.displayName"
                 [imageUrl]="user.pictureUrl">
               </app-avatar>

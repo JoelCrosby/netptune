@@ -27,7 +27,7 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
         <app-avatar
           [imageUrl]="user().pictureUrl"
           [name]="user().displayName"
-          [size]="26" />
+          size="sm" />
       </div>
 
       <div

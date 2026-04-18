@@ -38,7 +38,7 @@ import { TaskDetailService } from './task-detail.service';
         <h4 class="font-sm mt-4 mb-2 font-semibold">Reporter</h4>
         <div class="flex flex-row items-center rounded">
           <app-avatar
-            size="24"
+            size="sm"
             [name]="task().ownerUsername"
             [imageUrl]="task().ownerPictureUrl">
           </app-avatar>

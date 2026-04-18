@@ -54,7 +54,7 @@ import { NgClass } from '@angular/common';
         }
         @for (assignee of task().assignees; track assignee.id) {
           <app-avatar
-            size="24"
+            size="sm"
             class="task-card-user-chip"
             [name]="assignee.displayName"
             [imageUrl]="assignee.pictureUrl">

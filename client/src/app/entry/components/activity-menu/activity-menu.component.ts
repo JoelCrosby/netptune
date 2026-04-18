@@ -54,7 +54,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
                 class="shrink-0 grow-0 basis-8"
                 [imageUrl]="activity.userPictureUrl"
                 [name]="activity.userUsername"
-                size="24">
+                size="sm">
               </app-avatar>
               <span class="font-medium tracking-[0.225px] whitespace-nowrap">
                 {{ activity.userUsername }}
