@@ -87,6 +87,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_SECRET", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK", "test");
         Environment.SetEnvironmentVariable("SEND_GRID_API_KEY", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_S3_BUCKET_NAME", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_S3_REGION", "test");
