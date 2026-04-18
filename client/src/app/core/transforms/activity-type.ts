@@ -3,39 +3,39 @@ import { ActivityType } from '@core/models/view-models/activity-view-model';
 export const activityTypeToString = (value: ActivityType): string => {
   switch (value) {
     case ActivityType.assign:
-      return 'assigned';
+      return 'Assigned';
     case ActivityType.create:
-      return 'created';
+      return 'Created';
     case ActivityType.delete:
-      return 'deleted';
+      return 'Deleted';
     case ActivityType.modify:
-      return 'modified';
+      return 'Modified';
     case ActivityType.move:
-      return 'moved';
+      return 'Moved';
     case ActivityType.reorder:
-      return 'reordered';
+      return 'Reordered';
     case ActivityType.flag:
-      return 'flagged';
+      return 'Flagged';
     case ActivityType.unFlag:
-      return 'un-flagged';
+      return 'Un-flagged';
     case ActivityType.modifyName:
-      return 'modified name';
+      return 'Modified name';
     case ActivityType.modifyDescription:
-      return 'modified description';
+      return 'Modified description';
     case ActivityType.modifyStatus:
-      return 'changed status';
+      return 'Changed status';
     case ActivityType.invite:
-      return 'invited';
+      return 'Invited';
     case ActivityType.remove:
-      return 'removed';
+      return 'Removed';
     case ActivityType.permissionChanged:
-      return 'changed permissions';
+      return 'Changed permissions';
     case ActivityType.unassign:
-      return 'unassigned';
+      return 'Unassigned';
     case ActivityType.addTag:
-      return 'added tag';
+      return 'Added tag';
     case ActivityType.removeTag:
-      return 'removed tag';
+      return 'Removed tag';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

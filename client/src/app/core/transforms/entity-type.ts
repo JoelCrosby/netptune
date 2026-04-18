@@ -3,19 +3,19 @@ import { EntityType } from '@core/models/entity-type';
 export const entityTypeToString = (value: EntityType): string => {
   switch (value) {
     case EntityType.board:
-      return 'board';
+      return 'Board';
     case EntityType.boardGroup:
-      return 'board group';
+      return 'Board group';
     case EntityType.comment:
-      return 'comment';
+      return 'Comment';
     case EntityType.project:
-      return 'project';
+      return 'Project';
     case EntityType.task:
-      return 'task';
+      return 'Task';
     case EntityType.user:
-      return 'user';
+      return 'User';
     case EntityType.workspace:
-      return 'workspace';
+      return 'Workspace';
     default:
       return '[UNKNOWN ENTITY TYPE]';
   }

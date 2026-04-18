@@ -11,4 +11,6 @@ export interface NotificationViewModel {
   actorUserId: string;
   actorUsername: string;
   actorPictureUrl: string | null;
+  entityName: string | null;
+  entityIdentifier: string | null;
 }

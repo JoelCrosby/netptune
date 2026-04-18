@@ -155,6 +155,13 @@ export class AuthEffects implements OnInitEffects {
     }
   );
 
+  registerSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.registerSuccess),
+      map(() => loadWorkspaces())
+    );
+  });
+
   confirmEmail$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
