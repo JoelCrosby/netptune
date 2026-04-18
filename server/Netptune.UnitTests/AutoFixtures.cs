@@ -2,7 +2,6 @@
 using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Boards;
