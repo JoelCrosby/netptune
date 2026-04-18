@@ -30,26 +30,33 @@ interface PermissionGroup {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon, CheckboxComponent],
   host: {
-    class:
-      'block w-full bg-board-group overflow-auto  custom-scroll rounded border-border/60 border',
+    class: 'block w-full rounded ',
   },
   template: `
-    <div class="flex w-full flex-col">
+    <div class="flex w-full flex-col gap-6">
       @for (group of groups(); track group.heading) {
-        <div class="w-full">
+        <div class="border-border/60 w-full rounded border">
           <h4
-            class="border-border text-foreground/80 bg-background sticky top-0 mb-2 border-b px-4 pt-8 pb-4 tracking-wide capitalize">
+            class="border-border/60 text-foreground/80 bg-background sticky top-0 z-20 rounded-t border-b px-4 py-2 tracking-wide capitalize">
             {{ group.heading }}
           </h4>
           <div class="flex w-full flex-col">
-            @for (item of group.items; track item.key) {
+            @for (item of group.items; track item.key; let last = $last) {
               <div
-                class="border-border flex h-14 w-full items-center gap-3 border-b px-4"
-                [class.opacity-40]="!item.granted">
-                <svg [lucideIcon]="item.icon" class="h-6 w-6 shrink-0"></svg>
-                <span class="flex-1 text-sm">{{ item.label }}</span>
+                class="bg-board-group border-border hover:bg-hover flex h-10 w-full cursor-pointer items-center gap-3 border-b px-4"
+                [class.border-0!]="last">
+                <svg
+                  [lucideIcon]="item.icon"
+                  class="h-4 w-4 shrink-0"
+                  [class.opacity-40]="!item.granted"></svg>
+                <span
+                  class="flex-1 text-sm"
+                  [class.opacity-40]="!item.granted"
+                  >{{ item.label }}</span
+                >
 
                 <app-checkbox
+                  #check
                   [checked]="item.granted"
                   [disabled]="enabled()"
                   (changed)="onChanged(item)" />

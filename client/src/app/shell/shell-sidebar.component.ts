@@ -30,8 +30,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
   selector: 'app-shell-sidebar',
   template: `
     <div
-      class="border-side-bar-border bg-side-bar z-10 flex h-full w-18 flex-col justify-between border-r [transition:width_.2s_ease-in-out]"
-      [class.w-[248px]]="shell.sideNavExpanded()">
+      class="border-side-bar-border bg-side-bar z-10 flex h-full flex-col justify-between border-r [transition:width_.2s_ease-in-out]">
       <app-shell-menu-link-list>
         <app-workspace-select
           idKey="id"
@@ -57,7 +56,7 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
               class="app-menu-link-profile"
               [name]="user.displayName"
               [imageUrl]="user.pictureUrl"
-              [size]="24"
+              size="sm"
               [border]="true"
               [tooltip]="false" />
           </app-shell-menu-link>

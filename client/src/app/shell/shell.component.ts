@@ -13,9 +13,19 @@ import { ShellNavbarComponent } from './shell-navbar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ShellService],
   imports: [RouterOutlet, ShellSidebarComponent, ShellNavbarComponent],
+  styles: `
+    .expanded {
+      grid-template-columns: 247px auto;
+    }
+    .collapsed {
+      grid-template-columns: 72px auto;
+    }
+  `,
   template: `
     <div
-      class="bg-background grid h-screen w-screen grid-cols-[247px_auto] grid-rows-[60px_auto] gap-[1px]">
+      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] gap-px transition-all"
+      [class.expanded]="shell.sideNavExpanded()"
+      [class.collapsed]="shell.sideNavCollapsed()">
       @if (sideMenuOpen()) {
         <app-shell-sidebar
           class="col-start-1 row-span-2 row-start-1"
@@ -23,7 +33,7 @@ import { ShellNavbarComponent } from './shell-navbar.component';
       }
       <app-shell-navbar />
 
-      <main class="col-start-2 row-start-2 overflow-auto">
+      <main class="col-start-2 row-start-2 overflow-y-auto">
         <router-outlet />
       </main>
     </div>
