@@ -20,26 +20,28 @@ interface ShellMenuLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLinkActive, RouterLink, TooltipDirective, LucideDynamicIcon],
   host: { class: 'block w-full' },
-  template: ` <a
-    class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden py-4 text-sm font-medium text-white/70 select-none"
-    [routerLink]="link().value"
-    [class.px-6]="shell.sideNavExpanded()"
-    [class.justify-start]="shell.sideNavExpanded()"
-    [appTooltip]="shell.sideNavExpanded() ? '' : link().label"
-    appTooltipPosition="right"
-    routerLinkActive="bg-side-bar-active text-white!">
-    @if (link().icon) {
-      <svg [lucideIcon]="link().icon!" class="h-5 w-5"></svg>
-    }
+  template: ` @if (link(); as link) {
+    <a
+      class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden py-4 text-sm font-medium text-white/70 select-none"
+      [routerLink]="link.value"
+      [class.px-6]="shell.sideNavExpanded()"
+      [class.justify-start]="shell.sideNavExpanded()"
+      [appTooltip]="shell.sideNavExpanded() ? '' : link.label"
+      appTooltipPosition="right"
+      routerLinkActive="bg-side-bar-active text-white!">
+      @if (link.icon) {
+        <svg [lucideIcon]="link.icon!" class="h-5 w-5"></svg>
+      }
 
-    <ng-content />
+      <ng-content />
 
-    <span
-      [class.block!]="shell.sideNavExpanded()"
-      class="hidden transition-all transition-discrete"
-      >{{ link().label }}</span
-    >
-  </a>`,
+      @if (shell.sideNavExpanded()) {
+        <span class="transition-all transition-discrete">
+          {{ link.label }}
+        </span>
+      }
+    </a>
+  }`,
 })
 export class ShellMenuLinkComponent {
   link = input.required<ShellMenuLink>();
