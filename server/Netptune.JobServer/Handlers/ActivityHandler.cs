@@ -4,8 +4,9 @@ using System.Text.Json.Serialization;
 using Mediator;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
-using Netptune.Core.Services.Activity;
+using Netptune.Core.Models.Activity;
 using Netptune.Core.UnitOfWork;
 
 using StackExchange.Redis;
@@ -20,19 +21,17 @@ public record JobNotificationEvent(int NotificationId, bool IsRead);
 public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IAncestorService AncestorService;
     private readonly IConnectionMultiplexer Redis;
 
-    public ActivityHandler(INetptuneUnitOfWork unitOfWork, IAncestorService ancestorService, IConnectionMultiplexer redis)
+    public ActivityHandler(INetptuneUnitOfWork unitOfWork, IConnectionMultiplexer redis)
     {
         UnitOfWork = unitOfWork;
-        AncestorService = ancestorService;
         Redis = redis;
     }
 
     public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
     {
-        var activityLogs = new List<ActivityLog>();
+        var activityLogs = new List<(ActivityLog Log, ActivityAncestors Ancestors)>();
 
         foreach (var activity in request.Events)
         {
@@ -41,7 +40,14 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 throw new Exception("IActivityEvent EntityId cannot be null.");
             }
 
-            var ancestors = await AncestorService.GetTaskAncestors(activity.EntityId.Value);
+            var ancestors = activity.EntityType switch
+            {
+                EntityType.Task => await UnitOfWork.Ancestors.GetProjectTaskAncestors(activity.EntityId.Value),
+                EntityType.BoardGroup => await UnitOfWork.Ancestors.GetBoardGroupAncestors(activity.EntityId.Value),
+                EntityType.Board => await UnitOfWork.Ancestors.GetBoardAncestors(activity.EntityId.Value),
+                EntityType.Project => await UnitOfWork.Ancestors.GetProjectAncestors(activity.EntityId.Value),
+                _ => new ActivityAncestors(),
+            };
 
             var log = new ActivityLog
             {
@@ -52,16 +58,19 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 UserId = activity.UserId,
                 CreatedByUserId = activity.UserId,
                 WorkspaceId = activity.WorkspaceId,
-                TaskId = activity.EntityId,
+                TaskId = ancestors.TaskId,
                 ProjectId = ancestors.ProjectId,
-                BoardId = ancestors.ProjectId,
+                BoardId = ancestors.BoardId,
                 BoardGroupId = ancestors.BoardGroupId,
                 Time = activity.Time,
                 Meta = activity.Meta is not null ? JsonDocument.Parse(activity.Meta) : null,
+                BoardSlug = ancestors.BoardKey,
+                ProjectSlug = ancestors.ProjectKey,
+                WorkspaceSlug = ancestors.WorkspaceKey,
             };
 
             await UnitOfWork.ActivityLogs.AddAsync(log);
-            activityLogs.Add(log);
+            activityLogs.Add((log, ancestors));
         }
 
         await UnitOfWork.CompleteAsync();
@@ -71,16 +80,16 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         return default;
     }
 
-    private async Task CreateNotificationsAsync(List<ActivityLog> activityLogs)
+    private async Task CreateNotificationsAsync(List<(ActivityLog Log, ActivityAncestors Ancestors)> activityLogs)
     {
-        var workspaceIds = activityLogs.Select(l => l.WorkspaceId).Distinct().ToList();
+        var workspaceIds = activityLogs.Select(l => l.Log.WorkspaceId).Distinct().ToList();
 
         var slugsByWorkspace = await UnitOfWork.Workspaces.GetSlugsByIds(workspaceIds);
         var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds);
 
         var allNotifications = new List<Notification>();
 
-        foreach (var log in activityLogs)
+        foreach (var (log, ancestors) in activityLogs)
         {
             if (!slugsByWorkspace.TryGetValue(log.WorkspaceId, out var slug)) continue;
             if (!usersByWorkspace.TryGetValue(log.WorkspaceId, out var allUserIds)) continue;
@@ -88,7 +97,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             var recipients = allUserIds.Where(id => id != log.UserId).ToList();
             if (recipients.Count == 0) continue;
 
-            var link = BuildLink(slug, log);
+            var link = BuildLink(slug, log, ancestors);
 
             allNotifications.AddRange(recipients.Select(userId => new Notification
             {
@@ -112,14 +121,14 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         await PublishNotificationEventsAsync(allNotifications);
     }
 
-    private static string BuildLink(string workspaceSlug, ActivityLog log)
+    private static string BuildLink(string workspaceSlug, ActivityLog log, ActivityAncestors ancestors)
     {
         return log.EntityType switch
         {
-            Core.Enums.EntityType.Task => $"/{workspaceSlug}/tasks",
-            Core.Enums.EntityType.Board => $"/{workspaceSlug}/boards",
-            Core.Enums.EntityType.Project => $"/{workspaceSlug}/projects",
-            Core.Enums.EntityType.Workspace => $"/{workspaceSlug}",
+            EntityType.Task when ancestors.ProjectKey is not null => $"/{workspaceSlug}/tasks/{ancestors.ProjectKey}-{ancestors.TaskScopeId}",
+            EntityType.Task => $"/{workspaceSlug}/tasks/{ancestors.TaskId}",
+            EntityType.Board => $"/{workspaceSlug}/boards/{ancestors.BoardKey}",
+            EntityType.Project => $"/{workspaceSlug}/projects/{log.EntityId}",
             _ => $"/{workspaceSlug}",
         };
     }

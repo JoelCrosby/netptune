@@ -21,4 +21,8 @@ public class NotificationViewModel
     public string ActorUsername { get; set; } = null!;
 
     public string? ActorPictureUrl { get; set; }
+
+    public string? EntityName { get; set; }
+
+    public string? EntityIdentifier { get; set; }
 }

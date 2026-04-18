@@ -3,7 +3,6 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Models.Activity;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -330,31 +329,4 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return taskCount + 1 + increment;
     }
 
-    public async Task<ActivityAncestors> GetAncestors(int taskId)
-    {
-        using var connection = ConnectionFactory.StartConnection();
-
-        var result = await connection.QueryFirstAsync<TaskAncestorRow>(@"
-                SELECT
-                      ptibg.project_task_id as task_id
-                    , ptibg.board_group_id as board_group_id
-                    , b.id as board_id
-                    , p.id as project_id
-                    , p.workspace_id as workspace_id
-                FROM project_task_in_board_groups ptibg
-                LEFT JOIN board_groups bg on bg.id = ptibg.board_group_id
-                LEFT JOIN boards b on b.id = bg.board_id
-                LEFT Join projects p on p.id = b.project_id
-                WHERE ptibg.project_task_id = @taskId
-            ", new { taskId });
-
-        return new ActivityAncestors
-        {
-            TaskId = result.Task_id,
-            BoardGroupId = result.Board_group_id,
-            BoardId = result.Board_id,
-            ProjectId = result.Project_id,
-            WorkspaceId = result.Workspace_id,
-        };
-    }
 }

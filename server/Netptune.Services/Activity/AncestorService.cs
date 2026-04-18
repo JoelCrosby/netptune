@@ -15,6 +15,6 @@ public class AncestorService : IAncestorService
 
     public Task<ActivityAncestors> GetTaskAncestors(int entityId)
     {
-        return UnitOfWork.Tasks.GetAncestors(entityId);
+        return UnitOfWork.Ancestors.GetProjectTaskAncestors(entityId);
     }
 }
