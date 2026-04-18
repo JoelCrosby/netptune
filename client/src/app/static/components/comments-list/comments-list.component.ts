@@ -40,7 +40,7 @@ import { FormInputComponent } from '../form-input/form-input.component';
       @if (canCreate() && user(); as user) {
         <div class="my-4 flex flex-row items-center gap-4">
           <app-avatar
-            size="56"
+            size="lg"
             [name]="user.displayName"
             [imageUrl]="user.pictureUrl">
           </app-avatar>
@@ -59,7 +59,7 @@ import { FormInputComponent } from '../form-input/form-input.component';
           <div
             class="group mb-1 flex min-h-12 flex-row items-center gap-4 rounded-md p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800">
             <app-avatar
-              size="32"
+              size="md"
               class=""
               [name]="comment.userDisplayName"
               [imageUrl]="comment.userDisplayImage">

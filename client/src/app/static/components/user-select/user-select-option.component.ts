@@ -23,7 +23,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
       <app-avatar
         [imageUrl]="option().pictureUrl"
         [name]="option().displayName"
-        size="24" />
+        size="sm" />
       <span>{{ option().displayName }}</span>
     </div>
   `,

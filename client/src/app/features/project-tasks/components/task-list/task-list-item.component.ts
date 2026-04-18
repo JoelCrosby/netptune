@@ -83,7 +83,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
       @for (assignee of task().assignees; track assignee.id) {
         <app-avatar
           class="w-9.5 flex-none"
-          size="24"
+          size="sm"
           [name]="assignee.displayName"
           [imageUrl]="assignee.pictureUrl">
         </app-avatar>
