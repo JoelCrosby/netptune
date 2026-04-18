@@ -1,0 +1,62 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/test.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "server/**"
+      - ".github/workflows/test.yml"
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore
+        run: dotnet restore Netptune.UnitTests/Netptune.UnitTests.csproj
+
+      - name: Build
+        run: dotnet build Netptune.UnitTests/Netptune.UnitTests.csproj --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test Netptune.UnitTests/Netptune.UnitTests.csproj --no-build --configuration Release
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore
+        run: dotnet restore Netptune.IntegrationTests/Netptune.IntegrationTests.csproj
+
+      - name: Build
+        run: dotnet build Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-build --configuration Release
