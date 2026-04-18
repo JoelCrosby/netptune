@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
+using Netptune.TestData;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;

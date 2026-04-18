@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -268,7 +269,7 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task ReassignTasks_ShouldReturnSuccess_WhenInputValid()
     {
-        var user = TestData.Users.ElementAt(0);
+        var user = SeedData.Users.ElementAt(0);
         var request = new ReassignTasksRequest
         {
             TaskIds = new() { 0, 1 },

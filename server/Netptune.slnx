@@ -16,6 +16,7 @@
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Netptune.IntegrationTests/Netptune.IntegrationTests.csproj" />
+    <Project Path="Netptune.TestData/Netptune.TestData.csproj" />
     <Project Path="Netptune.UnitTests/Netptune.UnitTests.csproj" />
   </Folder>
   <Project Path="Netptune.App/Netptune.App.csproj" />

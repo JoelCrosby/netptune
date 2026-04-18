@@ -6,6 +6,7 @@ using FluentAssertions;
 using Netptune.Core.Extensions;
 using Netptune.Core.Models.Import;
 using Netptune.Core.Responses.Common;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -23,7 +24,7 @@ public sealed class ImportEndpointTests
     [Fact]
     public async Task ImportWorkspaceTasks_ShouldReturnCorrectly_WhenInputValid()
     {
-        var userEmail = TestData.Users.ElementAt(0).Email;
+        var userEmail = SeedData.Users.ElementAt(0).Email;
 
         var import = $"""
             Name,assignees,owner,group

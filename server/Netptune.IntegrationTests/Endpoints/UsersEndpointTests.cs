@@ -7,6 +7,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Users;
+using Netptune.TestData;
 
 using Xunit;
 
@@ -36,7 +37,7 @@ public sealed class UsersEndpointTests
     [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.GetAsync($"api/users/{TestData.Users.First().Id}");
+        var response = await Client.GetAsync($"api/users/{SeedData.Users.First().Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -56,7 +57,7 @@ public sealed class UsersEndpointTests
     [Fact]
     public async Task GetByEmail_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.GetAsync($"api/users/get-by-email?email={TestData.Users.First().Email}");
+        var response = await Client.GetAsync($"api/users/get-by-email?email={SeedData.Users.First().Email}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -88,7 +89,7 @@ public sealed class UsersEndpointTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var userId = TestData.Users.First().Id;
+        var userId = SeedData.Users.First().Id;
         var request = new UpdateUserRequest
         {
             Id = userId,
@@ -149,7 +150,7 @@ public sealed class UsersEndpointTests
     {
         var request = new InviteUsersRequest
         {
-            EmailAddresses = new () { TestData.Users.Last().Email },
+            EmailAddresses = new () { SeedData.Users.Last().Email },
         };
 
         var response = await Client.PostAsJsonAsync("api/users/remove", request);
