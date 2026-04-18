@@ -16,6 +16,9 @@ public class NotificationEntityMap : AuditableEntityMap<Notification, int>
             .HasIndex(n => new { n.UserId, n.WorkspaceId });
 
         builder
+            .HasIndex(n => new { n.UserId, n.WorkspaceId, n.IsRead });
+
+        builder
             .HasIndex(n => n.IsRead);
 
         builder
