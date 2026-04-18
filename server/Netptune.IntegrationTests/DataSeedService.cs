@@ -86,11 +86,14 @@ internal sealed class DataSeedService : IHostedService
             .RuleFor(p => p.Owner, f => f.PickRandom(users))
             .Generate(Workspaces.Count);
 
-        var workspaceUsers = new Faker<WorkspaceAppUser>()
-            .RuleFor(p => p.User, f => users.ElementAt(f.IndexFaker))
-            .RuleFor(p => p.Workspace, f => f.PickRandom(workspaces))
-            .RuleFor(p => p.Permissions, _ => WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Owner).ToList())
-            .Generate(users.Count);
+        var workspaceUsers = workspaces
+            .SelectMany(workspace => users.Select(user => new WorkspaceAppUser
+            {
+                User = user,
+                Workspace = workspace,
+                Permissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Owner).ToList(),
+            }))
+            .ToList();
 
         var projects = new Faker<Project>()
             .RuleFor(p => p.Name, f => Projects.ElementAt(f.IndexFaker))

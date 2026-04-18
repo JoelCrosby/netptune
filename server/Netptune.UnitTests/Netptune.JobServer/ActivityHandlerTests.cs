@@ -1,13 +1,9 @@
 using AutoFixture;
 
-using FluentAssertions;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
-using Netptune.Core.Repositories;
-using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.JobServer.Handlers;
 
@@ -26,14 +22,20 @@ public class ActivityHandlerTests
     private readonly ActivityHandler Handler;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IAncestorService AncestorService = Substitute.For<IAncestorService>();
     private readonly IConnectionMultiplexer Redis = Substitute.For<IConnectionMultiplexer>();
     private readonly ISubscriber Subscriber = Substitute.For<ISubscriber>();
 
     private const int WorkspaceId = 1;
+    private const int EntityId = 99;
     private const string ActorUserId = "actor-user-id";
     private const string OtherUserId1 = "other-user-id-1";
     private const string OtherUserId2 = "other-user-id-2";
+
+    private static readonly ActivityAncestors DefaultAncestors = new()
+    {
+        WorkspaceId = WorkspaceId, ProjectId = 1, BoardId = 1, BoardGroupId = 1,
+        TaskId = 10, TaskScopeId = 42, ProjectKey = "PROJ", BoardKey = "board-1",
+    };
 
     public ActivityHandlerTests()
     {
@@ -43,9 +45,21 @@ public class ActivityHandlerTests
             .PublishAsync(Arg.Any<RedisChannel>(), Arg.Any<RedisValue>(), Arg.Any<CommandFlags>())
             .Returns(1L);
 
-        AncestorService
-            .GetTaskAncestors(Arg.Any<int>())
-            .Returns(new ActivityAncestors { WorkspaceId = WorkspaceId, ProjectId = 1, BoardId = 1, BoardGroupId = 1 });
+        UnitOfWork.Ancestors
+            .GetProjectTaskAncestors(Arg.Any<int>())
+            .Returns(DefaultAncestors);
+
+        UnitOfWork.Ancestors
+            .GetBoardGroupAncestors(Arg.Any<int>())
+            .Returns(DefaultAncestors);
+
+        UnitOfWork.Ancestors
+            .GetBoardAncestors(Arg.Any<int>())
+            .Returns(DefaultAncestors);
+
+        UnitOfWork.Ancestors
+            .GetProjectAncestors(Arg.Any<int>())
+            .Returns(DefaultAncestors);
 
         UnitOfWork.ActivityLogs
             .AddAsync(Arg.Any<ActivityLog>())
@@ -66,14 +80,14 @@ public class ActivityHandlerTests
             .AddRangeAsync(Arg.Any<IEnumerable<Notification>>())
             .Returns(Task.CompletedTask);
 
-        Handler = new(UnitOfWork, AncestorService, Redis);
+        Handler = new(UnitOfWork, Redis);
     }
 
     private ActivityEvent BuildEvent(string? userId = null, int? workspaceId = null) =>
         Fixture.Build<ActivityEvent>()
             .With(e => e.UserId, userId ?? ActorUserId)
             .With(e => e.WorkspaceId, workspaceId ?? WorkspaceId)
-            .With(e => e.EntityId, Fixture.Create<int>())
+            .With(e => e.EntityId, EntityId)
             .Without(e => e.Meta)
             .Create();
 
@@ -138,21 +152,21 @@ public class ActivityHandlerTests
                 n.EntityType == EntityType.Task &&
                 n.ActivityType == @event.Type &&
                 n.IsRead == false &&
-                n.Link == "/test-workspace/tasks" &&
+                n.Link == "/test-workspace/tasks/PROJ-42" &&
                 n.CreatedByUserId == ActorUserId)));
     }
 
     [Theory]
-    [InlineData(EntityType.Task, "/test-workspace/tasks")]
-    [InlineData(EntityType.Board, "/test-workspace/boards")]
-    [InlineData(EntityType.Project, "/test-workspace/projects")]
+    [InlineData(EntityType.Task, "/test-workspace/tasks/PROJ-42")]
+    [InlineData(EntityType.Board, "/test-workspace/boards/board-1")]
+    [InlineData(EntityType.Project, "/test-workspace/projects/99")]
     [InlineData(EntityType.Workspace, "/test-workspace")]
     public async Task Handle_ShouldBuildCorrectLink_ForEntityType(EntityType entityType, string expectedLink)
     {
         var @event = Fixture.Build<ActivityEvent>()
             .With(e => e.UserId, ActorUserId)
             .With(e => e.WorkspaceId, WorkspaceId)
-            .With(e => e.EntityId, Fixture.Create<int>())
+            .With(e => e.EntityId, EntityId)
             .With(e => e.EntityType, entityType)
             .Without(e => e.Meta)
             .Create();
