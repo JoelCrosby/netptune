@@ -129,8 +129,12 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   focused = signal(false);
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   isDragging = this.store.selectSignal(BoardGroupSelectors.selectIsDragging);
-  private inlineActiveGroupId = this.store.selectSignal(selectInlineActiveGroupId);
-  isInlineActive = computed(() => this.group().id === this.inlineActiveGroupId());
+  private inlineActiveGroupId = this.store.selectSignal(
+    selectInlineActiveGroupId
+  );
+  isInlineActive = computed(
+    () => this.group().id === this.inlineActiveGroupId()
+  );
 
   showAddButton = computed(() => {
     return (

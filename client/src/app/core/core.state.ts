@@ -75,7 +75,8 @@ export const selectTasksFeature = selectFeature<TasksState>('tasks');
 export const selectUsersFeature = selectFeature<UsersState>('users');
 export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
-export const selectNotificationsFeature = selectFeature<NotificationsState>('notifications');
+export const selectNotificationsFeature =
+  selectFeature<NotificationsState>('notifications');
 
 export interface AppState {
   auth: AuthState;

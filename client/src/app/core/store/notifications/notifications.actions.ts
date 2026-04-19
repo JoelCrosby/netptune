@@ -2,7 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { createAction, props } from '@ngrx/store';
 
-export const loadNotifications = createAction('[Notifications] Load Notifications');
+export const loadNotifications = createAction(
+  '[Notifications] Load Notifications'
+);
 
 export const loadNotificationsSuccess = createAction(
   '[Notifications] Load Notifications Success',
@@ -14,7 +16,9 @@ export const loadNotificationsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
-export const loadUnreadCount = createAction('[Notifications] Load Unread Count');
+export const loadUnreadCount = createAction(
+  '[Notifications] Load Unread Count'
+);
 
 export const loadUnreadCountSuccess = createAction(
   '[Notifications] Load Unread Count Success',
@@ -38,4 +42,6 @@ export const markAsReadSuccess = createAction(
 
 export const markAllAsRead = createAction('[Notifications] Mark All As Read');
 
-export const markAllAsReadSuccess = createAction('[Notifications] Mark All As Read Success');
+export const markAllAsReadSuccess = createAction(
+  '[Notifications] Mark All As Read Success'
+);

@@ -8,11 +8,15 @@ export class NotificationsService {
   private http = inject(HttpClient);
 
   getAll() {
-    return this.http.get<ClientResponse<NotificationViewModel[]>>('api/notifications');
+    return this.http.get<ClientResponse<NotificationViewModel[]>>(
+      'api/notifications'
+    );
   }
 
   getUnreadCount() {
-    return this.http.get<ClientResponse<number>>('api/notifications/unread-count');
+    return this.http.get<ClientResponse<number>>(
+      'api/notifications/unread-count'
+    );
   }
 
   markAsRead(id: number) {

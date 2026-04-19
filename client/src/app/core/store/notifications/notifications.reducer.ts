@@ -5,7 +5,10 @@ import * as actions from './notifications.actions';
 const reducer = createReducer(
   initialState,
 
-  on(actions.loadNotifications, (state): NotificationsState => ({ ...state, loading: true })),
+  on(
+    actions.loadNotifications,
+    (state): NotificationsState => ({ ...state, loading: true })
+  ),
 
   on(
     actions.loadNotificationsSuccess,

@@ -63,7 +63,11 @@ export class AuthEffects implements OnInitEffects {
         concatLatestFrom(() => this.store.select(selectAuthFeature)),
         tap(([_, settings]) => {
           const { currentUser, tokenExpires, isAuthenticated } = settings;
-          this.localStorageService.setItem(AUTH_KEY, { currentUser, tokenExpires, isAuthenticated });
+          this.localStorageService.setItem(AUTH_KEY, {
+            currentUser,
+            tokenExpires,
+            isAuthenticated,
+          });
         })
       );
     },

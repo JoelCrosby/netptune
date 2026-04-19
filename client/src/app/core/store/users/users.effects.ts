@@ -71,10 +71,10 @@ export class UsersEffects {
       switchMap(({ userId, permission }) =>
         this.usersService.toggleUserPermission(userId, permission).pipe(
           tap(() => this.snackbar.open('Permission updated')),
-          map(() => actions.toggleUserPermissionSuccess({ userId, permission })),
-          catchError((error) =>
-            of(actions.toggleUserPermissionFail({ error }))
-          )
+          map(() =>
+            actions.toggleUserPermissionSuccess({ userId, permission })
+          ),
+          catchError((error) => of(actions.toggleUserPermissionFail({ error })))
         )
       )
     );

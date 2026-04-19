@@ -22,7 +22,9 @@ export class NotificationsEffects {
       switchMap(() =>
         this.notificationsService.getAll().pipe(
           unwrapClientReposne(),
-          map((notifications) => actions.loadNotificationsSuccess({ notifications })),
+          map((notifications) =>
+            actions.loadNotificationsSuccess({ notifications })
+          ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadNotificationsFail({ error }))
           )
