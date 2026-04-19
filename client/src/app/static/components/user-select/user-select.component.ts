@@ -8,6 +8,7 @@ import {
   inject,
   input,
   model,
+  OnDestroy,
   output,
   signal,
   untracked,
@@ -108,7 +109,7 @@ type User = AssigneeViewModel | AppUser;
     </ng-template>
   `,
 })
-export class UserSelectComponent {
+export class UserSelectComponent implements OnDestroy {
   private overlay = inject(Overlay);
   private readonly portal = viewChild.required(CdkPortal);
 
@@ -188,8 +189,13 @@ export class UserSelectComponent {
   close() {
     this.searchForm.term().value.set('');
     this.isOpen.set(false);
-    this.overlayRef?.detach();
+    this.overlayRef?.dispose();
+    this.overlayRef = undefined;
     this.closed.emit();
+  }
+
+  ngOnDestroy() {
+    this.overlayRef?.dispose();
   }
 
   select(option: AppUser) {

@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let timer: any = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 const edgeSize = 120;
 
 // Original auto scroll code from the link below.

@@ -6,10 +6,6 @@ export const extractFilenameFromHeaders = (headers: HttpHeaders): string => {
   const disposition = headers.get('Content-Disposition');
 
   if (!disposition) {
-    console.warn(
-      '[FileResponse] Content-Disposition did not exist in reponse.'
-    );
-
     return defaultFilename;
   }
 
@@ -20,10 +16,6 @@ export const extractFilenameFromHeaders = (headers: HttpHeaders): string => {
     if (matches != null && matches[1]) {
       return matches[1].replace(/['"]/g, '');
     }
-
-    console.warn(
-      '[FileResponse] Content-Disposition header did not contain the filename key.'
-    );
   }
 
   return defaultFilename;

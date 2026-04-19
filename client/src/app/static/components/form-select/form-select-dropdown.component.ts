@@ -6,6 +6,7 @@ import {
   HostListener,
   inject,
   input,
+  OnDestroy,
   viewChild,
   signal,
 } from '@angular/core';
@@ -21,7 +22,7 @@ import { ɵɵCdkPortal } from '@angular/cdk/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ɵɵCdkPortal],
 })
-export class FormSelectDropdownComponent {
+export class FormSelectDropdownComponent implements OnDestroy {
   private overlay = inject(Overlay);
 
   readonly reference = input.required<HTMLElement>();
@@ -39,8 +40,13 @@ export class FormSelectDropdownComponent {
   }
 
   hide() {
-    this.overlayRef?.detach();
+    this.overlayRef?.dispose();
+    this.overlayRef = undefined;
     this.showing.set(false);
+  }
+
+  ngOnDestroy() {
+    this.overlayRef?.dispose();
   }
 
   @HostListener('window:resize')

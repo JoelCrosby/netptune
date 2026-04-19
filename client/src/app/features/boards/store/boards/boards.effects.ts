@@ -10,7 +10,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './boards.actions';
 import { BoardsService } from './boards.service';
@@ -74,7 +74,7 @@ export class BoardsEffects {
       switchMap((action) =>
         this.confirmation.open(DELETE_BOARD_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.boardsService.delete(action.boardId).pipe(
               unwrapClientReposne(),

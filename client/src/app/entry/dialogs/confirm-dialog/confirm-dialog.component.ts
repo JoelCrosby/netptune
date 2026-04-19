@@ -50,9 +50,7 @@ export interface ConfirmDialogOptions {
           }
         </div>
         @if (data.message) {
-          <p
-            [innerHTML]="data.message"
-            [class.m-0]="!data.messageExtended && !data.icon">
+          <p [class.m-0]="!data.messageExtended && !data.icon">
             {{ data.message }}
           </p>
           @if (data.messageExtended) {

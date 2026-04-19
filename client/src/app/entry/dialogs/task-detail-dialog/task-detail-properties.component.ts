@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AppUser } from '@app/core/models/appuser';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
 import { selectAllProjects } from '@app/core/store/projects/projects.selectors';
@@ -16,6 +16,7 @@ import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-properties',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     UserSelectComponent,
     AvatarComponent,

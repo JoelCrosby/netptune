@@ -25,12 +25,6 @@ const routes: Routes = [
     data: { title: 'Workspaces', transparentSidebar: true, },
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./features/profile/profile.module').then((m) => m.ProfileModule),
-    canActivate: [authGuard],
-    data: { title: 'Profile', transparentSidebar: true, },
-  },
-  {
     path: ':workspace',
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
@@ -45,11 +39,6 @@ const routes: Routes = [
         path: 'projects',
         loadChildren: () => import('./features/projects/projects.module').then((m) => m.ProjectsModule),
         data: { title: 'Projects' },
-      },
-      {
-        path: 'projects-tasks',
-        loadChildren: () => import('./features/project-tasks/project-tasks.module').then((m) => m.ProjectTasksModule),
-        data: { title: 'Tasks' },
       },
       {
         path: 'tasks',

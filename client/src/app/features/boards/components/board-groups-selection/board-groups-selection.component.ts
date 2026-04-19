@@ -50,7 +50,7 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
           <svg lucideListX size="20" class="close-btn"></svg>
         </button>
 
-        @for (action of actions(); track $index) {
+        @for (action of actions(); track action.label) {
           <app-board-group-header-action
             [label]="action.label"
             [icon]="action.icon"

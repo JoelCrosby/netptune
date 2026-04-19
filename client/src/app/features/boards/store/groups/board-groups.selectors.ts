@@ -35,11 +35,13 @@ export const selectSelectedTasksCount = createSelector(
 export const selectAllBoardGroupsWithSelection = createSelector(
   selectAllBoardGroups,
   selectSelectedTasks,
-  (state: BoardViewGroup[], selected: number[]): BoardViewGroup[] =>
-    state.map((g) => ({
+  (state: BoardViewGroup[], selected: number[]): BoardViewGroup[] => {
+    const selectedSet = new Set(selected);
+    return state.map((g) => ({
       ...g,
-      tasks: g.tasks.map((t) => ({ ...t, selected: selected.includes(t.id) })),
-    }))
+      tasks: g.tasks.map((t) => ({ ...t, selected: selectedSet.has(t.id) })),
+    }));
+  }
 );
 
 export const selectBoardGroupEntities = createSelector(
@@ -65,6 +67,11 @@ export const selectCurrentBoardGroup = createSelector(
 export const selectIsDragging = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.isDragging
+);
+
+export const selectInlineActiveGroupId = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.inlineActive
 );
 
 export const selectIsInlineActive = (props: { groupId: number }) => {

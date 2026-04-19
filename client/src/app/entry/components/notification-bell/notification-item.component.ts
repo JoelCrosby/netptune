@@ -83,8 +83,6 @@ export class NotificationItemComponent {
     }
 
     if (notification.link) {
-      console.log(notification.link);
-
       void this.router.navigateByUrl(notification.link);
     }
   }

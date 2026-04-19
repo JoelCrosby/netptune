@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -7,6 +6,7 @@ import {
   OnDestroy,
   output,
 } from '@angular/core';
+import { environment } from '@env/environment';
 import { selectEffectiveTheme } from '@app/core/store/settings/settings.selectors';
 import { Store } from '@ngrx/store';
 
@@ -16,8 +16,7 @@ import { Store } from '@ngrx/store';
   template: `<div id="turnstile-container"></div>`,
 })
 export class TurnstileComponent implements AfterViewInit, OnDestroy {
-  store = inject(Store);
-  http = inject(HttpClient);
+  private store = inject(Store);
   turnstileElId?: string;
 
   tokenGenerated = output<string>();
@@ -27,7 +26,7 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
     const theme = effectiveTheme() === 'dark' ? 'dark' : 'light';
 
     this.turnstileElId = window.turnstile.render('#turnstile-container', {
-      sitekey: '1x00000000000000000000AA',
+      sitekey: environment.turnstileSitekey,
       size: 'flexible',
       theme,
       appearance: 'interaction-only',

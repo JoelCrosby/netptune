@@ -7,7 +7,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -31,7 +31,7 @@ export class ProfileEffects {
       ofType(actions.loadProfile),
       concatLatestFrom(() => this.store.select(selectCurrentUser)),
       switchMap(([_, user]) => {
-        if (!user) return of({ type: 'noop' });
+        if (!user) return EMPTY;
 
         return this.profileService.get(user.userId).pipe(
           map((profile) => actions.loadProfileSuccess({ profile })),
@@ -47,7 +47,7 @@ export class ProfileEffects {
     return this.actions$.pipe(
       ofType(actions.updateProfile),
       switchMap(({ profile }) => {
-        if (!profile) return of({ type: 'noop' });
+        if (!profile) return EMPTY;
 
         return this.profileService.put(profile).pipe(
           unwrapClientReposne(),
@@ -88,13 +88,8 @@ export class ProfileEffects {
   updateProfileWithImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.updateProfile),
-      map((action) => {
-        if (!action.image) {
-          return { type: 'noop' };
-        }
-
-        return actions.uploadProfilePicture({ data: action.image });
-      })
+      filter((action) => !!action.image),
+      map((action) => actions.uploadProfilePicture({ data: action.image! }))
     );
   });
 

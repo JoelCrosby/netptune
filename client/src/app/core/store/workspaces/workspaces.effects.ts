@@ -8,7 +8,7 @@ import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { asyncScheduler, of } from 'rxjs';
+import { asyncScheduler, EMPTY, of } from 'rxjs';
 import {
   catchError,
   filter,
@@ -96,7 +96,7 @@ export class WorkspacesEffects implements OnInitEffects {
       switchMap(({ workspace }) =>
         this.confirmation.open(DELETE_WORKSPACE_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.workspacesService.delete(workspace).pipe(
               tap(() => this.snackbar.open('Workspace deleted')),
@@ -143,7 +143,7 @@ export class WorkspacesEffects implements OnInitEffects {
 
         return this.confirmation.open(confirmation).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.workspacesService.put(request).pipe(
               unwrapClientReposne(),

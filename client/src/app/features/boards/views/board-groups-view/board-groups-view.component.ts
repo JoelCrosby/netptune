@@ -8,6 +8,7 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -112,6 +113,17 @@ export class BoardGroupsViewComponent implements OnDestroy {
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
   boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
+  private boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
+
+  siblingIdMap = computed(() => {
+    const groups = this.groups();
+    return new Map(
+      groups.map((g, _, arr) => [
+        g.id,
+        arr.filter((s) => s.id !== g.id).map((s) => s.id.toString()),
+      ])
+    );
+  });
 
   secondaryActions: HeaderAction[] = [
     {
@@ -133,8 +145,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const idSignal = this.store.selectSignal(selectBoardIdentifier);
-      const identifier = idSignal();
+      const identifier = this.boardIdentifier();
 
       if (!identifier) return;
 

@@ -9,7 +9,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
-import { asyncScheduler, of } from 'rxjs';
+import { asyncScheduler, EMPTY, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -117,7 +117,7 @@ export class ProjectsEffects {
         switchMap(({ project }) =>
           this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
             switchMap((result) => {
-              if (!result) return of({ type: 'NO_ACTION' });
+              if (!result) return EMPTY;
 
               return this.projectsService.delete(project).pipe(
                 debounceTime(debounce, scheduler),

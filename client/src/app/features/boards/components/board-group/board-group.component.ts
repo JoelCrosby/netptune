@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
   inject,
   input,
@@ -11,9 +12,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
 import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { selectIsInlineActive } from '@boards/store/groups/board-groups.selectors';
+import { selectInlineActiveGroupId } from '@boards/store/groups/board-groups.selectors';
 import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
@@ -116,6 +118,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);
   private dialog = inject(DialogService);
+  private destroyRef = inject(DestroyRef);
 
   readonly dragListId = input.required<string>();
   readonly group = input.required<BoardViewGroup>();
@@ -126,12 +129,8 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   focused = signal(false);
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
   isDragging = this.store.selectSignal(BoardGroupSelectors.selectIsDragging);
-  isInlineActive = computed(() => {
-    const groupId = this.group().id;
-    const inline = this.store.selectSignal(selectIsInlineActive({ groupId }));
-
-    return inline();
-  });
+  private inlineActiveGroupId = this.store.selectSignal(selectInlineActiveGroupId);
+  isInlineActive = computed(() => this.group().id === this.inlineActiveGroupId());
 
   showAddButton = computed(() => {
     return (
@@ -145,13 +144,13 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     const el: HTMLDivElement = this.container().nativeElement;
 
-    fromEvent(el, 'mouseenter', { passive: true }).subscribe({
-      next: () => this.focused.set(true),
-    });
+    fromEvent(el, 'mouseenter', { passive: true })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ next: () => this.focused.set(true) });
 
-    fromEvent(el, 'mouseleave', { passive: true }).subscribe({
-      next: () => this.focused.set(false),
-    });
+    fromEvent(el, 'mouseleave', { passive: true })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({ next: () => this.focused.set(false) });
   }
 
   ngOnDestroy() {

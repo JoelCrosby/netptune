@@ -6,6 +6,7 @@ import {
   HostListener,
   inject,
   input,
+  OnDestroy,
   viewChild,
 } from '@angular/core';
 
@@ -44,7 +45,7 @@ export type DropdownMenuXPosition = 'before' | 'after';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkPortal],
 })
-export class DropdownMenuComponent {
+export class DropdownMenuComponent implements OnDestroy {
   private overlay = inject(Overlay);
 
   readonly xPosition = input<DropdownMenuXPosition>('after');
@@ -69,7 +70,12 @@ export class DropdownMenuComponent {
   }
 
   close() {
-    this.overlayRef?.detach();
+    this.overlayRef?.dispose();
+    this.overlayRef = undefined;
+  }
+
+  ngOnDestroy() {
+    this.overlayRef?.dispose();
   }
 
   @HostListener('window:resize')

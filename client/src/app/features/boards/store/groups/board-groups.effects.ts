@@ -17,7 +17,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
-import { of, throwError } from 'rxjs';
+import { EMPTY, of, throwError } from 'rxjs';
 import {
   catchError,
   filter,
@@ -180,13 +180,13 @@ export class BoardGroupsEffects {
               isInfoMessage: true,
               message: 'You cannot delete the done column',
             })
-            .pipe(switchMap(() => of({ type: 'NO_ACTION' })));
+            .pipe(switchMap(() => EMPTY));
         }
 
         return this.confirmation.open(DELETE_CONFIRMATION).pipe(
           withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
           switchMap(([result, identifier]) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             if (identifier === undefined) {
               return throwError(
@@ -264,7 +264,7 @@ export class BoardGroupsEffects {
       switchMap(() =>
         this.confirmation.open(DELETE_SELECTED_TASKS_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.store.select(selectors.selectSelectedTasks).pipe(
               first(),

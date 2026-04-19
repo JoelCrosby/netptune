@@ -8,8 +8,8 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
 import { loadProjects } from '../projects/projects.actions';
 import { loadTags } from '../tags/tags.actions';
 import { loadUsers } from '../users/users.actions';
@@ -59,7 +59,7 @@ export class ProjectTasksEffects {
   editProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.editProjectTask),
-      switchMap((action) =>
+      concatMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
           unwrapClientReposne(),
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
@@ -78,7 +78,7 @@ export class ProjectTasksEffects {
       switchMap((action) =>
         this.confirmation.open(DELETE_TASK_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.projectTasksHubService
               .delete(action.identifier, action.task)
@@ -112,7 +112,7 @@ export class ProjectTasksEffects {
       switchMap((action) =>
         this.confirmation.open(DELETE_COMMENT_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.projectTasksService
               .deleteComment(action.commentId)

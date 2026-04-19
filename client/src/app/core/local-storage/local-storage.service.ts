@@ -34,7 +34,11 @@ export class LocalStorageService {
           if (!item) {
             return;
           }
-          currentStateRef[key] = JSON.parse(item);
+          try {
+            currentStateRef[key] = JSON.parse(item);
+          } catch {
+            return;
+          }
           return;
         }
 
@@ -56,7 +60,11 @@ export class LocalStorageService {
     if (!item) {
       return undefined;
     }
-    return JSON.parse(item);
+    try {
+      return JSON.parse(item);
+    } catch {
+      return undefined;
+    }
   }
 
   removeItem(key: string) {

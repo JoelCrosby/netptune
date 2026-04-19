@@ -6,7 +6,7 @@ import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
@@ -86,7 +86,7 @@ export class UsersEffects {
       switchMap(({ emailAddresses }) =>
         this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
             return this.usersService
               .removeUsersFromWorkspace(emailAddresses)
               .pipe(

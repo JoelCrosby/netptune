@@ -44,7 +44,7 @@
             class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
             [cdkDragData]="group"
             [group]="group"
-            [siblingIds]="getsiblingIds(group, groups)"
+            [siblingIds]="siblingIdMap().get(group.id) ?? []"
             [dragListId]="group.id.toString()"
             >
             <span

@@ -1,8 +1,8 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   inject,
+  OnInit,
 } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
@@ -28,13 +28,13 @@ import { first } from 'rxjs/operators';
     UserListComponent,
   ],
 })
-export class UsersViewComponent implements AfterViewInit {
+export class UsersViewComponent implements OnInit {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectUsersLoading);
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.store.dispatch(loadUsers());
   }
 

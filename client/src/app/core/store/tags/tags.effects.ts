@@ -8,7 +8,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action } from '@ngrx/store';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import * as actions from './tags.actions';
 import { TagsService } from './tags.service';
@@ -81,7 +81,7 @@ export class TagsEffects {
       switchMap((action) =>
         this.confirmation.open(DELETE_TAG_CONFIRMATION).pipe(
           switchMap((result) => {
-            if (!result) return of({ type: 'NO_ACTION' });
+            if (!result) return EMPTY;
 
             return this.tagsService.delete({ tags: action.tags }).pipe(
               unwrapClientReposne(),

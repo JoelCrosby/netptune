@@ -253,14 +253,12 @@ export class AuthEffects implements OnInitEffects {
       ofType(actions.logout),
       switchMap((action) =>
         this.confirmation.open(LOGOUT_CONFIRMATION, action.silent).pipe(
-          map((result) => {
-            if (!result) return { type: 'NO_ACTION' };
-
+          filter(Boolean),
+          tap(() => {
             this.cookie.deleteAll();
             void this.router.navigate(['/auth/login']);
-
-            return actions.logoutSuccess();
-          })
+          }),
+          map(() => actions.logoutSuccess())
         )
       )
     );
