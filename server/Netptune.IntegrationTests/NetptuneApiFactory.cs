@@ -94,6 +94,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("NETPTUNE_S3_ACCESS_KEY_ID", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_TURNSTILE_SECRET_KEY", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_CLOUDFLARE_EMAIL_TOKEN", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_CLOUDFLARE_ACCOUNT_ID", "test");
     }
 
     public async ValueTask DisposeAsync()
