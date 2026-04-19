@@ -4,9 +4,11 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
+import {
+  selectCanDeleteTask,
+  selectCanUpdateTask,
+} from '@app/core/store/permissions/permissions.selectors';
 import { selectRequiredDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
@@ -56,13 +58,8 @@ export class TaskDetailActionsComponent {
   readonly taskDetailService = inject(TaskDetailService);
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
 
-  canUpdateTask = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.update)
-  );
-
-  canDeleteTask = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.delete)
-  );
+  canUpdateTask = selectCanUpdateTask(this.store);
+  canDeleteTask = selectCanDeleteTask(this.store);
 
   showActions = computed(() => this.canUpdateTask() || this.canDeleteTask());
 

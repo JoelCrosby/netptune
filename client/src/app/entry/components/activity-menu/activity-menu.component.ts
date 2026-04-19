@@ -143,6 +143,7 @@ export class ActivityMenuComponent implements OnDestroy {
 
     const entityType = this.entityType();
     const entityId = this.entityId();
+
     if (entityId !== undefined) {
       this.store.dispatch(
         ActivityActions.loadActivity({ entityType, entityId })

@@ -1,6 +1,8 @@
 import { selectTasksFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { adapter, TasksState } from './tasks.model';
+import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { netptunePermissions } from '@app/core/auth/permissions';
 
 const { selectAll } = adapter.getSelectors();
 
@@ -29,6 +31,11 @@ export const selectInlineEditActive = createSelector(
 export const selectDetailTask = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.detailTask
+);
+
+export const selectDetailTaskIsRedOnly = createSelector(
+  selectHasPermission(netptunePermissions.tasks.update),
+  (state) => !state
 );
 
 export const selectRequiredDetailTask = createSelector(

@@ -64,9 +64,9 @@ import { TaskDetailService } from './task-detail.service';
           </button>
         </app-chip-listbox>
         <app-dropdown-menu #projectsMenu>
-          <small class="block px-3 py-1 text-xs text-neutral-500"
-            >Change Project</small
-          >
+          <small class="block px-3 py-1 text-xs text-neutral-500">
+            Change Project
+          </small>
           @for (project of projects(); track project.id) {
             <button
               app-menu-item

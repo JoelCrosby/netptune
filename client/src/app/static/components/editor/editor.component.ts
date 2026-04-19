@@ -1,23 +1,24 @@
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
   forwardRef,
-  OnDestroy,
-  ViewEncapsulation,
   inject,
   input,
+  OnDestroy,
   output,
   viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
-import { Logger } from '@core/util/logger';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import Attaches from '@editorjs/attaches';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
-import EditorJS from '@editorjs/editorjs';
 import type { LogLevels, OutputData } from '@editorjs/editorjs';
+import EditorJS from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
@@ -26,9 +27,9 @@ import Link from '@editorjs/link';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
-import Attaches from '@editorjs/attaches';
 import { environment } from '@env/environment';
 import { firstValueFrom } from 'rxjs';
+import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-editor',
@@ -43,7 +44,10 @@ import { firstValueFrom } from 'rxjs';
     },
   ],
 })
-export class EditorComponent implements ControlValueAccessor, OnDestroy {
+export class EditorComponent
+  extends AbstractFormValueControl
+  implements OnDestroy
+{
   private storage = inject(StorageService);
 
   readonly el = viewChild.required<ElementRef>('editorJs');
@@ -51,11 +55,21 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
   readonly placeholder = input('');
   readonly isReadOnly = input(false);
   readonly loaded = output();
+  readonly saved = output<string>();
 
   editor!: EditorJS;
 
   onChange!: (value: string) => void;
   onTouch!: () => void;
+
+  constructor() {
+    super();
+
+    effect(() => {
+      const val = this.value();
+      this.writeValue(val);
+    });
+  }
 
   ngOnDestroy() {
     this.editor?.destroy?.();
@@ -66,18 +80,6 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
     const intialValue = parsed as OutputData;
 
     this.createEditor(intialValue);
-  }
-
-  registerOnChange(fn: (...args: unknown[]) => unknown) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: (...args: unknown[]) => unknown) {
-    this.onTouch = fn;
-  }
-
-  setDisabledState?(isDisabled: boolean) {
-    Logger.log('setDisabledState', isDisabled);
   }
 
   createEditor(initialValue: OutputData | null = null) {
@@ -149,7 +151,10 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
       onReady: () => this.loaded.emit(),
       onChange: () => {
         void this.editor.save().then((value) => {
-          this.onChange(JSON.stringify(value));
+          const serialised = JSON.stringify(value);
+
+          this.value.set(serialised);
+          this.saved.emit(serialised);
         });
       },
     });
@@ -170,7 +175,7 @@ export class EditorComponent implements ControlValueAccessor, OnDestroy {
     setTimeout(
       () =>
         void this.editor.save().then((value) => {
-          this.onChange(JSON.stringify(value));
+          this.value.set(JSON.stringify(value));
         }),
       0
     );

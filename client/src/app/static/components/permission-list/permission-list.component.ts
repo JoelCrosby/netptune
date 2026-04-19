@@ -58,7 +58,7 @@ interface PermissionGroup {
                 <app-checkbox
                   #check
                   [checked]="item.granted"
-                  [disabled]="enabled()"
+                  [disabled]="!enabled()"
                   (changed)="onChanged(item)" />
               </div>
             }
