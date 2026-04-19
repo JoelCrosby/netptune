@@ -57,6 +57,8 @@ jobs:
             --set "secrets.api.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
             --set "secrets.api.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
             --set "secrets.api.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
+            --set "secrets.api.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
+            --set "secrets.api.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
             --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \
