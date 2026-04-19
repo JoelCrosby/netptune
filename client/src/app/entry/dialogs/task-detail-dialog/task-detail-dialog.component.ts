@@ -61,8 +61,8 @@ import { TaskDetailPropertiesComponent } from './task-detail-properties.componen
           <div class="px-12 py-0">
             <app-inline-text-area
               class="form-control"
-              [formField]="taskForm.name"
               activeBorder="true"
+              [formField]="taskForm.name"
               [isReadonly]="isReadOnly()" />
           </div>
           <div class="px-12 py-0">

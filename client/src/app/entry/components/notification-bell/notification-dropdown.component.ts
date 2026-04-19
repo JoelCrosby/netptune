@@ -59,7 +59,7 @@ import { NotificationItemComponent } from './notification-item.component';
           }
         } @empty {
           <div
-            class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-[0.4rem] text-sm">
+            class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-6 text-sm">
             <svg lucideBell></svg>
             <span>No notifications</span>
             <p class="text-foreground/60">You're all caught up!</p>
