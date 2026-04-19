@@ -2,6 +2,7 @@ using Flurl;
 
 using Microsoft.AspNetCore.Authentication;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
@@ -36,11 +37,24 @@ public static class AuthEndpoints
 
     public static async Task<IResult> HandleLogin(
         INetptuneAuthService authenticationService,
+        ITurnstileService turnstileService,
+        HttpContext context,
         TokenRequest request)
     {
+        var remoteIp = context.GetRemoteIpAddress();
+        var success = await turnstileService.ValidateAsync(request.Turnstile, remoteIp);
+
+        if (!success)
+        {
+            return Results.Unauthorized();
+        }
+
         var result = await authenticationService.LogIn(request);
 
-        if (!result.IsSuccess) return Results.Unauthorized();
+        if (!result.IsSuccess)
+        {
+            return Results.Unauthorized();
+        }
 
         return Results.Ok(result.Ticket);
     }
@@ -51,15 +65,28 @@ public static class AuthEndpoints
     {
         var result = await authenticationService.Refresh(request);
 
-        if (!result.IsSuccess) return Results.Unauthorized();
+        if (!result.IsSuccess)
+        {
+            return Results.Unauthorized();
+        }
 
         return Results.Ok(result.Ticket);
     }
 
     public static async Task<IResult> HandleRegister(
         INetptuneAuthService authenticationService,
+        ITurnstileService turnstileService,
+        HttpContext context,
         RegisterRequest request)
     {
+        var remoteIp = context.GetRemoteIpAddress();
+        var success = await turnstileService.ValidateAsync(request.Turnstile, remoteIp);
+
+        if (!success)
+        {
+            return Results.Unauthorized();
+        }
+
         var result = await authenticationService.Register(request);
 
         if (!result.IsSuccess) {

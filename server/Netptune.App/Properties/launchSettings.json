@@ -6,7 +6,8 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:7401;http://localhost:7400",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "NETPTUNE_TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA"
       }
     }
   }

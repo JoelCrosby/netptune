@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { RegisterRequest } from '@core/models/register-request';
+import { LoginRequest } from '@app/core/models/login-request';
+import { RegisterRequest } from '@app/core/models/register-request';
 import { createAction, props } from '@ngrx/store';
 import {
   AuthCodeRequest,
   AuthErrorKey,
-  LoginRequest,
   ResetPasswordRequest,
-  UserToken,
   UserResponse,
+  UserToken,
 } from './auth.models';
 
 // Current User

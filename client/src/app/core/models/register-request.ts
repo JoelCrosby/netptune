@@ -4,4 +4,5 @@ export interface RegisterRequest {
   email: string;
   password: string;
   inviteCode?: string;
+  turnstile: string;
 }

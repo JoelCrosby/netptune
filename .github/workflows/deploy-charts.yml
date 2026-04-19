@@ -56,6 +56,7 @@ jobs:
             --set "secrets.api.s3_region=${{ secrets.S3_REGION }}" \
             --set "secrets.api.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
             --set "secrets.api.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
+            --set "secrets.api.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
             --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \

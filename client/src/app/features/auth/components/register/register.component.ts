@@ -29,6 +29,7 @@ import { Store } from '@ngrx/store';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
 
 @Component({
   selector: 'app-register',
@@ -43,6 +44,7 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
     StrokedButtonComponent,
     FormField,
     FormErrorsComponent,
+    TurnstileComponent,
   ],
   template: `<app-auth-page-container>
     <form
@@ -108,6 +110,8 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
         <app-form-errors [formField]="registerForm.password1" />
       </app-form-input>
 
+      <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
+
       <div class="flex flex-row items-center justify-between gap-4">
         <a
           app-stroked-button
@@ -147,6 +151,7 @@ export class RegisterComponent implements OnDestroy {
     email: '',
     password0: '',
     password1: '',
+    turnstile: '',
   });
 
   registerForm = form(this.registerFormModel, (schema) => {
@@ -163,6 +168,7 @@ export class RegisterComponent implements OnDestroy {
     minLength(schema.password1, 4);
     disabled(schema, () => this.loading());
     disabled(schema.email, () => !!this.invite()?.code);
+    required(schema.turnstile);
     validate(schema.password1, ({ value }) => {
       if (this.registerForm.password0().value() !== value()) {
         return {
@@ -196,6 +202,7 @@ export class RegisterComponent implements OnDestroy {
     const lastname = this.registerForm.lastname().value();
     const email = this.registerForm.email().value();
     const password = this.registerForm.password0().value();
+    const turnstile = this.registerForm.turnstile().value();
 
     const inviteCode = this.invite()?.code;
 
@@ -212,8 +219,13 @@ export class RegisterComponent implements OnDestroy {
           email,
           password,
           inviteCode,
+          turnstile,
         },
       })
     );
+  }
+
+  onTurnstileResult(token: string) {
+    this.registerFormModel.update((form) => ({ ...form, turnstile: token }));
   }
 }

@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { RegisterRequest } from '@core/models/register-request';
+import { RegisterRequest } from '@app/core/models/register-request';
 import { ClientResponse } from '../models/client-response';
 import {
   AuthCodeRequest,
-  LoginRequest,
   ResetPasswordRequest,
   UserResponse,
   UserToken,
 } from './store/auth.models';
+import { LoginRequest } from '../models/login-request';
 
 @Injectable({
   providedIn: 'root',

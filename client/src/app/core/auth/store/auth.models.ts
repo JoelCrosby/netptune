@@ -35,11 +35,6 @@ export const initialState: AuthState = {
   resetPasswordLoading: false,
 };
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
 export interface UserResponse {
   userId: string;
   email: string;

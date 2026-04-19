@@ -26,6 +26,7 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
 import { LoginGithubComponent } from './login-github.component';
 import { selectBuildInfo } from '@app/core/store/meta/meta.selectors';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
 
 @Component({
   selector: 'app-login',
@@ -41,6 +42,7 @@ import { BuildNumberComponent } from '@app/static/components/build-number/build-
     LoginGithubComponent,
     ButtonLinkComponent,
     BuildNumberComponent,
+    TurnstileComponent,
   ],
   template: `<app-auth-page-container>
     <form
@@ -90,6 +92,8 @@ import { BuildNumberComponent } from '@app/static/components/build-number/build-
         type="password">
       </app-form-input>
 
+      <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
+
       <div class="flex items-center justify-between">
         <a
           app-button-link
@@ -134,12 +138,14 @@ export class LoginComponent {
   loginFormModel = signal({
     email: '',
     password: '',
+    turnstile: '',
   });
 
   loginForm = form(this.loginFormModel, (schema) => {
     required(schema.email);
     email(schema.email);
     required(schema.password);
+    required(schema.turnstile);
     disabled(schema, () => this.loading());
   });
 
@@ -150,14 +156,20 @@ export class LoginComponent {
 
     const email = this.loginForm.email().value();
     const password = this.loginForm.password().value();
+    const turnstile = this.loginForm.turnstile().value();
 
     this.store.dispatch(
       login({
         request: {
           email,
           password,
+          turnstile,
         },
       })
     );
+  }
+
+  onTurnstileResult(token: string) {
+    this.loginFormModel.update((form) => ({ ...form, turnstile: token }));
   }
 }

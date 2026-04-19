@@ -99,6 +99,7 @@ secrets:
     s3_region: ""
     s3_access_key_id: ""
     s3_secret_access_key: ""
+    turnstile_secret_key: ""
 config:
   postgres:
     POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"

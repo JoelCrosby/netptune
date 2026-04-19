@@ -44,6 +44,9 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<IAncestorService, AncestorService>();
 
         services.AddTransient<IActivityLogger, ActivityLogger>();
+
+        services.AddHttpClient();
+        services.AddTransient<ITurnstileService, TurnstileService>();
     }
 
     private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
