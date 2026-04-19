@@ -12,7 +12,6 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { CookieService } from 'ngx-cookie-service';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
@@ -38,7 +37,6 @@ export class AuthEffects implements OnInitEffects {
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
-  private cookie = inject(CookieService);
 
   init$ = createEffect(() => {
     return this.actions$.pipe(
@@ -64,8 +62,8 @@ export class AuthEffects implements OnInitEffects {
         ),
         concatLatestFrom(() => this.store.select(selectAuthFeature)),
         tap(([_, settings]) => {
-          const { token, currentUser } = settings;
-          this.localStorageService.setItem(AUTH_KEY, { token, currentUser });
+          const { currentUser, tokenExpires, isAuthenticated } = settings;
+          this.localStorageService.setItem(AUTH_KEY, { currentUser, tokenExpires, isAuthenticated });
         })
       );
     },
@@ -108,7 +106,7 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.login(action.request).pipe(
-            map((token) => actions.loginSuccess({ token })),
+            map((user) => actions.loginSuccess({ user })),
             catchError(() => of(actions.loginFail()))
           )
         )
@@ -144,7 +142,7 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.register(action.request).pipe(
-            map((token) => actions.registerSuccess({ token })),
+            map((user) => actions.registerSuccess({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             catchError((error: HttpErrorResponse) =>
               of(actions.registerFail({ error }))
@@ -169,7 +167,7 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.confirmEmail(action.request).pipe(
-            map((token) => actions.confirmEmailSuccess({ token })),
+            map((user) => actions.confirmEmailSuccess({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Email confirmed successfully')),
             catchError((error: HttpErrorResponse) =>
@@ -222,7 +220,7 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.resetPassword(action.request).pipe(
-            map((token) => actions.resetPasswordSuccess({ token })),
+            map((user) => actions.resetPasswordSuccess({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Password has been reset')),
             catchError((error: HttpErrorResponse) =>
@@ -254,10 +252,8 @@ export class AuthEffects implements OnInitEffects {
       switchMap((action) =>
         this.confirmation.open(LOGOUT_CONFIRMATION, action.silent).pipe(
           filter(Boolean),
-          tap(() => {
-            this.cookie.deleteAll();
-            void this.router.navigate(['/auth/login']);
-          }),
+          switchMap(() => this.authService.logout()),
+          tap(() => void this.router.navigate(['/auth/login'])),
           map(() => actions.logoutSuccess())
         )
       )

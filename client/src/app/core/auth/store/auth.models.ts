@@ -8,9 +8,9 @@ export interface AuthFeatureState {
 }
 
 export interface AuthState {
-  token?: UserToken;
   currentUser?: UserResponse;
   isAuthenticated: boolean;
+  tokenExpires?: Date;
   currentUserLoading: boolean;
   currentUserError?: HttpErrorResponse | Error;
   loginLoading: boolean;
@@ -43,11 +43,8 @@ export interface UserResponse {
   userPermissions?: UserPermissions;
 }
 
-export interface UserToken extends UserResponse {
-  [key: string]: unknown;
+export interface LoginResponse extends UserResponse {
   expires: Date;
-  token: string;
-  refreshToken: string;
 }
 
 export interface AuthCodeRequest {

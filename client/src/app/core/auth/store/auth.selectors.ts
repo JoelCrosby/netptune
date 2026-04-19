@@ -1,7 +1,6 @@
 import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
-import { AuthState, UserResponse, UserToken } from './auth.models';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { AuthState, UserResponse } from './auth.models';
 import { Permission } from '../permissions';
 import { WorkspaceRole } from '@app/core/enums/workspace-role';
 
@@ -31,31 +30,6 @@ export const selectCurrentUserId = createSelector(
   (state?: UserResponse) => state?.userId
 );
 
-export const selectUserToken = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.token
-);
-
-export const selectAuthToken = createSelector(
-  selectUserToken,
-  (token?: UserToken) => token?.token
-);
-
-export const selectRefreshToken = createSelector(
-  selectUserToken,
-  (token?: UserToken) => token?.refreshToken
-);
-
-export const selectAuthTokenWithWorkspaceId = createSelector(
-  selectUserToken,
-  selectCurrentWorkspaceIdentifier,
-  (token: UserToken | undefined, workspaceId: string | undefined) => ({
-    token: token?.token,
-    refreshToken: token?.refreshToken,
-    workspaceId,
-  })
-);
-
 export const selectLoginError = createSelector(
   selectAuthFeature,
   (state: AuthState) => state.loginError
@@ -67,13 +41,11 @@ export const selectCurrentUserDisplayName = createSelector(
 );
 
 export const selectIsAuthenticated = createSelector(
-  selectUserToken,
-  (token?: UserToken) => {
-    if (!token || !token.expires) return false;
+  selectAuthFeature,
+  (state: AuthState) => {
+    if (!state.isAuthenticated || !state.tokenExpires) return false;
 
-    const expires = new Date(token.expires);
-
-    return expires.getTime() > new Date().getTime();
+    return new Date(state.tokenExpires).getTime() > Date.now();
   }
 );
 

@@ -8,15 +8,13 @@ import {
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { refreshTokenSuccess } from '@core/auth/store/auth.actions';
-import { selectAuthTokenWithWorkspaceId } from '@core/auth/store/auth.selectors';
-import { UserToken } from '@core/auth/store/auth.models';
+import { refreshTokenSuccess, logout } from '@core/auth/store/auth.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, first, switchMap } from 'rxjs/operators';
-import { logout } from '../auth/store/auth.actions';
 import { WorkspaceService } from '../services/workspace.service';
+import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -32,23 +30,22 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    return this.store.select(selectAuthTokenWithWorkspaceId).pipe(
-      first(),
-      switchMap(({ token, refreshToken, workspaceId }) => {
-        if (!this.isApiRequest(req)) {
-          return next.handle(req);
-        }
+    if (!this.isApiRequest(req)) {
+      return next.handle(req);
+    }
 
+    return this.store.select(selectCurrentWorkspaceIdentifier).pipe(
+      first(),
+      switchMap((workspaceId) => {
         req = req.clone({
           url: environment.apiEndpoint + req.url,
+          withCredentials: true,
         });
 
         const workspaceRoute = this.workspaceService.getWorkspaceRoute();
         const workspaceHeader = workspaceId ?? workspaceRoute;
 
-        if (token) {
-          req = this.cloneWithToken(req, token, workspaceHeader);
-        } else if (workspaceHeader) {
+        if (workspaceHeader) {
           req = req.clone({
             headers: req.headers.set('workspace', workspaceHeader),
           });
@@ -58,7 +55,7 @@ export class AuthInterceptor implements HttpInterceptor {
           catchError((err: unknown) => {
             if (err instanceof HttpErrorResponse) {
               if (err.status === 401 && !this.isRefreshRequest(req)) {
-                return this.handle401(req, next, refreshToken);
+                return this.handle401(req, next);
               }
 
               if (err.status === 403) {
@@ -75,24 +72,18 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handle401<T>(
     req: HttpRequest<T>,
-    next: HttpHandler,
-    refreshToken: string | undefined
+    next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    if (!refreshToken) {
-      this.store.dispatch(logout({ silent: true }));
-      return throwError(() => new Error('No refresh token available'));
-    }
-
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      return this.authService.refresh(refreshToken).pipe(
-        switchMap((token: UserToken) => {
+      return this.authService.refresh().pipe(
+        switchMap((user) => {
           this.isRefreshing = false;
-          this.refreshTokenSubject.next(token.token);
-          this.store.dispatch(refreshTokenSuccess({ token }));
-          return next.handle(this.cloneWithToken(req, token.token));
+          this.refreshTokenSubject.next('ok');
+          this.store.dispatch(refreshTokenSuccess({ user }));
+          return next.handle(req);
         }),
         catchError((err) => {
           this.isRefreshing = false;
@@ -105,26 +96,8 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.refreshTokenSubject.pipe(
       filter((token): token is string => token !== null),
       first(),
-      switchMap((token) => next.handle(this.cloneWithToken(req, token)))
+      switchMap(() => next.handle(req))
     );
-  }
-
-  private cloneWithToken<T>(
-    req: HttpRequest<T>,
-    token: string,
-    workspaceHeader?: string | null
-  ): HttpRequest<T> {
-    req = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + token),
-    });
-
-    if (workspaceHeader) {
-      req = req.clone({
-        headers: req.headers.set('workspace', workspaceHeader),
-      });
-    }
-
-    return req;
   }
 
   private isRefreshRequest<T>(req: HttpRequest<T>): boolean {

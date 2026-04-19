@@ -5,9 +5,9 @@ import { createAction, props } from '@ngrx/store';
 import {
   AuthCodeRequest,
   AuthErrorKey,
+  LoginResponse,
   ResetPasswordRequest,
   UserResponse,
-  UserToken,
 } from './auth.models';
 
 // Current User
@@ -35,7 +35,7 @@ export const login = createAction(
 
 export const loginSuccess = createAction(
   '[Auth] Login Succeeded',
-  props<{ token: UserToken }>()
+  props<{ user: LoginResponse }>()
 );
 
 export const loginFail = createAction('[Auth] Login Failed');
@@ -58,7 +58,7 @@ export const register = createAction(
 
 export const registerSuccess = createAction(
   '[Auth] Register Succeeded',
-  props<{ token: UserToken }>()
+  props<{ user: LoginResponse }>()
 );
 
 export const registerFail = createAction(
@@ -75,7 +75,7 @@ export const confirmEmail = createAction(
 
 export const confirmEmailSuccess = createAction(
   '[Auth] Confirm Email Succeeded',
-  props<{ token: UserToken }>()
+  props<{ user: LoginResponse }>()
 );
 
 export const confirmEmailFail = createAction(
@@ -108,7 +108,7 @@ export const resetPassword = createAction(
 
 export const resetPasswordSuccess = createAction(
   '[Auth] Reset Password Succeeded',
-  props<{ token: UserToken }>()
+  props<{ user: LoginResponse }>()
 );
 
 export const resetPasswordFail = createAction(
@@ -127,7 +127,7 @@ export const clearError = createAction(
 
 export const refreshTokenSuccess = createAction(
   '[Auth] Refresh Token Succeeded',
-  props<{ token: UserToken }>()
+  props<{ user: LoginResponse }>()
 );
 
 // Clear User Info

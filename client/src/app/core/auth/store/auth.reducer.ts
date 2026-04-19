@@ -39,11 +39,12 @@ const reducer = createReducer(
   on(actions.login, (state): AuthState => ({ ...state, loginLoading: true })),
   on(
     actions.loginSuccess,
-    (state, { token }): AuthState => ({
+    (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
       loginLoading: false,
-      token,
+      currentUser: user,
+      tokenExpires: user.expires,
     })
   ),
   on(
@@ -57,10 +58,11 @@ const reducer = createReducer(
   ),
   on(
     actions.refreshTokenSuccess,
-    (state, { token }): AuthState => ({
+    (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
-      token,
+      currentUser: user,
+      tokenExpires: user.expires,
     })
   ),
   on(
@@ -79,12 +81,12 @@ const reducer = createReducer(
   ),
   on(
     actions.registerSuccess,
-    (state, { token }): AuthState => ({
+    (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
       registerLoading: false,
-      currentUser: token,
-      token,
+      currentUser: user,
+      tokenExpires: user.expires,
     })
   ),
   on(
@@ -108,12 +110,12 @@ const reducer = createReducer(
   ),
   on(
     actions.confirmEmailSuccess,
-    (state, { token }): AuthState => ({
+    (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
       confirmEmailLoading: false,
-      currentUser: token,
-      token,
+      currentUser: user,
+      tokenExpires: user.expires,
     })
   ),
   on(
@@ -163,12 +165,12 @@ const reducer = createReducer(
   ),
   on(
     actions.resetPasswordSuccess,
-    (state, { token }): AuthState => ({
+    (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
       resetPasswordLoading: false,
-      currentUser: token,
-      token,
+      currentUser: user,
+      tokenExpires: user.expires,
     })
   ),
   on(

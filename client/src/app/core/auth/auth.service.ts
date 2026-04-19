@@ -4,9 +4,9 @@ import { RegisterRequest } from '@app/core/models/register-request';
 import { ClientResponse } from '../models/client-response';
 import {
   AuthCodeRequest,
+  LoginResponse,
   ResetPasswordRequest,
   UserResponse,
-  UserToken,
 } from './store/auth.models';
 import { LoginRequest } from '../models/login-request';
 
@@ -21,15 +21,15 @@ export class AuthService {
   }
 
   login(request: LoginRequest) {
-    return this.http.post<UserToken>('api/auth/login', request);
+    return this.http.post<LoginResponse>('api/auth/login', request);
   }
 
   register(request: RegisterRequest) {
-    return this.http.post<UserToken>('api/auth/register', request);
+    return this.http.post<LoginResponse>('api/auth/register', request);
   }
 
   confirmEmail(request: AuthCodeRequest) {
-    return this.http.get<UserToken>('api/auth/confirm-email', {
+    return this.http.get<LoginResponse>('api/auth/confirm-email', {
       params: { ...request },
     });
   }
@@ -41,12 +41,16 @@ export class AuthService {
   }
 
   resetPassword(request: ResetPasswordRequest) {
-    return this.http.get<UserToken>('api/auth/reset-password', {
+    return this.http.get<LoginResponse>('api/auth/reset-password', {
       params: { ...request },
     });
   }
 
-  refresh(refreshToken: string) {
-    return this.http.post<UserToken>('api/auth/refresh', { refreshToken });
+  refresh() {
+    return this.http.post<LoginResponse>('api/auth/refresh', null);
+  }
+
+  logout() {
+    return this.http.post<void>('api/auth/logout', null);
   }
 }

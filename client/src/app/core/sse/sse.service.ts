@@ -1,11 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  selectAuthTokenWithWorkspaceId,
-  selectIsAuthenticated,
-} from '@core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
+import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -17,21 +15,17 @@ export class SseService {
   private readonly isAuthenticated = this.store.selectSignal(
     selectIsAuthenticated
   );
+  private readonly workspaceId = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
 
   connect(group: string, onEvent: () => void): void {
     if (!this.isAuthenticated()) return;
 
     this.disconnect();
 
-    const tokenSignal = this.store.selectSignal(selectAuthTokenWithWorkspaceId);
-    const { token, workspaceId } = tokenSignal();
-
-    if (!token) {
-      console.error('[SSE] Cannot connect: auth token not present.');
-      return;
-    }
-
-    const params = new URLSearchParams({ access_token: token, group });
+    const params = new URLSearchParams({ group });
+    const workspaceId = this.workspaceId();
 
     if (workspaceId) {
       params.set('workspace', workspaceId);
@@ -39,7 +33,7 @@ export class SseService {
 
     const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
 
-    this.eventSource = new EventSource(url);
+    this.eventSource = new EventSource(url, { withCredentials: true });
 
     this.eventSource.addEventListener('message', () => {
       Logger.log('%c[SSE][EVENT] board-update received', 'color: lime');
