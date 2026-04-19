@@ -26,13 +26,14 @@ public static class AuthEndpoints
         group.MapGet("/current-user", HandleCurrentUser).AllowAnonymous();
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
+        group.MapPost("/logout", HandleLogout).RequireAuthorization();
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/provider-login-redirect", HandleProviderLoginRedirect)
             .RequireAuthorization(AuthenticationSchemes.Github);
         group.MapPost("/provider-login-redirect", HandleProviderLoginRedirect)
             .RequireAuthorization(AuthenticationSchemes.Github);
 
-        return group;
+        return builder;
     }
 
     public static async Task<IResult> HandleLogin(
@@ -56,21 +57,35 @@ public static class AuthEndpoints
             return Results.Unauthorized();
         }
 
-        return Results.Ok(result.Ticket);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        return Results.Ok(result.Ticket!.ToUserResponse());
     }
 
     public static async Task<IResult> HandleRefresh(
         INetptuneAuthService authenticationService,
-        RefreshTokenRequest request)
+        HttpContext context)
     {
-        var result = await authenticationService.Refresh(request);
+        var refreshToken = context.Request.Cookies["refresh_token"];
+
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return Results.Unauthorized();
+        }
+
+        var result = await authenticationService.Refresh(new RefreshTokenRequest
+        {
+            RefreshToken = refreshToken,
+        });
 
         if (!result.IsSuccess)
         {
             return Results.Unauthorized();
         }
 
-        return Results.Ok(result.Ticket);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        return Results.Ok(result.Ticket!.ToUserResponse());
     }
 
     public static async Task<IResult> HandleRegister(
@@ -96,11 +111,14 @@ public static class AuthEndpoints
             );
         }
 
-        return Results.Ok(result.Ticket);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        return Results.Ok(result.Ticket!.ToUserResponse());
     }
 
     public static async Task<IResult> HandleConfirmEmail(
         INetptuneAuthService authenticationService,
+        HttpContext context,
         string userId,
         string code)
     {
@@ -116,7 +134,9 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
-        return Results.Ok(result.Ticket);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        return Results.Ok(result.Ticket!.ToUserResponse());
     }
 
     public static async Task<IResult> HandleRequestPasswordReset(
@@ -138,6 +158,7 @@ public static class AuthEndpoints
 
     public static async Task<IResult> HandleResetPassword(
         INetptuneAuthService authenticationService,
+        HttpContext context,
         string userId,
         string code,
         string password)
@@ -161,7 +182,9 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
-        return Results.Ok(result.Ticket);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        return Results.Ok(result.Ticket!.ToUserResponse());
     }
 
     public static async Task<IResult> HandleChangePassword(
@@ -196,6 +219,12 @@ public static class AuthEndpoints
         return Results.Ok(result);
     }
 
+    public static IResult HandleLogout(HttpContext context)
+    {
+        CookieHelper.ClearAuthCookies(context.Response);
+        return Results.Ok();
+    }
+
     public static IResult HandleGithubLogin(HttpContext context)
     {
         return Results.Challenge(new AuthenticationProperties
@@ -214,18 +243,17 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
         var redirect = hosting.ClientOrigin
             .AppendPathSegments("/auth/auth-provider-login")
             .SetQueryParams(new
             {
-                expires = result.Ticket?.Expires,
-                issued = result.Ticket?.Issued,
-                token = result.Ticket?.Token,
-                refreshToken = result.Ticket?.RefreshToken,
                 displayName = result.Ticket?.DisplayName,
                 email = result.Ticket?.EmailAddress,
                 pictureUrl = result.Ticket?.PictureUrl,
                 userId = result.Ticket?.UserId,
+                expires = result.Ticket?.Expires,
             });
 
         return Results.Redirect(redirect);

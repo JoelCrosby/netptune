@@ -18,8 +18,6 @@ using Netptune.Storage;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-var isDevelopment = builder.Environment.IsDevelopment();
-
 builder.AddServiceDefaults();
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");
@@ -36,12 +34,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials()
             .WithExposedHeaders("Content-Disposition");
-
-            if (isDevelopment)
-            {
-                policy.DisallowCredentials();
-                policy.AllowAnyOrigin();
-            }
     });
 });
 

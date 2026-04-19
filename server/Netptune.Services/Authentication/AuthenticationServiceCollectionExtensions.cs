@@ -86,14 +86,10 @@ public static class AuthenticationServiceCollectionExtensions
                 },
                 OnMessageReceived = context =>
                 {
-                    var accessToken = context.Request.Query["access_token"];
-                    var path = context.HttpContext.Request.Path;
-                    var accessTokenNotEmpty = !string.IsNullOrEmpty(accessToken);
-                    var isHubPath = path.StartsWithSegments("/api/hubs");
-
-                    if (accessTokenNotEmpty && isHubPath)
+                    if (context.Request.Cookies.TryGetValue("access_token", out var cookieToken)
+                        && !string.IsNullOrEmpty(cookieToken))
                     {
-                        context.Token = accessToken;
+                        context.Token = cookieToken;
                     }
 
                     return Task.CompletedTask;

@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Netptune.App.Utility;
 
 public static class Extensions
