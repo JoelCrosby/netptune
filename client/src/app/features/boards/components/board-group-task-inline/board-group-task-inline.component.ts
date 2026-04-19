@@ -53,6 +53,7 @@ import { DocumentService } from '@static/services/document.service';
       #textarea
       [formField]="taskForm.name"
       (keydown.enter)="onSubmit($event)"
+      (keydown.escape)="onEscape()"
       [cdkTrapFocusAutoCapture]="true"
       [cdkTrapFocus]="true"
       placeholder="What do you need to get done?">
@@ -170,5 +171,11 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
     this.store.dispatch(createProjectTask({ task }));
 
     this.loading.set(true);
+  }
+
+  onEscape() {
+    this.canceled.emit();
+    this.isEditActive.set(false);
+    this.loading.set(false);
   }
 }
