@@ -47,18 +47,18 @@ import { Store } from '@ngrx/store';
               {{ fromNow(notification.createdAt) }}
             </span>
           </div>
-          <span class="text-foreground/70 flex items-center gap-1 text-sm">
+          <span class="text-foreground/70 text-sm">
             {{ activityTypeToString(notification.activityType) }}
             {{ entityTypeToString(notification.entityType) }}
             @if (notification.entityIdentifier) {
-              <span class="text-foreground/85 font-medium">{{
-                notification.entityIdentifier
-              }}</span>
+              <span class="text-foreground/85 font-medium">
+                {{ notification.entityIdentifier }}
+              </span>
             }
             @if (notification.entityName) {
-              <span class="text-foreground/60">{{
-                notification.entityName
-              }}</span>
+              <span class="text-foreground/60">
+                {{ notification.entityName }}
+              </span>
             }
           </span>
         </div>
