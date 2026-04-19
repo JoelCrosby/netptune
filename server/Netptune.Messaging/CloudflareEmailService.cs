@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -116,16 +117,17 @@ public class CloudflareEmailService : IEmailService
         }
     }
 
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     private sealed class CloudflareEmailPayload
     {
         [JsonPropertyName("to")]
-        public string To { get; init; } = null!;
+        public required string To { get; init; }
 
         [JsonPropertyName("from")]
-        public string From { get; init; } = null!;
+        public required string From { get; init; }
 
         [JsonPropertyName("subject")]
-        public string Subject { get; init; } = null!;
+        public required string Subject { get; init; }
 
         [JsonPropertyName("html")]
         public string? Html { get; init; }
