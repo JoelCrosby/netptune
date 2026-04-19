@@ -87,6 +87,8 @@ secrets:
     s3_region: ""
     s3_access_key_id: ""
     s3_secret_access_key: ""
+    cloudflare_email_token: ""
+    cloudflare_account_id: ""
   api:
     cache_password: ""
     postgres_password: ""
