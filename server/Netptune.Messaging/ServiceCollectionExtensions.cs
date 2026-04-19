@@ -8,6 +8,20 @@ namespace Netptune.Messaging;
 
 public static class ServiceCollectionExtensions
 {
+    public static void AddCloudflareEmailService(this IServiceCollection services, Action<CloudflareEmailOptions> action)
+    {
+        if (action == null) throw new ArgumentNullException(nameof(action));
+
+        var options = new CloudflareEmailOptions();
+        action(options);
+
+        services.Configure(action);
+        services.AddHttpClient();
+        services.AddTransient<IEmailService, CloudflareEmailService>();
+
+        services.AddRazorLightRenderer();
+    }
+
     public static void AddSendGridEmailService(this IServiceCollection services, Action<SendGridEmailOptions> action)
     {
         if (action == null) throw new ArgumentNullException(nameof(action));

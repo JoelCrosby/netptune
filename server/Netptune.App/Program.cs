@@ -82,9 +82,10 @@ builder.Services.AddNetptuneServices(options =>
     options.ContentRootPath = builder.Environment.ContentRootPath;
 });
 
-builder.Services.AddSendGridEmailService(options =>
+builder.Services.AddCloudflareEmailService(options =>
 {
-    options.SendGridApiKey = configuration.GetEnvironmentVariable("SEND_GRID_API_KEY");
+    options.ApiToken = configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_EMAIL_TOKEN");
+    options.AccountId = configuration.GetEnvironmentVariable("NETPTUNE_CLOUDFLARE_ACCOUNT_ID");
     options.DefaultFromAddress = configuration.GetRequiredValue("Email:DefaultFromAddress");
     options.DefaultFromDisplayName = configuration.GetRequiredValue("Email:DefaultFromDisplayName");
 });
