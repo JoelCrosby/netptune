@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.6" />
     <PackageReference Include="Hashids.net" Version="1.7.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.6" />
-    <PackageReference Include="shortid" Version="5.0.0" />
+    <PackageReference Include="shortid" Version="5.1.0" />
   </ItemGroup>
 
 </Project>
