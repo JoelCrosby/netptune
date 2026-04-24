@@ -62,7 +62,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 ProjectId = ancestors.ProjectId,
                 BoardId = ancestors.BoardId,
                 BoardGroupId = ancestors.BoardGroupId,
-                Time = activity.Time,
+                OccurredAt = activity.OccurredAt,
                 Meta = activity.Meta is not null ? JsonDocument.Parse(activity.Meta) : null,
                 BoardSlug = ancestors.BoardKey,
                 ProjectSlug = ancestors.ProjectKey,

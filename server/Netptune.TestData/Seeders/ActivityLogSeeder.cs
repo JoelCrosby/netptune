@@ -18,7 +18,7 @@ internal static class ActivityLogSeeder
                     EntityType = EntityType.Task,
                     TaskId = task.Id,
                     EntityId = task.Id,
-                    Time = BaseDate.AddHours(idx),
+                    OccurredAt = BaseDate.AddHours(idx),
                     Type = Types[idx % Types.Length],
                     User = users[idx % users.Count],
                     Workspace = workspaces[idx % workspaces.Count],

@@ -34,7 +34,7 @@ public class ActivityEvent
 
     public int WorkspaceId { get; init; }
 
-    public DateTime Time { get; init; }
+    public DateTime OccurredAt { get; init; }
 
     public string? Meta { get; init; }
 }

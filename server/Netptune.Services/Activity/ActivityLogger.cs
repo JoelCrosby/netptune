@@ -49,7 +49,7 @@ public class ActivityLogger : IActivityLogger
             UserId = activityOptions.UserId,
             EntityId = activityOptions.EntityId.Value,
             WorkspaceId = activityOptions.WorkspaceId.Value,
-            Time = DateTime.UtcNow,
+            OccurredAt = DateTime.UtcNow,
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));
@@ -81,7 +81,7 @@ public class ActivityLogger : IActivityLogger
                 UserId = activityOptions.UserId,
                 EntityId = entityId,
                 WorkspaceId = activityOptions.WorkspaceId.Value,
-                Time = DateTime.UtcNow,
+                OccurredAt = DateTime.UtcNow,
             });
 
         EventPublisher.Dispatch(new ActivityMessage(activities));
@@ -117,7 +117,7 @@ public class ActivityLogger : IActivityLogger
             UserId = activityOptions.UserId,
             EntityId = activityOptions.EntityId.Value,
             WorkspaceId = activityOptions.WorkspaceId.Value,
-            Time = DateTime.UtcNow,
+            OccurredAt = DateTime.UtcNow,
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
         };
 
@@ -150,7 +150,7 @@ public class ActivityLogger : IActivityLogger
                 UserId = activityOptions.UserId,
                 EntityId = entityId,
                 WorkspaceId = activityOptions.WorkspaceId.Value,
-                Time = DateTime.UtcNow,
+                OccurredAt = DateTime.UtcNow,
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             });
 

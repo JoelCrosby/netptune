@@ -34,7 +34,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == entityType)
             .Where(predicate)
-            .OrderByDescending(x => x.Time)
+            .OrderByDescending(x => x.OccurredAt)
             .Include(x => x.User)
             .Select(y => new ActivityViewModel
             {
@@ -44,7 +44,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
                 UserId = y.UserId,
                 UserUsername = y.User.DisplayName,
                 UserPictureUrl = y.User.PictureUrl,
-                Time = y.Time,
+                Time = y.OccurredAt,
                 Meta = y.Meta,
             })
             .ToReadonlyListAsync(true);

@@ -22,7 +22,7 @@ public class ActivityLogEntityMap : AuditableEntityMap<ActivityLog, int>
             .HasIndex(log => new { log.EntityId });
 
         builder
-            .HasIndex(log => new { log.Time });
+            .HasIndex(log => new { log.OccurredAt });
 
         builder
             .Property(log => log.Type)
@@ -33,7 +33,7 @@ public class ActivityLogEntityMap : AuditableEntityMap<ActivityLog, int>
             .IsRequired();
 
         builder
-            .Property(log => log.Time)
+            .Property(log => log.OccurredAt)
             .IsRequired();
 
         builder

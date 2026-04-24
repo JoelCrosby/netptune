@@ -18,7 +18,7 @@ public record ActivityLog : WorkspaceEntity<int>
 
     public int? EntityId { get; init; }
 
-    public DateTime Time { get; init; }
+    public DateTime OccurredAt { get; init; }
 
     public int? ProjectId { get; init; }
 
