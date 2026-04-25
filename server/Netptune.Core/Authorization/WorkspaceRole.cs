@@ -2,8 +2,8 @@ namespace Netptune.Core.Authorization;
 
 public enum WorkspaceRole
 {
-    Owner = 0,
-    Admin = 1,
-    Member = 2,
-    Viewer = 3,
+    Viewer = 0,
+    Member = 10,
+    Admin = 100,
+    Owner = 1000,
 }

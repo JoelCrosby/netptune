@@ -1,6 +1,6 @@
 export enum WorkspaceRole {
-  owner = 0,
-  admin = 1,
-  member = 2,
-  viewer = 3,
+  viewer = 0,
+  member = 10,
+  admin = 100,
+  owner = 1000,
 }
