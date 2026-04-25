@@ -1,5 +1,4 @@
 import { ArrowRight } from 'lucide-solid';
-import Badge from './Badge';
 import Button from './Button';
 
 export default function Hero() {
@@ -8,11 +7,6 @@ export default function Hero() {
       <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-5%,rgba(103,58,183,0.2),transparent)]" />
 
       <div class="relative mx-auto max-w-4xl text-center">
-        <Badge variant="green" class="mb-7">
-          <span class="inline-block h-1.5 w-1.5 rounded-full bg-brand" />
-          Open source &middot; MIT licensed
-        </Badge>
-
         <h1 class="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl dark:text-white">
           Project management
           <br />

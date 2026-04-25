@@ -13,7 +13,11 @@
     "**/pgdata": true,
     "**/obj": true,
     "**/.cache/**": true,
-    "**/.angular/**": true
+    "**/.angular/**": true,
+    "**/.vite": true,
+    "**/.solid-start": true,
+    "**/.output": true,
+    "**/.nitro": true
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,
@@ -22,7 +26,11 @@
     "**/dist/**": true,
     "**/node_modules/**": true,
     "**/.cache/**": true,
-    "**/.angular/**": true
+    "**/.angular/**": true,
+    "**/.vite": true,
+    "**/.solid-start": true,
+    "**/.output": true,
+    "**/.nitro": true
   },
   "search.exclude": {
     "**/node_modules": true,
