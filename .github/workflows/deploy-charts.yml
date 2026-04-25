@@ -6,6 +6,7 @@ on:
       - Build App Image
       - Build Client Image
       - Build Jobs Image
+      - Build Website Image
     branches: [main]
     types: [completed]
   push:
