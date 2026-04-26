@@ -24,17 +24,6 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<IHostingService, HostingService>();
 
         services.AddTransient<IPublicWorkspaceService, PublicWorkspaceService>();
-        services.AddTransient<IProjectService, ProjectService>();
-        services.AddTransient<ITaskService, TaskService>();
-        services.AddTransient<IUserService, UserService>();
-        services.AddTransient<IWorkspaceService, WorkspaceService>();
-        services.AddTransient<IBoardService, BoardService>();
-        services.AddTransient<IBoardGroupService, BoardGroupService>();
-        services.AddTransient<ICommentService, CommentService>();
-        services.AddTransient<INotificationService, NotificationService>();
-        services.AddTransient<ITagService, TagService>();
-        services.AddTransient<IActivityService, ActivityService>();
-        services.AddTransient<IAuditService, AuditService>();
 
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();

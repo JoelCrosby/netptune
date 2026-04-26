@@ -5,6 +5,8 @@ using System.Text;
 
 using Flurl;
 
+using Mediator;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +27,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Services.Workspaces.Commands;
 
 namespace Netptune.Services.Authentication;
 
@@ -37,7 +40,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly IInviteCache InviteCache;
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IWorkspaceService WorkspaceService;
+    private readonly IMediator Mediator;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
 
     private readonly string Issuer;
@@ -54,7 +57,7 @@ public class NetptuneAuthService : INetptuneAuthService
         IInviteCache inviteCache,
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
-        IWorkspaceService workspaceService,
+        IMediator mediator,
         IWorkspacePermissionCache workspacePermissionCache)
     {
         SignInManager = signInManager;
@@ -64,7 +67,7 @@ public class NetptuneAuthService : INetptuneAuthService
         InviteCache = inviteCache;
         Identity = identity;
         UnitOfWork = unitOfWork;
-        WorkspaceService = workspaceService;
+        Mediator = mediator;
         WorkspacePermissionCache = workspacePermissionCache;
 
         Issuer = configuration.GetRequiredValue("Tokens:Issuer");
@@ -216,16 +219,16 @@ public class NetptuneAuthService : INetptuneAuthService
             InviteCache.Remove(model.InviteCode);
         }
 
-        await WorkspaceService.CreateNewUserWorkspace(new()
+        await Mediator.Send(new CreateWorkspaceForNewUserCommand(new()
         {
             Name = $"{user.Firstname}'s Workspace",
             Description = "Personal Workspace",
             Slug = user.Firstname.ToUrlSlug(true),
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = "#843ADF",
             },
-        }, user);
+        }, user));
 
         if (!result.Succeeded)
         {
