@@ -1,14 +1,14 @@
 using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Boards.Commands.CreateBoard;
-using Netptune.Services.Boards.Commands.DeleteBoard;
-using Netptune.Services.Boards.Commands.UpdateBoard;
-using Netptune.Services.Boards.Queries.GetBoard;
-using Netptune.Services.Boards.Queries.GetBoardsInProject;
-using Netptune.Services.Boards.Queries.GetBoardsInWorkspace;
-using Netptune.Services.Boards.Queries.GetBoardView;
-using Netptune.Services.Boards.Queries.IsBoardIdentifierUnique;
+using Netptune.Services.Boards.Commands;
+using Netptune.Services.Boards.Commands;
+using Netptune.Services.Boards.Commands;
+using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries;
 
 namespace Netptune.App.Endpoints;
 

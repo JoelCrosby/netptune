@@ -3,7 +3,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.Utilities;
-using Netptune.Services.Users.Commands.UpdateUser;
+using Netptune.Services.Users.Commands;
 
 namespace Netptune.App.Endpoints;
 

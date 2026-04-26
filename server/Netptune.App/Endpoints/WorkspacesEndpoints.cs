@@ -2,14 +2,14 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Workspaces.Commands.CreateWorkspace;
-using Netptune.Services.Workspaces.Commands.DeleteWorkspace;
-using Netptune.Services.Workspaces.Commands.DeleteWorkspacePermanent;
-using Netptune.Services.Workspaces.Commands.UpdateWorkspace;
-using Netptune.Services.Workspaces.Queries.GetAllWorkspaces;
-using Netptune.Services.Workspaces.Queries.GetUserWorkspaces;
-using Netptune.Services.Workspaces.Queries.GetWorkspace;
-using Netptune.Services.Workspaces.Queries.IsWorkspaceSlugUnique;
+using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Queries;
+using Netptune.Services.Workspaces.Queries;
+using Netptune.Services.Workspaces.Queries;
+using Netptune.Services.Workspaces.Queries;
 
 namespace Netptune.App.Endpoints;
 

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
-using Netptune.Services.Audit.Commands.AnonymiseUser;
-using Netptune.Services.Audit.Queries.ExportAuditLog;
-using Netptune.Services.Audit.Queries.GetActivitySummary;
-using Netptune.Services.Audit.Queries.GetAuditLog;
+using Netptune.Services.Audit.Commands;
+using Netptune.Services.Audit.Queries;
+using Netptune.Services.Audit.Queries;
+using Netptune.Services.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
 

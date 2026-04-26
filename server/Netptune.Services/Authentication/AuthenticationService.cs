@@ -27,7 +27,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Workspaces.Commands.CreateWorkspaceForNewUser;
+using Netptune.Services.Workspaces.Commands;
 
 namespace Netptune.Services.Authentication;
 

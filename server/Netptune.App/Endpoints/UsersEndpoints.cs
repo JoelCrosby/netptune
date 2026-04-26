@@ -1,14 +1,14 @@
 using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Users.Commands.InviteUsersToWorkspace;
-using Netptune.Services.Users.Commands.RemoveUsersFromWorkspace;
-using Netptune.Services.Users.Commands.ToggleUserPermission;
-using Netptune.Services.Users.Commands.UpdateUser;
-using Netptune.Services.Users.Queries.GetAllUsers;
-using Netptune.Services.Users.Queries.GetUser;
-using Netptune.Services.Users.Queries.GetUserByEmail;
-using Netptune.Services.Users.Queries.GetWorkspaceUsers;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Queries;
+using Netptune.Services.Users.Queries;
+using Netptune.Services.Users.Queries;
+using Netptune.Services.Users.Queries;
 
 namespace Netptune.App.Endpoints;
 
