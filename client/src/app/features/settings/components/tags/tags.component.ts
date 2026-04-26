@@ -43,7 +43,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
           <div
             role="button"
             [tabindex]="i"
-            class="group flex cursor-pointer flex-row items-center rounded-sm bg-[rgba(var(--foreground-rgb),.06)] px-[calc(.6rem+2px)] py-[calc(.4rem+2px)] text-[var(--foreground)] transition-colors duration-[240ms] ease-in-out hover:bg-[rgba(var(--foreground-rgb),.1)]"
+            class="group text-foreground flex cursor-pointer flex-row items-center rounded-sm bg-[rgba(var(--foreground-rgb),.06)] px-[calc(.6rem+2px)] py-[calc(.4rem+2px)] transition-colors duration-240 ease-in-out hover:bg-[rgba(var(--foreground-rgb),.1)]"
             (click)="onItemClicked(i)">
             <div class="w-full">{{ tag.name }}</div>
             <div
