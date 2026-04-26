@@ -7,7 +7,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
-using Netptune.Services.Workspaces.Commands.CreateWorkspaceForNewUser;
+using Netptune.Services.Workspaces.Commands;
 
 using NSubstitute;
 

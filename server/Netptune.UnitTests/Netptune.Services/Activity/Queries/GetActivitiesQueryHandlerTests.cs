@@ -9,7 +9,7 @@ using Netptune.Core.Models;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Activity;
-using Netptune.Services.Activity.Queries.GetActivities;
+using Netptune.Services.Activity.Queries;
 
 using NSubstitute;
 

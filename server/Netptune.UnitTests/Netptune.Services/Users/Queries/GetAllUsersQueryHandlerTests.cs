@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Users.Queries.GetAllUsers;
+using Netptune.Services.Users.Queries;
 
 using NSubstitute;
 

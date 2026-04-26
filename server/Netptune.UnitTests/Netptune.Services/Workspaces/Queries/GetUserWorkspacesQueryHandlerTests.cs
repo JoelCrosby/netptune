@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Workspaces.Queries.GetUserWorkspaces;
+using Netptune.Services.Workspaces.Queries;
 
 using NSubstitute;
 

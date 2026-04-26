@@ -6,7 +6,7 @@ using Netptune.Core.Models;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
-using Netptune.Services.Users.Queries.GetUser;
+using Netptune.Services.Users.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

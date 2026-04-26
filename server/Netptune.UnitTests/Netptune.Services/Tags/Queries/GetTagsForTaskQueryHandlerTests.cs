@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Services.Tags.Queries.GetTagsForTask;
+using Netptune.Services.Tags.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

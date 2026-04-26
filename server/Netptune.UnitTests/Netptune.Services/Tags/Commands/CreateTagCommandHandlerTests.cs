@@ -7,7 +7,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Services.Tags.Commands.CreateTag;
+using Netptune.Services.Tags.Commands;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

@@ -6,7 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Boards.Commands.UpdateBoard;
+using Netptune.Services.Boards.Commands;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Comments.Commands.DeleteComment;
+using Netptune.Services.Comments.Commands;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

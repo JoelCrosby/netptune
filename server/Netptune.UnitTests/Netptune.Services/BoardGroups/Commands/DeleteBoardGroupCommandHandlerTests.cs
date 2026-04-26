@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.BoardGroups.Commands.DeleteBoardGroup;
+using Netptune.Services.BoardGroups.Commands;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

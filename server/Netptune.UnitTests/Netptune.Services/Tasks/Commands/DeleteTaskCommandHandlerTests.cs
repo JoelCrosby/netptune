@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Tasks.Commands.DeleteTask;
+using Netptune.Services.Tasks.Commands;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

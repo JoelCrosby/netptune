@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
-using Netptune.Services.Comments.Queries.GetCommentsForTask;
+using Netptune.Services.Comments.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

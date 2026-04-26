@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Boards.Queries.GetBoardsInProject;
+using Netptune.Services.Boards.Queries;
 
 using NSubstitute;
 

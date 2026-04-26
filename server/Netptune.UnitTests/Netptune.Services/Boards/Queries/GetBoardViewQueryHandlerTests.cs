@@ -5,7 +5,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Services.Boards.Queries.GetBoardView;
+using Netptune.Services.Boards.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
