@@ -1,6 +1,10 @@
+using System.Threading.RateLimiting;
+
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 
 using Netptune.App.Endpoints;
+using Netptune.App.Middleware;
 using Netptune.App.Services;
 using Netptune.App.Utility;
 using Netptune.Cache;
@@ -65,6 +69,10 @@ builder.AddNetptuneCache(options =>
     options.Connection = redisConnectionString;
 });
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString, name: "postgres", tags: ["ready"])
+    .AddRedis(redisConnectionString, name: "redis", tags: ["ready"]);
+
 builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 
@@ -97,20 +105,48 @@ builder.Services.AddMediator(options =>
     options.ServiceLifetime = ServiceLifetime.Transient;
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddSlidingWindowLimiter("api", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 300;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.SegmentsPerWindow = 6;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 10;
+    });
+
+    options.AddSlidingWindowLimiter("import-export", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 10;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.SegmentsPerWindow = 2;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 2;
+    });
+});
+
 builder.Services.AddValidation();
 
 var app = builder.Build();
 
+app.UseCorrelationId();
 app.UseForwardedHeaders();
 
 app.UseRouting();
 
 app.UseCors();
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-var apiGroup = app.MapGroup("/api");
+app.UseWorkspaceValidation();
+
+var apiGroup = app.MapGroup("/api")
+    .RequireRateLimiting("api");
 
 apiGroup.MapBoardEventsEndpoints();
 apiGroup.MapNotificationsEndpoints();
@@ -120,8 +156,6 @@ apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
 apiGroup.MapBoardsEndpoints();
 apiGroup.MapCommentsEndpoints();
-apiGroup.MapExportEndpoints();
-apiGroup.MapImportEndpoints();
 apiGroup.MapMetaEndpoints();
 apiGroup.MapProjectsEndpoints();
 apiGroup.MapStorageEndpoints();
@@ -130,6 +164,11 @@ apiGroup.MapTasksEndpoints();
 apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
 apiGroup.MapPublicEndpoints();
+
+apiGroup.MapExportEndpoints()
+    .RequireRateLimiting("import-export");
+apiGroup.MapImportEndpoints()
+    .RequireRateLimiting("import-export");
 
 app.MapDefaultEndpoints();
 
