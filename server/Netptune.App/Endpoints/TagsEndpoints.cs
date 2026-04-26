@@ -5,8 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Tags.Commands;
-using Netptune.Services.Tags.Queries;
+using Netptune.Services.Tags.Commands.AddTagToTask;
+using Netptune.Services.Tags.Commands.CreateTag;
+using Netptune.Services.Tags.Commands.DeleteTagFromTask;
+using Netptune.Services.Tags.Commands.DeleteTags;
+using Netptune.Services.Tags.Commands.UpdateTag;
+using Netptune.Services.Tags.Queries.GetTagsForTask;
+using Netptune.Services.Tags.Queries.GetTagsForWorkspace;
 
 namespace Netptune.App.Endpoints;
 

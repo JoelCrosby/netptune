@@ -5,13 +5,12 @@ using CsvHelper;
 
 using Mediator;
 
-using Netptune.Core.Models.Audit;
 using Netptune.Core.Models.Files;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Audit;
 
-namespace Netptune.Services.Audit.Queries;
+namespace Netptune.Services.Audit.Queries.ExportAuditLog;
 
 public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQuery, FileResponse>
 {

@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Notifications.Commands;
+using Netptune.Services.Notifications.Commands.MarkAllAsRead;
 
 using NSubstitute;
 

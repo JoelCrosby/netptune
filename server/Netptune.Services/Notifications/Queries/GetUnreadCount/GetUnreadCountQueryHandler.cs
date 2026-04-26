@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Notifications.Queries;
+namespace Netptune.Services.Notifications.Queries.GetUnreadCount;
 
 public sealed class GetUnreadCountQueryHandler : IRequestHandler<GetUnreadCountQuery, ClientResponse<int>>
 {

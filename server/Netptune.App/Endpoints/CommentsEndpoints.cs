@@ -2,8 +2,9 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Comments.Commands;
-using Netptune.Services.Comments.Queries;
+using Netptune.Services.Comments.Commands.AddCommentToTask;
+using Netptune.Services.Comments.Commands.DeleteComment;
+using Netptune.Services.Comments.Queries.GetCommentsForTask;
 
 namespace Netptune.App.Endpoints;
 

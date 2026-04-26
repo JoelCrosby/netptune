@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Workspaces.Queries;
+using Netptune.Services.Workspaces.Queries.GetAllWorkspaces;
 
 using NSubstitute;
 

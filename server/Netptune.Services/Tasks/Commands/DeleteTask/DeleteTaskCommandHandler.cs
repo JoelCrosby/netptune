@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Tasks.Commands;
+namespace Netptune.Services.Tasks.Commands.DeleteTask;
 
 public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, ClientResponse>
 {

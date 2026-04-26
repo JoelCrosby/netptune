@@ -1,7 +1,7 @@
 using FluentAssertions;
 
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries.GetBoard;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

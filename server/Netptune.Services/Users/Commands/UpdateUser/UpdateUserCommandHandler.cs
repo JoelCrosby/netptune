@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
-namespace Netptune.Services.Users.Commands;
+namespace Netptune.Services.Users.Commands.UpdateUser;
 
 public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ClientResponse<UserViewModel>>
 {

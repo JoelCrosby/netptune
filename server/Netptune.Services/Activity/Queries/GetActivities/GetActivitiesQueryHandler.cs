@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Activity;
 
-namespace Netptune.Services.Activity.Queries;
+namespace Netptune.Services.Activity.Queries.GetActivities;
 
 public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, ClientResponse<List<ActivityViewModel>>>
 {

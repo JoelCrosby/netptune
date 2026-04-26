@@ -1,11 +1,12 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services.BoardGroups.Commands;
+namespace Netptune.Services.BoardGroups.Commands.UpdateBoardGroup;
 
 public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoardGroupCommand, ClientResponse<BoardGroupViewModel>>
 {

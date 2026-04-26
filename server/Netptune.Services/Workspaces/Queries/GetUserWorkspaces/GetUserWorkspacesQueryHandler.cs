@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Workspaces.Queries;
+namespace Netptune.Services.Workspaces.Queries.GetUserWorkspaces;
 
 public sealed class GetUserWorkspacesQueryHandler : IRequestHandler<GetUserWorkspacesQuery, List<Workspace>>
 {

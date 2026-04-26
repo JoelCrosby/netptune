@@ -6,7 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.BoardGroups.Commands;
+using Netptune.Services.BoardGroups.Commands.CreateBoardGroup;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

@@ -1,7 +1,6 @@
 using Mediator;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -14,25 +13,22 @@ using Netptune.Core.ViewModels.ProjectTasks;
 
 using Polly;
 
-namespace Netptune.Services.Tasks.Commands;
+namespace Netptune.Services.Tasks.Commands.CreateTask;
 
 public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, ClientResponse<TaskViewModel>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
-    private readonly ILogger<CreateTaskCommandHandler> Logger;
 
     public CreateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IActivityLogger activity,
-        ILogger<CreateTaskCommandHandler> logger)
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
-        Logger = logger;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)

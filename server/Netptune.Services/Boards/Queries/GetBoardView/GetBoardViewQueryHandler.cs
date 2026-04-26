@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services.Boards.Queries;
+namespace Netptune.Services.Boards.Queries.GetBoardView;
 
 public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery, ClientResponse<BoardView>>
 {

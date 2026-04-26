@@ -7,7 +7,7 @@ using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Tasks.Commands;
+using Netptune.Services.Tasks.Commands.ReassignTasks;
 
 using NSubstitute;
 

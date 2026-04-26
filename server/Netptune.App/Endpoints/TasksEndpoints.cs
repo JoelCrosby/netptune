@@ -2,8 +2,16 @@ using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Tasks.Commands;
-using Netptune.Services.Tasks.Queries;
+using Netptune.Services.Tasks.Commands.CreateTask;
+using Netptune.Services.Tasks.Commands.DeleteTask;
+using Netptune.Services.Tasks.Commands.DeleteTasks;
+using Netptune.Services.Tasks.Commands.MoveTaskInBoardGroup;
+using Netptune.Services.Tasks.Commands.MoveTasksToGroup;
+using Netptune.Services.Tasks.Commands.ReassignTasks;
+using Netptune.Services.Tasks.Commands.UpdateTask;
+using Netptune.Services.Tasks.Queries.GetTask;
+using Netptune.Services.Tasks.Queries.GetTaskDetail;
+using Netptune.Services.Tasks.Queries.GetTasks;
 
 namespace Netptune.App.Endpoints;
 

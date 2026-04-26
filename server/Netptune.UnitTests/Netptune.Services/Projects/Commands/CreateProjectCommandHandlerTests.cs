@@ -9,7 +9,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-using Netptune.Services.Projects.Commands;
+using Netptune.Services.Projects.Commands.CreateProject;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

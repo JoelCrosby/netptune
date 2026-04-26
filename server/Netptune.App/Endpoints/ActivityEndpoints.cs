@@ -2,7 +2,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
-using Netptune.Services.Activity.Queries;
+using Netptune.Services.Activity.Queries.GetActivities;
 
 namespace Netptune.App.Endpoints;
 

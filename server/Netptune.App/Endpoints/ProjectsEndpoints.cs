@@ -1,8 +1,11 @@
 using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Projects.Commands;
-using Netptune.Services.Projects.Queries;
+using Netptune.Services.Projects.Commands.CreateProject;
+using Netptune.Services.Projects.Commands.DeleteProject;
+using Netptune.Services.Projects.Commands.UpdateProject;
+using Netptune.Services.Projects.Queries.GetProject;
+using Netptune.Services.Projects.Queries.GetProjects;
 
 namespace Netptune.App.Endpoints;
 

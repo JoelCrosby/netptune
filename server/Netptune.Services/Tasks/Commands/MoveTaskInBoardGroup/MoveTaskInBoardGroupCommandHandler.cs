@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Ordering;
@@ -7,7 +8,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Tasks.Commands;
+namespace Netptune.Services.Tasks.Commands.MoveTaskInBoardGroup;
 
 public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTaskInBoardGroupCommand, ClientResponse>
 {

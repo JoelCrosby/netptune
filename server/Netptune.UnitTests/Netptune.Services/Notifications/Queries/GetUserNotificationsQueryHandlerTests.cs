@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Notifications;
-using Netptune.Services.Notifications.Queries;
+using Netptune.Services.Notifications.Queries.GetUserNotifications;
 
 using NSubstitute;
 

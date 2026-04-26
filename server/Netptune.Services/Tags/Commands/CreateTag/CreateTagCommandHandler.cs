@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Extensions;
@@ -8,7 +9,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.CreateTag;
 
 public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, ClientResponse<TagViewModel>>
 {

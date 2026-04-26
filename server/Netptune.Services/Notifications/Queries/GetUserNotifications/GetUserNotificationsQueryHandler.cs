@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Notifications;
 
-namespace Netptune.Services.Notifications.Queries;
+namespace Netptune.Services.Notifications.Queries.GetUserNotifications;
 
 public sealed class GetUserNotificationsQueryHandler : IRequestHandler<GetUserNotificationsQuery, ClientResponse<List<NotificationViewModel>>>
 {

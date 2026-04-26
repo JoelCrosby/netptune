@@ -1,8 +1,9 @@
 using Mediator;
+
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
-namespace Netptune.Services.Users.Queries;
+namespace Netptune.Services.Users.Queries.GetAllUsers;
 
 public sealed class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<UserViewModel>>
 {

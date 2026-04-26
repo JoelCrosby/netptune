@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Cache;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
-namespace Netptune.Services.Users.Queries;
+namespace Netptune.Services.Users.Queries.GetUser;
 
 public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserViewModel?>
 {

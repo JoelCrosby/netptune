@@ -1,15 +1,15 @@
 using Mediator;
+
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services.Boards.Commands;
+namespace Netptune.Services.Boards.Commands.CreateBoard;
 
 public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, ClientResponse<BoardViewModel>>
 {

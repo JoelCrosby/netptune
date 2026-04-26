@@ -1,11 +1,12 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.DeleteTags;
 
 public sealed class DeleteTagsCommandHandler : IRequestHandler<DeleteTagsCommand, ClientResponse>
 {

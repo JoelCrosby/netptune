@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Services.Tasks.Queries;
+using Netptune.Services.Tasks.Queries.GetTasks;
 
 using NSubstitute;
 

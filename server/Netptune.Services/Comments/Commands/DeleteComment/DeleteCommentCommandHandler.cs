@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Comments.Commands;
+namespace Netptune.Services.Comments.Commands.DeleteComment;
 
 public sealed class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, ClientResponse>
 {

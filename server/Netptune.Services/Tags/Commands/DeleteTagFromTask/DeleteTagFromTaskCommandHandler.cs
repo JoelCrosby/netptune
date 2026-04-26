@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tags;
 using Netptune.Core.Responses.Common;
@@ -6,7 +7,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.DeleteTagFromTask;
 
 public sealed class DeleteTagFromTaskCommandHandler : IRequestHandler<DeleteTagFromTaskCommand, ClientResponse>
 {

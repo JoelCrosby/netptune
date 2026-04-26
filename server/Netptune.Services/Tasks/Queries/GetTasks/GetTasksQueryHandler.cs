@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 
-namespace Netptune.Services.Tasks.Queries;
+namespace Netptune.Services.Tasks.Queries.GetTasks;
 
 public sealed class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, List<TaskViewModel>>
 {

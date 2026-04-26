@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Tasks.Queries;
+using Netptune.Services.Tasks.Queries.GetTaskDetail;
 
 using NSubstitute;
 

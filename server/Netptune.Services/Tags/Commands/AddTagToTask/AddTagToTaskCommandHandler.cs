@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tags;
@@ -10,7 +11,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.AddTagToTask;
 
 public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCommand, ClientResponse<TagViewModel>>
 {

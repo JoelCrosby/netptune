@@ -2,13 +2,9 @@ using System.Text;
 using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
-using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.JobServer.Services;
@@ -52,7 +48,6 @@ public sealed class AuditRetentionJob : BackgroundService
         var cutoff = DateTime.UtcNow.Subtract(RetentionPeriod);
 
         using var scope = ScopeFactory.CreateScope();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
         var storage = scope.ServiceProvider.GetRequiredService<IStorageService>();
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 

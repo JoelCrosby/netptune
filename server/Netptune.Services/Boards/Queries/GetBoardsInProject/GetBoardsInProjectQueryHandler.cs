@@ -1,8 +1,9 @@
 using Mediator;
+
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services.Boards.Queries;
+namespace Netptune.Services.Boards.Queries.GetBoardsInProject;
 
 public sealed class GetBoardsInProjectQueryHandler : IRequestHandler<GetBoardsInProjectQuery, List<BoardViewModel>?>
 {

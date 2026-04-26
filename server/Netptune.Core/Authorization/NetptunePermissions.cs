@@ -53,6 +53,8 @@ public static class NetptunePermissions
         public const string DeleteAny = "tasks.delete_any";
         public const string Move = "tasks.move";
         public const string Reassign = "tasks.reassign";
+        public const string Export = "tasks.export";
+        public const string Import = "tasks.import";
     }
 
     public static class Comments
@@ -94,15 +96,5 @@ public static class NetptunePermissions
     {
         public const string UploadProfilePicture = "storage.upload_profile_picture";
         public const string UploadMedia = "storage.upload_media";
-    }
-
-    public static class Export
-    {
-        public const string ProjectTasks = "export.tasks";
-    }
-
-    public static class Import
-    {
-        public const string ProjectTasks = "import.tasks";
     }
 }

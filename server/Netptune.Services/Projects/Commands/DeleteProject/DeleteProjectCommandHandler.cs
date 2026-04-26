@@ -1,11 +1,12 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Projects.Commands;
+namespace Netptune.Services.Projects.Commands.DeleteProject;
 
 public sealed class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, ClientResponse>
 {

@@ -2,7 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Projects.Queries;
+using Netptune.Services.Projects.Queries.GetProject;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

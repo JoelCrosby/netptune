@@ -8,7 +8,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Services.Tasks.Commands;
+using Netptune.Services.Tasks.Commands.UpdateTask;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

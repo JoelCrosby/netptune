@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Services.Workspaces.Commands.Shared;
 
-namespace Netptune.Services.Workspaces.Commands;
+namespace Netptune.Services.Workspaces.Commands.CreateWorkspaceForNewUser;
 
 public sealed class CreateWorkspaceForNewUserCommandHandler : IRequestHandler<CreateWorkspaceForNewUserCommand, ClientResponse<WorkspaceViewModel>>
 {

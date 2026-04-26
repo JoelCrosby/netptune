@@ -9,7 +9,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
-using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Commands.CreateWorkspace;
 
 using NSubstitute;
 

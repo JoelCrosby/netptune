@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Cache;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
@@ -6,7 +7,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Workspaces.Commands;
+namespace Netptune.Services.Workspaces.Commands.DeleteWorkspace;
 
 public sealed class DeleteWorkspaceCommandHandler : IRequestHandler<DeleteWorkspaceCommand, ClientResponse>
 {

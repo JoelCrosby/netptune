@@ -1,8 +1,9 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.BoardGroups.Queries;
+namespace Netptune.Services.BoardGroups.Queries.GetBoardGroup;
 
 public sealed class GetBoardGroupQueryHandler : IRequestHandler<GetBoardGroupQuery, BoardGroup?>
 {

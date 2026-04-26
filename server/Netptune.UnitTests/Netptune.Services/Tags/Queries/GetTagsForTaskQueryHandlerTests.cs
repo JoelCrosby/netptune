@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Services.Tags.Queries;
+using Netptune.Services.Tags.Queries.GetTagsForTask;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -38,7 +38,7 @@ public class GetTagsForTaskQueryHandlerTests
         var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
 
         result.Should().NotBeEmpty();
-        result!.Count.Should().Be(1);
+        result.Count.Should().Be(1);
     }
 
     [Fact]

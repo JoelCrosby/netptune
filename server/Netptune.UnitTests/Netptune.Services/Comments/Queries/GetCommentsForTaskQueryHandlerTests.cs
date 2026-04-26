@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
-using Netptune.Services.Comments.Queries;
+using Netptune.Services.Comments.Queries.GetCommentsForTask;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -38,7 +38,7 @@ public class GetCommentsForTaskQueryHandlerTests
         var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), CancellationToken.None);
 
         result.Should().NotBeEmpty();
-        result!.Count.Should().Be(1);
+        result.Count.Should().Be(1);
         result.Should().BeEquivalentTo(viewModels);
     }
 

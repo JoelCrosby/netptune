@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Relationships;
@@ -6,7 +7,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Tasks.Commands;
+namespace Netptune.Services.Tasks.Commands.ReassignTasks;
 
 public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksCommand, ClientResponse>
 {

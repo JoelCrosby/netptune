@@ -1,13 +1,13 @@
 using Mediator;
+
 using Netptune.Core.Enums;
-using Netptune.Core.Extensions;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.UpdateTag;
 
 public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, ClientResponse<TagViewModel>>
 {

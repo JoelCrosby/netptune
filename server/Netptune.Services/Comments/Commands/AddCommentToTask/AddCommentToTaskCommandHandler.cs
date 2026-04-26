@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
@@ -7,7 +8,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 
-namespace Netptune.Services.Comments.Commands;
+namespace Netptune.Services.Comments.Commands.AddCommentToTask;
 
 public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentToTaskCommand, ClientResponse<CommentViewModel>>
 {

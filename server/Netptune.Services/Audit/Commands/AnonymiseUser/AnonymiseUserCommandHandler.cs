@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Audit.Commands;
+namespace Netptune.Services.Audit.Commands.AnonymiseUser;
 
 public sealed class AnonymiseUserCommandHandler : IRequestHandler<AnonymiseUserCommand, ClientResponse>
 {

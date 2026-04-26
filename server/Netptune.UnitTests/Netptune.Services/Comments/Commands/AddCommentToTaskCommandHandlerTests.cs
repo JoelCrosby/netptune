@@ -7,7 +7,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
-using Netptune.Services.Comments.Commands;
+using Netptune.Services.Comments.Commands.AddCommentToTask;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.Services.Projects.Queries;
+namespace Netptune.Services.Projects.Queries.GetProjects;
 
 public sealed class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, List<ProjectViewModel>>
 {

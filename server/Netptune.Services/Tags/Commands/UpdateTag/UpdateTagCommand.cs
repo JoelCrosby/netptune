@@ -1,8 +1,9 @@
 using Mediator;
+
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Services.Tags.Commands;
+namespace Netptune.Services.Tags.Commands.UpdateTag;
 
 public sealed record UpdateTagCommand(UpdateTagRequest Request) : IRequest<ClientResponse<TagViewModel>>;

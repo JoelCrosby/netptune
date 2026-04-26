@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
@@ -6,7 +7,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
-namespace Netptune.Services.Boards.Commands;
+namespace Netptune.Services.Boards.Commands.UpdateBoard;
 
 public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardCommand, ClientResponse<BoardViewModel>>
 {

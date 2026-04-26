@@ -5,7 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.BoardGroups.Commands;
+using Netptune.Services.BoardGroups.Commands.UpdateBoardGroup;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

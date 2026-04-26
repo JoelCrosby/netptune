@@ -1,7 +1,8 @@
 using Mediator;
+
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 
-namespace Netptune.Services.Workspaces.Queries;
+namespace Netptune.Services.Workspaces.Queries.IsWorkspaceSlugUnique;
 
 public sealed record IsWorkspaceSlugUniqueQuery(string Slug) : IRequest<ClientResponse<IsSlugUniqueResponse>>;

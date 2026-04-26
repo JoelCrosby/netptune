@@ -9,7 +9,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Users.Commands;
+namespace Netptune.Services.Users.Commands.RemoveUsersFromWorkspace;
 
 public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<RemoveUsersFromWorkspaceCommand, ClientResponse<RemoveUsersWorkspaceResponse>>
 {

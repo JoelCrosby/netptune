@@ -7,7 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Boards.Commands;
+using Netptune.Services.Boards.Commands.CreateBoard;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

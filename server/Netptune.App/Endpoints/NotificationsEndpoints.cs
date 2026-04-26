@@ -2,8 +2,10 @@ using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
-using Netptune.Services.Notifications.Commands;
-using Netptune.Services.Notifications.Queries;
+using Netptune.Services.Notifications.Commands.MarkAllAsRead;
+using Netptune.Services.Notifications.Commands.MarkAsRead;
+using Netptune.Services.Notifications.Queries.GetUnreadCount;
+using Netptune.Services.Notifications.Queries.GetUserNotifications;
 
 namespace Netptune.App.Endpoints;
 

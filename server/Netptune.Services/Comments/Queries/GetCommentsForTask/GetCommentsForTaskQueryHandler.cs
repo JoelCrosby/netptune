@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 
-namespace Netptune.Services.Comments.Queries;
+namespace Netptune.Services.Comments.Queries.GetCommentsForTask;
 
 public sealed class GetCommentsForTaskQueryHandler : IRequestHandler<GetCommentsForTaskQuery, List<CommentViewModel>?>
 {

@@ -2,14 +2,13 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands.RemoveUsersFromWorkspace;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -25,7 +24,6 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IWorkspaceUserCache Cache = Substitute.For<IWorkspaceUserCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
-    private readonly Fixture Fixture = new();
 
     public RemoveUsersFromWorkspaceCommandHandlerTests()
     {

@@ -2,8 +2,6 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Microsoft.Extensions.Logging;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
@@ -11,7 +9,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Services.Tasks.Commands;
+using Netptune.Services.Tasks.Commands.CreateTask;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -27,11 +25,10 @@ public class CreateTaskCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
-    private readonly ILogger<CreateTaskCommandHandler> Logger = Substitute.For<ILogger<CreateTaskCommandHandler>>();
 
     public CreateTaskCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity, Logger);
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]

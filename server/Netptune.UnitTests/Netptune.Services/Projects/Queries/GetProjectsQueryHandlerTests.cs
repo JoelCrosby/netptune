@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-using Netptune.Services.Projects.Queries;
+using Netptune.Services.Projects.Queries.GetProjects;
 
 using NSubstitute;
 

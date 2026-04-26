@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -7,7 +8,7 @@ using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Services.Workspaces.Commands.Shared;
 
-namespace Netptune.Services.Workspaces.Commands;
+namespace Netptune.Services.Workspaces.Commands.CreateWorkspace;
 
 public sealed class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorkspaceCommand, ClientResponse<WorkspaceViewModel>>
 {

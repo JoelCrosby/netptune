@@ -1,12 +1,11 @@
 using FluentAssertions;
 
-using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries.GetBoardView;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

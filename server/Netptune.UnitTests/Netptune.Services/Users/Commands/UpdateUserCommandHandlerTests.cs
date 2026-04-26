@@ -4,7 +4,7 @@ using FluentAssertions;
 
 using Netptune.Core.Requests;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands.UpdateUser;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

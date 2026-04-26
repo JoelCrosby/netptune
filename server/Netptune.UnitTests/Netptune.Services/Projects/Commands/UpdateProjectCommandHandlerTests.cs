@@ -6,7 +6,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Projects.Commands;
+using Netptune.Services.Projects.Commands.UpdateProject;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

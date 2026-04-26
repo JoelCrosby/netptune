@@ -1,10 +1,11 @@
 using Mediator;
+
 using Netptune.Core.Encoding;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Workspaces.Queries;
+namespace Netptune.Services.Workspaces.Queries.IsWorkspaceSlugUnique;
 
 public sealed class IsWorkspaceSlugUniqueQueryHandler : IRequestHandler<IsWorkspaceSlugUniqueQuery, ClientResponse<IsSlugUniqueResponse>>
 {

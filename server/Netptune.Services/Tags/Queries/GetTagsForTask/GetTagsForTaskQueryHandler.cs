@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
-namespace Netptune.Services.Tags.Queries;
+namespace Netptune.Services.Tags.Queries.GetTagsForTask;
 
 public sealed class GetTagsForTaskQueryHandler : IRequestHandler<GetTagsForTaskQuery, List<TagViewModel>?>
 {

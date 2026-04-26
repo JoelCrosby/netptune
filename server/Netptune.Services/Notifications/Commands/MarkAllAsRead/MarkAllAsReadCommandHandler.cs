@@ -1,9 +1,10 @@
 using Mediator;
+
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Services.Notifications.Commands;
+namespace Netptune.Services.Notifications.Commands.MarkAllAsRead;
 
 public sealed class MarkAllAsReadCommandHandler : IRequestHandler<MarkAllAsReadCommand, ClientResponse>
 {

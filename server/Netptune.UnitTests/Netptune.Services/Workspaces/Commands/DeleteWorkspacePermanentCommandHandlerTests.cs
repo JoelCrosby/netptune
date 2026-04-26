@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Cache;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Commands.DeleteWorkspacePermanent;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

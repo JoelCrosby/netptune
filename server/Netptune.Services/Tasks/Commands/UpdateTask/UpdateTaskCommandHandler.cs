@@ -6,12 +6,11 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 
-namespace Netptune.Services.Tasks.Commands;
+namespace Netptune.Services.Tasks.Commands.UpdateTask;
 
 public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, ClientResponse<TaskViewModel>>
 {
@@ -93,7 +92,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         var sortOrder = group.TasksInGroups.LastOrDefault()?.SortOrder ?? 0 + 1;
 
-        group.TasksInGroups.Add(new Core.Relationships.ProjectTaskInBoardGroup
+        group.TasksInGroups.Add(new ProjectTaskInBoardGroup
         {
             BoardGroupId = group.Id,
             ProjectTaskId = result.Id,

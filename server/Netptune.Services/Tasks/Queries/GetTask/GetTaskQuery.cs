@@ -1,6 +1,7 @@
 using Mediator;
+
 using Netptune.Core.ViewModels.ProjectTasks;
 
-namespace Netptune.Services.Tasks.Queries;
+namespace Netptune.Services.Tasks.Queries.GetTask;
 
 public sealed record GetTaskQuery(int Id) : IRequest<TaskViewModel?>;

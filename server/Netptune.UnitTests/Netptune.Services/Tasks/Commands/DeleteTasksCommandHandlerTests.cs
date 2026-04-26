@@ -4,7 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Tasks.Commands;
+using Netptune.Services.Tasks.Commands.DeleteTasks;
 
 using NSubstitute;
 

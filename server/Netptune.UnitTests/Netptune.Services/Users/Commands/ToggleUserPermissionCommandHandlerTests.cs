@@ -7,7 +7,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Commands.ToggleUserPermission;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;

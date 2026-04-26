@@ -10,7 +10,7 @@ public static class ImportEndpoints
         var group = builder.MapGroup("import");
 
         group.MapPost("/tasks/{boardId}", HandleImportWorkspaceTasks)
-            .RequireAuthorization(NetptunePermissions.Import.ProjectTasks);
+            .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         return group;
     }

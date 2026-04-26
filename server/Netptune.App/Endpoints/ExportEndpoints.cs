@@ -10,9 +10,9 @@ public static class ExportEndpoints
         var group = builder.MapGroup("export");
 
         group.MapGet("/tasks/export-workspace", HandleExportWorkspaceTasks)
-            .RequireAuthorization(NetptunePermissions.Export.ProjectTasks);
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
         group.MapGet("/tasks/export-board/{boardId}", HandleExportBoardTasks)
-            .RequireAuthorization(NetptunePermissions.Export.ProjectTasks);
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         return group;
     }

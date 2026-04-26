@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
@@ -7,7 +8,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
 
-namespace Netptune.Services.Projects.Commands;
+namespace Netptune.Services.Projects.Commands.CreateProject;
 
 public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ClientResponse<ProjectViewModel>>
 {

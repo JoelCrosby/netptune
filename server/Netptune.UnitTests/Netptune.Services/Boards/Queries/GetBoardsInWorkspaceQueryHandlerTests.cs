@@ -3,7 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Services.Boards.Queries;
+using Netptune.Services.Boards.Queries.GetBoardsInWorkspace;
 
 using NSubstitute;
 
