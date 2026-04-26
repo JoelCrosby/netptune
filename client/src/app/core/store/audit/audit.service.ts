@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
+  AuditActivityPoint,
   AuditLogFilter,
   AuditLogPage,
 } from '@core/models/view-models/audit-log-view-model';
@@ -13,6 +14,11 @@ export class AuditService {
   getAuditLog(filter: AuditLogFilter) {
     const params = this.buildParams(filter);
     return this.http.get<ClientResponse<AuditLogPage>>('api/audit', { params });
+  }
+
+  getActivitySummary(filter: AuditLogFilter) {
+    const params = this.buildParams(filter);
+    return this.http.get<ClientResponse<AuditActivityPoint[]>>('api/audit/summary', { params });
   }
 
   exportAuditLog(filter: AuditLogFilter) {

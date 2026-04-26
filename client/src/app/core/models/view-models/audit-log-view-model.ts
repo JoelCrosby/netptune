@@ -24,6 +24,11 @@ export interface AuditLogPage {
   totalPages: number;
 }
 
+export interface AuditActivityPoint {
+  date: string;
+  count: number;
+}
+
 export interface AuditLogFilter {
   userId?: string;
   entityType?: EntityType;

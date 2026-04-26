@@ -3,6 +3,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { AuditFiltersComponent } from '@audit/components/audit-filters/audit-filters.component';
 import { AuditTableComponent } from '@audit/components/audit-table/audit-table.component';
+import { AuditActivityChartComponent } from '@audit/components/audit-activity-chart/audit-activity-chart.component';
 import { AuditStore } from '@audit/audit-state.service';
 
 @Component({
@@ -13,12 +14,14 @@ import { AuditStore } from '@audit/audit-state.service';
     PageContainerComponent,
     PageHeaderComponent,
     AuditFiltersComponent,
+    AuditActivityChartComponent,
     AuditTableComponent,
   ],
   template: `
     <app-page-container>
       <app-page-header title="Audit Log" />
       <app-audit-filters />
+      <app-audit-activity-chart />
       <app-audit-table />
     </app-page-container>
   `,

@@ -12,6 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { computed } from '@angular/core';
 import { pipe, switchMap, tap } from 'rxjs';
 import {
+  AuditActivityPoint,
   AuditLogFilter,
   AuditLogViewModel,
 } from '@core/models/view-models/audit-log-view-model';
@@ -20,6 +21,7 @@ import { AuditService } from '@core/store/audit/audit.service';
 interface AuditState {
   filter: AuditLogFilter;
   items: AuditLogViewModel[];
+  summary: AuditActivityPoint[];
   totalCount: number;
   totalPages: number;
   loading: boolean;
@@ -29,6 +31,7 @@ interface AuditState {
 const initialState: AuditState = {
   filter: { page: 1, pageSize: 50 },
   items: [],
+  summary: [],
   totalCount: 0,
   totalPages: 1,
   loading: false,
@@ -62,6 +65,18 @@ export const AuditStore = signalStore(
         )
       )
     ),
+    loadSummary: rxMethod<AuditLogFilter>(
+      pipe(
+        switchMap((filter) =>
+          auditService.getActivitySummary(filter).pipe(
+            tapResponse({
+              next: (response) => patchState(store, { summary: response.payload ?? [] }),
+              error: () => {},
+            })
+          )
+        )
+      )
+    ),
     applyFilters(from?: string, to?: string) {
       patchState(store, { filter: { from, to, page: 1, pageSize: 50 } });
     },
@@ -73,6 +88,9 @@ export const AuditStore = signalStore(
     },
   })),
   withHooks({
-    onInit: (store) => store.load(store.filter),
+    onInit: (store) => {
+      store.load(store.filter);
+      store.loadSummary(store.filter);
+    },
   })
 );

@@ -25,7 +25,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     } @else {
       <div
         class="border-border overflow-auto rounded border"
-        style="height: calc(100vh - 20rem)">
+        style="height: calc(100vh - 42rem)">
         <table class="w-full text-sm">
           <thead class="bg-background border-border sticky top-0 z-10 border-b">
             <tr class="text-left text-xs font-medium tracking-wide uppercase">
