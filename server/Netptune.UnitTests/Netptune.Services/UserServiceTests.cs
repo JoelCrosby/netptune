@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 
 using FluentAssertions;
 
@@ -14,7 +14,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
-using Netptune.Services;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -23,33 +24,16 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Services;
 
-public class UserServiceTests
+public class GetUserQueryHandlerTests
 {
-    private readonly Fixture Fixture = new();
-
-    private readonly UserService Service;
-
+    private readonly GetUserQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
-    private readonly IWorkspaceUserCache Cache = Substitute.For<IWorkspaceUserCache>();
-    private readonly IEmailService Email = Substitute.For<IEmailService>();
-    private readonly IHostingService Hosting = Substitute.For<IHostingService>();
-    private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
-    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
-    public UserServiceTests()
+    public GetUserQueryHandlerTests()
     {
-        Service = new(
-            UnitOfWork,
-            Identity,
-            Email,
-            Hosting,
-            Cache,
-            InviteCache,
-            WorkspacePermissionCache,
-            Activity
-        );
+        Handler = new(UnitOfWork, Identity, WorkspacePermissionCache);
     }
 
     [Fact]
@@ -68,7 +52,7 @@ public class UserServiceTests
             WorkspaceKey = workspaceKey,
         });
 
-        var result = await Service.Get("userId");
+        var result = await Handler.Handle(new GetUserQuery("userId"), CancellationToken.None);
 
         result.Should().BeEquivalentTo(new UserViewModel
         {
@@ -90,9 +74,22 @@ public class UserServiceTests
     {
         UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>()).ReturnsNull();
 
-        var result = await Service.Get("userId");
+        var result = await Handler.Handle(new GetUserQuery("userId"), CancellationToken.None);
 
         result.Should().BeNull();
+    }
+}
+
+public class GetUserByEmailQueryHandlerTests
+{
+    private readonly GetUserByEmailQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
+
+    public GetUserByEmailQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, WorkspacePermissionCache);
     }
 
     [Fact]
@@ -111,7 +108,7 @@ public class UserServiceTests
             WorkspaceKey = workspaceKey,
         });
 
-        var result = await Service.GetByEmail("email");
+        var result = await Handler.Handle(new GetUserByEmailQuery("email"), CancellationToken.None);
 
         result.Should().BeEquivalentTo(new UserViewModel
         {
@@ -133,60 +130,95 @@ public class UserServiceTests
     {
         UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>()).ReturnsNull();
 
-        var result = await Service.GetByEmail("email");
+        var result = await Handler.Handle(new GetUserByEmailQuery("email"), CancellationToken.None);
 
         result.Should().BeNull();
+    }
+}
+
+public class GetAllUsersQueryHandlerTests
+{
+    private readonly GetAllUsersQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+
+    public GetAllUsersQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork);
     }
 
     [Fact]
     public async Task GetAll_ShouldReturnCorrectly_WhenInputValid()
     {
-        UnitOfWork.Users.GetAllAsync().Returns(new List<AppUser>{ AutoFixtures.AppUser });
+        UnitOfWork.Users.GetAllAsync().Returns(new List<AppUser> { AutoFixtures.AppUser });
 
-        var result = await Service.GetAll();
+        var result = await Handler.Handle(new GetAllUsersQuery(), CancellationToken.None);
 
         result.Should().NotBeEmpty();
+    }
+}
+
+public class GetWorkspaceUsersQueryHandlerTests
+{
+    private readonly GetWorkspaceUsersQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetWorkspaceUsersQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
     public async Task GetWorkspaceUsers_ShouldReturnCorrectly_WhenInputValid()
     {
         const string workspaceKey = "workspaceKey";
-
-        var workspace = AutoFixtures.Workspace;
         var users = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var result = await Service.GetWorkspaceUsers();
+        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
 
         result.Should().NotBeEmpty();
     }
 
     [Fact]
-    public async Task GetWorkspaceUsers_ShouldReturnNull_WhenWorkspaceNotFound()
+    public async Task GetWorkspaceUsers_ShouldReturnEmpty_WhenNoUsers()
     {
         const string workspaceKey = "workspaceKey";
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns([]);
 
-        var result = await Service.GetWorkspaceUsers();
+        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
 
         result.Should().BeEmpty();
+    }
+}
+
+public class InviteUsersToWorkspaceCommandHandlerTests
+{
+    private readonly InviteUsersToWorkspaceCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IEmailService Email = Substitute.For<IEmailService>();
+    private readonly IHostingService Hosting = Substitute.For<IHostingService>();
+    private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public InviteUsersToWorkspaceCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Email, Hosting, InviteCache, Activity);
     }
 
     [Fact]
     public async Task InviteUsersToWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
@@ -194,8 +226,7 @@ public class UserServiceTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        var result = await Service.InviteUsersToWorkspace(emails);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -204,10 +235,9 @@ public class UserServiceTests
     public async Task InviteUsersToWorkspace_ReturnsFailure_WhenWorkspaceNotFound()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
@@ -215,8 +245,7 @@ public class UserServiceTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
 
-        var emails = new List<string> { "user@email.com" };
-        var result = await Service.InviteUsersToWorkspace(emails);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -225,19 +254,12 @@ public class UserServiceTests
     public async Task InviteUsersToWorkspace_ReturnsFailure_WhenInputEmpty()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var result = await Service.InviteUsersToWorkspace(new List<string>());
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string>()), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -246,11 +268,10 @@ public class UserServiceTests
     public async Task InviteUsersToWorkspace_ShouldSendEmails_WhenInputValid()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
@@ -258,8 +279,7 @@ public class UserServiceTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        await Service.InviteUsersToWorkspace(emails);
+        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         await Email.Received(1).Send(Arg.Any<SendMultipleEmailModel>());
     }
@@ -268,11 +288,10 @@ public class UserServiceTests
     public async Task InviteUsersToWorkspace_ShouldNotInvite_ExistingUsers()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { new () { Id = "userId", Email = "user@email.com" }};
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+        var users = new List<AppUser> { new() { Id = "userId", Email = "user@email.com" } };
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
@@ -280,8 +299,7 @@ public class UserServiceTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com", "existinguser@email.com" };
-        var result = await Service.InviteUsersToWorkspace(emails);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com", "existinguser@email.com" }), CancellationToken.None);
 
         result.Payload?.Emails.Should().Equal(new List<string> { "user@email.com" });
     }
@@ -290,11 +308,10 @@ public class UserServiceTests
     public async Task InviteUsersToWorkspace_ShouldCallCompleteAsync_WhenValidId()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" }};
+        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
@@ -302,26 +319,34 @@ public class UserServiceTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        await Service.InviteUsersToWorkspace(emails);
+        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
+    }
+}
+
+public class RemoveUsersFromWorkspaceCommandHandlerTests
+{
+    private readonly RemoveUsersFromWorkspaceCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IWorkspaceUserCache Cache = Substitute.For<IWorkspaceUserCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly Fixture Fixture = new();
+
+    public RemoveUsersFromWorkspaceCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Cache, Activity);
     }
 
     [Fact]
     public async Task RemoveUsersFromWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser>
         {
-            AutoFixtures.WorkspaceAppUser with {
-                User = new ()
-                {
-                    Email = "user@email.com",
-                },
-            },
+            AutoFixtures.WorkspaceAppUser with { User = new() { Email = "user@email.com" } },
         };
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
@@ -330,8 +355,7 @@ public class UserServiceTests
         UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        var result = await Service.RemoveUsersFromWorkspace(emails);
+        var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Emails.Should().BeEquivalentTo(new List<string> { "user@email.com" });
@@ -341,23 +365,16 @@ public class UserServiceTests
     public async Task RemoveUsersFromWorkspace_ShouldRemoveUsersFromCache()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser>
         {
-            AutoFixtures.WorkspaceAppUser with {
-                User = new ()
-                {
-                    Email = "user@email.com",
-                },
-            },
+            AutoFixtures.WorkspaceAppUser with { User = new() { Email = "user@email.com" } },
         };
 
         var user = AutoFixtures.AppUserFixture
             .With(x => x.Id, "userId")
             .With(x => x.Email, "user@email.com")
             .Create();
-
         var users = new List<AppUser> { user };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -365,11 +382,9 @@ public class UserServiceTests
         UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        await Service.RemoveUsersFromWorkspace(emails);
+        await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         var key = new WorkspaceUserKey { UserId = user.Id, WorkspaceKey = workspaceKey };
-
         Cache.Received(1).Remove(Arg.Is<WorkspaceUserKey>(k => k == key));
     }
 
@@ -377,7 +392,6 @@ public class UserServiceTests
     public async Task RemoveUsersFromWorkspace_ReturnsFailure_WhenWorkspaceNotFound()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser with { User = AutoFixtures.AppUser } };
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
@@ -386,8 +400,7 @@ public class UserServiceTests
         UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
 
-        var emails = new List<string> { "user@email.com" };
-        var result = await Service.RemoveUsersFromWorkspace(emails);
+        var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -396,17 +409,12 @@ public class UserServiceTests
     public async Task RemoveUsersFromWorkspace_ReturnsFailure_WhenInputEmpty()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser with { User = AutoFixtures.AppUser } };
-        var users = new List<AppUser> { AutoFixtures.AppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var result = await Service.RemoveUsersFromWorkspace(new List<string>());
+        var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string>()), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -415,18 +423,16 @@ public class UserServiceTests
     public async Task RemoveUsersFromWorkspace_ReturnsFailure_WhenRemovingWorkspaceOwner()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace with { OwnerId = "userId" };
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser with { User = AutoFixtures.AppUser } };
-        var users = new List<AppUser> { new () { Id = "userId", Email = "user@email.com" } };
+        var users = new List<AppUser> { new() { Id = "userId", Email = "user@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
         UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        var result = await Service.RemoveUsersFromWorkspace(emails);
+        var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -435,7 +441,6 @@ public class UserServiceTests
     public async Task RemoveUsersFromWorkspace_ShouldCallCompleteAsync_WhenValidId()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
         var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser with { User = AutoFixtures.AppUser } };
         var users = new List<AppUser> { AutoFixtures.AppUser };
@@ -445,24 +450,32 @@ public class UserServiceTests
         UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
 
-        var emails = new List<string> { "user@email.com" };
-        await Service.RemoveUsersFromWorkspace(emails);
+        await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
+    }
+}
+
+public class UpdateUserCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly UpdateUserCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+
+    public UpdateUserCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork);
     }
 
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateUserRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateUserRequest>().Create();
         var user = AutoFixtures.AppUser;
 
         UnitOfWork.Users.GetAsync(Arg.Any<string>()).Returns(user);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -475,15 +488,10 @@ public class UserServiceTests
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateUserRequest>()
-            .Create();
+        var request = Fixture.Build<UpdateUserRequest>().Create();
+        UnitOfWork.Users.GetAsync(Arg.Any<string>()).Returns(AutoFixtures.AppUser);
 
-        var user = AutoFixtures.AppUser;
-
-        UnitOfWork.Users.GetAsync(Arg.Any<string>()).Returns(user);
-
-        await Service.Update(request);
+        await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -491,18 +499,27 @@ public class UserServiceTests
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenUserNotFound()
     {
-        var request = Fixture
-            .Build<UpdateUserRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateUserRequest>().Create();
         UnitOfWork.Users.GetAsync(Arg.Any<string>()).ReturnsNull();
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
+}
 
-    // ToggleUserPermission
+public class ToggleUserPermissionCommandHandlerTests
+{
+    private readonly ToggleUserPermissionCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public ToggleUserPermissionCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, WorkspacePermissionCache, Activity);
+    }
 
     [Fact]
     public async Task ToggleUserPermission_ShouldAddPermission_WhenNotAlreadyGranted()
@@ -510,14 +527,10 @@ public class UserServiceTests
         const string workspaceKey = "workspaceKey";
         const string userId = "userId";
         const string permission = "tasks.read";
-
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            Role = WorkspaceRole.Member,
-            Permissions = [],
+            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -525,7 +538,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
-        var result = await Service.ToggleUserPermission(request);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().Contain(permission);
@@ -537,14 +550,10 @@ public class UserServiceTests
         const string workspaceKey = "workspaceKey";
         const string userId = "userId";
         const string permission = "tasks.read";
-
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            Role = WorkspaceRole.Member,
-            Permissions = [permission],
+            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [permission],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -552,7 +561,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
-        var result = await Service.ToggleUserPermission(request);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotContain(permission);
@@ -562,12 +571,11 @@ public class UserServiceTests
     public async Task ToggleUserPermission_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
         const string workspaceKey = "workspaceKey";
-
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
-        var result = await Service.ToggleUserPermission(request);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -576,7 +584,6 @@ public class UserServiceTests
     public async Task ToggleUserPermission_ShouldReturnFailure_WhenUserNotInWorkspace()
     {
         const string workspaceKey = "workspaceKey";
-
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -584,7 +591,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(Arg.Any<string>(), workspaceKey, false).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
-        var result = await Service.ToggleUserPermission(request);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -594,14 +601,10 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
         const string userId = "userId";
-
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            Role = WorkspaceRole.Member,
-            Permissions = [],
+            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -609,7 +612,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Service.ToggleUserPermission(request);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         await UnitOfWork.WorkspaceUsers.Received(1).SetUserPermissions(userId, workspace.Id, Arg.Any<IEnumerable<string>>());
     }
@@ -619,14 +622,10 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
         const string userId = "userId";
-
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            Role = WorkspaceRole.Member,
-            Permissions = [],
+            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -634,7 +633,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Service.ToggleUserPermission(request);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -644,14 +643,10 @@ public class UserServiceTests
     {
         const string workspaceKey = "workspaceKey";
         const string userId = "userId";
-
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId,
-            WorkspaceKey = workspaceKey,
-            Role = WorkspaceRole.Member,
-            Permissions = [],
+            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -659,7 +654,7 @@ public class UserServiceTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Service.ToggleUserPermission(request);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
         var expectedKey = new WorkspaceUserKey { UserId = userId, WorkspaceKey = workspaceKey };
         WorkspacePermissionCache.Received(1).Remove(Arg.Is<WorkspaceUserKey>(k => k == expectedKey));

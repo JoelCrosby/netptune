@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 
 using FluentAssertions;
 
@@ -7,7 +7,8 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services;
+using Netptune.Services.BoardGroups.Commands;
+using Netptune.Services.BoardGroups.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -16,19 +17,14 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Services;
 
-public class BoardGroupServiceTests
+public class GetBoardGroupQueryHandlerTests
 {
-    private readonly Fixture Fixture = new();
-
-    private readonly BoardGroupService Service;
-
+    private readonly GetBoardGroupQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
-    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
-    public BoardGroupServiceTests()
+    public GetBoardGroupQueryHandlerTests()
     {
-        Service = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork);
     }
 
     [Fact]
@@ -38,24 +34,34 @@ public class BoardGroupServiceTests
 
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(boardGroup);
 
-        var result = await Service.GetBoardGroup(1);
+        var result = await Handler.Handle(new GetBoardGroupQuery(1), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(boardGroup);
+    }
+}
+
+public class UpdateBoardGroupCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly UpdateBoardGroupCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public UpdateBoardGroupCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Activity);
     }
 
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateBoardGroupRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
         var boardGroup = AutoFixtures.BoardGroup;
 
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(boardGroup);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -67,15 +73,10 @@ public class BoardGroupServiceTests
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateBoardGroupRequest>()
-            .Create();
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
+        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(AutoFixtures.BoardGroup);
 
-        var boardGroup = AutoFixtures.BoardGroup;
-
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(boardGroup);
-
-        await Service.Update(request);
+        await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -83,31 +84,38 @@ public class BoardGroupServiceTests
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenNotFound()
     {
-        var request = Fixture
-            .Build<UpdateBoardGroupRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class CreateBoardGroupCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly CreateBoardGroupCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public CreateBoardGroupCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Activity);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddBoardGroupRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddBoardGroupRequest>().Create();
         var board = AutoFixtures.Board;
 
         UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).Returns(board);
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -119,17 +127,13 @@ public class BoardGroupServiceTests
     [Fact]
     public async Task Create_CallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddBoardGroupRequest>()
-            .Create();
+        var request = Fixture.Build<AddBoardGroupRequest>().Create();
 
-        var board = AutoFixtures.Board;
-
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).Returns(board);
+        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).Returns(AutoFixtures.Board);
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
 
-        await Service.Create(request);
+        await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -137,28 +141,37 @@ public class BoardGroupServiceTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenBoardNotFound()
     {
-        var request = Fixture
-            .Build<AddBoardGroupRequest>()
-            .Create();
+        var request = Fixture.Build<AddBoardGroupRequest>().Create();
 
         UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).ReturnsNull();
         UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
         UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class DeleteBoardGroupCommandHandlerTests
+{
+    private readonly DeleteBoardGroupCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public DeleteBoardGroupCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        var boardGroup = AutoFixtures.BoardGroup;
-
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).Returns(boardGroup);
+        UnitOfWork.BoardGroups.GetAsync(1).Returns(AutoFixtures.BoardGroup);
 
-        var result = await Service.Delete(1);
+        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -166,12 +179,10 @@ public class BoardGroupServiceTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        var boardGroup = AutoFixtures.BoardGroup;
-
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).Returns(boardGroup);
+        UnitOfWork.BoardGroups.GetAsync(1).Returns(AutoFixtures.BoardGroup);
 
-        await Service.Delete(1);
+        await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -182,18 +193,18 @@ public class BoardGroupServiceTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1).ReturnsNull();
 
-        var result = await Service.Delete(1);
+        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
-    public async Task Delete_ShouldNotCallCompleteAsync_WhenValidId()
+    public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1).ReturnsNull();
 
-        await Service.Delete(1);
+        await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
         await UnitOfWork.Received(0).CompleteAsync();
     }

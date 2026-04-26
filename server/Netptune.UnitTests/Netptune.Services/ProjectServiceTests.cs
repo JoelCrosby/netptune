@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 
 using FluentAssertions;
 
@@ -9,7 +9,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-using Netptune.Services;
+using Netptune.Services.Projects.Commands;
+using Netptune.Services.Projects.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -18,46 +19,39 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Services;
 
-public class ProjectServiceTests
+public class CreateProjectCommandHandlerTests
 {
     private readonly Fixture Fixture = new();
-
-    private readonly ProjectService Service;
-
+    private readonly CreateProjectCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
-    public ProjectServiceTests()
+    public CreateProjectCommandHandlerTests()
     {
-        Service = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddProjectRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddProjectRequest>().Create();
         var viewModel = Fixture.Build<ProjectViewModel>()
             .With(x => x.Name, request.Name)
             .With(x => x.Description, request.Description)
             .Create();
-
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
         UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -70,28 +64,22 @@ public class ProjectServiceTests
     [Fact]
     public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddProjectRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddProjectRequest>().Create();
         var viewModel = Fixture.Build<ProjectViewModel>()
             .With(x => x.Name, request.Name)
             .With(x => x.Description, request.Description)
             .Create();
 
-        var workspace = AutoFixtures.Workspace;
-
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(AutoFixtures.Workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
         UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
 
-        await Service.Create(request);
+        await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -99,38 +87,38 @@ public class ProjectServiceTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture
-            .Build<AddProjectRequest>()
-            .Create();
-
-        var viewModel = Fixture.Build<ProjectViewModel>()
-            .With(x => x.Name, request.Name)
-            .With(x => x.Description, request.Description)
-            .Create();
+        var request = Fixture.Build<AddProjectRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
-        UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
-        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
-        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class DeleteProjectCommandHandlerTests
+{
+    private readonly DeleteProjectCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public DeleteProjectCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        var project = AutoFixtures.Project;
+        UnitOfWork.Projects.GetAsync(1).Returns(AutoFixtures.Project);
 
-        UnitOfWork.Projects.GetAsync(1).Returns(project);
-
-        var result = await Service.Delete(1);
+        var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -138,11 +126,9 @@ public class ProjectServiceTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        var project = AutoFixtures.Project;
+        UnitOfWork.Projects.GetAsync(1).Returns(AutoFixtures.Project);
 
-        UnitOfWork.Projects.GetAsync(1).Returns(project);
-
-        await Service.Delete(1);
+        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -152,29 +138,41 @@ public class ProjectServiceTests
     {
         UnitOfWork.Projects.GetAsync(1).ReturnsNull();
 
-        var result = await Service.Delete(1);
+        var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
-    public async Task Delete_ShouldNotCallDeletePermanent_WhenValidId()
+    public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
         UnitOfWork.Projects.GetAsync(1).ReturnsNull();
 
-        await Service.Delete(1);
+        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
     }
 
     [Fact]
-    public async Task Delete_ShouldNotCallCompleteAsync_WhenValidId()
+    public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         UnitOfWork.Projects.GetAsync(1).ReturnsNull();
 
-        await Service.Delete(1);
+        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
         await UnitOfWork.Received(0).CompleteAsync();
+    }
+}
+
+public class GetProjectQueryHandlerTests
+{
+    private readonly GetProjectQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetProjectQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -186,7 +184,7 @@ public class ProjectServiceTests
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Projects.GetProjectViewModel("key", 1).Returns(viewModel);
 
-        var result = await Service.GetProject("key");
+        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 
         result.Should().BeEquivalentTo(viewModel);
     }
@@ -198,7 +196,7 @@ public class ProjectServiceTests
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Projects.GetProjectViewModel("key", 1).ReturnsNull();
 
-        var result = await Service.GetProject("key");
+        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 
         result.Should().BeNull();
     }
@@ -206,15 +204,24 @@ public class ProjectServiceTests
     [Fact]
     public async Task GetProject_ShouldReturnNull_WhenWorkspaceNotFound()
     {
-        var viewModel = AutoFixtures.ProjectViewModel;
-
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
-        UnitOfWork.Projects.GetProjectViewModel("key", 1).Returns(viewModel);
 
-        var result = await Service.GetProject("key");
+        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 
         result.Should().BeNull();
+    }
+}
+
+public class GetProjectsQueryHandlerTests
+{
+    private readonly GetProjectsQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetProjectsQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -225,25 +232,36 @@ public class ProjectServiceTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Projects.GetProjects("key").Returns(viewModels);
 
-        var result = await Service.GetProjects();
+        var result = await Handler.Handle(new GetProjectsQuery(), CancellationToken.None);
 
         result.Should().BeEquivalentTo(viewModels);
+    }
+}
+
+public class UpdateProjectCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly UpdateProjectCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public UpdateProjectCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateProjectRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateProjectRequest>().Create();
         var user = AutoFixtures.AppUser;
         var project = AutoFixtures.Project;
 
         Identity.GetCurrentUser().Returns(user);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).Returns(project);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -256,34 +274,25 @@ public class ProjectServiceTests
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateProjectRequest>()
-            .Create();
+        var request = Fixture.Build<UpdateProjectRequest>().Create();
 
-        var user = AutoFixtures.AppUser;
-        var project = AutoFixtures.Project;
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).Returns(AutoFixtures.Project);
 
-        Identity.GetCurrentUser().Returns(user);
-        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).Returns(project);
-
-        await Service.Update(request);
+        await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
 
     [Fact]
-    public async Task Update_ShouldReturnFailure_WhenUserNotFound()
+    public async Task Update_ShouldReturnFailure_WhenProjectNotFound()
     {
-        var request = Fixture
-            .Build<UpdateProjectRequest>()
-            .Create();
+        var request = Fixture.Build<UpdateProjectRequest>().Create();
 
-        var user = AutoFixtures.AppUser;
-
-        Identity.GetCurrentUser().Returns(user);
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).ReturnsNull();
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }

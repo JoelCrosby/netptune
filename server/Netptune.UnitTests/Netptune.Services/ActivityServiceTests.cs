@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 using AutoFixture;
 
@@ -9,7 +9,7 @@ using Netptune.Core.Models;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Activity;
-using Netptune.Services;
+using Netptune.Services.Activity.Queries;
 
 using NSubstitute;
 
@@ -17,18 +17,18 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Services;
 
-public class ActivityServiceTests
+public class GetActivitiesQueryHandlerTests
 {
     private readonly Fixture Fixture = new();
 
-    private readonly ActivityService Service;
+    private readonly GetActivitiesQueryHandler Handler;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
-    public ActivityServiceTests()
+    public GetActivitiesQueryHandlerTests()
     {
-        Service = new(UnitOfWork, Identity);
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class ActivityServiceTests
                 Fixture.Create<UserAvatar>(),
             });
 
-        var result = await Service.GetActivities(EntityType.Task, 1);
+        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -85,7 +85,7 @@ public class ActivityServiceTests
                 },
             });
 
-        var result = await Service.GetActivities(EntityType.Task, 1);
+        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), CancellationToken.None);
 
         result.Payload!.FirstOrDefault()!.Assignee.Should().NotBeNull();
     }

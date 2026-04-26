@@ -9,7 +9,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
-using Netptune.Services;
+using Netptune.Services.Tags.Commands;
+using Netptune.Services.Tags.Queries;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -18,38 +19,32 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Services;
 
-public class TagServiceTests
+public class CreateTagCommandHandlerTests
 {
     private readonly Fixture Fixture = new();
-
-    private readonly TagService Service;
-
+    private readonly CreateTagCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
-    public TagServiceTests()
+    public CreateTagCommandHandlerTests()
     {
-        Service = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddTagRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddTagRequest>().Create();
         var viewModel = Fixture.Create<TagViewModel>();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
         UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -59,20 +54,16 @@ public class TagServiceTests
     [Fact]
     public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddTagRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddTagRequest>().Create();
         var viewModel = Fixture.Create<TagViewModel>();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
         UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
 
-        await Service.Create(request);
+        await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -80,20 +71,14 @@ public class TagServiceTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture
-            .Build<AddTagRequest>()
-            .Create();
-
-        var viewModel = Fixture.Create<TagViewModel>();
+        var request = Fixture.Build<AddTagRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).ReturnsNull();
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -101,46 +86,49 @@ public class TagServiceTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenTagAlreadyExists()
     {
-        var request = Fixture
-            .Build<AddTagRequest>()
-            .Create();
-
-        var viewModel = Fixture.Create<TagViewModel>();
+        var request = Fixture.Build<AddTagRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(true);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
 
-        var result = await Service.Create(request);
+        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class AddTagToTaskCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly AddTagToTaskCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public AddTagToTaskCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task AddToTask_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<AddTagToTaskRequest>()
-            .Create();
-
+        var request = Fixture.Build<AddTagToTaskRequest>().Create();
         var tag = AutoFixtures.Tag;
         var viewModel = Fixture.Create<TagViewModel>();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
         UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
-
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Service.AddToTask(request);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -150,25 +138,15 @@ public class TagServiceTests
     [Fact]
     public async Task AddToTask_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture
-            .Build<AddTagToTaskRequest>()
-            .Create();
-
-        var tag = AutoFixtures.Tag;
-        var viewModel = Fixture.Create<TagViewModel>();
+        var request = Fixture.Build<AddTagToTaskRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).ReturnsNull();
-
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Service.AddToTask(request);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -176,27 +154,30 @@ public class TagServiceTests
     [Fact]
     public async Task AddToTask_ShouldReturnFailure_WhenTaskNotFound()
     {
-        var request = Fixture
-            .Build<AddTagToTaskRequest>()
-            .Create();
-
-        var tag = AutoFixtures.Tag;
-        var viewModel = Fixture.Create<TagViewModel>();
+        var request = Fixture.Build<AddTagToTaskRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).ReturnsNull();
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
-
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Service.AddToTask(request);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class GetTagsForTaskQueryHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly GetTagsForTaskQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetTagsForTaskQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -205,26 +186,37 @@ public class TagServiceTests
         var tags = new List<TagViewModel> { Fixture.Create<TagViewModel>() };
 
         Identity.GetWorkspaceKey().Returns("key");
-
         UnitOfWork.Tasks.GetTaskInternalId("task-id", "key").Returns(1);
         UnitOfWork.Tags.GetViewModelsForTask(1, Arg.Any<bool>()).Returns(tags);
 
-        var result = await Service.GetTagsForTask("task-id");
+        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
 
         result.Should().NotBeEmpty();
-        result.Count.Should().Be(1);
+        result!.Count.Should().Be(1);
     }
 
     [Fact]
     public async Task GetTagsForTask_ShouldReturnNull_WhenTaskNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-
         UnitOfWork.Tasks.GetTaskInternalId("task-id", "key").ReturnsNull();
 
-        var result = await Service.GetTagsForTask("task-id");
+        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
 
         result.Should().BeNull();
+    }
+}
+
+public class GetTagsForWorkspaceQueryHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly GetTagsForWorkspaceQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetTagsForWorkspaceQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
@@ -233,26 +225,38 @@ public class TagServiceTests
         var tags = new List<TagViewModel> { Fixture.Create<TagViewModel>() };
 
         Identity.GetWorkspaceKey().Returns("key");
-
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tags.GetViewModelsForWorkspace(1).Returns(tags);
 
-        var result = await Service.GetTagsForWorkspace();
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
 
         result.Should().NotBeEmpty();
-        result.Count.Should().Be(1);
+        result!.Count.Should().Be(1);
     }
 
     [Fact]
     public async Task GetTagsForWorkspace_ShouldReturnNull_WhenWorkspaceNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-
         UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
 
-        var result = await Service.GetTagsForWorkspace();
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
 
         result.Should().BeNull();
+    }
+}
+
+public class DeleteTagsCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly DeleteTagsCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public DeleteTagsCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
@@ -266,7 +270,7 @@ public class TagServiceTests
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tags.GetTagsByValueInWorkspace(1, tagNames, Arg.Any<bool>()).Returns(tags);
 
-        var result = await Service.Delete(request);
+        var result = await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -282,7 +286,7 @@ public class TagServiceTests
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tags.GetTagsByValueInWorkspace(1, tagNames, Arg.Any<bool>()).Returns(tags);
 
-        await Service.Delete(request);
+        await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -291,16 +295,28 @@ public class TagServiceTests
     public async Task Delete_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
         var tagNames = new List<string> { "tag" };
-        var tags = new List<Tag> { AutoFixtures.Tag };
         var request = Fixture.Create<DeleteTagsRequest>() with { Tags = tagNames };
 
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
-        UnitOfWork.Tags.GetTagsByValueInWorkspace(1, tagNames, Arg.Any<bool>()).Returns(tags);
 
-        var result = await Service.Delete(request);
+        var result = await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class DeleteTagFromTaskCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly DeleteTagFromTaskCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public DeleteTagFromTaskCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
@@ -316,7 +332,7 @@ public class TagServiceTests
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
 
-        var result = await Service.DeleteFromTask(request);
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -324,25 +340,20 @@ public class TagServiceTests
     [Fact]
     public async Task DeleteFromTask_ShouldCallCompleteAsync_WhenValidId()
     {
-
         var request = Fixture.Create<DeleteTagFromTaskRequest>() with
         {
             SystemId = "task-id",
             Tag = "tag",
         };
 
-        var tag = AutoFixtures.Tag with
-        {
-            Id = 1,
-            Name = request.Tag,
-        };
+        var tag = AutoFixtures.Tag with { Id = 1, Name = request.Tag };
 
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
         UnitOfWork.Tags.GetByValue(request.Tag, 1).Returns(tag);
 
-        await Service.DeleteFromTask(request);
+        await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 
         await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag);
         await UnitOfWork.Received(1).CompleteAsync();
@@ -359,29 +370,38 @@ public class TagServiceTests
 
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
-        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
 
-        var result = await Service.DeleteFromTask(request);
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
+    }
+}
+
+public class UpdateTagCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly UpdateTagCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public UpdateTagCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateTagRequest>()
-            .Create();
-
+        var request = Fixture.Build<UpdateTagRequest>().Create();
         var tag = AutoFixtures.Tag;
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(tag);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -392,19 +412,14 @@ public class TagServiceTests
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture
-            .Build<UpdateTagRequest>()
-            .Create();
-
-        var tag = AutoFixtures.Tag;
+        var request = Fixture.Build<UpdateTagRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(tag);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(AutoFixtures.Tag);
 
-        await Service.Update(request);
+        await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
         await UnitOfWork.Received(1).CompleteAsync();
     }
@@ -412,19 +427,13 @@ public class TagServiceTests
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture
-            .Build<UpdateTagRequest>()
-            .Create();
-
-        var tag = AutoFixtures.Tag;
+        var request = Fixture.Build<UpdateTagRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-
         UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(tag);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -432,17 +441,14 @@ public class TagServiceTests
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenTagNotFound()
     {
-        var request = Fixture
-            .Build<UpdateTagRequest>()
-            .Create();
+        var request = Fixture.Build<UpdateTagRequest>().Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).ReturnsNull();
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -450,22 +456,17 @@ public class TagServiceTests
     [Fact]
     public async Task Update_ShouldTrimWhitespace_FromNewNameValue()
     {
-        var request = Fixture
-                .Build<UpdateTagRequest>()
-                .Create() with
-            {
-                NewValue = "  Spaces before and after ",
-            };
-
-        var tag = AutoFixtures.Tag;
+        var request = Fixture.Build<UpdateTagRequest>().Create() with
+        {
+            NewValue = "  Spaces before and after ",
+        };
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(tag);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(AutoFixtures.Tag);
 
-        var result = await Service.Update(request);
+        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
         result.Payload!.Name.Should().Be("Spaces before and after");
     }

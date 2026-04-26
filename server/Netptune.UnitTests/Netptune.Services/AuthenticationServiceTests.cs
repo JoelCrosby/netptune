@@ -14,6 +14,8 @@ using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
+using Mediator;
+
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Authentication;
@@ -36,7 +38,7 @@ public class AuthenticationServiceTests
     private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IWorkspaceService WorkspaceService = Substitute.For<IWorkspaceService>();
+    private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
 
@@ -84,7 +86,7 @@ public class AuthenticationServiceTests
             InviteCache,
             Identity,
             UnitOfWork,
-            WorkspaceService,
+            Mediator,
             WorkspacePermissionCache
         );
     }
