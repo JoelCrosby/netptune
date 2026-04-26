@@ -9,6 +9,8 @@ public interface IAuditService
 {
     Task<ClientResponse<AuditLogPage>> GetAuditLog(AuditLogFilter filter);
 
+    Task<ClientResponse<List<AuditActivityPoint>>> GetActivitySummary(AuditLogFilter filter);
+
     Task<FileResponse> ExportAuditLog(AuditLogFilter filter);
 
     Task<ClientResponse> AnonymiseUser(string userId);

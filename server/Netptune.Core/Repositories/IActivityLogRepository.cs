@@ -15,5 +15,7 @@ public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog
 
     Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter);
 
+    Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter);
+
     Task AnonymiseUser(string userId, int workspaceId);
 }

@@ -16,6 +16,9 @@ public static class AuditEndpoints
         group.MapGet("/", HandleGetAuditLog)
             .RequireAuthorization(NetptunePermissions.Audit.Read);
 
+        group.MapGet("/summary", HandleGetActivitySummary)
+            .RequireAuthorization(NetptunePermissions.Audit.Read);
+
         group.MapGet("/export", HandleExport)
             .RequireAuthorization(NetptunePermissions.Audit.Export);
 
@@ -47,6 +50,28 @@ public static class AuditEndpoints
         };
 
         var result = await auditService.GetAuditLog(filter);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetActivitySummary(
+        IAuditService auditService,
+        [FromQuery] string? userId,
+        [FromQuery] EntityType? entityType,
+        [FromQuery] ActivityType? activityType,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to)
+    {
+        var filter = new AuditLogFilter
+        {
+            UserId = userId,
+            EntityType = entityType,
+            ActivityType = activityType,
+            From = from,
+            To = to,
+        };
+
+        var result = await auditService.GetActivitySummary(filter);
 
         return Results.Ok(result);
     }

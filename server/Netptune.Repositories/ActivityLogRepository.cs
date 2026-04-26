@@ -86,6 +86,16 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             .ToListAsync();
     }
 
+    public Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter)
+    {
+        return BuildAuditQuery(filter)
+            .GroupBy(x => x.OccurredAt.Date)
+            .Select(g => new AuditActivityPoint { Date = g.Key, Count = g.Count() })
+            .OrderBy(x => x.Date)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task AnonymiseUser(string userId, int workspaceId)
     {
         // Replace identifying data on audit rows with a placeholder.

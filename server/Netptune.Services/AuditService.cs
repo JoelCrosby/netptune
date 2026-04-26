@@ -32,6 +32,15 @@ public class AuditService : IAuditService
         return page;
     }
 
+    public async Task<ClientResponse<List<AuditActivityPoint>>> GetActivitySummary(AuditLogFilter filter)
+    {
+        filter.WorkspaceId = await Identity.GetWorkspaceId();
+
+        var points = await UnitOfWork.ActivityLogs.GetActivitySummary(filter);
+
+        return points;
+    }
+
     public async Task<FileResponse> ExportAuditLog(AuditLogFilter filter)
     {
         filter.WorkspaceId = await Identity.GetWorkspaceId();
