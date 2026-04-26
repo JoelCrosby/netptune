@@ -36,6 +36,16 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Added tag';
     case ActivityType.removeTag:
       return 'Removed tag';
+    case ActivityType.roleChanged:
+      return 'Changed role';
+    case ActivityType.workspaceSettingsChanged:
+      return 'Changed workspace settings';
+    case ActivityType.exportRequested:
+      return 'Requested export';
+    case ActivityType.loginSuccess:
+      return 'Logged in';
+    case ActivityType.loginFailed:
+      return 'Failed login';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

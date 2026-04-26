@@ -59,6 +59,12 @@ const routes: Routes = [
         data: { title: 'Users' },
       },
       {
+        path: 'audit',
+        loadChildren: () => import('./features/audit/audit.module').then((m) => m.AuditModule),
+        canActivate: [authGuard],
+        data: { title: 'Audit Log' },
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module').then((m) => m.SettingsModule),
         canActivate: [authGuard],

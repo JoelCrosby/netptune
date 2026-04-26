@@ -14,6 +14,7 @@ import {
   LucideBarChart2,
   LucideCheckSquare,
   LucideSettings,
+  LucideShield,
   LucideTable2,
   LucideUsers,
 } from '@lucide/angular';
@@ -87,6 +88,10 @@ export class ShellSidebarComponent {
     selectHasPermission(netptunePermissions.workspace.read)
   );
 
+  canReadAudit = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.audit.read)
+  );
+
   links = computed(() => {
     const links = [];
 
@@ -107,13 +112,17 @@ export class ShellSidebarComponent {
   });
 
   bottomLinks = computed(() => {
-    if (this.canReadWorkspace()) {
-      return [
-        { label: 'Settings', value: ['./settings'], icon: LucideSettings },
-      ];
+    const links = [];
+
+    if (this.canReadAudit()) {
+      links.push({ label: 'Audit Log', value: ['./audit'], icon: LucideShield });
     }
 
-    return [];
+    if (this.canReadWorkspace()) {
+      links.push({ label: 'Settings', value: ['./settings'], icon: LucideSettings });
+    }
+
+    return links;
   });
 
   user = this.store.selectSignal(selectCurrentUser);

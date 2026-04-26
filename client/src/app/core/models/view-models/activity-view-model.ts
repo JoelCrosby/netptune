@@ -31,4 +31,9 @@ export enum ActivityType {
   unassign = 15,
   addTag = 16,
   removeTag = 17,
+  roleChanged = 18,
+  workspaceSettingsChanged = 19,
+  exportRequested = 20,
+  loginSuccess = 21,
+  loginFailed = 22,
 }

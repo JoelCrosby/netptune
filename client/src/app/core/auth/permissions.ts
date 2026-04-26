@@ -56,6 +56,11 @@ export const netptunePermissions = {
   activity: {
     read: 'activity.read',
   },
+  audit: {
+    read: 'audit.read',
+    export: 'audit.export',
+    anonymise: 'audit.anonymise',
+  },
   storage: {
     uploadProfilePicture: 'storage.upload_profile_picture',
     uploadMedia: 'storage.upload_media',

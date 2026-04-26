@@ -15,6 +15,7 @@ import {
   LucideMessageCircleX,
   LucideMoveRight,
   LucidePencil,
+  LucideShield,
   LucideShieldX,
   LucideSquareX,
   LucideTag,
@@ -205,6 +206,19 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'activity.read',
       label: 'View Activity',
       icon: LucideActivity,
+    },
+  },
+  audit: {
+    read: { key: 'audit.read', label: 'View Audit Log', icon: LucideShield },
+    export: {
+      key: 'audit.export',
+      label: 'Export Audit Log',
+      icon: LucideDownload,
+    },
+    anonymise: {
+      key: 'audit.anonymise',
+      label: 'Anonymise Users',
+      icon: LucideShieldX,
     },
   },
   storage: {

@@ -32,6 +32,7 @@
       "@profile/*": ["./src/app/features/profile/*"],
       "@project-tasks/*": ["./src/app/features/project-tasks/*"],
       "@projects/*": ["./src/app/features/projects/*"],
+      "@audit/*": ["./src/app/features/audit/*"],
       "@settings/*": ["./src/app/features/settings/*"],
       "@users/*": ["./src/app/features/users/*"],
       "@workspaces/*": ["./src/app/features/workspaces/*"]
