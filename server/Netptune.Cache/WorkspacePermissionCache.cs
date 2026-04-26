@@ -16,7 +16,7 @@ public class WorkspacePermissionCache : EntityCache<UserPermissions?, WorkspaceU
         ICacheProvider cache,
         INetptuneUnitOfWork unitOfWork,
         ILogger<WorkspacePermissionCache> logger)
-        : base(cache, TimeSpan.FromHours(1), logger)
+        : base(cache, TimeSpan.FromMinutes(5), logger)
     {
         UnitOfWork = unitOfWork;
     }

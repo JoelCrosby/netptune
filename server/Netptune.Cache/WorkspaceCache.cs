@@ -16,7 +16,7 @@ public class WorkspaceCache : EntityCache<Workspace, string>, IWorkspaceCache
         ICacheProvider cache,
         INetptuneUnitOfWork unitOfWork,
         ILogger<WorkspaceCache> logger)
-        : base(cache, TimeSpan.FromHours(1), logger)
+        : base(cache, TimeSpan.FromMinutes(10), logger)
     {
         UnitOfWork = unitOfWork;
     }

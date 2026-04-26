@@ -16,7 +16,7 @@ public class UserCache : EntityCache<AppUser, string>, IUserCache
         ICacheProvider cache,
         INetptuneUnitOfWork unitOfWork,
         ILogger<UserCache> logger)
-        : base(cache, TimeSpan.FromHours(1), logger)
+        : base(cache, TimeSpan.FromMinutes(10), logger)
     {
         UnitOfWork = unitOfWork;
     }
