@@ -49,7 +49,10 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
                 </td>
                 <td class="px-4 py-2.5">
                   <span
-                    [class]="'rounded px-2 py-0.5 text-xs font-medium ' + pillClass(row.type)">
+                    [class]="
+                      'rounded px-2 py-0.5 text-xs font-medium ' +
+                      pillClass(row.type)
+                    ">
                     {{ row.type | activityType }}
                   </span>
                 </td>

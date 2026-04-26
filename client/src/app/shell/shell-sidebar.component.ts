@@ -115,11 +115,19 @@ export class ShellSidebarComponent {
     const links = [];
 
     if (this.canReadAudit()) {
-      links.push({ label: 'Audit Log', value: ['./audit'], icon: LucideShield });
+      links.push({
+        label: 'Audit Log',
+        value: ['./audit'],
+        icon: LucideShield,
+      });
     }
 
     if (this.canReadWorkspace()) {
-      links.push({ label: 'Settings', value: ['./settings'], icon: LucideSettings });
+      links.push({
+        label: 'Settings',
+        value: ['./settings'],
+        icon: LucideSettings,
+      });
     }
 
     return links;
