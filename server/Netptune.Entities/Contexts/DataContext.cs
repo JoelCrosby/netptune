@@ -25,6 +25,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Board> Boards { get; set; } = null!;
     public DbSet<BoardGroup> BoardGroups { get; set; } = null!;
     public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<CommentMention> CommentMentions { get; set; } = null!;
     public DbSet<Reaction> Reactions { get; set; } = null!;
     public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;

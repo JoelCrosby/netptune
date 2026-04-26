@@ -24,6 +24,7 @@ public enum ActivityType
     ExportRequested = 20,
     LoginSuccess = 21,
     LoginFailed = 22,
+    Mention = 23,
 }
 
 public enum ActivitySubType

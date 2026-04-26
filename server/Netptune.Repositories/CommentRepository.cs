@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
@@ -22,28 +24,58 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
             .OrderByDescending(x => x.CreatedAt)
-            .Include(x => x.CreatedByUser)
             .Include(x => x.Owner)
             .Include(x => x.Reactions)
+            .Include(x => x.Mentions).ThenInclude(m => m.User)
             .ToReadonlyListAsync(isReadonly);
     }
 
-    public async Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId)
+    public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId)
     {
-        var comments = await GetCommentsForTask(taskId, true);
-
-        return comments.ConvertAll(comment => comment.ToViewModel());
+        return Entities
+            .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
+            .OrderByDescending(x => x.CreatedAt)
+            .AsNoTracking()
+            .Select(ToViewModel())
+            .ToListAsync();
     }
 
-    public async Task<CommentViewModel?> GetCommentViewModel(int id)
+    public Task<CommentViewModel?> GetCommentViewModel(int id)
     {
-        var comment = await Entities
-            .Include(x => x.CreatedByUser)
-            .Include(x => x.Owner)
-            .Include(x => x.Reactions)
+        return Entities
+            .Where(x => x.Id == id)
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .Select(ToViewModel())
+            .FirstOrDefaultAsync();
+    }
 
-        return comment?.ToViewModel();
+    private static Expression<Func<Comment, CommentViewModel>> ToViewModel()
+    {
+        return x => new CommentViewModel
+        {
+            Id = x.Id,
+            UserDisplayName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                ? x.Owner.UserName!
+                : x.Owner.Firstname + " " + x.Owner.Lastname,
+            UserDisplayImage = x.Owner.PictureUrl,
+            UserId = x.OwnerId!,
+            Body = x.Body,
+            EntityId = x.EntityId,
+            EntityType = x.EntityType,
+            Reactions = x.Reactions.Select(r => new ReactionViewModel
+            {
+                Value = r.Value,
+                UserId = r.OwnerId ?? r.CreatedByUserId!,
+            }).ToList(),
+            Mentions = x.Mentions.Select(m => new CommentMentionViewModel
+            {
+                UserId = m.UserId,
+                DisplayName = string.IsNullOrEmpty(m.User.Firstname) && string.IsNullOrEmpty(m.User.Lastname)
+                    ? m.User.UserName!
+                    : m.User.Firstname + " " + m.User.Lastname,
+            }).ToList(),
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt,
+        };
     }
 }

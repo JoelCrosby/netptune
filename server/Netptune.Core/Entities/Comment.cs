@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
-using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Core.Entities;
 
@@ -19,26 +18,8 @@ public record Comment : WorkspaceEntity<int>
     [JsonIgnore]
     public ICollection<Reaction> Reactions { get; set; } = new HashSet<Reaction>();
 
-    #endregion
+    [JsonIgnore]
+    public ICollection<CommentMention> Mentions { get; set; } = new HashSet<CommentMention>();
 
-    public CommentViewModel ToViewModel()
-    {
-        return new()
-        {
-            Id = Id,
-            UserDisplayName = Owner!.DisplayName,
-            UserDisplayImage= Owner.PictureUrl,
-            UserId = OwnerId!,
-            Body = Body,
-            EntityId = EntityId,
-            EntityType = EntityType,
-            Reactions = Reactions.Select(e => new ReactionViewModel
-            {
-                Value = e.Value,
-                UserId = e.OwnerId ?? e.CreatedByUserId!,
-            }).ToList(),
-            CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt,
-        };
-    }
+    #endregion
 }

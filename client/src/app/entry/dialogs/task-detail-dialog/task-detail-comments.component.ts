@@ -18,8 +18,12 @@ import { selectCurrentUser } from '@core/auth/store/auth.selectors';
 import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
+import { selectAllUsers } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
-import { CommentsListComponent } from '@static/components/comments-list/comments-list.component';
+import {
+  CommentsListComponent,
+  CommentSubmitEvent,
+} from '@static/components/comments-list/comments-list.component';
 
 @Component({
   selector: 'app-task-detail-comments',
@@ -27,6 +31,7 @@ import { CommentsListComponent } from '@static/components/comments-list/comments
     <app-comments-list
       [user]="user()"
       [comments]="comments()"
+      [workspaceUsers]="workspaceUsers()"
       (commentSubmit)="onCommentSubmit($event)"
       (deleteComment)="onDeleteCommentClicked($event)"
       [canDelete]="canDeleteComment()"
@@ -41,6 +46,7 @@ export class TaskDetailCommentsComponent {
 
   comments = this.store.selectSignal(selectComments);
   user = this.store.selectSignal(selectCurrentUser);
+  workspaceUsers = this.store.selectSignal(selectAllUsers);
 
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
@@ -52,16 +58,17 @@ export class TaskDetailCommentsComponent {
 
   isReadOnly = computed(() => !this.canUpdateTask());
 
-  onCommentSubmit(value: string) {
-    if (!value) return;
+  onCommentSubmit(event: CommentSubmitEvent) {
+    if (!event.text) return;
 
     const task = this.task();
 
     if (!task) return;
 
     const request: AddCommentRequest = {
-      comment: value.trim(),
+      comment: event.text,
       systemId: task.systemId,
+      mentions: event.mentions,
     };
 
     this.store.dispatch(addComment({ request }));

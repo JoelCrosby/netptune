@@ -1,5 +1,10 @@
 import { EntityType } from './entity-type';
 
+export interface CommentMention {
+  userId: string;
+  displayName: string;
+}
+
 export interface CommentViewModel {
   id: number;
   userDisplayName: string;
@@ -9,6 +14,7 @@ export interface CommentViewModel {
   entityId: number;
   entityType: EntityType;
   reactions: Reaction[];
+  mentions: CommentMention[];
   createdAt: Date;
   updatedAt: Date;
 }

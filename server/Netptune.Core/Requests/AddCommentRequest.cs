@@ -9,4 +9,6 @@ public record AddCommentRequest
 
     [Required]
     public string SystemId { get; set; } = null!;
+
+    public List<string> Mentions { get; set; } = new();
 }

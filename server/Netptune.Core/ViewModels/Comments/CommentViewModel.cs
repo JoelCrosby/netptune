@@ -20,6 +20,8 @@ public record CommentViewModel
 
     public List<ReactionViewModel> Reactions { get; init; } = new();
 
+    public List<CommentMentionViewModel> Mentions { get; init; } = new();
+
     public DateTime CreatedAt { get; init; }
 
     public DateTime? UpdatedAt { get; init; }

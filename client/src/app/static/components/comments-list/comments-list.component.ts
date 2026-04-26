@@ -3,37 +3,46 @@ import {
   Component,
   input,
   output,
-  signal,
+  SecurityContext,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { inject } from '@angular/core';
 import { UserResponse } from '@core/auth/store/auth.models';
 import { CommentViewModel } from '@core/models/comment';
+import { AppUser } from '@core/models/appuser';
 
-import { FormField, form, required } from '@angular/forms/signals';
 import {
   LucideEllipsis,
-  LucideMessageCircle,
   LucideTrash2,
+  LucideMessageSquare,
 } from '@lucide/angular';
 import { IconButtonComponent } from '../button/icon-button.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { FormInputComponent } from '../form-input/form-input.component';
+import {
+  MentionInputComponent,
+  MentionSubmitEvent,
+} from '../mention-input/mention-input.component';
+
+export interface CommentSubmitEvent {
+  text: string;
+  mentions: string[];
+}
 
 @Component({
   selector: 'app-comments-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
-    FormInputComponent,
+    MentionInputComponent,
     IconButtonComponent,
     DropdownMenuComponent,
     MenuItemComponent,
     LucideEllipsis,
     LucideTrash2,
     FromNowPipe,
-    FormField,
   ],
   template: `
     <div>
@@ -44,14 +53,12 @@ import { FormInputComponent } from '../form-input/form-input.component';
             [name]="user.displayName"
             [imageUrl]="user.pictureUrl">
           </app-avatar>
-          <form class="flex-1" (submit)="submit($event)">
-            <app-form-input
-              [formField]="commentForm.comment"
-              placeholder="Add Comment"
-              [icon]="lucideMessageCircle"
-              [noMargin]="true">
-            </app-form-input>
-          </form>
+          <app-mention-input
+            class="flex-1"
+            [users]="workspaceUsers()"
+            (mentionSubmit)="onMentionSubmit($event)"
+            [icon]="lucideMessageSquare">
+          </app-mention-input>
         </div>
       }
       <div class="mb-4 flex flex-col" [class.ml-12]="canCreate()">
@@ -60,7 +67,6 @@ import { FormInputComponent } from '../form-input/form-input.component';
             class="group mb-1 flex min-h-12 flex-row items-center gap-4 rounded-md p-2 hover:bg-neutral-50 dark:hover:bg-neutral-800">
             <app-avatar
               size="md"
-              class=""
               [name]="comment.userDisplayName"
               [imageUrl]="comment.userDisplayImage">
             </app-avatar>
@@ -72,8 +78,9 @@ import { FormInputComponent } from '../form-input/form-input.component';
                   {{ comment.createdAt | fromNow }}
                 </small>
               </span>
-              <span class="text-sm font-normal">
-                {{ comment.body }}
+              <span
+                class="text-sm font-normal"
+                [innerHTML]="renderBody(comment.body)">
               </span>
             </div>
 
@@ -106,29 +113,34 @@ import { FormInputComponent } from '../form-input/form-input.component';
   `,
 })
 export class CommentsListComponent {
-  lucideMessageCircle = LucideMessageCircle;
+  private sanitizer = inject(DomSanitizer);
+
   readonly user = input<UserResponse>();
   readonly comments = input.required<CommentViewModel[] | null>();
+  readonly workspaceUsers = input<AppUser[] | null>([]);
   readonly canDelete = input<boolean>(false);
   readonly canDeleteAny = input<boolean>(false);
   readonly canCreate = input<boolean>(false);
 
   readonly deleteComment = output<CommentViewModel>();
-  readonly commentSubmit = output<string>();
+  readonly commentSubmit = output<CommentSubmitEvent>();
+  readonly lucideMessageSquare = LucideMessageSquare;
 
-  commentFormModel = signal({
-    comment: '',
-  });
+  onMentionSubmit(event: MentionSubmitEvent) {
+    this.commentSubmit.emit({ text: event.text, mentions: event.mentions });
+  }
 
-  commentForm = form(this.commentFormModel, (schema) => {
-    required(schema.comment);
-  });
+  renderBody(body: string): string {
+    const escaped = body
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 
-  submit(event: Event) {
-    event.preventDefault();
+    const withMentions = escaped.replace(
+      /@([\w][\w.\- ]*[\w]|[\w]+)/g,
+      '<span class="text-primary font-medium">@$1</span>'
+    );
 
-    this.commentSubmit.emit(this.commentForm.comment().value());
-    this.commentForm.comment().value.set('');
-    this.commentForm().reset();
+    return this.sanitizer.sanitize(SecurityContext.HTML, withMentions) ?? '';
   }
 }

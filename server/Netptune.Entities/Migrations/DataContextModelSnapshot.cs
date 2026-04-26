@@ -697,6 +697,91 @@ namespace Netptune.Entities.Migrations
                     b.ToTable("comments", (string)null);
                 });
 
+            modelBuilder.Entity("Netptune.Core.Entities.CommentMention", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("comment_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("text")
+                        .HasColumnName("created_by_user_id");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasColumnType("text")
+                        .HasColumnName("deleted_by_user_id");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("text")
+                        .HasColumnName("modified_by_user_id");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("text")
+                        .HasColumnName("owner_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
+                    b.Property<int>("WorkspaceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("workspace_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_comment_mentions");
+
+                    b.HasIndex("CreatedByUserId")
+                        .HasDatabaseName("ix_comment_mentions_created_by_user_id");
+
+                    b.HasIndex("DeletedByUserId")
+                        .HasDatabaseName("ix_comment_mentions_deleted_by_user_id");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("ix_comment_mentions_is_deleted");
+
+                    b.HasIndex("ModifiedByUserId")
+                        .HasDatabaseName("ix_comment_mentions_modified_by_user_id");
+
+                    b.HasIndex("OwnerId")
+                        .HasDatabaseName("ix_comment_mentions_owner_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_comment_mentions_user_id");
+
+                    b.HasIndex("WorkspaceId")
+                        .HasDatabaseName("ix_comment_mentions_workspace_id");
+
+                    b.HasIndex("CommentId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_comment_mentions_comment_id_user_id");
+
+                    b.ToTable("comment_mentions", (string)null);
+                });
+
             modelBuilder.Entity("Netptune.Core.Entities.Flag", b =>
                 {
                     b.Property<int>("Id")
@@ -1985,6 +2070,68 @@ namespace Netptune.Entities.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("Netptune.Core.Entities.CommentMention", b =>
+                {
+                    b.HasOne("Netptune.Core.Entities.Comment", "Comment")
+                        .WithMany("Mentions")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_comment_mentions_comments_comment_id");
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_comment_mentions_app_user_user_id");
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_comment_mentions_app_user_created_by_user_id");
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_comment_mentions_app_user_deleted_by_user_id");
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_comment_mentions_app_user_modified_by_user_id");
+
+                    b.HasOne("Netptune.Core.Entities.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_comment_mentions_app_user_owner_id");
+
+                    b.HasOne("Netptune.Core.Entities.Workspace", "Workspace")
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_comment_mentions_workspaces_workspace_id");
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("DeletedByUser");
+
+                    b.Navigation("ModifiedByUser");
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Netptune.Core.Entities.Reaction", b =>
                 {
                     b.HasOne("Netptune.Core.Entities.Comment", "Comment")
@@ -2266,6 +2413,8 @@ namespace Netptune.Entities.Migrations
 
             modelBuilder.Entity("Netptune.Core.Entities.Comment", b =>
                 {
+                    b.Navigation("Mentions");
+
                     b.Navigation("Reactions");
                 });
 

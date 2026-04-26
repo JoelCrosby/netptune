@@ -37,6 +37,19 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
             return ClientResponse<CommentViewModel>.NotFound;
         }
 
+        var mentions = request.Request.Mentions
+            .Distinct()
+            .Where(id => id != userId)
+            .ToList();
+
+        var validMentionIds = mentions.Count > 0
+            ? await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(workspaceId.Value)
+            : [];
+
+        var filteredMentions = mentions
+            .Where(validMentionIds.Contains)
+            .ToList();
+
         var comment = new Comment
         {
             Body = request.Request.Comment,
@@ -44,6 +57,11 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
             OwnerId = userId,
             EntityId = taskId.Value,
             WorkspaceId = workspaceId.Value,
+            Mentions = filteredMentions.Select(mentionedUserId => new CommentMention
+            {
+                UserId = mentionedUserId,
+                WorkspaceId = workspaceId.Value,
+            }).ToList(),
         };
 
         await UnitOfWork.Comments.AddAsync(comment);
@@ -62,6 +80,17 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
             options.EntityType = EntityType.Comment;
             options.Type = ActivityType.Create;
         });
+
+        if (filteredMentions.Count > 0)
+        {
+            Activity.Log(options =>
+            {
+                options.EntityId = comment.Id;
+                options.EntityType = EntityType.Comment;
+                options.Type = ActivityType.Mention;
+                options.RecipientUserIds = filteredMentions;
+            });
+        }
 
         return result;
     }

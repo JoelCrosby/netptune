@@ -41,4 +41,6 @@ public class ActivityEvent
     public string? IpAddress { get; init; }
 
     public string? UserAgent { get; init; }
+
+    public List<string>? RecipientUserIds { get; init; }
 }

@@ -20,6 +20,8 @@ public class ActivityOptions
 
     [Required]
     public ActivityType Type { get; set; }
+
+    public List<string>? RecipientUserIds { get; set; }
 }
 
 public class ActivityOptions<TMeta> : ActivityOptions where TMeta : class

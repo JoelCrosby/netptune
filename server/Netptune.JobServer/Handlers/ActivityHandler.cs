@@ -31,7 +31,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
     public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
     {
-        var activityLogs = new List<(ActivityLog Log, ActivityAncestors Ancestors)>();
+        var activityLogs = new List<(ActivityLog Log, ActivityAncestors Ancestors, List<string>? RecipientUserIds)>();
 
         foreach (var activity in request.Events)
         {
@@ -70,7 +70,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             };
 
             await UnitOfWork.ActivityLogs.AddAsync(log);
-            activityLogs.Add((log, ancestors));
+            activityLogs.Add((log, ancestors, activity.RecipientUserIds));
         }
 
         await UnitOfWork.CompleteAsync();
@@ -80,7 +80,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         return default;
     }
 
-    private async Task CreateNotificationsAsync(List<(ActivityLog Log, ActivityAncestors Ancestors)> activityLogs)
+    private async Task CreateNotificationsAsync(List<(ActivityLog Log, ActivityAncestors Ancestors, List<string>? RecipientUserIds)> activityLogs)
     {
         var workspaceIds = activityLogs.Select(l => l.Log.WorkspaceId).Distinct().ToList();
 
@@ -89,12 +89,15 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         var allNotifications = new List<Notification>();
 
-        foreach (var (log, ancestors) in activityLogs)
+        foreach (var (log, ancestors, recipientUserIds) in activityLogs)
         {
             if (!slugsByWorkspace.TryGetValue(log.WorkspaceId, out var slug)) continue;
             if (!usersByWorkspace.TryGetValue(log.WorkspaceId, out var allUserIds)) continue;
 
-            var recipients = allUserIds.Where(id => id != log.UserId).ToList();
+            var recipients = recipientUserIds is { Count: > 0 }
+                ? recipientUserIds.Where(id => id != log.UserId && allUserIds.Contains(id)).ToList()
+                : allUserIds.Where(id => id != log.UserId).ToList();
+
             if (recipients.Count == 0) continue;
 
             var link = BuildLink(slug, log, ancestors);

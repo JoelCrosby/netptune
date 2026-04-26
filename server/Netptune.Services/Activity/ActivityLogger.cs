@@ -69,6 +69,7 @@ public class ActivityLogger : IActivityLogger
             OccurredAt = DateTime.UtcNow,
             IpAddress = GetIpAddress(),
             UserAgent = GetUserAgent(),
+            RecipientUserIds = activityOptions.RecipientUserIds,
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));
