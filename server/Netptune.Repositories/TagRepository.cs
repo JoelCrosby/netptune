@@ -53,21 +53,21 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
             .ToListAsync();
     }
 
-    public async Task<TagViewModel?> GetViewModel(int id)
+    public Task<TagViewModel?> GetViewModel(int id)
     {
-        var result = await Entities
-            .Include(tag => tag.Owner)
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (result is null) return null;
-
-        return new ()
-        {
-            Id = id,
-            Name = result.Name,
-            OwnerName = result.Owner!.DisplayName,
-            OwnerId = result.OwnerId!,
-        };
+        return Entities
+            .Where(x => x.Id == id)
+            .AsNoTracking()
+            .Select(x => new TagViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                OwnerId = x.OwnerId!,
+                OwnerName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                    ? x.Owner.UserName!
+                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+            })
+            .FirstOrDefaultAsync();
     }
 
     public Task<bool> Exists(string value, int workspaceId)
@@ -81,10 +81,18 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
     public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId)
     {
         return Entities
-            .Include(tag => tag.Owner)
             .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
             .OrderBy(x => x.CreatedAt)
-            .Select(tag => tag.ToViewModel())
+            .AsNoTracking()
+            .Select(x => new TagViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                OwnerId = x.OwnerId!,
+                OwnerName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                    ? x.Owner.UserName!
+                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+            })
             .ToListAsync();
     }
 

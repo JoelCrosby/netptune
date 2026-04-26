@@ -37,14 +37,15 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             .Where(x => !x.IsDeleted && x.EntityType == entityType)
             .Where(predicate)
             .OrderByDescending(x => x.OccurredAt)
-            .Include(x => x.User)
             .Select(y => new ActivityViewModel
             {
                 Type = y.Type,
                 EntityId = y.EntityId,
                 EntityType = entityType,
                 UserId = y.UserId,
-                UserUsername = y.User.DisplayName,
+                UserUsername = string.IsNullOrEmpty(y.User.Firstname) && string.IsNullOrEmpty(y.User.Lastname)
+                    ? y.User.UserName!
+                    : y.User.Firstname + " " + y.User.Lastname,
                 UserPictureUrl = y.User.PictureUrl,
                 Time = y.OccurredAt,
                 Meta = y.Meta,
@@ -62,9 +63,24 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             .OrderByDescending(x => x.OccurredAt)
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
-            .Include(x => x.User)
-            .Select(y => ToAuditLogViewModel(y))
             .AsNoTracking()
+            .Select(y => new AuditLogViewModel
+            {
+                Id = y.Id,
+                OccurredAt = y.OccurredAt,
+                UserId = y.UserId,
+                UserDisplayName = string.IsNullOrEmpty(y.User.Firstname) && string.IsNullOrEmpty(y.User.Lastname)
+                    ? y.User.UserName!
+                    : y.User.Firstname + " " + y.User.Lastname,
+                UserPictureUrl = y.User.PictureUrl,
+                Type = y.Type,
+                EntityType = y.EntityType,
+                EntityId = y.EntityId,
+                WorkspaceSlug = y.WorkspaceSlug,
+                ProjectSlug = y.ProjectSlug,
+                BoardSlug = y.BoardSlug,
+                Meta = y.Meta,
+            })
             .ToListAsync();
 
         return new AuditLogPage
@@ -80,9 +96,24 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
     {
         return BuildAuditQuery(filter)
             .OrderByDescending(x => x.OccurredAt)
-            .Include(x => x.User)
-            .Select(y => ToAuditLogViewModel(y))
             .AsNoTracking()
+            .Select(y => new AuditLogViewModel
+            {
+                Id = y.Id,
+                OccurredAt = y.OccurredAt,
+                UserId = y.UserId,
+                UserDisplayName = string.IsNullOrEmpty(y.User.Firstname) && string.IsNullOrEmpty(y.User.Lastname)
+                    ? y.User.UserName!
+                    : y.User.Firstname + " " + y.User.Lastname,
+                UserPictureUrl = y.User.PictureUrl,
+                Type = y.Type,
+                EntityType = y.EntityType,
+                EntityId = y.EntityId,
+                WorkspaceSlug = y.WorkspaceSlug,
+                ProjectSlug = y.ProjectSlug,
+                BoardSlug = y.BoardSlug,
+                Meta = y.Meta,
+            })
             .ToListAsync();
     }
 
@@ -128,19 +159,4 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
         return query;
     }
 
-    private static AuditLogViewModel ToAuditLogViewModel(ActivityLog y) => new()
-    {
-        Id = y.Id,
-        OccurredAt = y.OccurredAt,
-        UserId = y.UserId,
-        UserDisplayName = y.User.DisplayName,
-        UserPictureUrl = y.User.PictureUrl,
-        Type = y.Type,
-        EntityType = y.EntityType,
-        EntityId = y.EntityId,
-        WorkspaceSlug = y.WorkspaceSlug,
-        ProjectSlug = y.ProjectSlug,
-        BoardSlug = y.BoardSlug,
-        Meta = y.Meta,
-    };
 }

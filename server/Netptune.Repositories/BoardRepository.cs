@@ -138,17 +138,12 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .ToList();
     }
 
-    public async Task<int?> GetIdByIdentifier(string identifier, int workspaceId)
+    public Task<int?> GetIdByIdentifier(string identifier, int workspaceId)
     {
-        var result = await
-            (from b in Entities
-                where b.Identifier == identifier && b.WorkspaceId == workspaceId
-                select b.Id)
-            .ToListAsync();
-
-        if (result.Any()) return result.FirstOrDefault();
-
-        return null;
+        return Entities
+            .Where(b => b.Identifier == identifier && b.WorkspaceId == workspaceId)
+            .Select(b => (int?)b.Id)
+            .FirstOrDefaultAsync();
     }
 
     public Task<Board?> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false)
@@ -159,14 +154,28 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .FirstOrDefaultAsync();
     }
 
-    public async Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false)
+    public Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false)
     {
-        var result = await Entities
+        return Entities
+            .Where(board => board.Id == id && !board.IsDeleted)
             .IsReadonly(isReadonly)
-            .Include(board => board.Project)
-            .FirstOrDefaultAsync(board => board.Id == id && !board.IsDeleted);
-
-        return result?.ToViewModel();
+            .Select(x => new BoardViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Identifier = x.Identifier,
+                ProjectId = x.ProjectId,
+                BoardType = x.BoardType,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                MetaInfo = x.MetaInfo,
+                OwnerUsername = x.Owner == null
+                    ? string.Empty
+                    : string.IsNullOrEmpty(x.Owner.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                        ? x.Owner.UserName!
+                        : x.Owner.Firstname + " " + x.Owner.Lastname,
+            })
+            .FirstOrDefaultAsync();
     }
 
     public Task<bool> Exists(string identifier)

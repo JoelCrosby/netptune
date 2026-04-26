@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using Dapper;
 
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +8,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
@@ -36,33 +39,25 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Where(x => x.Id == taskId)
-            .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.ProjectTaskAppUsers)
-                .ThenInclude(x => x.User)
-            .Include(x => x.Project)
-            .Include(x => x.Owner)
-            .Include(x => x.Workspace)
-            .Include(x => x.Tags)
-            .AsSplitQuery()
             .AsNoTracking()
-            .Select(task => task.ToViewModel())
+            .Select(TaskToViewModel())
             .FirstOrDefaultAsync();
     }
 
     public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey)
     {
-        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+        var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
         if (entity is null) return null;
 
-        var task = await entity.FirstOrDefaultAsync();
+        var task = await entity.Select(x => (int?)x.Id).FirstOrDefaultAsync();
 
-        return task?.Id;
+        return task;
     }
 
     public async Task<ProjectTask?> GetTask(string systemId, string workspaceKey)
     {
-        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+        var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
         if (entity is null) return null;
 
@@ -71,52 +66,29 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
     public async Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey)
     {
-        var entity = await GetTaskFromSystemId(systemId, workspaceKey, true);
+        var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
         if (entity is null) return null;
 
         return await entity
-            .Select(task => task.ToViewModel())
+            .Select(TaskToViewModel())
             .FirstOrDefaultAsync();
     }
 
-    private async Task<IQueryable<ProjectTask>?> GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
+    private IQueryable<ProjectTask>? GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
     {
         var parts = systemId.Split("-");
 
-        var hasProjectId = int.TryParse(parts.LastOrDefault(), out var projectScopeId);
-
-        if (!hasProjectId) return null;
+        if (!int.TryParse(parts.LastOrDefault(), out var projectScopeId)) return null;
 
         var projectKey = parts[0];
 
-        var workspaceIds = await Context.Workspaces
-            .AsNoTracking()
-            .Where(x => x.Slug == workspaceKey)
-            .Select(x => x.Id)
-            .Take(1)
-            .ToListAsync();
-
-        if (!workspaceIds.Any()) return null;
-
-        var workspaceId = workspaceIds.FirstOrDefault();
-
-        var projectIds = await Context.Projects
-            .AsNoTracking()
-            .Where(x => x.Key == projectKey && x.WorkspaceId == workspaceId)
-            .Select(x => x.Id)
-            .Take(1)
-            .ToListAsync();
-
-        if (!projectIds.Any()) return null;
-
-        var projectId = projectIds.FirstOrDefault();
-
         var queryable = Entities
-            .Where(x => x.ProjectScopeId == projectScopeId && x.WorkspaceId == workspaceId && x.ProjectId == projectId)
-            .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.ProjectTaskAppUsers)
-                .ThenInclude(x => x.User)
+            .Where(x =>
+                x.Workspace.Slug == workspaceKey &&
+                x.Project!.Key == projectKey &&
+                x.ProjectScopeId == projectScopeId)
+            .Include(x => x.ProjectTaskAppUsers).ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
@@ -131,14 +103,42 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return Entities
             .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
             .OrderByDescending(x => x.UpdatedAt)
-            .Include(x => x.ProjectTaskAppUsers)
-                .ThenInclude(x => x.User)
-            .Include(x => x.Project)
-            .Include(x => x.Owner)
-            .Include(x => x.Workspace)
-            .AsSplitQuery()
-            .Select(task => task.ToViewModel())
+            .Select(TaskToViewModel())
             .ToReadonlyListAsync(isReadonly);
+    }
+
+    private static Expression<Func<ProjectTask, TaskViewModel>> TaskToViewModel()
+    {
+        return x => new TaskViewModel
+        {
+            Id = x.Id,
+            OwnerId = x.OwnerId!,
+            Name = x.Name,
+            Description = x.Description,
+            Status = x.Status,
+            ProjectScopeId = x.ProjectScopeId,
+            SystemId = x.Project == null
+                ? x.ProjectScopeId.ToString()
+                : x.Project.Key + "-" + x.ProjectScopeId.ToString(),
+            IsFlagged = x.IsFlagged,
+            ProjectId = x.ProjectId,
+            WorkspaceId = x.WorkspaceId,
+            WorkspaceKey = x.Workspace.Slug,
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt,
+            OwnerUsername = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                ? x.Owner.UserName!
+                : x.Owner.Firstname + " " + x.Owner.Lastname,
+            OwnerPictureUrl = x.Owner.PictureUrl,
+            ProjectName = x.Project == null ? string.Empty : x.Project.Name,
+            Tags = x.Tags.Select(t => t.Name).OrderBy(n => n).ToList(),
+            Assignees = x.ProjectTaskAppUsers.Select(u => new AssigneeViewModel
+            {
+                Id = u.User.Id,
+                DisplayName = u.User.Firstname + " " + u.User.Lastname,
+                PictureUrl = u.User.PictureUrl,
+            }).ToList(),
+        };
     }
 
     public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)

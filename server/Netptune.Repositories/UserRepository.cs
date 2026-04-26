@@ -20,14 +20,13 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
     {
     }
 
-    public async Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false)
+    public Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false)
     {
-        var result = await Context.Workspaces
-            .Include(workspace => workspace.Users)
+        return Context.WorkspaceAppUsers
+            .Where(x => x.Workspace.Slug == workspaceKey)
+            .Select(x => x.User)
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(workspace => workspace.Slug == workspaceKey);
-
-        return result?.Users.ToList() ?? new List<AppUser>();
+            .ToListAsync();
     }
 
     public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false)

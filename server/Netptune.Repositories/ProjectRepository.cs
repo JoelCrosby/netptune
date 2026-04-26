@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
@@ -26,83 +28,62 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .FirstOrDefaultAsync(item => item.Id == id);
     }
 
-    public async Task<List<ProjectViewModel>> GetProjects(string workspaceKey)
+    public Task<List<ProjectViewModel>> GetProjects(string workspaceKey)
     {
-        var workspace = await Context.Workspaces.FirstOrDefaultAsync(item => item.Slug == workspaceKey);
-
-        if (workspace is null) return new ();
-
-        var workspaceId = workspace.Id;
-
-        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
-
-        return await Entities
-            .Where(project => project.WorkspaceId == workspaceId && !project.IsDeleted)
-            .Include(project => project.Workspace)
-            .Include(project => project.Owner)
-            .Include(project => project.ProjectBoards)
-            .AsSplitQuery()
+        return Entities
+            .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
             .AsNoTracking()
-            .Select(project => GetViewModel(project))
+            .Select(ProjectToViewModel())
             .ToListAsync();
     }
 
     public Task<ProjectViewModel?> GetProjectViewModel(int id)
     {
-        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
-
         return Entities
             .Where(project => project.Id == id && !project.IsDeleted)
-            .Include(project => project.Workspace)
-            .Include(project => project.Owner)
-            .Include(project => project.ProjectBoards)
-            .AsSplitQuery()
             .AsNoTracking()
-            .Select(project => GetViewModel(project))
+            .Select(ProjectToViewModel())
             .FirstOrDefaultAsync();
     }
 
     public Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId)
     {
-        Entities.Include(task => task.Owner!).ThenInclude(x => x.UserName);
-
         return Entities
-            .Where(project =>  !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
-            .Include(project => project.Workspace)
-            .Include(project => project.Owner)
-            .Include(project => project.ProjectBoards)
-            .AsSplitQuery()
+            .Where(project => !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
             .AsNoTracking()
-            .Select(project => GetViewModel(project))
+            .Select(ProjectToViewModel())
             .FirstOrDefaultAsync();
     }
 
-    public Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
+    public async Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
     {
-        return Entities
+        var exists = await Entities
             .AsNoTracking()
-            .Where(project => project.WorkspaceId == workspaceId)
-            .AllAsync(project => project.Key != key);
+            .AnyAsync(project => project.WorkspaceId == workspaceId && project.Key == key);
+
+        return !exists;
     }
 
-    private static ProjectViewModel GetViewModel(Project project)
+    private static Expression<Func<Project, ProjectViewModel>> ProjectToViewModel()
     {
-        var defaultBoard = project.ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
-        var identifier = defaultBoard?.Identifier;
-
-        return new ()
+        return x => new ProjectViewModel
         {
-            Id = project.Id,
-            Key = project.Key,
-            Name = project.Name,
-            Description = project.Description,
-            RepositoryUrl = project.RepositoryUrl,
-            Color = project.MetaInfo?.Color,
-            WorkspaceId = project.WorkspaceId,
-            OwnerDisplayName = project.Owner!.DisplayName,
-            UpdatedAt = project.UpdatedAt,
-            CreatedAt = project.CreatedAt,
-            DefaultBoardIdentifier = identifier,
+            Id = x.Id,
+            Key = x.Key,
+            Name = x.Name,
+            Description = x.Description,
+            RepositoryUrl = x.RepositoryUrl,
+            WorkspaceId = x.WorkspaceId,
+            OwnerDisplayName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                ? x.Owner.UserName!
+                : x.Owner.Firstname + " " + x.Owner.Lastname,
+            UpdatedAt = x.UpdatedAt,
+            CreatedAt = x.CreatedAt,
+            Color = x.MetaInfo != null ? x.MetaInfo.Color : null,
+            DefaultBoardIdentifier = x.ProjectBoards
+                .Where(b => b.BoardType == BoardType.Default)
+                .Select(b => b.Identifier)
+                .FirstOrDefault(),
         };
     }
 
