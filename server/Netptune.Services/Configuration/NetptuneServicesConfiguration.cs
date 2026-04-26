@@ -34,6 +34,7 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<INotificationService, NotificationService>();
         services.AddTransient<ITagService, TagService>();
         services.AddTransient<IActivityService, ActivityService>();
+        services.AddTransient<IAuditService, AuditService>();
 
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();

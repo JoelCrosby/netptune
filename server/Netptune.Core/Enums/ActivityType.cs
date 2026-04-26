@@ -19,6 +19,11 @@ public enum ActivityType
     Unassign = 15,
     AddTag = 16,
     RemoveTag = 17,
+    RoleChanged = 18,
+    WorkspaceSettingsChanged = 19,
+    ExportRequested = 20,
+    LoginSuccess = 21,
+    LoginFailed = 22,
 }
 
 public enum ActivitySubType

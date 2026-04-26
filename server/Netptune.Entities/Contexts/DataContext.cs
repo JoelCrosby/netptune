@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
+using Netptune.Entities.Interceptors;
 
 namespace Netptune.Entities.Contexts;
 
@@ -49,7 +50,8 @@ public class DataContext : IdentityDbContext<AppUser>
 
         optionsBuilder
             .UseNpgsql("Host=localhost;Database=netptune;Username=postgres;")
-            .UseSnakeCaseNamingConvention();
+            .UseSnakeCaseNamingConvention()
+            .AddInterceptors(new AuditLogImmutabilityInterceptor());
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -111,6 +113,9 @@ public class DataContext : IdentityDbContext<AppUser>
     {
         foreach (var entity in entities)
         {
+            // ActivityLog is append-only; skip UpdatedAt stamping entirely
+            if (entity.Entity is ActivityLog) continue;
+
             if (entity.State == EntityState.Added && entity.Entity.CreatedAt == default)
             {
                 entity.Entity.CreatedAt = DateTime.UtcNow;

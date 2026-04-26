@@ -110,6 +110,7 @@ var apiGroup = app.MapGroup("/api");
 apiGroup.MapBoardEventsEndpoints();
 apiGroup.MapNotificationsEndpoints();
 apiGroup.MapActivityEndpoints();
+apiGroup.MapAuditEndpoints();
 apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
 apiGroup.MapBoardsEndpoints();

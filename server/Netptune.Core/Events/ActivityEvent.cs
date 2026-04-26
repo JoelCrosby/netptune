@@ -37,4 +37,8 @@ public class ActivityEvent
     public DateTime OccurredAt { get; init; }
 
     public string? Meta { get; init; }
+
+    public string? IpAddress { get; init; }
+
+    public string? UserAgent { get; init; }
 }

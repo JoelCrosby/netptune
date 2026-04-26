@@ -63,7 +63,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 BoardId = ancestors.BoardId,
                 BoardGroupId = ancestors.BoardGroupId,
                 OccurredAt = activity.OccurredAt,
-                Meta = activity.Meta is not null ? JsonDocument.Parse(activity.Meta) : null,
+                Meta = BuildMeta(activity),
                 BoardSlug = ancestors.BoardKey,
                 ProjectSlug = ancestors.ProjectKey,
                 WorkspaceSlug = ancestors.WorkspaceKey,
@@ -119,6 +119,31 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         await UnitOfWork.CompleteAsync();
 
         await PublishNotificationEventsAsync(allNotifications);
+    }
+
+    private static JsonDocument? BuildMeta(ActivityEvent activity)
+    {
+        if (activity.IpAddress is null && activity.UserAgent is null && activity.Meta is null)
+        {
+            return null;
+        }
+
+        // Merge existing meta JSON with the request context fields
+        var dict = new Dictionary<string, object?>();
+
+        if (activity.Meta is not null)
+        {
+            var existing = JsonDocument.Parse(activity.Meta);
+            foreach (var prop in existing.RootElement.EnumerateObject())
+            {
+                dict[prop.Name] = prop.Value.Clone();
+            }
+        }
+
+        if (activity.IpAddress is not null) dict["ipAddress"] = activity.IpAddress;
+        if (activity.UserAgent is not null) dict["userAgent"] = activity.UserAgent;
+
+        return JsonDocument.Parse(JsonSerializer.Serialize(dict));
     }
 
     private static string BuildLink(string workspaceSlug, ActivityLog log, ActivityAncestors ancestors)

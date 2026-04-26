@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Microsoft.AspNetCore.Http;
+
 using Netptune.Core.Encoding;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
@@ -12,12 +14,27 @@ public class ActivityLogger : IActivityLogger
 {
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
+    private readonly IHttpContextAccessor HttpContextAccessor;
 
-    public ActivityLogger(IEventPublisher eventPublisher, IIdentityService identity)
+    public ActivityLogger(IEventPublisher eventPublisher, IIdentityService identity, IHttpContextAccessor httpContextAccessor)
     {
         EventPublisher = eventPublisher;
         Identity = identity;
+        HttpContextAccessor = httpContextAccessor;
     }
+
+    private string? GetIpAddress()
+    {
+        var context = HttpContextAccessor.HttpContext;
+        if (context is null) return null;
+
+        return context.Request.Headers.TryGetValue("X-Forwarded-For", out var forwarded)
+            ? forwarded.ToString().Split(',')[0].Trim()
+            : context.Connection.RemoteIpAddress?.ToString();
+    }
+
+    private string? GetUserAgent() =>
+        HttpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
 
     public void Log(Action<ActivityOptions> options)
     {
@@ -50,6 +67,8 @@ public class ActivityLogger : IActivityLogger
             EntityId = activityOptions.EntityId.Value,
             WorkspaceId = activityOptions.WorkspaceId.Value,
             OccurredAt = DateTime.UtcNow,
+            IpAddress = GetIpAddress(),
+            UserAgent = GetUserAgent(),
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));
@@ -73,6 +92,9 @@ public class ActivityLogger : IActivityLogger
             throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
         }
 
+        var ipAddress = GetIpAddress();
+        var userAgent = GetUserAgent();
+
         var activities = activityOptions.EntityIds
             .Select(entityId => new ActivityEvent
             {
@@ -82,6 +104,8 @@ public class ActivityLogger : IActivityLogger
                 EntityId = entityId,
                 WorkspaceId = activityOptions.WorkspaceId.Value,
                 OccurredAt = DateTime.UtcNow,
+                IpAddress = ipAddress,
+                UserAgent = userAgent,
             });
 
         EventPublisher.Dispatch(new ActivityMessage(activities));
@@ -119,6 +143,8 @@ public class ActivityLogger : IActivityLogger
             WorkspaceId = activityOptions.WorkspaceId.Value,
             OccurredAt = DateTime.UtcNow,
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
+            IpAddress = GetIpAddress(),
+            UserAgent = GetUserAgent(),
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));

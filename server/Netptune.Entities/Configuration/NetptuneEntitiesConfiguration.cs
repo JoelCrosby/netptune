@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Models.Options;
 using Netptune.Entities.Contexts;
+using Netptune.Entities.Interceptors;
 
 using Npgsql;
 
@@ -35,7 +36,8 @@ public static class NetptuneEntitiesConfiguration
         {
             options
                 .UseNpgsql(netptuneEntitiesOptions.ConnectionString)
-                .UseSnakeCaseNamingConvention();
+                .UseSnakeCaseNamingConvention()
+                .AddInterceptors(new AuditLogImmutabilityInterceptor());
         });
 
         return services;

@@ -47,6 +47,7 @@ builder.Services.AddS3StorageService(options =>
 });
 
 builder.Services.AddHostedService<QueueConsumerService>();
+builder.Services.AddHostedService<AuditRetentionJob>();
 
 builder.Services.AddNetptuneMessageQueue(builder.Configuration.GetNetptuneNatsConnectionString());
 
