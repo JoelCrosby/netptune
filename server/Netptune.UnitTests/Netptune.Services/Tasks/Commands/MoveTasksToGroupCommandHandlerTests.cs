@@ -2,6 +2,7 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;

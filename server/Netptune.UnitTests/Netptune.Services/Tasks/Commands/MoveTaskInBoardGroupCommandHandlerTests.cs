@@ -1,6 +1,7 @@
 using FluentAssertions;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
