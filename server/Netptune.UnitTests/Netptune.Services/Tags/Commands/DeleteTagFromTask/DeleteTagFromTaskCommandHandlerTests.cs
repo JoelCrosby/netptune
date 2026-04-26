@@ -1,0 +1,87 @@
+using AutoFixture;
+
+using FluentAssertions;
+
+using Netptune.Core.Requests;
+using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
+using Netptune.Core.UnitOfWork;
+using Netptune.Services.Tags.Commands;
+
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
+
+using Xunit;
+
+namespace Netptune.UnitTests.Netptune.Services.Tags.Commands;
+
+public class DeleteTagFromTaskCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly DeleteTagFromTaskCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public DeleteTagFromTaskCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
+    }
+
+    [Fact]
+    public async Task DeleteFromTask_ShouldReturnSuccess_WhenValidId()
+    {
+        var request = Fixture.Create<DeleteTagFromTaskRequest>() with
+        {
+            SystemId = "task-id",
+            Tag = "tag",
+        };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
+        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
+
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteFromTask_ShouldCallCompleteAsync_WhenValidId()
+    {
+        var request = Fixture.Create<DeleteTagFromTaskRequest>() with
+        {
+            SystemId = "task-id",
+            Tag = "tag",
+        };
+
+        var tag = AutoFixtures.Tag with { Id = 1, Name = request.Tag };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
+        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
+        UnitOfWork.Tags.GetByValue(request.Tag, 1).Returns(tag);
+
+        await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+
+        await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag);
+        await UnitOfWork.Received(1).CompleteAsync();
+    }
+
+    [Fact]
+    public async Task DeleteFromTask_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        var request = Fixture.Create<DeleteTagFromTaskRequest>() with
+        {
+            SystemId = "task-id",
+            Tag = "tag",
+        };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+}
