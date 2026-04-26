@@ -24,7 +24,7 @@ import { Store } from '@ngrx/store';
       placeholder="Add a Tag..."
       [value]="selectedTags()"
       (changed)="onTagsSelectionChanged($event)"
-      [isReadonly]="isReadOnly()">
+      [isReadonly]="!canUpdate()">
       @for (tag of tags(); track tag) {
         <app-form-select-tags-option [value]="tag">
           {{ tag }}
@@ -44,7 +44,7 @@ export class TaskDetailTagsComponent {
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   selectedTags = computed(() => this.task()?.tags ?? []);
 
-  isReadOnly = selectCanUpdateTask(this.store);
+  canUpdate = selectCanUpdateTask(this.store);
 
   onTagsSelectionChanged(tags: string[]) {
     const task = this.task();
