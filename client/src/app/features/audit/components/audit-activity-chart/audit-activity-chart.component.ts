@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AuditStore } from '@audit/audit-state.service';
 
@@ -8,7 +13,8 @@ import { AuditStore } from '@audit/audit-state.service';
   imports: [NgApexchartsModule],
   template: `
     <div class="border-border mb-6 rounded border p-4">
-      <p class="text-foreground/60 mb-3 text-xs font-medium tracking-wide uppercase">
+      <p
+        class="text-foreground/60 mb-3 text-xs font-medium tracking-wide uppercase">
         Activity Over Time
       </p>
       <apx-chart
@@ -20,8 +26,7 @@ import { AuditStore } from '@audit/audit-state.service';
         [fill]="fill"
         [dataLabels]="dataLabels"
         [grid]="grid"
-        [tooltip]="tooltip"
-      />
+        [tooltip]="tooltip" />
     </div>
   `,
 })
@@ -31,7 +36,9 @@ export class AuditActivityChartComponent {
   series = computed(() => [
     {
       name: 'Events',
-      data: this.store.summary().map((p) => [new Date(p.date).getTime(), p.count]),
+      data: this.store
+        .summary()
+        .map((p) => [new Date(p.date).getTime(), p.count]),
     },
   ]);
 
@@ -40,7 +47,9 @@ export class AuditActivityChartComponent {
     return {
       type: 'datetime' as const,
       min: points[0] ? new Date(points[0].date).getTime() : undefined,
-      max: points[points.length - 1] ? new Date(points[points.length - 1].date).getTime() : undefined,
+      max: points[points.length - 1]
+        ? new Date(points[points.length - 1].date).getTime()
+        : undefined,
       labels: {
         style: { colors: 'hsl(var(--foreground) / 0.5)', fontSize: '11px' },
         datetimeUTC: false,

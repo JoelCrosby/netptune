@@ -18,7 +18,10 @@ export class AuditService {
 
   getActivitySummary(filter: AuditLogFilter) {
     const params = this.buildParams(filter);
-    return this.http.get<ClientResponse<AuditActivityPoint[]>>('api/audit/summary', { params });
+    return this.http.get<ClientResponse<AuditActivityPoint[]>>(
+      'api/audit/summary',
+      { params }
+    );
   }
 
   exportAuditLog(filter: AuditLogFilter) {

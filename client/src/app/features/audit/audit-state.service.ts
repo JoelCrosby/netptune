@@ -70,7 +70,8 @@ export const AuditStore = signalStore(
         switchMap((filter) =>
           auditService.getActivitySummary(filter).pipe(
             tapResponse({
-              next: (response) => patchState(store, { summary: response.payload ?? [] }),
+              next: (response) =>
+                patchState(store, { summary: response.payload ?? [] }),
               error: () => {},
             })
           )
