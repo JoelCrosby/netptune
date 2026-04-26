@@ -1,0 +1,44 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: security-headers
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  headers:
+    customResponseHeaders:
+      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+      Permissions-Policy: "camera=(), microphone=(), geolocation=()"
+      Content-Security-Policy-Report-Only: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://{{ .Values.ingress.appHost }}; img-src 'self' data: https:; frame-ancestors 'none';"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: body-size-limit
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  buffering:
+    maxRequestBodyBytes: 52428800
+{{- if or .Values.grafana.enabled .Values.prometheus.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth2-forwardauth
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  forwardAuth:
+    address: "https://{{ .Values.headlamp.host }}/oauth2/auth"
+    authResponseHeaders:
+      - X-Auth-Request-User
+      - X-Auth-Request-Email
+    authRequestHeaders:
+      - Cookie
+      - Authorization
+{{- end }}
