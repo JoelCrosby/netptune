@@ -1,10 +1,10 @@
 using Mediator;
 using Netptune.Core.Enums;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Core.Requests;
 
 namespace Netptune.Services.Tags.Commands;
 

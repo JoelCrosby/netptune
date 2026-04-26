@@ -1,11 +1,11 @@
 using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Core.Requests;
 
 namespace Netptune.Services.BoardGroups.Commands;
 

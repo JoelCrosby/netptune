@@ -1,13 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-
-using Xunit;
-
 using FluentAssertions;
-
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Tags;
+using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 

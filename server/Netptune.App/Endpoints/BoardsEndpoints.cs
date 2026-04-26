@@ -2,12 +2,6 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Services.Boards.Commands;
-using Netptune.Services.Boards.Commands;
-using Netptune.Services.Boards.Commands;
-using Netptune.Services.Boards.Queries;
-using Netptune.Services.Boards.Queries;
-using Netptune.Services.Boards.Queries;
-using Netptune.Services.Boards.Queries;
 using Netptune.Services.Boards.Queries;
 
 namespace Netptune.App.Endpoints;

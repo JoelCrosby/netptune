@@ -5,8 +5,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
 using Netptune.Services.Audit.Commands;
 using Netptune.Services.Audit.Queries;
-using Netptune.Services.Audit.Queries;
-using Netptune.Services.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
 

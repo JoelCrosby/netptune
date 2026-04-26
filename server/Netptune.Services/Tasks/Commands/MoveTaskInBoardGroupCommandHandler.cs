@@ -3,10 +3,10 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Core.Requests;
 
 namespace Netptune.Services.Tasks.Commands;
 
@@ -32,7 +32,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             : await TransferTaskInGroups(req);
     }
 
-    private async Task<ClientResponse> TransferTaskInGroups(Core.Requests.MoveTaskInGroupRequest request)
+    private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)
     {
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
@@ -89,7 +89,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         return ClientResponse.Success;
     }
 
-    private async Task<ClientResponse> MoveTaskInGroup(Core.Requests.MoveTaskInGroupRequest request)
+    private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request)
     {
         var item = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
 

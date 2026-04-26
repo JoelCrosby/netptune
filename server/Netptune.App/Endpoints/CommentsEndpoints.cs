@@ -3,7 +3,6 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Services.Comments.Commands;
-using Netptune.Services.Comments.Commands;
 using Netptune.Services.Comments.Queries;
 
 namespace Netptune.App.Endpoints;

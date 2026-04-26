@@ -1,9 +1,9 @@
 using Mediator;
+using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Activity;
-using Netptune.Core.Enums;
 
 namespace Netptune.Services.Activity.Queries;
 

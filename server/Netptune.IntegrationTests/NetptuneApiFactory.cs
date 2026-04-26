@@ -1,5 +1,4 @@
 using System.Net;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -7,18 +6,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
-using Netptune.TestData;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Services.Authorization.Requirements;
-
+using Netptune.TestData;
 using Testcontainers.Nats;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
-
 using Xunit;
 
 [assembly: AssemblyFixture(typeof(NetptuneFixture))]

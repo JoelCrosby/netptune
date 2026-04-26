@@ -3,8 +3,6 @@ using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Services.BoardGroups.Commands;
-using Netptune.Services.BoardGroups.Commands;
-using Netptune.Services.BoardGroups.Commands;
 using Netptune.Services.BoardGroups.Queries;
 
 namespace Netptune.App.Endpoints;

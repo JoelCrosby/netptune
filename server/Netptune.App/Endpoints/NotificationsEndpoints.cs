@@ -3,8 +3,6 @@ using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Services.Notifications.Commands;
-using Netptune.Services.Notifications.Commands;
-using Netptune.Services.Notifications.Queries;
 using Netptune.Services.Notifications.Queries;
 
 namespace Netptune.App.Endpoints;

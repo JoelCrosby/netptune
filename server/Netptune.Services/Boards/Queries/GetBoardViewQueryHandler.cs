@@ -1,9 +1,9 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Core.Requests;
 
 namespace Netptune.Services.Boards.Queries;
 
