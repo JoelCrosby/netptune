@@ -1,7 +1,9 @@
+using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.BoardGroups.Commands;
+using Netptune.Services.BoardGroups.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -19,11 +21,9 @@ public static class BoardGroupsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGet(
-        IBoardGroupService boardGroupService,
-        int id)
+    public static async Task<IResult> HandleGet(IMediator mediator, int id)
     {
-        var result = await boardGroupService.GetBoardGroup(id);
+        var result = await mediator.Send(new GetBoardGroupQuery(id));
 
         if (result is null) return Results.NotFound();
 
@@ -31,12 +31,12 @@ public static class BoardGroupsEndpoints
     }
 
     public static async Task<IResult> HandlePut(
-        IBoardGroupService boardGroupService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         UpdateBoardGroupRequest request)
     {
-        var result = await boardGroupService.Update(request);
+        var result = await mediator.Send(new UpdateBoardGroupCommand(request));
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -46,12 +46,12 @@ public static class BoardGroupsEndpoints
     }
 
     public static async Task<IResult> HandlePost(
-        IBoardGroupService boardGroupService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         AddBoardGroupRequest request)
     {
-        var result = await boardGroupService.Create(request);
+        var result = await mediator.Send(new CreateBoardGroupCommand(request));
 
         await BroadcastAsync(boardEventService, context);
 
@@ -59,12 +59,12 @@ public static class BoardGroupsEndpoints
     }
 
     public static async Task<IResult> HandleDelete(
-        IBoardGroupService boardGroupService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         int id)
     {
-        var result = await boardGroupService.Delete(id);
+        var result = await mediator.Send(new DeleteBoardGroupCommand(id));
 
         if (result.IsNotFound) return Results.NotFound(result);
 

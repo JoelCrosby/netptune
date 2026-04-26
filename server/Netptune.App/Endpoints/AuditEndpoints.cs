@@ -1,9 +1,10 @@
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
-
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
-using Netptune.Core.Services;
+using Netptune.Services.Audit.Commands;
+using Netptune.Services.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -29,7 +30,7 @@ public static class AuditEndpoints
     }
 
     private static async Task<IResult> HandleGetAuditLog(
-        IAuditService auditService,
+        IMediator mediator,
         [FromQuery] string? userId,
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
@@ -49,13 +50,13 @@ public static class AuditEndpoints
             PageSize = Math.Clamp(pageSize, 1, 200),
         };
 
-        var result = await auditService.GetAuditLog(filter);
+        var result = await mediator.Send(new GetAuditLogQuery(filter));
 
         return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleGetActivitySummary(
-        IAuditService auditService,
+        IMediator mediator,
         [FromQuery] string? userId,
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
@@ -71,13 +72,13 @@ public static class AuditEndpoints
             To = to,
         };
 
-        var result = await auditService.GetActivitySummary(filter);
+        var result = await mediator.Send(new GetActivitySummaryQuery(filter));
 
         return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleExport(
-        IAuditService auditService,
+        IMediator mediator,
         [FromQuery] string? userId,
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
@@ -93,16 +94,16 @@ public static class AuditEndpoints
             To = to,
         };
 
-        var result = await auditService.ExportAuditLog(filter);
+        var result = await mediator.Send(new ExportAuditLogQuery(filter));
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }
 
     private static async Task<IResult> HandleAnonymiseUser(
-        IAuditService auditService,
+        IMediator mediator,
         [FromRoute] string userId)
     {
-        var result = await auditService.AnonymiseUser(userId);
+        var result = await mediator.Send(new AnonymiseUserCommand(userId));
 
         return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Message);
     }

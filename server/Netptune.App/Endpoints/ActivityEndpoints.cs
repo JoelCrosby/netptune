@@ -1,8 +1,8 @@
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
-
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
-using Netptune.Core.Services;
+using Netptune.Services.Activity.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -17,9 +17,9 @@ public static class ActivityEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGet(IActivityService activityService, EntityType entityType, [FromRoute] int id)
+    public static async Task<IResult> HandleGet(IMediator mediator, EntityType entityType, [FromRoute] int id)
     {
-        var result = await activityService.GetActivities(entityType, id);
+        var result = await mediator.Send(new GetActivitiesQuery(entityType, id));
 
         return Results.Ok(result);
     }

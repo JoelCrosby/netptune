@@ -92,6 +92,11 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
+builder.Services.AddMediator(options =>
+{
+    options.ServiceLifetime = ServiceLifetime.Transient;
+});
+
 builder.Services.AddValidation();
 
 var app = builder.Build();

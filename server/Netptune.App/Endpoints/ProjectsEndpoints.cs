@@ -1,6 +1,8 @@
+using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Projects.Commands;
+using Netptune.Services.Projects.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -19,50 +21,41 @@ public static class ProjectsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetProjects(
-        IProjectService projectService)
+    public static async Task<IResult> HandleGetProjects(IMediator mediator)
     {
-        var result = await projectService.GetProjects();
+        var result = await mediator.Send(new GetProjectsQuery());
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetProject(
-        IProjectService projectService,
-        string key)
+    public static async Task<IResult> HandleGetProject(IMediator mediator, string key)
     {
-        var result = await projectService.GetProject(key);
+        var result = await mediator.Send(new GetProjectQuery(key));
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePut(
-        IProjectService projectService,
-        UpdateProjectRequest request)
+    public static async Task<IResult> HandlePut(IMediator mediator, UpdateProjectRequest request)
     {
-        var result = await projectService.Update(request);
+        var result = await mediator.Send(new UpdateProjectCommand(request));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePost(
-        IProjectService projectService,
-        AddProjectRequest request)
+    public static async Task<IResult> HandlePost(IMediator mediator, AddProjectRequest request)
     {
-        var result = await projectService.Create(request);
+        var result = await mediator.Send(new CreateProjectCommand(request));
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(
-        IProjectService projectService,
-        int id)
+    public static async Task<IResult> HandleDelete(IMediator mediator, int id)
     {
-        var result = await projectService.Delete(id);
+        var result = await mediator.Send(new DeleteProjectCommand(id));
 
         if (result.IsNotFound) return Results.NotFound(result);
 

@@ -1,9 +1,12 @@
+using Mediator;
+
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Tags.Commands;
+using Netptune.Services.Tags.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -21,14 +24,14 @@ public static class TagsEndpoints
         group.MapDelete("/task", HandleDeleteFromTask).RequireAuthorization(NetptunePermissions.Tags.Assign);
         group.MapPatch("/", HandleUpdateTag).RequireAuthorization(NetptunePermissions.Tags.Update);
 
-        return group;
+        return builder;
     }
 
     public static async Task<IResult> HandlePost(
-        ITagService tagService,
+        IMediator mediator,
         [FromBody] AddTagRequest request)
     {
-        var result = await tagService.Create(request);
+        var result = await mediator.Send(new CreateTagCommand(request));
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -36,12 +39,12 @@ public static class TagsEndpoints
     }
 
     public static async Task<IResult> HandlePostTaskTag(
-        ITagService tagService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         [FromBody] AddTagToTaskRequest request)
     {
-        var result = await tagService.AddToTask(request);
+        var result = await mediator.Send(new AddTagToTaskCommand(request));
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -51,10 +54,10 @@ public static class TagsEndpoints
     }
 
     public static async Task<IResult> HandleGetTagsForTask(
-        ITagService tagService,
+        IMediator mediator,
         string systemId)
     {
-        var result = await tagService.GetTagsForTask(systemId);
+        var result = await mediator.Send(new GetTagsForTaskQuery(systemId));
 
         if (result is null) return Results.NotFound();
 
@@ -62,9 +65,9 @@ public static class TagsEndpoints
     }
 
     public static async Task<IResult> HandleGetTagsForWorkspace(
-        ITagService tagService)
+        IMediator mediator)
     {
-        var result = await tagService.GetTagsForWorkspace();
+        var result = await mediator.Send(new GetTagsForWorkspaceQuery());
 
         if (result is null) return Results.NotFound();
 
@@ -72,25 +75,36 @@ public static class TagsEndpoints
     }
 
     public static async Task<IResult> HandleDelete(
-        ITagService tagService,
+        IMediator mediator,
         [FromBody] DeleteTagsRequest request)
     {
-        var result = await tagService.Delete(request);
+        var result = await mediator.Send(new DeleteTagsCommand(request));
 
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleDeleteFromTask(
-        ITagService tagService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         [FromBody] DeleteTagFromTaskRequest request)
     {
-        var result = await tagService.DeleteFromTask(request);
+        var result = await mediator.Send(new DeleteTagFromTaskCommand(request));
 
         if (result.IsNotFound) return Results.NotFound();
 
         await BroadcastAsync(boardEventService, context);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleUpdateTag(
+        IMediator mediator,
+        [FromBody] UpdateTagRequest request)
+    {
+        var result = await mediator.Send(new UpdateTagCommand(request));
+
+        if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
@@ -103,16 +117,5 @@ public static class TagsEndpoints
         if (string.IsNullOrEmpty(group)) return Task.CompletedTask;
 
         return boardEventService.BroadcastAsync(group, clientId);
-    }
-
-    public static async Task<IResult> HandleUpdateTag(
-        ITagService tagService,
-        [FromBody] UpdateTagRequest request)
-    {
-        var result = await tagService.Update(request);
-
-        if (result.IsNotFound) return Results.NotFound();
-
-        return Results.Ok(result);
     }
 }

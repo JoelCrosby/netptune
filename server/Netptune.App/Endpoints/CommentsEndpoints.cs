@@ -1,6 +1,9 @@
+using Mediator;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Comments.Commands;
+using Netptune.Services.Comments.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -17,27 +20,27 @@ public static class CommentsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetCommentsForTask(ICommentService commentService, string systemId)
+    public static async Task<IResult> HandleGetCommentsForTask(IMediator mediator, string systemId)
     {
-        var result = await commentService.GetCommentsForTask(systemId);
+        var result = await mediator.Send(new GetCommentsForTaskQuery(systemId));
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePostTaskComment(ICommentService commentService, AddCommentRequest request)
+    public static async Task<IResult> HandlePostTaskComment(IMediator mediator, AddCommentRequest request)
     {
-        var result = await commentService.AddCommentToTask(request);
+        var result = await mediator.Send(new AddCommentToTaskCommand(request));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(ICommentService commentService, int id)
+    public static async Task<IResult> HandleDelete(IMediator mediator, int id)
     {
-        var result = await commentService.Delete(id);
+        var result = await mediator.Send(new DeleteCommentCommand(id));
 
         if (result.IsNotFound) return Results.NotFound(result);
 

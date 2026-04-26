@@ -1,7 +1,9 @@
+using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.Utilities;
+using Netptune.Services.Users.Commands;
 
 namespace Netptune.App.Endpoints;
 
@@ -22,7 +24,7 @@ public static class StorageEndpoints
     public static async Task<IResult> HandleUploadProfilePicture(
         IStorageService storageService,
         IIdentityService identity,
-        IUserService userService,
+        IMediator mediator,
         HttpRequest request)
     {
         var file = request.Form.Files.FirstOrDefault();
@@ -50,11 +52,11 @@ public static class StorageEndpoints
             return Results.BadRequest();
         }
 
-        await userService.Update(new()
+        await mediator.Send(new UpdateUserCommand(new()
         {
             Id = userId,
             PictureUrl = result.Payload.Uri,
-        });
+        }));
 
         return Results.Ok(result);
     }

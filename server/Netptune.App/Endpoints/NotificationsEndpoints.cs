@@ -1,6 +1,9 @@
+using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
+using Netptune.Services.Notifications.Commands;
+using Netptune.Services.Notifications.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -33,27 +36,27 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(INotificationService notifications)
+    private static async Task<IResult> HandleGet(IMediator mediator)
     {
-        var result = await notifications.GetUserNotifications();
+        var result = await mediator.Send(new GetUserNotificationsQuery());
         return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleGetUnreadCount(INotificationService notifications)
+    private static async Task<IResult> HandleGetUnreadCount(IMediator mediator)
     {
-        var result = await notifications.GetUnreadCount();
+        var result = await mediator.Send(new GetUnreadCountQuery());
         return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkRead(int id, INotificationService notifications)
+    private static async Task<IResult> HandleMarkRead(int id, IMediator mediator)
     {
-        var result = await notifications.MarkAsRead(id);
+        var result = await mediator.Send(new MarkAsReadCommand(id));
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkAllRead(INotificationService notifications)
+    private static async Task<IResult> HandleMarkAllRead(IMediator mediator)
     {
-        var result = await notifications.MarkAllAsRead();
+        var result = await mediator.Send(new MarkAllAsReadCommand());
         return Results.Ok(result);
     }
 

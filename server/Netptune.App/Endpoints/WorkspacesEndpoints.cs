@@ -1,8 +1,9 @@
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
-
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Workspaces.Commands;
+using Netptune.Services.Workspaces.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -25,16 +26,15 @@ public static class WorkspacesEndpoints
         return builder;
     }
 
-    public static async Task<IResult> HandleGetWorkspaces(
-        IWorkspaceService workspaceService)
+    public static async Task<IResult> HandleGetWorkspaces(IMediator mediator)
     {
-        var result = await workspaceService.GetUserWorkspaces();
+        var result = await mediator.Send(new GetUserWorkspacesQuery());
 
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleGetWorkspace(
-        IWorkspaceService workspaceService,
+        IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
         string key)
@@ -44,7 +44,7 @@ public static class WorkspacesEndpoints
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await workspaceService.GetWorkspace(key);
+        var result = await mediator.Send(new GetWorkspaceQuery(key));
 
         if (result is null) return Results.NotFound();
 
@@ -52,7 +52,7 @@ public static class WorkspacesEndpoints
     }
 
     public static async Task<IResult> HandlePut(
-        IWorkspaceService workspaceService,
+        IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
         UpdateWorkspaceRequest request)
@@ -62,22 +62,20 @@ public static class WorkspacesEndpoints
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await workspaceService.Update(request);
+        var result = await mediator.Send(new UpdateWorkspaceCommand(request));
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePost(
-        IWorkspaceService workspaceService,
-        AddWorkspaceRequest request)
+    public static async Task<IResult> HandlePost(IMediator mediator, AddWorkspaceRequest request)
     {
-        var result = await workspaceService.Create(request);
+        var result = await mediator.Send(new CreateWorkspaceCommand(request));
 
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleDelete(
-        IWorkspaceService workspaceService,
+        IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
         string key)
@@ -87,7 +85,7 @@ public static class WorkspacesEndpoints
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await workspaceService.Delete(key);
+        var result = await mediator.Send(new DeleteWorkspaceCommand(key));
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -95,7 +93,7 @@ public static class WorkspacesEndpoints
     }
 
     public static async Task<IResult> HandleDeletePermanent(
-        IWorkspaceService workspaceService,
+        IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
         string key)
@@ -105,26 +103,23 @@ public static class WorkspacesEndpoints
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await workspaceService.DeletePermanent(key);
+        var result = await mediator.Send(new DeleteWorkspacePermanentCommand(key));
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetAllWorkspaces(
-        IWorkspaceService workspaceService)
+    public static async Task<IResult> HandleGetAllWorkspaces(IMediator mediator)
     {
-        var result = await workspaceService.GetAll();
+        var result = await mediator.Send(new GetAllWorkspacesQuery());
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleIsSlugUnique(
-        IWorkspaceService workspaceService,
-        string slug)
+    public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string slug)
     {
-        var result = await workspaceService.IsSlugUnique(slug);
+        var result = await mediator.Send(new IsWorkspaceSlugUniqueQuery(slug));
 
         return Results.Ok(result);
     }

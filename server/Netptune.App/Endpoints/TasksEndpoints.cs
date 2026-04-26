@@ -1,7 +1,9 @@
+using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Tasks.Commands;
+using Netptune.Services.Tasks.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -25,30 +27,25 @@ public static class TasksEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetTasks(
-        ITaskService taskService)
+    public static async Task<IResult> HandleGetTasks(IMediator mediator)
     {
-        var result = await taskService.GetTasks();
+        var result = await mediator.Send(new GetTasksQuery());
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetTask(
-        ITaskService taskService,
-        int id)
+    public static async Task<IResult> HandleGetTask(IMediator mediator, int id)
     {
-        var result = await taskService.GetTask(id);
+        var result = await mediator.Send(new GetTaskQuery(id));
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetTaskDetail(
-        ITaskService taskService,
-        string systemId)
+    public static async Task<IResult> HandleGetTaskDetail(IMediator mediator, string systemId)
     {
-        var result = await taskService.GetTaskDetail(systemId);
+        var result = await mediator.Send(new GetTaskDetailQuery(systemId));
 
         if (result is null) return Results.NotFound(result);
 
@@ -56,12 +53,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandlePut(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         UpdateProjectTaskRequest request)
     {
-        var result = await taskService.Update(request);
+        var result = await mediator.Send(new UpdateTaskCommand(request));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -71,12 +68,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandlePost(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         AddProjectTaskRequest request)
     {
-        var result = await taskService.Create(request);
+        var result = await mediator.Send(new CreateTaskCommand(request));
 
         await BroadcastAsync(boardEventService, context);
 
@@ -84,12 +81,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandleDelete(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         IEnumerable<int> ids)
     {
-        var result = await taskService.Delete(ids);
+        var result = await mediator.Send(new DeleteTasksCommand(ids));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -99,12 +96,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandleDeleteById(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         int id)
     {
-        var result = await taskService.Delete(id);
+        var result = await mediator.Send(new DeleteTaskCommand(id));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -114,12 +111,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandleMoveTaskInGroup(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         MoveTaskInGroupRequest request)
     {
-        var result = await taskService.MoveTaskInBoardGroup(request);
+        var result = await mediator.Send(new MoveTaskInBoardGroupCommand(request));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -129,12 +126,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandleMoveTasksToGroup(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         MoveTasksToGroupRequest request)
     {
-        var result = await taskService.MoveTasksToGroup(request);
+        var result = await mediator.Send(new MoveTasksToGroupCommand(request));
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -144,12 +141,12 @@ public static class TasksEndpoints
     }
 
     public static async Task<IResult> HandleReassignTasks(
-        ITaskService taskService,
+        IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
         ReassignTasksRequest request)
     {
-        var result = await taskService.ReassignTasks(request);
+        var result = await mediator.Send(new ReassignTasksCommand(request));
 
         await BroadcastAsync(boardEventService, context);
 

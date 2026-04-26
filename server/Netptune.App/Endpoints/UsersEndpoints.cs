@@ -1,6 +1,8 @@
+using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
+using Netptune.Services.Users.Commands;
+using Netptune.Services.Users.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -22,78 +24,64 @@ public static class UsersEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetWorkspaceUsers(
-        IUserService userService)
+    public static async Task<IResult> HandleGetWorkspaceUsers(IMediator mediator)
     {
-        var result = await userService.GetWorkspaceUsers();
+        var result = await mediator.Send(new GetWorkspaceUsersQuery());
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetUser(
-        IUserService userService,
-        string id)
+    public static async Task<IResult> HandleGetUser(IMediator mediator, string id)
     {
-        var result = await userService.Get(id);
+        var result = await mediator.Send(new GetUserQuery(id));
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleUpdateUser(
-        IUserService userService,
-        UpdateUserRequest request)
+    public static async Task<IResult> HandleUpdateUser(IMediator mediator, UpdateUserRequest request)
     {
-        var result = await userService.Update(request);
+        var result = await mediator.Send(new UpdateUserCommand(request));
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleInvite(
-        IUserService userService,
-        InviteUsersRequest request)
+    public static async Task<IResult> HandleInvite(IMediator mediator, InviteUsersRequest request)
     {
-        var result = await userService.InviteUsersToWorkspace(request.EmailAddresses);
+        var result = await mediator.Send(new InviteUsersToWorkspaceCommand(request.EmailAddresses));
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleRemoveUserFromWorkspace(
-        IUserService userService,
-        InviteUsersRequest request)
+    public static async Task<IResult> HandleRemoveUserFromWorkspace(IMediator mediator, InviteUsersRequest request)
     {
-        var result = await userService.RemoveUsersFromWorkspace(request.EmailAddresses);
+        var result = await mediator.Send(new RemoveUsersFromWorkspaceCommand(request.EmailAddresses));
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetUserByEmail(
-        IUserService userService,
-        string email)
+    public static async Task<IResult> HandleGetUserByEmail(IMediator mediator, string email)
     {
-        var result = await userService.GetByEmail(email);
+        var result = await mediator.Send(new GetUserByEmailQuery(email));
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetAll(
-        IUserService userService)
+    public static async Task<IResult> HandleGetAll(IMediator mediator)
     {
-        var result = await userService.GetAll();
+        var result = await mediator.Send(new GetAllUsersQuery());
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleTogglePermission(
-        IUserService userService,
-        ToggleUserPermissionRequest request)
+    public static async Task<IResult> HandleTogglePermission(IMediator mediator, ToggleUserPermissionRequest request)
     {
-        var result = await userService.ToggleUserPermission(request);
+        var result = await mediator.Send(new ToggleUserPermissionCommand(request));
 
         if (!result.IsSuccess) return Results.BadRequest(result.Message);
 
