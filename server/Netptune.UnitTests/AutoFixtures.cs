@@ -34,6 +34,7 @@ public static class AutoFixtures
     public static Comment Comment => Fixture
         .Build<Comment>()
         .With(p => p.Reactions, new List<Reaction>())
+        .With(p => p.Mentions, new  List<CommentMention>())
         .WithoutWorkspace()
         .Create();
 

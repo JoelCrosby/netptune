@@ -40,6 +40,7 @@ public class AddCommentToTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(10);
         UnitOfWork.Comments.GetCommentViewModel(Arg.Any<int>()).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug("key").Returns(2);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(Arg.Any<int>()).Returns([]);
 
         var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
 

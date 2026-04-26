@@ -88,6 +88,7 @@ public class ActivityHandlerTests
             .With(e => e.UserId, userId ?? ActorUserId)
             .With(e => e.WorkspaceId, workspaceId ?? WorkspaceId)
             .With(e => e.EntityId, EntityId)
+            .With(e => e.RecipientUserIds, [OtherUserId1, OtherUserId2])
             .Without(e => e.Meta)
             .Create();
 
@@ -141,6 +142,7 @@ public class ActivityHandlerTests
             .With(e => e.WorkspaceId, WorkspaceId)
             .With(e => e.EntityId, Fixture.Create<int>())
             .With(e => e.EntityType, EntityType.Task)
+            .With(e => e.RecipientUserIds, [OtherUserId1, OtherUserId2])
             .Without(e => e.Meta)
             .Create();
 
@@ -170,6 +172,7 @@ public class ActivityHandlerTests
             .With(e => e.WorkspaceId, WorkspaceId)
             .With(e => e.EntityId, EntityId)
             .With(e => e.EntityType, entityType)
+            .With(e => e.RecipientUserIds, [OtherUserId1, OtherUserId2])
             .Without(e => e.Meta)
             .Create();
 
