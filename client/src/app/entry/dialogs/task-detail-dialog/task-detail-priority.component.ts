@@ -1,8 +1,9 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
-  output,
+  computed,
+  inject,
   viewChild,
 } from '@angular/core';
 import {
@@ -11,10 +12,12 @@ import {
   taskPriorityLabels,
   taskPriorityOptions,
 } from '@core/enums/task-priority';
-import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
-import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
-import { NgClass } from '@angular/common';
+import { selectRequiredDetailTask } from '@core/store/tasks/tasks.selectors';
 import { LucideFlag } from '@lucide/angular';
+import { Store } from '@ngrx/store';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-priority-select',
@@ -35,8 +38,11 @@ import { LucideFlag } from '@lucide/angular';
       @for (option of options; track option.value) {
         <button
           app-menu-item
-          (click)="select(option.value); menu.close()">
-          <svg lucideFlag class="h-4 w-4" [ngClass]="colorFor(option.value)"></svg>
+          (click)="selectPriority(option.value); menu.close()">
+          <svg
+            lucideFlag
+            class="h-4 w-4"
+            [ngClass]="colorFor(option.value)"></svg>
           {{ option.label }}
         </button>
       }
@@ -44,8 +50,11 @@ import { LucideFlag } from '@lucide/angular';
   `,
 })
 export class TaskPrioritySelectComponent {
-  readonly priority = input<TaskPriority | null>(null);
-  readonly priorityChange = output<TaskPriority>();
+  readonly store = inject(Store);
+  readonly taskDetailService = inject(TaskDetailService);
+  readonly task = this.store.selectSignal(selectRequiredDetailTask);
+
+  readonly priority = computed(() => this.task().priority);
 
   readonly options = taskPriorityOptions;
 
@@ -70,7 +79,9 @@ export class TaskPrioritySelectComponent {
     return taskPriorityColors[priority];
   }
 
-  select(priority: TaskPriority) {
-    this.priorityChange.emit(priority);
+  selectPriority(priority: TaskPriority) {
+    const task = this.task();
+    if (!task) return;
+    this.taskDetailService.updateTask({ ...task, priority });
   }
 }

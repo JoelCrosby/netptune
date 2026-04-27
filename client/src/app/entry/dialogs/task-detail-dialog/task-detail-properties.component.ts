@@ -4,15 +4,13 @@ import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-proje
 import { selectAllProjects } from '@app/core/store/projects/projects.selectors';
 import { selectRequiredDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { selectAllUsers } from '@app/core/store/users/users.selectors';
+import { TaskPrioritySelectComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-priority.component';
 import { AvatarComponent } from '@app/static/components/avatar/avatar.component';
 import { ChipListboxComponent } from '@app/static/components/chip/chip-listbox.component';
 import { ChipOptionComponent } from '@app/static/components/chip/chip-option.component';
 import { DropdownMenuComponent } from '@app/static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@app/static/components/dropdown-menu/menu-item.component';
-import { TaskPrioritySelectComponent } from '@app/static/components/task-priority-select/task-priority-select.component';
 import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
-import { EstimateType } from '@core/enums/estimate-type';
-import { TaskPriority } from '@core/enums/task-priority';
 import { Store } from '@ngrx/store';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 import { TaskDetailActionsComponent } from './task-detail-actions.component';
@@ -64,17 +62,11 @@ import { TaskDetailService } from './task-detail.service';
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
-        <app-task-priority-select
-          [priority]="task().priority"
-          (priorityChange)="selectPriority($event)" />
+        <app-task-priority-select />
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Estimate</h4>
-        <app-task-detail-estimate
-          [estimateType]="task().estimateType"
-          [estimateValue]="task().estimateValue"
-          (estimateTypeChange)="selectEstimateType($event)"
-          (estimateValueChange)="selectEstimateValue($event)" />
+        <app-task-detail-estimate />
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
@@ -106,7 +98,6 @@ import { TaskDetailService } from './task-detail.service';
 export class TaskDetailPropertiesComponent {
   readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
-
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
   readonly projects = this.store.selectSignal(selectAllProjects);
   readonly users = this.store.selectSignal(selectAllUsers);
@@ -135,23 +126,5 @@ export class TaskDetailPropertiesComponent {
     };
 
     this.taskDetailService.updateTask(updated);
-  }
-
-  selectPriority(priority: TaskPriority) {
-    const task = this.task();
-    if (!task) return;
-    this.taskDetailService.updateTask({ ...task, priority });
-  }
-
-  selectEstimateType(estimateType: EstimateType) {
-    const task = this.task();
-    if (!task) return;
-    this.taskDetailService.updateTask({ ...task, estimateType, estimateValue: null });
-  }
-
-  selectEstimateValue(estimateValue: number | null) {
-    const task = this.task();
-    if (!task) return;
-    this.taskDetailService.updateTask({ ...task, estimateValue });
   }
 }
