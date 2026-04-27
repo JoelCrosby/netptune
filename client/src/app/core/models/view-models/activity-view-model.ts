@@ -20,8 +20,6 @@ export enum ActivityType {
   assign = 3,
   move = 5,
   reorder = 6,
-  flag = 7,
-  unFlag = 8,
   modifyName = 9,
   modifyDescription = 10,
   modifyStatus = 11,

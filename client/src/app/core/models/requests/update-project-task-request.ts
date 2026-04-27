@@ -7,7 +7,6 @@ export interface UpdateProjectTaskRequest {
   name: string;
   description: string;
   status?: TaskStatus;
-  isFlagged?: boolean;
   sortOrder?: number;
   ownerId: string;
   assigneeIds?: string[];

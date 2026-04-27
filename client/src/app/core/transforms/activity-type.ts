@@ -14,10 +14,6 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Moved';
     case ActivityType.reorder:
       return 'Reordered';
-    case ActivityType.flag:
-      return 'Flagged';
-    case ActivityType.unFlag:
-      return 'Un-flagged';
     case ActivityType.modifyName:
       return 'Modified name';
     case ActivityType.modifyDescription:

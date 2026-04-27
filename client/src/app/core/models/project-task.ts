@@ -10,7 +10,6 @@ export interface ProjectTask extends Basemodel {
   name: string;
   description: string;
   status: TaskStatus;
-  isFlagged: boolean;
   priority: TaskPriority | null;
   estimateType: EstimateType | null;
   estimateValue: number | null;
@@ -32,7 +31,6 @@ export interface AddProjectTaskRequest {
   name: string;
   description?: string;
   status?: TaskStatus;
-  isFlagged?: boolean;
 
   projectId: number;
   boardGroupId?: number;
