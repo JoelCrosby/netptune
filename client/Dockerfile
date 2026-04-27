@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 RUN apk upgrade --no-cache && npm install -g pnpm
 WORKDIR /client
 COPY package*.json ./

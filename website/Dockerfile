@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 RUN apk upgrade --no-cache && npm install -g pnpm
 WORKDIR /src
 COPY package*.json ./
@@ -9,7 +9,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
-FROM node:22-alpine AS final
+FROM node:25-alpine AS final
 RUN apk upgrade --no-cache
 COPY --from=build /src/.output /usr/share/nginx/html
 
