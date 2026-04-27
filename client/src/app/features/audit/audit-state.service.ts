@@ -1,4 +1,11 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import {
+  AuditActivityPoint,
+  AuditLogFilter,
+  AuditLogViewModel,
+} from '@core/models/view-models/audit-log-view-model';
+import { AuditService } from '@core/store/audit/audit.service';
+import { Logger } from '@core/util/logger';
 import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
@@ -9,14 +16,7 @@ import {
   withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { computed } from '@angular/core';
 import { pipe, switchMap, tap } from 'rxjs';
-import {
-  AuditActivityPoint,
-  AuditLogFilter,
-  AuditLogViewModel,
-} from '@core/models/view-models/audit-log-view-model';
-import { AuditService } from '@core/store/audit/audit.service';
 
 interface AuditState {
   filter: AuditLogFilter;
@@ -70,9 +70,12 @@ export const AuditStore = signalStore(
         switchMap((filter) =>
           auditService.getActivitySummary(filter).pipe(
             tapResponse({
-              next: (response) =>
-                patchState(store, { summary: response.payload ?? [] }),
-              error: () => {},
+              next: (response) => {
+                return patchState(store, { summary: response.payload ?? [] });
+              },
+              error: (err) => {
+                Logger.error(err);
+              },
             })
           )
         )
