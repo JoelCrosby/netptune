@@ -91,7 +91,6 @@ public sealed class TasksEndpointTests
             Name = "updated name",
             Description = "updated description",
             Status = ProjectTaskStatus.Complete,
-            IsFlagged = true,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -104,7 +103,6 @@ public sealed class TasksEndpointTests
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Status.Should().Be(request.Status);
-        result.Payload.IsFlagged.Should().Be(request.IsFlagged.Value);
     }
 
     [Fact]
@@ -116,7 +114,6 @@ public sealed class TasksEndpointTests
             Name = "updated name",
             Description = "updated description",
             Status = ProjectTaskStatus.Complete,
-            IsFlagged = true,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -132,7 +129,6 @@ public sealed class TasksEndpointTests
             Name = "updated name",
             Description = "updated description",
             Status = ProjectTaskStatus.Complete,
-            IsFlagged = true,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -149,7 +145,6 @@ public sealed class TasksEndpointTests
             Description = "new description",
             Status = ProjectTaskStatus.InProgress,
             ProjectId = 1,
-            IsFlagged = false,
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks", request);
@@ -162,7 +157,6 @@ public sealed class TasksEndpointTests
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Status.Should().Be(request.Status);
-        result.Payload.IsFlagged.Should().Be(request.IsFlagged);
     }
 
     [Fact]
@@ -173,7 +167,6 @@ public sealed class TasksEndpointTests
             Description = "new description",
             Status = ProjectTaskStatus.InProgress,
             ProjectId = 1,
-            IsFlagged = false,
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks", request);
