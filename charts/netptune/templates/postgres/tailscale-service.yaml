@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/component: "postgres"
     app.kubernetes.io/instance: "{{ .Release.Name }}"
   annotations:
+    tailscale.com/expose: "true"
     tailscale.com/hostname: "netptune-postgres"
 spec:
   type: "LoadBalancer"
