@@ -12,6 +12,8 @@ import { LucideCheck, LucideFlag } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { NgClass } from '@angular/common';
+import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
+import { TaskPriority, taskPriorityColors, taskPriorityLabels } from '@core/enums/task-priority';
 
 @Component({
   selector: 'app-board-group-card',
@@ -46,9 +48,24 @@ import { NgClass } from '@angular/common';
         @if (task().status === 1) {
           <svg lucideCheck class="text-green-500">done</svg>
         }
+
+        @if (priorityVisible()) {
+          <span
+            class="flex items-center gap-1 text-xs font-medium"
+            [ngClass]="priorityColor()"
+            [title]="priorityLabel()">
+            <svg lucideFlag class="h-3 w-3" [ngClass]="priorityColor()"></svg>
+            {{ priorityLabel() }}
+          </span>
+        }
       </div>
 
       <div class="flex items-center gap-4">
+        @if (estimateLabel()) {
+          <span class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+            {{ estimateLabel() }}
+          </span>
+        }
         @if (task().isFlagged) {
           <svg lucideFlag class="fill-red-500 text-red-500" size="20px"></svg>
         }
@@ -71,4 +88,25 @@ export class BoardGroupCardComponent {
   flaggedClasses = computed(() => ({
     'bg-red-700/10 border-red-900/20': this.task().isFlagged,
   }));
+
+  priorityVisible = computed(() => {
+    const p = this.task().priority;
+    return p !== null && p !== undefined && p !== TaskPriority.none;
+  });
+
+  priorityColor = computed(() => {
+    const p = this.task().priority ?? TaskPriority.none;
+    return taskPriorityColors[p];
+  });
+
+  priorityLabel = computed(() => {
+    const p = this.task().priority ?? TaskPriority.none;
+    return taskPriorityLabels[p];
+  });
+
+  estimateLabel = computed(() => {
+    const { estimateType, estimateValue } = this.task();
+    if (estimateValue == null) return null;
+    return formatEstimate(estimateType ?? EstimateType.storyPoints, estimateValue);
+  });
 }
