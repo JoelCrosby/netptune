@@ -253,7 +253,6 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             Description = row.Description,
             WorkspaceId = workspaceId,
             ProjectId = project.Id,
-            IsFlagged = ParseBool(row.IsFlagged),
             CreatedAt = row.CreatedAt,
             UpdatedAt = row.UpdatedAt,
             Status = ParseStatus(row.Status),

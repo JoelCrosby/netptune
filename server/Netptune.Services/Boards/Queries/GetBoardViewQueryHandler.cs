@@ -36,7 +36,6 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
 
         var includeUserFilter = request.Filter?.Users.Any() ?? false;
         var includeTagFilter = request.Filter?.Tags.Any() ?? false;
-        var includeFlaggedFilter = request.Filter?.Flagged ?? false;
 
         var userIds = groups
             .SelectMany(group => group.Tasks)
@@ -50,9 +49,6 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
             {
                 var matchUser = !includeUserFilter || (request.Filter?.Users.Any(u => task.Assignees.Any(a => a.Id == u)) ?? true);
                 if (!matchUser) return false;
-
-                var matchFlagged = !includeFlaggedFilter || task.IsFlagged;
-                if (!matchFlagged) return false;
 
                 var matchTag = !includeTagFilter || (request.Filter?.Tags.Intersect(task.Tags).Any() ?? true);
                 return matchTag;
