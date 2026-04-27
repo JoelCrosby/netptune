@@ -22,6 +22,10 @@ public record ProjectTaskDiff
 
     private ValueDiff<ProjectTaskStatus> Status = null!;
 
+    private ValueDiff<TaskPriority> Priority = null!;
+
+    private ValueDiff<EstimateType> Estimate = null!;
+
     private AssigneeDiff Assignees = null!;
 
     private record AssigneeDiff
@@ -44,6 +48,12 @@ public record ProjectTaskDiff
 
         var statusChanged = updated.Status != old.Status;
         var statusValue = updated.Status;
+
+        var priorityChanged = updated.Priority != old.Priority;
+        var priorityValue = updated.Priority ?? TaskPriority.None;
+
+        var estimateChanged = updated.EstimateType != old.EstimateType || updated.EstimateValue != old.EstimateValue;
+        var estimateTypeValue = updated.EstimateType ?? EstimateType.StoryPoints;
 
         var oldAssigneeIds = old.Assignees.Select(a => a.Id).ToHashSet();
         var newAssigneeIds = updated.Assignees.Select(a => a.Id).ToHashSet();
@@ -71,6 +81,16 @@ public record ProjectTaskDiff
             {
                 Modified = statusChanged,
                 NewValue = statusValue,
+            },
+            Priority = new ValueDiff<TaskPriority>
+            {
+                Modified = priorityChanged,
+                NewValue = priorityValue,
+            },
+            Estimate = new ValueDiff<EstimateType>
+            {
+                Modified = estimateChanged,
+                NewValue = estimateTypeValue,
             },
             Assignees = new AssigneeDiff
             {
@@ -120,6 +140,26 @@ public record ProjectTaskDiff
                 options.EntityId = entityId;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.ModifyStatus;
+            });
+        }
+
+        if (Priority.Modified)
+        {
+            activity.Log(options =>
+            {
+                options.EntityId = entityId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.ModifyPriority;
+            });
+        }
+
+        if (Estimate.Modified)
+        {
+            activity.Log(options =>
+            {
+                options.EntityId = entityId;
+                options.EntityType = EntityType.Task;
+                options.Type = ActivityType.ModifyEstimate;
             });
         }
 

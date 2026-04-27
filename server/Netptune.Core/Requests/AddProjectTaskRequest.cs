@@ -25,4 +25,10 @@ public record AddProjectTaskRequest
     public double? SortOrder { get; set; }
 
     public string? AssigneeId { get; set; }
+
+    public TaskPriority? Priority { get; set; }
+
+    public EstimateType? EstimateType { get; set; }
+
+    public decimal? EstimateValue { get; set; }
 }

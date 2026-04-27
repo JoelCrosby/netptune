@@ -25,6 +25,12 @@ public record TaskViewModel
 
     public bool IsFlagged { get; set; }
 
+    public TaskPriority? Priority { get; set; }
+
+    public EstimateType? EstimateType { get; set; }
+
+    public decimal? EstimateValue { get; set; }
+
     public double SortOrder { get; set; }
 
     public int? ProjectId { get; set; }

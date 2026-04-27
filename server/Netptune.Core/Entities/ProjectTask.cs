@@ -19,6 +19,12 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public bool IsFlagged { get; set; }
 
+    public TaskPriority? Priority { get; set; }
+
+    public EstimateType? EstimateType { get; set; }
+
+    public decimal? EstimateValue { get; set; }
+
     #region ForeignKeys
 
     public int? ProjectId { get; set; }
@@ -68,6 +74,9 @@ public record ProjectTask : WorkspaceEntity<int>
             OwnerUsername = Owner?.DisplayName ?? string.Empty,
             OwnerPictureUrl = Owner?.PictureUrl ?? string.Empty,
             ProjectName = Project?.Name ?? string.Empty,
+            Priority = Priority,
+            EstimateType = EstimateType,
+            EstimateValue = EstimateValue,
             Tags = Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
             Assignees = ProjectTaskAppUsers
                 .Select(u => u.User)

@@ -25,6 +25,8 @@ public enum ActivityType
     LoginSuccess = 21,
     LoginFailed = 22,
     Mention = 23,
+    ModifyPriority = 24,
+    ModifyEstimate = 25,
 }
 
 public enum ActivitySubType

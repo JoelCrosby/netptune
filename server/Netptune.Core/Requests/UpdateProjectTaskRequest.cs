@@ -21,4 +21,10 @@ public record UpdateProjectTaskRequest
     public List<string>? AssigneeIds { get; set; }
 
     public List<string>? Tags { get; set; }
+
+    public TaskPriority? Priority { get; set; }
+
+    public EstimateType? EstimateType { get; set; }
+
+    public decimal? EstimateValue { get; set; }
 }
