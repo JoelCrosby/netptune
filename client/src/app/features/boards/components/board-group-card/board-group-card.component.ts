@@ -32,7 +32,6 @@ import {
   ],
   template: `<app-card
     class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-2! text-[14px] tracking-[.1px]"
-    [ngClass]="flaggedClasses()"
     [class.selected]="task().selected">
     <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
 
@@ -71,9 +70,6 @@ import {
             {{ estimateLabel() }}
           </span>
         }
-        @if (task().isFlagged) {
-          <svg lucideFlag class="fill-red-500 text-red-500" size="20px"></svg>
-        }
         @for (assignee of task().assignees; track assignee.id) {
           <app-avatar
             size="sm"
@@ -89,10 +85,6 @@ import {
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
-
-  flaggedClasses = computed(() => ({
-    'bg-red-700/10 border-red-900/20': this.task().isFlagged,
-  }));
 
   priorityVisible = computed(() => {
     const p = this.task().priority;

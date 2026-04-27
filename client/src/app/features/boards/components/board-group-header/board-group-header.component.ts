@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BoardGroupTagsComponent } from '@boards/components/board-group-tags/board-group-tags.component';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
-import { BoardGroupsFlaggedComponent } from '@boards/components/board-groups-flagged/board-groups-flagged.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
 import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
@@ -13,7 +12,6 @@ import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperat
     BoardGroupsSearchComponent,
     BoardGroupUsersComponent,
     BoardGroupTagsComponent,
-    BoardGroupsFlaggedComponent,
     BoardGroupsSelectionComponent,
     BoardGroupHeaderSeperatorComponent,
   ],
@@ -24,7 +22,6 @@ import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperat
     <app-board-group-users />
     <app-board-group-header-seperator />
     <app-board-group-tags />
-    <app-board-groups-flagged />
     <app-board-groups-selection />
   </div> `,
 })

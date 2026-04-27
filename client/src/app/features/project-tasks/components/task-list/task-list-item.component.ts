@@ -15,7 +15,6 @@ import {
   LucideArchiveRestore,
   LucideCheck,
   LucideEllipsisVertical,
-  LucideFlag,
   LucideTrash2,
 } from '@lucide/angular';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
@@ -31,7 +30,6 @@ import { netptunePermissions } from '@app/core/auth/permissions';
   imports: [
     IconButtonComponent,
     LucideEllipsisVertical,
-    LucideFlag,
     LucideCheck,
     LucideArchiveRestore,
     LucideTrash2,
@@ -43,8 +41,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
   template: `
     <div
       class="bg-card flex h-10 cursor-pointer items-center gap-2 overflow-hidden transition-colors duration-200 ease-in-out"
-      [class.pl-4]="!showMenu()"
-      [class.flagged]="task().isFlagged">
+      [class.pl-4]="!showMenu()">
       @if (canDelete()) {
         <button
           class="w-10 flex-none"
@@ -71,10 +68,6 @@ import { netptunePermissions } from '@app/core/auth/permissions';
         (click)="titleClicked()">
         {{ task().name }}
       </div>
-
-      @if (task().isFlagged) {
-        <svg lucideFlag class="h-5 w-8 flex-none text-red-500"></svg>
-      }
 
       @if (task().status === 1) {
         <svg lucideCheck class="h-5 w-5 text-green-500"></svg>
