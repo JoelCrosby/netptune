@@ -14,8 +14,6 @@ public class ExportTaskViewModel
 
     public string Status { get; init; } = null!;
 
-    public bool IsFlagged { get; init; }
-
     public double SortOrder { get; init; }
 
     public DateTime CreatedAt { get; init; }

@@ -8,8 +8,6 @@ public record TaskImportRow
 
     public string? Status { get; init; }
 
-    public string? IsFlagged { get; init; }
-
     public required  DateTime CreatedAt { get; init; }
 
     public DateTime? UpdatedAt { get; init; }

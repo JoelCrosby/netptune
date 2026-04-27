@@ -17,8 +17,6 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public int ProjectScopeId { get; set; }
 
-    public bool IsFlagged { get; set; }
-
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }
@@ -65,7 +63,6 @@ public record ProjectTask : WorkspaceEntity<int>
             Status = Status,
             ProjectScopeId = ProjectScopeId,
             SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
-            IsFlagged = IsFlagged,
             ProjectId = ProjectId,
             WorkspaceId = WorkspaceId,
             WorkspaceKey = Workspace.Slug,

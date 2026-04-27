@@ -6,8 +6,6 @@ public record BoardGroupsFilter
 
     public required string[] Tags { get; init; }
 
-    public bool? Flagged { get; init; }
-
     public string? Term { get; init; }
 
     public static BoardGroupsFilter Empty()

@@ -12,8 +12,6 @@ public record UpdateProjectTaskRequest
 
     public ProjectTaskStatus? Status { get; set; }
 
-    public bool? IsFlagged { get; set; }
-
     public double? SortOrder { get; set; }
 
     public string? OwnerId { get; set; }

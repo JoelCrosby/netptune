@@ -8,8 +8,6 @@ public enum ActivityType
     Assign = 3,
     Move = 5,
     Reorder = 6,
-    Flag = 7,
-    UnFlag = 8,
     ModifyName = 9,
     ModifyDescription = 10,
     ModifyStatus = 11,
@@ -27,10 +25,4 @@ public enum ActivityType
     Mention = 23,
     ModifyPriority = 24,
     ModifyEstimate = 25,
-}
-
-public enum ActivitySubType
-{
-    MoveTaskToGroup = 0,
-    FlagTask,
 }

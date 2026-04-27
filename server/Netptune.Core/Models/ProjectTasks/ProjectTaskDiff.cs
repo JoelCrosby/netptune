@@ -18,8 +18,6 @@ public record ProjectTaskDiff
 
     private ValueDiff<string> Description = null!;
 
-    private ValueDiff<bool> Flagged = null!;
-
     private ValueDiff<ProjectTaskStatus> Status = null!;
 
     private ValueDiff<TaskPriority> Priority = null!;
@@ -42,9 +40,6 @@ public record ProjectTaskDiff
 
         var descriptionChanged = updated.Description != old.Description;
         var descriptionValue = updated.Description;
-
-        var flaggedChanged = updated.IsFlagged != old.IsFlagged;
-        var flaggedValue = updated.IsFlagged;
 
         var statusChanged = updated.Status != old.Status;
         var statusValue = updated.Status;
@@ -71,11 +66,6 @@ public record ProjectTaskDiff
             {
                 Modified = descriptionChanged,
                 NewValue = descriptionValue,
-            },
-            Flagged = new ValueDiff<bool>
-            {
-                Modified = flaggedChanged,
-                NewValue = flaggedValue,
             },
             Status = new ValueDiff<ProjectTaskStatus>
             {
@@ -120,16 +110,6 @@ public record ProjectTaskDiff
                 options.EntityId = entityId;
                 options.EntityType = EntityType.Task;
                 options.Type = ActivityType.ModifyDescription;
-            });
-        }
-
-        if (Flagged.Modified)
-        {
-            activity.Log(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type =  Flagged.NewValue ? ActivityType.Flag : ActivityType.UnFlag;
             });
         }
 

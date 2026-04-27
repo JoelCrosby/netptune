@@ -23,8 +23,6 @@ public record TaskViewModel
 
     public List<string> Tags { get; set; } = new();
 
-    public bool IsFlagged { get; set; }
-
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }
