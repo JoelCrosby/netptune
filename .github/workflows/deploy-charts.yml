@@ -15,6 +15,10 @@ on:
       - "charts/**"
       - ".github/workflows/deploy-charts.yml"
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
