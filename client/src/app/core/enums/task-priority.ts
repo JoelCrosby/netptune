@@ -32,4 +32,4 @@ export const taskPriorityIconColors: Record<TaskPriority, string> = {
 
 export const taskPriorityOptions = Object.values(TaskPriority)
   .filter((v): v is TaskPriority => typeof v === 'number')
-  .map(value => ({ value, label: taskPriorityLabels[value] }));
+  .map((value) => ({ value, label: taskPriorityLabels[value] }));

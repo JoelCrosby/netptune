@@ -18,7 +18,7 @@ export const estimateTypeUnits: Record<EstimateType, string> = {
 
 export const estimateTypeOptions = Object.values(EstimateType)
   .filter((v): v is EstimateType => typeof v === 'number')
-  .map(value => ({ value, label: estimateTypeLabels[value] }));
+  .map((value) => ({ value, label: estimateTypeLabels[value] }));
 
 export const tShirtSizes: { value: number; label: string }[] = [
   { value: 1, label: 'XS' },
@@ -30,7 +30,7 @@ export const tShirtSizes: { value: number; label: string }[] = [
 
 export function formatEstimate(type: EstimateType, value: number): string {
   if (type === EstimateType.tShirt) {
-    return tShirtSizes.find(s => s.value === value)?.label ?? '?';
+    return tShirtSizes.find((s) => s.value === value)?.label ?? '?';
   }
   return `${value}${estimateTypeUnits[type]}`;
 }

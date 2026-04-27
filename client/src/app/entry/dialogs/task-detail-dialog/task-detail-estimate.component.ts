@@ -36,9 +36,9 @@ import { TaskDetailService } from './task-detail.service';
         <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
       </button>
       <app-dropdown-menu #typeMenu>
-        <small class="block px-3 py-1 text-xs text-neutral-500"
-          >Estimate Type</small
-        >
+        <small class="block px-3 py-1 text-xs text-neutral-500">
+          Estimate Type
+        </small>
         @for (opt of estimateTypeOptions; track opt.value) {
           <button
             app-menu-item

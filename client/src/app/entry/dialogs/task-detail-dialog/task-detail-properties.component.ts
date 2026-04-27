@@ -13,7 +13,6 @@ import { MenuItemComponent } from '@app/static/components/dropdown-menu/menu-ite
 import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
 import { Store } from '@ngrx/store';
 import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
-import { TaskDetailActionsComponent } from './task-detail-actions.component';
 import { TaskDetailEstimateComponent } from './task-detail-estimate.component';
 import { TaskDetailService } from './task-detail.service';
 
@@ -26,7 +25,6 @@ import { TaskDetailService } from './task-detail.service';
     ChipListboxComponent,
     DropdownMenuComponent,
     MenuItemComponent,
-    TaskDetailActionsComponent,
     TaskStatusPipe,
     ChipOptionComponent,
     TaskPrioritySelectComponent,
@@ -43,7 +41,7 @@ import { TaskDetailService } from './task-detail.service';
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Reporter</h4>
-        <div class="flex flex-row items-center rounded">
+        <div class="flex flex-row items-center rounded pl-2">
           <app-avatar
             size="sm"
             [name]="task().ownerUsername"
@@ -91,8 +89,6 @@ import { TaskDetailService } from './task-detail.service';
         </app-dropdown-menu>
       </div>
     </div>
-
-    <app-task-detail-actions />
   `,
 })
 export class TaskDetailPropertiesComponent {

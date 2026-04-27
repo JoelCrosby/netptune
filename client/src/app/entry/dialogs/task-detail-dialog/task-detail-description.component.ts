@@ -15,14 +15,18 @@ import { EditorComponent } from '@static/components/editor/editor.component';
 
 @Component({
   selector: 'app-task-detail-description',
-  template: ` <app-editor
-    class="border-foreground/30 mt-2 flex max-h-[calc(100vh-960px)] overflow-y-auto rounded-sm border-2 px-4 py-1"
-    aria-labelledby="description"
-    placeholder="Add a Description..."
-    (saved)="updateTask($event)"
-    [(value)]="description"
-    [isReadOnly]="isReadOnly()">
-  </app-editor>`,
+  template: ` <label class="font-sm font-semibold" for="description">
+      Description
+    </label>
+
+    <app-editor
+      class="border-foreground/30 mt-2 flex max-h-[calc(100vh-960px)] overflow-y-auto rounded-sm border-2 px-4 py-1"
+      aria-labelledby="description"
+      placeholder="Add a Description..."
+      (saved)="updateTask($event)"
+      [(value)]="description"
+      [isReadOnly]="isReadOnly()">
+    </app-editor>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [EditorComponent],
 })

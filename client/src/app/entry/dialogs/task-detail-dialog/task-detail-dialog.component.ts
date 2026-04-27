@@ -25,6 +25,7 @@ import { TaskDetailDescriptionComponent } from './task-detail-description.compon
 import { TaskDetailHeaderComponent } from './task-detail-header.component';
 import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
+import { TaskDetailActionsComponent } from './task-detail-actions.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -38,24 +39,12 @@ import { TaskDetailTagsComponent } from './task-detail-tags.component';
           <app-task-scope-id [id]="task.systemId" />
           <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
         </div>
-        <div class="px-12 py-0">
+        <div class="flex flex-col gap-6 px-12">
           <app-task-detail-header />
-        </div>
-        <div class="px-12 py-0">
-          <div class="flex flex-col">
-            <app-task-detail-properties />
-            <div>
-              <h4 class="font-sm mt-4 mb-2 font-semibold">Tags</h4>
-              <app-task-detail-tags />
-            </div>
-            <div>
-              <h4 class="font-sm mt-4 mb-2 font-semibold">Comments</h4>
-              <app-task-detail-comments />
-            </div>
-          </div>
-          <label class="font-sm font-semibold" for="description">
-            Description
-          </label>
+          <app-task-detail-properties />
+          <app-task-detail-actions />
+          <app-task-detail-tags />
+          <app-task-detail-comments />
           <app-task-detail-description />
         </div>
       </div>
@@ -81,6 +70,7 @@ import { TaskDetailTagsComponent } from './task-detail-tags.component';
     TaskDetailDescriptionComponent,
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
+    TaskDetailActionsComponent,
   ],
 })
 export class TaskDetailDialogComponent implements OnDestroy {

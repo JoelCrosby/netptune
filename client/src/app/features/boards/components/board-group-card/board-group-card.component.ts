@@ -13,7 +13,11 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { NgClass } from '@angular/common';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
-import { TaskPriority, taskPriorityColors, taskPriorityLabels } from '@core/enums/task-priority';
+import {
+  TaskPriority,
+  taskPriorityColors,
+  taskPriorityLabels,
+} from '@core/enums/task-priority';
 
 @Component({
   selector: 'app-board-group-card',
@@ -62,7 +66,8 @@ import { TaskPriority, taskPriorityColors, taskPriorityLabels } from '@core/enum
 
       <div class="flex items-center gap-4">
         @if (estimateLabel()) {
-          <span class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <span
+            class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
             {{ estimateLabel() }}
           </span>
         }
@@ -107,6 +112,9 @@ export class BoardGroupCardComponent {
   estimateLabel = computed(() => {
     const { estimateType, estimateValue } = this.task();
     if (estimateValue == null) return null;
-    return formatEstimate(estimateType ?? EstimateType.storyPoints, estimateValue);
+    return formatEstimate(
+      estimateType ?? EstimateType.storyPoints,
+      estimateValue
+    );
   });
 }

@@ -19,6 +19,7 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-task-detail-tags',
   template: `
+    <h4 class="font-sm mt-4 mb-2 font-semibold">Tags</h4>
     <app-form-select-tags
       class="tags-autocomplete"
       placeholder="Add a Tag..."

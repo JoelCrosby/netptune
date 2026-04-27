@@ -28,6 +28,7 @@ import {
 @Component({
   selector: 'app-task-detail-comments',
   template: `
+    <h4 class="font-sm mt-4 mb-2 font-semibold">Comments</h4>
     <app-comments-list
       [user]="user()"
       [comments]="comments()"
