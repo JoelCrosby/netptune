@@ -18,6 +18,9 @@ spec:
       containers:
         - image: "{{ .Values.parameters.jobs.jobs_image }}"
           name: "jobs"
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Production"
           envFrom:
             - configMapRef:
                 name: "jobs-config"
