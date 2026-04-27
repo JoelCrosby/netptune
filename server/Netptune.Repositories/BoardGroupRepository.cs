@@ -54,6 +54,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , pt.id               AS task_id
                      , pt.name             AS task_name
                      , pt.is_flagged       AS task_is_flagged
+                     , pt.priority         AS task_priority
+                     , pt.estimate_type    AS task_estimate_type
+                     , pt.estimate_value   AS task_estimate_value
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
                      , ptibg.sort_order    AS task_sort_order
@@ -136,6 +139,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                     Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
                     IsFlagged = row.Task_Is_Flagged,
+                    Priority = row.Task_Priority,
+                    EstimateType = row.Task_Estimate_Type,
+                    EstimateValue = row.Task_Estimate_Value,
                     SortOrder = row.Task_Sort_Order,
                     ProjectId = row.Project_Id,
                     WorkspaceId = row.Workspace_Id,

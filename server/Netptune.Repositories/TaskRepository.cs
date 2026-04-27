@@ -121,6 +121,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 ? x.ProjectScopeId.ToString()
                 : x.Project.Key + "-" + x.ProjectScopeId.ToString(),
             IsFlagged = x.IsFlagged,
+            Priority = x.Priority,
+            EstimateType = x.EstimateType,
+            EstimateValue = x.EstimateValue,
             ProjectId = x.ProjectId,
             WorkspaceId = x.WorkspaceId,
             WorkspaceKey = x.Workspace.Slug,

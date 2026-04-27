@@ -38,6 +38,24 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired();
 
         builder
+            .Property(task => task.Priority)
+            .HasColumnName("priority")
+            .HasConversion<int?>()
+            .IsRequired(false);
+
+        builder
+            .Property(task => task.EstimateType)
+            .HasColumnName("estimate_type")
+            .HasConversion<int?>()
+            .IsRequired(false);
+
+        builder
+            .Property(task => task.EstimateValue)
+            .HasColumnName("estimate_value")
+            .HasColumnType("numeric(10,2)")
+            .IsRequired(false);
+
+        builder
             .HasMany(task => task.Tags)
             .WithMany(tag => tag.Tasks)
             .UsingEntity<ProjectTaskTag>(

@@ -16,6 +16,12 @@ public class BoardViewRowMap
 
     public bool Task_Is_Flagged { get; set; }
 
+    public TaskPriority? Task_Priority { get; set; }
+
+    public EstimateType? Task_Estimate_Type { get; set; }
+
+    public decimal? Task_Estimate_Value { get; set; }
+
     public double Task_Sort_Order { get; set; }
 
     public int Project_Id { get; set; }
