@@ -1,0 +1,23 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "postgres-tailscale"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "postgres"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    tailscale.com/hostname: "netptune-postgres"
+spec:
+  type: "LoadBalancer"
+  loadBalancerClass: "tailscale.com/tailscale"
+  selector:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "postgres"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  ports:
+    - name: "tcp"
+      protocol: "TCP"
+      port: 5432
+      targetPort: 5432
