@@ -25,7 +25,7 @@ import { TaskDetailService } from './task-detail.service';
   imports: [DropdownMenuComponent, MenuItemComponent, NgClass, LucideFlag],
   template: `
     <button
-      class="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+      class="flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
       (click)="menu.toggle($any($event.currentTarget))">
       <svg lucideFlag class="h-4 w-4" [ngClass]="iconColor()"></svg>
       <span [ngClass]="labelColor()">{{ label() }}</span>

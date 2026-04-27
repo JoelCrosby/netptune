@@ -15,9 +15,11 @@ import { NgClass } from '@angular/common';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
 import {
   TaskPriority,
+  taskPriorityCardColors,
   taskPriorityColors,
   taskPriorityLabels,
 } from '@core/enums/task-priority';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-board-group-card',
@@ -29,10 +31,12 @@ import {
     LucideFlag,
     LucideCheck,
     NgClass,
+    TooltipDirective,
   ],
   template: `<app-card
     class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-2! text-[14px] tracking-[.1px]"
-    [class.selected]="task().selected">
+    [class.selected]="task().selected"
+    [ngClass]="priorityClasses()">
     <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
 
     <div class="mt-4 flex flex-row flex-wrap">
@@ -51,16 +55,6 @@ import {
         @if (task().status === 1) {
           <svg lucideCheck class="text-green-500">done</svg>
         }
-
-        @if (priorityVisible()) {
-          <span
-            class="flex items-center gap-1 text-xs font-medium"
-            [ngClass]="priorityColor()"
-            [title]="priorityLabel()">
-            <svg lucideFlag class="h-3 w-3" [ngClass]="priorityColor()"></svg>
-            {{ priorityLabel() }}
-          </span>
-        }
       </div>
 
       <div class="flex items-center gap-4">
@@ -70,6 +64,17 @@ import {
             {{ estimateLabel() }}
           </span>
         }
+
+        @if (priorityVisible()) {
+          <span
+            class="flex items-center gap-1 text-xs font-medium"
+            [ngClass]="priorityColor()"
+            [title]="priorityLabel()"
+            [appTooltip]="priorityLabel()">
+            <svg lucideFlag class="h-5 w-5" [ngClass]="priorityColor()"></svg>
+          </span>
+        }
+
         @for (assignee of task().assignees; track assignee.id) {
           <app-avatar
             size="sm"
@@ -85,19 +90,25 @@ import {
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
+  readonly priority = computed(() => this.task().priority);
 
   priorityVisible = computed(() => {
-    const p = this.task().priority;
+    const p = this.priority();
     return p !== null && p !== undefined && p !== TaskPriority.none;
   });
 
   priorityColor = computed(() => {
-    const p = this.task().priority ?? TaskPriority.none;
+    const p = this.priority() ?? TaskPriority.none;
     return taskPriorityColors[p];
   });
 
+  priorityClasses = computed(() => {
+    const p = this.priority() ?? TaskPriority.none;
+    return { [taskPriorityCardColors[p]]: true };
+  });
+
   priorityLabel = computed(() => {
-    const p = this.task().priority ?? TaskPriority.none;
+    const p = this.priority() ?? TaskPriority.none;
     return taskPriorityLabels[p];
   });
 

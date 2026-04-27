@@ -132,9 +132,6 @@ export class AuditTableComponent {
       case ActivityType.permissionChanged:
       case ActivityType.roleChanged:
         return 'bg-sky-500/10 text-sky-600 dark:text-sky-400';
-      case ActivityType.flag:
-      case ActivityType.unFlag:
-        return 'bg-orange-500/10 text-orange-600 dark:text-orange-400';
       case ActivityType.exportRequested:
         return 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400';
       default:

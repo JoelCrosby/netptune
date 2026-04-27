@@ -30,7 +30,7 @@ import { TaskDetailService } from './task-detail.service';
   template: `
     <div class="flex items-center gap-2">
       <button
-        class="flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
         (click)="typeMenu.toggle($any($event.currentTarget))">
         {{ estimateTypeLabels[estimateType() ?? EstimateType.storyPoints] }}
         <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
@@ -50,7 +50,7 @@ import { TaskDetailService } from './task-detail.service';
 
       @if (estimateType() === EstimateType.tShirt) {
         <button
-          class="flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
           (click)="sizeMenu.toggle($any($event.currentTarget))">
           {{ tShirtLabel() }}
           <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
@@ -69,7 +69,7 @@ import { TaskDetailService } from './task-detail.service';
         <input
           type="number"
           min="0"
-          class="w-20 rounded border border-neutral-200 bg-transparent px-2 py-1 text-sm dark:border-neutral-700"
+          class="w-20 rounded-sm border border-neutral-200 bg-transparent px-4 py-2 text-sm dark:border-neutral-700"
           placeholder="—"
           [ngModel]="estimateValue()"
           (ngModelChange)="onEstimateValueChange($event)" />

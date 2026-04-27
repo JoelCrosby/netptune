@@ -182,6 +182,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
                         WorkspaceKey = meta.Workspace_Identifier,
+                        Priority = row.Task_Priority,
                         Assignees = new List<AssigneeViewModel>
                         {
                             new ()
