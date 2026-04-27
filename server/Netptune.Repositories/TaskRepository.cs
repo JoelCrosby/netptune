@@ -120,7 +120,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             SystemId = x.Project == null
                 ? x.ProjectScopeId.ToString()
                 : x.Project.Key + "-" + x.ProjectScopeId.ToString(),
-            IsFlagged = x.IsFlagged,
             Priority = x.Priority,
             EstimateType = x.EstimateType,
             EstimateValue = x.EstimateValue,
@@ -157,7 +156,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , pt.id               AS task_id
                      , pt.name             AS task_name
                      , pt.description      AS task_description
-                     , pt.is_flagged       AS task_is_flagged
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
                      , pt.created_at       AS task_created_at
@@ -210,7 +208,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , pt.id               AS task_id
                      , pt.name             AS task_name
                      , pt.description      AS task_description
-                     , pt.is_flagged       AS task_is_flagged
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
                      , pt.created_at       AS task_created_at
@@ -287,7 +284,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Description = row.Task_Description,
                 SystemId = systemId,
                 Status = row.Task_Status.ToString(),
-                IsFlagged = row.Task_Is_Flagged,
                 SortOrder = row.Task_Sort_Order,
                 Board = row.Board_Identifier,
                 CreatedAt = row.Task_Created_At,

@@ -33,11 +33,6 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired();
 
         builder
-            .Property(task => task.IsFlagged)
-            .HasDefaultValue(false)
-            .IsRequired();
-
-        builder
             .Property(task => task.Priority)
             .HasColumnName("priority")
             .HasConversion<int?>()

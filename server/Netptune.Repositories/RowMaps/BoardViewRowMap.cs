@@ -14,8 +14,6 @@ public class BoardViewRowMap
 
     public ProjectTaskStatus Task_Status { get; set; }
 
-    public bool Task_Is_Flagged { get; set; }
-
     public TaskPriority? Task_Priority { get; set; }
 
     public EstimateType? Task_Estimate_Type { get; set; }

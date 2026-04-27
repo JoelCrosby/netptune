@@ -18,8 +18,6 @@ public class TasksViewRowMap
 
     public ProjectTaskStatus Task_Status { get; set; }
 
-    public bool Task_Is_Flagged { get; set; }
-
     public double Task_Sort_Order { get; set; }
 
     public string Project_Scope_Id { get; set; } = null!;
