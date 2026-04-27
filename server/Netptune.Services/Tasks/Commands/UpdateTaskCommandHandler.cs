@@ -47,6 +47,9 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             result.Status = req.Status ?? result.Status;
             result.IsFlagged = req.IsFlagged ?? result.IsFlagged;
             result.OwnerId = req.OwnerId ?? result.OwnerId;
+            result.Priority = req.Priority ?? result.Priority;
+            result.EstimateType = req.EstimateType ?? result.EstimateType;
+            result.EstimateValue = req.EstimateValue ?? result.EstimateValue;
 
             if (req.AssigneeIds is not null)
             {

@@ -50,6 +50,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             ProjectId = req.ProjectId,
             OwnerId = user.Id,
             WorkspaceId = workspace.Id,
+            Priority = req.Priority,
+            EstimateType = req.EstimateType,
+            EstimateValue = req.EstimateValue,
             ProjectTaskAppUsers = new List<ProjectTaskAppUser> { new() { UserId = userId } },
         };
 
