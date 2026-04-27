@@ -1,7 +1,8 @@
 import {
   LucideActivity,
   LucideArrowRightLeft,
-  LucideCircleMinus,
+  LucideBell,
+  LucideBellDot,
   LucideCirclePlus,
   LucideClipboardList,
   LucideDownload,
@@ -167,6 +168,16 @@ export const netptunePermissionLabels: PermissionLabels = {
       label: 'Reassign Tasks',
       icon: LucideArrowRightLeft,
     },
+    export: {
+      key: 'tasks.export',
+      label: 'Export Tasks',
+      icon: LucideDownload,
+    },
+    import: {
+      key: 'tasks.import',
+      label: 'Import Tasks',
+      icon: LucideUpload,
+    },
   },
   comments: {
     read: {
@@ -221,6 +232,18 @@ export const netptunePermissionLabels: PermissionLabels = {
       icon: LucideShieldX,
     },
   },
+  notifications: {
+    read: {
+      key: 'notifications.read',
+      label: 'View Notifications',
+      icon: LucideBell,
+    },
+    update: {
+      key: 'notifications.update',
+      label: 'Manage Notifications',
+      icon: LucideBellDot,
+    },
+  },
   storage: {
     uploadProfilePicture: {
       key: 'storage.upload_profile_picture',
@@ -231,20 +254,6 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'storage.upload_media',
       label: 'Upload Media',
       icon: LucideUpload,
-    },
-  },
-  export: {
-    projectTasks: {
-      key: 'export.tasks',
-      label: 'Export Tasks',
-      icon: LucideDownload,
-    },
-  },
-  import: {
-    projectTasks: {
-      key: 'import.tasks',
-      label: 'Import Tasks',
-      icon: LucideCircleMinus,
     },
   },
 };

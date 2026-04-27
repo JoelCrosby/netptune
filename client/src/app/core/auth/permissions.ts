@@ -39,6 +39,8 @@ export const netptunePermissions = {
     deleteAny: 'tasks.delete_any',
     move: 'tasks.move',
     reassign: 'tasks.reassign',
+    export: 'tasks.export',
+    import: 'tasks.import',
   },
   comments: {
     read: 'comments.read',
@@ -61,15 +63,13 @@ export const netptunePermissions = {
     export: 'audit.export',
     anonymise: 'audit.anonymise',
   },
+  notifications: {
+    read: 'notifications.read',
+    update: 'notifications.update',
+  },
   storage: {
     uploadProfilePicture: 'storage.upload_profile_picture',
     uploadMedia: 'storage.upload_media',
-  },
-  export: {
-    projectTasks: 'export.tasks',
-  },
-  import: {
-    projectTasks: 'import.tasks',
   },
 } as const;
 
