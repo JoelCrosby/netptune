@@ -36,4 +36,7 @@ export enum ActivityType {
   exportRequested = 20,
   loginSuccess = 21,
   loginFailed = 22,
+  mention = 23,
+  modifyPriority = 24,
+  modifyEstimate = 25,
 }

@@ -1,3 +1,5 @@
+import { EstimateType } from '../enums/estimate-type';
+import { TaskPriority } from '../enums/task-priority';
 import { TaskStatus } from '../enums/project-task-status';
 import { AppUser } from './appuser';
 import { Basemodel } from './basemodel';
@@ -9,6 +11,9 @@ export interface ProjectTask extends Basemodel {
   description: string;
   status: TaskStatus;
   isFlagged: boolean;
+  priority: TaskPriority | null;
+  estimateType: EstimateType | null;
+  estimateValue: number | null;
 
   sortOrder: number;
 
@@ -35,4 +40,8 @@ export interface AddProjectTaskRequest {
   sortOrder?: number;
 
   assigneeId?: string;
+
+  priority?: TaskPriority;
+  estimateType?: EstimateType;
+  estimateValue?: number;
 }

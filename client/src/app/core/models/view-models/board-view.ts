@@ -1,3 +1,5 @@
+import { EstimateType } from '@core/enums/estimate-type';
+import { TaskPriority } from '@core/enums/task-priority';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AppUser } from '../appuser';
 import { BoardGroupType } from './board-group-view-model';
@@ -25,6 +27,9 @@ export interface BoardViewTask {
   systemId: string;
   tags: string[];
   isFlagged: boolean;
+  priority: TaskPriority | null;
+  estimateType: EstimateType | null;
+  estimateValue: number | null;
   sortOrder: number;
   status: TaskStatus;
   projectId: number;

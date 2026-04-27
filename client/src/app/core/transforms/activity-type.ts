@@ -46,6 +46,12 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Logged in';
     case ActivityType.loginFailed:
       return 'Failed login';
+    case ActivityType.mention:
+      return 'Mentioned';
+    case ActivityType.modifyPriority:
+      return 'Changed priority';
+    case ActivityType.modifyEstimate:
+      return 'Changed estimate';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }
