@@ -31,6 +31,20 @@ spec:
               protocol: "TCP"
               containerPort: {{ .Values.parameters.jobs.port_http | int }}
           imagePullPolicy: "Always"
+          livenessProbe:
+            httpGet:
+              path: "/health/live"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/health/ready"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: "netptune-app"
@@ -41,5 +55,5 @@ spec:
   strategy:
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1
+      maxUnavailable: 0
     type: "RollingUpdate"
