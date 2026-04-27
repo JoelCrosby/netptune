@@ -68,7 +68,6 @@ export class BoardGroupsEffects {
             actions.loadBoardGroupsSuccess({
               boardGroups,
               selectedIds: paramMap.getAll('users'),
-              onlyFlagged: paramMap.get('flagged') === 'true',
               searchTerm: paramMap.get('term'),
             })
           ),
@@ -345,25 +344,21 @@ export class BoardGroupsEffects {
       ofType(
         actions.toggleUserSelection,
         toggleSelectedTag,
-        actions.toggleOnlyFlagged,
         actions.setSearchTerm
       ),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardGroupsSelectedUserIds),
         this.store.select(selectSelectedTags),
-        this.store.select(selectors.selectOnlyFlagged),
         this.store.select(selectors.selectSearchTerm),
       ]),
-      map(([_, users, tags, flagged, term]) => {
+      map(([_, users, tags, term]) => {
         const usersParam = users?.length ? users : undefined;
         const tagsParam = tags?.length ? tags : undefined;
-        const flaggedParam = flagged === true || undefined;
         const termParam = term;
 
         return {
           users: usersParam,
           tags: tagsParam,
-          flagged: flaggedParam,
           term: termParam,
         };
       }),

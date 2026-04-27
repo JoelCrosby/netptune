@@ -38,7 +38,6 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   isInlineActive: boolean;
   isInlineDirty: boolean;
   inlineActive?: number;
-  onlyFlagged?: boolean;
   selectedTasks: number[];
   searchTerm?: string | null;
   inlineTaskContent?: string | null;
@@ -48,6 +47,5 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
 export interface BorderFilterParams {
   users?: string[];
   tags?: string[];
-  flagged?: boolean;
   term?: string | null;
 }

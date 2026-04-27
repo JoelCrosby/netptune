@@ -149,11 +149,6 @@ export const selectBoardProjectId = createSelector(
   (state?: BoardViewModel) => state?.projectId
 );
 
-export const selectOnlyFlagged = createSelector(
-  selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.onlyFlagged ?? false
-);
-
 export const selectSearchTerm = createSelector(
   selectBoardGroupsFeature,
   (state: BoardGroupsState) => state.searchTerm
@@ -162,18 +157,16 @@ export const selectSearchTerm = createSelector(
 export const selectCreateBoardGroupTaskMessage = createSelector(
   selectCurrentUserId,
   selectBoardGroupTaskAssignee,
-  selectOnlyFlagged,
   selectSearchTerm,
   selectSelectedTagCount,
   (
     currentUserId: string | undefined,
     assigneeId: string | undefined,
-    onlyFlagged: boolean | undefined,
     term: string | undefined | null,
     tagCount: number
   ): string | null => {
     const differentUser = currentUserId !== assigneeId;
-    const filterApplied = onlyFlagged || term || tagCount;
+    const filterApplied = term || tagCount;
 
     if (differentUser || filterApplied) {
       return 'The filters currently applied may cause the newly created task to be hidden.';

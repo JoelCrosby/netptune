@@ -29,7 +29,7 @@ const reducer = createReducer(
     actions.loadBoardGroupsSuccess,
     (
       state,
-      { boardGroups, selectedIds, onlyFlagged, searchTerm }
+      { boardGroups, selectedIds, searchTerm }
     ): BoardGroupsState => {
       const selectedIdMap = new Set(selectedIds);
 
@@ -39,7 +39,6 @@ const reducer = createReducer(
         loaded: true,
         board: boardGroups.board,
         users: boardGroups.users,
-        onlyFlagged,
         searchTerm,
         selectedTasks: [],
         selectedUsers: boardGroups.users.filter((user) =>
@@ -144,16 +143,6 @@ const reducer = createReducer(
       selectedUsers,
     };
   }),
-
-  // Toggle Only Flagged
-
-  on(
-    actions.toggleOnlyFlagged,
-    (state): BoardGroupsState => ({
-      ...state,
-      onlyFlagged: !state.onlyFlagged,
-    })
-  ),
 
   // Set Search Term
 
