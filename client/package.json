@@ -72,9 +72,9 @@
     "@schematics/angular": "^21.2.8",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^25.6.0",
-    "@typescript-eslint/eslint-plugin": "^8.59.0",
-    "@typescript-eslint/parser": "^8.59.0",
-    "@typescript-eslint/utils": "^8.59.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "@typescript-eslint/utils": "^8.59.1",
     "angular-eslint": "^21.3.1",
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
@@ -82,9 +82,9 @@
     "prettier": "^3.8.3",
     "prettier-plugin-classnames": "^0.10.1",
     "prettier-plugin-merge": "^0.10.1",
-    "prettier-plugin-tailwindcss": "^0.7.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "turnstile-types": "^1.2.3",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.59.0"
+    "typescript-eslint": "^8.59.1"
   }
 }
