@@ -9,55 +9,33 @@ import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import { ActivityState } from './store/activity/activity.model';
-import { activityReducer } from './store/activity/activity.reducer';
-import { AuthState } from './store/auth/auth.models';
+import type { ActivityState } from './store/activity/activity.model';
+import type { AuthState } from './store/auth/auth.models';
 import { authReducer } from './store/auth/auth.reducer';
-import { BoardsState } from './store/boards/boards.model';
-import { boardsReducer } from './store/boards/boards.reducer';
-import { BoardGroupsState } from './store/groups/board-groups.model';
-import { boardGroupsReducer } from './store/groups/board-groups.reducer';
-import {
-  hubContextReducer,
-  HubContextState,
-} from './store/hub-context/hub-context.reducer';
+import type { BoardsState } from './store/boards/boards.model';
+import type { BoardGroupsState } from './store/groups/board-groups.model';
+import type { HubContextState } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
-import { MetaState } from './store/meta/meta.model';
+import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
-import { NotificationsState } from './store/notifications/notifications.model';
-import { notificationsReducer } from './store/notifications/notifications.reducer';
-import { ProfileState } from './store/profile/profile.model';
-import { profileReducer } from './store/profile/profile.reducer';
-import { ProjectsState } from './store/projects/projects.model';
-import { projectsReducer } from './store/projects/projects.reducer';
-import { SettingsState } from './store/settings/settings.model';
+import type { NotificationsState } from './store/notifications/notifications.model';
+import type { ProfileState } from './store/profile/profile.model';
+import type { ProjectsState } from './store/projects/projects.model';
+import type { SettingsState } from './store/settings/settings.model';
 import { settingsReducer } from './store/settings/settings.reducer';
-import { TagsState } from './store/tags/tags.model';
-import { tagsReducer } from './store/tags/tags.reducer';
-import { TasksState } from './store/tasks/tasks.model';
-import { projectTasksReducer } from './store/tasks/tasks.reducer';
-import { UsersState } from './store/users/users.model';
-import { usersReducer } from './store/users/users.reducer';
-import { WorkspacesState } from './store/workspaces/workspaces.model';
+import type { TagsState } from './store/tags/tags.model';
+import type { TasksState } from './store/tasks/tasks.model';
+import type { UsersState } from './store/users/users.model';
+import type { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
 export const reducers: ActionReducerMap<Partial<AppState>> = {
   auth: authReducer,
   meta: metaReducer,
-  activites: activityReducer,
   router: routerReducer,
   layout: layoutReducer,
   settings: settingsReducer,
   workspaces: workspacesReducer,
-  projects: projectsReducer,
-  tasks: projectTasksReducer,
-  users: usersReducer,
-  tags: tagsReducer,
-  hub: hubContextReducer,
-  notifications: notificationsReducer,
-  boards: boardsReducer,
-  boardgroups: boardGroupsReducer,
-  profile: profileReducer,
 };
 
 export const metaReducers: MetaReducer<Partial<AppState>>[] = [

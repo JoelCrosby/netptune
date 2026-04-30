@@ -19,9 +19,9 @@ public static class AuthEndpoints
 
         group.MapPost("/login", HandleLogin).AllowAnonymous();
         group.MapPost("/register", HandleRegister).AllowAnonymous();
-        group.MapGet("/confirm-email", HandleConfirmEmail).AllowAnonymous();
+        group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
         group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
-        group.MapGet("/reset-password", HandleResetPassword).AllowAnonymous();
+        group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();
         group.MapPatch("/change-password", HandleChangePassword).RequireAuthorization();
         group.MapGet("/current-user", HandleCurrentUser).AllowAnonymous();
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
@@ -119,18 +119,17 @@ public static class AuthEndpoints
     public static async Task<IResult> HandleConfirmEmail(
         INetptuneAuthService authenticationService,
         HttpContext context,
-        string userId,
-        string code)
+        AuthCodeRequest request)
     {
-        if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+        if (string.IsNullOrWhiteSpace(request.userId) || string.IsNullOrWhiteSpace(request.code))
         {
             return Results.Unauthorized();
         }
 
-        // Encoding for plus symbols is going wonky some where ...
-        var decodedCode = code.Replace(' ', '+');
+        // Encoding for plus symbols is going wonky
+        var decodedCode = request.code.Replace(' ', '+');
 
-        var result = await authenticationService.ConfirmEmail(userId, decodedCode);
+        var result = await authenticationService.ConfirmEmail(request.userId, decodedCode);
 
         if (!result.IsSuccess) return Results.Unauthorized();
 
@@ -159,25 +158,23 @@ public static class AuthEndpoints
     public static async Task<IResult> HandleResetPassword(
         INetptuneAuthService authenticationService,
         HttpContext context,
-        string userId,
-        string code,
-        string password)
+        ResetPasswordRequest request)
     {
-        if (string.IsNullOrWhiteSpace(userId)
-            || string.IsNullOrWhiteSpace(code)
-            || string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(request.UserId)
+            || string.IsNullOrWhiteSpace(request.Code)
+            || string.IsNullOrWhiteSpace(request.Password))
         {
             return Results.Unauthorized();
         }
 
-        // Encoding for plus symbols is going wonky some where ...
-        var decodedCode = code.Replace(' ', '+');
+        // Encoding for plus symbols is going wonky
+        var decodedCode = request.Code.Replace(' ', '+');
 
         var result = await authenticationService.ResetPassword(new ResetPasswordRequest
         {
             Code = decodedCode,
-            UserId = userId,
-            Password = password,
+            UserId = request.UserId,
+            Password = request.Password,
         });
 
         if (!result.IsSuccess) return Results.Unauthorized();

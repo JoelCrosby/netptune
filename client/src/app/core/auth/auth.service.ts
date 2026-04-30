@@ -29,21 +29,17 @@ export class AuthService {
   }
 
   confirmEmail(request: AuthCodeRequest) {
-    return this.http.get<LoginResponse>('api/auth/confirm-email', {
-      params: { ...request },
-    });
+    return this.http.post<LoginResponse>('api/auth/confirm-email', request);
   }
 
   requestPasswordReset(email: string) {
-    return this.http.get<ClientResponse>('api/auth/request-password-reset', {
-      params: { email },
+    return this.http.post<ClientResponse>('api/auth/request-password-reset', {
+      email,
     });
   }
 
   resetPassword(request: ResetPasswordRequest) {
-    return this.http.get<LoginResponse>('api/auth/reset-password', {
-      params: { ...request },
-    });
+    return this.http.post<LoginResponse>('api/auth/reset-password', request);
   }
 
   refresh() {

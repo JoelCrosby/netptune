@@ -116,8 +116,6 @@ export class InlineEditHeadingComponent extends AbstractFormValueControl {
   }
 
   private commit(val: string) {
-    console.log('commit: ', { val });
-
     this.value.set(val);
     this.isEditing.set(false);
     this.submitted.emit(val);

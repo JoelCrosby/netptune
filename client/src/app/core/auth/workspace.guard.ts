@@ -14,7 +14,8 @@ export const workspaceGuard: CanActivateFn = (
   const http = inject(HttpClient);
   const router = inject(Router);
 
-  const workspaceKey = route.paramMap.get('workspace');
+  const workspaceKey =
+    route.paramMap.get('workspace') ?? route.parent?.paramMap.get('workspace');
 
   return store.select(selectIsAuthenticated).pipe(
     first(),

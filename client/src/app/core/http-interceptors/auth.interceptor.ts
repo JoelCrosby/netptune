@@ -10,10 +10,19 @@ import { AuthService } from '@core/auth/auth.service';
 import { logout, refreshTokenSuccess } from '@app/core/store/auth/auth.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, filter, first, switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import {
+  catchError,
+  finalize,
+  first,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { WorkspaceService } from '../services/workspace.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
+
+let refreshTokenRequest$: ReturnType<AuthService['refresh']> | null = null;
 
 export const authInterceptor = (
   req: HttpRequest<unknown>,
@@ -23,9 +32,6 @@ export const authInterceptor = (
   const router = inject(Router);
   const workspaceService = inject(WorkspaceService);
   const authService = inject(AuthService);
-  const refreshTokenSubject = new BehaviorSubject<string | null>(null);
-
-  let isRefreshing = false;
 
   const isRefreshRequest = (req: HttpRequest<unknown>): boolean => {
     return req.url.includes('auth/refresh');
@@ -36,29 +42,22 @@ export const authInterceptor = (
   };
 
   const handle401 = (req: HttpRequest<unknown>) => {
-    if (!isRefreshing) {
-      isRefreshing = true;
-      refreshTokenSubject.next(null);
-
-      return authService.refresh().pipe(
-        switchMap((user) => {
-          isRefreshing = false;
-          refreshTokenSubject.next('ok');
-          store.dispatch(refreshTokenSuccess({ user }));
-          return next(req);
+    if (!refreshTokenRequest$) {
+      refreshTokenRequest$ = authService.refresh().pipe(
+        tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
+        finalize(() => {
+          refreshTokenRequest$ = null;
         }),
-        catchError((err) => {
-          isRefreshing = false;
-          store.dispatch(logout({ silent: true }));
-          return throwError(() => err);
-        })
+        shareReplay({ bufferSize: 1, refCount: false })
       );
     }
 
-    return refreshTokenSubject.pipe(
-      filter((token): token is string => token !== null),
-      first(),
-      switchMap(() => next(req))
+    return refreshTokenRequest$.pipe(
+      switchMap(() => next(req)),
+      catchError((err) => {
+        store.dispatch(logout({ silent: true }));
+        return throwError(() => err);
+      })
     );
   };
 

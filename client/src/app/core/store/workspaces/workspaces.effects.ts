@@ -17,11 +17,11 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
 import { currentUser } from '@app/core/store/auth/auth.actions';
+import { SseService } from '@core/sse/sse.service';
 
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {
@@ -30,7 +30,7 @@ export class WorkspacesEffects implements OnInitEffects {
   private workspacesService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
-  private hubService = inject(ProjectTasksHubService);
+  private sse = inject(SseService);
 
   init$ = createEffect(() => {
     return this.actions$.pipe(
@@ -45,7 +45,7 @@ export class WorkspacesEffects implements OnInitEffects {
     () => {
       return this.actions$.pipe(
         ofType(actions.selectWorkspace),
-        tap(() => void this.hubService.disconnect())
+        tap(() => void this.sse.disconnect())
       );
     },
     { dispatch: false }

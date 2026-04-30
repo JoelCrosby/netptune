@@ -1,17 +1,16 @@
-import { concatLatestFrom } from '@ngrx/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { selectAuthFeature } from '@core/core.state';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
+import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { openSideNav } from '@core/store/layout/layout.actions';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { asyncScheduler, of } from 'rxjs';
 import {
   catchError,
@@ -24,14 +23,12 @@ import {
 import { AuthService } from '../../auth/auth.service';
 import * as actions from './auth.actions';
 import { selectIsAuthenticated } from './auth.selectors';
-import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
 
 export const AUTH_KEY = 'AUTH';
 
 @Injectable()
 export class AuthEffects implements OnInitEffects {
   private actions$ = inject<Actions<Action>>(Actions);
-  private localStorageService = inject(LocalStorageService);
   private router = inject(Router);
   private authService = inject(AuthService);
   private store = inject(Store);
@@ -44,35 +41,6 @@ export class AuthEffects implements OnInitEffects {
       map(() => actions.currentUser())
     );
   });
-
-  persistSettings = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(
-          actions.loginSuccess,
-          actions.logout,
-          actions.logoutSuccess,
-          actions.login,
-          actions.registerSuccess,
-          actions.registerFail,
-          actions.confirmEmailSuccess,
-          actions.confirmEmailFail,
-          actions.currentUserSuccess,
-          actions.refreshTokenSuccess
-        ),
-        concatLatestFrom(() => this.store.select(selectAuthFeature)),
-        tap(([_, settings]) => {
-          const { currentUser, tokenExpires, isAuthenticated } = settings;
-          this.localStorageService.setItem(AUTH_KEY, {
-            currentUser,
-            tokenExpires,
-            isAuthenticated,
-          });
-        })
-      );
-    },
-    { dispatch: false }
-  );
 
   currentUser$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
@@ -134,6 +102,16 @@ export class AuthEffects implements OnInitEffects {
         ofType(actions.loginSuccess),
         debounceTime(debounce, scheduler),
         switchMap(() => this.router.navigate(['/workspaces'])),
+        map(() => loadWorkspaces())
+      );
+    }
+  );
+
+  loadWorkspacesAfterRefresh$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
+        ofType(actions.refreshTokenSuccess),
+        debounceTime(debounce, scheduler),
         map(() => loadWorkspaces())
       );
     }
@@ -263,16 +241,6 @@ export class AuthEffects implements OnInitEffects {
       )
     );
   });
-
-  clearUserInfo$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(actions.clearUserInfo),
-        tap(() => this.localStorageService.removeItem(AUTH_KEY))
-      );
-    },
-    { dispatch: false }
-  );
 
   ngrxOnInitEffects(): Action {
     return actions.initAuth();

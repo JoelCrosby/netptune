@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { LucideDynamicIcon } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
 import { HeaderAction } from '@core/types/header-action';
@@ -19,6 +14,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
     FlatButtonComponent,
     ButtonLinkComponent,
   ],
+  host: { class: 'netp-card-actions' },
   template: `
     <div class="mt-4 flex items-center gap-2">
       @for (action of actions(); track action.label; let isFirst = $first) {
@@ -28,6 +24,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               app-flat-button
               color="primary"
               type="button"
+              (click)="$event.stopPropagation()"
               [routerLink]="action.routerLink">
               @if (action.icon) {
                 <svg
@@ -41,6 +38,7 @@ import { ButtonLinkComponent } from '../button/button-link.component';
               app-button-link
               color="primary"
               type="button"
+              (click)="$event.stopPropagation()"
               [routerLink]="action.routerLink">
               @if (action.icon) {
                 <svg
@@ -55,7 +53,9 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <button
               app-flat-button
               color="primary"
-              (click)="action.click && action.click()">
+              (click)="
+                $event.stopPropagation(); action.click && action.click()
+              ">
               @if (action.icon) {
                 <svg
                   [lucideIcon]="action.icon"
@@ -67,7 +67,9 @@ import { ButtonLinkComponent } from '../button/button-link.component';
             <button
               app-button-link
               color="primary"
-              (click)="action.click && action.click()">
+              (click)="
+                $event.stopPropagation(); action.click && action.click()
+              ">
               @if (action.icon) {
                 <svg
                   [lucideIcon]="action.icon"
@@ -82,7 +84,5 @@ import { ButtonLinkComponent } from '../button/button-link.component';
   `,
 })
 export class CardActionsComponent {
-  @HostBinding('class') className = 'netp-card-actions';
-
   readonly actions = input<HeaderAction[]>([]);
 }

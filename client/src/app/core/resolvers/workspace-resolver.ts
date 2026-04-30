@@ -14,7 +14,8 @@ export const workspaceResovler: ResolveFn<Workspace> = (
   const http = inject(HttpClient);
   const store = inject(Store);
 
-  const workspaceKey = next.paramMap.get('workspace');
+  const workspaceKey =
+    next.paramMap.get('workspace') ?? next.parent?.paramMap.get('workspace');
 
   if (!workspaceKey) {
     return throwError(() => new Error('workspace key null'));

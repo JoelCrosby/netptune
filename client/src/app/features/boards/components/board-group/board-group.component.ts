@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
   inject,
   input,
@@ -117,6 +118,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);
   private dialog = inject(DialogService);
+  private destroyRef = inject(DestroyRef);
 
   readonly dragListId = input.required<string>();
   readonly group = input.required<BoardViewGroup>();
@@ -147,11 +149,11 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
     const el: HTMLDivElement = this.container().nativeElement;
 
     fromEvent(el, 'mouseenter', { passive: true })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ next: () => this.focused.set(true) });
 
     fromEvent(el, 'mouseleave', { passive: true })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({ next: () => this.focused.set(false) });
   }
 
