@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { uploadProfilePicture } from '@profile/store/profile.actions';
+import { uploadProfilePicture } from '@app/core/store/profile/profile.actions';
 import { Store } from '@ngrx/store';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';

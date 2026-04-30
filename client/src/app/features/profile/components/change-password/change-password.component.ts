@@ -9,11 +9,11 @@ import { disabled, FormField, form, required } from '@angular/forms/signals';
 import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { Store } from '@ngrx/store';
-import { changePassword } from '@profile/store/profile.actions';
+import { changePassword } from '@app/core/store/profile/profile.actions';
 import {
   selectChangePasswordError,
   selectChangePasswordLoading,
-} from '@profile/store/profile.selectors';
+} from '@app/core/store/profile/profile.selectors';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 

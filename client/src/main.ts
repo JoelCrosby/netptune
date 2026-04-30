@@ -28,6 +28,7 @@ import { TagsEffects } from './app/core/store/tags/tags.effects';
 import { ProjectTasksEffects } from './app/core/store/tasks/tasks.effects';
 import { UsersEffects } from './app/core/store/users/users.effects';
 import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effects';
+import { ProfileEffects } from './app/core/store/profile/profile.effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -59,6 +60,7 @@ bootstrapApplication(AppComponent, {
       UsersEffects,
       TagsEffects,
       BoardsEffects,
+      ProfileEffects,
       BoardGroupsEffects,
     ]),
     provideHttpClient(withInterceptors([authInterceptor])),

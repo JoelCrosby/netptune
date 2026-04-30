@@ -13,11 +13,11 @@ import {
   required,
 } from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
-import { updateProfile } from '@profile/store/profile.actions';
+import { updateProfile } from '@app/core/store/profile/profile.actions';
 import {
   selectProfile,
   selectUpdateProfileLoading,
-} from '@profile/store/profile.selectors';
+} from '@app/core/store/profile/profile.selectors';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { UpdateProfileImageComponent } from '@profile/components/update-profile-image/update-profile-image.component';

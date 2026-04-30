@@ -5,14 +5,14 @@ import {
   createFeatureSelector,
   MetaReducer,
 } from '@ngrx/store';
-import { AuthState } from './store/auth/auth.models';
-import { authReducer } from './store/auth/auth.reducer';
 import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
 import { ActivityState } from './store/activity/activity.model';
 import { activityReducer } from './store/activity/activity.reducer';
+import { AuthState } from './store/auth/auth.models';
+import { authReducer } from './store/auth/auth.reducer';
 import { BoardsState } from './store/boards/boards.model';
 import { boardsReducer } from './store/boards/boards.reducer';
 import { BoardGroupsState } from './store/groups/board-groups.model';
@@ -26,6 +26,8 @@ import { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
 import { NotificationsState } from './store/notifications/notifications.model';
 import { notificationsReducer } from './store/notifications/notifications.reducer';
+import { ProfileState } from './store/profile/profile.model';
+import { profileReducer } from './store/profile/profile.reducer';
 import { ProjectsState } from './store/projects/projects.model';
 import { projectsReducer } from './store/projects/projects.reducer';
 import { SettingsState } from './store/settings/settings.model';
@@ -55,6 +57,7 @@ export const reducers: ActionReducerMap<Partial<AppState>> = {
   notifications: notificationsReducer,
   boards: boardsReducer,
   boardgroups: boardGroupsReducer,
+  profile: profileReducer,
 };
 
 export const metaReducers: MetaReducer<Partial<AppState>>[] = [
@@ -100,4 +103,5 @@ export interface AppState {
   notifications: NotificationsState;
   boards: BoardsState;
   boardgroups: BoardGroupsState;
+  profile: ProfileState;
 }

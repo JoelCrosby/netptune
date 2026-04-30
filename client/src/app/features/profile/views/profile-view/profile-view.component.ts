@@ -4,11 +4,11 @@ import { logout } from '@app/core/store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
-import { loadProfile } from '@profile/store/profile.actions';
+import { loadProfile } from '@app/core/store/profile/profile.actions';
 import {
   selectProfileLoading,
   selectUpdateProfileLoading,
-} from '@profile/store/profile.selectors';
+} from '@app/core/store/profile/profile.selectors';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
