@@ -1,10 +1,3 @@
-import slugify from 'slugify';
+import slugify from '@sindresorhus/slugify';
 
-export const toUrlSlug = (value: string) =>
-  slugify(value, {
-    replacement: '-',
-    remove: undefined,
-    lower: true,
-    strict: true,
-    locale: 'en',
-  });
+export const toUrlSlug = (value: string) => slugify(value);

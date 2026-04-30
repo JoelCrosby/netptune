@@ -22,7 +22,6 @@
           "options": {
             "allowedCommonJsDependencies": [
               "dayjs",
-              "slugify",
               "@editorjs/*"
             ],
             "baseHref": "/",

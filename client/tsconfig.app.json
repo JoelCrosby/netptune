@@ -1,11 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./",
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": ["turnstile-types"]
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/environments/environment.prod.ts"
   ],
   "include": [
     "src/**/*.d.ts"
