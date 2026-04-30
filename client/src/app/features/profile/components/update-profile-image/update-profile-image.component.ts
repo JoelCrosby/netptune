@@ -33,5 +33,5 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 })
 export class UpdateProfileImageComponent {
   pictureUrl = input<string>('');
-  changePictureClicked = output<void>();
+  changePictureClicked = output();
 }

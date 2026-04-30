@@ -23,7 +23,7 @@ export class BoardGroupHeaderActionComponent {
   icon = input.required<LucideIconInput>();
   color = input<'warn' | 'primary'>();
 
-  action = output<void>();
+  action = output();
 
   class = computed(() => {
     let base =

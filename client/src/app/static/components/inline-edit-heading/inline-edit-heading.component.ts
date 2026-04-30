@@ -32,7 +32,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 })
 export class InlineEditHeadingComponent extends AbstractFormValueControl {
   readonly submitted = output<string>();
-  readonly cancelled = output<void>();
+  readonly cancelled = output();
 
   readonly editableRef = viewChild<ElementRef>('editable');
 

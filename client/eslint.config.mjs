@@ -11,7 +11,7 @@ export default defineConfig([
 
     extends: [
       eslint.configs.recommended,
-      ...typescript.configs.recommended,
+      ...typescript.configs.strict,
       ...typescript.configs.stylistic,
       ...angular.configs.tsRecommended,
       ...ngrx.configs.all
@@ -54,6 +54,7 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-assignment': ['off'],
       '@typescript-eslint/no-unsafe-call': ['off'],
       '@typescript-eslint/no-unsafe-return': ['off'],
+      '@typescript-eslint/no-extraneous-class': ['off'],
 
       '@typescript-eslint/no-unused-vars': [
         'error',

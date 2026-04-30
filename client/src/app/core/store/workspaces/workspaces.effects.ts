@@ -133,8 +133,10 @@ export class WorkspacesEffects implements OnInitEffects {
       filter(([_, workspace]) => !!workspace?.slug),
       map(([action, workspace]) => ({
         isPublic: action.isPublic,
+        /* eslint-disable @typescript-eslint/no-non-null-assertion */
         slug: workspace!.slug!,
         metaInfo: workspace!.metaInfo ?? {},
+        /* eslint-enable @typescript-eslint/no-non-null-assertion */
       })),
       switchMap((request) => {
         const confirmation = request.isPublic

@@ -22,7 +22,7 @@ function getClosestDialog<TResult, TComponent>(
     parent = parent.parentElement;
   }
 
-  return parent ? openDialogs.find((dialog) => dialog.id === parent!.id) : null;
+  return parent ? openDialogs.find((dialog) => dialog.id === parent.id) : null;
 }
 
 function closeDialogVia<R>(
@@ -46,7 +46,7 @@ function closeDialogVia<R>(
   },
 })
 export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
-  dialogRef = inject<DialogRef<TResult>>(DialogRef, { optional: true });
+  dialogRef? = inject<DialogRef<TResult>>(DialogRef, { optional: true });
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _dialog = inject(Dialog);
 
@@ -64,7 +64,7 @@ export class DialogCloseDirective<TResult> implements OnInit, OnChanges {
       this.dialogRef = getClosestDialog(
         this._elementRef,
         this._dialog.openDialogs
-      )!;
+      );
     }
   }
 

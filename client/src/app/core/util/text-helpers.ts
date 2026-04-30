@@ -1,13 +1,3 @@
-export class TextHelpers {
-  static readonly tail = ' ...';
-  static truncate(input: string, maxLength = 48) {
-    if (input.length <= maxLength) {
-      return input;
-    }
-    return input.substring(0, maxLength - this.tail.length) + this.tail;
-  }
-}
-
 export const toWordCase = (value: string): string | undefined => {
   if (value === null || value === undefined) {
     return undefined;

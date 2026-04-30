@@ -118,6 +118,11 @@ export class WorkspaceSelectComponent implements OnDestroy {
   constructor() {
     effect(() => {
       const event = this.keyboard.keyDown();
+
+      if (!event) {
+        return;
+      }
+
       untracked(() => {
         if (this.isOpen()) {
           this.handleKeyDown(event);

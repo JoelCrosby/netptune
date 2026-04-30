@@ -77,5 +77,5 @@ export class NotificationDropdownComponent {
   readonly notifications = input.required<NotificationViewModel[]>();
   readonly unreadCount = input.required<number>();
   readonly loaded = input.required<boolean>();
-  readonly markAllAsRead = output<void>();
+  readonly markAllAsRead = output();
 }

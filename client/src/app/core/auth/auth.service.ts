@@ -51,6 +51,6 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.post<void>('api/auth/logout', null);
+    return this.http.post('api/auth/logout', null);
   }
 }
