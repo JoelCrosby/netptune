@@ -20,21 +20,24 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
-import { deleteBoard, updateBoard } from '@boards/store/boards/boards.actions';
+import {
+  deleteBoard,
+  updateBoard,
+} from '@app/core/store/boards/boards.actions';
 import {
   clearState,
   deleteBoardGroup,
   editBoardGroup,
   exportBoardTasks,
-} from '@boards/store/groups/board-groups.actions';
+} from '@app/core/store/groups/board-groups.actions';
 import {
   selectAllBoardGroupsWithSelection,
   selectBoardGroupsLoaded,
   selectBoardGroupsLoading,
   selectBoardIdentifier,
   selectSelectedBoard,
-} from '@boards/store/groups/board-groups.selectors';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+} from '@app/core/store/groups/board-groups.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { importTasks } from '@core/store/tasks/tasks.actions';

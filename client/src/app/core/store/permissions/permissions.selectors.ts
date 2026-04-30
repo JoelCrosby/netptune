@@ -1,5 +1,5 @@
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 
 export const selectCanCreateComment = (store: Store) => {

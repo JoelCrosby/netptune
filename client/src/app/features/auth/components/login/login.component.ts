@@ -14,11 +14,11 @@ import {
 import { RouterLink } from '@angular/router';
 import { ButtonLinkComponent } from '@app/static/components/button/button-link.component';
 import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
-import { login } from '@core/auth/store/auth.actions';
+import { login } from '@app/core/store/auth/auth.actions';
 import {
   selectLoginLoading,
   selectShowLoginError,
-} from '@core/auth/store/auth.selectors';
+} from '@app/core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';

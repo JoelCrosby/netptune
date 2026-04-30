@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { LucidePanelsTopLeft } from '@lucide/angular';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
   selector: 'app-project-list-item',

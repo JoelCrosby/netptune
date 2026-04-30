@@ -5,8 +5,8 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import * as actions from '@boards/store/groups/board-groups.actions';
-import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
+import * as actions from '@app/core/store/groups/board-groups.actions';
+import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';

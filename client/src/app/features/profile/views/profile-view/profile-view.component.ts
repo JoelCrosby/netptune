@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { logout } from '@core/auth/store/auth.actions';
+import { logout } from '@app/core/store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';

@@ -1,5 +1,5 @@
 import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { ListLinkItemComponent } from '@static/components/list/list-link-item.component';
 import {
   ChangeDetectionStrategy,

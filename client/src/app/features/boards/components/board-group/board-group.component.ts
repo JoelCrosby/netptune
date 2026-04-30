@@ -13,10 +13,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
-import * as BoardGroupSelectors from '@boards/store/groups/board-groups.selectors';
-import { selectInlineActiveGroupId } from '@boards/store/groups/board-groups.selectors';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
+import * as BoardGroupSelectors from '@app/core/store/groups/board-groups.selectors';
+import { selectInlineActiveGroupId } from '@app/core/store/groups/board-groups.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
 import {

@@ -1,14 +1,13 @@
 import {
   HttpErrorResponse,
   HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
+  HttpHandlerFn,
   HttpRequest,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { refreshTokenSuccess, logout } from '@core/auth/store/auth.actions';
+import { logout, refreshTokenSuccess } from '@app/core/store/auth/auth.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
@@ -16,95 +15,89 @@ import { catchError, filter, first, switchMap } from 'rxjs/operators';
 import { WorkspaceService } from '../services/workspace.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private store = inject(Store);
-  private router = inject(Router);
-  private workspaceService = inject(WorkspaceService);
-  private authService = inject(AuthService);
+export const authInterceptor = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+  const store = inject(Store);
+  const router = inject(Router);
+  const workspaceService = inject(WorkspaceService);
+  const authService = inject(AuthService);
+  const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-  private isRefreshing = false;
-  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+  let isRefreshing = false;
 
-  intercept<T>(
-    req: HttpRequest<T>,
-    next: HttpHandler
-  ): Observable<HttpEvent<T>> {
-    if (!this.isApiRequest(req)) {
-      return next.handle(req);
-    }
+  const isRefreshRequest = (req: HttpRequest<unknown>): boolean => {
+    return req.url.includes('auth/refresh');
+  };
 
-    return this.store.select(selectCurrentWorkspaceIdentifier).pipe(
-      first(),
-      switchMap((workspaceId) => {
-        req = req.clone({
-          url: environment.apiEndpoint + req.url,
-          withCredentials: true,
-        });
+  const isApiRequest = (req: HttpRequest<unknown>): boolean => {
+    return req.url.startsWith('api/');
+  };
 
-        const workspaceRoute = this.workspaceService.getWorkspaceRoute();
-        const workspaceHeader = workspaceId ?? workspaceRoute;
+  const handle401 = (req: HttpRequest<unknown>) => {
+    if (!isRefreshing) {
+      isRefreshing = true;
+      refreshTokenSubject.next(null);
 
-        if (workspaceHeader) {
-          req = req.clone({
-            headers: req.headers.set('workspace', workspaceHeader),
-          });
-        }
-
-        return next.handle(req).pipe(
-          catchError((err: unknown) => {
-            if (err instanceof HttpErrorResponse) {
-              if (err.status === 401 && !this.isRefreshRequest(req)) {
-                return this.handle401(req, next);
-              }
-
-              if (err.status === 403) {
-                void this.router.navigate(['/auth/login']);
-              }
-            }
-
-            return throwError(() => err);
-          })
-        );
-      })
-    );
-  }
-
-  private handle401<T>(
-    req: HttpRequest<T>,
-    next: HttpHandler
-  ): Observable<HttpEvent<T>> {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenSubject.next(null);
-
-      return this.authService.refresh().pipe(
+      return authService.refresh().pipe(
         switchMap((user) => {
-          this.isRefreshing = false;
-          this.refreshTokenSubject.next('ok');
-          this.store.dispatch(refreshTokenSuccess({ user }));
-          return next.handle(req);
+          isRefreshing = false;
+          refreshTokenSubject.next('ok');
+          store.dispatch(refreshTokenSuccess({ user }));
+          return next(req);
         }),
         catchError((err) => {
-          this.isRefreshing = false;
-          this.store.dispatch(logout({ silent: true }));
+          isRefreshing = false;
+          store.dispatch(logout({ silent: true }));
           return throwError(() => err);
         })
       );
     }
 
-    return this.refreshTokenSubject.pipe(
+    return refreshTokenSubject.pipe(
       filter((token): token is string => token !== null),
       first(),
-      switchMap(() => next.handle(req))
+      switchMap(() => next(req))
     );
+  };
+
+  if (!isApiRequest(req)) {
+    return next(req);
   }
 
-  private isRefreshRequest<T>(req: HttpRequest<T>): boolean {
-    return req.url.includes('auth/refresh');
-  }
+  return store.select(selectCurrentWorkspaceIdentifier).pipe(
+    first(),
+    switchMap((workspaceId) => {
+      req = req.clone({
+        url: environment.apiEndpoint + req.url,
+        withCredentials: true,
+      });
 
-  isApiRequest<T>(req: HttpRequest<T>): boolean {
-    return req.url.startsWith('api/');
-  }
-}
+      const workspaceRoute = workspaceService.getWorkspaceRoute();
+      const workspaceHeader = workspaceId ?? workspaceRoute;
+
+      if (workspaceHeader) {
+        req = req.clone({
+          headers: req.headers.set('workspace', workspaceHeader),
+        });
+      }
+
+      return next(req).pipe(
+        catchError((err: unknown) => {
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 401 && !isRefreshRequest(req)) {
+              return handle401(req);
+            }
+
+            if (err.status === 403) {
+              void router.navigate(['/auth/login']);
+            }
+          }
+
+          return throwError(() => err);
+        })
+      );
+    })
+  );
+};

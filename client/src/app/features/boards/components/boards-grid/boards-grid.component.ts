@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import * as BoardSelectors from '@boards/store/boards/boards.selectors';
+import * as BoardSelectors from '@app/core/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';
 import { CardGroupComponent } from '@static/components/card/card-group.component';
 import { BoardsGridCardComponent } from './boards-grid-card.component';

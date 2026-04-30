@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { inject } from '@angular/core';
-import { UserResponse } from '@core/auth/store/auth.models';
+import { UserResponse } from '@app/core/store/auth/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 import { AppUser } from '@core/models/appuser';
 

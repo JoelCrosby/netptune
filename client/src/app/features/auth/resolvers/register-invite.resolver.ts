@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { clearUserInfo } from '@core/auth/store/auth.actions';
-import { WorkspaceInvite } from '@core/auth/store/auth.models';
+import { clearUserInfo } from '@app/core/store/auth/auth.actions';
+import { WorkspaceInvite } from '@app/core/store/auth/auth.models';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';

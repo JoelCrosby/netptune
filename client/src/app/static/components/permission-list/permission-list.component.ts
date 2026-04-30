@@ -13,7 +13,7 @@ import { LucideDynamicIcon } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { toggleUserPermission } from '@app/core/store/users/users.actions';
 
 interface PermissionItem extends PermissionMeta {

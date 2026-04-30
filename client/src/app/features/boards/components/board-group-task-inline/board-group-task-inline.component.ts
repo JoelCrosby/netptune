@@ -25,14 +25,14 @@ import {
   createProjectTask,
   setInlineTaskContent,
   setIsInlineDirty,
-} from '@boards/store/groups/board-groups.actions';
+} from '@app/core/store/groups/board-groups.actions';
 import {
   selectBoardProjectId,
   selectCreateBoardGroupTaskMessage,
   selectInlineTaskContent,
   selectIsInlineDirty,
-} from '@boards/store/groups/board-groups.selectors';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+} from '@app/core/store/groups/board-groups.selectors';
+import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';

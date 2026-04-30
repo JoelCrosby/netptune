@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ActivatedRoute } from '@angular/router';
-import { confirmEmail } from '@core/auth/store/auth.actions';
-import { AuthCodeRequest } from '@core/auth/store/auth.models';
-import { selectIsConfirmEmailLoading } from '@core/auth/store/auth.selectors';
+import { confirmEmail } from '@app/core/store/auth/auth.actions';
+import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
+import { selectIsConfirmEmailLoading } from '@app/core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({

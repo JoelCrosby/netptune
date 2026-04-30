@@ -14,7 +14,7 @@ import {
   selectComments,
   selectDetailTask,
 } from '@app/core/store/tasks/tasks.selectors';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { CommentViewModel } from '@core/models/comment';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';

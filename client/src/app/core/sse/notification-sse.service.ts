@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';

@@ -4,7 +4,7 @@ import {
   OnDestroy,
   inject,
 } from '@angular/core';
-import { selectHasPermission } from '@core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';

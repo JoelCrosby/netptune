@@ -8,7 +8,7 @@ import {
 import {
   selectCurrentUser,
   selectHasPermission,
-} from '@core/auth/store/auth.selectors';
+} from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import {
   LucideBarChart2,

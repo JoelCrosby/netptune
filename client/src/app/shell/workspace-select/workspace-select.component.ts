@@ -16,9 +16,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { debounce, form } from '@angular/forms/signals';
-import { selectIsAuthenticated } from '@app/core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ShellService } from '@app/shell/shell.service';
-import { logout } from '@core/auth/store/auth.actions';
+import { logout } from '@app/core/store/auth/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import {
   selectAllWorkspaces,

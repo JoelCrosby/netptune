@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';

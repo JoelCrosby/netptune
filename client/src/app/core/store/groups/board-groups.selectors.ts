@@ -1,4 +1,4 @@
-import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
+import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { AppState } from '@core/core.state';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';

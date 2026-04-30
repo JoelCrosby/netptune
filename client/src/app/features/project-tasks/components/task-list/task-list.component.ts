@@ -13,7 +13,7 @@ import { TaskInlineComponent } from '../task-inline/task-inline.component';
 import { LucideListChecks, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
   selector: 'app-task-list',

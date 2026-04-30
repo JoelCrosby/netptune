@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import * as groupsActions from '@boards/store/groups/board-groups.actions';
+import * as groupsActions from '@app/core/store/groups/board-groups.actions';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';

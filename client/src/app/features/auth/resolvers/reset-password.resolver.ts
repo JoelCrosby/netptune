@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { clearUserInfo } from '@core/auth/store/auth.actions';
-import { AuthCodeRequest } from '@core/auth/store/auth.models';
+import { clearUserInfo } from '@app/core/store/auth/auth.actions';
+import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
 import { Store } from '@ngrx/store';
 
 export const resetPassword: ResolveFn<AuthCodeRequest | null> = (

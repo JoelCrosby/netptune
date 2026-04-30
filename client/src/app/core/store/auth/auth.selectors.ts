@@ -1,7 +1,7 @@
 import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse } from './auth.models';
-import { Permission } from '../permissions';
+import { Permission } from '../../auth/permissions';
 import { WorkspaceRole } from '@app/core/enums/workspace-role';
 
 export const selectLoginLoading = createSelector(

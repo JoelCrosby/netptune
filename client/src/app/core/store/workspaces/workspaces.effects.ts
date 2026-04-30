@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -21,7 +21,7 @@ import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
-import { currentUser } from '@app/core/auth/store/auth.actions';
+import { currentUser } from '@app/core/store/auth/auth.actions';
 
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {

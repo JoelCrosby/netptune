@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { disabled, FormField, form, required } from '@angular/forms/signals';
-import { selectCurrentUserId } from '@core/auth/store/auth.selectors';
+import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { Store } from '@ngrx/store';
 import { changePassword } from '@profile/store/profile.actions';

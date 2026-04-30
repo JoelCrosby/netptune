@@ -7,7 +7,7 @@ import {
   LoginResponse,
   ResetPasswordRequest,
   UserResponse,
-} from './store/auth.models';
+} from '../store/auth/auth.models';
 import { LoginRequest } from '../models/login-request';
 
 @Injectable({

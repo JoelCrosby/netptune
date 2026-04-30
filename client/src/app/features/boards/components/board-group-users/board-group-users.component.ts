@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toggleUserSelection } from '@boards/store/groups/board-groups.actions';
-import { selectBoardGroupsUsersModel } from '@boards/store/groups/board-groups.selectors';
+import { toggleUserSelection } from '@app/core/store/groups/board-groups.actions';
+import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
 import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
 import { Store } from '@ngrx/store';

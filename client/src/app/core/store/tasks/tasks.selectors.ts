@@ -1,7 +1,7 @@
 import { selectTasksFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { adapter, TasksState } from './tasks.model';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
 
 const { selectAll } = adapter.getSelectors();

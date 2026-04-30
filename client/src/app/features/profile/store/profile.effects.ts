@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { currentUser } from '@core/auth/store/auth.actions';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { currentUser } from '@app/core/store/auth/auth.actions';
+import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';

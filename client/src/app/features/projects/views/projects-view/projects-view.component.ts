@@ -9,7 +9,7 @@ import { ProjectListComponent } from '@projects/components/project-list/project-
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -27,10 +27,7 @@ const reducer = createReducer(
   ),
   on(
     actions.loadBoardGroupsSuccess,
-    (
-      state,
-      { boardGroups, selectedIds, searchTerm }
-    ): BoardGroupsState => {
+    (state, { boardGroups, selectedIds, searchTerm }): BoardGroupsState => {
       const selectedIdMap = new Set(selectedIds);
 
       return adapter.setAll(boardGroups.groups, {

@@ -5,15 +5,15 @@ import {
   inject,
 } from '@angular/core';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectPermissions } from '@app/core/auth/store/auth.selectors';
+import { selectPermissions } from '@app/core/store/auth/auth.selectors';
 import {
   clearTaskSelection,
   deleteSelectedTasks,
-} from '@boards/store/groups/board-groups.actions';
+} from '@app/core/store/groups/board-groups.actions';
 import {
   selectSelectedTasks,
   selectSelectedTasksCount,
-} from '@boards/store/groups/board-groups.selectors';
+} from '@app/core/store/groups/board-groups.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import {
   LucideListX,

@@ -12,8 +12,8 @@ import {
   required,
 } from '@angular/forms/signals';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { setSearchTerm } from '@boards/store/groups/board-groups.actions';
-import { selectSearchTerm } from '@boards/store/groups/board-groups.selectors';
+import { setSearchTerm } from '@app/core/store/groups/board-groups.actions';
+import { selectSearchTerm } from '@app/core/store/groups/board-groups.selectors';
 import { LucideSearch, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 

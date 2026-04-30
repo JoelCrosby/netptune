@@ -12,8 +12,8 @@ import {
   required,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
-import { requestPasswordReset } from '@core/auth/store/auth.actions';
-import { selectRequestPasswordResetLoading } from '@core/auth/store/auth.selectors';
+import { requestPasswordReset } from '@app/core/store/auth/auth.actions';
+import { selectRequestPasswordResetLoading } from '@app/core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';

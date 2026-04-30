@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { selectIsAuthenticated } from '@core/auth/store/auth.selectors';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { toggleSideMenu } from '@core/store/layout/layout.actions';
 import { selectSideMenuOpen } from '@core/store/layout/layout.selectors';

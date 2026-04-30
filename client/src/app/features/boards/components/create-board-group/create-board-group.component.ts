@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LucidePlus } from '@lucide/angular';
-import { selectBoardIdAndIdentifier } from '@boards/store/groups/board-groups.selectors';
+import { selectBoardIdAndIdentifier } from '@app/core/store/groups/board-groups.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { Store } from '@ngrx/store';

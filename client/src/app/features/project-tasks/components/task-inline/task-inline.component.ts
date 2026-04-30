@@ -10,8 +10,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { UserResponse } from '@core/auth/store/auth.models';
-import { selectCurrentUser } from '@core/auth/store/auth.selectors';
+import { UserResponse } from '@app/core/store/auth/auth.models';
+import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';

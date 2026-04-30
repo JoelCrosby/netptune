@@ -8,7 +8,7 @@ import {
 import { FormField, form, required } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import * as BoardGroupActions from '@boards/store/groups/board-groups.actions';
+import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';

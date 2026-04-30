@@ -1,5 +1,5 @@
 import { Action, ActionReducer } from '@ngrx/store';
-import { logoutSuccess } from '@core/auth/store/auth.actions';
+import { logoutSuccess } from '@app/core/store/auth/auth.actions';
 import { AppState } from '@core/core.state';
 
 export const clearState =

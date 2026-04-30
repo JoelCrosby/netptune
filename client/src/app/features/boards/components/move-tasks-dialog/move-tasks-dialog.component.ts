@@ -6,8 +6,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { moveSelectedTasks } from '@boards/store/groups/board-groups.actions';
-import { selectAllBoardGroups } from '@boards/store/groups/board-groups.selectors';
+import { moveSelectedTasks } from '@app/core/store/groups/board-groups.actions';
+import { selectAllBoardGroups } from '@app/core/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';

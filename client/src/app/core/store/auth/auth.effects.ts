@@ -21,7 +21,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../auth/auth.service';
 import * as actions from './auth.actions';
 import { selectIsAuthenticated } from './auth.selectors';
 import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';

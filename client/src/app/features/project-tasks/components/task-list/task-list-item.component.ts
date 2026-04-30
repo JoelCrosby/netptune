@@ -21,7 +21,7 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { selectHasPermission } from '@app/core/auth/store/auth.selectors';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
 
 @Component({

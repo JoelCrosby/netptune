@@ -17,8 +17,8 @@ import {
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { createBoard } from '@boards/store/boards/boards.actions';
-import { BoardsService } from '@boards/store/boards/boards.service';
+import { createBoard } from '@app/core/store/boards/boards.actions';
+import { BoardsService } from '@app/core/store/boards/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { loadProjects } from '@core/store/projects/projects.actions';
