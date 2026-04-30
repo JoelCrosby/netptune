@@ -38,7 +38,6 @@ internal static class TaskSeeder
                 Name = Names[i],
                 Description = Descriptions[i],
                 Status = Statuses[(pi * 8 + i) % Statuses.Length],
-                IsFlagged = (pi * 8 + i) % 2 == 0,
                 Owner = users[(pi + i) % users.Count],
                 Project = project,
                 ProjectScopeId = i,
