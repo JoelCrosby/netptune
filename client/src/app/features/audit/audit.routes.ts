@@ -1,4 +1,11 @@
 import { Routes } from '@angular/router';
-import { AuditViewComponent } from './views/audit-view/audit-view.component';
 
-export const routes: Routes = [{ path: '**', component: AuditViewComponent }];
+export const routes: Routes = [
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./views/audit-view/audit-view.component').then(
+        (m) => m.AuditViewComponent
+      ),
+  },
+];

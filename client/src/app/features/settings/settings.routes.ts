@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
-import { SettingsViewComponent } from './views/settings-view/settings-view.component';
 
 export const routes: Routes = [
-  { path: '**', component: SettingsViewComponent },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./views/settings-view/settings-view.component').then(
+        (m) => m.SettingsViewComponent
+      ),
+  },
 ];

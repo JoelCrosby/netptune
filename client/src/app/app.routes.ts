@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@core/auth/auth.guard';
 import { workspaceGuard } from '@core/auth/workspace.guard';
 import { workspaceResovler } from '@core/resolvers/workspace-resolver';
-import { ShellComponent } from './shell/shell.component';
 
 // prettier-ignore
 
@@ -27,7 +26,7 @@ export const routes: Routes = [
     path: ':workspace',
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
-    component: ShellComponent,
+    loadComponent: () => import('./shell/shell.component').then(m => m.ShellComponent),
     children: [
       {
         path: '',
