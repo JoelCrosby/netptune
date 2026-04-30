@@ -9,14 +9,13 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Update } from '@ngrx/entity';
-import { cloneDeep } from 'lodash-es';
 import { adapter, BoardGroupsState } from './board-groups.model';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
   request: MoveTaskInGroupRequest
 ): BoardGroupsState => {
-  const stateClone = cloneDeep(state);
+  const stateClone = structuredClone(state);
   const newGroup = stateClone.entities[request.newGroupId];
 
   if (!newGroup || !stateClone?.entities) return state;

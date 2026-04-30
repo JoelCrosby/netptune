@@ -1,9 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import {
-  inject,
-  provideAppInitializer,
-  provideZonelessChangeDetection,
-} from '@angular/core';
+import { inject, provideAppInitializer } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
@@ -32,7 +28,6 @@ import { ProfileEffects } from './app/core/store/profile/profile.effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZonelessChangeDetection(),
     provideRouter(routes, withViewTransitions()),
     provideStore(reducers, {
       metaReducers,
