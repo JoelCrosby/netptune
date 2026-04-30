@@ -235,11 +235,6 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     {
         var userList = users.ToList();
 
-        static bool ParseBool(string? input)
-        {
-            return string.Equals(input?.Trim(), "true", StringComparison.InvariantCultureIgnoreCase);
-        }
-
         static ProjectTaskStatus ParseStatus(string? input)
         {
             var isValid = Enum.TryParse(typeof(ProjectTaskStatus), input, true, out var status);
