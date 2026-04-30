@@ -1,20 +1,21 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
     "useDefineForClassFields": false,
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitOverride": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "target": "ES2022",
@@ -40,9 +41,15 @@
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
-    "strictTemplates": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-  }
+    "strictTemplates": true,
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
 }
