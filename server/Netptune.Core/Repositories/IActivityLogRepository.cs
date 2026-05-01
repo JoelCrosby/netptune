@@ -9,13 +9,13 @@ namespace Netptune.Core.Repositories;
 
 public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
 {
-    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId);
+    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, CancellationToken cancellationToken = default);
 
-    Task<AuditLogPage> GetAuditLog(AuditLogFilter filter);
+    Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default);
 
-    Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter);
+    Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter, CancellationToken cancellationToken = default);
 
-    Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter);
+    Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter, CancellationToken cancellationToken = default);
 
-    Task AnonymiseUser(string userId, int workspaceId);
+    Task AnonymiseUser(string userId, int workspaceId, CancellationToken cancellationToken = default);
 }

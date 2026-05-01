@@ -16,7 +16,7 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
     {
     }
 
-    public Task<List<Tag>> GetForTask(int taskId, bool isReadonly = false)
+    public Task<List<Tag>> GetForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return (from tag in Entities
                 join ptt in Context.ProjectTaskTags on tag.Id equals ptt.TagId
@@ -24,10 +24,10 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
                 where !task.IsDeleted && !tag.IsDeleted && task.Id == taskId
                 select tag)
             .IsReadonly(isReadonly)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false)
+    public Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return (from tag in Entities
                 join ptt in Context.ProjectTaskTags on tag.Id equals ptt.TagId
@@ -50,10 +50,10 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
                 OwnerName = $"{t.OwnerFirstname} {t.OwnerLastname}",
             })
             .IsReadonly(isReadonly)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<TagViewModel?> GetViewModel(int id)
+    public Task<TagViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => x.Id == id)
@@ -67,18 +67,18 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
                     ? x.Owner.UserName!
                     : x.Owner.Firstname + " " + x.Owner.Lastname,
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<bool> Exists(string value, int workspaceId)
+    public Task<bool> Exists(string value, int workspaceId, CancellationToken cancellationToken = default)
     {
         var trimmed = value.Trim();
 
         return Entities
-            .AnyAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
+            .AnyAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed, cancellationToken);
     }
 
-    public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId)
+    public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
@@ -93,64 +93,64 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
                     ? x.Owner.UserName!
                     : x.Owner.Firstname + " " + x.Owner.Lastname,
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false)
+    public Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var trimmed = value.Trim();
 
         return Entities
             .Include(tag => tag.Owner)
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed);
+            .FirstOrDefaultAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed, cancellationToken);
     }
 
-    public Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false)
+    public Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId)
             .OrderBy(x => x.CreatedAt)
             .IsReadonly(isReadonly)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false)
+    public Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var tagsList = tags.ToList();
 
         return Entities
             .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId && tagsList.Contains(x.Name))
             .IsReadonly(isReadonly)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<bool> ExistsForTask(int tagId, int taskId)
+    public Task<bool> ExistsForTask(int tagId, int taskId, CancellationToken cancellationToken = default)
     {
-        return Context.ProjectTaskTags.AnyAsync(x => x.TagId == tagId && x.ProjectTaskId == taskId);
+        return Context.ProjectTaskTags.AnyAsync(x => x.TagId == tagId && x.ProjectTaskId == taskId, cancellationToken);
     }
 
-    public override async Task DeletePermanent(IEnumerable<Tag> entities)
+    public override async Task DeletePermanent(IEnumerable<Tag> entities, CancellationToken cancellationToken = default)
     {
         var entityList = entities.ToList();
         var entityIds = entityList.Select(x => x.Id);
-        var taskTags = await Context.ProjectTaskTags.Where(x => entityIds.Contains(x.TagId)).ToListAsync();
+        var taskTags = await Context.ProjectTaskTags.Where(x => entityIds.Contains(x.TagId)).ToListAsync(cancellationToken);
 
         Context.ProjectTaskTags.RemoveRange(taskTags);
         Entities.RemoveRange(entityList);
     }
 
-    public async Task DeleteTagFromTask(int workspaceId, int taskId, string tag)
+    public async Task DeleteTagFromTask(int workspaceId, int taskId, string tag, CancellationToken cancellationToken = default)
     {
         var tagTrimmed = tag.Trim();
         var tagIds = await Entities
             .Where(x => x.Name == tagTrimmed && x.WorkspaceId == workspaceId)
             .Select(x => x.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var taskTags = await Context.ProjectTaskTags
             .Where(x => x.ProjectTaskId == taskId && tagIds.Contains(x.TagId))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         Context.ProjectTaskTags.RemoveRange(taskTags);
     }

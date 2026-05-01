@@ -15,25 +15,25 @@ public abstract class WorkspaceEntityRepository<TContext, TEntity, TId>
     {
     }
 
-    public Task<List<TEntity>> GetAllInWorkspace(int workspaceId, bool includeDeleted = false, bool isReadonly = false)
+    public Task<List<TEntity>> GetAllInWorkspace(int workspaceId, bool includeDeleted = false, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => entity.WorkspaceId == workspaceId && (includeDeleted || !entity.IsDeleted))
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public Task<List<TId>> GetAllIdsInWorkspace(int workspaceId, bool includeDeleted = false)
+    public Task<List<TId>> GetAllIdsInWorkspace(int workspaceId, bool includeDeleted = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => entity.WorkspaceId == workspaceId && (includeDeleted || !entity.IsDeleted))
             .Select(entity => entity.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteAllInWorkspace(int workspaceId)
+    public async Task DeleteAllInWorkspace(int workspaceId, CancellationToken cancellationToken = default)
     {
-        var entityIds = await GetAllIdsInWorkspace(workspaceId, true);
+        var entityIds = await GetAllIdsInWorkspace(workspaceId, true, cancellationToken);
 
-        await DeletePermanent(entityIds);
+        await DeletePermanent(entityIds, cancellationToken);
     }
 }

@@ -16,11 +16,11 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
     : Repository<DataContext, Notification, int>(context, connectionFactory), INotificationRepository
 {
 
-    public async Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId)
+    public async Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var results = await connection.QueryAsync<NotificationViewModel>(
+        var results = await connection.QueryAsync<NotificationViewModel>(new CommandDefinition(
             """
              SELECT
                    n.id
@@ -57,21 +57,21 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             projectType = EntityType.Project,
             boardType = EntityType.Board,
             boardGroupType = EntityType.BoardGroup,
-        });
+        }, cancellationToken: cancellationToken));
 
         return results.AsList();
     }
 
-    public Task<int> GetUnreadCount(string userId, int workspaceId)
+    public Task<int> GetUnreadCount(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities
-            .CountAsync(n => !n.IsDeleted && n.UserId == userId && n.WorkspaceId == workspaceId && !n.IsRead);
+            .CountAsync(n => !n.IsDeleted && n.UserId == userId && n.WorkspaceId == workspaceId && !n.IsRead, cancellationToken);
     }
 
-    public async Task MarkAllAsRead(string userId, int workspaceId)
+    public async Task MarkAllAsRead(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
         await Entities
             .Where(n => n.UserId == userId && n.WorkspaceId == workspaceId && !n.IsRead)
-            .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true));
+            .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true), cancellationToken);
     }
 }

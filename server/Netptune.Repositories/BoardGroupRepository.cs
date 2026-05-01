@@ -20,24 +20,24 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     {
     }
 
-    public Task<BoardGroup?> GetWithTasksInGroups(int id)
+    public Task<BoardGroup?> GetWithTasksInGroups(int id, CancellationToken cancellationToken = default)
     {
         return Entities
             .Include(group => group.TasksInGroups)
-            .FirstOrDefaultAsync(group => group.Id == id);
+            .FirstOrDefaultAsync(group => group.Id == id, cancellationToken);
     }
 
-    public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false)
+    public Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(boardGroup => boardGroup.BoardId == boardId)
             .Where(boardGroup => !boardGroup.IsDeleted)
             .Include(boardGroup => boardGroup.TasksInGroups)
             .OrderBy(boardGroup => boardGroup.SortOrder)
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public async Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? searchTerm = null)
+    public async Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? searchTerm = null, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -47,7 +47,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             ? null
             : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
 
-        var results = await connection.QueryMultipleAsync(@$"
+        var results = await connection.QueryMultipleAsync(new CommandDefinition(@$"
                 SELECT b.id
                      , b.name              AS board_name
                      , b.identifier        AS board_identifier
@@ -95,7 +95,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          LEFT JOIN workspaces w on b.workspace_id = w.id
                          LEFT JOIN projects p on b.project_id = p.id
                 WHERE b.id = @boardId
-            ", new { boardId, searchPhrase });
+            ", new { boardId, searchPhrase }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
         var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
@@ -200,7 +200,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         });
     }
 
-    public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false)
+    public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var query = Entities
 
@@ -211,19 +211,19 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .Include(group => group.TasksInGroups)
             .ThenInclude(relational => relational.ProjectTask);
 
-        return query.ToReadonlyListAsync(isReadonly);
+        return query.ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false)
+    public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var query = Context.ProjectTaskInBoardGroups
             .Where(item => item.BoardGroupId == groupId)
             .Select(item => item.ProjectTask!);
 
-        return query.ToReadonlyListAsync(isReadonly);
+        return query.ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId)
+    public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId, CancellationToken cancellationToken = default)
     {
         var sortOrders = await Entities
 
@@ -235,18 +235,18 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .AsNoTracking()
 
             .Select(boardGroup => boardGroup.SortOrder)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return sortOrders.Max() + 1;
     }
 
-    public async Task<int?> GetBoardGroupIdForTask(int projectTaskId)
+    public async Task<int?> GetBoardGroupIdForTask(int projectTaskId, CancellationToken cancellationToken = default)
     {
         var results = await Context.ProjectTaskInBoardGroups
             .AsNoTracking()
             .Where(x => x.ProjectTaskId == projectTaskId)
             .Select(x => x.BoardGroupId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return results.Count > 0 ? results.Single() : null;
     }

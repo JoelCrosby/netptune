@@ -15,27 +15,27 @@ public class RefreshTokenRepository : Repository<DataContext, RefreshToken, int>
     {
     }
 
-    public Task<RefreshToken?> GetByTokenAsync(string token)
+    public Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken = default)
     {
         return Context.RefreshTokens
-            .FirstOrDefaultAsync(t => t.Token == token);
+            .FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
     }
 
-    public async Task RevokeAsync(string token)
+    public async Task RevokeAsync(string token, CancellationToken cancellationToken = default)
     {
         var refreshToken = await Context.RefreshTokens
-            .FirstOrDefaultAsync(t => t.Token == token);
+            .FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
 
         if (refreshToken is null) return;
 
         refreshToken.Revoked = DateTime.UtcNow;
     }
 
-    public async Task RemoveExpiredAsync(string userId)
+    public async Task RemoveExpiredAsync(string userId, CancellationToken cancellationToken = default)
     {
         var expired = await Context.RefreshTokens
             .Where(t => t.UserId == userId && (t.Revoked != null || t.Expires <= DateTime.UtcNow))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         Context.RefreshTokens.RemoveRange(expired);
     }

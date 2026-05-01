@@ -21,7 +21,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
     {
     }
 
-    public Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId)
+    public Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, CancellationToken cancellationToken = default)
     {
         Expression<Func<ActivityLog, bool>> predicate = entityType switch
         {
@@ -50,14 +50,14 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
                 Time = y.OccurredAt,
                 Meta = y.Meta,
             })
-            .ToReadonlyListAsync(true);
+            .ToReadonlyListAsync(true, cancellationToken);
     }
 
-    public async Task<AuditLogPage> GetAuditLog(AuditLogFilter filter)
+    public async Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default)
     {
         var query = BuildAuditQuery(filter);
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
             .OrderByDescending(x => x.OccurredAt)
@@ -81,7 +81,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
                 BoardSlug = y.BoardSlug,
                 Meta = y.Meta,
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new AuditLogPage
         {
@@ -92,7 +92,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
         };
     }
 
-    public Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter)
+    public Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter, CancellationToken cancellationToken = default)
     {
         return BuildAuditQuery(filter)
             .OrderByDescending(x => x.OccurredAt)
@@ -114,27 +114,27 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
                 BoardSlug = y.BoardSlug,
                 Meta = y.Meta,
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter)
+    public Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter, CancellationToken cancellationToken = default)
     {
         return BuildAuditQuery(filter)
             .GroupBy(x => x.OccurredAt.Date)
             .Select(g => new AuditActivityPoint { Date = g.Key, Count = g.Count() })
             .OrderBy(x => x.Date)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task AnonymiseUser(string userId, int workspaceId)
+    public async Task AnonymiseUser(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
         // Replace identifying data on audit rows with a placeholder.
         // The log row is preserved for audit trail integrity.
         await Entities
             .Where(x => x.UserId == userId && x.WorkspaceId == workspaceId)
             .ExecuteUpdateAsync(s => s
-                .SetProperty(x => x.UserId, "[deleted]"));
+                .SetProperty(x => x.UserId, "[deleted]"), cancellationToken);
     }
 
     private IQueryable<ActivityLog> BuildAuditQuery(AuditLogFilter filter)

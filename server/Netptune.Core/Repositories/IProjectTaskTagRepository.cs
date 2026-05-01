@@ -5,5 +5,5 @@ namespace Netptune.Core.Repositories;
 
 public interface IProjectTaskTagRepository : IRepository<ProjectTaskTag, int>
 {
-    Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds);
+    Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 }

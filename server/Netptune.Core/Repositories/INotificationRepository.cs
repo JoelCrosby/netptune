@@ -6,9 +6,9 @@ namespace Netptune.Core.Repositories;
 
 public interface INotificationRepository : IRepository<Notification, int>
 {
-    Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId);
+    Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<int> GetUnreadCount(string userId, int workspaceId);
+    Task<int> GetUnreadCount(string userId, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task MarkAllAsRead(string userId, int workspaceId);
+    Task MarkAllAsRead(string userId, int workspaceId, CancellationToken cancellationToken = default);
 }

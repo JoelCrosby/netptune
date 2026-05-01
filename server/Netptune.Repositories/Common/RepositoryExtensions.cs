@@ -5,14 +5,14 @@ namespace Netptune.Repositories.Common;
 public static class RepositoryExtensions
 {
     public static Task<List<TEntity>> ToReadonlyListAsync<TEntity>
-        (this IQueryable<TEntity> query, bool isReadonly) where TEntity : class
+        (this IQueryable<TEntity> query, bool isReadonly, CancellationToken cancellationToken = default) where TEntity : class
     {
         if (isReadonly)
         {
-            return query.AsNoTracking().ToListAsync();
+            return query.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        return query.ToListAsync();
+        return query.ToListAsync(cancellationToken);
     }
 
     public static List<TEntity> ToReadonlyList<TEntity>

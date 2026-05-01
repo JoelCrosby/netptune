@@ -14,9 +14,9 @@ public abstract class AuditableRepository<TContext, TEntity, TId> : Repository<T
     {
     }
 
-    public async Task<TEntity?> Delete(TId id, AppUser user)
+    public async Task<TEntity?> Delete(TId id, AppUser user, CancellationToken cancellationToken = default)
     {
-        var entity = await GetAsync(id);
+        var entity = await GetAsync(id, cancellationToken: cancellationToken);
 
         if (entity is null) return null;
 
@@ -25,17 +25,18 @@ public abstract class AuditableRepository<TContext, TEntity, TId> : Repository<T
 
         return entity;
     }
-    public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
+
+    public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => !entity.IsDeleted)
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public override Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
+    public override Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => !entity.IsDeleted && ids.Contains(entity.Id))
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 }

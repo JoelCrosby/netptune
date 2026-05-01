@@ -19,47 +19,47 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     {
     }
 
-    public Task<Project?> GetWithIncludes(int id)
+    public Task<Project?> GetWithIncludes(int id, CancellationToken cancellationToken = default)
     {
         return Entities
             .Include(item => item.Owner)
             .Include(item => item.ProjectBoards)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
     }
 
-    public Task<List<ProjectViewModel>> GetProjects(string workspaceKey)
+    public Task<List<ProjectViewModel>> GetProjects(string workspaceKey, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
             .AsNoTracking()
             .Select(ProjectToViewModel())
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<ProjectViewModel?> GetProjectViewModel(int id)
+    public Task<ProjectViewModel?> GetProjectViewModel(int id, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(project => project.Id == id && !project.IsDeleted)
             .AsNoTracking()
             .Select(ProjectToViewModel())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId)
+    public Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(project => !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
             .AsNoTracking()
             .Select(ProjectToViewModel())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<bool> IsProjectKeyAvailable(string key, int workspaceId)
+    public async Task<bool> IsProjectKeyAvailable(string key, int workspaceId, CancellationToken cancellationToken = default)
     {
         var exists = await Entities
             .AsNoTracking()
-            .AnyAsync(project => project.WorkspaceId == workspaceId && project.Key == key);
+            .AnyAsync(project => project.WorkspaceId == workspaceId && project.Key == key, cancellationToken);
 
         return !exists;
     }
@@ -87,7 +87,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         };
     }
 
-    public Task<string> GenerateProjectKey(string projectName, int workspaceId)
+    public Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default)
     {
         const int keyLength = 4;
         var key = projectName[..keyLength].ToLowerInvariant();
@@ -96,7 +96,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         {
             while (true)
             {
-                var isAvailable = await IsProjectKeyAvailable(currentKey, workspaceId);
+                var isAvailable = await IsProjectKeyAvailable(currentKey, workspaceId, cancellationToken);
                 if (isAvailable) return currentKey;
                 var nextKey = projectName[..(currentKeyLength + 1)].ToLowerInvariant();
                 currentKey = nextKey;

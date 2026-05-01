@@ -15,28 +15,28 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     {
     }
 
-    public async Task<int?> GetIdBySlug(string slug)
+    public async Task<int?> GetIdBySlug(string slug, CancellationToken cancellationToken = default)
     {
         var result = await Entities
             .IsReadonly(true)
             .Where(workspace => workspace.Slug == slug && !workspace.IsDeleted)
             .Select(x => x.Id)
             .Take(1)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         if (result.Any()) return result.FirstOrDefault();
 
         return null;
     }
 
-    public Task<Workspace?> GetBySlug(string slug, bool isReadonly = false)
+    public Task<Workspace?> GetBySlug(string slug, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+            .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
     }
 
-    public Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false)
+    public Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         if (includeRelated)
         {
@@ -44,34 +44,34 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
                 .IsReadonly(isReadonly)
                 .Include(workspace => workspace.Projects)
                 .ThenInclude(project => project.ProjectTasks)
-                .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+                .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
         }
 
         return Entities
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted);
+            .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
     }
 
-    public Task<List<Workspace>> GetUserWorkspaces(string userId)
+    public Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default)
     {
         return Context.WorkspaceAppUsers
             .Where(x => x.UserId == userId)
             .Select(w => w.Workspace)
             .Where(x => !x.IsDeleted)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<bool> Exists(string slug)
+    public Task<bool> Exists(string slug, CancellationToken cancellationToken = default)
     {
-        return Entities.AnyAsync(workspace => workspace.Slug == slug);
+        return Entities.AnyAsync(workspace => workspace.Slug == slug, cancellationToken);
     }
 
-    public Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids)
+    public Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids, CancellationToken cancellationToken = default)
     {
         return Entities
             .IsReadonly(true)
             .Where(w => ids.Contains(w.Id) && !w.IsDeleted)
             .Select(w => new { w.Id, w.Slug })
-            .ToDictionaryAsync(w => w.Id, w => w.Slug);
+            .ToDictionaryAsync(w => w.Id, w => w.Slug, cancellationToken);
     }
 }

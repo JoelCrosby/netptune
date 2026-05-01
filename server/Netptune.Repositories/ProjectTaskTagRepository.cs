@@ -15,15 +15,15 @@ public class ProjectTaskTagRepository : Repository<DataContext, ProjectTaskTag, 
     {
     }
 
-    public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds)
+    public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();
         var ids = await Entities
             .Where(entity => taskIdList.Contains(entity.ProjectTaskId))
             .Select(entity => entity.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        await DeletePermanent(ids);
+        await DeletePermanent(ids, cancellationToken);
 
         return ids;
     }

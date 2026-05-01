@@ -46,46 +46,46 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
             selector.Parameters);
     }
 
-    public virtual Task<TEntity?> GetAsync(TId id, bool isReadonly = false)
+    public virtual Task<TEntity?> GetAsync(TId id, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
-        return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(EqualsPredicate(id));
+        return Entities.IsReadonly(isReadonly).FirstOrDefaultAsync(EqualsPredicate(id), cancellationToken);
     }
 
-    public virtual Task<List<TEntity>> GetAllAsync(bool isReadonly = false)
+    public virtual Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
     {
-        return Entities.ToReadonlyListAsync(isReadonly);
+        return Entities.ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public virtual Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false)
+    public virtual Task<List<TEntity>> GetAllByIdAsync(IEnumerable<TId> ids, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(entity => ids.Contains(entity.Id))
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery, bool isReadonly = false)
+    public virtual Task<IPagedResult<TEntity>> GetPagedResultsAsync(IPageQuery pageQuery, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
-        return PaginateToPagedResultAsync(Entities.IsReadonly(isReadonly), pageQuery);
+        return PaginateToPagedResultAsync(Entities.IsReadonly(isReadonly), pageQuery, cancellationToken);
     }
 
-    public async virtual Task<TEntity> AddAsync(TEntity entity)
+    public async virtual Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        var entityResult = await Entities.AddAsync(entity);
+        var entityResult = await Entities.AddAsync(entity, cancellationToken);
 
         return entityResult.Entity;
     }
 
-    public virtual Task AddRangeAsync(IEnumerable<TEntity> entities)
+    public virtual Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        return Entities.AddRangeAsync(entities);
+        return Entities.AddRangeAsync(entities, cancellationToken);
     }
 
-    protected static async Task<IPagedResult<TEntity>> PaginateToPagedResultAsync(IQueryable<TEntity> entities, IPageQuery pageQuery)
+    protected static async Task<IPagedResult<TEntity>> PaginateToPagedResultAsync(IQueryable<TEntity> entities, IPageQuery pageQuery, CancellationToken cancellationToken = default)
     {
         var result = GetPagedResult(entities, pageQuery);
         var results = ApplyPagination(entities, pageQuery);
 
-        result.Results = await results.ToListAsync();
+        result.Results = await results.ToListAsync(cancellationToken);
 
         return result;
     }
@@ -95,9 +95,9 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
         return ApplyPagination(entities, pageQuery);
     }
 
-    public virtual async Task<TEntity?> DeletePermanent(TId id)
+    public virtual async Task<TEntity?> DeletePermanent(TId id, CancellationToken cancellationToken = default)
     {
-        var entity = await GetAsync(id);
+        var entity = await GetAsync(id, cancellationToken: cancellationToken);
 
         if (entity is null) return null;
 
@@ -106,7 +106,7 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
         return entity;
     }
 
-    public virtual async Task DeletePermanent(IEnumerable<TId> ids)
+    public virtual async Task DeletePermanent(IEnumerable<TId> ids, CancellationToken cancellationToken = default)
     {
         var idList = ids.ToList();
 
@@ -125,10 +125,10 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
 
         var formatted = idSqlString[..^1];
 
-        await connection.ExecuteAsync($"DELETE FROM {TableName} WHERE id IN ({formatted})", transaction: transaction);
+        await connection.ExecuteAsync(new CommandDefinition($"DELETE FROM {TableName} WHERE id IN ({formatted})", transaction: transaction, cancellationToken: cancellationToken));
     }
 
-    public virtual Task DeletePermanent(IEnumerable<TEntity> entities)
+    public virtual Task DeletePermanent(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
         Entities.RemoveRange(entities);
 

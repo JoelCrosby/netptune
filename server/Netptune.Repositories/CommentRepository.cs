@@ -19,7 +19,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
     {
     }
 
-    public Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false)
+    public Task<List<Comment>> GetCommentsForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
@@ -27,26 +27,26 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .Include(x => x.Owner)
             .Include(x => x.Reactions)
             .Include(x => x.Mentions).ThenInclude(m => m.User)
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId)
+    public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
             .OrderByDescending(x => x.CreatedAt)
             .AsNoTracking()
             .Select(ToViewModel())
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<CommentViewModel?> GetCommentViewModel(int id)
+    public Task<CommentViewModel?> GetCommentViewModel(int id, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => x.Id == id)
             .AsNoTracking()
             .Select(ToViewModel())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     private static Expression<Func<Comment, CommentViewModel>> ToViewModel()

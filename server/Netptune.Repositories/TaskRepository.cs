@@ -22,7 +22,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
     }
 
-    public override Task<ProjectTask?> GetAsync(int id, bool isReadonly = false)
+    public override Task<ProjectTask?> GetAsync(int id, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Include(x => x.ProjectTaskAppUsers)
@@ -32,39 +32,39 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Workspace)
             .AsSplitQuery()
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync(EqualsPredicate(id));
+            .FirstOrDefaultAsync(EqualsPredicate(id), cancellationToken);
     }
 
-    public Task<TaskViewModel?> GetTaskViewModel(int taskId)
+    public Task<TaskViewModel?> GetTaskViewModel(int taskId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => x.Id == taskId)
             .AsNoTracking()
             .Select(TaskToViewModel())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey)
+    public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
         if (entity is null) return null;
 
-        var task = await entity.Select(x => (int?)x.Id).FirstOrDefaultAsync();
+        var task = await entity.Select(x => (int?)x.Id).FirstOrDefaultAsync(cancellationToken);
 
         return task;
     }
 
-    public async Task<ProjectTask?> GetTask(string systemId, string workspaceKey)
+    public async Task<ProjectTask?> GetTask(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
         if (entity is null) return null;
 
-        return await entity.FirstOrDefaultAsync();
+        return await entity.FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey)
+    public async Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);
 
@@ -72,7 +72,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
         return await entity
             .Select(TaskToViewModel())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     private IQueryable<ProjectTask>? GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
@@ -98,13 +98,13 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
 
-    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false)
+    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
             .OrderByDescending(x => x.UpdatedAt)
             .Select(TaskToViewModel())
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
     private static Expression<Func<ProjectTask, TaskViewModel>> TaskToViewModel()
@@ -143,11 +143,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         };
     }
 
-    public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey)
+    public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var rows = await connection.QueryAsync<TasksViewRowMap>(@"
+        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(@"
                 SELECT w.slug              AS workspace_key
                      , p.name              AS project_name
                      , p.key               AS project_key
@@ -190,16 +190,16 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             ", new
         {
             workspaceKey,
-        });
+        }, cancellationToken: cancellationToken));
 
         return RowsToExportList(rows);
     }
 
-    public async Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier)
+    public async Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var rows = await connection.QueryAsync<TasksViewRowMap>(@"
+        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(@"
                 SELECT w.slug              AS workspace_key
                      , p.name              AS project_name
                      , p.key               AS project_key
@@ -243,7 +243,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         {
             workspaceKey,
             boardIdentifier,
-        });
+        }, cancellationToken: cancellationToken));
 
         return RowsToExportList(rows);
     }
@@ -299,11 +299,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         });
     }
 
-    public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier)
+    public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var results = await connection.QueryAsync<int>(@"
+        var results = await connection.QueryAsync<int>(new CommandDefinition(@"
                 SELECT pt.id
                 FROM boards b
 
@@ -312,18 +312,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
 
                 WHERE b.identifier = @boardIdentifier
-            ", new { boardIdentifier });
+            ", new { boardIdentifier }, cancellationToken: cancellationToken));
 
         return results.ToList();
     }
 
-    public async Task<int?> GetNextScopeId(int projectId, int increment = 0)
+    public async Task<int?> GetNextScopeId(int projectId, int increment = 0, CancellationToken cancellationToken = default)
     {
         var taskCount = await Entities
             .Where(x => x.ProjectId == projectId)
             .OrderByDescending(x => x.ProjectScopeId)
             .Select(x => x.ProjectScopeId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         return taskCount + 1 + increment;
     }

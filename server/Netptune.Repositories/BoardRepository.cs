@@ -23,19 +23,19 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     {
     }
 
-    public Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
+    public Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default)
     {
         var query = Entities
             .Where(board => board.ProjectId == projectId)
             .Where(board => !board.IsDeleted)
             .IsReadonly(isReadonly);
 
-        if (!includeGroups) return query.ToListAsync();
+        if (!includeGroups) return query.ToListAsync(cancellationToken);
 
-        return query.Include(board => board.BoardGroups).ToListAsync();
+        return query.Include(board => board.BoardGroups).ToListAsync(cancellationToken);
     }
 
-    public Task<Board?> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false)
+    public Task<Board?> GetDefaultBoardInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default)
     {
         var query = Entities
             .Where(board => board.ProjectId == projectId)
@@ -43,15 +43,15 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .Where(board => board.BoardType == BoardType.Default)
             .IsReadonly(isReadonly);
 
-        if (!includeGroups) return query.FirstOrDefaultAsync();
+        if (!includeGroups) return query.FirstOrDefaultAsync(cancellationToken);
 
         return query
             .Include(board => board.BoardGroups)
             .ThenInclude(group => group.TasksInGroups)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<Board>> GetBoards(string slug, bool isReadonly = false)
+    public Task<List<Board>> GetBoards(string slug, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return (from b in Entities
                 join p in Context.Projects on b.ProjectId equals p.Id
@@ -61,14 +61,14 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .Include(x => x.Owner)
             .Include(x => x.Project)
             .AsSplitQuery()
-            .ToReadonlyListAsync(isReadonly);
+            .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug)
+    public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var results = await connection.QueryMultipleAsync(@"
+        var results = await connection.QueryMultipleAsync(new CommandDefinition(@"
                 SELECT b.id,
                        b.name,
                        b.identifier,
@@ -87,7 +87,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                          LEFT JOIN users AS u ON b.owner_id = u.id
                 WHERE w.slug = @slug AND NOT b.is_deleted
                 ORDER BY p.updated_at, b.updated_at
-            ", new { slug });
+            ", new { slug }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewModelRowMap>();
 
@@ -138,23 +138,23 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .ToList();
     }
 
-    public Task<int?> GetIdByIdentifier(string identifier, int workspaceId)
+    public Task<int?> GetIdByIdentifier(string identifier, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(b => b.Identifier == identifier && b.WorkspaceId == workspaceId)
             .Select(b => (int?)b.Id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Board?> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false)
+    public Task<Board?> GetByIdentifier(string identifier, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(b => !b.IsDeleted && b.Identifier == identifier && b.WorkspaceId == workspaceId)
             .IsReadonly(isReadonly)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false)
+    public Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(board => board.Id == id && !board.IsDeleted)
@@ -175,11 +175,11 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                         ? x.Owner.UserName!
                         : x.Owner.Firstname + " " + x.Owner.Lastname,
             })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<bool> Exists(string identifier)
+    public Task<bool> Exists(string identifier, CancellationToken cancellationToken = default)
     {
-        return Entities.AnyAsync(board => board.Identifier == identifier);
+        return Entities.AnyAsync(board => board.Identifier == identifier, cancellationToken);
     }
 }

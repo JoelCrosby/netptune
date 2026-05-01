@@ -14,11 +14,11 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
     {
     }
 
-    public async Task<ActivityAncestors> GetProjectTaskAncestors(int taskId)
+    public async Task<ActivityAncestors> GetProjectTaskAncestors(int taskId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var result = await connection.QueryFirstOrDefaultAsync<TaskAncestorRow>(@"
+        var result = await connection.QueryFirstOrDefaultAsync<TaskAncestorRow>(new CommandDefinition(@"
                 SELECT
                       ptibg.project_task_id as task_id
                     , ptibg.board_group_id as board_group_id
@@ -36,7 +36,7 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
                 LEFT JOIN workspaces w on w.id = p.workspace_id
                 LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
                 WHERE ptibg.project_task_id = @taskId
-            ", new { taskId });
+            ", new { taskId }, cancellationToken: cancellationToken));
 
         if (result is null) return new ActivityAncestors();
 
@@ -54,11 +54,11 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
         };
     }
 
-    public async Task<ActivityAncestors> GetBoardGroupAncestors(int boardGroupId)
+    public async Task<ActivityAncestors> GetBoardGroupAncestors(int boardGroupId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var result = await connection.QueryFirstOrDefaultAsync<BoardGroupAncestorRow>(@"
+        var result = await connection.QueryFirstOrDefaultAsync<BoardGroupAncestorRow>(new CommandDefinition(@"
                 SELECT
                       bg.id as board_group_id
                     , b.id as board_id
@@ -72,7 +72,7 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
                 LEFT JOIN projects p on p.id = b.project_id
                 LEFT JOIN workspaces w on w.id = p.workspace_id
                 WHERE bg.id = @boardGroupId
-            ", new { boardGroupId });
+            ", new { boardGroupId }, cancellationToken: cancellationToken));
 
         if (result is null) return new ActivityAncestors();
 
@@ -88,11 +88,11 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
         };
     }
 
-    public async Task<ActivityAncestors> GetBoardAncestors(int boardId)
+    public async Task<ActivityAncestors> GetBoardAncestors(int boardId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var result = await connection.QueryFirstOrDefaultAsync<BoardAncestorRow>(@"
+        var result = await connection.QueryFirstOrDefaultAsync<BoardAncestorRow>(new CommandDefinition(@"
                 SELECT
                       b.id as board_id
                     , b.identifier as board_key
@@ -104,7 +104,7 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
                 LEFT JOIN projects p on p.id = b.project_id
                 LEFT JOIN workspaces w on w.id = p.workspace_id
                 WHERE b.id = @boardId
-            ", new { boardId });
+            ", new { boardId }, cancellationToken: cancellationToken));
 
         if (result is null) return new ActivityAncestors();
 
@@ -119,11 +119,11 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
         };
     }
 
-    public async Task<ActivityAncestors> GetProjectAncestors(int projectId)
+    public async Task<ActivityAncestors> GetProjectAncestors(int projectId, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var result = await connection.QueryFirstOrDefaultAsync<ProjectAncestorRow>(@"
+        var result = await connection.QueryFirstOrDefaultAsync<ProjectAncestorRow>(new CommandDefinition(@"
                 SELECT
                       p.id as project_id
                     , p.key as project_key
@@ -132,7 +132,7 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
                 FROM projects p
                 LEFT JOIN workspaces w on w.id = p.workspace_id
                 WHERE p.id = @projectId
-            ", new { projectId });
+            ", new { projectId }, cancellationToken: cancellationToken));
 
         if (result is null) return new ActivityAncestors();
 
