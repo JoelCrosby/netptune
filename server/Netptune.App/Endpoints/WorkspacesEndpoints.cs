@@ -26,9 +26,10 @@ public static class WorkspacesEndpoints
         return builder;
     }
 
-    public static async Task<IResult> HandleGetWorkspaces(IMediator mediator)
+    public static async Task<IResult> HandleGetWorkspaces(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserWorkspacesQuery());
+        var result = await mediator.Send(new GetUserWorkspacesQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -37,14 +38,15 @@ public static class WorkspacesEndpoints
         IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
-        string key)
+        string key,
+        CancellationToken cancellationToken)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, key, NetptunePermissions.Workspace.Read);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await mediator.Send(new GetWorkspaceQuery(key));
+        var result = await mediator.Send(new GetWorkspaceQuery(key), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
@@ -55,21 +57,23 @@ public static class WorkspacesEndpoints
         IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
-        UpdateWorkspaceRequest request)
+        UpdateWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, request.Slug!, NetptunePermissions.Workspace.Update);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await mediator.Send(new UpdateWorkspaceCommand(request));
+        var result = await mediator.Send(new UpdateWorkspaceCommand(request), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePost(IMediator mediator, AddWorkspaceRequest request)
+    public static async Task<IResult> HandlePost(IMediator mediator, AddWorkspaceRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateWorkspaceCommand(request));
+        var result = await mediator.Send(new CreateWorkspaceCommand(request), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -78,14 +82,15 @@ public static class WorkspacesEndpoints
         IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
-        string key)
+        string key,
+        CancellationToken cancellationToken)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, key, NetptunePermissions.Workspace.Delete);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await mediator.Send(new DeleteWorkspaceCommand(key));
+        var result = await mediator.Send(new DeleteWorkspaceCommand(key), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -96,30 +101,33 @@ public static class WorkspacesEndpoints
         IMediator mediator,
         IAuthorizationService authorizationService,
         HttpContext context,
-        string key)
+        string key,
+        CancellationToken cancellationToken)
     {
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, key, NetptunePermissions.Workspace.DeletePermanent);
 
         if (!authorizationResult.Succeeded) return Results.Forbid();
 
-        var result = await mediator.Send(new DeleteWorkspacePermanentCommand(key));
+        var result = await mediator.Send(new DeleteWorkspacePermanentCommand(key), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetAllWorkspaces(IMediator mediator)
+    public static async Task<IResult> HandleGetAllWorkspaces(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAllWorkspacesQuery());
+        var result = await mediator.Send(new GetAllWorkspacesQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string slug)
+    public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string slug,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new IsWorkspaceSlugUniqueQuery(slug));
+        var result = await mediator.Send(new IsWorkspaceSlugUniqueQuery(slug), cancellationToken);
 
         return Results.Ok(result);
     }

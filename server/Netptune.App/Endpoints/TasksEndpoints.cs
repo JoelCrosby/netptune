@@ -27,25 +27,28 @@ public static class TasksEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetTasks(IMediator mediator)
+    public static async Task<IResult> HandleGetTasks(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTasksQuery());
+        var result = await mediator.Send(new GetTasksQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetTask(IMediator mediator, int id)
+    public static async Task<IResult> HandleGetTask(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTaskQuery(id));
+        var result = await mediator.Send(new GetTaskQuery(id), cancellationToken);
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetTaskDetail(IMediator mediator, string systemId)
+    public static async Task<IResult> HandleGetTaskDetail(IMediator mediator, string systemId,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTaskDetailQuery(systemId));
+        var result = await mediator.Send(new GetTaskDetailQuery(systemId), cancellationToken);
 
         if (result is null) return Results.NotFound(result);
 
@@ -56,9 +59,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        UpdateProjectTaskRequest request)
+        UpdateProjectTaskRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateTaskCommand(request));
+        var result = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -71,9 +75,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        AddProjectTaskRequest request)
+        AddProjectTaskRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateTaskCommand(request));
+        var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
 
         await BroadcastAsync(boardEventService, context);
 
@@ -84,9 +89,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        IEnumerable<int> ids)
+        IEnumerable<int> ids,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteTasksCommand(ids));
+        var result = await mediator.Send(new DeleteTasksCommand(ids), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -99,9 +105,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        int id)
+        int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteTaskCommand(id));
+        var result = await mediator.Send(new DeleteTaskCommand(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -114,9 +121,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        MoveTaskInGroupRequest request)
+        MoveTaskInGroupRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new MoveTaskInBoardGroupCommand(request));
+        var result = await mediator.Send(new MoveTaskInBoardGroupCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -129,9 +137,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        MoveTasksToGroupRequest request)
+        MoveTasksToGroupRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new MoveTasksToGroupCommand(request));
+        var result = await mediator.Send(new MoveTasksToGroupCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
@@ -144,9 +153,10 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        ReassignTasksRequest request)
+        ReassignTasksRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ReassignTasksCommand(request));
+        var result = await mediator.Send(new ReassignTasksCommand(request), cancellationToken);
 
         await BroadcastAsync(boardEventService, context);
 

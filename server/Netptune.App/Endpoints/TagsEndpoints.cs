@@ -29,9 +29,10 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandlePost(
         IMediator mediator,
-        [FromBody] AddTagRequest request)
+        [FromBody] AddTagRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateTagCommand(request));
+        var result = await mediator.Send(new CreateTagCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -42,9 +43,10 @@ public static class TagsEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        [FromBody] AddTagToTaskRequest request)
+        [FromBody] AddTagToTaskRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new AddTagToTaskCommand(request));
+        var result = await mediator.Send(new AddTagToTaskCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -55,9 +57,10 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleGetTagsForTask(
         IMediator mediator,
-        string systemId)
+        string systemId,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTagsForTaskQuery(systemId));
+        var result = await mediator.Send(new GetTagsForTaskQuery(systemId), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
@@ -65,9 +68,10 @@ public static class TagsEndpoints
     }
 
     public static async Task<IResult> HandleGetTagsForWorkspace(
-        IMediator mediator)
+        IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTagsForWorkspaceQuery());
+        var result = await mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
@@ -76,9 +80,10 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleDelete(
         IMediator mediator,
-        [FromBody] DeleteTagsRequest request)
+        [FromBody] DeleteTagsRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteTagsCommand(request));
+        var result = await mediator.Send(new DeleteTagsCommand(request), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -87,9 +92,10 @@ public static class TagsEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        [FromBody] DeleteTagFromTaskRequest request)
+        [FromBody] DeleteTagFromTaskRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteTagFromTaskCommand(request));
+        var result = await mediator.Send(new DeleteTagFromTaskCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -100,9 +106,10 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleUpdateTag(
         IMediator mediator,
-        [FromBody] UpdateTagRequest request)
+        [FromBody] UpdateTagRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateTagCommand(request));
+        var result = await mediator.Send(new UpdateTagCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 

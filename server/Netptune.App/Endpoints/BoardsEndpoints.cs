@@ -24,29 +24,32 @@ public static class BoardsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGet(IMediator mediator, int id)
+    public static async Task<IResult> HandleGet(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardQuery(id));
+        var result = await mediator.Send(new GetBoardQuery(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetBoardsInWorkspace(IMediator mediator)
+    public static async Task<IResult> HandleGetBoardsInWorkspace(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardsInWorkspaceQuery());
+        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetBoardsInProject(IMediator mediator, int? projectId)
+    public static async Task<IResult> HandleGetBoardsInProject(IMediator mediator, int? projectId,
+        CancellationToken cancellationToken)
     {
         if (!projectId.HasValue) return Results.BadRequest();
 
-        var result = await mediator.Send(new GetBoardsInProjectQuery(projectId.Value));
+        var result = await mediator.Send(new GetBoardsInProjectQuery(projectId.Value), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
@@ -56,43 +59,48 @@ public static class BoardsEndpoints
     public static async Task<IResult> HandleGetBoardView(
         IMediator mediator,
         string identifier,
-        [AsParameters] BoardGroupsFilter filter)
+        [AsParameters] BoardGroupsFilter filter,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardViewQuery(identifier, filter));
+        var result = await mediator.Send(new GetBoardViewQuery(identifier, filter), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePut(IMediator mediator, UpdateBoardRequest request)
+    public static async Task<IResult> HandlePut(IMediator mediator, UpdateBoardRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateBoardCommand(request));
+        var result = await mediator.Send(new UpdateBoardCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePost(IMediator mediator, AddBoardRequest request)
+    public static async Task<IResult> HandlePost(IMediator mediator, AddBoardRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateBoardCommand(request));
+        var result = await mediator.Send(new CreateBoardCommand(request), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(IMediator mediator, int id)
+    public static async Task<IResult> HandleDelete(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteBoardCommand(id));
+        var result = await mediator.Send(new DeleteBoardCommand(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string identifier)
+    public static async Task<IResult> HandleIsSlugUnique(IMediator mediator, string identifier,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new IsBoardIdentifierUniqueQuery(identifier));
+        var result = await mediator.Send(new IsBoardIdentifierUniqueQuery(identifier), cancellationToken);
 
         return Results.Ok(result);
     }

@@ -36,7 +36,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
             task.ProjectTaskAppUsers.Add(new ProjectTaskAppUser { UserId = req.AssigneeId });
         }
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogWithMany<AssignActivityMeta>(options =>
         {

@@ -39,7 +39,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         {
             if (req.Status.HasValue && result.Status != req.Status.Value)
             {
-                await PutTaskInBoardGroup(req.Status.Value, result);
+                await PutTaskInBoardGroup(req.Status.Value, result, cancellationToken);
             }
 
             result.Name = req.Name ?? result.Name;
@@ -58,7 +58,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
                     req.AssigneeIds).ToList();
             }
 
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id);
@@ -70,10 +70,10 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         return ClientResponse<TaskViewModel>.Success(response);
     }
 
-    private async Task PutTaskInBoardGroup(ProjectTaskStatus status, Core.Entities.ProjectTask result)
+    private async Task PutTaskInBoardGroup(ProjectTaskStatus status, Core.Entities.ProjectTask result, CancellationToken cancellationToken)
     {
-        await RemoveTaskFromGroups(result.Id);
-        await UnitOfWork.CompleteAsync();
+        await RemoveTaskFromGroups(result.Id, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (result.ProjectId is null) return;
 
@@ -103,7 +103,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         });
     }
 
-    private async Task RemoveTaskFromGroups(int taskId)
+    private async Task RemoveTaskFromGroups(int taskId, CancellationToken cancellationToken)
     {
         var groupsWithTask = await UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(taskId);
 
@@ -112,6 +112,6 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             .SelectMany(taskInGroups => taskInGroups);
 
         await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
     }
 }

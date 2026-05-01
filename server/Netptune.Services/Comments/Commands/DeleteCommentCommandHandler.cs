@@ -31,7 +31,7 @@ public sealed class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentC
         var commentId = comment.Id;
 
         await UnitOfWork.Comments.DeletePermanent(comment.Id);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

@@ -73,14 +73,14 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             activityLogs.Add((log, ancestors, activity.RecipientUserIds));
         }
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
-        await CreateNotificationsAsync(activityLogs);
+        await CreateNotificationsAsync(activityLogs, cancellationToken);
 
         return default;
     }
 
-    private async Task CreateNotificationsAsync(List<(ActivityLog Log, ActivityAncestors Ancestors, List<string>? RecipientUserIds)> activityLogs)
+    private async Task CreateNotificationsAsync(List<(ActivityLog Log, ActivityAncestors Ancestors, List<string>? RecipientUserIds)> activityLogs, CancellationToken cancellationToken)
     {
         var workspaceIds = activityLogs.Select(l => l.Log.WorkspaceId).Distinct().ToList();
 
@@ -119,7 +119,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         if (allNotifications.Count == 0) return;
 
         await UnitOfWork.Notifications.AddRangeAsync(allNotifications);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         await PublishNotificationEventsAsync(allNotifications);
     }

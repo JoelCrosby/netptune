@@ -30,7 +30,7 @@ public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoard
         result.Name = request.Request.Name ?? result.Name;
         result.SortOrder = request.Request.SortOrder ?? result.SortOrder;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

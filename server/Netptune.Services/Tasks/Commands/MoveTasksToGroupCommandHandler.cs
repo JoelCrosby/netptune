@@ -48,7 +48,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         });
 
         await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogWithMany<MoveTaskActivityMeta>(options =>
         {

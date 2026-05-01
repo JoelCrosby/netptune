@@ -51,7 +51,7 @@ public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, 
         };
 
         await UnitOfWork.Tags.AddAsync(tag);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         var result = await UnitOfWork.Tags.GetViewModel(tag.Id);
 

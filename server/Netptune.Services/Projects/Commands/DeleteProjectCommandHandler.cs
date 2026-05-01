@@ -31,7 +31,7 @@ public sealed class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectC
 
         project.Delete(userId);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

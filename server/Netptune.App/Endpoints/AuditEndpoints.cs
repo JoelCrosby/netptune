@@ -36,6 +36,7 @@ public static class AuditEndpoints
         [FromQuery] ActivityType? activityType,
         [FromQuery] DateTime? from,
         [FromQuery] DateTime? to,
+        CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 50)
     {
@@ -50,7 +51,7 @@ public static class AuditEndpoints
             PageSize = Math.Clamp(pageSize, 1, 200),
         };
 
-        var result = await mediator.Send(new GetAuditLogQuery(filter));
+        var result = await mediator.Send(new GetAuditLogQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -61,7 +62,8 @@ public static class AuditEndpoints
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
         [FromQuery] DateTime? from,
-        [FromQuery] DateTime? to)
+        [FromQuery] DateTime? to,
+        CancellationToken cancellationToken)
     {
         var filter = new AuditLogFilter
         {
@@ -72,7 +74,7 @@ public static class AuditEndpoints
             To = to,
         };
 
-        var result = await mediator.Send(new GetActivitySummaryQuery(filter));
+        var result = await mediator.Send(new GetActivitySummaryQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -83,7 +85,8 @@ public static class AuditEndpoints
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
         [FromQuery] DateTime? from,
-        [FromQuery] DateTime? to)
+        [FromQuery] DateTime? to,
+        CancellationToken cancellationToken)
     {
         var filter = new AuditLogFilter
         {
@@ -94,16 +97,17 @@ public static class AuditEndpoints
             To = to,
         };
 
-        var result = await mediator.Send(new ExportAuditLogQuery(filter));
+        var result = await mediator.Send(new ExportAuditLogQuery(filter), cancellationToken);
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }
 
     private static async Task<IResult> HandleAnonymiseUser(
         IMediator mediator,
-        [FromRoute] string userId)
+        [FromRoute] string userId,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new AnonymiseUserCommand(userId));
+        var result = await mediator.Send(new AnonymiseUserCommand(userId), cancellationToken);
 
         return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Message);
     }

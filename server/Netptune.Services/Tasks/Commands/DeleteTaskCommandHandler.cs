@@ -26,7 +26,7 @@ public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand
         if (task is null) return ClientResponse.NotFound;
 
         await UnitOfWork.Tasks.DeletePermanent(task.Id);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

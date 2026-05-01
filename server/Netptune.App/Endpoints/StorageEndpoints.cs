@@ -25,7 +25,8 @@ public static class StorageEndpoints
         IStorageService storageService,
         IIdentityService identity,
         IMediator mediator,
-        HttpRequest request)
+        HttpRequest request,
+        CancellationToken cancellationToken)
     {
         var file = request.Form.Files.FirstOrDefault();
 
@@ -56,7 +57,7 @@ public static class StorageEndpoints
         {
             Id = userId,
             PictureUrl = result.Payload.Uri,
-        }));
+        }), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -64,7 +65,8 @@ public static class StorageEndpoints
     public static async Task<IResult> HandleUploadMedia(
         IStorageService storageService,
         IIdentityService identity,
-        HttpRequest request)
+        HttpRequest request,
+        CancellationToken cancellationToken)
     {
         var workspaceKey = identity.GetWorkspaceKey();
         var file = request.Form.Files[0];

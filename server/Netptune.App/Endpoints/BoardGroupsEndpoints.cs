@@ -21,9 +21,10 @@ public static class BoardGroupsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGet(IMediator mediator, int id)
+    public static async Task<IResult> HandleGet(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardGroupQuery(id));
+        var result = await mediator.Send(new GetBoardGroupQuery(id), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
@@ -34,9 +35,10 @@ public static class BoardGroupsEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        UpdateBoardGroupRequest request)
+        UpdateBoardGroupRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateBoardGroupCommand(request));
+        var result = await mediator.Send(new UpdateBoardGroupCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
@@ -49,9 +51,10 @@ public static class BoardGroupsEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        AddBoardGroupRequest request)
+        AddBoardGroupRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateBoardGroupCommand(request));
+        var result = await mediator.Send(new CreateBoardGroupCommand(request), cancellationToken);
 
         await BroadcastAsync(boardEventService, context);
 
@@ -62,9 +65,10 @@ public static class BoardGroupsEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        int id)
+        int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteBoardGroupCommand(id));
+        var result = await mediator.Send(new DeleteBoardGroupCommand(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

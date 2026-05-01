@@ -28,11 +28,11 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         var req = request.Request;
 
         return req.OldGroupId == req.NewGroupId
-            ? await MoveTaskInGroup(req)
-            : await TransferTaskInGroups(req);
+            ? await MoveTaskInGroup(req, cancellationToken)
+            : await TransferTaskInGroups(req, cancellationToken);
     }
 
-    private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request)
+    private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
     {
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
@@ -63,7 +63,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             };
 
             await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational);
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync(cancellationToken);
 
             return newGroup;
         });
@@ -76,7 +76,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
         taskInBoardGroup.SortOrder = sortOrder;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogWith<MoveTaskActivityMeta>(options =>
         {
@@ -89,7 +89,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         return ClientResponse.Success;
     }
 
-    private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request)
+    private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
     {
         var item = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
 
@@ -97,7 +97,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
         item.SortOrder = await GetTaskInGroupSortOrder(request.NewGroupId, request.TaskId, request.PreviousIndex, request.CurrentIndex);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

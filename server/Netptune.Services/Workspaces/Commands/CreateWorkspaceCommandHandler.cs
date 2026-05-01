@@ -27,7 +27,7 @@ public sealed class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorksp
     public async ValueTask<ClientResponse<WorkspaceViewModel>> Handle(CreateWorkspaceCommand request, CancellationToken cancellationToken)
     {
         var user = await Identity.GetCurrentUser();
-        var result = await WorkspaceFactory.CreateAsync(request.Request, user, UnitOfWork);
+        var result = await WorkspaceFactory.CreateAsync(request.Request, user, UnitOfWork, cancellationToken);
 
         if (result.IsSuccess && result.Payload is { } workspace)
         {

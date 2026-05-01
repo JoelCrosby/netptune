@@ -49,7 +49,7 @@ public sealed class DeleteWorkspacePermanentCommandHandler : IRequestHandler<Del
 
             await u.Workspaces.DeletePermanent(workspaceId);
 
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
         return ClientResponse.Success;

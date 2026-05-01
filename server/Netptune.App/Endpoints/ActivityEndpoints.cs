@@ -17,9 +17,10 @@ public static class ActivityEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGet(IMediator mediator, EntityType entityType, [FromRoute] int id)
+    public static async Task<IResult> HandleGet(IMediator mediator, EntityType entityType, [FromRoute] int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetActivitiesQuery(entityType, id));
+        var result = await mediator.Send(new GetActivitiesQuery(entityType, id), cancellationToken);
 
         return Results.Ok(result);
     }

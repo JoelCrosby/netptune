@@ -36,27 +36,27 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator)
+    private static async Task<IResult> HandleGet(IMediator mediator, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserNotificationsQuery());
+        var result = await mediator.Send(new GetUserNotificationsQuery(), cancellationToken);
         return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleGetUnreadCount(IMediator mediator)
+    private static async Task<IResult> HandleGetUnreadCount(IMediator mediator, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUnreadCountQuery());
+        var result = await mediator.Send(new GetUnreadCountQuery(), cancellationToken);
         return Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkRead(int id, IMediator mediator)
+    private static async Task<IResult> HandleMarkRead(int id, IMediator mediator, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new MarkAsReadCommand(id));
+        var result = await mediator.Send(new MarkAsReadCommand(id), cancellationToken);
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleMarkAllRead(IMediator mediator)
+    private static async Task<IResult> HandleMarkAllRead(IMediator mediator, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new MarkAllAsReadCommand());
+        var result = await mediator.Send(new MarkAllAsReadCommand(), cancellationToken);
         return Results.Ok(result);
     }
 

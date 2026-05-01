@@ -15,7 +15,7 @@ public interface IUnitOfWork
     /// Execute all the database changes asynchronous.
     /// </summary>
     /// <returns>Number of changes</returns>
-    Task<int> CompleteAsync();
+    Task<int> CompleteAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Executes the passed function in a single transaction.

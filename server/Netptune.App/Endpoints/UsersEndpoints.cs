@@ -24,64 +24,72 @@ public static class UsersEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetWorkspaceUsers(IMediator mediator)
+    public static async Task<IResult> HandleGetWorkspaceUsers(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetWorkspaceUsersQuery());
+        var result = await mediator.Send(new GetWorkspaceUsersQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetUser(IMediator mediator, string id)
+    public static async Task<IResult> HandleGetUser(IMediator mediator, string id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserQuery(id));
+        var result = await mediator.Send(new GetUserQuery(id), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleUpdateUser(IMediator mediator, UpdateUserRequest request)
+    public static async Task<IResult> HandleUpdateUser(IMediator mediator, UpdateUserRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateUserCommand(request));
+        var result = await mediator.Send(new UpdateUserCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleInvite(IMediator mediator, InviteUsersRequest request)
+    public static async Task<IResult> HandleInvite(IMediator mediator, InviteUsersRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new InviteUsersToWorkspaceCommand(request.EmailAddresses));
+        var result = await mediator.Send(new InviteUsersToWorkspaceCommand(request.EmailAddresses), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleRemoveUserFromWorkspace(IMediator mediator, InviteUsersRequest request)
+    public static async Task<IResult> HandleRemoveUserFromWorkspace(IMediator mediator, InviteUsersRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new RemoveUsersFromWorkspaceCommand(request.EmailAddresses));
+        var result = await mediator.Send(new RemoveUsersFromWorkspaceCommand(request.EmailAddresses), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetUserByEmail(IMediator mediator, string email)
+    public static async Task<IResult> HandleGetUserByEmail(IMediator mediator, string email,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserByEmailQuery(email));
+        var result = await mediator.Send(new GetUserByEmailQuery(email), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetAll(IMediator mediator)
+    public static async Task<IResult> HandleGetAll(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAllUsersQuery());
+        var result = await mediator.Send(new GetAllUsersQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleTogglePermission(IMediator mediator, ToggleUserPermissionRequest request)
+    public static async Task<IResult> HandleTogglePermission(IMediator mediator, ToggleUserPermissionRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ToggleUserPermissionCommand(request));
+        var result = await mediator.Send(new ToggleUserPermissionCommand(request), cancellationToken);
 
         if (!result.IsSuccess) return Results.BadRequest(result.Message);
 

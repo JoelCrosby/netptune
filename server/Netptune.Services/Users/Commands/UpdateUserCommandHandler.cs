@@ -27,7 +27,7 @@ public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand
         updatedUser.Lastname = request.Request.Lastname ?? updatedUser.Lastname;
         updatedUser.PictureUrl = request.Request.PictureUrl ?? updatedUser.PictureUrl;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         return updatedUser.ToViewModel();
     }

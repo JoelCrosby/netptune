@@ -34,7 +34,7 @@ public sealed class DeleteTagsCommandHandler : IRequestHandler<DeleteTagsCommand
         var tagIds = tags.ConvertAll(t => t.Id);
 
         await UnitOfWork.Tags.DeletePermanent(tags);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogMany(options =>
         {

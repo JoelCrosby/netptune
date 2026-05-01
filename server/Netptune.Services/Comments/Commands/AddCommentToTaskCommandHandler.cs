@@ -65,7 +65,7 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
         };
 
         await UnitOfWork.Comments.AddAsync(comment);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         var result = await UnitOfWork.Comments.GetCommentViewModel(comment.Id);
 

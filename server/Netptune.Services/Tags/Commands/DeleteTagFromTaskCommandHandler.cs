@@ -41,7 +41,7 @@ public sealed class DeleteTagFromTaskCommandHandler : IRequestHandler<DeleteTagF
         var tag = await UnitOfWork.Tags.GetByValue(request.Request.Tag, workspaceId.Value);
 
         await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Request.Tag);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (tag is not null)
         {

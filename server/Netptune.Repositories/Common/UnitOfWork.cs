@@ -36,9 +36,9 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
     /// Execute all the database changes asynchronous.
     /// </summary>
     /// <returns>Number of changes</returns>
-    public async Task<int> CompleteAsync()
+    public async Task<int> CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return await Context.SaveChangesAsync();
+        return await Context.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>

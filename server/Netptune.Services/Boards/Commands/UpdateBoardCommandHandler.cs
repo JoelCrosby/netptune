@@ -35,7 +35,7 @@ public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardComma
         result.Name = req.Name ?? result.Name;
         result.Identifier = req.Identifier?.ToUrlSlug() ?? result.Identifier;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

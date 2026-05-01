@@ -44,7 +44,7 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
 
         var result = await UnitOfWork.BoardGroups.AddAsync(boardGroup);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

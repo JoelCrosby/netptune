@@ -20,27 +20,30 @@ public static class CommentsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetCommentsForTask(IMediator mediator, string systemId)
+    public static async Task<IResult> HandleGetCommentsForTask(IMediator mediator, string systemId,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetCommentsForTaskQuery(systemId));
+        var result = await mediator.Send(new GetCommentsForTaskQuery(systemId), cancellationToken);
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePostTaskComment(IMediator mediator, AddCommentRequest request)
+    public static async Task<IResult> HandlePostTaskComment(IMediator mediator, AddCommentRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new AddCommentToTaskCommand(request));
+        var result = await mediator.Send(new AddCommentToTaskCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(IMediator mediator, int id)
+    public static async Task<IResult> HandleDelete(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteCommentCommand(id));
+        var result = await mediator.Send(new DeleteCommentCommand(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

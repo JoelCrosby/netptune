@@ -32,7 +32,7 @@ public sealed class DeleteBoardCommandHandler : IRequestHandler<DeleteBoardComma
 
         board.Delete(userId);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

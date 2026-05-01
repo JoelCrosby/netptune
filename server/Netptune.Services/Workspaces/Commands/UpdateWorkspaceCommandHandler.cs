@@ -38,7 +38,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         result.IsPublic = request.Request.IsPublic ?? result.IsPublic;
         result.UpdatedAt = DateTime.UtcNow;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

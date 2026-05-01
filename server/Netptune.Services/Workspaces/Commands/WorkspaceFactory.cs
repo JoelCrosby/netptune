@@ -11,7 +11,7 @@ namespace Netptune.Services.Workspaces.Commands;
 
 internal static class WorkspaceFactory
 {
-    internal static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(AddWorkspaceRequest request, AppUser user, INetptuneUnitOfWork unitOfWork)
+    internal static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(AddWorkspaceRequest request, AppUser user, INetptuneUnitOfWork unitOfWork, CancellationToken cancellationToken = default)
     {
         return unitOfWork.Transaction(async () =>
         {
@@ -27,7 +27,7 @@ internal static class WorkspaceFactory
 
             var workspace = await unitOfWork.Workspaces.AddAsync(entity);
 
-            await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync(cancellationToken);
 
             var permissions = WorkspaceRolePermissions
                 .GetDefaultPermissions(WorkspaceRole.Owner)
@@ -58,7 +58,7 @@ internal static class WorkspaceFactory
 
             workspace.Projects.Add(project);
 
-            await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync(cancellationToken);
 
             return ClientResponse<WorkspaceViewModel>.Success(workspace.ToViewModel());
         });

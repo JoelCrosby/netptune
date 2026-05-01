@@ -57,7 +57,7 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         var newUserIds = userIds.Except(existingUsers.Select(x => x.Id)).ToHashSet();
 
         await UnitOfWork.Users.InviteUsersToWorkspace(newUserIds, workspace.Id);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         var existingUserEmails = existingUsers.Select(user => user.Email!.IdentityNormalize()).ToHashSet();
         var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).Select(e => e.ToLowerInvariant()).ToHashSet();

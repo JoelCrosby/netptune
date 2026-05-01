@@ -30,7 +30,7 @@ public sealed class MarkAsReadCommandHandler : IRequestHandler<MarkAsReadCommand
 
         notification.IsRead = true;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         return ClientResponse.Success;
     }

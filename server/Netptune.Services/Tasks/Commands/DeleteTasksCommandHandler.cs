@@ -28,7 +28,7 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
         await UnitOfWork.ProjectTasksInGroups.DeletePermanent(ids);
 
         await UnitOfWork.Tasks.DeletePermanent(taskIds);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogMany(options =>
         {

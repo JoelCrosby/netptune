@@ -58,7 +58,7 @@ public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<Rem
         var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace(userIds, workspace.Id);
         var removeUserEmails = removed.Select(x => x.User.Email!).ToList();
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogWith<UserMembershipActivityMeta>(options =>
         {

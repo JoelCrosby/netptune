@@ -37,7 +37,7 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
         project.Key = request.Request.Key ?? project.Key;
         project.ModifiedByUserId = user.Id;
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

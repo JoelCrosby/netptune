@@ -57,7 +57,7 @@ public sealed class ToggleUserPermissionCommandHandler : IRequestHandler<ToggleU
         }
 
         await UnitOfWork.WorkspaceUsers.SetUserPermissions(request.Request.UserId, workspace.Id, permissions);
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         PermissionCache.Remove(new() { UserId = request.Request.UserId, WorkspaceKey = workspaceKey });
 

@@ -71,7 +71,7 @@ public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCom
                 tag.ProjectTaskTags.Add(taskTag);
             }
 
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync(cancellationToken);
 
             Activity.LogWith<TagActivityMeta>(options =>
             {

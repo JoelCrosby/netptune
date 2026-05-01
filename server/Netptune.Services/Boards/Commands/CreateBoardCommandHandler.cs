@@ -54,7 +54,7 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
 
         var result = await UnitOfWork.Boards.AddAsync(board);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

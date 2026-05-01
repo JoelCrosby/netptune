@@ -37,7 +37,7 @@ public sealed class DeleteWorkspaceCommandHandler : IRequestHandler<DeleteWorksp
 
         workspace.Delete(userId);
 
-        await UnitOfWork.CompleteAsync();
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
         {

@@ -20,6 +20,6 @@ public sealed class CreateWorkspaceForNewUserCommandHandler : IRequestHandler<Cr
 
     public async ValueTask<ClientResponse<WorkspaceViewModel>> Handle(CreateWorkspaceForNewUserCommand request, CancellationToken cancellationToken)
     {
-        return await WorkspaceFactory.CreateAsync(request.Request, request.User, UnitOfWork);
+        return await WorkspaceFactory.CreateAsync(request.Request, request.User, UnitOfWork, cancellationToken);
     }
 }

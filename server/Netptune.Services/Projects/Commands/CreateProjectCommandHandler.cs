@@ -50,7 +50,7 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
 
             workspace.Projects.Add(project);
 
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.CompleteAsync(cancellationToken);
 
             var result = await UnitOfWork.Projects.GetProjectViewModel(project.Id);
 

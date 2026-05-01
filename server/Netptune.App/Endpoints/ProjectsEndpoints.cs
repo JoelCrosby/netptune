@@ -21,41 +21,46 @@ public static class ProjectsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetProjects(IMediator mediator)
+    public static async Task<IResult> HandleGetProjects(IMediator mediator,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetProjectsQuery());
+        var result = await mediator.Send(new GetProjectsQuery(), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetProject(IMediator mediator, string key)
+    public static async Task<IResult> HandleGetProject(IMediator mediator, string key,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetProjectQuery(key));
+        var result = await mediator.Send(new GetProjectQuery(key), cancellationToken);
 
         if (result is null) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePut(IMediator mediator, UpdateProjectRequest request)
+    public static async Task<IResult> HandlePut(IMediator mediator, UpdateProjectRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new UpdateProjectCommand(request));
+        var result = await mediator.Send(new UpdateProjectCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePost(IMediator mediator, AddProjectRequest request)
+    public static async Task<IResult> HandlePost(IMediator mediator, AddProjectRequest request,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CreateProjectCommand(request));
+        var result = await mediator.Send(new CreateProjectCommand(request), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(IMediator mediator, int id)
+    public static async Task<IResult> HandleDelete(IMediator mediator, int id,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new DeleteProjectCommand(id));
+        var result = await mediator.Send(new DeleteProjectCommand(id), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

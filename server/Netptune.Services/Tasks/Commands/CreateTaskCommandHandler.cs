@@ -83,7 +83,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             .Execute(async () =>
             {
                 result.ProjectScopeId = scopeId;
-                return await UnitOfWork.CompleteAsync();
+                return await UnitOfWork.CompleteAsync(cancellationToken);
             });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id);
