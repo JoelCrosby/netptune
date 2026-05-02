@@ -7,7 +7,10 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { logoutSuccess, refreshTokenSuccess } from '@app/core/store/auth/auth.actions';
+import {
+  logoutSuccess,
+  refreshTokenSuccess,
+} from '@app/core/store/auth/auth.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
@@ -22,7 +25,7 @@ import {
 import { WorkspaceService } from '../services/workspace.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
-let refreshTokenRequest$: ReturnType<AuthService['refresh']> | null = null;
+let sessionRefreshRequest$: ReturnType<AuthService['refresh']> | null = null;
 
 export const authInterceptor = (
   req: HttpRequest<unknown>,
@@ -34,7 +37,10 @@ export const authInterceptor = (
   const authService = inject(AuthService);
 
   const isAuthManagementRequest = (req: HttpRequest<unknown>): boolean => {
-    return req.url.includes('auth/refresh') || req.url.includes('auth/logout');
+    return (
+      req.url.includes('api/auth/refresh') ||
+      req.url.includes('api/auth/logout')
+    );
   };
 
   const isApiRequest = (req: HttpRequest<unknown>): boolean => {
@@ -42,17 +48,17 @@ export const authInterceptor = (
   };
 
   const handle401 = (req: HttpRequest<unknown>) => {
-    if (!refreshTokenRequest$) {
-      refreshTokenRequest$ = authService.refresh().pipe(
+    if (!sessionRefreshRequest$) {
+      sessionRefreshRequest$ = authService.refresh().pipe(
         tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
         finalize(() => {
-          refreshTokenRequest$ = null;
+          sessionRefreshRequest$ = null;
         }),
         shareReplay({ bufferSize: 1, refCount: false })
       );
     }
 
-    const refreshWithLogoutOnFailure$ = refreshTokenRequest$.pipe(
+    const sessionRefreshWithLogoutOnFailure$ = sessionRefreshRequest$.pipe(
       catchError((err) => {
         store.dispatch(logoutSuccess());
         void router.navigate(['/auth/login']);
@@ -60,7 +66,7 @@ export const authInterceptor = (
       })
     );
 
-    return refreshWithLogoutOnFailure$.pipe(switchMap(() => next(req)));
+    return sessionRefreshWithLogoutOnFailure$.pipe(switchMap(() => next(req)));
   };
 
   if (!isApiRequest(req)) {

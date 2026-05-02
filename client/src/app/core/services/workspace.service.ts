@@ -4,6 +4,8 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class WorkspaceService {
+  private readonly nonWorkspaceRoutes = new Set(['auth', 'workspaces']);
+
   currentWorkspace = signal<string | null>(null);
 
   setWorkspace(workspace: string | null) {
@@ -17,7 +19,7 @@ export class WorkspaceService {
     if (parts.length >= 1) {
       const workspace = parts[0];
 
-      if (workspace !== 'workspaces') {
+      if (!this.nonWorkspaceRoutes.has(workspace)) {
         return workspace;
       }
     }
