@@ -105,7 +105,7 @@ public class UpdateTaskCommandHandlerTests
     public async Task Update_ShouldReturnFailed_WhenIdNotFound()
     {
         var request = Fixture.Build<UpdateProjectTaskRequest>().Create();
-        UnitOfWork.Tasks.GetAsync(request.Id).ReturnsNull();
+        UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
 

@@ -22,7 +22,7 @@ public class IsBoardIdentifierUniqueQueryHandlerTests
     [Fact]
     public async Task IsIdentifierUnique_ShouldReturnCorrectly_WhenNotExists()
     {
-        UnitOfWork.Boards.Exists("identifier").Returns(false);
+        UnitOfWork.Boards.Exists("identifier", TestContext.Current.CancellationToken).Returns(false);
 
         var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), CancellationToken.None);
 
@@ -33,7 +33,7 @@ public class IsBoardIdentifierUniqueQueryHandlerTests
     [Fact]
     public async Task IsIdentifierUnique_ShouldReturnCorrectly_WhenExists()
     {
-        UnitOfWork.Boards.Exists("identifier").Returns(true);
+        UnitOfWork.Boards.Exists("identifier", TestContext.Current.CancellationToken).Returns(true);
 
         var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), CancellationToken.None);
 

@@ -24,7 +24,7 @@ public class GetBoardGroupQueryHandlerTests
     {
         var boardGroup = AutoFixtures.BoardGroup;
 
-        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(boardGroup);
+        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
         var result = await Handler.Handle(new GetBoardGroupQuery(1), CancellationToken.None);
 

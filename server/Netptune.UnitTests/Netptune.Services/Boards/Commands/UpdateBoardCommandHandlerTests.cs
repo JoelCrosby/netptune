@@ -33,7 +33,7 @@ public class UpdateBoardCommandHandlerTests
         var request = Fixture.Build<UpdateBoardRequest>().Create();
         var board = AutoFixtures.Board;
 
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(board);
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new UpdateBoardCommand(request), CancellationToken.None);
 
@@ -48,18 +48,18 @@ public class UpdateBoardCommandHandlerTests
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<UpdateBoardRequest>().Create();
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
         await Handler.Handle(new UpdateBoardCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenNotFound()
     {
         var request = Fixture.Build<UpdateBoardRequest>().Create();
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateBoardCommand(request), CancellationToken.None);
 

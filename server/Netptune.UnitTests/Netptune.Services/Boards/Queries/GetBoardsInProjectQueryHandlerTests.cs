@@ -25,7 +25,7 @@ public class GetBoardsInProjectQueryHandlerTests
     {
         var boards = new List<Board> { AutoFixtures.Board };
 
-        UnitOfWork.Boards.GetBoardsInProject(1, Arg.Any<bool>()).Returns(boards);
+        UnitOfWork.Boards.GetBoardsInProject(1, Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).Returns(boards);
 
         var result = await Handler.Handle(new GetBoardsInProjectQuery(1), CancellationToken.None);
 

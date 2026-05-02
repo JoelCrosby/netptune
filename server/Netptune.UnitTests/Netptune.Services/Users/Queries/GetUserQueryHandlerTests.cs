@@ -33,7 +33,7 @@ public class GetUserQueryHandlerTests
         var user = AutoFixtures.AppUser;
         const string workspaceKey = "workspaceKey";
 
-        UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>()).Returns(user);
+        UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(user);
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
         {
@@ -63,7 +63,7 @@ public class GetUserQueryHandlerTests
     [Fact]
     public async Task Get_ShouldReturnNull_WhenUserNotFound()
     {
-        UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetUserQuery("userId"), CancellationToken.None);
 

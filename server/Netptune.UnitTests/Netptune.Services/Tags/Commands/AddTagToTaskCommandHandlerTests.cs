@@ -39,11 +39,11 @@ public class AddTagToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>()).Returns(tag);
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(false);
+        UnitOfWork.Tags.GetViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.Tags.GetByValue(Arg.Any<string>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(tag);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
         var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
@@ -60,8 +60,8 @@ public class AddTagToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
         var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
@@ -76,8 +76,8 @@ public class AddTagToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).ReturnsNull();
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
         var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);

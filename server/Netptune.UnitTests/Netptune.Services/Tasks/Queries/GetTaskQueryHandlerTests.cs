@@ -23,7 +23,7 @@ public class GetTaskQueryHandlerTests
     public async Task GetTask_ShouldReturnCorrectly_WhenInputValid()
     {
         var task = AutoFixtures.TaskViewModel;
-        UnitOfWork.Tasks.GetTaskViewModel(1).Returns(task);
+        UnitOfWork.Tasks.GetTaskViewModel(1, TestContext.Current.CancellationToken).Returns(task);
 
         var result = await Handler.Handle(new GetTaskQuery(1), CancellationToken.None);
 

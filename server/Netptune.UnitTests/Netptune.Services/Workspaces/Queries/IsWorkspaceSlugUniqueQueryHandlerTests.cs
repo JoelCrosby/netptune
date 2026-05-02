@@ -22,7 +22,7 @@ public class IsWorkspaceSlugUniqueQueryHandlerTests
     [Fact]
     public async Task IsSlugUnique_ShouldReturnCorrectly_WhenUnique()
     {
-        UnitOfWork.Workspaces.Exists(Arg.Any<string>()).Returns(false);
+        UnitOfWork.Workspaces.Exists(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(false);
 
         var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), CancellationToken.None);
 
@@ -33,7 +33,7 @@ public class IsWorkspaceSlugUniqueQueryHandlerTests
     [Fact]
     public async Task IsSlugUnique_ShouldReturnFailure_WhenNotUnique()
     {
-        UnitOfWork.Workspaces.Exists(Arg.Any<string>()).Returns(true);
+        UnitOfWork.Workspaces.Exists(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(true);
 
         var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), CancellationToken.None);
 

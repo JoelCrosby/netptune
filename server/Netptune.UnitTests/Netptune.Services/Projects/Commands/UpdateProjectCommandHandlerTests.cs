@@ -36,7 +36,7 @@ public class UpdateProjectCommandHandlerTests
         var project = AutoFixtures.Project;
 
         Identity.GetCurrentUser().Returns(user);
-        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).Returns(project);
+        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(project);
 
         var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 
@@ -54,11 +54,11 @@ public class UpdateProjectCommandHandlerTests
         var request = Fixture.Build<UpdateProjectRequest>().Create();
 
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class UpdateProjectCommandHandlerTests
         var request = Fixture.Build<UpdateProjectRequest>().Create();
 
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
 

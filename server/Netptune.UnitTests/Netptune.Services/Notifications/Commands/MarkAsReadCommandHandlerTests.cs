@@ -33,24 +33,24 @@ public class MarkAsReadCommandHandlerTests
     {
         var notification = AutoFixtures.Notification with { UserId = UserId };
 
-        UnitOfWork.Notifications.GetAsync(notification.Id).Returns(notification);
+        UnitOfWork.Notifications.GetAsync(notification.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(notification);
 
         var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         notification.IsRead.Should().BeTrue();
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task MarkAsRead_ShouldReturnNotFound_WhenNotificationDoesNotExist()
     {
-        UnitOfWork.Notifications.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Notifications.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new MarkAsReadCommand(42), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
-        await UnitOfWork.DidNotReceive().CompleteAsync();
+        await UnitOfWork.DidNotReceive().CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -58,12 +58,12 @@ public class MarkAsReadCommandHandlerTests
     {
         var notification = AutoFixtures.Notification with { UserId = "different-user-id" };
 
-        UnitOfWork.Notifications.GetAsync(notification.Id).Returns(notification);
+        UnitOfWork.Notifications.GetAsync(notification.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(notification);
 
         var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
         notification.IsRead.Should().BeFalse();
-        await UnitOfWork.DidNotReceive().CompleteAsync();
+        await UnitOfWork.DidNotReceive().CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

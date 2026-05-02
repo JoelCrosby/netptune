@@ -30,7 +30,7 @@ public class UpdateUserCommandHandlerTests
         var request = Fixture.Build<UpdateUserRequest>().Create();
         var user = AutoFixtures.AppUser;
 
-        UnitOfWork.Users.GetAsync(Arg.Any<string>()).Returns(user);
+        UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(user);
 
         var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 
@@ -46,18 +46,18 @@ public class UpdateUserCommandHandlerTests
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<UpdateUserRequest>().Create();
-        UnitOfWork.Users.GetAsync(Arg.Any<string>()).Returns(AutoFixtures.AppUser);
+        UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.AppUser);
 
         await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenUserNotFound()
     {
         var request = Fixture.Build<UpdateUserRequest>().Create();
-        UnitOfWork.Users.GetAsync(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
 

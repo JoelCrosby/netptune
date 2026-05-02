@@ -31,8 +31,8 @@ public class ReassignTasksCommandHandlerTests
     public async Task ReassignTasks_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture.Build<ReassignTasksRequest>().Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         var result = await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
 
@@ -43,20 +43,20 @@ public class ReassignTasksCommandHandlerTests
     public async Task ReassignTasks_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<ReassignTasksRequest>().Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task ReassignTasks_ShouldLogActivity_WhenValidId()
     {
         var request = Fixture.Build<ReassignTasksRequest>().Create();
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>()).Returns(AutoFixtures.ProjectTasks);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
         await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
 

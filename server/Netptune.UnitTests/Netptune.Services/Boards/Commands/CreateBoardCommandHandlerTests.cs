@@ -34,8 +34,8 @@ public class CreateBoardCommandHandlerTests
         var request = Fixture.Build<AddBoardRequest>().Create();
         var project = AutoFixtures.Project;
 
-        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(project);
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(project);
 
         var result = await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
 
@@ -51,12 +51,12 @@ public class CreateBoardCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardRequest>().Create();
 
-        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(AutoFixtures.Project);
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -64,8 +64,8 @@ public class CreateBoardCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardRequest>().Create();
 
-        UnitOfWork.Boards.AddAsync(Arg.Any<Board>()).Returns(x => x.Arg<Board>());
-        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
+        UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
 

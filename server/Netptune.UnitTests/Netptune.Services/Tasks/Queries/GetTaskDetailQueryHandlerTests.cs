@@ -29,7 +29,7 @@ public class GetTaskDetailQueryHandlerTests
         const string workspaceKey = "workspaceKey";
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Tasks.GetTaskViewModel(systemId, workspaceKey).Returns(task);
+        UnitOfWork.Tasks.GetTaskViewModel(systemId, workspaceKey, TestContext.Current.CancellationToken).Returns(task);
 
         var result = await Handler.Handle(new GetTaskDetailQuery(systemId), CancellationToken.None);
 

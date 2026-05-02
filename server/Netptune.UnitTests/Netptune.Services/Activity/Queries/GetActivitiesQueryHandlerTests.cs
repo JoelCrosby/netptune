@@ -34,8 +34,7 @@ public class GetActivitiesQueryHandlerTests
     [Fact]
     public async Task GetActivities_ShouldReturnCorrectly_WhenValidId()
     {
-        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>())
-            .Returns(new List<ActivityViewModel>
+        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)
@@ -44,8 +43,7 @@ public class GetActivitiesQueryHandlerTests
             });
 
         Identity.GetWorkspaceId().Returns(1);
-        UnitOfWork.Users.GetUserAvatars(Arg.Any<IEnumerable<string>>(), Arg.Any<int>())
-            .Returns(new List<UserAvatar>
+        UnitOfWork.Users.GetUserAvatars(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<UserAvatar>
             {
                 Fixture.Create<UserAvatar>(),
             });
@@ -60,8 +58,7 @@ public class GetActivitiesQueryHandlerTests
     {
         const string userId = "user-id-1";
 
-        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>())
-            .Returns(new List<ActivityViewModel>
+        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)
@@ -74,8 +71,7 @@ public class GetActivitiesQueryHandlerTests
             });
 
         Identity.GetWorkspaceId().Returns(1);
-        UnitOfWork.Users.GetUserAvatars(Arg.Any<IEnumerable<string>>(), Arg.Any<int>())
-            .Returns(new List<UserAvatar>
+        UnitOfWork.Users.GetUserAvatars(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<UserAvatar>
             {
                 new ()
                 {

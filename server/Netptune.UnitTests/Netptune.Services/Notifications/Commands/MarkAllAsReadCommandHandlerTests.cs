@@ -31,12 +31,11 @@ public class MarkAllAsReadCommandHandlerTests
     public async Task MarkAllAsRead_ShouldReturnSuccess_AndCallRepository()
     {
         UnitOfWork.Notifications
-            .MarkAllAsRead(UserId, WorkspaceId)
-            .Returns(Task.CompletedTask);
+            .MarkAllAsRead(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(Task.CompletedTask);
 
         var result = await Handler.Handle(new MarkAllAsReadCommand(), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        await UnitOfWork.Notifications.Received(1).MarkAllAsRead(UserId, WorkspaceId);
+        await UnitOfWork.Notifications.Received(1).MarkAllAsRead(UserId, WorkspaceId, TestContext.Current.CancellationToken);
     }
 }

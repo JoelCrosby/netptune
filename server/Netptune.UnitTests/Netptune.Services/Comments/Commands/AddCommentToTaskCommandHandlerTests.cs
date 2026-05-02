@@ -37,10 +37,10 @@ public class AddCommentToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(10);
-        UnitOfWork.Comments.GetCommentViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(2);
-        UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(Arg.Any<int>()).Returns([]);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(10);
+        UnitOfWork.Comments.GetCommentViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(2);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns([]);
 
         var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
 
@@ -54,8 +54,8 @@ public class AddCommentToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).ReturnsNull();
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(2);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(2);
 
         var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
 
@@ -69,8 +69,8 @@ public class AddCommentToTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(10);
-        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(10);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
 

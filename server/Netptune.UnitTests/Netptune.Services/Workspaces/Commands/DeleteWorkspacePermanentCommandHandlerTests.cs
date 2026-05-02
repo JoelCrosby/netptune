@@ -28,7 +28,7 @@ public class DeleteWorkspacePermanentCommandHandlerTests
     public async Task DeletePermanent_ShouldReturnSuccess_WhenValidId()
     {
         UnitOfWork.InvokeTransaction();
-        UnitOfWork.Workspaces.GetBySlug("workspace").Returns(AutoFixtures.Workspace);
+        UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
         var result = await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
 
@@ -39,21 +39,21 @@ public class DeleteWorkspacePermanentCommandHandlerTests
     public async Task DeletePermanent_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
         UnitOfWork.InvokeTransaction();
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
 
-        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task DeletePermanent_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         UnitOfWork.InvokeTransaction();
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

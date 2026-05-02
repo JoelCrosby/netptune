@@ -25,7 +25,7 @@ public class DeleteCommentCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Comments.GetAsync(1).Returns(AutoFixtures.Comment);
+        UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Comment);
 
         var result = await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
 
@@ -35,17 +35,17 @@ public class DeleteCommentCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        UnitOfWork.Comments.GetAsync(1).Returns(AutoFixtures.Comment);
+        UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Comment);
 
         await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Comments.GetAsync(1).ReturnsNull();
+        UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
 
@@ -55,10 +55,10 @@ public class DeleteCommentCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
-        UnitOfWork.Comments.GetAsync(1).ReturnsNull();
+        UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

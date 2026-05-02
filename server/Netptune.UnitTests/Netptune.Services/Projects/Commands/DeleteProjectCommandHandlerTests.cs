@@ -27,7 +27,7 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Projects.GetAsync(1).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
@@ -37,17 +37,17 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        UnitOfWork.Projects.GetAsync(1).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1).ReturnsNull();
+        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
@@ -57,20 +57,20 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1).ReturnsNull();
+        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1).ReturnsNull();
+        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

@@ -33,9 +33,9 @@ public class CreateBoardGroupCommandHandlerTests
         var request = Fixture.Build<AddBoardGroupRequest>().Create();
         var board = AutoFixtures.Board;
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).Returns(board);
-        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
-        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
+        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
+        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 
         var result = await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 
@@ -51,13 +51,13 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).Returns(AutoFixtures.Board);
-        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
-        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
+        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
+        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
+        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 
         await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -65,9 +65,9 @@ public class CreateBoardGroupCommandHandlerTests
     {
         var request = Fixture.Build<AddBoardGroupRequest>().Create();
 
-        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>()).ReturnsNull();
-        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>()).Returns(x => x.Arg<BoardGroup>());
-        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>()).Returns(0);
+        UnitOfWork.Boards.GetAsync(request.BoardId!.Value, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.AddAsync(Arg.Any<BoardGroup>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<BoardGroup>());
+        UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(0);
 
         var result = await Handler.Handle(new CreateBoardGroupCommand(request), CancellationToken.None);
 

@@ -345,14 +345,14 @@ public class AuthenticationServiceTests
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
         SignInManager.SignInAsync(Arg.Any<AppUser>(), false).Returns(Task.CompletedTask);
         UserManager.UpdateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
-        UnitOfWork.WorkspaceUsers.AddAsync(Arg.Any<WorkspaceAppUser>()).Returns(new WorkspaceAppUser());
-        UnitOfWork.CompleteAsync().Returns(1);
+        UnitOfWork.WorkspaceUsers.AddAsync(Arg.Any<WorkspaceAppUser>(), TestContext.Current.CancellationToken).Returns(new WorkspaceAppUser());
+        UnitOfWork.CompleteAsync(TestContext.Current.CancellationToken).Returns(1);
 
         var result = await Service.Register(request);
 
         result.IsSuccess.Should().BeTrue();
-        await UnitOfWork.WorkspaceUsers.Received(1).AddAsync(Arg.Is<WorkspaceAppUser>(w => w.WorkspaceId == 42));
-        await UnitOfWork.Received().CompleteAsync();
+        await UnitOfWork.WorkspaceUsers.Received(1).AddAsync(Arg.Is<WorkspaceAppUser>(w => w.WorkspaceId == 42), TestContext.Current.CancellationToken);
+        await UnitOfWork.Received().CompleteAsync(TestContext.Current.CancellationToken);
         InviteCache.Received(1).Remove("valid-code");
     }
 

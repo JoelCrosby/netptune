@@ -30,7 +30,7 @@ public class GetUnreadCountQueryHandlerTests
     [Fact]
     public async Task GetUnreadCount_ShouldReturnSuccess_WithCount()
     {
-        UnitOfWork.Notifications.GetUnreadCount(UserId, WorkspaceId).Returns(5);
+        UnitOfWork.Notifications.GetUnreadCount(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(5);
 
         var result = await Handler.Handle(new GetUnreadCountQuery(), CancellationToken.None);
 

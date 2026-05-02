@@ -32,8 +32,8 @@ public class GetCommentsForTaskQueryHandlerTests
         var viewModels = new List<CommentViewModel> { Fixture.Create<CommentViewModel>() };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).Returns(1);
-        UnitOfWork.Comments.GetCommentViewModelsForTask(Arg.Any<int>()).Returns(viewModels);
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Comments.GetCommentViewModelsForTask(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModels);
 
         var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), CancellationToken.None);
 
@@ -46,7 +46,7 @@ public class GetCommentsForTaskQueryHandlerTests
     public async Task GetCommentsForTask_ShouldReturnNull_WhenTaskNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), CancellationToken.None);
 

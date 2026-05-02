@@ -26,7 +26,7 @@ public class DeleteTaskCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Tasks.GetAsync(1).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
         var result = await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
 
@@ -37,28 +37,28 @@ public class DeleteTaskCommandHandlerTests
     public async Task Delete_ShouldCallDeletePermanent_WhenValidId()
     {
         var taskToDelete = AutoFixtures.ProjectTask;
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).Returns(taskToDelete);
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
 
         await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), CancellationToken.None);
 
-        await UnitOfWork.Tasks.Received(1).DeletePermanent(taskToDelete.Id);
+        await UnitOfWork.Tasks.Received(1).DeletePermanent(taskToDelete.Id, TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
         var taskToDelete = AutoFixtures.ProjectTask;
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).Returns(taskToDelete);
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
 
         await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
 
@@ -68,27 +68,27 @@ public class DeleteTaskCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>());
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).ReturnsNull();
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldLogActivity_WhenValidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>()).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
         await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
 

@@ -38,8 +38,8 @@ public class DeleteTagFromTaskCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key", TestContext.Current.CancellationToken).Returns(1);
 
         var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 
@@ -58,14 +58,14 @@ public class DeleteTagFromTaskCommandHandlerTests
         var tag = AutoFixtures.Tag with { Id = 1, Name = request.Tag };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.Tag, 1).Returns(tag);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetByValue(request.Tag, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(tag);
 
         await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag);
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag, TestContext.Current.CancellationToken);
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class DeleteTagFromTaskCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
 

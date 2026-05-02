@@ -28,7 +28,7 @@ public class DeleteBoardCommandHandlerTests
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Boards.GetAsync(1).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
         var result = await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
 
@@ -39,18 +39,18 @@ public class DeleteBoardCommandHandlerTests
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Boards.GetAsync(1).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
         await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+        UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
 
@@ -61,21 +61,21 @@ public class DeleteBoardCommandHandlerTests
     public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+        UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Boards.Received(0).DeletePermanent(Arg.Any<int>());
+        await UnitOfWork.Boards.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Boards.GetAsync(1).ReturnsNull();
+        UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

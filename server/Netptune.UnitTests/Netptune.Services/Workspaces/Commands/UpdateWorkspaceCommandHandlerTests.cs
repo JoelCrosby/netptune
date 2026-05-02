@@ -36,7 +36,7 @@ public class UpdateWorkspaceCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
 
@@ -55,11 +55,11 @@ public class UpdateWorkspaceCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(AutoFixtures.Workspace);
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
         await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class UpdateWorkspaceCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
 

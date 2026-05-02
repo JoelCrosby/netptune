@@ -28,8 +28,8 @@ public class GetProjectQueryHandlerTests
         var viewModel = AutoFixtures.ProjectViewModel;
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Projects.GetProjectViewModel("key", 1).Returns(viewModel);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Projects.GetProjectViewModel("key", 1, TestContext.Current.CancellationToken).Returns(viewModel);
 
         var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 
@@ -40,8 +40,8 @@ public class GetProjectQueryHandlerTests
     public async Task GetProject_ShouldReturnNull_WhenProjectNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Projects.GetProjectViewModel("key", 1).ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Projects.GetProjectViewModel("key", 1, TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 
@@ -52,7 +52,7 @@ public class GetProjectQueryHandlerTests
     public async Task GetProject_ShouldReturnNull_WhenWorkspaceNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
 

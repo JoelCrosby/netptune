@@ -33,7 +33,7 @@ public class GetUserByEmailQueryHandlerTests
         var user = AutoFixtures.AppUser;
         const string workspaceKey = "workspaceKey";
 
-        UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>()).Returns(user);
+        UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(user);
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
         {
@@ -63,7 +63,7 @@ public class GetUserByEmailQueryHandlerTests
     [Fact]
     public async Task GetByEmail_ShouldReturnNull_WhenUserNotFound()
     {
-        UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetUserByEmailQuery("email"), CancellationToken.None);
 

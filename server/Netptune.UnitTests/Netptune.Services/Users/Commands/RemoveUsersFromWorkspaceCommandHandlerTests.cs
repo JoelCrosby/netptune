@@ -42,9 +42,9 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
@@ -69,9 +69,9 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var users = new List<AppUser> { user };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
         await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
@@ -87,9 +87,9 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
@@ -103,7 +103,7 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string>()), CancellationToken.None);
 
@@ -119,9 +119,9 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var users = new List<AppUser> { new() { Id = "userId", Email = "user@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
@@ -137,12 +137,12 @@ public class RemoveUsersFromWorkspaceCommandHandlerTests
         var users = new List<AppUser> { AutoFixtures.AppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>()).Returns(users);
-        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>()).Returns(workspaceAppUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
+        UnitOfWork.Users.RemoveUsersFromWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
         await Handler.Handle(new RemoveUsersFromWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

@@ -23,7 +23,7 @@ public class GetAllUsersQueryHandlerTests
     [Fact]
     public async Task GetAll_ShouldReturnCorrectly_WhenInputValid()
     {
-        UnitOfWork.Users.GetAllAsync().Returns(new List<AppUser> { AutoFixtures.AppUser });
+        UnitOfWork.Users.GetAllAsync(cancellationToken: TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
         var result = await Handler.Handle(new GetAllUsersQuery(), CancellationToken.None);
 

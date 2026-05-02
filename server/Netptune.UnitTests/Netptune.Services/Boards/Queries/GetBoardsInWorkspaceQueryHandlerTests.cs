@@ -28,8 +28,8 @@ public class GetBoardsInWorkspaceQueryHandlerTests
         var viewModels = new List<BoardsViewModel> { AutoFixtures.BoardsViewModel };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.Exists("key").Returns(true);
-        UnitOfWork.Boards.GetBoardViewModels("key").Returns(viewModels);
+        UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(true);
+        UnitOfWork.Boards.GetBoardViewModels("key", TestContext.Current.CancellationToken).Returns(viewModels);
 
         var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), CancellationToken.None);
 
@@ -41,7 +41,7 @@ public class GetBoardsInWorkspaceQueryHandlerTests
     public async Task GetBoardsInWorkspace_ShouldReturnNull_WhenWorkspaceNotExists()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.Exists("key").Returns(false);
+        UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(false);
 
         var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), CancellationToken.None);
 

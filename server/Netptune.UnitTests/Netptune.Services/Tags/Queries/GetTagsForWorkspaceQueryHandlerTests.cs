@@ -32,8 +32,8 @@ public class GetTagsForWorkspaceQueryHandlerTests
         var tags = new List<TagViewModel> { Fixture.Create<TagViewModel>() };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetViewModelsForWorkspace(1).Returns(tags);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetViewModelsForWorkspace(1, TestContext.Current.CancellationToken).Returns(tags);
 
         var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
 
@@ -45,7 +45,7 @@ public class GetTagsForWorkspaceQueryHandlerTests
     public async Task GetTagsForWorkspace_ShouldReturnNull_WhenWorkspaceNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
 

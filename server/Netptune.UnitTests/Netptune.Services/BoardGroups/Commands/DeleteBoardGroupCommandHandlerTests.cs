@@ -28,7 +28,7 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
@@ -39,18 +39,18 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).ReturnsNull();
+        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
@@ -61,10 +61,10 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1).ReturnsNull();
+        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
 
-        await UnitOfWork.Received(0).CompleteAsync();
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

@@ -42,8 +42,8 @@ public class ToggleUserPermissionCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
         var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
@@ -65,8 +65,8 @@ public class ToggleUserPermissionCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
         var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
@@ -80,7 +80,7 @@ public class ToggleUserPermissionCommandHandlerTests
     {
         const string workspaceKey = "workspaceKey";
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
         var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
@@ -95,8 +95,8 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(Arg.Any<string>(), workspaceKey, false).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(Arg.Any<string>(), workspaceKey, false, TestContext.Current.CancellationToken).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
         var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
@@ -116,13 +116,13 @@ public class ToggleUserPermissionCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
         await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
-        await UnitOfWork.WorkspaceUsers.Received(1).SetUserPermissions(userId, workspace.Id, Arg.Any<IEnumerable<string>>());
+        await UnitOfWork.WorkspaceUsers.Received(1).SetUserPermissions(userId, workspace.Id, Arg.Any<IEnumerable<string>>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -137,13 +137,13 @@ public class ToggleUserPermissionCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
         await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -158,8 +158,8 @@ public class ToggleUserPermissionCommandHandlerTests
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>()).Returns(workspace);
-        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false).Returns(userPermissions);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
         await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);

@@ -36,8 +36,8 @@ public class UpdateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(tag);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(tag);
 
         var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
@@ -54,12 +54,12 @@ public class UpdateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(AutoFixtures.Tag);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Tag);
 
         await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class UpdateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetIdBySlug("key").ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
@@ -83,8 +83,8 @@ public class UpdateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).ReturnsNull();
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 
@@ -101,8 +101,8 @@ public class UpdateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
-        UnitOfWork.Workspaces.GetIdBySlug("key").Returns(1);
-        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1).Returns(AutoFixtures.Tag);
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Tag);
 
         var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
 

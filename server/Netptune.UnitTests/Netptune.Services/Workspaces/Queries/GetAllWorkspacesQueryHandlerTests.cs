@@ -24,7 +24,7 @@ public class GetAllWorkspacesQueryHandlerTests
     public async Task GetAll_ShouldReturnCorrectly_WhenInputValid()
     {
         var workspaces = new List<Workspace> { AutoFixtures.Workspace };
-        UnitOfWork.Workspaces.GetAllAsync().Returns(workspaces);
+        UnitOfWork.Workspaces.GetAllAsync(cancellationToken: TestContext.Current.CancellationToken).Returns(workspaces);
 
         var result = await Handler.Handle(new GetAllWorkspacesQuery(), CancellationToken.None);
 

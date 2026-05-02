@@ -38,8 +38,8 @@ public class CreateWorkspaceCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();
-        UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>()).Returns(x => x.Arg<Workspace>());
-        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
+        UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Workspace>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
 
         var result = await Handler.Handle(new CreateWorkspaceCommand(request), CancellationToken.None);
 
@@ -59,11 +59,11 @@ public class CreateWorkspaceCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();
-        UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>()).Returns(x => x.Arg<Workspace>());
-        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
+        UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Workspace>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
 
         await Handler.Handle(new CreateWorkspaceCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(2).CompleteAsync();
+        await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
     }
 }

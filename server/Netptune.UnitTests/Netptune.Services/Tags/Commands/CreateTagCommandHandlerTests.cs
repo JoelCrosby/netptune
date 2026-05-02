@@ -37,9 +37,9 @@ public class CreateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(false);
+        UnitOfWork.Tags.GetViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
         var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
@@ -56,13 +56,13 @@ public class CreateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Tags.GetViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(false);
+        UnitOfWork.Tags.GetViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
         await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -72,8 +72,8 @@ public class CreateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(false);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 
@@ -87,8 +87,8 @@ public class CreateTagCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>()).Returns(true);
-        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>()).Returns(1);
+        UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(true);
+        UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
         var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
 

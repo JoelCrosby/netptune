@@ -27,7 +27,7 @@ public class DeleteTasksCommandHandlerTests
     public async Task DeleteMany_ShouldReturnSuccess_WhenValidId()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>()).Returns(new List<ProjectTask>
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
         {
             new () { Id = 1 },
             new () { Id = 2 },
@@ -43,7 +43,7 @@ public class DeleteTasksCommandHandlerTests
     public async Task DeleteMany_ShouldCallDeletePermanent_WhenValidId()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>()).Returns(new List<ProjectTask>
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
         {
             new () { Id = 1 },
             new () { Id = 2 },
@@ -52,14 +52,14 @@ public class DeleteTasksCommandHandlerTests
 
         await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
 
-        await UnitOfWork.Tasks.Received(1).DeletePermanent(Arg.Any<IEnumerable<int>>());
+        await UnitOfWork.Tasks.Received(1).DeletePermanent(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task DeleteMany_ShouldCallCompleteAsync_WhenValidId()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>()).Returns(new List<ProjectTask>
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
         {
             new () { Id = 1 },
             new () { Id = 2 },
@@ -68,14 +68,14 @@ public class DeleteTasksCommandHandlerTests
 
         await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task DeleteMany_ShouldLogActivity_WhenValidId()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>()).Returns(new List<ProjectTask>
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
         {
             new () { Id = 1 },
             new () { Id = 2 },

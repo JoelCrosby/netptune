@@ -27,7 +27,7 @@ public class GetUserWorkspacesQueryHandlerTests
     {
         var workspaces = new List<Workspace> { AutoFixtures.Workspace };
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.Workspaces.GetUserWorkspaces("userId").Returns(workspaces);
+        UnitOfWork.Workspaces.GetUserWorkspaces("userId", TestContext.Current.CancellationToken).Returns(workspaces);
 
         var result = await Handler.Handle(new GetUserWorkspacesQuery(), CancellationToken.None);
 

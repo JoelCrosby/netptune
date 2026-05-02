@@ -31,8 +31,8 @@ public class MoveTasksToGroupCommandHandlerTests
     public async Task MoveTasksToGroup_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
         var result = await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
 
@@ -43,20 +43,20 @@ public class MoveTasksToGroupCommandHandlerTests
     public async Task MoveTasksToGroup_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
         await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task MoveTasksToGroup_ShouldLogActivity_WhenValidId()
     {
         var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId).Returns(new List<int>());
+        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
         await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
 

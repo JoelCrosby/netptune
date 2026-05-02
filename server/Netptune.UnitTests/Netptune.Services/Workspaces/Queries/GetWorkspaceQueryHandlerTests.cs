@@ -23,7 +23,7 @@ public class GetWorkspaceQueryHandlerTests
     public async Task GetWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
         var workspace = AutoFixtures.Workspace;
-        UnitOfWork.Workspaces.GetBySlug("slug").Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug("slug", cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new GetWorkspaceQuery("slug"), CancellationToken.None);
 

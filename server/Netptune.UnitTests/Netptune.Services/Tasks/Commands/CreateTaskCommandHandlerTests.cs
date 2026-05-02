@@ -45,12 +45,11 @@ public class CreateTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
-            .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
-        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>()).Returns(Fixture.Create<int>());
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
         var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 
@@ -71,16 +70,15 @@ public class CreateTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
-            .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
-        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).Returns(Fixture.Create<int>());
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
         await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -91,8 +89,7 @@ public class CreateTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
-            .ReturnsForAnyArgs(AutoFixtures.Workspace);
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace);
 
         var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 
@@ -105,8 +102,7 @@ public class CreateTaskCommandHandlerTests
         var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
 
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
-            .ReturnsNull();
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 
@@ -122,12 +118,11 @@ public class CreateTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
-            .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
-        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>()).ReturnsNull();
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
         var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 
@@ -143,12 +138,11 @@ public class CreateTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Workspaces
-            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>())
-            .ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
-        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>()).Returns(AutoFixtures.ProjectTask);
-        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>()).Returns(Fixture.Create<int>());
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>()).Returns(AutoFixtures.BoardGroup.WithTasks());
+            .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace.WithProjects());
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
         await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
 

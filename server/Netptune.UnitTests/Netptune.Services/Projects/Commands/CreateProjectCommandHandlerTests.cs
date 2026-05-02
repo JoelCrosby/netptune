@@ -45,10 +45,10 @@ public class CreateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(workspace);
-        UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
-        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
-        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
+        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
 
         var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 
@@ -73,14 +73,14 @@ public class CreateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).Returns(AutoFixtures.Workspace);
-        UnitOfWork.Projects.AddAsync(Arg.Any<Project>()).Returns(x => x.Arg<Project>());
-        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>()).Returns("key");
-        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>()).Returns(viewModel);
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
+        UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
+        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
 
         await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 
-        await UnitOfWork.Received(1).CompleteAsync();
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class CreateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
-        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>()).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
 

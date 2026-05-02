@@ -24,7 +24,7 @@ public class GetBoardQueryHandlerTests
     public async Task GetBoard_ShouldReturnCorrectly_WhenInputValid()
     {
         var board = AutoFixtures.Board;
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).Returns(board);
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new GetBoardQuery(1), CancellationToken.None);
 
@@ -34,7 +34,7 @@ public class GetBoardQueryHandlerTests
     [Fact]
     public async Task GetBoard_ShouldReturnFailure_WhenNotFound()
     {
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>()).ReturnsNull();
+        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetBoardQuery(1), CancellationToken.None);
 

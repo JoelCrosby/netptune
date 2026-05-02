@@ -32,8 +32,8 @@ public class GetTagsForTaskQueryHandlerTests
         var tags = new List<TagViewModel> { Fixture.Create<TagViewModel>() };
 
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Tasks.GetTaskInternalId("task-id", "key").Returns(1);
-        UnitOfWork.Tags.GetViewModelsForTask(1, Arg.Any<bool>()).Returns(tags);
+        UnitOfWork.Tasks.GetTaskInternalId("task-id", "key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetViewModelsForTask(1, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(tags);
 
         var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
 
@@ -45,7 +45,7 @@ public class GetTagsForTaskQueryHandlerTests
     public async Task GetTagsForTask_ShouldReturnNull_WhenTaskNotFound()
     {
         Identity.GetWorkspaceKey().Returns("key");
-        UnitOfWork.Tasks.GetTaskInternalId("task-id", "key").ReturnsNull();
+        UnitOfWork.Tasks.GetTaskInternalId("task-id", "key", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
 

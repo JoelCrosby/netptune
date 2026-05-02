@@ -29,7 +29,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         var users = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns(users);
+        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
 
         var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
 
@@ -42,7 +42,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         const string workspaceKey = "workspaceKey";
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>()).Returns([]);
+        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns([]);
 
         var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
 
