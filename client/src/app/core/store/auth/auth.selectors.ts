@@ -4,6 +4,8 @@ import { AuthState, UserResponse } from './auth.models';
 import { Permission } from '../../auth/permissions';
 import { WorkspaceRole } from '@app/core/enums/workspace-role';
 
+const sessionRefreshBufferMs = 60_000;
+
 export const selectLoginLoading = createSelector(
   selectAuthFeature,
   (state: AuthState) => state.loginLoading
@@ -46,6 +48,20 @@ export const selectIsAuthenticated = createSelector(
     if (!state.isAuthenticated || !state.tokenExpires) return false;
 
     return new Date(state.tokenExpires).getTime() > Date.now();
+  }
+);
+
+export const selectShouldRefreshSession = createSelector(
+  selectAuthFeature,
+  (state: AuthState) => {
+    if (!state.isAuthenticated) return false;
+    if (!state.tokenExpires) return true;
+
+    const expiresAt = new Date(state.tokenExpires).getTime();
+
+    if (Number.isNaN(expiresAt)) return true;
+
+    return expiresAt - sessionRefreshBufferMs <= Date.now();
   }
 );
 

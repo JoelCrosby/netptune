@@ -5,15 +5,13 @@ import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { provideStore, Store } from '@ngrx/store';
-import { catchError, firstValueFrom, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, of, switchMap, tap } from 'rxjs';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { AuthService } from './app/core/auth/auth.service';
-import {
-  logoutSuccess,
-  refreshTokenSuccess,
-} from './app/core/store/auth/auth.actions';
+import { refreshTokenSuccess } from './app/core/store/auth/auth.actions';
 import { AuthEffects } from './app/core/store/auth/auth.effects';
+import { selectShouldRefreshSession } from './app/core/store/auth/auth.selectors';
 import { metaReducers, reducers } from './app/core/core.state';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { CustomSerializer } from './app/core/router/custom-serializer';
@@ -52,11 +50,14 @@ bootstrapApplication(AppComponent, {
       const store = inject(Store);
 
       return firstValueFrom(
-        authService.refresh().pipe(
-          tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
-          catchError(() => {
-            store.dispatch(logoutSuccess());
-            return of(null);
+        store.select(selectShouldRefreshSession).pipe(
+          switchMap((shouldRefresh) => {
+            if (!shouldRefresh) return of(null);
+
+            return authService.refresh().pipe(
+              tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
+              catchError(() => of(null))
+            );
           })
         )
       );
