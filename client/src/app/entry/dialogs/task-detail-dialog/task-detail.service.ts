@@ -8,9 +8,7 @@ import {
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TaskDetailService {
   readonly store = inject(Store);
   readonly task = this.store.selectSignal(selectDetailTask);

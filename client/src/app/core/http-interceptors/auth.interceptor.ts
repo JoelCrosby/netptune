@@ -7,7 +7,7 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
-import { logout, refreshTokenSuccess } from '@app/core/store/auth/auth.actions';
+import { logoutSuccess, refreshTokenSuccess } from '@app/core/store/auth/auth.actions';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
@@ -33,8 +33,8 @@ export const authInterceptor = (
   const workspaceService = inject(WorkspaceService);
   const authService = inject(AuthService);
 
-  const isRefreshRequest = (req: HttpRequest<unknown>): boolean => {
-    return req.url.includes('auth/refresh');
+  const isAuthManagementRequest = (req: HttpRequest<unknown>): boolean => {
+    return req.url.includes('auth/refresh') || req.url.includes('auth/logout');
   };
 
   const isApiRequest = (req: HttpRequest<unknown>): boolean => {
@@ -55,7 +55,8 @@ export const authInterceptor = (
     return refreshTokenRequest$.pipe(
       switchMap(() => next(req)),
       catchError((err) => {
-        store.dispatch(logout({ silent: true }));
+        store.dispatch(logoutSuccess());
+        void router.navigate(['/auth/login']);
         return throwError(() => err);
       })
     );
@@ -85,7 +86,7 @@ export const authInterceptor = (
       return next(req).pipe(
         catchError((err: unknown) => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 401 && !isRefreshRequest(req)) {
+            if (err.status === 401 && !isAuthManagementRequest(req)) {
               return handle401(req);
             }
 

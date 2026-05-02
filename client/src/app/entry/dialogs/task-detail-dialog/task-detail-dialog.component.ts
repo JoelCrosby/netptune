@@ -26,6 +26,7 @@ import { TaskDetailHeaderComponent } from './task-detail-header.component';
 import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailActionsComponent } from './task-detail-actions.component';
+import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -72,6 +73,7 @@ import { TaskDetailActionsComponent } from './task-detail-actions.component';
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,
   ],
+  providers: [TaskDetailService],
 })
 export class TaskDetailDialogComponent implements OnDestroy {
   data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
