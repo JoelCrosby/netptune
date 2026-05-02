@@ -31,7 +31,7 @@ public class GetTaskDetailQueryHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Tasks.GetTaskViewModel(systemId, workspaceKey, TestContext.Current.CancellationToken).Returns(task);
 
-        var result = await Handler.Handle(new GetTaskDetailQuery(systemId), CancellationToken.None);
+        var result = await Handler.Handle(new GetTaskDetailQuery(systemId), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(task);
     }

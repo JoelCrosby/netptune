@@ -37,7 +37,7 @@ public class CreateBoardCommandHandlerTests
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
         UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(project);
 
-        var result = await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -54,7 +54,7 @@ public class CreateBoardCommandHandlerTests
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
         UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
-        await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -67,7 +67,7 @@ public class CreateBoardCommandHandlerTests
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
         UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new CreateBoardCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateBoardCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

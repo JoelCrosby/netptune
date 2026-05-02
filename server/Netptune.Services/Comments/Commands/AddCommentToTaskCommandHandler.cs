@@ -29,8 +29,8 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var userId = Identity.GetCurrentUserId();
-        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey);
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey, cancellationToken);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (taskId is null || !workspaceId.HasValue)
         {
@@ -43,7 +43,7 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
             .ToList();
 
         var validMentionIds = mentions.Count > 0
-            ? await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(workspaceId.Value)
+            ? await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(workspaceId.Value, cancellationToken)
             : [];
 
         var filteredMentions = mentions
@@ -64,10 +64,10 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
             }).ToList(),
         };
 
-        await UnitOfWork.Comments.AddAsync(comment);
+        await UnitOfWork.Comments.AddAsync(comment, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var result = await UnitOfWork.Comments.GetCommentViewModel(comment.Id);
+        var result = await UnitOfWork.Comments.GetCommentViewModel(comment.Id, cancellationToken);
 
         if (result is null)
         {

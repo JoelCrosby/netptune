@@ -136,7 +136,7 @@ public class WorkspacePermissionAuthorizationHandlerTests
         var workspace = AutoFixtures.Workspace with { IsPublic = true };
 
         Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
 
         var context = CreateContext(user, requirement);
         await Handler.HandleAsync(context);
@@ -153,7 +153,7 @@ public class WorkspacePermissionAuthorizationHandlerTests
         var workspace = AutoFixtures.Workspace with { IsPublic = false };
 
         Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
 
         var context = CreateContext(user, requirement);
         await Handler.HandleAsync(context);
@@ -170,7 +170,7 @@ public class WorkspacePermissionAuthorizationHandlerTests
         var workspace = AutoFixtures.Workspace with { IsPublic = true };
 
         Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
 
         var context = CreateContext(user, requirement);
         await Handler.HandleAsync(context);
@@ -189,7 +189,7 @@ public class WorkspacePermissionAuthorizationHandlerTests
         var context = CreateContext(user, requirement);
         await Handler.HandleAsync(context);
 
-        await UnitOfWork.Workspaces.DidNotReceive().GetBySlug(Arg.Any<string>(), Arg.Any<bool>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.Workspaces.DidNotReceive().GetBySlug(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -203,7 +203,7 @@ public class WorkspacePermissionAuthorizationHandlerTests
         var context = CreateContext(user, requirement);
         await Handler.HandleAsync(context);
 
-        await UnitOfWork.Workspaces.DidNotReceive().GetBySlug(Arg.Any<string>(), Arg.Any<bool>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.Workspaces.DidNotReceive().GetBySlug(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
         context.HasSucceeded.Should().BeFalse();
     }
 }

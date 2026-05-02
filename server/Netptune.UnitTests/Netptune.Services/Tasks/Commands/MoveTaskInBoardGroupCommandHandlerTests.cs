@@ -49,7 +49,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -77,7 +77,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), CancellationToken.None);
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -105,7 +105,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), CancellationToken.None);
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         Activity.Received(1).LogWith(Arg.Any<Action<ActivityOptions<MoveTaskActivityMeta>>>());
     }
@@ -133,7 +133,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }

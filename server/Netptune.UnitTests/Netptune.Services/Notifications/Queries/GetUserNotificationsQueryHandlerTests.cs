@@ -36,7 +36,7 @@ public class GetUserNotificationsQueryHandlerTests
         UnitOfWork.Notifications
             .GetUserNotifications(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(notifications);
 
-        var result = await Handler.Handle(new GetUserNotificationsQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserNotificationsQuery(), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().HaveCount(2);
@@ -48,7 +48,7 @@ public class GetUserNotificationsQueryHandlerTests
         UnitOfWork.Notifications
             .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<NotificationViewModel>());
 
-        await Handler.Handle(new GetUserNotificationsQuery(), CancellationToken.None);
+        await Handler.Handle(new GetUserNotificationsQuery(), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.Received(1).GetUserNotifications(UserId, WorkspaceId, TestContext.Current.CancellationToken);
     }

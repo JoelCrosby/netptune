@@ -40,7 +40,7 @@ public class DeleteTagsCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetTagsByValueInWorkspace(1, tagNames, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(tags);
 
-        var result = await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTagsCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -56,7 +56,7 @@ public class DeleteTagsCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetTagsByValueInWorkspace(1, tagNames, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(tags);
 
-        await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
+        await Handler.Handle(new DeleteTagsCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -70,7 +70,7 @@ public class DeleteTagsCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteTagsCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTagsCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

@@ -30,7 +30,7 @@ public class DeleteBoardCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
-        var result = await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteBoardCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -41,7 +41,7 @@ public class DeleteBoardCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
-        await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteBoardCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -52,7 +52,7 @@ public class DeleteBoardCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteBoardCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -63,7 +63,7 @@ public class DeleteBoardCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteBoardCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Boards.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
@@ -74,7 +74,7 @@ public class DeleteBoardCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Boards.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteBoardCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteBoardCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

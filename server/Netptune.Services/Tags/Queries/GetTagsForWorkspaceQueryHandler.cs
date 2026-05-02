@@ -21,10 +21,10 @@ public sealed class GetTagsForWorkspaceQueryHandler : IRequestHandler<GetTagsFor
     public async ValueTask<List<TagViewModel>?> Handle(GetTagsForWorkspaceQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (workspaceId is null) return null;
 
-        return await UnitOfWork.Tags.GetViewModelsForWorkspace(workspaceId.Value);
+        return await UnitOfWork.Tags.GetViewModelsForWorkspace(workspaceId.Value, cancellationToken);
     }
 }

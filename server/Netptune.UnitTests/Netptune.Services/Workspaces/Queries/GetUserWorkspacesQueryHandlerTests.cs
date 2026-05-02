@@ -29,7 +29,7 @@ public class GetUserWorkspacesQueryHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.Workspaces.GetUserWorkspaces("userId", TestContext.Current.CancellationToken).Returns(workspaces);
 
-        var result = await Handler.Handle(new GetUserWorkspacesQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserWorkspacesQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(workspaces);
     }

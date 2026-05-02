@@ -23,7 +23,7 @@ public sealed class MarkAllAsReadCommandHandler : IRequestHandler<MarkAllAsReadC
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
 
-        await UnitOfWork.Notifications.MarkAllAsRead(userId, workspaceId);
+        await UnitOfWork.Notifications.MarkAllAsRead(userId, workspaceId, cancellationToken);
 
         return ClientResponse.Success;
     }

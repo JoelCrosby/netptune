@@ -24,7 +24,7 @@ public class IsBoardIdentifierUniqueQueryHandlerTests
     {
         UnitOfWork.Boards.Exists("identifier", TestContext.Current.CancellationToken).Returns(false);
 
-        var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), CancellationToken.None);
+        var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.IsUnique.Should().BeTrue();
@@ -35,7 +35,7 @@ public class IsBoardIdentifierUniqueQueryHandlerTests
     {
         UnitOfWork.Boards.Exists("identifier", TestContext.Current.CancellationToken).Returns(true);
 
-        var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), CancellationToken.None);
+        var result = await Handler.Handle(new IsBoardIdentifierUniqueQuery("identifier"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.IsUnique.Should().BeFalse();

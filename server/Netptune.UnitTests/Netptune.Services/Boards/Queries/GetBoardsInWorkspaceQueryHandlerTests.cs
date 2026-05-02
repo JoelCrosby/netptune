@@ -31,7 +31,7 @@ public class GetBoardsInWorkspaceQueryHandlerTests
         UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(true);
         UnitOfWork.Boards.GetBoardViewModels("key", TestContext.Current.CancellationToken).Returns(viewModels);
 
-        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
         result.Should().BeEquivalentTo(viewModels);
@@ -43,7 +43,7 @@ public class GetBoardsInWorkspaceQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.Exists("key", TestContext.Current.CancellationToken).Returns(false);
 
-        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardsInWorkspaceQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

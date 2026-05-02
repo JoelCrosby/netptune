@@ -23,7 +23,7 @@ public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoard
 
     public async ValueTask<ClientResponse<BoardGroupViewModel>> Handle(UpdateBoardGroupCommand request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.BoardGroups.GetAsync(request.Request.BoardGroupId!.Value);
+        var result = await UnitOfWork.BoardGroups.GetAsync(request.Request.BoardGroupId!.Value, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 

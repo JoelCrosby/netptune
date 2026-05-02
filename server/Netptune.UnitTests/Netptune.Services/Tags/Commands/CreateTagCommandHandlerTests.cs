@@ -41,7 +41,7 @@ public class CreateTagCommandHandlerTests
         UnitOfWork.Tags.GetViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
-        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class CreateTagCommandHandlerTests
         UnitOfWork.Tags.GetViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
-        await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateTagCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -75,7 +75,7 @@ public class CreateTagCommandHandlerTests
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(false);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -90,7 +90,7 @@ public class CreateTagCommandHandlerTests
         UnitOfWork.Tags.Exists(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(true);
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
 
-        var result = await Handler.Handle(new CreateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

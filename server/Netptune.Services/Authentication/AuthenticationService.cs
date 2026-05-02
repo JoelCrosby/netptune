@@ -212,7 +212,7 @@ public class NetptuneAuthService : INetptuneAuthService
                 WorkspaceId = invite.WorkspaceId,
                 Role = WorkspaceRole.Member,
                 Permissions = permissions,
-            });
+            }, CancellationToken.None);
 
             await UnitOfWork.CompleteAsync();
 

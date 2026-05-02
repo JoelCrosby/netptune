@@ -35,12 +35,12 @@ public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<Rem
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var emailList = request.Emails.ToList();
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null) return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("workspace not found");
         if (emailList.Count == 0) return ClientResponse<RemoveUsersWorkspaceResponse>.Failed("no email addresses provided");
 
-        var users = await UnitOfWork.Users.GetByEmailRange(emailList, true);
+        var users = await UnitOfWork.Users.GetByEmailRange(emailList, true, cancellationToken);
         var userIds = users.ConvertAll(user => user.Id);
 
         if (userIds.Count == 1 && userIds.Contains(workspace.OwnerId!))
@@ -55,7 +55,7 @@ public sealed class RemoveUsersFromWorkspaceCommandHandler : IRequestHandler<Rem
             WorkspaceUserCache.Remove(new() { UserId = userId, WorkspaceKey = workspaceKey });
         }
 
-        var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace(userIds, workspace.Id);
+        var removed = await UnitOfWork.Users.RemoveUsersFromWorkspace(userIds, workspace.Id, cancellationToken);
         var removeUserEmails = removed.Select(x => x.User.Email!).ToList();
 
         await UnitOfWork.CompleteAsync(cancellationToken);

@@ -27,11 +27,11 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
         var req = request.Request;
         var boardId = req.BoardId ?? throw new ArgumentNullException(nameof(req.BoardId));
 
-        var board = await UnitOfWork.Boards.GetAsync(boardId);
+        var board = await UnitOfWork.Boards.GetAsync(boardId, cancellationToken: cancellationToken);
 
         if (board is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 
-        var sortOrder = req.SortOrder ?? await UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(boardId);
+        var sortOrder = req.SortOrder ?? await UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(boardId, cancellationToken);
 
         var boardGroup = new BoardGroup
         {
@@ -42,7 +42,7 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
             BoardId = board.Id,
         };
 
-        var result = await UnitOfWork.BoardGroups.AddAsync(boardGroup);
+        var result = await UnitOfWork.BoardGroups.AddAsync(boardGroup, cancellationToken);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

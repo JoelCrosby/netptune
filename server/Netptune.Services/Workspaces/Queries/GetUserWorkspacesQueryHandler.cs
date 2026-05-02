@@ -21,6 +21,6 @@ public sealed class GetUserWorkspacesQueryHandler : IRequestHandler<GetUserWorks
     public ValueTask<List<Workspace>> Handle(GetUserWorkspacesQuery request, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
-        return new ValueTask<List<Workspace>>(UnitOfWork.Workspaces.GetUserWorkspaces(userId));
+        return new ValueTask<List<Workspace>>(UnitOfWork.Workspaces.GetUserWorkspaces(userId, cancellationToken));
     }
 }

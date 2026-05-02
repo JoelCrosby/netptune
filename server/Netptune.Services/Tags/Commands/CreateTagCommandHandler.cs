@@ -30,7 +30,7 @@ public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, 
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (!workspaceId.HasValue)
         {
@@ -38,7 +38,7 @@ public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, 
         }
 
         var trimmedTag = request.Request.Tag.Trim().Capitalize();
-        var alreadyExists = await UnitOfWork.Tags.Exists(trimmedTag, workspaceId.Value);
+        var alreadyExists = await UnitOfWork.Tags.Exists(trimmedTag, workspaceId.Value, cancellationToken);
 
         if (alreadyExists) return ClientResponse<TagViewModel>.Failed("Tag Name should be unique");
 
@@ -50,10 +50,10 @@ public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, 
             IsDeleted = false,
         };
 
-        await UnitOfWork.Tags.AddAsync(tag);
+        await UnitOfWork.Tags.AddAsync(tag, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var result = await UnitOfWork.Tags.GetViewModel(tag.Id);
+        var result = await UnitOfWork.Tags.GetViewModel(tag.Id, cancellationToken);
 
         Activity.Log(options =>
         {

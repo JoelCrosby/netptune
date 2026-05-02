@@ -26,11 +26,11 @@ public sealed class DeleteTagsCommandHandler : IRequestHandler<DeleteTagsCommand
     public async ValueTask<ClientResponse> Handle(DeleteTagsCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (workspaceId is null) return ClientResponse.Failed();
 
-        var tags = await UnitOfWork.Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Request.Tags);
+        var tags = await UnitOfWork.Tags.GetTagsByValueInWorkspace(workspaceId.Value, request.Request.Tags, cancellationToken: cancellationToken);
         var tagIds = tags.ConvertAll(t => t.Id);
 
         await UnitOfWork.Tags.DeletePermanent(tags);

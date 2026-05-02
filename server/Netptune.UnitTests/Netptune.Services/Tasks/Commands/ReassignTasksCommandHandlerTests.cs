@@ -34,7 +34,7 @@ public class ReassignTasksCommandHandlerTests
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
-        var result = await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -46,7 +46,7 @@ public class ReassignTasksCommandHandlerTests
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
-        await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
+        await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -58,7 +58,7 @@ public class ReassignTasksCommandHandlerTests
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
 
-        await Handler.Handle(new ReassignTasksCommand(request), CancellationToken.None);
+        await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
 
         Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<AssignActivityMeta>>>());
     }

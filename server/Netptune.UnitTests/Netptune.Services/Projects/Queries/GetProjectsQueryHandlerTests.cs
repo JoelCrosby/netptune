@@ -30,7 +30,7 @@ public class GetProjectsQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Projects.GetProjects("key", TestContext.Current.CancellationToken).Returns(viewModels);
 
-        var result = await Handler.Handle(new GetProjectsQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetProjectsQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(viewModels);
     }

@@ -46,7 +46,7 @@ public class AddTagToTaskCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -64,7 +64,7 @@ public class AddTagToTaskCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -80,7 +80,7 @@ public class AddTagToTaskCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.InvokeTransaction<ClientResponse<TagViewModel>>();
 
-        var result = await Handler.Handle(new AddTagToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddTagToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

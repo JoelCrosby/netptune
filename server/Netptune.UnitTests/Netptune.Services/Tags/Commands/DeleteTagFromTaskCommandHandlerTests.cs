@@ -41,7 +41,7 @@ public class DeleteTagFromTaskCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key", TestContext.Current.CancellationToken).Returns(1);
 
-        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -62,7 +62,7 @@ public class DeleteTagFromTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, "key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetByValue(request.Tag, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(tag);
 
-        await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new DeleteTagFromTaskCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tags.Received(1).DeleteTagFromTask(1, 1, request.Tag, TestContext.Current.CancellationToken);
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
@@ -80,7 +80,7 @@ public class DeleteTagFromTaskCommandHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTagFromTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

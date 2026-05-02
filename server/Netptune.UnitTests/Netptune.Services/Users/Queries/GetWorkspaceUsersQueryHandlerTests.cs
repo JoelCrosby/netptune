@@ -31,7 +31,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
 
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
     }
@@ -44,7 +44,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns([]);
 
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeEmpty();
     }

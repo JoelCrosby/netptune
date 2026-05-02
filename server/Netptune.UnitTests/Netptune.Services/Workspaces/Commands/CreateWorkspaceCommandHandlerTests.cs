@@ -41,7 +41,7 @@ public class CreateWorkspaceCommandHandlerTests
         UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Workspace>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
 
-        var result = await Handler.Handle(new CreateWorkspaceCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -62,7 +62,7 @@ public class CreateWorkspaceCommandHandlerTests
         UnitOfWork.Workspaces.AddAsync(Arg.Any<Workspace>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Workspace>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
 
-        await Handler.Handle(new CreateWorkspaceCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
     }

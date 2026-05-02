@@ -31,7 +31,7 @@ public class GetProjectQueryHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetProjectViewModel("key", 1, TestContext.Current.CancellationToken).Returns(viewModel);
 
-        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
+        var result = await Handler.Handle(new GetProjectQuery("key"), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(viewModel);
     }
@@ -43,7 +43,7 @@ public class GetProjectQueryHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetProjectViewModel("key", 1, TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
+        var result = await Handler.Handle(new GetProjectQuery("key"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }
@@ -54,7 +54,7 @@ public class GetProjectQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetProjectQuery("key"), CancellationToken.None);
+        var result = await Handler.Handle(new GetProjectQuery("key"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

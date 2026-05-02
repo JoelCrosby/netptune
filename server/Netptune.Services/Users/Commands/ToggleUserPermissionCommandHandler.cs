@@ -34,11 +34,11 @@ public sealed class ToggleUserPermissionCommandHandler : IRequestHandler<ToggleU
     public async ValueTask<ClientResponse<List<string>>> Handle(ToggleUserPermissionCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null) return ClientResponse<List<string>>.Failed("workspace not found");
 
-        var workspaceUser = await UnitOfWork.WorkspaceUsers.GetUserPermissions(request.Request.UserId, workspaceKey, false);
+        var workspaceUser = await UnitOfWork.WorkspaceUsers.GetUserPermissions(request.Request.UserId, workspaceKey, false, cancellationToken);
 
         if (workspaceUser is null) return ClientResponse<List<string>>.Failed("user is not a member of this workspace");
 
@@ -56,7 +56,7 @@ public sealed class ToggleUserPermissionCommandHandler : IRequestHandler<ToggleU
             granted = true;
         }
 
-        await UnitOfWork.WorkspaceUsers.SetUserPermissions(request.Request.UserId, workspace.Id, permissions);
+        await UnitOfWork.WorkspaceUsers.SetUserPermissions(request.Request.UserId, workspace.Id, permissions, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         PermissionCache.Remove(new() { UserId = request.Request.UserId, WorkspaceKey = workspaceKey });

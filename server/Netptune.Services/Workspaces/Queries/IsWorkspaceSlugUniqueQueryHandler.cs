@@ -20,7 +20,7 @@ public sealed class IsWorkspaceSlugUniqueQueryHandler : IRequestHandler<IsWorksp
     public async ValueTask<ClientResponse<IsSlugUniqueResponse>> Handle(IsWorkspaceSlugUniqueQuery request, CancellationToken cancellationToken)
     {
         var slugLower = request.Slug.ToUrlSlug();
-        var exists = await UnitOfWork.Workspaces.Exists(slugLower);
+        var exists = await UnitOfWork.Workspaces.Exists(slugLower, cancellationToken);
 
         return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
         {

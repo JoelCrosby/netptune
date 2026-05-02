@@ -21,11 +21,11 @@ public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand
 
     public async ValueTask<ClientResponse> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = await UnitOfWork.Tasks.GetAsync(request.Id);
+        var task = await UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: cancellationToken);
 
         if (task is null) return ClientResponse.NotFound;
 
-        await UnitOfWork.Tasks.DeletePermanent(task.Id);
+        await UnitOfWork.Tasks.DeletePermanent(task.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>

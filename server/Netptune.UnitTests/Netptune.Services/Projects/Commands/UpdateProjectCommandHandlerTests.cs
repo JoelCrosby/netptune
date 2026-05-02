@@ -38,7 +38,7 @@ public class UpdateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(user);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(project);
 
-        var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -56,7 +56,7 @@ public class UpdateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
-        await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -69,7 +69,7 @@ public class UpdateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateProjectCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

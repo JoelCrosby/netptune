@@ -34,7 +34,7 @@ public class MoveTasksToGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
-        var result = await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -46,7 +46,7 @@ public class MoveTasksToGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
-        await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -58,7 +58,7 @@ public class MoveTasksToGroupCommandHandlerTests
         UnitOfWork.BoardGroups.GetAsync(request.NewGroupId!.Value, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(new List<int>());
 
-        await Handler.Handle(new MoveTasksToGroupCommand(request), CancellationToken.None);
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
         Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<MoveTaskActivityMeta>>>());
     }

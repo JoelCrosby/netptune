@@ -34,7 +34,7 @@ public class GetTasksQueryHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Tasks.GetTasksAsync(workspaceKey, cancellationToken: TestContext.Current.CancellationToken).Returns(tasks);
 
-        var result = await Handler.Handle(new GetTasksQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetTasksQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(tasks);
     }

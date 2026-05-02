@@ -28,7 +28,7 @@ public class DeleteTaskCommandHandlerTests
     {
         UnitOfWork.Tasks.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        var result = await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -39,7 +39,7 @@ public class DeleteTaskCommandHandlerTests
         var taskToDelete = AutoFixtures.ProjectTask;
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
 
-        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), CancellationToken.None);
+        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(1).DeletePermanent(taskToDelete.Id, TestContext.Current.CancellationToken);
     }
@@ -50,7 +50,7 @@ public class DeleteTaskCommandHandlerTests
         var taskToDelete = AutoFixtures.ProjectTask;
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
 
-        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), CancellationToken.None);
+        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -60,7 +60,7 @@ public class DeleteTaskCommandHandlerTests
     {
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -70,7 +70,7 @@ public class DeleteTaskCommandHandlerTests
     {
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
@@ -80,7 +80,7 @@ public class DeleteTaskCommandHandlerTests
     {
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -90,7 +90,7 @@ public class DeleteTaskCommandHandlerTests
     {
         UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
 
-        await Handler.Handle(new DeleteTaskCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
         Activity.Received(1).Log(Arg.Any<Action<ActivityOptions>>());
     }

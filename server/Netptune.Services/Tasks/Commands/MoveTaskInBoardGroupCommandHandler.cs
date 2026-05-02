@@ -36,20 +36,20 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
     {
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
-            var itemToRemove = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.OldGroupId);
+            var itemToRemove = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.OldGroupId, cancellationToken);
 
             if (itemToRemove is not null)
             {
                 await UnitOfWork.ProjectTasksInGroups.DeletePermanent(itemToRemove.Id);
             }
 
-            var tasks = await UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId);
+            var tasks = await UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId, cancellationToken: cancellationToken);
             var existing = tasks.Where(x => x.Id == request.TaskId).ToList();
 
             await UnitOfWork.ProjectTasksInGroups.DeletePermanent(existing.Select(item => item.Id));
 
-            var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId);
-            var task = await UnitOfWork.Tasks.GetAsync(request.TaskId);
+            var newGroup = await UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: cancellationToken);
+            var task = await UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: cancellationToken);
 
             if (newGroup is null || task is null) return null;
 
@@ -62,15 +62,15 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                 SortOrder = -1,
             };
 
-            await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational);
+            await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             return newGroup;
         });
 
-        var taskInBoardGroup = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
+        var taskInBoardGroup = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, cancellationToken);
 
-        var sortOrder = await GetTaskInGroupSortOrder(request.NewGroupId, request.TaskId, request.PreviousIndex, request.CurrentIndex, true);
+        var sortOrder = await GetTaskInGroupSortOrder(request.NewGroupId, request.TaskId, request.PreviousIndex, request.CurrentIndex, true, cancellationToken);
 
         if (boardGroup is null || taskInBoardGroup is null) return ClientResponse.NotFound;
 
@@ -91,11 +91,11 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
     private async Task<ClientResponse> MoveTaskInGroup(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
     {
-        var item = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId);
+        var item = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, cancellationToken);
 
         if (item is null) return ClientResponse.NotFound;
 
-        item.SortOrder = await GetTaskInGroupSortOrder(request.NewGroupId, request.TaskId, request.PreviousIndex, request.CurrentIndex);
+        item.SortOrder = await GetTaskInGroupSortOrder(request.NewGroupId, request.TaskId, request.PreviousIndex, request.CurrentIndex, cancellationToken: cancellationToken);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
@@ -109,9 +109,9 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         return ClientResponse.Success;
     }
 
-    private async Task<double> GetTaskInGroupSortOrder(int groupId, int taskId, int previousIndex, int currentIndex, bool isNewItem = false)
+    private async Task<double> GetTaskInGroupSortOrder(int groupId, int taskId, int previousIndex, int currentIndex, bool isNewItem = false, CancellationToken cancellationToken = default)
     {
-        var tasks = await UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(groupId);
+        var tasks = await UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(groupId, cancellationToken);
         var item = tasks.Find(task => task.ProjectTaskId == taskId);
 
         if (item is null) throw new($"Task with id of {taskId} does not exist in group {groupId}.");

@@ -27,7 +27,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
     public async ValueTask<ClientResponse<Workspace>> Handle(UpdateWorkspaceCommand request, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
-        var result = await UnitOfWork.Workspaces.GetBySlug(request.Request.Slug!);
+        var result = await UnitOfWork.Workspaces.GetBySlug(request.Request.Slug!, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<Workspace>.NotFound;
 

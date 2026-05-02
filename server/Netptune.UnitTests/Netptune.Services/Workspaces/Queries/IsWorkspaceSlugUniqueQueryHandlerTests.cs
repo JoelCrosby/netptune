@@ -24,7 +24,7 @@ public class IsWorkspaceSlugUniqueQueryHandlerTests
     {
         UnitOfWork.Workspaces.Exists(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(false);
 
-        var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), CancellationToken.None);
+        var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload?.IsUnique.Should().BeTrue();
@@ -35,7 +35,7 @@ public class IsWorkspaceSlugUniqueQueryHandlerTests
     {
         UnitOfWork.Workspaces.Exists(Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(true);
 
-        var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), CancellationToken.None);
+        var result = await Handler.Handle(new IsWorkspaceSlugUniqueQuery("slug"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload?.IsUnique.Should().BeFalse();

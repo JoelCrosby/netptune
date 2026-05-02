@@ -27,7 +27,7 @@ public class DeleteCommentCommandHandlerTests
     {
         UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Comment);
 
-        var result = await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteCommentCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -37,7 +37,7 @@ public class DeleteCommentCommandHandlerTests
     {
         UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Comment);
 
-        await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteCommentCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -47,7 +47,7 @@ public class DeleteCommentCommandHandlerTests
     {
         UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteCommentCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -57,7 +57,7 @@ public class DeleteCommentCommandHandlerTests
     {
         UnitOfWork.Comments.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteCommentCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteCommentCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

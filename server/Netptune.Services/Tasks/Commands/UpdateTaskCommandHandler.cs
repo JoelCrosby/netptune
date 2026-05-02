@@ -29,7 +29,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
-        var result = await UnitOfWork.Tasks.GetAsync(req.Id);
+        var result = await UnitOfWork.Tasks.GetAsync(req.Id, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<TaskViewModel>.NotFound;
 
@@ -61,7 +61,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
-        var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id);
+        var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id, cancellationToken);
 
         if (response is null) return ClientResponse<TaskViewModel>.NotFound;
 
@@ -77,7 +77,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         if (result.ProjectId is null) return;
 
-        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, false, true);
+        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, false, true, cancellationToken);
 
         if (defaultBoard is null)
         {
@@ -105,7 +105,7 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
     private async Task RemoveTaskFromGroups(int taskId, CancellationToken cancellationToken)
     {
-        var groupsWithTask = await UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(taskId);
+        var groupsWithTask = await UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(taskId, cancellationToken: cancellationToken);
 
         var taskInGroupsToDelete = groupsWithTask
             .Select(boardGroup => boardGroup.TasksInGroups.Where(x => x.ProjectTaskId == taskId))

@@ -42,7 +42,7 @@ public class AddCommentToTaskCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(2);
         UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns([]);
 
-        var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddCommentToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -57,7 +57,7 @@ public class AddCommentToTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(2);
 
-        var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddCommentToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -72,7 +72,7 @@ public class AddCommentToTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(10);
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new AddCommentToTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new AddCommentToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

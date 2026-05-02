@@ -30,7 +30,7 @@ public class DeleteWorkspacePermanentCommandHandlerTests
         UnitOfWork.InvokeTransaction();
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
-        var result = await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -41,7 +41,7 @@ public class DeleteWorkspacePermanentCommandHandlerTests
         UnitOfWork.InvokeTransaction();
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
+        await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
@@ -52,7 +52,7 @@ public class DeleteWorkspacePermanentCommandHandlerTests
         UnitOfWork.InvokeTransaction();
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), CancellationToken.None);
+        await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

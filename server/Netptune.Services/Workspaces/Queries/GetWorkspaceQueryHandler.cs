@@ -17,6 +17,6 @@ public sealed class GetWorkspaceQueryHandler : IRequestHandler<GetWorkspaceQuery
 
     public ValueTask<Workspace?> Handle(GetWorkspaceQuery request, CancellationToken cancellationToken)
     {
-        return new ValueTask<Workspace?>(UnitOfWork.Workspaces.GetBySlug(request.Slug));
+        return new ValueTask<Workspace?>(UnitOfWork.Workspaces.GetBySlug(request.Slug, cancellationToken: cancellationToken));
     }
 }

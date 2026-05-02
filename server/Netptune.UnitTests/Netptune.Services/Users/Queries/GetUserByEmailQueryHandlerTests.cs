@@ -43,7 +43,7 @@ public class GetUserByEmailQueryHandlerTests
             WorkspaceKey = workspaceKey,
         });
 
-        var result = await Handler.Handle(new GetUserByEmailQuery("email"), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserByEmailQuery("email"), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(new UserViewModel
         {
@@ -65,7 +65,7 @@ public class GetUserByEmailQueryHandlerTests
     {
         UnitOfWork.Users.GetByEmail("email", Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetUserByEmailQuery("email"), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserByEmailQuery("email"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

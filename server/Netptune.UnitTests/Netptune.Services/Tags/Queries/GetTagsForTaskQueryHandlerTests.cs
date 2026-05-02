@@ -35,7 +35,7 @@ public class GetTagsForTaskQueryHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId("task-id", "key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetViewModelsForTask(1, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(tags);
 
-        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
+        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
         result.Count.Should().Be(1);
@@ -47,7 +47,7 @@ public class GetTagsForTaskQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Tasks.GetTaskInternalId("task-id", "key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), CancellationToken.None);
+        var result = await Handler.Handle(new GetTagsForTaskQuery("task-id"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

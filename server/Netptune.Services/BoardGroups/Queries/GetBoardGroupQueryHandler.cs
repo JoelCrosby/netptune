@@ -17,6 +17,6 @@ public sealed class GetBoardGroupQueryHandler : IRequestHandler<GetBoardGroupQue
 
     public ValueTask<BoardGroup?> Handle(GetBoardGroupQuery request, CancellationToken cancellationToken)
     {
-        return new ValueTask<BoardGroup?>(UnitOfWork.BoardGroups.GetAsync(request.Id, true));
+        return new ValueTask<BoardGroup?>(UnitOfWork.BoardGroups.GetAsync(request.Id, true, cancellationToken));
     }
 }

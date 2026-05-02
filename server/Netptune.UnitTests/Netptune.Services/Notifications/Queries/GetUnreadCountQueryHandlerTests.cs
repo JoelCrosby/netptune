@@ -32,7 +32,7 @@ public class GetUnreadCountQueryHandlerTests
     {
         UnitOfWork.Notifications.GetUnreadCount(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(5);
 
-        var result = await Handler.Handle(new GetUnreadCountQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetUnreadCountQuery(), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().Be(5);

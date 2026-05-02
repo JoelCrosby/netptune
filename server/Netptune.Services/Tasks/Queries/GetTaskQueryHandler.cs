@@ -17,6 +17,6 @@ public sealed class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, TaskView
 
     public ValueTask<TaskViewModel?> Handle(GetTaskQuery request, CancellationToken cancellationToken)
     {
-        return new ValueTask<TaskViewModel?>(UnitOfWork.Tasks.GetTaskViewModel(request.Id));
+        return new ValueTask<TaskViewModel?>(UnitOfWork.Tasks.GetTaskViewModel(request.Id, cancellationToken));
     }
 }

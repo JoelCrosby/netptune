@@ -61,7 +61,7 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
 
         if (workspaceKey is null) return;
 
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, isReadonly: true);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, isReadonly: true, cancellationToken: CancellationToken.None);
 
         if (workspace?.IsPublic == true)
         {

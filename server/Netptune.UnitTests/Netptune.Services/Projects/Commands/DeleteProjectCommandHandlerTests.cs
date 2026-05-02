@@ -29,7 +29,7 @@ public class DeleteProjectCommandHandlerTests
     {
         UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
-        var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -39,7 +39,7 @@ public class DeleteProjectCommandHandlerTests
     {
         UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
-        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -49,7 +49,7 @@ public class DeleteProjectCommandHandlerTests
     {
         UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -59,7 +59,7 @@ public class DeleteProjectCommandHandlerTests
     {
         UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
@@ -69,7 +69,7 @@ public class DeleteProjectCommandHandlerTests
     {
         UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteProjectCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

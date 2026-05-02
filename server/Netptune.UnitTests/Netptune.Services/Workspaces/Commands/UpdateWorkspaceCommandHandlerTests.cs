@@ -38,7 +38,7 @@ public class UpdateWorkspaceCommandHandlerTests
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
 
-        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -57,7 +57,7 @@ public class UpdateWorkspaceCommandHandlerTests
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
-        await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -71,7 +71,7 @@ public class UpdateWorkspaceCommandHandlerTests
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

@@ -32,7 +32,7 @@ public class UpdateUserCommandHandlerTests
 
         UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(user);
 
-        var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateUserCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -48,7 +48,7 @@ public class UpdateUserCommandHandlerTests
         var request = Fixture.Build<UpdateUserRequest>().Create();
         UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.AppUser);
 
-        await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateUserCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -59,7 +59,7 @@ public class UpdateUserCommandHandlerTests
         var request = Fixture.Build<UpdateUserRequest>().Create();
         UnitOfWork.Users.GetAsync(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateUserCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateUserCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

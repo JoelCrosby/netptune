@@ -43,7 +43,7 @@ public class GetBoardViewQueryHandlerTests
         UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
 
-        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -61,7 +61,7 @@ public class GetBoardViewQueryHandlerTests
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
-        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -80,7 +80,7 @@ public class GetBoardViewQueryHandlerTests
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
-        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -99,7 +99,7 @@ public class GetBoardViewQueryHandlerTests
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
-        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

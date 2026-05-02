@@ -21,7 +21,7 @@ public sealed class MarkAsReadCommandHandler : IRequestHandler<MarkAsReadCommand
     public async ValueTask<ClientResponse> Handle(MarkAsReadCommand request, CancellationToken cancellationToken)
     {
         var userId = Identity.GetCurrentUserId();
-        var notification = await UnitOfWork.Notifications.GetAsync(request.Id);
+        var notification = await UnitOfWork.Notifications.GetAsync(request.Id, cancellationToken: cancellationToken);
 
         if (notification is null || notification.UserId != userId)
         {

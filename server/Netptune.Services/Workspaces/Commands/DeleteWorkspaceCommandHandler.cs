@@ -27,7 +27,7 @@ public sealed class DeleteWorkspaceCommandHandler : IRequestHandler<DeleteWorksp
 
     public async ValueTask<ClientResponse> Handle(DeleteWorkspaceCommand request, CancellationToken cancellationToken)
     {
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Key);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Key, cancellationToken: cancellationToken);
 
         if (workspace is null) return ClientResponse.NotFound;
 

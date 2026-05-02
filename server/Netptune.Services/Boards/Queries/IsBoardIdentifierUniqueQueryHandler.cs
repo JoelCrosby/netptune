@@ -20,7 +20,7 @@ public sealed class IsBoardIdentifierUniqueQueryHandler : IRequestHandler<IsBoar
     public async ValueTask<ClientResponse<IsSlugUniqueResponse>> Handle(IsBoardIdentifierUniqueQuery request, CancellationToken cancellationToken)
     {
         var slugLower = request.Identifier.ToUrlSlug();
-        var exists = await UnitOfWork.Boards.Exists(slugLower);
+        var exists = await UnitOfWork.Boards.Exists(slugLower, cancellationToken);
 
         return ClientResponse<IsSlugUniqueResponse>.Success(new IsSlugUniqueResponse
         {

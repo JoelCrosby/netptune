@@ -19,7 +19,7 @@ public sealed class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand
 
     public async ValueTask<ClientResponse<UserViewModel>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var updatedUser = await UnitOfWork.Users.GetAsync(request.Request.Id!);
+        var updatedUser = await UnitOfWork.Users.GetAsync(request.Request.Id!, cancellationToken: cancellationToken);
 
         if (updatedUser is null) return ClientResponse<UserViewModel>.NotFound;
 

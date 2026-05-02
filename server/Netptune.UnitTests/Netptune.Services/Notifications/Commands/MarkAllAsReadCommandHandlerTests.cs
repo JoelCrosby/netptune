@@ -33,7 +33,7 @@ public class MarkAllAsReadCommandHandlerTests
         UnitOfWork.Notifications
             .MarkAllAsRead(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(Task.CompletedTask);
 
-        var result = await Handler.Handle(new MarkAllAsReadCommand(), CancellationToken.None);
+        var result = await Handler.Handle(new MarkAllAsReadCommand(), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         await UnitOfWork.Notifications.Received(1).MarkAllAsRead(UserId, WorkspaceId, TestContext.Current.CancellationToken);

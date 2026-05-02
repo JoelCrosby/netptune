@@ -28,7 +28,7 @@ public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardComma
 
         if (!req.Id.HasValue) throw new Exception($"{nameof(req.Id)} is required");
 
-        var result = await UnitOfWork.Boards.GetAsync(req.Id.Value);
+        var result = await UnitOfWork.Boards.GetAsync(req.Id.Value, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<BoardViewModel>.NotFound;
 

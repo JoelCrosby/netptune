@@ -21,13 +21,13 @@ public sealed class GetCommentsForTaskQueryHandler : IRequestHandler<GetComments
     public async ValueTask<List<CommentViewModel>?> Handle(GetCommentsForTaskQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey);
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.SystemId, workspaceKey, cancellationToken);
 
         if (taskId is null)
         {
             return null;
         }
 
-        return await UnitOfWork.Comments.GetCommentViewModelsForTask(taskId.Value);
+        return await UnitOfWork.Comments.GetCommentViewModelsForTask(taskId.Value, cancellationToken);
     }
 }

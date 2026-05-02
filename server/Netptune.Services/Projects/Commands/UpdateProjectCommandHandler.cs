@@ -26,7 +26,7 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
 
     public async ValueTask<ClientResponse<ProjectViewModel>> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
     {
-        var project = await UnitOfWork.Projects.GetWithIncludes(request.Request.Id!.Value);
+        var project = await UnitOfWork.Projects.GetWithIncludes(request.Request.Id!.Value, cancellationToken);
         var user = await Identity.GetCurrentUser();
 
         if (project is null) return ClientResponse<ProjectViewModel>.NotFound;

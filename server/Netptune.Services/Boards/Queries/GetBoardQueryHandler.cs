@@ -18,7 +18,7 @@ public sealed class GetBoardQueryHandler : IRequestHandler<GetBoardQuery, Client
 
     public async ValueTask<ClientResponse<BoardViewModel>> Handle(GetBoardQuery request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.Boards.GetAsync(request.Id, true);
+        var result = await UnitOfWork.Boards.GetAsync(request.Id, true, cancellationToken);
 
         if (result is null) return ClientResponse<BoardViewModel>.NotFound;
 

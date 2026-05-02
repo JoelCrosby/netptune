@@ -33,8 +33,8 @@ public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCom
         var userId = Identity.GetCurrentUserId();
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey);
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey, cancellationToken);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (taskId is null || !workspaceId.HasValue)
         {
@@ -47,7 +47,7 @@ public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCom
 
             async Task<Tag> GetOrCreateTag()
             {
-                var existingTag = await UnitOfWork.Tags.GetByValue(trimmedTag, workspaceId.Value);
+                var existingTag = await UnitOfWork.Tags.GetByValue(trimmedTag, workspaceId.Value, cancellationToken: cancellationToken);
 
                 if (existingTag is not null) return existingTag;
 
@@ -59,12 +59,12 @@ public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCom
                     IsDeleted = false,
                 };
 
-                return await UnitOfWork.Tags.AddAsync(entity);
+                return await UnitOfWork.Tags.AddAsync(entity, cancellationToken);
             }
 
             var tag = await GetOrCreateTag();
             var taskTag = new ProjectTaskTag { TagId = tag.Id, ProjectTaskId = taskId.Value };
-            var tagForTaskExists = await UnitOfWork.Tags.ExistsForTask(tag.Id, taskId.Value);
+            var tagForTaskExists = await UnitOfWork.Tags.ExistsForTask(tag.Id, taskId.Value, cancellationToken);
 
             if (!tagForTaskExists)
             {
@@ -85,7 +85,7 @@ public sealed class AddTagToTaskCommandHandler : IRequestHandler<AddTagToTaskCom
                 };
             });
 
-            var response = await UnitOfWork.Tags.GetViewModel(tag.Id);
+            var response = await UnitOfWork.Tags.GetViewModel(tag.Id, cancellationToken);
 
             return ClientResponse<TagViewModel>.Success(response!);
         });

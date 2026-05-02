@@ -34,7 +34,7 @@ public class UpdateBoardGroupCommandHandlerTests
 
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
-        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -49,7 +49,7 @@ public class UpdateBoardGroupCommandHandlerTests
         var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
-        await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -60,7 +60,7 @@ public class UpdateBoardGroupCommandHandlerTests
         var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

@@ -23,7 +23,7 @@ public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserView
 
     public async ValueTask<UserViewModel?> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await UnitOfWork.Users.GetAsync(request.UserId, true);
+        var user = await UnitOfWork.Users.GetAsync(request.UserId, true, cancellationToken);
 
         if (user is null) return null;
 

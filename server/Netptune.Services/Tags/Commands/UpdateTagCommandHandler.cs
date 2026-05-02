@@ -27,14 +27,14 @@ public sealed class UpdateTagCommandHandler : IRequestHandler<UpdateTagCommand, 
     public async ValueTask<ClientResponse<TagViewModel>> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (!workspaceId.HasValue)
         {
             return ClientResponse<TagViewModel>.Failed($"workspace with key {workspaceKey} does not exist");
         }
 
-        var tag = await UnitOfWork.Tags.GetByValue(request.Request.CurrentValue, workspaceId.Value);
+        var tag = await UnitOfWork.Tags.GetByValue(request.Request.CurrentValue, workspaceId.Value, cancellationToken: cancellationToken);
 
         if (tag is null)
         {

@@ -24,7 +24,7 @@ public sealed class DeleteBoardGroupCommandHandler : IRequestHandler<DeleteBoard
 
     public async ValueTask<ClientResponse> Handle(DeleteBoardGroupCommand request, CancellationToken cancellationToken)
     {
-        var boardGroup = await UnitOfWork.BoardGroups.GetAsync(request.Id);
+        var boardGroup = await UnitOfWork.BoardGroups.GetAsync(request.Id, cancellationToken: cancellationToken);
 
         if (boardGroup is null) return ClientResponse.NotFound;
 

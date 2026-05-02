@@ -35,7 +35,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     {
         var req = request.Request;
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true);
+        var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true, cancellationToken: cancellationToken);
 
         if (workspace is null) return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
 
@@ -62,16 +62,16 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (req.BoardGroupId.HasValue)
         {
-            await AddTaskToBoardGroup(req.BoardGroupId.Value, task);
+            await AddTaskToBoardGroup(req.BoardGroupId.Value, task, cancellationToken);
         }
         else
         {
-            await AddTaskToBoardGroup(project, task);
+            await AddTaskToBoardGroup(project, task, cancellationToken);
         }
 
-        var result = await UnitOfWork.Tasks.AddAsync(task);
+        var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
 
-        var scopeIdRef = await UnitOfWork.Tasks.GetNextScopeId(project.Id);
+        var scopeIdRef = await UnitOfWork.Tasks.GetNextScopeId(project.Id, cancellationToken: cancellationToken);
 
         if (!scopeIdRef.HasValue) return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
 
@@ -86,7 +86,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                 return await UnitOfWork.CompleteAsync(cancellationToken);
             });
 
-        var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id);
+        var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id, cancellationToken);
 
         Activity.Log(options =>
         {
@@ -98,9 +98,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         return ClientResponse<TaskViewModel>.Success(response!);
     }
 
-    private async Task AddTaskToBoardGroup(int groupId, ProjectTask task)
+    private async Task AddTaskToBoardGroup(int groupId, ProjectTask task, CancellationToken cancellationToken)
     {
-        var boardGroup = await UnitOfWork.BoardGroups.GetWithTasksInGroups(groupId);
+        var boardGroup = await UnitOfWork.BoardGroups.GetWithTasksInGroups(groupId, cancellationToken);
 
         if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
@@ -116,9 +116,9 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         });
     }
 
-    private async Task AddTaskToBoardGroup(Project project, ProjectTask task)
+    private async Task AddTaskToBoardGroup(Project project, ProjectTask task, CancellationToken cancellationToken)
     {
-        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true);
+        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true, cancellationToken);
 
         if (defaultBoard is null) throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
 

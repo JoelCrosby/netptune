@@ -21,10 +21,10 @@ public sealed class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, Pr
     public async ValueTask<ProjectViewModel?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (workspaceId is null) return null;
 
-        return await UnitOfWork.Projects.GetProjectViewModel(request.Key, workspaceId.Value);
+        return await UnitOfWork.Projects.GetProjectViewModel(request.Key, workspaceId.Value, cancellationToken);
     }
 }

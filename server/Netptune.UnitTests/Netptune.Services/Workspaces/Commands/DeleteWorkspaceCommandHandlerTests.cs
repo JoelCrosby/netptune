@@ -31,7 +31,7 @@ public class DeleteWorkspaceCommandHandlerTests
     {
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
-        var result = await Handler.Handle(new DeleteWorkspaceCommand("workspace"), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteWorkspaceCommand("workspace"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -41,7 +41,7 @@ public class DeleteWorkspaceCommandHandlerTests
     {
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
 
-        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), CancellationToken.None);
+        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -51,7 +51,7 @@ public class DeleteWorkspaceCommandHandlerTests
     {
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteWorkspaceCommand("workspace"), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteWorkspaceCommand("workspace"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -61,7 +61,7 @@ public class DeleteWorkspaceCommandHandlerTests
     {
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), CancellationToken.None);
+        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
     }
@@ -71,7 +71,7 @@ public class DeleteWorkspaceCommandHandlerTests
     {
         UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), CancellationToken.None);
+        await Handler.Handle(new DeleteWorkspaceCommand("workspace"), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

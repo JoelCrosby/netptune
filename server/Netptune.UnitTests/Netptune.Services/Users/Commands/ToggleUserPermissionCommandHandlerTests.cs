@@ -46,7 +46,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
-        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().Contain(permission);
@@ -69,7 +69,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = permission };
-        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotContain(permission);
@@ -83,7 +83,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
-        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -99,7 +99,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(Arg.Any<string>(), workspaceKey, false, TestContext.Current.CancellationToken).ReturnsNull();
 
         var request = new ToggleUserPermissionRequest { UserId = "userId", Permission = "tasks.read" };
-        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -120,7 +120,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.WorkspaceUsers.Received(1).SetUserPermissions(userId, workspace.Id, Arg.Any<IEnumerable<string>>(), TestContext.Current.CancellationToken);
     }
@@ -141,7 +141,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -162,7 +162,7 @@ public class ToggleUserPermissionCommandHandlerTests
         UnitOfWork.WorkspaceUsers.GetUserPermissions(userId, workspaceKey, false, TestContext.Current.CancellationToken).Returns(userPermissions);
 
         var request = new ToggleUserPermissionRequest { UserId = userId, Permission = "tasks.read" };
-        await Handler.Handle(new ToggleUserPermissionCommand(request), CancellationToken.None);
+        await Handler.Handle(new ToggleUserPermissionCommand(request), TestContext.Current.CancellationToken);
 
         var expectedKey = new WorkspaceUserKey { UserId = userId, WorkspaceKey = workspaceKey };
         WorkspacePermissionCache.Received(1).Remove(Arg.Is<WorkspaceUserKey>(k => k == expectedKey));

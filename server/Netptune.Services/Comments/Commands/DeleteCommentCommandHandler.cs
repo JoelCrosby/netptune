@@ -21,7 +21,7 @@ public sealed class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentC
 
     public async ValueTask<ClientResponse> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
     {
-        var comment = await UnitOfWork.Comments.GetAsync(request.Id);
+        var comment = await UnitOfWork.Comments.GetAsync(request.Id, cancellationToken: cancellationToken);
 
         if (comment is null)
         {

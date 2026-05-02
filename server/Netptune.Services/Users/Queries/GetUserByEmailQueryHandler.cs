@@ -23,7 +23,7 @@ public sealed class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQ
 
     public async ValueTask<UserViewModel?> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
-        var user = await UnitOfWork.Users.GetByEmail(request.Email, true);
+        var user = await UnitOfWork.Users.GetByEmail(request.Email, true, cancellationToken);
 
         if (user is null) return null;
 

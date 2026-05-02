@@ -17,7 +17,7 @@ public sealed class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, 
 
     public async ValueTask<List<UserViewModel>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await UnitOfWork.Users.GetAllAsync();
+        var users = await UnitOfWork.Users.GetAllAsync(cancellationToken: cancellationToken);
         return users.ConvertAll(u => u.ToViewModel());
     }
 }

@@ -48,7 +48,7 @@ public class GetActivitiesQueryHandlerTests
                 Fixture.Create<UserAvatar>(),
             });
 
-        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), CancellationToken.None);
+        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -81,7 +81,7 @@ public class GetActivitiesQueryHandlerTests
                 },
             });
 
-        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), CancellationToken.None);
+        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), TestContext.Current.CancellationToken);
 
         result.Payload!.FirstOrDefault()!.Assignee.Should().NotBeNull();
     }

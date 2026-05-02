@@ -23,7 +23,7 @@ public sealed class GetUserNotificationsQueryHandler : IRequestHandler<GetUserNo
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
-        var notifications = await UnitOfWork.Notifications.GetUserNotifications(userId, workspaceId);
+        var notifications = await UnitOfWork.Notifications.GetUserNotifications(userId, workspaceId, cancellationToken);
 
         return ClientResponse<List<NotificationViewModel>>.Success(notifications);
     }

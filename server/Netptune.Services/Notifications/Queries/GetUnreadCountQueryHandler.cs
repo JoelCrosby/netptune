@@ -22,7 +22,7 @@ public sealed class GetUnreadCountQueryHandler : IRequestHandler<GetUnreadCountQ
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
-        var count = await UnitOfWork.Notifications.GetUnreadCount(userId, workspaceId);
+        var count = await UnitOfWork.Notifications.GetUnreadCount(userId, workspaceId, cancellationToken);
 
         return ClientResponse<int>.Success(count);
     }

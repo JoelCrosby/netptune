@@ -42,10 +42,10 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
             var ancestors = activity.EntityType switch
             {
-                EntityType.Task => await UnitOfWork.Ancestors.GetProjectTaskAncestors(activity.EntityId.Value),
-                EntityType.BoardGroup => await UnitOfWork.Ancestors.GetBoardGroupAncestors(activity.EntityId.Value),
-                EntityType.Board => await UnitOfWork.Ancestors.GetBoardAncestors(activity.EntityId.Value),
-                EntityType.Project => await UnitOfWork.Ancestors.GetProjectAncestors(activity.EntityId.Value),
+                EntityType.Task => await UnitOfWork.Ancestors.GetProjectTaskAncestors(activity.EntityId.Value, cancellationToken),
+                EntityType.BoardGroup => await UnitOfWork.Ancestors.GetBoardGroupAncestors(activity.EntityId.Value, cancellationToken),
+                EntityType.Board => await UnitOfWork.Ancestors.GetBoardAncestors(activity.EntityId.Value, cancellationToken),
+                EntityType.Project => await UnitOfWork.Ancestors.GetProjectAncestors(activity.EntityId.Value, cancellationToken),
                 _ => new ActivityAncestors(),
             };
 
@@ -69,7 +69,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 WorkspaceSlug = ancestors.WorkspaceKey,
             };
 
-            await UnitOfWork.ActivityLogs.AddAsync(log);
+            await UnitOfWork.ActivityLogs.AddAsync(log, cancellationToken);
             activityLogs.Add((log, ancestors, activity.RecipientUserIds));
         }
 
@@ -84,8 +84,8 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
     {
         var workspaceIds = activityLogs.Select(l => l.Log.WorkspaceId).Distinct().ToList();
 
-        var slugsByWorkspace = await UnitOfWork.Workspaces.GetSlugsByIds(workspaceIds);
-        var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds);
+        var slugsByWorkspace = await UnitOfWork.Workspaces.GetSlugsByIds(workspaceIds, cancellationToken);
+        var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
 
         var allNotifications = new List<Notification>();
 
@@ -118,7 +118,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         if (allNotifications.Count == 0) return;
 
-        await UnitOfWork.Notifications.AddRangeAsync(allNotifications);
+        await UnitOfWork.Notifications.AddRangeAsync(allNotifications, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         await PublishNotificationEventsAsync(allNotifications);

@@ -47,7 +47,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -66,7 +66,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -80,7 +80,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string>()), CancellationToken.None);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string>()), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -100,7 +100,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
-        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
+        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
 
         await Email.Received(1).Send(Arg.Any<SendMultipleEmailModel>());
     }
@@ -120,7 +120,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com", "existinguser@email.com" }), CancellationToken.None);
+        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com", "existinguser@email.com" }), TestContext.Current.CancellationToken);
 
         result.Payload?.Emails.Should().Equal(new List<string> { "user@email.com" });
     }
@@ -140,7 +140,7 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
         UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
 
-        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), CancellationToken.None);
+        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }

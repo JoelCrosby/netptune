@@ -27,20 +27,20 @@ public sealed class DeleteTagFromTaskCommandHandler : IRequestHandler<DeleteTagF
     public async ValueTask<ClientResponse> Handle(DeleteTagFromTaskCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey);
+        var taskId = await UnitOfWork.Tasks.GetTaskInternalId(request.Request.SystemId, workspaceKey, cancellationToken);
 
         if (!taskId.HasValue) return ClientResponse.NotFound;
 
-        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
         if (!workspaceId.HasValue)
         {
             return ClientResponse.Failed($"workspace with key {workspaceKey} does not exist");
         }
 
-        var tag = await UnitOfWork.Tags.GetByValue(request.Request.Tag, workspaceId.Value);
+        var tag = await UnitOfWork.Tags.GetByValue(request.Request.Tag, workspaceId.Value, cancellationToken: cancellationToken);
 
-        await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Request.Tag);
+        await UnitOfWork.Tags.DeleteTagFromTask(workspaceId.Value, taskId.Value, request.Request.Tag, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         if (tag is not null)

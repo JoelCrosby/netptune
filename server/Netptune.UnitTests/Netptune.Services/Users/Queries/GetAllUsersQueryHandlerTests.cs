@@ -25,7 +25,7 @@ public class GetAllUsersQueryHandlerTests
     {
         UnitOfWork.Users.GetAllAsync(cancellationToken: TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
-        var result = await Handler.Handle(new GetAllUsersQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetAllUsersQuery(), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
     }

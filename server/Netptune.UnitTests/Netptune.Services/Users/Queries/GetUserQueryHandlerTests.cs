@@ -43,7 +43,7 @@ public class GetUserQueryHandlerTests
             WorkspaceKey = workspaceKey,
         });
 
-        var result = await Handler.Handle(new GetUserQuery("userId"), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserQuery("userId"), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(new UserViewModel
         {
@@ -65,7 +65,7 @@ public class GetUserQueryHandlerTests
     {
         UnitOfWork.Users.GetAsync("userId", Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetUserQuery("userId"), CancellationToken.None);
+        var result = await Handler.Handle(new GetUserQuery("userId"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

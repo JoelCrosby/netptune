@@ -17,7 +17,7 @@ public sealed class GetBoardsInProjectQueryHandler : IRequestHandler<GetBoardsIn
 
     public async ValueTask<List<BoardViewModel>?> Handle(GetBoardsInProjectQuery request, CancellationToken cancellationToken)
     {
-        var results = await UnitOfWork.Boards.GetBoardsInProject(request.ProjectId, true);
+        var results = await UnitOfWork.Boards.GetBoardsInProject(request.ProjectId, true, cancellationToken: cancellationToken);
 
         return results.ConvertAll(r => r.ToViewModel());
     }

@@ -35,7 +35,7 @@ public class MarkAsReadCommandHandlerTests
 
         UnitOfWork.Notifications.GetAsync(notification.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(notification);
 
-        var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), CancellationToken.None);
+        var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         notification.IsRead.Should().BeTrue();
@@ -47,7 +47,7 @@ public class MarkAsReadCommandHandlerTests
     {
         UnitOfWork.Notifications.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new MarkAsReadCommand(42), CancellationToken.None);
+        var result = await Handler.Handle(new MarkAsReadCommand(42), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         await UnitOfWork.DidNotReceive().CompleteAsync(TestContext.Current.CancellationToken);
@@ -60,7 +60,7 @@ public class MarkAsReadCommandHandlerTests
 
         UnitOfWork.Notifications.GetAsync(notification.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(notification);
 
-        var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), CancellationToken.None);
+        var result = await Handler.Handle(new MarkAsReadCommand(notification.Id), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         notification.IsRead.Should().BeFalse();

@@ -26,7 +26,7 @@ public class GetBoardGroupQueryHandlerTests
 
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
-        var result = await Handler.Handle(new GetBoardGroupQuery(1), CancellationToken.None);
+        var result = await Handler.Handle(new GetBoardGroupQuery(1), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(boardGroup);

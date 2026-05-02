@@ -21,6 +21,6 @@ public sealed class GetTaskDetailQueryHandler : IRequestHandler<GetTaskDetailQue
     public ValueTask<TaskViewModel?> Handle(GetTaskDetailQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        return new ValueTask<TaskViewModel?>(UnitOfWork.Tasks.GetTaskViewModel(request.SystemId, workspaceKey));
+        return new ValueTask<TaskViewModel?>(UnitOfWork.Tasks.GetTaskViewModel(request.SystemId, workspaceKey, cancellationToken));
     }
 }

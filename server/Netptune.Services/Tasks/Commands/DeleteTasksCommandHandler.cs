@@ -21,13 +21,13 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
 
     public async ValueTask<ClientResponse> Handle(DeleteTasksCommand request, CancellationToken cancellationToken)
     {
-        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(request.Ids);
+        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(request.Ids, cancellationToken: cancellationToken);
         var taskIds = tasks.ConvertAll(task => task.Id);
 
-        var ids = await UnitOfWork.ProjectTasksInGroups.GetAllByTaskId(taskIds);
-        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(ids);
+        var ids = await UnitOfWork.ProjectTasksInGroups.GetAllByTaskId(taskIds, cancellationToken);
+        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(ids, cancellationToken);
 
-        await UnitOfWork.Tasks.DeletePermanent(taskIds);
+        await UnitOfWork.Tasks.DeletePermanent(taskIds, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogMany(options =>

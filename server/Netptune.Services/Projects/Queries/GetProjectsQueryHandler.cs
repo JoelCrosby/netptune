@@ -21,6 +21,6 @@ public sealed class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, 
     public ValueTask<List<ProjectViewModel>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        return new ValueTask<List<ProjectViewModel>>(UnitOfWork.Projects.GetProjects(workspaceKey));
+        return new ValueTask<List<ProjectViewModel>>(UnitOfWork.Projects.GetProjects(workspaceKey, cancellationToken));
     }
 }

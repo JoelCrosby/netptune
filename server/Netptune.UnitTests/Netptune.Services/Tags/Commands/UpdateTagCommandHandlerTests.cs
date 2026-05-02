@@ -39,7 +39,7 @@ public class UpdateTagCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(tag);
 
-        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -57,7 +57,7 @@ public class UpdateTagCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Tag);
 
-        await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTagCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -71,7 +71,7 @@ public class UpdateTagCommandHandlerTests
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -86,7 +86,7 @@ public class UpdateTagCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -104,7 +104,7 @@ public class UpdateTagCommandHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetByValue(request.CurrentValue, 1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Tag);
 
-        var result = await Handler.Handle(new UpdateTagCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTagCommand(request), TestContext.Current.CancellationToken);
 
         result.Payload!.Name.Should().Be("Spaces before and after");
     }

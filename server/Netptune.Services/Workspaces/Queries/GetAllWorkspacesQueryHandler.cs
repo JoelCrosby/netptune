@@ -17,6 +17,6 @@ public sealed class GetAllWorkspacesQueryHandler : IRequestHandler<GetAllWorkspa
 
     public ValueTask<List<Workspace>> Handle(GetAllWorkspacesQuery request, CancellationToken cancellationToken)
     {
-        return new ValueTask<List<Workspace>>(UnitOfWork.Workspaces.GetAllAsync());
+        return new ValueTask<List<Workspace>>(UnitOfWork.Workspaces.GetAllAsync(cancellationToken: cancellationToken));
     }
 }

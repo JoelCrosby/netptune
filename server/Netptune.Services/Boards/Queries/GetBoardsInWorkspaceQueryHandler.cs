@@ -21,10 +21,10 @@ public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoards
     public async ValueTask<List<BoardsViewModel>?> Handle(GetBoardsInWorkspaceQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceKey);
+        var workspaceExists = await UnitOfWork.Workspaces.Exists(workspaceKey, cancellationToken);
 
         if (!workspaceExists) return null;
 
-        return await UnitOfWork.Boards.GetBoardViewModels(workspaceKey);
+        return await UnitOfWork.Boards.GetBoardViewModels(workspaceKey, cancellationToken);
     }
 }

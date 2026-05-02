@@ -21,7 +21,7 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
     public async ValueTask<List<WorkspaceUserViewModel>> Handle(GetWorkspaceUsersQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true);
+        var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken);
 
         if (workspaceAppUsers.Count == 0) return [];
 

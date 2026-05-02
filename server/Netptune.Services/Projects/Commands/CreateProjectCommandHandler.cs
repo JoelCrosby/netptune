@@ -30,12 +30,12 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
         return await UnitOfWork.Transaction(async () =>
         {
             var workspaceKey = Identity.GetWorkspaceKey();
-            var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey);
+            var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, cancellationToken: cancellationToken);
 
             if (workspace is null) return ClientResponse<ProjectViewModel>.NotFound;
 
             var user = await Identity.GetCurrentUser();
-            var projectKey = await UnitOfWork.Projects.GenerateProjectKey(request.Request.Name, workspace.Id);
+            var projectKey = await UnitOfWork.Projects.GenerateProjectKey(request.Request.Name, workspace.Id, cancellationToken);
 
             var project = Project.Create(new()
             {
@@ -52,7 +52,7 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 
-            var result = await UnitOfWork.Projects.GetProjectViewModel(project.Id);
+            var result = await UnitOfWork.Projects.GetProjectViewModel(project.Id, cancellationToken);
 
             if (result is null) return ClientResponse<ProjectViewModel>.Failed("Project not found");
 

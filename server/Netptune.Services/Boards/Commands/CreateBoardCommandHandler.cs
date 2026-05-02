@@ -33,7 +33,7 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             throw new Exception($"{nameof(req.ProjectId)} is required");
         }
 
-        var project = await UnitOfWork.Projects.GetAsync(req.ProjectId.Value, true);
+        var project = await UnitOfWork.Projects.GetAsync(req.ProjectId.Value, true, cancellationToken);
 
         if (project is null) return ClientResponse<BoardViewModel>.NotFound;
 
@@ -52,7 +52,7 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
         board.BoardGroups.Add(new() { Name = "Todo", Type = BoardGroupType.Todo, SortOrder = 1.1D, WorkspaceId = workspaceId });
         board.BoardGroups.Add(new() { Name = "Done", Type = BoardGroupType.Done, SortOrder = 1.2D, WorkspaceId = workspaceId });
 
-        var result = await UnitOfWork.Boards.AddAsync(board);
+        var result = await UnitOfWork.Boards.AddAsync(board, cancellationToken);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

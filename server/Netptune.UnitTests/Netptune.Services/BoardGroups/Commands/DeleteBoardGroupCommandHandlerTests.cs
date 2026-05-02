@@ -30,7 +30,7 @@ public class DeleteBoardGroupCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
-        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -41,7 +41,7 @@ public class DeleteBoardGroupCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
-        await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -52,7 +52,7 @@ public class DeleteBoardGroupCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -63,7 +63,7 @@ public class DeleteBoardGroupCommandHandlerTests
         Identity.GetCurrentUserId().Returns("userId");
         UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        await Handler.Handle(new DeleteBoardGroupCommand(1), CancellationToken.None);
+        await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }

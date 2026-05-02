@@ -25,7 +25,7 @@ public class GetWorkspaceQueryHandlerTests
         var workspace = AutoFixtures.Workspace;
         UnitOfWork.Workspaces.GetBySlug("slug", cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
 
-        var result = await Handler.Handle(new GetWorkspaceQuery("slug"), CancellationToken.None);
+        var result = await Handler.Handle(new GetWorkspaceQuery("slug"), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(workspace);
     }

@@ -50,7 +50,7 @@ public class CreateProjectCommandHandlerTests
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
         UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
 
-        var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -78,7 +78,7 @@ public class CreateProjectCommandHandlerTests
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
         UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
 
-        await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -94,7 +94,7 @@ public class CreateProjectCommandHandlerTests
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new CreateProjectCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }

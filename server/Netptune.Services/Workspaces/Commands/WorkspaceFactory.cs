@@ -25,7 +25,7 @@ internal static class WorkspaceFactory
                 MetaInfo = request.MetaInfo,
             };
 
-            var workspace = await unitOfWork.Workspaces.AddAsync(entity);
+            var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);
 
             await unitOfWork.CompleteAsync(cancellationToken);
 
@@ -41,7 +41,7 @@ internal static class WorkspaceFactory
                 Permissions = permissions,
             });
 
-            var projectKey = await unitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id);
+            var projectKey = await unitOfWork.Projects.GenerateProjectKey(workspace.Slug, workspace.Id, cancellationToken);
 
             var project = Project.Create(new()
             {

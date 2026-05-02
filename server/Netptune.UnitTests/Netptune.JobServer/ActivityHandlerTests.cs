@@ -46,38 +46,38 @@ public class ActivityHandlerTests
             .Returns(1L);
 
         UnitOfWork.Ancestors
-            .GetProjectTaskAncestors(Arg.Any<int>())
+            .GetProjectTaskAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
         UnitOfWork.Ancestors
-            .GetBoardGroupAncestors(Arg.Any<int>())
+            .GetBoardGroupAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
         UnitOfWork.Ancestors
-            .GetBoardAncestors(Arg.Any<int>())
+            .GetBoardAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
         UnitOfWork.Ancestors
-            .GetProjectAncestors(Arg.Any<int>())
+            .GetProjectAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
         UnitOfWork.ActivityLogs
-            .AddAsync(Arg.Any<ActivityLog>())
+            .AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>())
             .Returns(x => x.Arg<ActivityLog>());
 
         UnitOfWork.Workspaces
-            .GetSlugsByIds(Arg.Any<IEnumerable<int>>())
+            .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, string> { [WorkspaceId] = "test-workspace" });
 
         UnitOfWork.WorkspaceUsers
-            .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>())
+            .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, List<string>>
             {
                 [WorkspaceId] = [ActorUserId, OtherUserId1, OtherUserId2],
             });
 
         UnitOfWork.Notifications
-            .AddRangeAsync(Arg.Any<IEnumerable<Notification>>())
+            .AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
         Handler = new(UnitOfWork, Redis);
@@ -97,7 +97,7 @@ public class ActivityHandlerTests
     {
         var message = new ActivityMessage([BuildEvent(), BuildEvent()]);
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.ActivityLogs.Received(2).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
         await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
@@ -108,7 +108,7 @@ public class ActivityHandlerTests
     {
         var message = new ActivityMessage(BuildEvent());
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Is<IEnumerable<Notification>>(notifications =>
             // ReSharper disable PossibleMultipleEnumeration
@@ -127,7 +127,7 @@ public class ActivityHandlerTests
 
         var message = new ActivityMessage(BuildEvent());
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.DidNotReceive().AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), TestContext.Current.CancellationToken);
         await Subscriber.DidNotReceive().PublishAsync(Arg.Any<RedisChannel>(), Arg.Any<RedisValue>(), Arg.Any<CommandFlags>());
@@ -147,7 +147,7 @@ public class ActivityHandlerTests
 
         var message = new ActivityMessage(@event);
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Is<IEnumerable<Notification>>(notifications =>
             notifications.All(n =>
@@ -177,7 +177,7 @@ public class ActivityHandlerTests
 
         var message = new ActivityMessage(@event);
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Is<IEnumerable<Notification>>(notifications =>
                 notifications.All(n => n.Link == expectedLink)), TestContext.Current.CancellationToken);
@@ -188,7 +188,7 @@ public class ActivityHandlerTests
     {
         var message = new ActivityMessage(BuildEvent());
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await Subscriber.Received(1).PublishAsync(
             Arg.Is<RedisChannel>(c => c == RedisChannel.Literal($"notifications:{OtherUserId1}")),
@@ -211,7 +211,7 @@ public class ActivityHandlerTests
     {
         var message = new ActivityMessage([BuildEvent(), BuildEvent(), BuildEvent()]);
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Workspaces.Received(1).GetSlugsByIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
         await UnitOfWork.WorkspaceUsers.Received(1).GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
@@ -225,7 +225,7 @@ public class ActivityHandlerTests
 
         var message = new ActivityMessage(BuildEvent());
 
-        await Handler.Handle(message, CancellationToken.None);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.DidNotReceive().AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), TestContext.Current.CancellationToken);
     }

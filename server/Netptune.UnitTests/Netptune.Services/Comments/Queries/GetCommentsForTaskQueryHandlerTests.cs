@@ -35,7 +35,7 @@ public class GetCommentsForTaskQueryHandlerTests
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Comments.GetCommentViewModelsForTask(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModels);
 
-        var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), CancellationToken.None);
+        var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
         result.Count.Should().Be(1);
@@ -48,7 +48,7 @@ public class GetCommentsForTaskQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Tasks.GetTaskInternalId(Arg.Any<string>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), CancellationToken.None);
+        var result = await Handler.Handle(new GetCommentsForTaskQuery("task-id"), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

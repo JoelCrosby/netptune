@@ -26,7 +26,7 @@ public class GetAllWorkspacesQueryHandlerTests
         var workspaces = new List<Workspace> { AutoFixtures.Workspace };
         UnitOfWork.Workspaces.GetAllAsync(cancellationToken: TestContext.Current.CancellationToken).Returns(workspaces);
 
-        var result = await Handler.Handle(new GetAllWorkspacesQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetAllWorkspacesQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(workspaces);
     }

@@ -25,7 +25,7 @@ public class GetTaskQueryHandlerTests
         var task = AutoFixtures.TaskViewModel;
         UnitOfWork.Tasks.GetTaskViewModel(1, TestContext.Current.CancellationToken).Returns(task);
 
-        var result = await Handler.Handle(new GetTaskQuery(1), CancellationToken.None);
+        var result = await Handler.Handle(new GetTaskQuery(1), TestContext.Current.CancellationToken);
 
         result.Should().BeEquivalentTo(task);
     }

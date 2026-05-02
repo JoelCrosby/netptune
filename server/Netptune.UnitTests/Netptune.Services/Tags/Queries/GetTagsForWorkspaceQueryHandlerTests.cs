@@ -35,7 +35,7 @@ public class GetTagsForWorkspaceQueryHandlerTests
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Tags.GetViewModelsForWorkspace(1, TestContext.Current.CancellationToken).Returns(tags);
 
-        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), TestContext.Current.CancellationToken);
 
         result.Should().NotBeEmpty();
         result.Count.Should().Be(1);
@@ -47,7 +47,7 @@ public class GetTagsForWorkspaceQueryHandlerTests
         Identity.GetWorkspaceKey().Returns("key");
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), CancellationToken.None);
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }

@@ -23,7 +23,7 @@ public sealed class DeleteWorkspacePermanentCommandHandler : IRequestHandler<Del
 
     public async ValueTask<ClientResponse> Handle(DeleteWorkspacePermanentCommand request, CancellationToken cancellationToken)
     {
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Key);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(request.Key, cancellationToken: cancellationToken);
 
         if (workspace is null) return ClientResponse.NotFound;
 

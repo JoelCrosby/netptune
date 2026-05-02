@@ -34,7 +34,7 @@ public class DeleteTasksCommandHandlerTests
             new () { Id = 3 },
         });
 
-        var result = await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
+        var result = await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -50,7 +50,7 @@ public class DeleteTasksCommandHandlerTests
             new () { Id = 3 },
         });
 
-        await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
+        await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Tasks.Received(1).DeletePermanent(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
     }
@@ -66,7 +66,7 @@ public class DeleteTasksCommandHandlerTests
             new () { Id = 3 },
         });
 
-        await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
+        await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -82,7 +82,7 @@ public class DeleteTasksCommandHandlerTests
             new () { Id = 3 },
         });
 
-        await Handler.Handle(new DeleteTasksCommand(ids), CancellationToken.None);
+        await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
         Activity.Received(1).LogMany(Arg.Any<Action<ActivityMultipleOptions>>());
     }

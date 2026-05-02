@@ -25,10 +25,10 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
     public async ValueTask<ClientResponse> Handle(ReassignTasksCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
-        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId);
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
 
-        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds);
+        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, cancellationToken: cancellationToken);
 
         foreach (var task in tasks)
         {

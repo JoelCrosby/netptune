@@ -46,17 +46,17 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var emailList = request.Emails.Select(e => e.Trim().IdentityNormalize()).ToHashSet();
-        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true);
+        var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null) return ClientResponse<InviteUserResponse>.Failed("workspace not found");
         if (emailList.Count == 0) return ClientResponse<InviteUserResponse>.Failed("no email addresses provided");
 
-        var users = await UnitOfWork.Users.GetByEmailRange(emailList, true);
+        var users = await UnitOfWork.Users.GetByEmailRange(emailList, true, cancellationToken);
         var userIds = users.ConvertAll(user => user.Id);
-        var existingUsers = await UnitOfWork.Users.IsUserInWorkspaceRange(userIds, workspace.Id);
+        var existingUsers = await UnitOfWork.Users.IsUserInWorkspaceRange(userIds, workspace.Id, cancellationToken);
         var newUserIds = userIds.Except(existingUsers.Select(x => x.Id)).ToHashSet();
 
-        await UnitOfWork.Users.InviteUsersToWorkspace(newUserIds, workspace.Id);
+        await UnitOfWork.Users.InviteUsersToWorkspace(newUserIds, workspace.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         var existingUserEmails = existingUsers.Select(user => user.Email!.IdentityNormalize()).ToHashSet();

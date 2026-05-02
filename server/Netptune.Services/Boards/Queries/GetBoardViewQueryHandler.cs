@@ -23,14 +23,14 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
     public async ValueTask<ClientResponse<BoardView>> Handle(GetBoardViewQuery request, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
-        var nullableBoardId = await UnitOfWork.Boards.GetIdByIdentifier(request.Identifier, workspaceId);
+        var nullableBoardId = await UnitOfWork.Boards.GetIdByIdentifier(request.Identifier, workspaceId, cancellationToken);
 
         if (!nullableBoardId.HasValue) return ClientResponse<BoardView>.NotFound;
 
         var boardId = nullableBoardId.Value;
 
-        var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, request.Filter?.Term);
-        var board = await UnitOfWork.Boards.GetViewModel(boardId, true);
+        var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, request.Filter?.Term, cancellationToken);
+        var board = await UnitOfWork.Boards.GetViewModel(boardId, true, cancellationToken);
 
         if (groups is null || board is null) return ClientResponse<BoardView>.Failed();
 
@@ -55,7 +55,7 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
             }).ToList();
         }
 
-        var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true);
+        var userEntities = await UnitOfWork.Users.GetAllByIdAsync(userIds, true, cancellationToken);
         var users = userEntities.Select(user => user.ToViewModel());
 
         return new BoardView

@@ -51,7 +51,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
-        var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -76,7 +76,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
-        await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }
@@ -91,7 +91,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Workspaces
             .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsForAnyArgs(AutoFixtures.Workspace);
 
-        var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -104,7 +104,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Workspaces
             .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -124,7 +124,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
-        var result = await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -144,7 +144,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetWithTasksInGroups(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup.WithTasks());
 
-        await Handler.Handle(new CreateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
         Activity.Received(1).Log(Arg.Any<Action<ActivityOptions>>());
     }

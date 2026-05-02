@@ -64,10 +64,10 @@ public class UpdateTaskCommandHandlerTests
 
     private void SetupHandlerDependencies(UpdateProjectTaskRequest request, ProjectTask task, TaskViewModel viewModel)
     {
-        UnitOfWork.Tasks.GetAsync(request.Id).Returns(task);
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>()).Returns(AutoFixtures.BoardGroups);
-        UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(AutoFixtures.Board);
+        UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: Arg.Any<CancellationToken>()).Returns(task);
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(viewModel);
+        UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>(), cancellationToken: Arg.Any<CancellationToken>()).Returns(AutoFixtures.BoardGroups);
+        UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(AutoFixtures.Board);
         UnitOfWork.InvokeTransaction();
     }
 
@@ -88,7 +88,7 @@ public class UpdateTaskCommandHandlerTests
 
         SetupHandlerDependencies(request, task, viewModel);
 
-        var result = await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
@@ -107,7 +107,7 @@ public class UpdateTaskCommandHandlerTests
         var request = Fixture.Build<UpdateProjectTaskRequest>().Create();
         UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
-        var result = await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -126,7 +126,7 @@ public class UpdateTaskCommandHandlerTests
 
         SetupHandlerDependencies(request, task, viewModel);
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>());
     }
@@ -141,7 +141,7 @@ public class UpdateTaskCommandHandlerTests
         SetupHandlerDependencies(request, task, viewModel);
         var loggedTypes = CaptureLoggedActivityTypes();
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().Contain(ActivityType.ModifyPriority);
     }
@@ -156,7 +156,7 @@ public class UpdateTaskCommandHandlerTests
         SetupHandlerDependencies(request, task, viewModel);
         var loggedTypes = CaptureLoggedActivityTypes();
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().NotContain(ActivityType.ModifyPriority);
     }
@@ -176,7 +176,7 @@ public class UpdateTaskCommandHandlerTests
         SetupHandlerDependencies(request, task, viewModel);
         var loggedTypes = CaptureLoggedActivityTypes();
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().Contain(ActivityType.ModifyEstimate);
     }
@@ -196,7 +196,7 @@ public class UpdateTaskCommandHandlerTests
         SetupHandlerDependencies(request, task, viewModel);
         var loggedTypes = CaptureLoggedActivityTypes();
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().Contain(ActivityType.ModifyEstimate);
     }
@@ -216,7 +216,7 @@ public class UpdateTaskCommandHandlerTests
         SetupHandlerDependencies(request, task, viewModel);
         var loggedTypes = CaptureLoggedActivityTypes();
 
-        await Handler.Handle(new UpdateTaskCommand(request), CancellationToken.None);
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().NotContain(ActivityType.ModifyEstimate);
     }
