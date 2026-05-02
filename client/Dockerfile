@@ -16,6 +16,6 @@ RUN node scripts/embed-build-meta.js
 
 FROM nginx:stable-alpine AS final
 RUN apk upgrade --no-cache
-COPY --from=build /client/dist/netptune /usr/share/nginx/html
+COPY --from=build /client/dist/netptune/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 EXPOSE 80
