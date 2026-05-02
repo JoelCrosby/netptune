@@ -52,14 +52,15 @@ export const authInterceptor = (
       );
     }
 
-    return refreshTokenRequest$.pipe(
-      switchMap(() => next(req)),
+    const refreshWithLogoutOnFailure$ = refreshTokenRequest$.pipe(
       catchError((err) => {
         store.dispatch(logoutSuccess());
         void router.navigate(['/auth/login']);
         return throwError(() => err);
       })
     );
+
+    return refreshWithLogoutOnFailure$.pipe(switchMap(() => next(req)));
   };
 
   if (!isApiRequest(req)) {
