@@ -62,6 +62,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             COMMIT=${{ github.sha }}
+            GITHUB_REF=${{ github.ref }}
             BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+            RUN_ID=${{ github.run_id }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
