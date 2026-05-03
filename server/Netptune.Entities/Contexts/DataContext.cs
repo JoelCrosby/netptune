@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Entities.Interceptors;
 
@@ -51,7 +53,11 @@ public class DataContext : IdentityDbContext<AppUser>
         if (optionsBuilder.IsConfigured) return;
 
         optionsBuilder
-            .UseNpgsql("Host=localhost;Database=netptune;Username=postgres;")
+            .UseNpgsql("Host=localhost;Database=netptune;Username=postgres;", npgsql =>
+            {
+                npgsql.MapEnum<WorkspaceRole>();
+                npgsql.MapEnum<SprintStatus>();
+            })
             .UseSnakeCaseNamingConvention()
             .AddInterceptors(new AuditLogImmutabilityInterceptor());
     }

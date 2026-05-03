@@ -59,6 +59,6 @@ public class SprintEntityMap : WorkspaceEntityMap<Sprint, int>
         builder
             .HasIndex(sprint => sprint.ProjectId)
             .IsUnique()
-            .HasFilter("status = 1 AND is_deleted = false");
+            .HasFilter("status = 'active'::sprint_status AND is_deleted = false");
     }
 }

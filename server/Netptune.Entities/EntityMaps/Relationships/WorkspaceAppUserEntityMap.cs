@@ -30,7 +30,7 @@ public class WorkspaceAppUserEntityMap : KeyedEntityMap<WorkspaceAppUser, int>
 
         builder
             .Property(workspaceUser => workspaceUser.Role)
-            .HasConversion<int>()
+            .HasSentinel((WorkspaceRole)(-1))
             .HasDefaultValue(WorkspaceRole.Member);
 
         builder

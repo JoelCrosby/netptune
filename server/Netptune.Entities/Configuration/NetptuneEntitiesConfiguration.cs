@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Authorization;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Options;
 using Netptune.Entities.Contexts;
 using Netptune.Entities.Interceptors;
@@ -23,6 +25,8 @@ public static class NetptuneEntitiesConfiguration
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         #pragma warning disable CS0618 // Type or member is obsolete
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceRole>();
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<SprintStatus>();
         NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
         #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -35,7 +39,11 @@ public static class NetptuneEntitiesConfiguration
         services.AddDbContext<DataContext>(options =>
         {
             options
-                .UseNpgsql(netptuneEntitiesOptions.ConnectionString)
+                .UseNpgsql(netptuneEntitiesOptions.ConnectionString, npgsql =>
+                {
+                    npgsql.MapEnum<WorkspaceRole>();
+                    npgsql.MapEnum<SprintStatus>();
+                })
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(new AuditLogImmutabilityInterceptor());
         });

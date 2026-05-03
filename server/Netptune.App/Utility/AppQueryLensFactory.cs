@@ -2,6 +2,8 @@ using EFQueryLens.Core;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
+using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
 
 namespace EFQueryLens.Core
@@ -23,7 +25,11 @@ namespace Netptune.App.Utility
         {
             const string connectionString = "Host=ef_querylens_offline;Database=ef_querylens_offline;Username=ef_querylens_offline;Password=ef_querylens_offline";
             var options = new DbContextOptionsBuilder<DataContext>()
-                .UseNpgsql(connectionString)
+                .UseNpgsql(connectionString, npgsql =>
+                {
+                    npgsql.MapEnum<WorkspaceRole>();
+                    npgsql.MapEnum<SprintStatus>();
+                })
                 .Options;
 
             return new DataContext(options);
