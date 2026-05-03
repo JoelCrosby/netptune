@@ -114,7 +114,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
         query = query.OrderByDescending(x => x.UpdatedAt);
 
-        if (filter?.Take is > 0)
+        if (filter.Take is > 0)
         {
             query = query.Take(Math.Min(filter.Take.Value, 100));
         }
