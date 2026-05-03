@@ -224,6 +224,8 @@ public static class AuthEndpoints
 
     public static IResult HandleGithubLogin(HttpContext context)
     {
+        context.Request.Scheme = Uri.UriSchemeHttps;
+
         return Results.Challenge(new AuthenticationProperties
         {
             RedirectUri = "/api/auth/provider-login-redirect",
