@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { ShellService } from './shell.service';
 import { NotificationBellComponent } from '@app/entry/components/notification-bell/notification-bell.component';
 import { CurrentSprintDropdownComponent } from './current-sprint-dropdown.component';
+import { ProfileMenuComponent } from './profile-menu.component';
 
 @Component({
   selector: 'app-shell-navbar',
@@ -12,6 +13,7 @@ import { CurrentSprintDropdownComponent } from './current-sprint-dropdown.compon
     PageHeaderBackLinkComponent,
     NotificationBellComponent,
     CurrentSprintDropdownComponent,
+    ProfileMenuComponent,
   ],
   template: `
     <div
@@ -23,6 +25,7 @@ import { CurrentSprintDropdownComponent } from './current-sprint-dropdown.compon
       <div class="ml-auto flex items-center justify-end gap-2 py-2">
         <app-current-sprint-dropdown />
         <app-notification-bell />
+        <app-profile-menu />
       </div>
     </div>
   `,
