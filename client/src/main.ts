@@ -48,6 +48,10 @@ bootstrapApplication(AppComponent, {
       const authService = inject(AuthService);
       const store = inject(Store);
 
+      if (window.location.pathname === '/auth/auth-provider-login') {
+        return firstValueFrom(of(null));
+      }
+
       return firstValueFrom(
         authService.refresh().pipe(
           tap((user) => store.dispatch(refreshTokenSuccess({ user }))),

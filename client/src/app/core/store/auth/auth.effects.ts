@@ -64,13 +64,6 @@ export class AuthEffects implements OnInitEffects {
     }
   );
 
-  currentUserFail$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.currentUserFail),
-      map(() => actions.logout({ silent: true }))
-    );
-  });
-
   login$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(

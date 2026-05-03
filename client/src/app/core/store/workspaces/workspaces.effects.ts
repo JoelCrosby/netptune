@@ -58,6 +58,26 @@ export class WorkspacesEffects implements OnInitEffects {
     );
   });
 
+  loadCurrentUserAfterWorkspacesLoad$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadWorkspacesSuccess),
+      concatLatestFrom(() => this.store.select(selectCurrentWorkspace)),
+      map(([{ workspaces }, currentWorkspace]) => {
+        const workspace =
+          currentWorkspace &&
+          workspaces.some((workspace) => workspace.id === currentWorkspace.id)
+            ? currentWorkspace
+            : workspaces[0];
+
+        return workspace ? actions.setCurrentWorkspace({ workspace }) : null;
+      }),
+      filter(
+        (action): action is ReturnType<typeof actions.setCurrentWorkspace> =>
+          action !== null
+      )
+    );
+  });
+
   loadWorkspaces$ = createEffect(
     ({ throttle = 800, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(

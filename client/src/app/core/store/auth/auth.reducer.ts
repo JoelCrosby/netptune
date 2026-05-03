@@ -28,7 +28,6 @@ const reducer = createReducer(
     actions.currentUserFail,
     (state, { error }): AuthState => ({
       ...state,
-      isAuthenticated: false,
       currentUserError: error,
       currentUserLoading: false,
     })
