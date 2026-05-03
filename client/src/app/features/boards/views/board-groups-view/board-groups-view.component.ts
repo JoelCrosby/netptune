@@ -16,10 +16,7 @@ import {
   OnDestroy,
   viewChild,
 } from '@angular/core';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
-import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
-import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import {
   deleteBoard,
   updateBoard,
@@ -36,17 +33,16 @@ import {
   selectBoardGroupsLoaded,
   selectBoardGroupsLoading,
   selectBoardIdentifier,
-  selectBoardProjectId,
-  selectSelectedSprintId,
   selectSelectedBoard,
 } from '@app/core/store/groups/board-groups.selectors';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
+import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
+import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
-import { loadSprints } from '@core/store/sprints/sprints.actions';
-import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
@@ -58,13 +54,13 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
@@ -125,10 +121,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
   boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
-  private boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
-  private boardProjectId = this.store.selectSignal(selectBoardProjectId);
-  selectedSprintId = this.store.selectSignal(selectSelectedSprintId);
-  sprints = this.store.selectSignal(selectAllSprints);
+  boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
 
   siblingIdMap = computed(() => {
     const groups = this.groups();
@@ -165,14 +158,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
       if (!identifier) return;
 
       this.hubService.addToGroup(identifier);
-    });
-
-    effect(() => {
-      const projectId = this.boardProjectId();
-
-      if (!projectId) return;
-
-      this.store.dispatch(loadSprints({ filter: { projectId } }));
     });
   }
 
