@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
+import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
@@ -36,6 +37,10 @@ export class SprintsEffects {
       ofType(actions.loadSprints),
       map(() => loadProjects())
     );
+  });
+
+  onWorkspaceSelected$ = createEffect(() => {
+    return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
   });
 
   loadCurrentSprints$ = createEffect(() => {

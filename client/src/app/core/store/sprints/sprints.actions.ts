@@ -39,6 +39,11 @@ export const loadCurrentSprintsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+export const setSprintTaskFilter = createAction(
+  '[Sprints] Set Sprint Task Filter',
+  props<{ sprintId?: number }>()
+);
+
 export const loadSprintDetail = createAction(
   '[Sprints] Load Sprint Detail',
   props<{ sprintId: number }>()

@@ -36,6 +36,25 @@ export const selectCurrentSprintsLoaded = createSelector(
   (state: SprintsState) => state.currentSprintsLoaded
 );
 
+export const selectSelectedSprintFilterId = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.selectedSprintFilterId
+);
+
+export const selectSelectedSprintFilter = createSelector(
+  selectSelectedSprintFilterId,
+  selectCurrentSprints,
+  selectSprintEntities,
+  (sprintId, currentSprints, sprintEntities) => {
+    if (!sprintId) return undefined;
+
+    return (
+      currentSprints.find((sprint) => sprint.id === sprintId) ??
+      sprintEntities[sprintId]
+    );
+  }
+);
+
 export const selectSprintDetail = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.detail

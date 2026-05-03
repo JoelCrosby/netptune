@@ -7,6 +7,8 @@ import { BoardGroupType } from '@core/models/view-models/board-group-view-model'
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
 import { selectSelectedTags } from '@core/store/tags/tags.selectors';
+import * as SprintActions from '@core/store/sprints/sprints.actions';
+import { selectSelectedSprintFilterId } from '@core/store/sprints/sprints.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -59,24 +61,37 @@ export class BoardGroupsEffects {
         this.route.queryParamMap,
         this.route.queryParams,
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
+        this.store.select(selectSelectedSprintFilterId),
       ]),
       filter(([, , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      switchMap(([_, id, paramMap, params]) =>
-        this.boardGroupsService.get(id as string, params).pipe(
+      switchMap(([_, id, paramMap, params, , selectedSprintFilterId]) => {
+        const sprintId =
+          selectedSprintFilterId ?? getSprintId(paramMap.get('sprintId'));
+        const requestParams = {
+          ...params,
+        };
+
+        if (sprintId !== undefined) {
+          requestParams['sprintId'] = sprintId;
+        } else {
+          delete requestParams['sprintId'];
+        }
+
+        return this.boardGroupsService.get(id as string, requestParams).pipe(
           unwrapClientReposne(),
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,
               selectedIds: paramMap.getAll('users'),
               searchTerm: paramMap.get('term'),
-              sprintId: getSprintId(paramMap.get('sprintId')),
+              sprintId,
             })
           ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadBoardGroupsFail({ error }))
           )
-        )
-      )
+        );
+      })
     );
   });
 
@@ -338,6 +353,17 @@ export class BoardGroupsEffects {
 
   onWorkspaceSelected$ = createEffect(() => {
     return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
+  });
+
+  syncSprintTaskFilterToBoard$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SprintActions.setSprintTaskFilter),
+      concatLatestFrom(() =>
+        this.store.select(RouteSelectors.selectIsBoardGroupsRoute)
+      ),
+      filter(([, isBoardGroupsRoute]) => isBoardGroupsRoute),
+      map(([{ sprintId }]) => actions.setSprintFilter({ sprintId }))
+    );
   });
 
   updateFilters$ = createEffect(() => {

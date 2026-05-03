@@ -54,8 +54,6 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -103,8 +101,6 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     InlineEditInputComponent,
     IconButtonComponent,
     CreateBoardGroupComponent,
-    FormSelectComponent,
-    FormSelectOptionComponent,
   ],
 })
 export class BoardGroupsViewComponent implements OnDestroy {

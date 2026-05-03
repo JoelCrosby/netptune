@@ -8,13 +8,23 @@ import {
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
-import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
+import {
+  loadCurrentSprints,
+  setSprintTaskFilter,
+} from '@core/store/sprints/sprints.actions';
 import {
   selectCurrentSprint,
   selectCurrentSprints,
   selectCurrentSprintsLoaded,
+  selectSelectedSprintFilter,
+  selectSelectedSprintFilterId,
 } from '@core/store/sprints/sprints.selectors';
-import { LucideCalendarDays, LucideChevronDown } from '@lucide/angular';
+import {
+  LucideCalendarDays,
+  LucideCheck,
+  LucideChevronDown,
+  LucideFilterX,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -29,7 +39,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     DropdownMenuComponent,
     MenuItemComponent,
     LucideCalendarDays,
+    LucideCheck,
     LucideChevronDown,
+    LucideFilterX,
   ],
   template: `
     @if (canReadSprints() && currentSprintsLoaded()) {
@@ -58,6 +70,12 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
               type="button"
               class="min-w-72"
               (click)="onSprintSelected(sprint.id, sprintMenu)">
+              <svg
+                lucideCheck
+                class="h-4 w-4 shrink-0"
+                [class.opacity-100]="selectedSprintFilterId() === sprint.id"
+                [class.opacity-0]="selectedSprintFilterId() !== sprint.id"
+                aria-hidden="true"></svg>
               <span class="flex min-w-0 flex-col items-start">
                 <span class="max-w-64 truncate font-medium">
                   {{ sprint.name }}
@@ -66,6 +84,18 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                   {{ sprint.projectName }}
                 </span>
               </span>
+            </button>
+          }
+
+          @if (selectedSprintFilterId()) {
+            <div class="border-border/50 my-1 border-t"></div>
+
+            <button
+              app-menu-item
+              type="button"
+              (click)="onSprintFilterRemoved(sprintMenu)">
+              <svg lucideFilterX class="h-4 w-4 shrink-0"></svg>
+              Remove sprint filter
             </button>
           }
 
@@ -99,8 +129,20 @@ export class CurrentSprintDropdownComponent {
   readonly currentSprintsLoaded = this.store.selectSignal(
     selectCurrentSprintsLoaded
   );
+  readonly selectedSprintFilterId = this.store.selectSignal(
+    selectSelectedSprintFilterId
+  );
+  readonly selectedSprintFilter = this.store.selectSignal(
+    selectSelectedSprintFilter
+  );
 
   readonly triggerLabel = computed(() => {
+    const selectedSprint = this.selectedSprintFilter();
+
+    if (selectedSprint) {
+      return selectedSprint.name;
+    }
+
     const sprints = this.currentSprints();
 
     if (sprints.length === 1) {
@@ -120,9 +162,12 @@ export class CurrentSprintDropdownComponent {
 
   onSprintSelected(sprintId: number, menu: DropdownMenuComponent) {
     menu.close();
-    void this.router.navigate(['./sprints', sprintId], {
-      relativeTo: this.route,
-    });
+    this.store.dispatch(setSprintTaskFilter({ sprintId }));
+  }
+
+  onSprintFilterRemoved(menu: DropdownMenuComponent) {
+    menu.close();
+    this.store.dispatch(setSprintTaskFilter({ sprintId: undefined }));
   }
 
   onSprintsSelected(menu: DropdownMenuComponent) {

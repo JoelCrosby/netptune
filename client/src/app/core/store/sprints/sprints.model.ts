@@ -16,6 +16,7 @@ export const initialState: SprintsState = adapter.getInitialState({
   currentSprints: [],
   currentSprintsLoading: false,
   currentSprintsLoaded: false,
+  selectedSprintFilterId: undefined,
   detail: undefined,
   detailLoading: false,
   availableTasks: [],
@@ -39,6 +40,7 @@ export interface SprintsState extends AsyncEntityState<SprintViewModel> {
   currentSprints: SprintViewModel[];
   currentSprintsLoading: boolean;
   currentSprintsLoaded: boolean;
+  selectedSprintFilterId?: number;
   detail?: SprintDetailViewModel;
   detailLoading: boolean;
   availableTasks: TaskViewModel[];

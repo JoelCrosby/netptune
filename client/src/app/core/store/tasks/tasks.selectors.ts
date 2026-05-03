@@ -3,10 +3,18 @@ import { createSelector } from '@ngrx/store';
 import { adapter, TasksState } from './tasks.model';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
 
 const { selectAll } = adapter.getSelectors();
 
-export const selectTasks = createSelector(selectTasksFeature, selectAll);
+export const selectAllTasks = createSelector(selectTasksFeature, selectAll);
+
+export const selectTasks = createSelector(
+  selectAllTasks,
+  selectSelectedSprintFilterId,
+  (tasks, sprintId) =>
+    sprintId ? tasks.filter((task) => task.sprintId === sprintId) : tasks
+);
 
 export const selectTasksLoading = createSelector(
   selectTasksFeature,
