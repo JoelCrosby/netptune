@@ -99,6 +99,10 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
                   [(value)]="endDate" />
               </div>
 
+              @if (dateError) {
+                <p class="text-sm text-red-600">{{ dateError }}</p>
+              }
+
               <button
                 app-flat-button
                 color="primary"
@@ -145,13 +149,13 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
                     <p class="text-sm">{{ sprint.goal }}</p>
                   }
 
-                  <div class="flex items-center justify-between">
+                  <div class="flex flex-col items-baseline gap-2">
                     <span class="text-muted text-sm">
                       {{ sprint.taskCount }} tasks
                     </span>
 
                     <a
-                      app-stroked-button
+                      app-flat-button
                       color="primary"
                       [routerLink]="[sprint.id]">
                       Open
@@ -187,8 +191,8 @@ export class SprintsViewComponent {
     end.setDate(start.getDate() + 14);
 
     return {
-      start: start.toISOString().slice(0, 10),
-      end: end.toISOString().slice(0, 10),
+      start: this.toDateInputValue(start),
+      end: this.toDateInputValue(end),
     };
   });
 
@@ -197,6 +201,7 @@ export class SprintsViewComponent {
   goal = '';
   startDate = this.defaultDates().start;
   endDate = this.defaultDates().end;
+  dateError?: string;
 
   constructor() {
     effect(() => {
@@ -207,7 +212,7 @@ export class SprintsViewComponent {
       }
     });
 
-    this.store.dispatch(loadSprints({}));
+    this.store.dispatch(loadSprints({ filter: { take: 100 } }));
   }
 
   statusLabel(status: SprintStatus) {
@@ -220,6 +225,13 @@ export class SprintsViewComponent {
 
   onCreateSprint() {
     if (!this.projectId || !this.name.trim()) return;
+
+    if (this.endDate < this.startDate) {
+      this.dateError = 'End date must be after start date.';
+      return;
+    }
+
+    this.dateError = undefined;
 
     this.store.dispatch(
       createSprint({
@@ -235,5 +247,13 @@ export class SprintsViewComponent {
 
     this.name = '';
     this.goal = '';
+  }
+
+  private toDateInputValue(date: Date) {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

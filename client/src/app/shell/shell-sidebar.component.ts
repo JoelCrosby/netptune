@@ -11,11 +11,12 @@ import {
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import {
-  LucideBarChart2,
-  LucideCheckSquare,
   LucideCalendarDays,
+  LucideChartNoAxesColumn,
+  LucideIconInput,
   LucideSettings,
   LucideShield,
+  LucideSquareCheckBig,
   LucideTable2,
   LucideUsers,
 } from '@lucide/angular';
@@ -27,6 +28,12 @@ import { ShellMenuLinkComponent } from './shell-menu-link.component';
 import { ShellSidebarCollapseComponent } from './shell-sidebar-collapse.component';
 import { ShellService } from './shell.service';
 import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
+
+interface SidebarLink {
+  label: string;
+  value: string[];
+  icon: LucideIconInput;
+}
 
 @Component({
   selector: 'app-shell-sidebar',
@@ -93,6 +100,10 @@ export class ShellSidebarComponent {
     selectHasPermission(netptunePermissions.audit.read)
   );
 
+  canReadSprints = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.read)
+  );
+
   links = computed(() => {
     const links = [];
 
@@ -100,17 +111,29 @@ export class ShellSidebarComponent {
       links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
     }
 
-    return [
-      { label: 'Projects', value: ['./projects'], icon: LucideBarChart2 },
+    const primaryLinks: SidebarLink[] = [
+      {
+        label: 'Projects',
+        value: ['./projects'],
+        icon: LucideChartNoAxesColumn,
+      },
       { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
-      { label: 'Sprints', value: ['./sprints'], icon: LucideCalendarDays },
       {
         label: 'Tasks',
         value: ['./tasks'],
-        icon: LucideCheckSquare,
+        icon: LucideSquareCheckBig,
       },
-      ...links,
     ];
+
+    if (this.canReadSprints()) {
+      primaryLinks.splice(2, 0, {
+        label: 'Sprints',
+        value: ['./sprints'],
+        icon: LucideCalendarDays,
+      });
+    }
+
+    return [...primaryLinks, ...links];
   });
 
   bottomLinks = computed(() => {
