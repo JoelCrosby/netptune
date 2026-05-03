@@ -11,6 +11,7 @@ public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
         string workspaceKey,
         int? projectId = null,
         SprintStatus? status = null,
+        int? take = null,
         CancellationToken cancellationToken = default);
 
     Task<SprintDetailViewModel?> GetSprintDetailAsync(

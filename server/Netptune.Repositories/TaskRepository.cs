@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
@@ -99,11 +100,26 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
 
-    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
-        return Entities
+        filter ??= new TaskFilter();
+
+        var query = Entities
             .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
-            .OrderByDescending(x => x.UpdatedAt)
+            .Where(x => !filter.ProjectId.HasValue || x.ProjectId == filter.ProjectId.Value)
+            .Where(x => !filter.ExcludeSprintId.HasValue || x.SprintId == null || x.SprintId != filter.ExcludeSprintId.Value)
+            .Where(x => string.IsNullOrWhiteSpace(filter.Search) ||
+                        x.Name.ToLower().Contains(filter.Search.ToLower()) ||
+                        x.Project!.Key.ToLower().Contains(filter.Search.ToLower()));
+
+        query = query.OrderByDescending(x => x.UpdatedAt);
+
+        if (filter?.Take is > 0)
+        {
+            query = query.Take(Math.Min(filter.Take.Value, 100));
+        }
+
+        return query
             .Select(TaskToViewModel())
             .ToReadonlyListAsync(isReadonly, cancellationToken);
     }

@@ -23,15 +23,23 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         string workspaceKey,
         int? projectId = null,
         SprintStatus? status = null,
+        int? take = null,
         CancellationToken cancellationToken = default)
     {
-        return Entities
+        var query = Entities
             .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => !projectId.HasValue || sprint.ProjectId == projectId.Value)
             .Where(sprint => !status.HasValue || sprint.Status == status.Value)
             .OrderByDescending(sprint => sprint.Status == SprintStatus.Active)
             .ThenByDescending(sprint => sprint.StartDate)
-            .AsNoTracking()
+            .AsNoTracking();
+
+        if (take is > 0)
+        {
+            query = query.Take(Math.Min(take.Value, 100));
+        }
+
+        return query
             .Select(SprintToViewModel())
             .ToListAsync(cancellationToken);
     }

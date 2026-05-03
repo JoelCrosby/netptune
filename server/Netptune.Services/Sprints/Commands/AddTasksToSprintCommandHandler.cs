@@ -35,9 +35,11 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
 
         var taskIds = request.Request.TaskIds.Distinct().ToList();
 
+        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, cancellationToken: cancellationToken);
+
         foreach (var taskId in taskIds)
         {
-            var task = await UnitOfWork.Tasks.GetAsync(taskId, cancellationToken: cancellationToken);
+            var task = tasks.FirstOrDefault(candidate => candidate.Id == taskId);
 
             if (task is null || task.IsDeleted || task.WorkspaceId != sprint.WorkspaceId)
             {

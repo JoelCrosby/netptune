@@ -31,7 +31,7 @@ public static class SprintsEndpoints
         [AsParameters] SprintFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, filter.Status), cancellationToken);
+        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, filter.Status, filter.Take), cancellationToken);
 
         return Results.Ok(result);
     }

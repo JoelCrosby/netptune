@@ -27,10 +27,12 @@ public static class TasksEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetTasks(IMediator mediator,
+    public static async Task<IResult> HandleGetTasks(
+        IMediator mediator,
+        [AsParameters] TaskFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTasksQuery(), cancellationToken);
+        var result = await mediator.Send(new GetTasksQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }
