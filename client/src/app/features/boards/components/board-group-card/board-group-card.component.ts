@@ -20,7 +20,7 @@ import {
   taskPriorityLabels,
 } from '@core/enums/task-priority';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { SprintStatus } from '@core/enums/sprint-status';
+import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 
 @Component({
   selector: 'app-board-group-card',
@@ -33,6 +33,7 @@ import { SprintStatus } from '@core/enums/sprint-status';
     LucideCheck,
     NgClass,
     TooltipDirective,
+    SprintBadgeComponent,
   ],
   template: `<app-card
     class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-2! text-[14px] tracking-[.1px]"
@@ -42,14 +43,10 @@ import { SprintStatus } from '@core/enums/sprint-status';
 
     <div class="mt-4 flex flex-row flex-wrap">
       @if (task().sprintName) {
-        <div
-          class="my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem] text-xs font-medium"
-          [class.bg-green-100]="task().sprintStatus === sprintStatus.active"
-          [class.text-green-800]="task().sprintStatus === sprintStatus.active"
-          [class.bg-neutral-100]="task().sprintStatus !== sprintStatus.active"
-          [class.text-neutral-700]="task().sprintStatus !== sprintStatus.active">
-          {{ task().sprintName }}
-        </div>
+        <app-sprint-badge
+          class="my-[.2rem] mr-[.2rem] ml-0"
+          [name]="task().sprintName!"
+          [status]="task().sprintStatus" />
       }
 
       @for (tag of task().tags; track tag) {
@@ -102,7 +99,6 @@ import { SprintStatus } from '@core/enums/sprint-status';
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
-  readonly sprintStatus = SprintStatus;
   readonly priority = computed(() => this.task().priority);
 
   priorityVisible = computed(() => {

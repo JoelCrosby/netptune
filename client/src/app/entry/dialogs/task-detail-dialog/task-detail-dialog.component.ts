@@ -18,6 +18,7 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
 import { LucideCheck } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
+import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { TaskDetailCommentsComponent } from './task-detail-comments.component';
@@ -35,10 +36,9 @@ import { TaskDetailService } from './task-detail.service';
       <div>
         <div class="mb-1 flex flex-row items-center justify-end gap-4">
           @if (task.sprintName) {
-            <span
-              class="bg-neutral-100 text-neutral-700 rounded px-2 py-1 text-xs font-semibold">
-              {{ task.sprintName }}
-            </span>
+            <app-sprint-badge
+              [name]="task.sprintName"
+              [status]="task.sprintStatus" />
           }
           @if (task.status === 1) {
             <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
@@ -70,6 +70,7 @@ import { TaskDetailService } from './task-detail.service';
     ActivityMenuComponent,
     DialogActionsDirective,
     SpinnerComponent,
+    SprintBadgeComponent,
     TaskDates,
     TaskScopeIdComponent,
     TaskDetailPropertiesComponent,

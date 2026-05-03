@@ -23,6 +23,7 @@ import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
+import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 
 @Component({
   selector: 'app-task-list-item',
@@ -35,6 +36,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
     LucideTrash2,
     CheckboxComponent,
     AvatarComponent,
+    SprintBadgeComponent,
     DropdownMenuComponent,
     MenuItemComponent,
   ],
@@ -70,10 +72,10 @@ import { netptunePermissions } from '@app/core/auth/permissions';
       </div>
 
       @if (task().sprintName) {
-        <span
-          class="bg-neutral-100 text-neutral-700 mr-2 max-w-36 flex-none truncate rounded px-2 py-1 text-xs font-semibold">
-          {{ task().sprintName }}
-        </span>
+        <app-sprint-badge
+          class="mr-2 max-w-36 flex-none"
+          [name]="task().sprintName!"
+          [status]="task().sprintStatus" />
       }
 
       @if (task().status === 1) {
