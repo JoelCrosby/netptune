@@ -49,6 +49,7 @@ public static class AutoFixtures
         .Without(p => p.ProjectUsers)
         .Without(p => p.ProjectTasks)
         .Without(p => p.ProjectPosts)
+        .Without(p => p.Sprints)
         .With(p => p.ProjectBoards, new List<Board> { Board })
         .WithoutWorkspace()
         .With(p => p.Owner, AppUser)
@@ -65,6 +66,7 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskInBoardGroups)
         .Without(p => p.ProjectTaskTags)
         .Without(p => p.Tags)
+        .Without(p => p.Sprint)
         .With(p => p.Workspace, Workspace)
         .WithoutAuditable()
         .Create();
@@ -167,6 +169,7 @@ public static class AutoFixtures
             .Without(p => p.ProjectTasks)
             .Without(p => p.ProjectPosts)
             .Without(p => p.ProjectBoards)
+            .Without(p => p.Sprints)
             .Without(p => p.Workspace)
             .With(p => p.Id, 1)
             .WithoutWorkspace()

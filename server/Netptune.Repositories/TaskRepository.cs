@@ -28,6 +28,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.ProjectTaskAppUsers)
                 .ThenInclude(x => x.User)
             .Include(x => x.Project)
+            .Include(x => x.Sprint)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
             .AsSplitQuery()
@@ -124,6 +125,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             EstimateType = x.EstimateType,
             EstimateValue = x.EstimateValue,
             ProjectId = x.ProjectId,
+            SprintId = x.SprintId,
+            SprintName = x.Sprint == null ? null : x.Sprint.Name,
+            SprintStatus = x.Sprint == null ? null : x.Sprint.Status,
             WorkspaceId = x.WorkspaceId,
             WorkspaceKey = x.Workspace.Slug,
             CreatedAt = x.CreatedAt,
@@ -171,6 +175,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , o.lastname          AS owner_lastname
                      , o.email             AS owner_email
                      , t.name              AS tag
+                     , s.name              AS sprint_name
+                     , s.status            AS sprint_status
+                     , s.start_date        AS sprint_start_date
+                     , s.end_date          AS sprint_end_date
 
                 FROM workspaces w
                          LEFT JOIN projects p on p.workspace_id = w.id
@@ -183,6 +191,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
                          LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
                          LEFT JOIN users u on ptau.user_id = u.id
+                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
 
                 WHERE w.slug = @workspaceKey
 
@@ -223,6 +232,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , o.lastname          AS owner_lastname
                      , o.email             AS owner_email
                      , t.name              AS tag
+                     , s.name              AS sprint_name
+                     , s.status            AS sprint_status
+                     , s.start_date        AS sprint_start_date
+                     , s.end_date          AS sprint_end_date
 
                 FROM workspaces w
                          LEFT JOIN projects p on p.workspace_id = w.id
@@ -235,6 +248,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
                          LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
                          LEFT JOIN users u on ptau.user_id = u.id
+                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
 
                 WHERE w.slug = @workspaceKey
 
@@ -292,6 +306,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Owner = row.Owner_Email,
                 Project = row.Project_Name,
                 Group = row.Board_Group_Name,
+                Sprint = row.Sprint_Name,
+                SprintStatus = row.Sprint_Status?.ToString(),
+                SprintStartDate = row.Sprint_Start_Date,
+                SprintEndDate = row.Sprint_End_Date,
                 Tags = Set(row.Tag),
             });
 

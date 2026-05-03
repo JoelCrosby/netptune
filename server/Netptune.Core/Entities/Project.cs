@@ -30,6 +30,9 @@ public record Project : WorkspaceEntity<int>
     public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
 
     [JsonIgnore]
+    public ICollection<Sprint> Sprints { get; set; } = new HashSet<Sprint>();
+
+    [JsonIgnore]
     public ICollection<Post> ProjectPosts { get; set; } = new HashSet<Post>();
 
     [JsonIgnore]

@@ -31,6 +31,14 @@ public class ExportTaskViewModel
     public string? Project { get; init; }
 
     public string? Board { get; init; }
+
+    public string? Sprint { get; init; }
+
+    public string? SprintStatus { get; init; }
+
+    public DateTime? SprintStartDate { get; init; }
+
+    public DateTime? SprintEndDate { get; init; }
 }
 
 public sealed class ExportTaskViewModelMap : ClassMap<ExportTaskViewModel>

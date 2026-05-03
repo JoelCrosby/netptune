@@ -8,6 +8,8 @@ public record BoardGroupsFilter
 
     public string? Term { get; init; }
 
+    public int? SprintId { get; init; }
+
     public static BoardGroupsFilter Empty()
     {
         return new BoardGroupsFilter

@@ -51,6 +51,12 @@ public class BoardViewTask
 
     public int ProjectId { get; set; }
 
+    public int? SprintId { get; set; }
+
+    public string? SprintName { get; set; }
+
+    public SprintStatus? SprintStatus { get; set; }
+
     public int WorkspaceId { get; set; }
 
     public string WorkspaceKey { get; set; } = null!;

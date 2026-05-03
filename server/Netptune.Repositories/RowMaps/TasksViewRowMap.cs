@@ -42,6 +42,14 @@ public class TasksViewRowMap
 
     public string? Tag { get; set; }
 
+    public string? Sprint_Name { get; set; }
+
+    public SprintStatus? Sprint_Status { get; set; }
+
+    public DateTime? Sprint_Start_Date { get; set; }
+
+    public DateTime? Sprint_End_Date { get; set; }
+
     public DateTime Task_Created_At { get; set; }
 
     public DateTime? Task_Updated_At { get; set; }

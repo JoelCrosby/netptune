@@ -10,4 +10,5 @@ public enum EntityType
     Task = 5,
     Comment,
     Tag,
+    Sprint,
 }

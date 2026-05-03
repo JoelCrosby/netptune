@@ -20,6 +20,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Workspace> Workspaces { get; set; } = null!;
     public DbSet<Flag> Flags { get; set; } = null!;
     public DbSet<ProjectTask> ProjectTasks { get; set; } = null!;
+    public DbSet<Sprint> Sprints { get; set; } = null!;
     public DbSet<AppUser> AppUsers { get; set; } = null!;
     public DbSet<Post> Posts { get; set; } = null!;
     public DbSet<Board> Boards { get; set; } = null!;

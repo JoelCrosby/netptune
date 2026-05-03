@@ -39,7 +39,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(groups);
+        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(groups);
         UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
 
@@ -57,7 +57,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).ReturnsNull();
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
@@ -76,7 +76,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns(new List<BoardViewGroup> { AutoFixtures.BoardViewGroup });
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 
@@ -95,7 +95,7 @@ public class GetBoardViewQueryHandlerTests
 
         Identity.GetWorkspaceId().Returns(workspaceId);
         UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
-        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.GetBoardViewGroups(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Boards.GetViewModel(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
         UnitOfWork.Users.GetAllByIdAsync(Arg.Any<List<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(new List<AppUser> { AutoFixtures.AppUser });
 

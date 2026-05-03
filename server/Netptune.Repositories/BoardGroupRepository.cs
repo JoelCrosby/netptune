@@ -37,7 +37,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public async Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? searchTerm = null, CancellationToken cancellationToken = default)
+    public async Task<List<BoardViewGroup>?> GetBoardViewGroups(
+        int boardId,
+        string? searchTerm = null,
+        int? sprintId = null,
+        CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -56,6 +60,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , pt.priority         AS task_priority
                      , pt.estimate_type    AS task_estimate_type
                      , pt.estimate_value   AS task_estimate_value
+                     , s.id                AS sprint_id
+                     , s.name              AS sprint_name
+                     , s.status            AS sprint_status
                      , pt.project_scope_id AS project_scope_id
                      , pt.status           AS task_status
                      , ptibg.sort_order    AS task_sort_order
@@ -75,12 +82,15 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
+                            AND NOT pt.is_deleted
+                            AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
                             {searchQuery}
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
                          LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
                          LEFT JOIN users u on ptau.user_id = u.id
+                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
 
                 WHERE b.id = @boardId
 
@@ -95,7 +105,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          LEFT JOIN workspaces w on b.workspace_id = w.id
                          LEFT JOIN projects p on b.project_id = p.id
                 WHERE b.id = @boardId
-            ", new { boardId, searchPhrase }, cancellationToken: cancellationToken));
+            ", new { boardId, searchPhrase, sprintId }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
         var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
@@ -140,6 +150,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     Priority = row.Task_Priority,
                     EstimateType = row.Task_Estimate_Type,
                     EstimateValue = row.Task_Estimate_Value,
+                    SprintId = row.Sprint_Id,
+                    SprintName = row.Sprint_Name,
+                    SprintStatus = row.Sprint_Status,
                     SortOrder = row.Task_Sort_Order,
                     ProjectId = row.Project_Id,
                     WorkspaceId = row.Workspace_Id,
@@ -178,6 +191,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                         Status = row.Task_Status,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                         Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
+                        SprintId = row.Sprint_Id,
+                        SprintName = row.Sprint_Name,
+                        SprintStatus = row.Sprint_Status,
                         SortOrder = row.Task_Sort_Order,
                         ProjectId = row.Project_Id,
                         WorkspaceId = row.Workspace_Id,
@@ -198,6 +214,14 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
             return result;
         });
+    }
+
+    public Task<List<BoardViewGroup>?> GetBoardViewGroups(
+        int boardId,
+        string? searchTerm,
+        CancellationToken cancellationToken)
+    {
+        return GetBoardViewGroups(boardId, searchTerm, null, cancellationToken);
     }
 
     public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)

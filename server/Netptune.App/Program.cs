@@ -159,6 +159,7 @@ apiGroup.MapCommentsEndpoints();
 apiGroup.MapMetaEndpoints();
 apiGroup.MapProjectsEndpoints();
 apiGroup.MapStorageEndpoints();
+apiGroup.MapSprintsEndpoints();
 apiGroup.MapTagsEndpoints();
 apiGroup.MapTasksEndpoints();
 apiGroup.MapUsersEndpoints();

@@ -34,7 +34,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
         var viewModel = new TaskViewModel
         {
             Name = request.Name,
@@ -64,7 +67,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
         var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description };
 
         Identity.GetWorkspaceKey().Returns("key");
@@ -84,7 +90,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
@@ -99,7 +108,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
 
         UnitOfWork.Workspaces
             .GetBySlugWithTasks(Arg.Any<string>(), Arg.Any<bool>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
@@ -112,7 +124,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenScopeRefIdNull()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
         var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description };
 
         Identity.GetWorkspaceKey().Returns("key");

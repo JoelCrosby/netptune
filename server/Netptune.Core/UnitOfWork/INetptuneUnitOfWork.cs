@@ -13,6 +13,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     ITaskRepository Tasks { get; }
 
+    ISprintRepository Sprints { get; }
+
     IUserRepository Users { get; }
 
     IBoardRepository Boards { get; }

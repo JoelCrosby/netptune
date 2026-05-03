@@ -27,6 +27,8 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public int? ProjectId { get; set; }
 
+    public int? SprintId { get; set; }
+
     #endregion
 
     #region NavigationProperties
@@ -36,6 +38,9 @@ public record ProjectTask : WorkspaceEntity<int>
 
     [JsonIgnore]
     public Project? Project { get; set; }
+
+    [JsonIgnore]
+    public Sprint? Sprint { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
@@ -64,6 +69,9 @@ public record ProjectTask : WorkspaceEntity<int>
             ProjectScopeId = ProjectScopeId,
             SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
             ProjectId = ProjectId,
+            SprintId = SprintId,
+            SprintName = Sprint?.Name,
+            SprintStatus = Sprint?.Status,
             WorkspaceId = WorkspaceId,
             WorkspaceKey = Workspace.Slug,
             CreatedAt = CreatedAt,

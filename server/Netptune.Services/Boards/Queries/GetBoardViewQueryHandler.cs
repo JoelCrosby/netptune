@@ -29,7 +29,11 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
 
         var boardId = nullableBoardId.Value;
 
-        var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, request.Filter?.Term, cancellationToken);
+        var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(
+            boardId,
+            request.Filter?.Term,
+            request.Filter?.SprintId,
+            cancellationToken);
         var board = await UnitOfWork.Boards.GetViewModel(boardId, true, cancellationToken);
 
         if (groups is null || board is null) return ClientResponse<BoardView>.Failed();

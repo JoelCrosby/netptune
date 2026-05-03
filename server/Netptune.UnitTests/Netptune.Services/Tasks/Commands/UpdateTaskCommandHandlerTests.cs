@@ -41,6 +41,7 @@ public class UpdateTaskCommandHandlerTests
             .Without(p => p.ProjectTaskInBoardGroups)
             .Without(p => p.ProjectTaskTags)
             .Without(p => p.Tags)
+            .Without(p => p.Sprint)
             .With(p => p.Workspace, AutoFixtures.Workspace)
             .With(p => p.Priority, priority)
             .With(p => p.EstimateType, estimateType)

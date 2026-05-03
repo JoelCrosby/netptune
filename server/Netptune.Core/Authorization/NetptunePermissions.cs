@@ -57,6 +57,15 @@ public static class NetptunePermissions
         public const string Import = "tasks.import";
     }
 
+    public static class Sprints
+    {
+        public const string Read = "sprints.read";
+        public const string Create = "sprints.create";
+        public const string Update = "sprints.update";
+        public const string Delete = "sprints.delete";
+        public const string ManageTasks = "sprints.manage_tasks";
+    }
+
     public static class Comments
     {
         public const string Read = "comments.read";

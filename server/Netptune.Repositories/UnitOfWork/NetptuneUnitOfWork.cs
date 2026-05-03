@@ -12,6 +12,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IWorkspaceRepository Workspaces { get; }
     public IWorkspaceUserRepository WorkspaceUsers { get; }
     public ITaskRepository Tasks { get; }
+    public ISprintRepository Sprints { get; }
     public IUserRepository Users { get; }
     public IBoardRepository Boards { get; }
     public IBoardGroupRepository BoardGroups { get; }
@@ -29,6 +30,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     {
         Projects = new ProjectRepository(context, connectionFactory);
         Tasks = new TaskRepository(context, connectionFactory);
+        Sprints = new SprintRepository(context, connectionFactory);
         Users = new UserRepository(context, connectionFactory);
         Workspaces = new WorkspaceRepository(context, connectionFactory);
         WorkspaceUsers = new WorkspaceUserRepository(context, connectionFactory);

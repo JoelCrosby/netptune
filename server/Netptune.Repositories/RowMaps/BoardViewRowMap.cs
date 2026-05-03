@@ -20,6 +20,12 @@ public class BoardViewRowMap
 
     public decimal? Task_Estimate_Value { get; set; }
 
+    public int? Sprint_Id { get; set; }
+
+    public string? Sprint_Name { get; set; }
+
+    public SprintStatus? Sprint_Status { get; set; }
+
     public double Task_Sort_Order { get; set; }
 
     public int Project_Id { get; set; }

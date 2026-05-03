@@ -51,6 +51,12 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired(false);
 
         builder
+            .HasOne(task => task.Sprint)
+            .WithMany(sprint => sprint.ProjectTasks)
+            .HasForeignKey(task => task.SprintId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
             .HasMany(task => task.Tags)
             .WithMany(tag => tag.Tasks)
             .UsingEntity<ProjectTaskTag>(
