@@ -50,17 +50,21 @@ loki:
   promtailImage: "grafana/promtail:latest"
 website:
   enabled: true
+  replicas: 4
   image: "ghcr.io/joelcrosby/netptune-website:latest"
   host: "www.netptune.co.uk"
 
 parameters:
   jobs:
+    replicas: 1
     port_http: 8080
     jobs_image: "ghcr.io/joelcrosby/netptune-jobs:latest"
   api:
+    replicas: 4
     port_http: 7400
     api_image: "ghcr.io/joelcrosby/netptune:latest"
   client:
+    replicas: 4
     client_image: "ghcr.io/joelcrosby/netptune-client:latest"
     api_url: "http://api-service:7400"
 secrets:

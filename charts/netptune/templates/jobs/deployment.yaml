@@ -15,6 +15,15 @@ spec:
         app.kubernetes.io/component: "jobs"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "kubernetes.io/hostname"
+          whenUnsatisfiable: "ScheduleAnyway"
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: "netptune-app"
+              app.kubernetes.io/component: "jobs"
+              app.kubernetes.io/instance: "{{ .Release.Name }}"
       containers:
         - image: "{{ .Values.parameters.jobs.jobs_image }}"
           name: "jobs"
@@ -50,7 +59,7 @@ spec:
       app.kubernetes.io/name: "netptune-app"
       app.kubernetes.io/component: "jobs"
       app.kubernetes.io/instance: "{{ .Release.Name }}"
-  replicas: 1
+  replicas: {{ .Values.parameters.jobs.replicas | int }}
   revisionHistoryLimit: 3
   strategy:
     rollingUpdate:
