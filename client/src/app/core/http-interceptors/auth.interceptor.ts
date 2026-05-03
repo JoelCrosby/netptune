@@ -96,10 +96,6 @@ export const authInterceptor = (
             if (err.status === 401 && !isAuthManagementRequest(req)) {
               return handle401(req);
             }
-
-            if (err.status === 403) {
-              void router.navigate(['/auth/login']);
-            }
           }
 
           return throwError(() => err);
