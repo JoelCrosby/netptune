@@ -33,7 +33,12 @@ const reducer = createReducer(
   ),
   on(
     actions.loadSprintDetail,
-    (state): SprintsState => ({ ...state, detailLoading: true })
+    (state): SprintsState => ({
+      ...state,
+      detailLoading: true,
+      availableTasks: [],
+      availableTasksLoading: false,
+    })
   ),
   on(
     actions.loadSprintDetailSuccess,
@@ -51,6 +56,26 @@ const reducer = createReducer(
       ...state,
       loadingError: error,
       detailLoading: false,
+    })
+  ),
+  on(
+    actions.loadAvailableSprintTasks,
+    (state): SprintsState => ({ ...state, availableTasksLoading: true })
+  ),
+  on(
+    actions.loadAvailableSprintTasksSuccess,
+    (state, { tasks }): SprintsState => ({
+      ...state,
+      availableTasks: tasks,
+      availableTasksLoading: false,
+    })
+  ),
+  on(
+    actions.loadAvailableSprintTasksFail,
+    (state, { error }): SprintsState => ({
+      ...state,
+      loadingError: error,
+      availableTasksLoading: false,
     })
   ),
   on(
@@ -86,14 +111,18 @@ const reducer = createReducer(
       updateState: { loading: true },
     })
   ),
-  on(
-    actions.updateSprintSuccess,
-    (state, { sprint }): SprintsState =>
-      adapter.upsertOne(sprint, {
-        ...state,
-        updateState: { loading: false },
-      })
-  ),
+  on(actions.updateSprintSuccess, (state, { sprint }): SprintsState => {
+    const detail =
+      state.detail?.id === sprint.id
+        ? { ...state.detail, ...sprint }
+        : state.detail;
+
+    return adapter.upsertOne(sprint, {
+      ...state,
+      detail,
+      updateState: { loading: false },
+    });
+  }),
   on(
     actions.updateSprintFail,
     (state, { error }): SprintsState => ({

@@ -4,10 +4,7 @@ import { adapter, SprintsState } from './sprints.model';
 
 const { selectAll, selectEntities } = adapter.getSelectors();
 
-export const selectAllSprints = createSelector(
-  selectSprintsFeature,
-  selectAll
-);
+export const selectAllSprints = createSelector(selectSprintsFeature, selectAll);
 
 export const selectSprintEntities = createSelector(
   selectSprintsFeature,
@@ -29,7 +26,22 @@ export const selectSprintDetailLoading = createSelector(
   (state: SprintsState) => state.detailLoading
 );
 
+export const selectAvailableSprintTasks = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.availableTasks
+);
+
+export const selectAvailableSprintTasksLoading = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.availableTasksLoading
+);
+
 export const selectSprintCreateLoading = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.createState.loading
+);
+
+export const selectSprintUpdateLoading = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.updateState.loading
 );

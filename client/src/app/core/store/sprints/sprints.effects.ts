@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { SprintStatus } from '@core/enums/sprint-status';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './sprints.actions';
 import { SprintsService } from './sprints.service';
@@ -31,7 +32,10 @@ export class SprintsEffects {
   });
 
   loadProjectsForSprints$ = createEffect(() => {
-    return this.actions$.pipe(ofType(actions.loadSprints), map(() => loadProjects()));
+    return this.actions$.pipe(
+      ofType(actions.loadSprints),
+      map(() => loadProjects())
+    );
   });
 
   loadSprintDetail$ = createEffect(() => {
@@ -43,6 +47,37 @@ export class SprintsEffects {
           map((sprint) => actions.loadSprintDetailSuccess({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadSprintDetailFail({ error }))
+          )
+        )
+      )
+    );
+  });
+
+  loadAvailableTasksForSprint$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadSprintDetailSuccess),
+      switchMap(({ sprint }) => {
+        if (sprint.status === SprintStatus.completed || !sprint.id)
+          return EMPTY;
+
+        return of(
+          actions.loadAvailableSprintTasks({
+            sprintId: sprint.id,
+            projectId: sprint.projectId,
+          })
+        );
+      })
+    );
+  });
+
+  loadAvailableSprintTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadAvailableSprintTasks),
+      switchMap(({ sprintId, projectId }) =>
+        this.sprintsService.availableTasks(sprintId, projectId).pipe(
+          map((tasks) => actions.loadAvailableSprintTasksSuccess({ tasks })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadAvailableSprintTasksFail({ error }))
           )
         )
       )

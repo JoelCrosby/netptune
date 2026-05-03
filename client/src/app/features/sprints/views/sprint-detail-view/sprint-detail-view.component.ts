@@ -2,12 +2,15 @@ import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
 import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import {
   completeSprint,
   addTasksToSprint,
@@ -15,11 +18,11 @@ import {
   removeTaskFromSprint,
   startSprint,
 } from '@core/store/sprints/sprints.actions';
-import { loadProjectTasks } from '@core/store/tasks/tasks.actions';
-import { selectTasks } from '@core/store/tasks/tasks.selectors';
 import {
+  selectAvailableSprintTasks,
   selectSprintDetail,
   selectSprintDetailLoading,
+  selectSprintUpdateLoading,
 } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -30,6 +33,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { FormSelectSearchComponent } from '@static/components/form-select-search/form-select-search.component';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,22 +75,28 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
                 {{ statusLabel(sprint.status) }}
               </span>
 
-              @if (sprint.status === sprintStatus.planning) {
+              @if (
+                canUpdateSprints() && sprint.status === sprintStatus.planning
+              ) {
                 <button
                   app-flat-button
                   color="primary"
                   type="button"
-                  (click)="onStart(sprint.id!)">
+                  [disabled]="updateLoading()"
+                  (click)="onStart(sprint.id)">
                   Start
                 </button>
               }
 
-              @if (sprint.status === sprintStatus.active) {
+              @if (
+                canUpdateSprints() && sprint.status === sprintStatus.active
+              ) {
                 <button
                   app-flat-button
                   color="primary"
                   type="button"
-                  (click)="onComplete(sprint.id!)">
+                  [disabled]="updateLoading()"
+                  (click)="onComplete(sprint.id)">
                   Complete
                 </button>
               }
@@ -126,10 +136,13 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
 
           <div class="bg-board-group p-2">
             <app-card class="min-h-0! p-0!">
-              @if (sprint.status !== sprintStatus.completed) {
+              @if (
+                canManageSprintTasks() &&
+                sprint.status !== sprintStatus.completed
+              ) {
                 <form
                   class="border-border flex flex-wrap items-center gap-3 border-b p-4"
-                  (submit)="onAddTask($event, sprint.id!)">
+                  (submit)="onAddTask($event, sprint.id)">
                   <app-form-select-search
                     class="min-w-64 flex-1"
                     label="Add Task"
@@ -146,7 +159,7 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
                     app-flat-button
                     color="primary"
                     type="submit"
-                    [disabled]="!selectedTaskId">
+                    [disabled]="updateLoading() || !selectedTaskId">
                     Add
                   </button>
                 </form>
@@ -169,12 +182,16 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
                     </div>
                   </div>
 
-                  @if (sprint.status !== sprintStatus.completed) {
+                  @if (
+                    canManageSprintTasks() &&
+                    sprint.status !== sprintStatus.completed
+                  ) {
                     <button
                       app-stroked-button
                       color="primary"
                       type="button"
-                      (click)="onRemoveTask(sprint.id!, task.id!)">
+                      [disabled]="updateLoading()"
+                      (click)="onRemoveTask(sprint.id, task.id)">
                       Remove
                     </button>
                   }
@@ -196,48 +213,64 @@ export class SprintDetailViewComponent {
   readonly sprintStatus = SprintStatus;
   readonly sprint = this.store.selectSignal(selectSprintDetail);
   readonly loading = this.store.selectSignal(selectSprintDetailLoading);
-  readonly tasks = this.store.selectSignal(selectTasks);
-  readonly availableTasks = computed(() => {
-    const sprint = this.sprint();
-    if (!sprint) return [];
-
-    const sprintTaskIds = new Set(sprint.tasks.map((task) => task.id));
-
-    return this.tasks().filter(
-      (task) =>
-        task.projectId === sprint.projectId &&
-        !sprintTaskIds.has(task.id) &&
-        task.sprintId !== sprint.id
-    );
-  });
+  readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
+  readonly availableTasks = this.store.selectSignal(selectAvailableSprintTasks);
+  readonly canUpdateSprints = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.update)
+  );
+  readonly canManageSprintTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.manageTasks)
+  );
 
   selectedTaskId?: number;
   taskSelectLabel = (task: TaskViewModel) => `${task.systemId} · ${task.name}`;
   taskSelectValue = (task: TaskViewModel) => task.id;
 
   constructor() {
-    const sprintId = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap
+      .pipe(
+        map((params) => Number(params.get('id'))),
+        distinctUntilChanged(),
+        takeUntilDestroyed()
+      )
+      .subscribe((sprintId) => {
+        if (Number.isFinite(sprintId) && sprintId > 0) {
+          this.selectedTaskId = undefined;
+          this.store.dispatch(loadSprintDetail({ sprintId }));
+        }
+      });
 
-    if (Number.isFinite(sprintId)) {
-      this.store.dispatch(loadSprintDetail({ sprintId }));
-    }
+    effect(() => {
+      const selectedTaskId = this.selectedTaskId;
 
-    this.store.dispatch(loadProjectTasks());
+      if (
+        selectedTaskId &&
+        !this.availableTasks().some((task) => task.id === selectedTaskId)
+      ) {
+        this.selectedTaskId = undefined;
+      }
+    });
   }
 
   statusLabel(status: SprintStatus) {
     return sprintStatusLabels[status];
   }
 
-  onStart(sprintId: number) {
+  onStart(sprintId?: number) {
+    if (!sprintId) return;
+
     this.store.dispatch(startSprint({ sprintId }));
   }
 
-  onComplete(sprintId: number) {
+  onComplete(sprintId?: number) {
+    if (!sprintId) return;
+
     this.store.dispatch(completeSprint({ sprintId }));
   }
 
-  onRemoveTask(sprintId: number, taskId: number) {
+  onRemoveTask(sprintId?: number, taskId?: number) {
+    if (!sprintId || !taskId) return;
+
     this.store.dispatch(removeTaskFromSprint({ sprintId, taskId }));
   }
 
@@ -245,10 +278,10 @@ export class SprintDetailViewComponent {
     this.selectedTaskId = taskId;
   }
 
-  onAddTask(event: Event, sprintId: number) {
+  onAddTask(event: Event, sprintId?: number) {
     event.preventDefault();
 
-    if (!this.selectedTaskId) return;
+    if (!sprintId || !this.selectedTaskId) return;
 
     this.store.dispatch(
       addTasksToSprint({
