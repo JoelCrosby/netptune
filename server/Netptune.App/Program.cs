@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 
+using Netptune.App.Configuration;
 using Netptune.App.Endpoints;
 using Netptune.App.Middleware;
 using Netptune.App.Services;
@@ -27,6 +28,8 @@ builder.AddServiceDefaults();
 var connectionString = configuration.GetNetptuneConnectionString("netptune");
 var redisConnectionString = configuration.GetNetptuneRedisConnectionString();
 var natsConnectionString = configuration.GetNetptuneNatsConnectionString();
+
+builder.AddNetptuneDataProtection(redisConnectionString);
 
 builder.Services.AddCors(options =>
 {
