@@ -10,7 +10,7 @@ public static class CookieHelper
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.Lax,
             Path = "/api",
             Expires = ticket.Expires,
         });
@@ -19,7 +19,7 @@ public static class CookieHelper
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.Lax,
             Path = "/api/auth/refresh",
             Expires = DateTimeOffset.UtcNow.AddDays(30),
         });
