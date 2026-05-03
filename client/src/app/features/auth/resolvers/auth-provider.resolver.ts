@@ -19,11 +19,16 @@ export const authProvider: ResolveFn<boolean> = (
   }
 
   const expires = new Date(expiresValue);
+
+  if (Number.isNaN(expires.getTime())) {
+    return of(false);
+  }
+
   const displayName = route.queryParamMap.get('displayName') ?? '';
   const pictureUrl = route.queryParamMap.get('pictureUrl') ?? '';
 
   const user: LoginResponse = {
-    expires,
+    expires: expiresValue,
     email,
     userId,
     displayName,

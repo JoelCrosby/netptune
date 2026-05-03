@@ -250,7 +250,7 @@ public static class AuthEndpoints
                 email = result.Ticket?.EmailAddress,
                 pictureUrl = result.Ticket?.PictureUrl,
                 userId = result.Ticket?.UserId,
-                expires = result.Ticket?.Expires,
+                expires = result.Ticket?.Expires.ToUniversalTime().ToString("O"),
             });
 
         return Results.Redirect(redirect);
