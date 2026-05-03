@@ -25,6 +25,20 @@ export const loadSprintsFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+export const loadCurrentSprints = createAction(
+  '[Sprints] Load Current Sprints'
+);
+
+export const loadCurrentSprintsSuccess = createAction(
+  '[Sprints] Load Current Sprints Success',
+  props<{ sprints: SprintViewModel[] }>()
+);
+
+export const loadCurrentSprintsFail = createAction(
+  '[Sprints] Load Current Sprints Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
 export const loadSprintDetail = createAction(
   '[Sprints] Load Sprint Detail',
   props<{ sprintId: number }>()

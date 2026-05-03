@@ -13,6 +13,9 @@ export const initialState: SprintsState = adapter.getInitialState({
   loading: false,
   loaded: false,
   loadingCreate: false,
+  currentSprints: [],
+  currentSprintsLoading: false,
+  currentSprintsLoaded: false,
   detail: undefined,
   detailLoading: false,
   availableTasks: [],
@@ -33,6 +36,9 @@ export interface SprintsState extends AsyncEntityState<SprintViewModel> {
   loading: boolean;
   loaded: boolean;
   loadingError?: HttpErrorResponse;
+  currentSprints: SprintViewModel[];
+  currentSprintsLoading: boolean;
+  currentSprintsLoaded: boolean;
   detail?: SprintDetailViewModel;
   detailLoading: boolean;
   availableTasks: TaskViewModel[];

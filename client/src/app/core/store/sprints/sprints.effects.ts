@@ -38,6 +38,20 @@ export class SprintsEffects {
     );
   });
 
+  loadCurrentSprints$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadCurrentSprints),
+      switchMap(() =>
+        this.sprintsService.get({ status: SprintStatus.active, take: 10 }).pipe(
+          map((sprints) => actions.loadCurrentSprintsSuccess({ sprints })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadCurrentSprintsFail({ error }))
+          )
+        )
+      )
+    );
+  });
+
   loadSprintDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadSprintDetail),

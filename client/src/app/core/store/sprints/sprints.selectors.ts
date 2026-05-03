@@ -16,6 +16,26 @@ export const selectSprintsLoading = createSelector(
   (state: SprintsState) => state.loading && !state.loaded
 );
 
+export const selectCurrentSprints = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.currentSprints
+);
+
+export const selectCurrentSprint = createSelector(
+  selectCurrentSprints,
+  (sprints) => sprints[0]
+);
+
+export const selectCurrentSprintsLoading = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.currentSprintsLoading
+);
+
+export const selectCurrentSprintsLoaded = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.currentSprintsLoaded
+);
+
 export const selectSprintDetail = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.detail

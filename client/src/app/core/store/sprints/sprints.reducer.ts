@@ -1,4 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
+import { SprintStatus } from '@core/enums/sprint-status';
+import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import * as actions from './sprints.actions';
 import { adapter, initialState, SprintsState } from './sprints.model';
 
@@ -29,6 +31,31 @@ const reducer = createReducer(
       ...state,
       loading: false,
       loadingError: error,
+    })
+  ),
+  on(
+    actions.loadCurrentSprints,
+    (state): SprintsState => ({
+      ...state,
+      currentSprintsLoading: true,
+    })
+  ),
+  on(
+    actions.loadCurrentSprintsSuccess,
+    (state, { sprints }): SprintsState => ({
+      ...state,
+      currentSprints: sprints,
+      currentSprintsLoading: false,
+      currentSprintsLoaded: true,
+    })
+  ),
+  on(
+    actions.loadCurrentSprintsFail,
+    (state, { error }): SprintsState => ({
+      ...state,
+      loadingError: error,
+      currentSprintsLoading: false,
+      currentSprintsLoaded: state.currentSprintsLoaded,
     })
   ),
   on(
@@ -90,6 +117,7 @@ const reducer = createReducer(
     (state, { sprint }): SprintsState =>
       adapter.addOne(sprint, {
         ...state,
+        currentSprints: upsertCurrentSprint(state.currentSprints, sprint),
         createState: { loading: false },
       })
   ),
@@ -120,6 +148,7 @@ const reducer = createReducer(
     return adapter.upsertOne(sprint, {
       ...state,
       detail,
+      currentSprints: upsertCurrentSprint(state.currentSprints, sprint),
       updateState: { loading: false },
     });
   }),
@@ -143,6 +172,9 @@ const reducer = createReducer(
       adapter.removeOne(sprintId, {
         ...state,
         detail: state.detail?.id === sprintId ? undefined : state.detail,
+        currentSprints: state.currentSprints.filter(
+          (sprint) => sprint.id !== sprintId
+        ),
         deleteState: { loading: false },
       })
   ),
@@ -159,3 +191,26 @@ export const sprintsReducer = (
   state: SprintsState | undefined,
   action: Action
 ): SprintsState => reducer(state, action);
+
+function upsertCurrentSprint(
+  currentSprints: SprintViewModel[],
+  sprint: SprintViewModel
+): SprintViewModel[] {
+  if (sprint.status !== SprintStatus.active) {
+    return currentSprints.filter(
+      (currentSprint) => currentSprint.id !== sprint.id
+    );
+  }
+
+  const exists = currentSprints.some(
+    (currentSprint) => currentSprint.id === sprint.id
+  );
+
+  if (!exists) {
+    return [...currentSprints, sprint];
+  }
+
+  return currentSprints.map((currentSprint) =>
+    currentSprint.id === sprint.id ? sprint : currentSprint
+  );
+}
