@@ -20,7 +20,8 @@ public static class Extensions
     {
         if (builder.Environment.IsProduction())
         {
-            builder.Logging.AddJsonConsole();
+            builder.Logging.ClearProviders();
+            builder.Logging.AddJsonConsole(options => options.IncludeScopes = true);
         }
 
         builder.ConfigureOpenTelemetry();

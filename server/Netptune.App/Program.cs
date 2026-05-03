@@ -134,6 +134,7 @@ var app = builder.Build();
 
 app.UseCorrelationId();
 app.UseForwardedHeaders();
+app.UseServerErrorLogging();
 
 app.UseRouting();
 
