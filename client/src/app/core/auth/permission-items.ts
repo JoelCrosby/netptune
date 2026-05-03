@@ -3,6 +3,7 @@ import {
   LucideArrowRightLeft,
   LucideBell,
   LucideBellDot,
+  LucideCalendarDays,
   LucideCirclePlus,
   LucideClipboardList,
   LucideDownload,
@@ -177,6 +178,33 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'tasks.import',
       label: 'Import Tasks',
       icon: LucideUpload,
+    },
+  },
+  sprints: {
+    read: {
+      key: 'sprints.read',
+      label: 'View Sprints',
+      icon: LucideCalendarDays,
+    },
+    create: {
+      key: 'sprints.create',
+      label: 'Create Sprints',
+      icon: LucideCirclePlus,
+    },
+    update: {
+      key: 'sprints.update',
+      label: 'Edit Sprints',
+      icon: LucidePencil,
+    },
+    delete: {
+      key: 'sprints.delete',
+      label: 'Delete Sprints',
+      icon: LucideTrash2,
+    },
+    manageTasks: {
+      key: 'sprints.manage_tasks',
+      label: 'Manage Sprint Tasks',
+      icon: LucideClipboardList,
     },
   },
   comments: {

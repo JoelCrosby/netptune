@@ -20,6 +20,7 @@ import {
   taskPriorityLabels,
 } from '@core/enums/task-priority';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { SprintStatus } from '@core/enums/sprint-status';
 
 @Component({
   selector: 'app-board-group-card',
@@ -40,6 +41,17 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
 
     <div class="mt-4 flex flex-row flex-wrap">
+      @if (task().sprintName) {
+        <div
+          class="my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem] text-xs font-medium"
+          [class.bg-green-100]="task().sprintStatus === sprintStatus.active"
+          [class.text-green-800]="task().sprintStatus === sprintStatus.active"
+          [class.bg-neutral-100]="task().sprintStatus !== sprintStatus.active"
+          [class.text-neutral-700]="task().sprintStatus !== sprintStatus.active">
+          {{ task().sprintName }}
+        </div>
+      }
+
       @for (tag of task().tags; track tag) {
         <div
           class="bg-primary/10 my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem]">
@@ -90,6 +102,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
+  readonly sprintStatus = SprintStatus;
   readonly priority = computed(() => this.task().priority);
 
   priorityVisible = computed(() => {

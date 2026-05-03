@@ -17,6 +17,8 @@ import { ProfileEffects } from './core/store/profile/profile.effects';
 import { profileReducer } from './core/store/profile/profile.reducer';
 import { ProjectsEffects } from './core/store/projects/projects.effects';
 import { projectsReducer } from './core/store/projects/projects.reducer';
+import { SprintsEffects } from './core/store/sprints/sprints.effects';
+import { sprintsReducer } from './core/store/sprints/sprints.reducer';
 import { TagsEffects } from './core/store/tags/tags.effects';
 import { tagsReducer } from './core/store/tags/tags.reducer';
 import { ProjectTasksEffects } from './core/store/tasks/tasks.effects';
@@ -39,6 +41,7 @@ export const routes: Routes = [
       provideState('tags', tagsReducer),
       provideState('hub', hubContextReducer),
       provideState('notifications', notificationsReducer),
+      provideState('sprints', sprintsReducer),
       provideState('boards', boardsReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideState('profile', profileReducer),
@@ -52,6 +55,7 @@ export const routes: Routes = [
         BoardsEffects,
         ProfileEffects,
         BoardGroupsEffects,
+        SprintsEffects,
       ]),
     ],
     loadComponent: () => import('./shell/shell.component').then((m) => m.ShellComponent),
@@ -77,6 +81,12 @@ export const routes: Routes = [
         loadChildren: () => import('./features/boards/boards.routes').then((m) => m.routes),
         runGuardsAndResolvers: 'always',
         data: { title: 'Boards' },
+      },
+      {
+        path: 'sprints',
+        loadChildren: () => import('./features/sprints/sprints.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Sprints' },
       },
       {
         path: 'users',

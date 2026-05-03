@@ -1,6 +1,7 @@
 import { EstimateType } from '../enums/estimate-type';
 import { TaskPriority } from '../enums/task-priority';
 import { TaskStatus } from '../enums/project-task-status';
+import { SprintStatus } from '../enums/sprint-status';
 import { AppUser } from './appuser';
 import { Basemodel } from './basemodel';
 import { Project } from './project';
@@ -19,6 +20,10 @@ export interface ProjectTask extends Basemodel {
   project: Project;
   projectId: number;
   projectScopeId: number;
+
+  sprintId?: number | null;
+  sprintName?: string | null;
+  sprintStatus?: SprintStatus | null;
 
   workspace: Workspace;
   workspaceId: number;

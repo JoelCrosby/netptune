@@ -69,6 +69,7 @@ export class BoardGroupsEffects {
               boardGroups,
               selectedIds: paramMap.getAll('users'),
               searchTerm: paramMap.get('term'),
+              sprintId: getSprintId(paramMap.get('sprintId')),
             })
           ),
           catchError((error: HttpErrorResponse) =>
@@ -344,14 +345,16 @@ export class BoardGroupsEffects {
       ofType(
         actions.toggleUserSelection,
         toggleSelectedTag,
-        actions.setSearchTerm
+        actions.setSearchTerm,
+        actions.setSprintFilter
       ),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardGroupsSelectedUserIds),
         this.store.select(selectSelectedTags),
         this.store.select(selectors.selectSearchTerm),
+        this.store.select(selectors.selectSelectedSprintId),
       ]),
-      map(([_, users, tags, term]) => {
+      map(([_, users, tags, term, sprintId]) => {
         const usersParam = users?.length ? users : undefined;
         const tagsParam = tags?.length ? tags : undefined;
         const termParam = term;
@@ -360,6 +363,7 @@ export class BoardGroupsEffects {
           users: usersParam,
           tags: tagsParam,
           term: termParam,
+          sprintId,
         };
       }),
       map((params) => actions.updateBoardFilter({ params }))
@@ -457,3 +461,11 @@ const DELETE_SELECTED_TASKS_CONFIRMATION: ConfirmDialogOptions = {
   message: 'Are you sure you want to delete the selected tasks?',
   title: 'Delete Selected Tasks',
 };
+
+function getSprintId(value: string | null): number | undefined {
+  if (!value) return undefined;
+
+  const sprintId = Number(value);
+
+  return Number.isFinite(sprintId) ? sprintId : undefined;
+}

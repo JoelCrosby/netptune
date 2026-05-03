@@ -42,6 +42,13 @@ export const netptunePermissions = {
     export: 'tasks.export',
     import: 'tasks.import',
   },
+  sprints: {
+    read: 'sprints.read',
+    create: 'sprints.create',
+    update: 'sprints.update',
+    delete: 'sprints.delete',
+    manageTasks: 'sprints.manage_tasks',
+  },
   comments: {
     read: 'comments.read',
     create: 'comments.create',

@@ -19,7 +19,26 @@
       [overflowActions]="isAuthenticated() ? secondaryActions : []"
       (titleSubmitted)="onTitleSubmitted($event)"
       >
-      <app-board-group-header />
+      <div class="flex flex-wrap items-center gap-3">
+        <app-board-group-header />
+
+        <app-form-select
+          class="block w-56"
+          label="Sprint"
+          placeholder="All tasks"
+          [value]="selectedSprintId() ?? 0"
+          (changed)="onSprintFilterChanged($event)"
+          >
+          <app-form-select-option [value]="0">
+            All tasks
+          </app-form-select-option>
+          @for (sprint of sprints(); track sprint.id) {
+            <app-form-select-option [value]="sprint.id!">
+              {{ sprint.name }}
+            </app-form-select-option>
+          }
+        </app-form-select>
+      </div>
     </app-page-header>
   }
 

@@ -26,6 +26,7 @@ export const initialState: BoardGroupsState = adapter.getInitialState({
   users: [],
   selectedUsers: [],
   selectedTasks: [],
+  selectedSprintId: undefined,
   deleteState: initialAsyncDataState(),
 });
 
@@ -39,6 +40,7 @@ export interface BoardGroupsState extends AsyncEntityState<BoardViewGroup> {
   isInlineDirty: boolean;
   inlineActive?: number;
   selectedTasks: number[];
+  selectedSprintId?: number;
   searchTerm?: string | null;
   inlineTaskContent?: string | null;
   deleteState: AsyncDataState;
@@ -48,4 +50,5 @@ export interface BorderFilterParams {
   users?: string[];
   tags?: string[];
   term?: string | null;
+  sprintId?: number;
 }

@@ -22,6 +22,7 @@ import type { NotificationsState } from './store/notifications/notifications.mod
 import type { ProfileState } from './store/profile/profile.model';
 import type { ProjectsState } from './store/projects/projects.model';
 import type { SettingsState } from './store/settings/settings.model';
+import type { SprintsState } from './store/sprints/sprints.model';
 import { settingsReducer } from './store/settings/settings.reducer';
 import type { TagsState } from './store/tags/tags.model';
 import type { TasksState } from './store/tasks/tasks.model';
@@ -64,6 +65,7 @@ export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 export const selectNotificationsFeature =
   selectFeature<NotificationsState>('notifications');
+export const selectSprintsFeature = selectFeature<SprintsState>('sprints');
 
 export interface AppState {
   auth: AuthState;
@@ -79,6 +81,7 @@ export interface AppState {
   tags: TagsState;
   hub: HubContextState;
   notifications: NotificationsState;
+  sprints: SprintsState;
   boards: BoardsState;
   boardgroups: BoardGroupsState;
   profile: ProfileState;

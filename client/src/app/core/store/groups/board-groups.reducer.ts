@@ -27,7 +27,7 @@ const reducer = createReducer(
   ),
   on(
     actions.loadBoardGroupsSuccess,
-    (state, { boardGroups, selectedIds, searchTerm }): BoardGroupsState => {
+    (state, { boardGroups, selectedIds, searchTerm, sprintId }): BoardGroupsState => {
       const selectedIdMap = new Set(selectedIds);
 
       return adapter.setAll(boardGroups.groups, {
@@ -37,6 +37,7 @@ const reducer = createReducer(
         board: boardGroups.board,
         users: boardGroups.users,
         searchTerm,
+        selectedSprintId: sprintId,
         selectedTasks: [],
         selectedUsers: boardGroups.users.filter((user) =>
           selectedIdMap.has(user.id)
@@ -148,6 +149,16 @@ const reducer = createReducer(
     (state, { term }): BoardGroupsState => ({
       ...state,
       searchTerm: term,
+    })
+  ),
+
+  // Set Sprint Filter
+
+  on(
+    actions.setSprintFilter,
+    (state, { sprintId }): BoardGroupsState => ({
+      ...state,
+      selectedSprintId: sprintId,
     })
   ),
 

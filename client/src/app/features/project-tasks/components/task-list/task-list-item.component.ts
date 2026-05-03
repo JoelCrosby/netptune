@@ -69,6 +69,13 @@ import { netptunePermissions } from '@app/core/auth/permissions';
         {{ task().name }}
       </div>
 
+      @if (task().sprintName) {
+        <span
+          class="bg-neutral-100 text-neutral-700 mr-2 max-w-36 flex-none truncate rounded px-2 py-1 text-xs font-semibold">
+          {{ task().sprintName }}
+        </span>
+      }
+
       @if (task().status === 1) {
         <svg lucideCheck class="h-5 w-5 text-green-500"></svg>
       }

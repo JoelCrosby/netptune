@@ -16,10 +16,16 @@
   align-items: center;
 }
 
+.netp-form-select-search .arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .nept-form-select-option {
   cursor: pointer;
-  border-radius: .2rem;
-  padding: .4rem;
+  border-radius: 0.2rem;
+  padding: 0.4rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -38,6 +44,14 @@
   background-color: var(--primary-selected);
 }
 
+.nept-form-select-option.active {
+  background-color: var(--hover);
+}
+
+.nept-form-select-option.active.selected {
+  background-color: var(--primary-selected-hover);
+}
+
 .form-select-dropdown {
   border: 1px solid var(--border);
   background-color: var(--seconday-background);
@@ -46,8 +60,32 @@
   flex-direction: column;
   width: 100%;
   border-radius: 0.4rem;
-  gap: .4rem;
-  padding: .4rem;
-      --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  gap: 0.4rem;
+  padding: 0.4rem;
+  --tw-shadow:
+    0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
+    0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+
+.form-select-search-dropdown {
+  padding-right: 0;
+}
+
+.form-select-search-viewport {
+  width: 100%;
+  min-height: 2.5rem;
+}
+
+.form-select-search-option {
+  display: flex;
+  align-items: center;
+}
+
+.form-select-search-empty {
+  padding: 0.6rem 0.4rem;
+  opacity: 0.6;
+  user-select: none;
 }

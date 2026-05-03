@@ -1,0 +1,113 @@
+<div class="nept-form-control">
+  @if (label()) {
+    <label [for]="name()" class="form-control-label">
+      {{ label() }}
+    </label>
+  }
+
+  <div
+    #dropreference
+    class="form-control-input netp-form-select-search w-full"
+    [class.invalid]="touched() && invalid()"
+    [class.active]="value() && pending()"
+    (click)="onTriggerClick($event)">
+    @if (prefix()) {
+      <div class="form-control-prefix">{{ prefix() }}</div>
+    }
+
+    <input
+      #input
+      role="combobox"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="listboxId"
+      [attr.aria-activedescendant]="activeOptionId()"
+      [placeholder]="placeholder()"
+      [id]="name()"
+      [value]="inputValue()"
+      [disabled]="disabled()"
+      [readOnly]="isReadonly()"
+      class="grow"
+      [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+      (click)="$event.stopPropagation(); showDropdown()"
+      (input)="onSearchInput($event)"
+      (keydown)="onKeyDown($event)"
+      (blur)="touched.set(true)"
+      autocomplete="off" />
+
+    @if (icon()) {
+      <svg
+        class="mr-3"
+        [lucideIcon]="icon()!"
+        size="20"
+        aria-hidden="true"></svg>
+    }
+
+    @if (isOpen()) {
+      <svg
+        lucideChevronDown
+        size="42"
+        aria-hidden="true"
+        class="arrow text-foreground/70 mr-4"></svg>
+    } @else {
+      <svg
+        lucideChevronRight
+        size="42"
+        aria-hidden="true"
+        class="arrow text-foreground/70 mr-4"></svg>
+    }
+
+    <app-form-select-dropdown [reference]="dropreference">
+      <div
+        class="form-select-dropdown form-select-search-dropdown menu-scale-in"
+        [id]="listboxId"
+        role="listbox">
+        @if (filteredOptions().length) {
+          <cdk-virtual-scroll-viewport
+            class="form-select-search-viewport custom-scroll"
+            [style.height.px]="dropdownHeight()"
+            [itemSize]="itemSize()"
+            minBufferPx="256"
+            maxBufferPx="512">
+            <div
+              *cdkVirtualFor="
+                let option of filteredOptions();
+                let index = index;
+                trackBy: trackByOption
+              "
+              class="nept-form-select-option form-select-search-option"
+              role="option"
+              [id]="optionId(index)"
+              [class.active]="isActive(index)"
+              [class.selected]="isSelected(option)"
+              [style.height.px]="itemSize()"
+              [attr.aria-selected]="isSelected(option)"
+              (mouseenter)="setActiveIndex(index)"
+              (click)="selectOption(option, $event)">
+              @if (optionTemplate) {
+                <ng-container
+                  *ngTemplateOutlet="
+                    optionTemplate;
+                    context: {
+                      $implicit: option,
+                      active: isActive(index),
+                      selected: isSelected(option),
+                    }
+                  " />
+              } @else {
+                {{ labelWith()(option) }}
+              }
+            </div>
+          </cdk-virtual-scroll-viewport>
+        } @else {
+          <div class="form-select-search-empty">
+            {{ emptyMessage() }}
+          </div>
+        }
+      </div>
+    </app-form-select-dropdown>
+  </div>
+
+  @if (hint()) {
+    <small class="form-control-hint">{{ hint() }}</small>
+  }
+</div>

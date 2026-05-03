@@ -23,6 +23,7 @@ export const loadBoardGroupsSuccess = createAction(
     boardGroups: BoardView;
     selectedIds: string[];
     searchTerm?: string | null;
+    sprintId?: number;
   }>()
 );
 
@@ -148,6 +149,13 @@ export const toggleUserSelection = createAction(
 export const setSearchTerm = createAction(
   '[BoardGroups] Set Search Term',
   props<{ term?: string | null }>()
+);
+
+// Set Sprint Filter
+
+export const setSprintFilter = createAction(
+  '[BoardGroups] Set Sprint Filter',
+  props<{ sprintId?: number }>()
 );
 
 // Select Task

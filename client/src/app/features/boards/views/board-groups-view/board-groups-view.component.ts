@@ -29,12 +29,15 @@ import {
   deleteBoardGroup,
   editBoardGroup,
   exportBoardTasks,
+  setSprintFilter,
 } from '@app/core/store/groups/board-groups.actions';
 import {
   selectAllBoardGroupsWithSelection,
   selectBoardGroupsLoaded,
   selectBoardGroupsLoading,
   selectBoardIdentifier,
+  selectBoardProjectId,
+  selectSelectedSprintId,
   selectSelectedBoard,
 } from '@app/core/store/groups/board-groups.selectors';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
@@ -42,6 +45,8 @@ import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-grou
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { loadSprints } from '@core/store/sprints/sprints.actions';
+import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
@@ -58,6 +63,8 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 
 @Component({
   templateUrl: './board-groups-view.component.html',
@@ -100,6 +107,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     InlineEditInputComponent,
     IconButtonComponent,
     CreateBoardGroupComponent,
+    FormSelectComponent,
+    FormSelectOptionComponent,
   ],
 })
 export class BoardGroupsViewComponent implements OnDestroy {
@@ -117,6 +126,9 @@ export class BoardGroupsViewComponent implements OnDestroy {
   loading = this.store.selectSignal(selectBoardGroupsLoading);
   boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
   private boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
+  private boardProjectId = this.store.selectSignal(selectBoardProjectId);
+  selectedSprintId = this.store.selectSignal(selectSelectedSprintId);
+  sprints = this.store.selectSignal(selectAllSprints);
 
   siblingIdMap = computed(() => {
     const groups = this.groups();
@@ -153,6 +165,14 @@ export class BoardGroupsViewComponent implements OnDestroy {
       if (!identifier) return;
 
       this.hubService.addToGroup(identifier);
+    });
+
+    effect(() => {
+      const projectId = this.boardProjectId();
+
+      if (!projectId) return;
+
+      this.store.dispatch(loadSprints({ filter: { projectId } }));
     });
   }
 
@@ -256,6 +276,16 @@ export class BoardGroupsViewComponent implements OnDestroy {
     if (boardId === undefined || boardId === null) return;
 
     this.store.dispatch(deleteBoard({ boardId }));
+  }
+
+  onSprintFilterChanged(value: number) {
+    const sprintId = value ? Number(value) : undefined;
+
+    this.store.dispatch(
+      setSprintFilter({
+        sprintId: Number.isFinite(sprintId) ? sprintId : undefined,
+      })
+    );
   }
 
   handleFileInput(event: Event) {

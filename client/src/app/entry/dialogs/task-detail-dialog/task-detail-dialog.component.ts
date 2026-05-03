@@ -34,6 +34,12 @@ import { TaskDetailService } from './task-detail.service';
     @if (task(); as task) {
       <div>
         <div class="mb-1 flex flex-row items-center justify-end gap-4">
+          @if (task.sprintName) {
+            <span
+              class="bg-neutral-100 text-neutral-700 rounded px-2 py-1 text-xs font-semibold">
+              {{ task.sprintName }}
+            </span>
+          }
           @if (task.status === 1) {
             <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
           }

@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
   contentChildren,
   ElementRef,
   inject,
@@ -16,6 +17,7 @@ import {
 import { FormValueControl } from '@angular/forms/signals';
 import {
   LucideChevronDown,
+  LucideChevronRight,
   LucideDynamicIcon,
   LucideIconInput,
 } from '@lucide/angular';
@@ -28,7 +30,12 @@ import { FormSelectService } from './form-select.service';
   templateUrl: './form-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectService],
-  imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
+  imports: [
+    LucideDynamicIcon,
+    LucideChevronDown,
+    LucideChevronRight,
+    FormSelectDropdownComponent,
+  ],
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue | null>
@@ -63,6 +70,8 @@ export class FormSelectComponent<TValue>
   selectedPortal?: CdkPortal;
   selectedOption = signal<FormSelectOptionComponent<TValue> | null>(null);
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
+
+  isOpen = computed(() => this.dropdown().showing());
 
   constructor() {
     this.service.register(this);
@@ -123,7 +132,7 @@ export class FormSelectComponent<TValue>
 
     const value = this.selectedOption()?.value();
 
-    if (!value) return;
+    if (value === undefined || value === null) return;
 
     this.changed.emit(value);
     this.input().nativeElement.focus();

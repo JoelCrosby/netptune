@@ -7,7 +7,7 @@
 
   <div
     #dropreference
-    class="form-control-input netp-form-select"
+    class="form-control-input netp-form-select w-full"
     [class.invalid]="touched() && invalid()"
     [class.active]="value() && pending()"
     (click)="onDropMenuIconClick($event)"
@@ -22,6 +22,7 @@
       [id]="name()"
       [value]="displayValue()"
       [disabled]="disabled()"
+      class="grow"
       [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
       readonly
       (click)="$event.stopPropagation(); showDropdown()"
@@ -41,7 +42,12 @@
     <svg class="mr-3" [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
     }
 
-    <svg lucideChevronDown size="42" aria-hidden="true" class="arrow mr-4 text-foreground/70"></svg>
+    @if (isOpen()) {
+      <svg lucideChevronDown size="42" aria-hidden="true" class="arrow mr-4 text-foreground/70"></svg>
+    } @else {
+      <svg lucideChevronRight size="42" aria-hidden="true" class="arrow mr-4 text-foreground/70"></svg>
+    }
+
 
     <app-form-select-dropdown [reference]="dropreference">
       <div class="form-select-dropdown menu-scale-in">

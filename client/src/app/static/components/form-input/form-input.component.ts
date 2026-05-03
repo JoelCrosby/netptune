@@ -77,7 +77,9 @@ export class FormInputComponent extends AbstractFormValueControl {
   readonly placeholder = input<string | null>();
   readonly hint = input<string | null>();
   readonly loading = input<boolean | null>(false);
-  readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
+  readonly type = input<'text' | 'number' | 'email' | 'password' | 'date'>(
+    'text'
+  );
   readonly pending = input(false);
   readonly noMargin = input(false);
 
