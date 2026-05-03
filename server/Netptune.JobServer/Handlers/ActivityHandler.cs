@@ -46,6 +46,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 EntityType.BoardGroup => await UnitOfWork.Ancestors.GetBoardGroupAncestors(activity.EntityId.Value, cancellationToken),
                 EntityType.Board => await UnitOfWork.Ancestors.GetBoardAncestors(activity.EntityId.Value, cancellationToken),
                 EntityType.Project => await UnitOfWork.Ancestors.GetProjectAncestors(activity.EntityId.Value, cancellationToken),
+                EntityType.Sprint => await UnitOfWork.Ancestors.GetSprintAncestors(activity.EntityId.Value, cancellationToken),
                 _ => new ActivityAncestors(),
             };
 
@@ -157,6 +158,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             EntityType.Task => $"/{workspaceSlug}/tasks/{ancestors.TaskId}",
             EntityType.Board => $"/{workspaceSlug}/boards/{ancestors.BoardKey}",
             EntityType.Project => $"/{workspaceSlug}/projects/{log.EntityId}",
+            EntityType.Sprint => $"/{workspaceSlug}/sprints/{log.EntityId}",
             _ => $"/{workspaceSlug}",
         };
     }

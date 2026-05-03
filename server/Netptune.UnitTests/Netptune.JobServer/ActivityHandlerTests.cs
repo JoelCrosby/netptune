@@ -61,6 +61,10 @@ public class ActivityHandlerTests
             .GetProjectAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
+        UnitOfWork.Ancestors
+            .GetSprintAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(DefaultAncestors);
+
         UnitOfWork.ActivityLogs
             .AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>())
             .Returns(x => x.Arg<ActivityLog>());
@@ -163,6 +167,7 @@ public class ActivityHandlerTests
     [InlineData(EntityType.Task, "/test-workspace/tasks/PROJ-42")]
     [InlineData(EntityType.Board, "/test-workspace/boards/board-1")]
     [InlineData(EntityType.Project, "/test-workspace/projects/99")]
+    [InlineData(EntityType.Sprint, "/test-workspace/sprints/99")]
     [InlineData(EntityType.Workspace, "/test-workspace")]
     public async Task Handle_ShouldBuildCorrectLink_ForEntityType(EntityType entityType, string expectedLink)
     {

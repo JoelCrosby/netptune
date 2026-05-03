@@ -32,7 +32,7 @@ public class GetTasksQueryHandlerTests
         const string workspaceKey = "workspaceKey";
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Tasks.GetTasksAsync(workspaceKey, cancellationToken: TestContext.Current.CancellationToken).Returns(tasks);
+        UnitOfWork.Tasks.GetTasksAsync(workspaceKey, null, true, TestContext.Current.CancellationToken).Returns(tasks);
 
         var result = await Handler.Handle(new GetTasksQuery(), TestContext.Current.CancellationToken);
 

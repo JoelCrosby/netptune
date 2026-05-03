@@ -144,4 +144,31 @@ public class AncestorRepository : ReadOnlyRepository, IAncestorRepository
             WorkspaceKey = result.Workspace_key,
         };
     }
+
+    public async Task<ActivityAncestors> GetSprintAncestors(int sprintId, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var result = await connection.QueryFirstOrDefaultAsync<ProjectAncestorRow>(new CommandDefinition(@"
+                SELECT
+                      p.id as project_id
+                    , p.key as project_key
+                    , p.workspace_id as workspace_id
+                    , w.slug as workspace_key
+                FROM sprints s
+                LEFT JOIN projects p on p.id = s.project_id
+                LEFT JOIN workspaces w on w.id = p.workspace_id
+                WHERE s.id = @sprintId
+            ", new { sprintId }, cancellationToken: cancellationToken));
+
+        if (result is null) return new ActivityAncestors();
+
+        return new ActivityAncestors
+        {
+            ProjectId = result.Project_id,
+            ProjectKey = result.Project_key,
+            WorkspaceId = result.Workspace_id,
+            WorkspaceKey = result.Workspace_key,
+        };
+    }
 }

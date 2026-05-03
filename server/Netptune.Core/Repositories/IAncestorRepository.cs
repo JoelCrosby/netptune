@@ -11,4 +11,6 @@ public interface IAncestorRepository
     Task<ActivityAncestors> GetBoardAncestors(int boardId, CancellationToken cancellationToken = default);
 
     Task<ActivityAncestors> GetProjectAncestors(int projectId, CancellationToken cancellationToken = default);
+
+    Task<ActivityAncestors> GetSprintAncestors(int sprintId, CancellationToken cancellationToken = default);
 }

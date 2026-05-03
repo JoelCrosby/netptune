@@ -199,8 +199,8 @@ public class SprintCommandHandlerTests
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
-        UnitOfWork.Tasks.GetAsync(firstTask.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(firstTask);
-        UnitOfWork.Tasks.GetAsync(secondTask.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(secondTask);
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), false, TestContext.Current.CancellationToken)
+            .Returns([firstTask, secondTask]);
         UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
             .Returns(sprintViewModel);
 
@@ -209,7 +209,10 @@ public class SprintCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         firstTask.SprintId.Should().Be(sprint.Id);
         secondTask.SprintId.Should().Be(sprint.Id);
-        await UnitOfWork.Tasks.Received(1).GetAsync(firstTask.Id, cancellationToken: TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(1).GetAllByIdAsync(
+            Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { firstTask.Id, secondTask.Id })),
+            false,
+            TestContext.Current.CancellationToken);
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.Assign);
     }
@@ -223,7 +226,8 @@ public class SprintCommandHandlerTests
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
-        UnitOfWork.Tasks.GetAsync(task.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(task);
+        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), false, TestContext.Current.CancellationToken)
+            .Returns([task]);
 
         var result = await handler.Handle(
             new AddTasksToSprintCommand(sprint.Id, new AddTasksToSprintRequest { TaskIds = [task.Id] }),

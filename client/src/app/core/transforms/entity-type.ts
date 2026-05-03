@@ -10,6 +10,8 @@ export const entityTypeToString = (value: EntityType): string => {
       return 'Comment';
     case EntityType.project:
       return 'Project';
+    case EntityType.sprint:
+      return 'Sprint';
     case EntityType.task:
       return 'Task';
     case EntityType.user:
