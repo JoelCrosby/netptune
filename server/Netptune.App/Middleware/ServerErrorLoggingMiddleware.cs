@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Netptune.App.Middleware;
@@ -22,6 +24,26 @@ public class ServerErrorLoggingMiddleware(RequestDelegate next)
         {
             throw;
         }
+        catch (BadHttpRequestException exception)
+        {
+            if (context.Response.HasStarted)
+            {
+                throw;
+            }
+
+            context.Response.Clear();
+            context.Response.StatusCode = exception.StatusCode;
+            context.Response.ContentType = "application/problem+json";
+
+            var problem = new ProblemDetails
+            {
+                Status = exception.StatusCode,
+                Title = "Bad Request",
+                Instance = context.Request.Path
+            };
+
+            await JsonSerializer.SerializeAsync(context.Response.Body, problem, cancellationToken: context.RequestAborted);
+        }
         catch (Exception exception)
         {
             context.Items[ExceptionLoggedKey] = true;
@@ -44,7 +66,7 @@ public class ServerErrorLoggingMiddleware(RequestDelegate next)
                 Instance = context.Request.Path
             };
 
-            await context.Response.WriteAsJsonAsync(problem, context.RequestAborted);
+            await JsonSerializer.SerializeAsync(context.Response.Body, problem, cancellationToken: context.RequestAborted);
         }
     }
 

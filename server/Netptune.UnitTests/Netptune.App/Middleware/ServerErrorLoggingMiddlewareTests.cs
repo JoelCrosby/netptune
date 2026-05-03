@@ -47,6 +47,21 @@ public class ServerErrorLoggingMiddlewareTests
             && entry.Message.Contains("responded 500"));
     }
 
+    [Fact]
+    public async Task InvokeAsync_ReturnsBadRequestForBadHttpRequestException()
+    {
+        var logger = new ListLogger<ServerErrorLoggingMiddleware>();
+        var context = CreateHttpContext();
+        var middleware = new ServerErrorLoggingMiddleware(_ =>
+            throw new BadHttpRequestException("invalid request body"));
+
+        await middleware.InvokeAsync(context, logger);
+
+        context.Response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+        context.Response.ContentType.Should().Be("application/problem+json");
+        logger.Entries.Should().BeEmpty();
+    }
+
     private static DefaultHttpContext CreateHttpContext()
     {
         var context = new DefaultHttpContext
