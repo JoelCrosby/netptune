@@ -19,15 +19,14 @@ import {
 } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CardComponent } from '@static/components/card/card.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +37,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
     PageHeaderComponent,
     SpinnerComponent,
     FlatButtonComponent,
-    StrokedButtonComponent,
     CardComponent,
     FormInputComponent,
     FormSelectComponent,
