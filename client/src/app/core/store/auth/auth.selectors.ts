@@ -45,11 +45,9 @@ export const selectCurrentUserDisplayName = createSelector(
 export const selectIsAuthenticated = createSelector(
   selectAuthFeature,
   (state: AuthState) => {
-    console.log('selectIsAuthenticated');
-    console.log('state', state);
-    console.log('state.tokenExpires: ', state.tokenExpires);
-
-    if (!state.isAuthenticated || !state.tokenExpires) return false;
+    if (!state.isAuthenticated || !state.tokenExpires) {
+      return false;
+    }
 
     return new Date(state.tokenExpires).getTime() > Date.now();
   }

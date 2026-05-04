@@ -1,16 +1,13 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { AuthService } from '@app/core/auth/auth.service';
 import { loginSuccess } from '@app/core/store/auth/auth.actions';
 import { LoginResponse } from '@app/core/store/auth/auth.models';
 import { Store } from '@ngrx/store';
-import { firstValueFrom } from 'rxjs';
 
 export const authProvider: ResolveFn<boolean> = async (
   route: ActivatedRouteSnapshot
 ): Promise<boolean> => {
   const store = inject(Store);
-  const authService = inject(AuthService);
 
   const expiresValue = route.queryParamMap.get('expires');
   const email = route.queryParamMap.get('email');
@@ -39,10 +36,9 @@ export const authProvider: ResolveFn<boolean> = async (
   const displayName = route.queryParamMap.get('displayName') ?? '';
   const pictureUrl = route.queryParamMap.get('pictureUrl') ?? '';
 
-  const currentUser = await firstValueFrom(authService.currentUser());
-
   const user: LoginResponse = {
-    ...currentUser,
+    userId,
+    email,
     expires: expiresValue,
     displayName,
     pictureUrl,
