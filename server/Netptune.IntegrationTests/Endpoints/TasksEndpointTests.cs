@@ -35,6 +35,66 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldFilterTasks_WhenFilterQueryProvided()
+    {
+        var searchResponse = await Client.GetAsync("api/tasks?search=OpenTelemetry");
+
+        searchResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var searchResult = await searchResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        searchResult.Should().NotBeNull();
+        searchResult.Should().NotBeEmpty();
+        searchResult.Should().OnlyContain(task =>
+            task.Name.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
+            task.ProjectName!.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
+            task.Tags.Any(tag => tag.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase)));
+
+        var tagResponse = await Client.GetAsync("api/tasks?tags=Typescript");
+
+        tagResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var tagResult = await tagResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        tagResult.Should().NotBeNull();
+        tagResult.Should().NotBeEmpty();
+        tagResult.Should().OnlyContain(task => task.Tags.Contains("Typescript"));
+
+        var statusResponse = await Client.GetAsync($"api/tasks?statuses={(int)ProjectTaskStatus.Complete}");
+
+        statusResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var statusResult = await statusResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        statusResult.Should().NotBeNull();
+        statusResult.Should().NotBeEmpty();
+        statusResult.Should().OnlyContain(task => task.Status == ProjectTaskStatus.Complete);
+
+        var user = SeedData.Users.ElementAt(0);
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Assignee filter test",
+            Description = "Task used to verify assignee filtering",
+            Status = ProjectTaskStatus.InProgress,
+            ProjectId = 1,
+            AssigneeId = user.Id,
+        });
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var assigneeResponse = await Client.GetAsync($"api/tasks?assignees={user.Id}");
+
+        assigneeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var assigneeResult = await assigneeResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        assigneeResult.Should().NotBeNull();
+        assigneeResult.Should().NotBeEmpty();
+        assigneeResult.Should().OnlyContain(task =>
+            task.Assignees.Any(assignee => assignee.Id == user.Id));
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks/1");

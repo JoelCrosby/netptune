@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -100,28 +101,211 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
 
-    public Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public async Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         filter ??= new TaskFilter();
+        var search = filter.Search?.Trim().ToLower() ?? string.Empty;
+        var searchPattern = $"%{search}%";
+        var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
+        var statuses = filter.Statuses.Select(status => (int)status).ToArray();
+        var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
+        var take = filter.Take is > 0 ? Math.Min(filter.Take.Value, 100) : (int?)null;
 
-        var query = Entities
-            .Where(x => x.Workspace.Slug == workspaceKey && !x.IsDeleted)
-            .Where(x => !filter.ProjectId.HasValue || x.ProjectId == filter.ProjectId.Value)
-            .Where(x => !filter.ExcludeSprintId.HasValue || x.SprintId == null || x.SprintId != filter.ExcludeSprintId.Value)
-            .Where(x => string.IsNullOrWhiteSpace(filter.Search) ||
-                        x.Name.ToLower().Contains(filter.Search.ToLower()) ||
-                        x.Project!.Key.ToLower().Contains(filter.Search.ToLower()));
+        using var connection = ConnectionFactory.StartConnection();
 
-        query = query.OrderByDescending(x => x.UpdatedAt);
-
-        if (filter.Take is > 0)
+        var rows = await connection.QueryAsync<TaskViewRowMap>(new CommandDefinition($@"
+            WITH filtered_tasks AS (
+                SELECT pt.id
+                     , pt.owner_id
+                     , pt.name
+                     , pt.description
+                     , pt.status
+                     , pt.project_scope_id
+                     , pt.priority
+                     , pt.estimate_type
+                     , pt.estimate_value
+                     , pt.project_id
+                     , pt.sprint_id
+                     , pt.workspace_id
+                     , pt.created_at
+                     , pt.updated_at
+                     , w.slug AS workspace_key
+                     , p.key AS project_key
+                     , p.name AS project_name
+                     , s.name AS sprint_name
+                     , s.status AS sprint_status
+                     , CASE
+                           WHEN NULLIF(CONCAT_WS(' ', o.firstname, o.lastname), '') IS NULL
+                               THEN o.user_name
+                           ELSE CONCAT_WS(' ', o.firstname, o.lastname)
+                       END AS owner_username
+                     , o.picture_url AS owner_picture_url
+                FROM project_tasks pt
+                         INNER JOIN workspaces w ON pt.workspace_id = w.id
+                         LEFT JOIN projects p ON pt.project_id = p.id
+                         LEFT JOIN sprints s ON pt.sprint_id = s.id AND NOT s.is_deleted
+                         INNER JOIN users o ON pt.owner_id = o.id
+                WHERE w.slug = @workspaceKey
+                  AND NOT pt.is_deleted
+                  AND (@projectId IS NULL OR pt.project_id = @projectId)
+                  AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
+                  AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
+                  AND (CARDINALITY(@statuses) = 0 OR pt.status = ANY(@statuses))
+                  AND (CARDINALITY(@assignees) = 0 OR EXISTS (
+                      SELECT 1
+                      FROM project_task_app_users ptau_filter
+                      WHERE ptau_filter.project_task_id = pt.id
+                        AND ptau_filter.user_id = ANY(@assignees)
+                  ))
+                  AND (CARDINALITY(@tags) = 0 OR EXISTS (
+                      SELECT 1
+                      FROM project_task_tags ptt_filter
+                               INNER JOIN tags t_filter ON ptt_filter.tag_id = t_filter.id AND NOT t_filter.is_deleted
+                      WHERE ptt_filter.project_task_id = pt.id
+                        AND t_filter.name = ANY(@tags)
+                  ))
+                  AND (@search = '' OR (
+                      LOWER(pt.name) LIKE @searchPattern
+                      OR LOWER(p.key) LIKE @searchPattern
+                      OR LOWER(p.name) LIKE @searchPattern
+                      OR EXISTS (
+                          SELECT 1
+                          FROM project_task_tags ptt_search
+                                   INNER JOIN tags t_search ON ptt_search.tag_id = t_search.id AND NOT t_search.is_deleted
+                          WHERE ptt_search.project_task_id = pt.id
+                            AND LOWER(t_search.name) LIKE @searchPattern
+                      )
+                  ))
+                ORDER BY pt.updated_at DESC NULLS LAST
+                {GetLimitClause(take)}
+            )
+            SELECT ft.id AS task_id
+                 , ft.owner_id
+                 , ft.name AS task_name
+                 , ft.description AS task_description
+                 , ft.status AS task_status
+                 , ft.project_scope_id
+                 , ft.priority AS task_priority
+                 , ft.estimate_type AS task_estimate_type
+                 , ft.estimate_value AS task_estimate_value
+                 , ft.project_id
+                 , ft.sprint_id
+                 , ft.sprint_name
+                 , ft.sprint_status
+                 , ft.workspace_id
+                 , ft.workspace_key
+                 , ft.created_at AS task_created_at
+                 , ft.updated_at AS task_updated_at
+                 , ft.owner_username
+                 , ft.owner_picture_url
+                 , ft.project_key
+                 , ft.project_name
+                 , t.name AS tag
+                 , u.id AS assignee_id
+                 , u.firstname AS assignee_firstname
+                 , u.lastname AS assignee_lastname
+                 , u.picture_url AS assignee_picture_url
+            FROM filtered_tasks ft
+                     LEFT JOIN project_task_tags ptt ON ft.id = ptt.project_task_id
+                     LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted
+                     LEFT JOIN project_task_app_users ptau ON ft.id = ptau.project_task_id
+                     LEFT JOIN users u ON ptau.user_id = u.id
+            ORDER BY ft.updated_at DESC NULLS LAST, ft.id, t.name, u.id;
+        ", new
         {
-            query = query.Take(Math.Min(filter.Take.Value, 100));
+            workspaceKey,
+            projectId = filter.ProjectId,
+            sprintId = filter.SprintId,
+            excludeSprintId = filter.ExcludeSprintId,
+            statuses,
+            tags,
+            assignees,
+            search,
+            searchPattern,
+            take,
+        }, cancellationToken: cancellationToken));
+
+        return RowsToTaskViewModels(rows);
+    }
+
+    private static string GetLimitClause(int? take)
+    {
+        return take.HasValue ? "LIMIT @take" : string.Empty;
+    }
+
+    private static List<TaskViewModel> RowsToTaskViewModels(IEnumerable<TaskViewRowMap> rows)
+    {
+        return rows.Aggregate(new List<TaskViewModel>(200), (result, row) =>
+        {
+            var lastTask = result.LastOrDefault();
+
+            if (lastTask?.Id == row.Task_Id)
+            {
+                AddTag(lastTask, row.Tag);
+                AddAssignee(lastTask, row);
+
+                return result;
+            }
+
+            var task = new TaskViewModel
+            {
+                Id = row.Task_Id,
+                OwnerId = row.Owner_Id,
+                Name = row.Task_Name,
+                Description = row.Task_Description,
+                Status = row.Task_Status,
+                ProjectScopeId = row.Project_Scope_Id,
+                SystemId = row.Project_Key is null
+                    ? row.Project_Scope_Id.ToString()
+                    : $"{row.Project_Key}-{row.Project_Scope_Id}",
+                Priority = row.Task_Priority,
+                EstimateType = row.Task_Estimate_Type,
+                EstimateValue = row.Task_Estimate_Value,
+                ProjectId = row.Project_Id,
+                SprintId = row.Sprint_Id,
+                SprintName = row.Sprint_Name,
+                SprintStatus = row.Sprint_Status,
+                WorkspaceId = row.Workspace_Id,
+                WorkspaceKey = row.Workspace_Key,
+                CreatedAt = row.Task_Created_At,
+                UpdatedAt = row.Task_Updated_At,
+                OwnerUsername = row.Owner_Username,
+                OwnerPictureUrl = row.Owner_Picture_Url,
+                ProjectName = row.Project_Name ?? string.Empty,
+                Tags = [],
+                Assignees = [],
+            };
+
+            AddTag(task, row.Tag);
+            AddAssignee(task, row);
+
+            result.Add(task);
+
+            return result;
+        });
+    }
+
+    private static void AddTag(TaskViewModel task, string? tag)
+    {
+        if (tag is not null && !task.Tags.Contains(tag))
+        {
+            task.Tags.Add(tag);
+        }
+    }
+
+    private static void AddAssignee(TaskViewModel task, TaskViewRowMap row)
+    {
+        if (row.Assignee_Id is null || task.Assignees.Any(assignee => assignee.Id == row.Assignee_Id))
+        {
+            return;
         }
 
-        return query
-            .Select(TaskToViewModel())
-            .ToReadonlyListAsync(isReadonly, cancellationToken);
+        task.Assignees.Add(new AssigneeViewModel
+        {
+            Id = row.Assignee_Id,
+            DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
+            PictureUrl = row.Assignee_Picture_Url,
+        });
     }
 
     private static Expression<Func<ProjectTask, TaskViewModel>> TaskToViewModel()
@@ -362,4 +546,58 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return taskCount + 1 + increment;
     }
 
+    private sealed class TaskViewRowMap
+    {
+        public int Task_Id { get; init; }
+
+        public string Owner_Id { get; init; } = null!;
+
+        public string Task_Name { get; init; } = null!;
+
+        public string? Task_Description { get; init; }
+
+        public ProjectTaskStatus Task_Status { get; init; }
+
+        public int Project_Scope_Id { get; init; }
+
+        public TaskPriority? Task_Priority { get; init; }
+
+        public EstimateType? Task_Estimate_Type { get; init; }
+
+        public decimal? Task_Estimate_Value { get; init; }
+
+        public int? Project_Id { get; init; }
+
+        public int? Sprint_Id { get; init; }
+
+        public string? Sprint_Name { get; init; }
+
+        public SprintStatus? Sprint_Status { get; init; }
+
+        public int Workspace_Id { get; init; }
+
+        public string Workspace_Key { get; init; } = null!;
+
+        public DateTime Task_Created_At { get; init; }
+
+        public DateTime? Task_Updated_At { get; init; }
+
+        public string Owner_Username { get; init; } = null!;
+
+        public string? Owner_Picture_Url { get; init; }
+
+        public string? Project_Key { get; init; }
+
+        public string? Project_Name { get; init; }
+
+        public string? Tag { get; init; }
+
+        public string? Assignee_Id { get; init; }
+
+        public string? Assignee_Firstname { get; init; }
+
+        public string? Assignee_Lastname { get; init; }
+
+        public string? Assignee_Picture_Url { get; init; }
+    }
 }
