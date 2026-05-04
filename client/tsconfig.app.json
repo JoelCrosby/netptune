@@ -7,7 +7,8 @@
   },
   "files": [
     "src/main.ts",
-    "src/environments/environment.prod.ts"
+    "src/environments/environment.prod.ts",
+    "prettier.config.ts"
   ],
   "include": [
     "src/**/*.d.ts"

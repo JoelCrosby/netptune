@@ -17,8 +17,12 @@ public static class AuthEndpoints
     {
         var group = builder.MapGroup("auth");
 
-        group.MapPost("/login", HandleLogin).AllowAnonymous();
-        group.MapPost("/register", HandleRegister).AllowAnonymous();
+        group.MapPost("/login", HandleLogin)
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
+        group.MapPost("/register", HandleRegister)
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
         group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
         group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
         group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();

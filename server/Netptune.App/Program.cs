@@ -112,6 +112,18 @@ builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetSlidingWindowLimiter(
+            context.GetRemoteIpAddress() ?? "unknown",
+            _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                SegmentsPerWindow = 6,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0,
+            }));
+
     options.AddSlidingWindowLimiter("api", limiterOptions =>
     {
         limiterOptions.PermitLimit = 300;

@@ -152,7 +152,10 @@ export class LoginComponent {
   login(event: Event) {
     event.preventDefault();
 
-    if (this.loginForm().invalid()) return;
+    if (this.loginForm().invalid()) {
+      this.loginForm().markAsDirty();
+      return;
+    }
 
     const email = this.loginForm.email().value();
     const password = this.loginForm.password().value();
