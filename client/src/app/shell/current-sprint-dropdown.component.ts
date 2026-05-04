@@ -109,7 +109,12 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           </button>
         </app-dropdown-menu>
       } @else {
-        <a app-button-link variant="filled" [routerLink]="['./sprints']">
+        <a
+          app-button-link
+          variant="outlined"
+          color="neutral"
+          class="mr-4 h-7 min-h-6"
+          [routerLink]="['./sprints']">
           Start Sprint
         </a>
       }

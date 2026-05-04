@@ -4,6 +4,7 @@ import {
   HostBinding,
   input,
 } from '@angular/core';
+import { cn, strokedButtonVariants, type ButtonColor } from './button.variants';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -12,18 +13,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StrokedButtonComponent {
-  readonly color = input<'primary' | 'warn'>('primary');
+  readonly color = input<ButtonColor>('primary');
+  readonly class = input('');
 
   @HostBinding('class') get className(): string {
-    const base =
-      'inline-flex items-center justify-center gap-2 px-4 h-10 min-w-16 rounded-sm text-sm font-medium tracking-wide cursor-pointer select-none transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
-
-    const colors: Record<string, string> = {
-      primary:
-        'border-border text-primary bg-transparent hover:bg-primary/10 focus-visible:ring-primary',
-      warn: 'border-border text-warn bg-transparent hover:bg-warn/10 focus-visible:ring-warn',
-    };
-
-    return `${base} ${colors[this.color()]}`;
+    return cn(strokedButtonVariants({ color: this.color() }), this.class());
   }
 }

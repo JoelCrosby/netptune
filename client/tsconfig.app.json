@@ -6,11 +6,10 @@
     "types": ["turnstile-types"]
   },
   "files": [
-    "src/main.ts",
-    "src/environments/environment.prod.ts",
-    "prettier.config.ts"
+    "src/main.ts"
   ],
   "include": [
+    "**/*.ts",
     "src/**/*.d.ts"
   ]
 }
