@@ -25,8 +25,7 @@ import { TurnstileLoaderService } from './turnstile-loader.service';
         <p
           class="text-warn bg-warn/5 rounded px-3 py-2 text-sm leading-5"
           role="alert">
-          We could not load the security check. Allow challenges.cloudflare.com
-          in your content blocker, then refresh.
+          {{ errorMessage() }}
         </p>
       }
     </div>
@@ -43,6 +42,9 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
   private turnstileContainer?: ElementRef<HTMLDivElement>;
 
   loadError = signal(false);
+  errorMessage = signal(
+    'We could not load the security check. Allow challenges.cloudflare.com in your content blocker, then refresh.'
+  );
 
   tokenGenerated = output<string>();
 
@@ -65,20 +67,33 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
             this.loadError.set(false);
             this.tokenGenerated.emit(token);
           },
-          'error-callback': () => {
+          'error-callback': (errorCode: string) => {
+            this.errorMessage.set(this.getErrorMessage(errorCode));
             this.loadError.set(true);
             this.tokenGenerated.emit('');
+            return true;
           },
           'expired-callback': () => {
             this.tokenGenerated.emit('');
           },
           'timeout-callback': () => {
-            this.tokenGenerated.emit('');
-          },
-          'unsupported-callback': () => {
+            this.errorMessage.set(
+              'The security check timed out. Refresh the page, then try again.'
+            );
             this.loadError.set(true);
             this.tokenGenerated.emit('');
           },
+          'unsupported-callback': () => {
+            this.errorMessage.set(
+              'This browser cannot complete the security check. Try updating your browser or using a different one.'
+            );
+            this.loadError.set(true);
+            this.tokenGenerated.emit('');
+            return true;
+          },
+          retry: 'auto',
+          'retry-interval': 8000,
+          'refresh-expired': 'auto',
         }
       );
     } catch {
@@ -93,5 +108,17 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
     if (this.turnstileElId && window.turnstile) {
       window.turnstile.remove(this.turnstileElId);
     }
+  }
+
+  private getErrorMessage(errorCode: string) {
+    if (errorCode.startsWith('200')) {
+      return 'The security check could not load. Allow challenges.cloudflare.com in your content blocker, then refresh.';
+    }
+
+    if (errorCode.startsWith('110')) {
+      return 'The security check configuration failed. Refresh the page, then try again.';
+    }
+
+    return 'The security check failed. Refresh the page or try a different browser.';
   }
 }

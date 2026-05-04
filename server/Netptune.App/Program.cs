@@ -124,6 +124,18 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
             }));
 
+    options.AddPolicy("register", context =>
+        RateLimitPartition.GetSlidingWindowLimiter(
+            context.GetRemoteIpAddress() ?? "unknown",
+            _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(10),
+                SegmentsPerWindow = 10,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0,
+            }));
+
     options.AddSlidingWindowLimiter("api", limiterOptions =>
     {
         limiterOptions.PermitLimit = 300;

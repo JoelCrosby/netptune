@@ -22,7 +22,7 @@ public static class AuthEndpoints
             .RequireRateLimiting("auth");
         group.MapPost("/register", HandleRegister)
             .AllowAnonymous()
-            .RequireRateLimiting("auth");
+            .RequireRateLimiting("register");
         group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
         group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
         group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();
