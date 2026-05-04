@@ -4,7 +4,10 @@ import {
   TrackByFunction,
   inject,
 } from '@angular/core';
-import { selectTasks } from '@core/store/tasks/tasks.selectors';
+import {
+  selectTaskFiltersActive,
+  selectTasks,
+} from '@core/store/tasks/tasks.selectors';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
@@ -14,6 +17,7 @@ import { LucideListChecks, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { TaskListFiltersComponent } from './task-list-filters.component';
 
 @Component({
   selector: 'app-task-list',
@@ -25,12 +29,15 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
     LucideListChecks,
     FlatButtonComponent,
     LucidePlus,
+    TaskListFiltersComponent,
   ],
   template: `
+    <app-task-list-filters />
+
     <app-list
       [items]="tasks()"
       [itemSize]="43"
-      viewportClass="h-[calc(100vh-262px)] min-h-16"
+      viewportClass="h-[calc(100vh-312px)] min-h-16"
       [trackBy]="trackByTask">
       <ng-template #item let-task>
         <app-task-list-item
@@ -45,7 +52,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
       </ng-template>
 
       <ng-template #listEmpty>
-        @if (canCreate()) {
+        @if (canCreate() && !filtersActive()) {
           <app-task-inline />
         }
 
@@ -54,10 +61,14 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
             class="my-16 flex h-full flex-col items-center justify-center gap-2">
             <svg size="38" lucideListChecks></svg>
             <h4 class="mx-16 text-center font-normal">
-              There are currently no tasks.
+              {{
+                filtersActive()
+                  ? 'No tasks match these filters.'
+                  : 'There are currently no tasks.'
+              }}
             </h4>
 
-            @if (canCreate()) {
+            @if (canCreate() && !filtersActive()) {
               <p class="text-foreground/70 mb-4 text-center text-sm">
                 Use the Create Task button to create your first task and get
                 started.
@@ -77,6 +88,7 @@ export class TaskListComponent {
   private store = inject(Store);
 
   readonly tasks = this.store.selectSignal(selectTasks);
+  readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
   readonly trackByTask: TrackByFunction<TaskViewModel> = (_, task) => task.id;
 
   readonly canCreate = this.store.selectSignal(
