@@ -19,6 +19,10 @@ public class NotificationEntityMap : AuditableEntityMap<Notification, int>
             .HasIndex(n => new { n.UserId, n.WorkspaceId, n.IsRead });
 
         builder
+            .HasIndex(n => new { n.UserId, n.WorkspaceId, n.IsDeleted, n.CreatedAt, n.Id })
+            .HasDatabaseName("ix_notifications_user_workspace_deleted_created_id");
+
+        builder
             .HasIndex(n => n.IsRead);
 
         builder

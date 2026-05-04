@@ -19,6 +19,10 @@ public class WorkspaceAppUserEntityMap : KeyedEntityMap<WorkspaceAppUser, int>
             .HasAlternateKey(workspaceUser => new { workspaceUser.WorkspaceId, workspaceUser.UserId });
 
         builder
+            .HasIndex(workspaceUser => new { workspaceUser.UserId, workspaceUser.WorkspaceId })
+            .HasDatabaseName("ix_workspace_app_users_user_workspace");
+
+        builder
             .HasOne(workspaceUser => workspaceUser.Workspace)
             .WithMany(workspace => workspace.WorkspaceUsers)
             .HasForeignKey(workspaceUser => workspaceUser.WorkspaceId);

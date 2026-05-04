@@ -47,7 +47,7 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<List<TaskViewModel>>();
 
         result.Should().NotBeNull();
-        result!.Should().HaveCountLessThanOrEqualTo(100);
+        result.Should().HaveCountLessThanOrEqualTo(100);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public sealed class TasksEndpointTests
         var secondPage = await secondResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
 
         secondPage.Should().NotBeNull();
-        secondPage!.Select(task => task.Id).Should().NotIntersectWith(firstPage!.Select(task => task.Id));
+        secondPage.Select(task => task.Id).Should().NotIntersectWith(firstPage.Select(task => task.Id));
     }
 
     [Fact]

@@ -54,6 +54,14 @@ public class SprintEntityMap : WorkspaceEntityMap<Sprint, int>
             .HasIndex(sprint => new { sprint.WorkspaceId, sprint.ProjectId, sprint.Status });
 
         builder
+            .HasIndex(sprint => new { sprint.WorkspaceId, sprint.ProjectId, sprint.IsDeleted, sprint.Status, sprint.StartDate, sprint.Id })
+            .HasDatabaseName("ix_sprints_workspace_project_deleted_status_start_id");
+
+        builder
+            .HasIndex(sprint => new { sprint.WorkspaceId, sprint.IsDeleted, sprint.Status, sprint.StartDate, sprint.Id })
+            .HasDatabaseName("ix_sprints_workspace_deleted_status_start_id");
+
+        builder
             .HasIndex(sprint => new { sprint.ProjectId, sprint.Name });
 
         builder

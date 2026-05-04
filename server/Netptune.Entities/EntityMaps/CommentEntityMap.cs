@@ -30,6 +30,10 @@ public class CommentEntityMap : WorkspaceEntityMap<Comment, int>
             .HasDatabaseName("ix_comments_workspace_entity_created_id");
 
         builder
+            .HasIndex(comment => new { comment.EntityType, comment.EntityId, comment.IsDeleted, comment.CreatedAt, comment.Id })
+            .HasDatabaseName("ix_comments_entity_deleted_created_id");
+
+        builder
             .HasMany(comment => comment.Reactions)
             .WithOne(reaction => reaction.Comment)
             .HasForeignKey(reaction => reaction.CommentId)

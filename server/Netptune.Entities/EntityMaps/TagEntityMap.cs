@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -19,5 +20,9 @@ public class TagEntityMap : WorkspaceEntityMap<Tag, int>
         builder
             .HasIndex(tag => new { tag.Name, tag.WorkspaceId })
             .IsUnique();
+
+        builder
+            .HasIndex(tag => new { tag.WorkspaceId, tag.IsDeleted, tag.CreatedAt, tag.Id })
+            .HasDatabaseName("ix_tags_workspace_deleted_created_id");
     }
 }
