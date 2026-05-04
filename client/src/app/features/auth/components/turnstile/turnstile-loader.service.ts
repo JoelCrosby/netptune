@@ -42,7 +42,7 @@ export class TurnstileLoaderService {
           return;
         }
 
-        window.turnstile.ready(() => resolve(window.turnstile));
+        resolve(window.turnstile);
       };
 
       const handleError = () => {
