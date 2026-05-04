@@ -9,6 +9,7 @@ import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
+import { TaskStatus } from '@core/enums/project-task-status';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -248,4 +249,21 @@ export const loadActivitySuccess = createAction(
 export const loadActivityFail = createAction(
   '[ProjectTasks] Load Activity Fail',
   props<{ error: HttpErrorResponse }>()
+);
+
+// Filters
+
+export const setSearchTerm = createAction(
+  '[ProjectTasks] Set Search Term',
+  props<{ term?: string | null }>()
+);
+
+export const toggleSelectedStatus = createAction(
+  '[ProjectTasks] Toggle Selected Status',
+  props<{ status: TaskStatus }>()
+);
+
+export const toggleSelectedAssignee = createAction(
+  '[ProjectTasks] Toggle Selected Assignee',
+  props<{ assigneeId: string }>()
 );

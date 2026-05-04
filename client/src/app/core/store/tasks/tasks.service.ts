@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
@@ -9,6 +9,7 @@ import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ProjectTasksFilter } from './tasks.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,30 @@ import { switchMap } from 'rxjs/operators';
 export class ProjectTasksService {
   private http = inject(HttpClient);
 
-  get() {
-    return this.http.get<TaskViewModel[]>('api/tasks');
+  get(filter?: ProjectTasksFilter) {
+    let params = new HttpParams();
+
+    if (filter?.search) {
+      params = params.set('search', filter.search);
+    }
+
+    if (filter?.sprintId !== undefined) {
+      params = params.set('sprintId', filter.sprintId);
+    }
+
+    for (const tag of filter?.tags ?? []) {
+      params = params.append('tags', tag);
+    }
+
+    for (const status of filter?.statuses ?? []) {
+      params = params.append('statuses', status);
+    }
+
+    for (const assignee of filter?.assignees ?? []) {
+      params = params.append('assignees', assignee);
+    }
+
+    return this.http.get<TaskViewModel[]>('api/tasks', { params });
   }
 
   post(task: AddProjectTaskRequest) {

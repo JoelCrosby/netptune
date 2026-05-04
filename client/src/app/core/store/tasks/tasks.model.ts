@@ -17,6 +17,9 @@ export const initialState: TasksState = adapter.getInitialState({
   deleteState: DEFAULT_ACTION_STATE,
   editState: DEFAULT_ACTION_STATE,
   comments: [],
+  searchTerm: null,
+  selectedStatuses: [],
+  selectedAssignees: [],
 });
 
 export interface TasksState extends AsyncEntityState<TaskViewModel> {
@@ -31,6 +34,9 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   inlineEditActive?: boolean;
   detailTask?: TaskViewModel;
   comments: CommentViewModel[];
+  searchTerm?: string | null;
+  selectedStatuses: TaskStatus[];
+  selectedAssignees: string[];
 }
 
 export interface TaskListGroup {
@@ -39,4 +45,12 @@ export interface TaskListGroup {
   header: string;
   status: TaskStatus;
   emptyMessage: string;
+}
+
+export interface ProjectTasksFilter {
+  search?: string | null;
+  sprintId?: number;
+  tags?: string[];
+  statuses?: TaskStatus[];
+  assignees?: string[];
 }

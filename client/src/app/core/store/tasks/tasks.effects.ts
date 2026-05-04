@@ -2,21 +2,33 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import * as RouteSelectors from '@core/core.route.selectors';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Action, Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap, tap } from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { loadProjects } from '../projects/projects.actions';
+import * as SprintActions from '../sprints/sprints.actions';
+import * as TagActions from '../tags/tags.actions';
 import { loadTags } from '../tags/tags.actions';
 import { loadUsers } from '../users/users.actions';
 import * as actions from './tasks.actions';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import { ProjectTasksService } from './tasks.service';
 import { clearState } from '../activity/activity.actions';
+import { selectProjectTasksFilter } from './tasks.selectors';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -25,18 +37,38 @@ export class ProjectTasksEffects {
   private projectTasksHubService = inject(ProjectTasksHubService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
+  private store = inject(Store);
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadProjectTasks),
-      switchMap(() =>
-        this.projectTasksService.get().pipe(
+      concatLatestFrom(() => this.store.select(selectProjectTasksFilter)),
+      switchMap(([_, taskFilter]) =>
+        this.projectTasksService.get(taskFilter).pipe(
           map((tasks) => actions.loadProjectTasksSuccess({ tasks })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadProjectTasksFail(error))
+            of(actions.loadProjectTasksFail({ error }))
           )
         )
       )
+    );
+  });
+
+  reloadProjectTasksOnFilterChange$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        actions.setSearchTerm,
+        actions.toggleSelectedStatus,
+        actions.toggleSelectedAssignee,
+        TagActions.toggleSelectedTag,
+        TagActions.setSelectedTags,
+        SprintActions.setSprintTaskFilter
+      ),
+      concatLatestFrom(() =>
+        this.store.select(RouteSelectors.selectIsTasksRoute)
+      ),
+      filter(([, isTasksRoute]) => isTasksRoute),
+      map(() => actions.loadProjectTasks())
     );
   });
 

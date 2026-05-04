@@ -7,3 +7,23 @@ export enum TaskStatus {
   awaitingClassification = 5,
   inActive = 6,
 }
+
+export const taskStatusLabels: Record<TaskStatus, string> = {
+  [TaskStatus.new]: 'New',
+  [TaskStatus.complete]: 'Complete',
+  [TaskStatus.inProgress]: 'In Progress',
+  [TaskStatus.onHold]: 'On Hold',
+  [TaskStatus.unAssigned]: 'Un-assigned',
+  [TaskStatus.awaitingClassification]: 'Awaiting Classification',
+  [TaskStatus.inActive]: 'Inactive',
+};
+
+export const taskStatusOptions = [
+  TaskStatus.new,
+  TaskStatus.inProgress,
+  TaskStatus.onHold,
+  TaskStatus.unAssigned,
+  TaskStatus.awaitingClassification,
+  TaskStatus.inActive,
+  TaskStatus.complete,
+];

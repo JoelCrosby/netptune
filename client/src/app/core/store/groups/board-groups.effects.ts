@@ -379,7 +379,9 @@ export class BoardGroupsEffects {
         this.store.select(selectSelectedTags),
         this.store.select(selectors.selectSearchTerm),
         this.store.select(selectors.selectSelectedSprintId),
+        this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
       ]),
+      filter(([, , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
       map(([_, users, tags, term, sprintId]) => {
         const usersParam = users?.length ? users : undefined;
         const tagsParam = tags?.length ? tags : undefined;

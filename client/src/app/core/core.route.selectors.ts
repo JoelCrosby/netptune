@@ -34,6 +34,14 @@ export const selectIsBoardGroupsRoute = createSelector(
   }
 );
 
+export const selectIsTasksRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) => {
+    const match = state.match(/\/.+\/tasks/) ?? [];
+    return match.length > 0;
+  }
+);
+
 export const selectSideBarTransparent = createSelector(
   selectRouterReducerState,
   (state: RouterStateUrl) => state?.transparentSidebar

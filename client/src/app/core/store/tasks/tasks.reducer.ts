@@ -188,6 +188,34 @@ const reducer = createReducer(
       detailTask: undefined,
       comments: [],
     })
+  ),
+
+  // Filters
+
+  on(
+    actions.setSearchTerm,
+    (state, { term }): TasksState => ({
+      ...state,
+      searchTerm: term,
+    })
+  ),
+  on(
+    actions.toggleSelectedStatus,
+    (state, { status }): TasksState => ({
+      ...state,
+      selectedStatuses: state.selectedStatuses.includes(status)
+        ? state.selectedStatuses.filter((item) => item !== status)
+        : [...state.selectedStatuses, status],
+    })
+  ),
+  on(
+    actions.toggleSelectedAssignee,
+    (state, { assigneeId }): TasksState => ({
+      ...state,
+      selectedAssignees: state.selectedAssignees.includes(assigneeId)
+        ? state.selectedAssignees.filter((item) => item !== assigneeId)
+        : [...state.selectedAssignees, assigneeId],
+    })
   )
 );
 
