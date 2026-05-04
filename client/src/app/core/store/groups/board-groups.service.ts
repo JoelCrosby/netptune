@@ -4,6 +4,7 @@ import { Params } from '@angular/router';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { MAX_PAGE_SIZE } from '@core/models/pagination';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { FileResponse } from '@core/types/file-response';
@@ -19,7 +20,7 @@ export class BoardGroupsService {
     return this.http.get<ClientResponse<BoardView>>(
       `api/boards/view/${boardId}`,
       {
-        params,
+        params: { ...params, take: params['take'] ?? MAX_PAGE_SIZE },
       }
     );
   }

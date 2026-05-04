@@ -20,6 +20,9 @@ export const initialState: TasksState = adapter.getInitialState({
   searchTerm: null,
   selectedStatuses: [],
   selectedAssignees: [],
+  nextCursor: undefined,
+  pageSize: 50,
+  loadingMore: false,
 });
 
 export interface TasksState extends AsyncEntityState<TaskViewModel> {
@@ -37,6 +40,9 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   searchTerm?: string | null;
   selectedStatuses: TaskStatus[];
   selectedAssignees: string[];
+  nextCursor?: string;
+  pageSize: number;
+  loadingMore: boolean;
 }
 
 export interface TaskListGroup {
@@ -53,4 +59,6 @@ export interface ProjectTasksFilter {
   tags?: string[];
   statuses?: TaskStatus[];
   assignees?: string[];
+  take?: number;
+  cursor?: string | null;
 }

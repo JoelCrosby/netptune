@@ -12,9 +12,19 @@ export const loadActivity = createAction(
   props<{ entityType: EntityType; entityId: number }>()
 );
 
+export const loadMoreActivity = createAction(
+  '[Activity] Load More Activity',
+  props<{ entityType: EntityType; entityId: number }>()
+);
+
 export const loadActivitySuccess = createAction(
   '[Activity] Load Activity Success',
-  props<{ activities: ActivityViewModel[] }>()
+  props<{ activities: ActivityViewModel[]; nextCursor?: string; pageSize: number }>()
+);
+
+export const loadMoreActivitySuccess = createAction(
+  '[Activity] Load More Activity Success',
+  props<{ activities: ActivityViewModel[]; nextCursor?: string; pageSize: number }>()
 );
 
 export const loadActivityFail = createAction(

@@ -2,6 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
+import {
+  appendCursorParams,
+  CursorPage,
+  cursorPageFromHeaders,
+  DEFAULT_PAGE_SIZE,
+} from '@core/models/pagination';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -17,7 +23,7 @@ import { ProjectTasksFilter } from './tasks.model';
 export class ProjectTasksService {
   private http = inject(HttpClient);
 
-  get(filter?: ProjectTasksFilter) {
+  get(filter?: ProjectTasksFilter): Observable<CursorPage<TaskViewModel>> {
     let params = new HttpParams();
 
     if (filter?.search) {
@@ -40,7 +46,18 @@ export class ProjectTasksService {
       params = params.append('assignees', assignee);
     }
 
-    return this.http.get<TaskViewModel[]>('api/tasks', { params });
+    params = appendCursorParams(params, {
+      take: filter?.take ?? DEFAULT_PAGE_SIZE,
+      cursor: filter?.cursor,
+    });
+
+    return this.http
+      .get<TaskViewModel[]>('api/tasks', { params, observe: 'response' })
+      .pipe(
+        switchMap((response) =>
+          of(cursorPageFromHeaders(response.body, response.headers))
+        )
+      );
   }
 
   post(task: AddProjectTaskRequest) {
@@ -75,7 +92,12 @@ export class ProjectTasksService {
   }
 
   getComments(systemId: string) {
-    return this.http.get<CommentViewModel[]>(`api/comments/task/${systemId}`);
+    return this.http.get<CommentViewModel[]>(`api/comments/task/${systemId}`, {
+      params: {
+        page: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+      },
+    });
   }
 
   deleteComment(commentId: number) {

@@ -10,23 +10,41 @@ const reducer = createReducer(
 
   on(
     actions.loadProjectTasks,
-    (state): TasksState => ({ ...state, loading: true })
+    (state): TasksState => ({ ...state, loading: true, nextCursor: undefined })
+  ),
+  on(
+    actions.loadMoreProjectTasks,
+    (state): TasksState => ({ ...state, loadingMore: true })
   ),
   on(
     actions.loadProjectTasksFail,
     (state, { error }): TasksState => ({
       ...state,
       loading: false,
+      loadingMore: false,
       loadProjectsError: error,
     })
   ),
   on(
     actions.loadProjectTasksSuccess,
-    (state, { tasks }): TasksState =>
+    (state, { tasks, nextCursor, pageSize }): TasksState =>
       adapter.setAll(tasks, {
         ...state,
         loading: false,
         loaded: true,
+        nextCursor,
+        pageSize,
+      })
+  ),
+  on(
+    actions.loadMoreProjectTasksSuccess,
+    (state, { tasks, nextCursor, pageSize }): TasksState =>
+      adapter.upsertMany(tasks, {
+        ...state,
+        loadingMore: false,
+        loaded: true,
+        nextCursor,
+        pageSize,
       })
   ),
 

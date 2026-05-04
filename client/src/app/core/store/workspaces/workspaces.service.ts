@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
+import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
@@ -12,7 +13,9 @@ export class WorkspacesService {
   private http = inject(HttpClient);
 
   get() {
-    return this.http.get<Workspace[]>('api/workspaces');
+    return this.http.get<Workspace[]>('api/workspaces', {
+      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
+    });
   }
 
   post(request: AddWorkspaceRequest) {

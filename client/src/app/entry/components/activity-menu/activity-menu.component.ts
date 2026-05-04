@@ -17,6 +17,7 @@ import { EntityType } from '@core/models/entity-type';
 import * as ActivityActions from '@core/store/activity/activity.actions';
 import {
   selectActivities,
+  selectActivityCanLoadMore,
   selectActivitiesLoaded,
 } from '@core/store/activity/activity.selectors';
 import { LucideActivity } from '@lucide/angular';
@@ -77,6 +78,14 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
               </p>
             </div>
           }
+
+          @if (canLoadMore()) {
+            <div class="flex justify-center px-3 pt-3">
+              <button app-stroked-button (click)="loadMore()">
+                <span>Load more</span>
+              </button>
+            </div>
+          }
         } @else {
           <div class="flex justify-center p-4">
             <app-spinner diameter="24" />
@@ -96,6 +105,7 @@ export class ActivityMenuComponent implements OnDestroy {
 
   readonly activities = this.store.selectSignal(selectActivities);
   readonly loaded = this.store.selectSignal(selectActivitiesLoaded);
+  readonly canLoadMore = this.store.selectSignal(selectActivityCanLoadMore);
 
   private readonly menuTemplate =
     viewChild.required<TemplateRef<unknown>>('menuTemplate');
@@ -154,6 +164,17 @@ export class ActivityMenuComponent implements OnDestroy {
   private closeMenu() {
     this.overlayRef?.detach();
     this.store.dispatch(ActivityActions.clearState());
+  }
+
+  loadMore() {
+    const entityType = this.entityType();
+    const entityId = this.entityId();
+
+    if (entityId !== undefined) {
+      this.store.dispatch(
+        ActivityActions.loadMoreActivity({ entityType, entityId })
+      );
+    }
   }
 
   ngOnDestroy() {

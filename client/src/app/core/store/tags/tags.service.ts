@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import {
   AddTagRequest,
   AddTagToTaskRequest,
@@ -17,7 +18,9 @@ export class TagsService {
   private http = inject(HttpClient);
 
   get() {
-    return this.http.get<Tag[]>('api/tags/workspace');
+    return this.http.get<Tag[]>('api/tags/workspace', {
+      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
+    });
   }
 
   getForTask(systemId: string) {

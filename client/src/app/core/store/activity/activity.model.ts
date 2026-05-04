@@ -5,6 +5,9 @@ export const initialState: ActivityState = {
   activities: [],
   loading: true,
   loaded: false,
+  nextCursor: undefined,
+  pageSize: 50,
+  loadingMore: false,
 };
 
 export interface ActivityState {
@@ -12,4 +15,7 @@ export interface ActivityState {
   loading: boolean;
   loaded: boolean;
   loadingError?: HttpErrorResponse | Error;
+  nextCursor?: string;
+  pageSize: number;
+  loadingMore: boolean;
 }

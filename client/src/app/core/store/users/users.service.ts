@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
+import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,9 @@ export class UsersService {
   }
 
   getUsersInWorkspace() {
-    return this.http.get<WorkspaceAppUser[]>(`api/users`);
+    return this.http.get<WorkspaceAppUser[]>(`api/users`, {
+      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
+    });
   }
 
   inviteUsersToWorkspace(emailAddresses: string[]) {

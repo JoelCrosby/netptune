@@ -28,7 +28,11 @@ import * as actions from './tasks.actions';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import { ProjectTasksService } from './tasks.service';
 import { clearState } from '../activity/activity.actions';
-import { selectProjectTasksFilter } from './tasks.selectors';
+import {
+  selectProjectTasksFilter,
+  selectTasksNextCursor,
+  selectTasksPageSize,
+} from './tasks.selectors';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -45,11 +49,45 @@ export class ProjectTasksEffects {
       concatLatestFrom(() => this.store.select(selectProjectTasksFilter)),
       switchMap(([_, taskFilter]) =>
         this.projectTasksService.get(taskFilter).pipe(
-          map((tasks) => actions.loadProjectTasksSuccess({ tasks })),
+          map((page) =>
+            actions.loadProjectTasksSuccess({
+              tasks: page.items,
+              nextCursor: page.nextCursor,
+              pageSize: page.pageLimit,
+            })
+          ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadProjectTasksFail({ error }))
           )
         )
+      )
+    );
+  });
+
+  loadMoreProjectTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadMoreProjectTasks),
+      concatLatestFrom(() => [
+        this.store.select(selectProjectTasksFilter),
+        this.store.select(selectTasksNextCursor),
+        this.store.select(selectTasksPageSize),
+      ]),
+      filter(([, , cursor]) => !!cursor),
+      switchMap(([_, taskFilter, cursor, pageSize]) =>
+        this.projectTasksService
+          .get({ ...taskFilter, cursor, take: pageSize })
+          .pipe(
+            map((page) =>
+              actions.loadMoreProjectTasksSuccess({
+                tasks: page.items,
+                nextCursor: page.nextCursor,
+                pageSize: page.pageLimit,
+              })
+            ),
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadProjectTasksFail({ error }))
+            )
+          )
       )
     );
   });

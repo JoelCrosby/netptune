@@ -2,6 +2,7 @@ import { EntityType } from '../entity-type';
 import { UserAvatar } from '../user-avatar';
 
 export interface ActivityViewModel {
+  id: number;
   entityType: EntityType;
   userId: string;
   userUsername: string;

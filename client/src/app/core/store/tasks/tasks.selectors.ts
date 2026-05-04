@@ -93,6 +93,21 @@ export const selectProjectTasksFilter = createSelector(
   })
 );
 
+export const selectTasksNextCursor = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.nextCursor
+);
+
+export const selectTasksPageSize = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.pageSize
+);
+
+export const selectTasksCanLoadMore = createSelector(
+  selectTasksNextCursor,
+  (cursor) => !!cursor
+);
+
 export const selectTaskAssigneeOptions = createSelector(
   selectAllTasks,
   selectSelectedAssignees,

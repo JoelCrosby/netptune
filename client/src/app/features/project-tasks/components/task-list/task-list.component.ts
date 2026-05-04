@@ -5,9 +5,11 @@ import {
   inject,
 } from '@angular/core';
 import {
+  selectTasksCanLoadMore,
   selectTaskFiltersActive,
   selectTasks,
 } from '@core/store/tasks/tasks.selectors';
+import { loadMoreProjectTasks } from '@core/store/tasks/tasks.actions';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
@@ -49,6 +51,14 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
         @if (canCreate()) {
           <app-task-inline [siblings]="tasks()" />
         }
+
+        @if (canLoadMore()) {
+          <div class="flex justify-center py-4">
+            <button app-flat-button (click)="loadMore()">
+              <span>Load more</span>
+            </button>
+          </div>
+        }
       </ng-template>
 
       <ng-template #listEmpty>
@@ -89,9 +99,14 @@ export class TaskListComponent {
 
   readonly tasks = this.store.selectSignal(selectTasks);
   readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
+  readonly canLoadMore = this.store.selectSignal(selectTasksCanLoadMore);
   readonly trackByTask: TrackByFunction<TaskViewModel> = (_, task) => task.id;
 
   readonly canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.create)
   );
+
+  loadMore() {
+    this.store.dispatch(loadMoreProjectTasks());
+  }
 }

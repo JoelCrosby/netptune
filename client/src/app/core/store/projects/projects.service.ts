@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import { AddProjectRequest } from '@core/models/project';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
@@ -11,7 +12,9 @@ export class ProjectsService {
   private http = inject(HttpClient);
 
   get() {
-    return this.http.get<ProjectViewModel[]>(`api/projects`);
+    return this.http.get<ProjectViewModel[]>(`api/projects`, {
+      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
+    });
   }
 
   getProjectDetail(projectKey: string) {
@@ -19,7 +22,9 @@ export class ProjectsService {
   }
 
   getProjectBoards(projectId: number) {
-    return this.http.get<BoardViewModel[]>(`api/boards/project/${projectId}`);
+    return this.http.get<BoardViewModel[]>(`api/boards/project/${projectId}`, {
+      params: appendPageParams(new HttpParams(), { pageSize: MAX_PAGE_SIZE }),
+    });
   }
 
   post(project: AddProjectRequest) {

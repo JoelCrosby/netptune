@@ -16,3 +16,18 @@ export const selectActivitiesLoaded = createSelector(
   selectActivitesFeature,
   (state: ActivityState) => state.loaded
 );
+
+export const selectActivityNextCursor = createSelector(
+  selectActivitesFeature,
+  (state: ActivityState) => state.nextCursor
+);
+
+export const selectActivityPageSize = createSelector(
+  selectActivitesFeature,
+  (state: ActivityState) => state.pageSize
+);
+
+export const selectActivityCanLoadMore = createSelector(
+  selectActivityNextCursor,
+  (cursor) => !!cursor
+);
