@@ -21,10 +21,12 @@ public static class ProjectsEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetProjects(IMediator mediator,
+    public static async Task<IResult> HandleGetProjects(
+        IMediator mediator,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetProjectsQuery(), cancellationToken);
+        var result = await mediator.Send(new GetProjectsQuery(page), cancellationToken);
 
         return Results.Ok(result);
     }

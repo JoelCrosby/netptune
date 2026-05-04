@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -52,12 +53,36 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .FirstOrDefaultAsync(workspace => workspace.Slug == slug && !workspace.IsDeleted, cancellationToken);
     }
 
-    public Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default)
+    public Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
         return Context.WorkspaceAppUsers
             .Where(x => x.UserId == userId)
             .Select(w => w.Workspace)
             .Where(x => !x.IsDeleted)
+            .OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt)
+            .ThenByDescending(x => x.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<Workspace>> GetWorkspaces(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
+    {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
+
+        return Entities
+            .Where(x => !x.IsDeleted)
+            .OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt)
+            .ThenByDescending(x => x.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 

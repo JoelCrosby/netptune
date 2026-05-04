@@ -29,10 +29,19 @@ public static class TasksEndpoints
 
     public static async Task<IResult> HandleGetTasks(
         IMediator mediator,
+        HttpContext context,
         [AsParameters] TaskFilter filter,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetTasksQuery(filter), cancellationToken);
+        var take = Math.Clamp(filter.Take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+
+        if (result.LastOrDefault() is { } last && result.Count == take)
+        {
+            context.Response.Headers["X-Next-Cursor"] = CursorRequest.Create(last.UpdatedAt ?? last.CreatedAt, last.Id);
+        }
+
+        context.Response.Headers["X-Page-Limit"] = take.ToString();
 
         return Results.Ok(result);
     }

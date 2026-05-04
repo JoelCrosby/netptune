@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Users;
@@ -34,10 +35,8 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .ThenByDescending(sprint => sprint.StartDate)
             .AsNoTracking();
 
-        if (take is > 0)
-        {
-            query = query.Take(Math.Min(take.Value, 100));
-        }
+        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+        query = query.Take(limit);
 
         return query
             .Select(SprintToViewModel())

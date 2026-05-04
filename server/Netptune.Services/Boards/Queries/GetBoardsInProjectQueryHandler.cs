@@ -1,10 +1,11 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services.Boards.Queries;
 
-public sealed record GetBoardsInProjectQuery(int ProjectId) : IRequest<List<BoardViewModel>?>;
+public sealed record GetBoardsInProjectQuery(int ProjectId, PageRequest? Page = null) : IRequest<List<BoardViewModel>?>;
 
 public sealed class GetBoardsInProjectQueryHandler : IRequestHandler<GetBoardsInProjectQuery, List<BoardViewModel>?>
 {
@@ -17,7 +18,7 @@ public sealed class GetBoardsInProjectQueryHandler : IRequestHandler<GetBoardsIn
 
     public async ValueTask<List<BoardViewModel>?> Handle(GetBoardsInProjectQuery request, CancellationToken cancellationToken)
     {
-        var results = await UnitOfWork.Boards.GetBoardsInProject(request.ProjectId, true, cancellationToken: cancellationToken);
+        var results = await UnitOfWork.Boards.GetBoardsInProject(request.ProjectId, true, cancellationToken: cancellationToken, pageRequest: request.Page);
 
         return results.ConvertAll(r => r.ToViewModel());
     }

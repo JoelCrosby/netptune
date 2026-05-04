@@ -1,11 +1,12 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 
 namespace Netptune.Services.Comments.Queries;
 
-public sealed record GetCommentsForTaskQuery(string SystemId) : IRequest<List<CommentViewModel>?>;
+public sealed record GetCommentsForTaskQuery(string SystemId, PageRequest? Page = null) : IRequest<List<CommentViewModel>?>;
 
 public sealed class GetCommentsForTaskQueryHandler : IRequestHandler<GetCommentsForTaskQuery, List<CommentViewModel>?>
 {
@@ -28,6 +29,6 @@ public sealed class GetCommentsForTaskQueryHandler : IRequestHandler<GetComments
             return null;
         }
 
-        return await UnitOfWork.Comments.GetCommentViewModelsForTask(taskId.Value, cancellationToken);
+        return await UnitOfWork.Comments.GetCommentViewModelsForTask(taskId.Value, cancellationToken, request.Page);
     }
 }

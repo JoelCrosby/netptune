@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -78,11 +79,18 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
             .AnyAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed, cancellationToken);
     }
 
-    public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default)
+    public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
         return Entities
             .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
             .OrderBy(x => x.CreatedAt)
+            .ThenBy(x => x.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .AsNoTracking()
             .Select(x => new TagViewModel
             {

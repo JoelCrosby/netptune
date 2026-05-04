@@ -10,6 +10,8 @@ public record BoardGroupsFilter
 
     public int? SprintId { get; init; }
 
+    public int? Take { get; init; }
+
     public static BoardGroupsFilter Empty()
     {
         return new BoardGroupsFilter

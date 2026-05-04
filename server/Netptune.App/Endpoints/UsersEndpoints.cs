@@ -24,10 +24,12 @@ public static class UsersEndpoints
         return group;
     }
 
-    public static async Task<IResult> HandleGetWorkspaceUsers(IMediator mediator,
+    public static async Task<IResult> HandleGetWorkspaceUsers(
+        IMediator mediator,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetWorkspaceUsersQuery(), cancellationToken);
+        var result = await mediator.Send(new GetWorkspaceUsersQuery(page), cancellationToken);
 
         return Results.Ok(result);
     }
@@ -78,10 +80,12 @@ public static class UsersEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetAll(IMediator mediator,
+    public static async Task<IResult> HandleGetAll(
+        IMediator mediator,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAllUsersQuery(), cancellationToken);
+        var result = await mediator.Send(new GetAllUsersQuery(page), cancellationToken);
 
         return Results.Ok(result);
     }

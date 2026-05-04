@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -28,10 +29,18 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
     }
 
-    public Task<List<ProjectViewModel>> GetProjects(string workspaceKey, CancellationToken cancellationToken = default)
+    public Task<List<ProjectViewModel>> GetProjects(string workspaceKey, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
         return Entities
             .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
+            .OrderByDescending(project => project.UpdatedAt ?? project.CreatedAt)
+            .ThenByDescending(project => project.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .AsNoTracking()
             .Select(ProjectToViewModel())
             .ToListAsync(cancellationToken);

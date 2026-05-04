@@ -69,9 +69,10 @@ public static class TagsEndpoints
 
     public static async Task<IResult> HandleGetTagsForWorkspace(
         IMediator mediator,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
+        var result = await mediator.Send(new GetTagsForWorkspaceQuery(page), cancellationToken);
 
         if (result is null) return Results.NotFound();
 

@@ -7,6 +7,7 @@ using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -29,12 +30,37 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
         return Context.WorkspaceAppUsers
             .Include(x => x.User)
             .Where(x => x.Workspace.Slug == workspaceKey)
+            .OrderBy(x => x.User.Firstname)
+            .ThenBy(x => x.User.Lastname)
+            .ThenBy(x => x.UserId)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .IsReadonly(isReadonly)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
+    {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
+
+        return Entities
+            .OrderBy(x => x.Firstname)
+            .ThenBy(x => x.Lastname)
+            .ThenBy(x => x.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 

@@ -21,9 +21,10 @@ public static class CommentsEndpoints
     }
 
     public static async Task<IResult> HandleGetCommentsForTask(IMediator mediator, string systemId,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetCommentsForTaskQuery(systemId), cancellationToken);
+        var result = await mediator.Send(new GetCommentsForTaskQuery(systemId, page), cancellationToken);
 
         if (result is null) return Results.NotFound(result);
 

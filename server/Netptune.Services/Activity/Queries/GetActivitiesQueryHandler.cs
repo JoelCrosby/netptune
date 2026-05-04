@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Activity;
 
 namespace Netptune.Services.Activity.Queries;
 
-public sealed record GetActivitiesQuery(EntityType EntityType, int EntityId) : IRequest<ClientResponse<List<ActivityViewModel>>>;
+public sealed record GetActivitiesQuery(EntityType EntityType, int EntityId, int? Take = null, string? Cursor = null) : IRequest<ClientResponse<List<ActivityViewModel>>>;
 
 public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, ClientResponse<List<ActivityViewModel>>>
 {
@@ -22,7 +22,12 @@ public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQue
 
     public async ValueTask<ClientResponse<List<ActivityViewModel>>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
-        var activities = await UnitOfWork.ActivityLogs.GetActivities(request.EntityType, request.EntityId, cancellationToken);
+        var activities = await UnitOfWork.ActivityLogs.GetActivities(
+            request.EntityType,
+            request.EntityId,
+            cancellationToken,
+            request.Take,
+            request.Cursor);
 
         var workspaceId = await Identity.GetWorkspaceId();
         var assigneeIds = GetAssigneeIds(activities).ToHashSet();

@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Audit;
 using Netptune.Entities.Contexts;
@@ -21,7 +22,12 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
     {
     }
 
-    public Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, CancellationToken cancellationToken = default)
+    public Task<List<ActivityViewModel>> GetActivities(
+        EntityType entityType,
+        int entityId,
+        CancellationToken cancellationToken = default,
+        int? take = null,
+        string? cursor = null)
     {
         Expression<Func<ActivityLog, bool>> predicate = entityType switch
         {
@@ -34,12 +40,26 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             _ => _ => true,
         };
 
-        return Entities
+        var cursorRequest = new CursorRequest { Cursor = cursor };
+        var hasCursor = cursorRequest.TryGetCursor(out var cursorOccurredAt, out var cursorId);
+        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+
+        var query = Entities
             .Where(x => !x.IsDeleted && x.EntityType == entityType)
-            .Where(predicate)
+            .Where(predicate);
+
+        if (hasCursor)
+        {
+            query = query.Where(x => x.OccurredAt < cursorOccurredAt || (x.OccurredAt == cursorOccurredAt && x.Id < cursorId));
+        }
+
+        return query
             .OrderByDescending(x => x.OccurredAt)
+            .ThenByDescending(x => x.Id)
+            .Take(limit)
             .Select(y => new ActivityViewModel
             {
+                Id = y.Id,
                 Type = y.Type,
                 EntityId = y.EntityId,
                 EntityType = entityType,
@@ -97,6 +117,8 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
     {
         return BuildAuditQuery(filter)
             .OrderByDescending(x => x.OccurredAt)
+            .ThenByDescending(x => x.Id)
+            .Take(PaginationDefaults.MaxExportRows)
             .AsNoTracking()
             .Select(y => new AuditLogViewModel
             {

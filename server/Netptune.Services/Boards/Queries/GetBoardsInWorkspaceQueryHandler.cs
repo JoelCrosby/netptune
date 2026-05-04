@@ -1,11 +1,12 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
 namespace Netptune.Services.Boards.Queries;
 
-public sealed record GetBoardsInWorkspaceQuery : IRequest<List<BoardsViewModel>?>;
+public sealed record GetBoardsInWorkspaceQuery(PageRequest? Page = null) : IRequest<List<BoardsViewModel>?>;
 
 public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoardsInWorkspaceQuery, List<BoardsViewModel>?>
 {
@@ -25,6 +26,6 @@ public sealed class GetBoardsInWorkspaceQueryHandler : IRequestHandler<GetBoards
 
         if (!workspaceExists) return null;
 
-        return await UnitOfWork.Boards.GetBoardViewModels(workspaceKey, cancellationToken);
+        return await UnitOfWork.Boards.GetBoardViewModels(workspaceKey, cancellationToken, request.Page);
     }
 }

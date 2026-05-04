@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -30,11 +31,18 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
-    public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default)
+    public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
+        pageRequest ??= new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
             .OrderByDescending(x => x.CreatedAt)
+            .ThenByDescending(x => x.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .AsNoTracking()
             .Select(ToViewModel())
             .ToListAsync(cancellationToken);

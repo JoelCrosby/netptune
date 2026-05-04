@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
@@ -41,7 +42,8 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         int boardId,
         string? searchTerm = null,
         int? sprintId = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        int? take = null)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -50,22 +52,57 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         var searchQuery = searchTerm is null
             ? null
             : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
+        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(@$"
+                WITH board_groups_for_board AS (
+                    SELECT bg.id
+                         , bg.name
+                         , bg.type
+                         , bg.sort_order
+                    FROM board_groups bg
+                    WHERE bg.board_id = @boardId
+                      AND NOT bg.is_deleted
+                ),
+                limited_tasks AS (
+                    SELECT pt.id               AS task_id
+                         , pt.name             AS task_name
+                         , pt.priority         AS task_priority
+                         , pt.estimate_type    AS task_estimate_type
+                         , pt.estimate_value   AS task_estimate_value
+                         , s.id                AS sprint_id
+                         , s.name              AS sprint_name
+                         , s.status            AS sprint_status
+                         , pt.project_scope_id AS project_scope_id
+                         , pt.status           AS task_status
+                         , ptibg.sort_order    AS task_sort_order
+                         , bg.id               AS board_group_id
+                         , pt.workspace_id     AS workspace_id
+                         , pt.project_id       AS project_id
+                    FROM board_groups_for_board bg
+                             INNER JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
+                             INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id
+                                AND NOT pt.is_deleted
+                             LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
+                    WHERE (@sprintId IS NULL OR pt.sprint_id = @sprintId)
+                      {searchQuery}
+                    ORDER BY bg.sort_order, ptibg.sort_order, pt.id
+                    LIMIT @limit
+                )
                 SELECT b.id
                      , b.name              AS board_name
                      , b.identifier        AS board_identifier
-                     , pt.id               AS task_id
-                     , pt.name             AS task_name
-                     , pt.priority         AS task_priority
-                     , pt.estimate_type    AS task_estimate_type
-                     , pt.estimate_value   AS task_estimate_value
-                     , s.id                AS sprint_id
-                     , s.name              AS sprint_name
-                     , s.status            AS sprint_status
-                     , pt.project_scope_id AS project_scope_id
-                     , pt.status           AS task_status
-                     , ptibg.sort_order    AS task_sort_order
+                     , lt.task_id
+                     , lt.task_name
+                     , lt.task_priority
+                     , lt.task_estimate_type
+                     , lt.task_estimate_value
+                     , lt.sprint_id
+                     , lt.sprint_name
+                     , lt.sprint_status
+                     , lt.project_scope_id
+                     , lt.task_status
+                     , lt.task_sort_order
                      , bg.id               AS board_group_id
                      , bg.name             AS board_group_name
                      , bg.type             AS board_group_type
@@ -75,26 +112,21 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , u.lastname          AS assignee_lastname
                      , u.picture_url       AS assignee_picture_url
                      , t.name              AS tag
-                     , pt.workspace_id     AS workspace_id
-                     , pt.project_id       AS project_id
+                     , lt.workspace_id
+                     , lt.project_id
 
                 FROM boards b
 
-                         LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
-                         LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
-                            AND NOT pt.is_deleted
-                            AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
-                            {searchQuery}
-                         LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
+                         LEFT JOIN board_groups_for_board bg ON TRUE
+                         LEFT JOIN limited_tasks lt on bg.id = lt.board_group_id
+                         LEFT JOIN project_task_tags ptt on lt.task_id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
-                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
+                         LEFT JOIN project_task_app_users ptau on lt.task_id = ptau.project_task_id
                          LEFT JOIN users u on ptau.user_id = u.id
-                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
 
                 WHERE b.id = @boardId
 
-                ORDER BY bg.sort_order, ptibg.sort_order, t.name, u.id;
+                ORDER BY bg.sort_order, lt.task_sort_order, t.name, u.id;
 
                 -- Select board
 
@@ -105,7 +137,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          LEFT JOIN workspaces w on b.workspace_id = w.id
                          LEFT JOIN projects p on b.project_id = p.id
                 WHERE b.id = @boardId
-            ", new { boardId, searchPhrase, sprintId }, cancellationToken: cancellationToken));
+            ", new { boardId, searchPhrase, sprintId, limit }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
         var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();

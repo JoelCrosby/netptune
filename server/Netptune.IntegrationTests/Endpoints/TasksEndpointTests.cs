@@ -28,10 +28,49 @@ public sealed class TasksEndpointTests
         var response = await Client.GetAsync("api/tasks");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Headers.GetValues("X-Page-Limit").Should().ContainSingle("50");
 
         var result = await response.Content.ReadFromJsonAsync<List<TaskViewModel>>();
 
         result.Should().NotBeEmpty();
+        result.Should().HaveCountLessThanOrEqualTo(50);
+    }
+
+    [Fact]
+    public async Task Get_ShouldClampTake_WhenTakeExceedsMax()
+    {
+        var response = await Client.GetAsync("api/tasks?take=999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Headers.GetValues("X-Page-Limit").Should().ContainSingle("100");
+
+        var result = await response.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        result.Should().NotBeNull();
+        result!.Should().HaveCountLessThanOrEqualTo(100);
+    }
+
+    [Fact]
+    public async Task Get_ShouldReturnStableNextPage_WhenCursorProvided()
+    {
+        var firstResponse = await Client.GetAsync("api/tasks?take=2");
+
+        firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        firstResponse.Headers.TryGetValues("X-Next-Cursor", out var cursorValues).Should().BeTrue();
+
+        var cursor = cursorValues!.Single();
+        var firstPage = await firstResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        firstPage.Should().HaveCount(2);
+
+        var secondResponse = await Client.GetAsync($"api/tasks?take=2&cursor={Uri.EscapeDataString(cursor)}");
+
+        secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var secondPage = await secondResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+
+        secondPage.Should().NotBeNull();
+        secondPage!.Select(task => task.Id).Should().NotIntersectWith(firstPage!.Select(task => task.Id));
     }
 
     [Fact]

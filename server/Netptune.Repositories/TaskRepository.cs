@@ -109,7 +109,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
         var statuses = filter.Statuses.Select(status => (int)status).ToArray();
         var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
-        var take = filter.Take is > 0 ? Math.Min(filter.Take.Value, 100) : (int?)null;
+        var take = Math.Clamp(filter.Take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+        var cursor = new CursorRequest { Cursor = filter.Cursor };
+        var hasCursor = cursor.TryGetCursor(out var cursorUpdatedAt, out var cursorId);
 
         using var connection = ConnectionFactory.StartConnection();
 
@@ -176,8 +178,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                             AND LOWER(t_search.name) LIKE @searchPattern
                       )
                   ))
-                ORDER BY pt.updated_at DESC NULLS LAST
-                {GetLimitClause(take)}
+                  AND (@hasCursor = FALSE
+                       OR COALESCE(pt.updated_at, pt.created_at) < @cursorUpdatedAt
+                       OR (COALESCE(pt.updated_at, pt.created_at) = @cursorUpdatedAt AND pt.id < @cursorId))
+                ORDER BY COALESCE(pt.updated_at, pt.created_at) DESC, pt.id DESC
+                LIMIT @take
             )
             SELECT ft.id AS task_id
                  , ft.owner_id
@@ -210,7 +215,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted
                      LEFT JOIN project_task_app_users ptau ON ft.id = ptau.project_task_id
                      LEFT JOIN users u ON ptau.user_id = u.id
-            ORDER BY ft.updated_at DESC NULLS LAST, ft.id, t.name, u.id;
+            ORDER BY COALESCE(ft.updated_at, ft.created_at) DESC, ft.id DESC, t.name, u.id;
         ", new
         {
             workspaceKey,
@@ -223,14 +228,12 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             search,
             searchPattern,
             take,
+            hasCursor,
+            cursorUpdatedAt,
+            cursorId,
         }, cancellationToken: cancellationToken));
 
         return RowsToTaskViewModels(rows);
-    }
-
-    private static string GetLimitClause(int? take)
-    {
-        return take.HasValue ? "LIMIT @take" : string.Empty;
     }
 
     private static List<TaskViewModel> RowsToTaskViewModels(IEnumerable<TaskViewRowMap> rows)
@@ -385,7 +388,16 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN boards b on b.project_id = p.id
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
+                            AND NOT pt.is_deleted
+                            AND pt.id IN (
+                                SELECT pt_limit.id
+                                FROM project_tasks pt_limit
+                                WHERE pt_limit.workspace_id = w.id
+                                  AND NOT pt_limit.is_deleted
+                                ORDER BY COALESCE(pt_limit.updated_at, pt_limit.created_at) DESC, pt_limit.id DESC
+                                LIMIT @take
+                            )
                          INNER JOIN users o on pt.owner_id = o.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
@@ -399,6 +411,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             ", new
         {
             workspaceKey,
+            take = PaginationDefaults.MaxExportRows,
         }, cancellationToken: cancellationToken));
 
         return RowsToExportList(rows);
@@ -442,7 +455,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                          LEFT JOIN boards b on b.project_id = p.id AND b.identifier = @boardIdentifier
                          LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
                          LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
+                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
+                            AND NOT pt.is_deleted
+                            AND pt.id IN (
+                                SELECT pt_limit.id
+                                FROM boards b_limit
+                                         INNER JOIN board_groups bg_limit ON b_limit.id = bg_limit.board_id AND NOT bg_limit.is_deleted
+                                         INNER JOIN project_task_in_board_groups ptibg_limit ON bg_limit.id = ptibg_limit.board_group_id
+                                         INNER JOIN project_tasks pt_limit ON pt_limit.id = ptibg_limit.project_task_id AND NOT pt_limit.is_deleted
+                                WHERE b_limit.identifier = @boardIdentifier
+                                ORDER BY bg_limit.sort_order, ptibg_limit.sort_order, pt_limit.id
+                                LIMIT @take
+                            )
                          INNER JOIN users o on pt.owner_id = o.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
@@ -457,6 +481,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         {
             workspaceKey,
             boardIdentifier,
+            take = PaginationDefaults.MaxExportRows,
         }, cancellationToken: cancellationToken));
 
         return RowsToExportList(rows);

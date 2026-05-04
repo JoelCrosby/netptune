@@ -34,22 +34,27 @@ public static class BoardsEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetBoardsInWorkspace(IMediator mediator,
+    public static async Task<IResult> HandleGetBoardsInWorkspace(
+        IMediator mediator,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(), cancellationToken);
+        var result = await mediator.Send(new GetBoardsInWorkspaceQuery(page), cancellationToken);
 
         if (result is null) return Results.NotFound();
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleGetBoardsInProject(IMediator mediator, int? projectId,
+    public static async Task<IResult> HandleGetBoardsInProject(
+        IMediator mediator,
+        int? projectId,
+        [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
         if (!projectId.HasValue) return Results.BadRequest();
 
-        var result = await mediator.Send(new GetBoardsInProjectQuery(projectId.Value), cancellationToken);
+        var result = await mediator.Send(new GetBoardsInProjectQuery(projectId.Value, page), cancellationToken);
 
         if (result is null) return Results.NotFound();
 

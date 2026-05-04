@@ -9,7 +9,12 @@ namespace Netptune.Core.Repositories;
 
 public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
 {
-    Task<List<ActivityViewModel>> GetActivities(EntityType entityType, int entityId, CancellationToken cancellationToken = default);
+    Task<List<ActivityViewModel>> GetActivities(
+        EntityType entityType,
+        int entityId,
+        CancellationToken cancellationToken = default,
+        int? take = null,
+        string? cursor = null);
 
     Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default);
 

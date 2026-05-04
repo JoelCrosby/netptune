@@ -33,7 +33,8 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
             boardId,
             request.Filter?.Term,
             request.Filter?.SprintId,
-            cancellationToken);
+            cancellationToken,
+            request.Filter?.Take);
         var board = await UnitOfWork.Boards.GetViewModel(boardId, true, cancellationToken);
 
         if (groups is null || board is null) return ClientResponse<BoardView>.Failed();

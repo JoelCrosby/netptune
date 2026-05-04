@@ -1,11 +1,12 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Services.Tags.Queries;
 
-public sealed record GetTagsForWorkspaceQuery : IRequest<List<TagViewModel>?>;
+public sealed record GetTagsForWorkspaceQuery(PageRequest? Page = null) : IRequest<List<TagViewModel>?>;
 
 public sealed class GetTagsForWorkspaceQueryHandler : IRequestHandler<GetTagsForWorkspaceQuery, List<TagViewModel>?>
 {
@@ -25,6 +26,6 @@ public sealed class GetTagsForWorkspaceQueryHandler : IRequestHandler<GetTagsFor
 
         if (workspaceId is null) return null;
 
-        return await UnitOfWork.Tags.GetViewModelsForWorkspace(workspaceId.Value, cancellationToken);
+        return await UnitOfWork.Tags.GetViewModelsForWorkspace(workspaceId.Value, cancellationToken, request.Page);
     }
 }

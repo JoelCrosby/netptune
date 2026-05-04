@@ -19,4 +19,6 @@ public sealed class TaskFilter
     public string[] Assignees { get; init; } = [];
 
     public int? Take { get; init; }
+
+    public string? Cursor { get; init; }
 }

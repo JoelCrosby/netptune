@@ -147,7 +147,10 @@ public class CreateTaskCommandHandlerTests
     [Fact]
     public async Task Create_ShouldLogActivity_WhenInputValid()
     {
-        var request = Fixture.Build<AddProjectTaskRequest>().With(p => p.ProjectId, 1).Create();
+        var request = Fixture.Build<AddProjectTaskRequest>()
+            .With(p => p.ProjectId, 1)
+            .With(p => p.BoardGroupId, 1)
+            .Create();
         var viewModel = new TaskViewModel { Name = request.Name, Description = request.Description };
 
         Identity.GetWorkspaceKey().Returns("key");

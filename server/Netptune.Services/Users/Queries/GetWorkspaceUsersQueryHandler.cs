@@ -1,11 +1,12 @@
 using Mediator;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Services.Users.Queries;
 
-public sealed record GetWorkspaceUsersQuery : IRequest<List<WorkspaceUserViewModel>>;
+public sealed record GetWorkspaceUsersQuery(PageRequest? Page = null) : IRequest<List<WorkspaceUserViewModel>>;
 
 public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspaceUsersQuery, List<WorkspaceUserViewModel>>
 {
@@ -21,7 +22,7 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
     public async ValueTask<List<WorkspaceUserViewModel>> Handle(GetWorkspaceUsersQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken);
+        var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken, request.Page);
 
         if (workspaceAppUsers.Count == 0) return [];
 

@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Core.Repositories;
@@ -10,7 +11,7 @@ public interface ITagRepository : IWorkspaceEntityRepository<Tag, int>
 
     Task<List<TagViewModel>> GetViewModelsForTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default);
+    Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
     Task<TagViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default);
 

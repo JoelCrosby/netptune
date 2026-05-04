@@ -7,6 +7,8 @@ namespace Netptune.Core.ViewModels.Activity;
 
 public class ActivityViewModel
 {
+    public int Id { get; set; }
+
     public EntityType EntityType { get; set; }
 
     public string UserId { get; set; } = null!;
