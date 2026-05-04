@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
@@ -17,6 +18,10 @@ public class ProjectTaskTagEntityMap : KeyedEntityMap<ProjectTaskTag, int>
                 projectTaskTag.TagId,
                 projectTaskTag.ProjectTaskId,
             });
+
+        builder
+            .HasIndex(projectTaskTag => new { projectTaskTag.ProjectTaskId, projectTaskTag.TagId })
+            .HasDatabaseName("ix_project_task_tags_task_tag");
 
         builder
             .HasOne(projectTaskTag => projectTaskTag.ProjectTask)

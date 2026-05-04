@@ -25,6 +25,30 @@ public class ActivityLogEntityMap : AuditableEntityMap<ActivityLog, int>
             .HasIndex(log => new { log.OccurredAt });
 
         builder
+            .HasIndex(log => new { log.WorkspaceId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_occurred_id");
+
+        builder
+            .HasIndex(log => new { log.WorkspaceId, log.EntityType, log.EntityId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_entity_occurred_id");
+
+        builder
+            .HasIndex(log => new { log.WorkspaceId, log.EntityType, log.TaskId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_task_occurred_id");
+
+        builder
+            .HasIndex(log => new { log.WorkspaceId, log.EntityType, log.BoardId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_board_occurred_id");
+
+        builder
+            .HasIndex(log => new { log.WorkspaceId, log.EntityType, log.ProjectId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_project_occurred_id");
+
+        builder
+            .HasIndex(log => new { log.WorkspaceId, log.EntityType, log.BoardGroupId, log.OccurredAt, log.Id })
+            .HasDatabaseName("ix_activity_logs_workspace_board_group_occurred_id");
+
+        builder
             .Property(log => log.Type)
             .IsRequired();
 

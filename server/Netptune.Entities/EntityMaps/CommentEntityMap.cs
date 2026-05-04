@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -23,6 +24,10 @@ public class CommentEntityMap : WorkspaceEntityMap<Comment, int>
         builder
             .Property(comment => comment.EntityType)
             .IsRequired();
+
+        builder
+            .HasIndex(comment => new { comment.WorkspaceId, comment.EntityType, comment.EntityId, comment.CreatedAt, comment.Id })
+            .HasDatabaseName("ix_comments_workspace_entity_created_id");
 
         builder
             .HasMany(comment => comment.Reactions)

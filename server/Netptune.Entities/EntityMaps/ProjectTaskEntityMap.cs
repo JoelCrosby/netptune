@@ -68,6 +68,22 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsUnique();
 
         builder
+            .HasIndex(task => new { task.WorkspaceId, task.IsDeleted, task.UpdatedAt, task.Id })
+            .HasDatabaseName("ix_project_tasks_workspace_deleted_updated_id");
+
+        builder
+            .HasIndex(task => new { task.WorkspaceId, task.ProjectId, task.IsDeleted, task.UpdatedAt, task.Id })
+            .HasDatabaseName("ix_project_tasks_workspace_project_deleted_updated_id");
+
+        builder
+            .HasIndex(task => new { task.WorkspaceId, task.SprintId, task.IsDeleted, task.UpdatedAt, task.Id })
+            .HasDatabaseName("ix_project_tasks_workspace_sprint_deleted_updated_id");
+
+        builder
+            .HasIndex(task => new { task.WorkspaceId, task.Status, task.IsDeleted, task.UpdatedAt, task.Id })
+            .HasDatabaseName("ix_project_tasks_workspace_status_deleted_updated_id");
+
+        builder
             .Property(task => task.OwnerId)
             .IsRequired();
 

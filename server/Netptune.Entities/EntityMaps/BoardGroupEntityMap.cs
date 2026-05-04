@@ -22,5 +22,9 @@ public class BoardGroupEntityMap : WorkspaceEntityMap<BoardGroup, int>
             .WithMany(board => board.BoardGroups)
             .HasForeignKey(board => board.BoardId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasIndex(boardGroup => new { boardGroup.BoardId, boardGroup.IsDeleted, boardGroup.SortOrder, boardGroup.Id })
+            .HasDatabaseName("ix_board_groups_board_deleted_sort_id");
     }
 }
