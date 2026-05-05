@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -61,6 +62,15 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .Where(project => !project.IsDeleted && project.Key == key && project.WorkspaceId == workspaceId)
             .AsNoTracking()
             .Select(ProjectToViewModel())
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<TaskCreationProject?> GetTaskCreationProject(int projectId, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(project => project.Id == projectId && project.WorkspaceId == workspaceId && !project.IsDeleted)
+            .AsNoTracking()
+            .Select(project => new TaskCreationProject(project.Id, project.Name, project.WorkspaceId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

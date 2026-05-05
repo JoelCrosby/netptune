@@ -3,6 +3,8 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -277,6 +279,49 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .Select(item => item.ProjectTask!);
 
         return query.ToReadonlyListAsync(isReadonly, cancellationToken);
+    }
+
+    public Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(group => group.Id == groupId && !group.IsDeleted)
+            .AsNoTracking()
+            .Select(group => new BoardGroupTaskTarget(
+                group.Id,
+                group.Name,
+                group.Type,
+                Context.ProjectTaskInBoardGroups
+                    .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
+                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, BoardGroupType groupType, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(group => !group.IsDeleted)
+            .Where(group => group.Type == groupType)
+            .Where(group => group.Board != null
+                && group.Board.ProjectId == projectId
+                && group.Board.BoardType == BoardType.Default
+                && !group.Board.IsDeleted)
+            .OrderBy(group => group.SortOrder)
+            .AsNoTracking()
+            .Select(group => new BoardGroupTaskTarget(
+                group.Id,
+                group.Name,
+                group.Type,
+                Context.ProjectTaskInBoardGroups
+                    .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
+                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<double> GetMaxTaskSortOrder(int groupId, CancellationToken cancellationToken = default)
+    {
+        return await Context.ProjectTaskInBoardGroups
+            .Where(taskInGroup => taskInGroup.BoardGroupId == groupId)
+            .MaxAsync(taskInGroup => (double?)taskInGroup.SortOrder, cancellationToken) ?? 0D;
     }
 
     public async ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId, CancellationToken cancellationToken = default)

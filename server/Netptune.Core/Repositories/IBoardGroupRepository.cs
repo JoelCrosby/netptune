@@ -1,4 +1,6 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Boards;
 
@@ -25,6 +27,12 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
     Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default);
+
+    Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
+
+    Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, BoardGroupType groupType, CancellationToken cancellationToken = default);
+
+    Task<double> GetMaxTaskSortOrder(int groupId, CancellationToken cancellationToken = default);
 
     ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId, CancellationToken cancellationToken = default);
 

@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Projects;
@@ -14,6 +15,8 @@ public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
     Task<ProjectViewModel?> GetProjectViewModel(int id, CancellationToken cancellationToken = default);
 
     Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<TaskCreationProject?> GetTaskCreationProject(int projectId, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<bool> IsProjectKeyAvailable(string key, int workspaceId, CancellationToken cancellationToken = default);
 

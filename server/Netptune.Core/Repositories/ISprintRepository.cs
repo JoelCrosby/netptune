@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Sprints;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Sprints;
 
@@ -23,6 +24,11 @@ public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
         string workspaceKey,
         int sprintId,
         bool isReadonly = false,
+        CancellationToken cancellationToken = default);
+
+    Task<SprintTaskAssignmentTarget?> GetTaskAssignmentTarget(
+        string workspaceKey,
+        int sprintId,
         CancellationToken cancellationToken = default);
 
     Task<bool> HasActiveSprintAsync(

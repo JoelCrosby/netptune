@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Sprints;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -101,6 +102,22 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .AsSplitQuery();
 
         return query.IsReadonly(isReadonly).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<SprintTaskAssignmentTarget?> GetTaskAssignmentTarget(
+        string workspaceKey,
+        int sprintId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .AsNoTracking()
+            .Select(sprint => new SprintTaskAssignmentTarget(
+                sprint.Id,
+                sprint.Status,
+                sprint.WorkspaceId,
+                sprint.ProjectId))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<bool> HasActiveSprintAsync(

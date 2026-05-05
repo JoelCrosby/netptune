@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -36,6 +37,13 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .AsSplitQuery()
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(EqualsPredicate(id), cancellationToken);
+    }
+
+    public Task<ProjectTask?> GetTaskForUpdate(int id, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(x => x.ProjectTaskAppUsers)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public Task<TaskViewModel?> GetTaskViewModel(int taskId, CancellationToken cancellationToken = default)
@@ -569,6 +577,85 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(cancellationToken);
 
         return taskCount + 1 + increment;
+    }
+
+    public Task<int> UpdateTaskStatus(int id, ProjectTaskStatus status, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(task => task.Id == id && !task.IsDeleted)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(task => task.Status, status)
+                .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    public Task<List<int>> GetValidTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(task => taskIdList.Contains(task.Id))
+            .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .Select(task => task.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<int>> GetValidTaskIdsInProject(IEnumerable<int> taskIds, int workspaceId, int projectId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(task => taskIdList.Contains(task.Id))
+            .Where(task => task.WorkspaceId == workspaceId && task.ProjectId == projectId && !task.IsDeleted)
+            .Select(task => task.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task AssignTasksToSprint(IEnumerable<int> taskIds, int sprintId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        if (taskIdList.Count == 0)
+        {
+            return;
+        }
+
+        await Entities
+            .Where(task => taskIdList.Contains(task.Id))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(task => task.SprintId, sprintId)
+                .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    public async Task AssignTasksToUser(IEnumerable<int> taskIds, string assigneeId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        if (taskIdList.Count == 0)
+        {
+            return;
+        }
+
+        await Entities
+            .Where(task => taskIdList.Contains(task.Id))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
+
+        var existingTaskIds = await Context.ProjectTaskAppUsers
+            .AsNoTracking()
+            .Where(assignment => assignment.UserId == assigneeId && taskIdList.Contains(assignment.ProjectTaskId))
+            .Select(assignment => assignment.ProjectTaskId)
+            .ToListAsync(cancellationToken);
+
+        var missingAssignments = taskIdList
+            .Except(existingTaskIds)
+            .Select(taskId => new ProjectTaskAppUser
+            {
+                ProjectTaskId = taskId,
+                UserId = assigneeId,
+            });
+
+        await Context.ProjectTaskAppUsers.AddRangeAsync(missingAssignments, cancellationToken);
     }
 
     private sealed class TaskViewRowMap

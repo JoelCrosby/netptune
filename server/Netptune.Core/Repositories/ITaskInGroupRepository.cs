@@ -14,4 +14,12 @@ public interface ITaskInGroupRepository : IRepository<ProjectTaskInBoardGroup, i
     Task<List<int>> GetAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 
     Task DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
+
+    Task DeleteTaskFromGroup(int taskId, int groupId, CancellationToken cancellationToken = default);
+
+    Task<(double? Previous, double? Next)> GetNeighborSortOrdersForInsert(
+        int groupId,
+        int taskId,
+        int currentIndex,
+        CancellationToken cancellationToken = default);
 }
