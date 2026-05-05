@@ -1,7 +1,6 @@
 using Mediator;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
@@ -28,14 +27,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
         var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
 
-        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, cancellationToken: cancellationToken);
-
-        foreach (var task in tasks)
-        {
-            task.UpdatedAt = DateTime.UtcNow;
-            task.ProjectTaskAppUsers.Add(new ProjectTaskAppUser { UserId = req.AssigneeId });
-        }
-
+        await UnitOfWork.Tasks.AssignTasksToUser(taskIds, req.AssigneeId, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.LogWithMany<AssignActivityMeta>(options =>

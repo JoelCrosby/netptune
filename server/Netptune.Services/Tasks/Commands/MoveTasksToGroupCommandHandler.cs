@@ -25,30 +25,29 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
     public async ValueTask<ClientResponse> Handle(MoveTasksToGroupCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
-        var boardGroup = await UnitOfWork.BoardGroups.GetAsync(req.NewGroupId!.Value, cancellationToken: cancellationToken);
+        var boardGroup = await UnitOfWork.BoardGroups.GetTaskTarget(req.NewGroupId!.Value, cancellationToken);
 
         if (boardGroup is null) return ClientResponse.Failed();
 
         var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
 
-        var ids = await UnitOfWork.ProjectTasksInGroups.GetAllByTaskId(taskIds, cancellationToken);
-        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(ids, cancellationToken);
-
-        var baseSortOrder = boardGroup.TasksInGroups
-            .OrderByDescending(task => task.SortOrder)
-            .Select(task => task.SortOrder)
-            .FirstOrDefault() + 1;
-
-        var taskInGroups = taskIds.Select((id, index) => new ProjectTaskInBoardGroup
+        await UnitOfWork.Transaction(async () =>
         {
-            BoardGroupId = boardGroup.Id,
-            ProjectTaskId = id,
-            SortOrder = baseSortOrder + index,
-        });
+            await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds, cancellationToken);
 
-        await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            var baseSortOrder = await UnitOfWork.BoardGroups.GetMaxTaskSortOrder(boardGroup.Id, cancellationToken) + 1;
+
+            var taskInGroups = taskIds.Select((id, index) => new ProjectTaskInBoardGroup
+            {
+                BoardGroupId = boardGroup.Id,
+                ProjectTaskId = id,
+                SortOrder = baseSortOrder + index,
+            });
+
+            await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups, cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
 
         Activity.LogWithMany<MoveTaskActivityMeta>(options =>
         {

@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -35,12 +36,15 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     {
         var req = request.Request;
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspace = await UnitOfWork.Workspaces.GetBySlugWithTasks(workspaceKey, true, cancellationToken: cancellationToken);
+        var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
-        if (workspace is null) return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
+        if (!workspaceId.HasValue) return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
 
         var user = await Identity.GetCurrentUser();
         var userId = req.AssigneeId ?? user.Id;
+        var project = await UnitOfWork.Projects.GetTaskCreationProject(req.ProjectId!.Value, workspaceId.Value, cancellationToken);
+
+        if (project is null) return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
 
         var task = new ProjectTask
         {
@@ -49,16 +53,12 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             Status = req.Status ?? ProjectTaskStatus.New,
             ProjectId = req.ProjectId,
             OwnerId = user.Id,
-            WorkspaceId = workspace.Id,
+            WorkspaceId = workspaceId.Value,
             Priority = req.Priority,
             EstimateType = req.EstimateType,
             EstimateValue = req.EstimateValue,
             ProjectTaskAppUsers = new List<ProjectTaskAppUser> { new() { UserId = userId } },
         };
-
-        var project = workspace.Projects.FirstOrDefault(item => !item.IsDeleted && item.Id == req.ProjectId);
-
-        if (project is null) return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
 
         if (req.BoardGroupId.HasValue)
         {
@@ -69,13 +69,14 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             await AddTaskToBoardGroup(project, task, cancellationToken);
         }
 
-        var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
-
         var scopeIdRef = await UnitOfWork.Tasks.GetNextScopeId(project.Id, cancellationToken: cancellationToken);
 
         if (!scopeIdRef.HasValue) return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
 
         var scopeId = scopeIdRef.Value;
+        task.ProjectScopeId = scopeId;
+
+        var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
 
         await Policy
             .Handle<DbUpdateException>()
@@ -100,48 +101,32 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
     private async Task AddTaskToBoardGroup(int groupId, ProjectTask task, CancellationToken cancellationToken)
     {
-        var boardGroup = await UnitOfWork.BoardGroups.GetWithTasksInGroups(groupId, cancellationToken);
+        var boardGroup = await UnitOfWork.BoardGroups.GetTaskTarget(groupId, cancellationToken);
 
         if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
         task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
 
-        var sortOrder = GetNextSortOrder(boardGroup);
-
-        boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
+        task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
         {
-            SortOrder = sortOrder,
-            BoardGroup = boardGroup,
+            SortOrder = boardGroup.MaxSortOrder + 1,
+            BoardGroupId = boardGroup.Id,
             ProjectTask = task,
         });
     }
 
-    private async Task AddTaskToBoardGroup(Project project, ProjectTask task, CancellationToken cancellationToken)
+    private async Task AddTaskToBoardGroup(TaskCreationProject project, ProjectTask task, CancellationToken cancellationToken)
     {
-        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(project.Id, false, true, cancellationToken);
-
-        if (defaultBoard is null) throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board.");
-
         var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
-        var boardGroup = defaultBoard.BoardGroups.FirstOrDefault(group => group.Type == boardGroupType);
+        var boardGroup = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(project.Id, boardGroupType, cancellationToken);
 
-        if (boardGroup is null) throw new Exception($"Board '{defaultBoard.Name}' With Id {defaultBoard.Id} does not have a group of type {boardGroupType}.");
+        if (boardGroup is null) throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board group of type {boardGroupType}.");
 
-        var sortOrder = GetNextSortOrder(boardGroup);
-
-        boardGroup.TasksInGroups.Add(new ProjectTaskInBoardGroup
+        task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
         {
-            SortOrder = sortOrder,
-            BoardGroup = boardGroup,
+            SortOrder = boardGroup.MaxSortOrder + 1,
+            BoardGroupId = boardGroup.Id,
             ProjectTask = task,
         });
-    }
-
-    private static double GetNextSortOrder(BoardGroup boardGroup)
-    {
-        return boardGroup.TasksInGroups
-            .OrderByDescending(t => t.SortOrder)
-            .Select(t => t.SortOrder)
-            .FirstOrDefault() + 1;
     }
 }

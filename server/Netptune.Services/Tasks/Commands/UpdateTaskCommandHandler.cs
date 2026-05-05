@@ -29,11 +29,13 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
-        var result = await UnitOfWork.Tasks.GetAsync(req.Id, cancellationToken: cancellationToken);
+        var old = await UnitOfWork.Tasks.GetTaskViewModel(req.Id, cancellationToken);
+
+        if (old is null) return ClientResponse<TaskViewModel>.NotFound;
+
+        var result = await UnitOfWork.Tasks.GetTaskForUpdate(req.Id, cancellationToken);
 
         if (result is null) return ClientResponse<TaskViewModel>.NotFound;
-
-        var old = result.ToViewModel() with { };
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -72,46 +74,24 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
     private async Task PutTaskInBoardGroup(ProjectTaskStatus status, Core.Entities.ProjectTask result, CancellationToken cancellationToken)
     {
-        await RemoveTaskFromGroups(result.Id, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
-
         if (result.ProjectId is null) return;
 
-        var defaultBoard = await UnitOfWork.Boards.GetDefaultBoardInProject(result.ProjectId.Value, false, true, cancellationToken);
+        var groupType = status.GetGroupTypeFromTaskStatus();
+        var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(result.ProjectId.Value, groupType, cancellationToken);
 
-        if (defaultBoard is null)
+        if (group is null)
         {
-            Logger.LogInformation("Project With Id {ProjectId} does not have a default board", result.ProjectId.Value);
+            Logger.LogInformation("Project With Id {ProjectId} does not have a default board group of type {GroupType}", result.ProjectId.Value, groupType);
             return;
         }
 
-        var groupType = status.GetGroupTypeFromTaskStatus();
-        var group = defaultBoard.BoardGroups
-            .Where(item => !item.IsDeleted)
-            .OrderBy(item => item.SortOrder)
-            .FirstOrDefault(item => item.Type == groupType);
+        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(new[] { result.Id }, cancellationToken);
 
-        if (group is null) return;
-
-        var sortOrder = group.TasksInGroups.LastOrDefault()?.SortOrder ?? 0 + 1;
-
-        group.TasksInGroups.Add(new ProjectTaskInBoardGroup
+        await UnitOfWork.ProjectTasksInGroups.AddAsync(new ProjectTaskInBoardGroup
         {
             BoardGroupId = group.Id,
             ProjectTaskId = result.Id,
-            SortOrder = sortOrder,
-        });
-    }
-
-    private async Task RemoveTaskFromGroups(int taskId, CancellationToken cancellationToken)
-    {
-        var groupsWithTask = await UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(taskId, cancellationToken: cancellationToken);
-
-        var taskInGroupsToDelete = groupsWithTask
-            .Select(boardGroup => boardGroup.TasksInGroups.Where(x => x.ProjectTaskId == taskId))
-            .SelectMany(taskInGroups => taskInGroups);
-
-        await UnitOfWork.ProjectTasksInGroups.DeletePermanent(taskInGroupsToDelete);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            SortOrder = group.MaxSortOrder + 1,
+        }, cancellationToken);
     }
 }

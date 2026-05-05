@@ -27,34 +27,28 @@ public sealed class AddTasksToSprintCommandHandler : IRequestHandler<AddTasksToS
     public async ValueTask<ClientResponse<SprintDetailViewModel>> Handle(AddTasksToSprintCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var sprint = await UnitOfWork.Sprints.GetSprintInWorkspaceAsync(workspaceKey, request.SprintId, cancellationToken: cancellationToken);
+        var sprint = await UnitOfWork.Sprints.GetTaskAssignmentTarget(workspaceKey, request.SprintId, cancellationToken);
 
         if (sprint is null) return ClientResponse<SprintDetailViewModel>.NotFound;
         if (sprint.Status == SprintStatus.Completed) return ClientResponse<SprintDetailViewModel>.Failed("Completed sprints cannot be changed");
         if (request.Request.TaskIds.Count == 0) return ClientResponse<SprintDetailViewModel>.Failed("At least one task is required");
 
         var taskIds = request.Request.TaskIds.Distinct().ToList();
+        var taskIdsInWorkspace = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(taskIds, sprint.WorkspaceId, cancellationToken);
 
-        var tasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, cancellationToken: cancellationToken);
-
-        foreach (var taskId in taskIds)
+        foreach (var taskId in taskIds.Except(taskIdsInWorkspace))
         {
-            var task = tasks.FirstOrDefault(candidate => candidate.Id == taskId);
-
-            if (task is null || task.IsDeleted || task.WorkspaceId != sprint.WorkspaceId)
-            {
-                return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} not found");
-            }
-
-            if (task.ProjectId != sprint.ProjectId)
-            {
-                return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} is not in sprint project");
-            }
-
-            task.SprintId = sprint.Id;
+            return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} not found");
         }
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        var taskIdsInProject = await UnitOfWork.Tasks.GetValidTaskIdsInProject(taskIds, sprint.WorkspaceId, sprint.ProjectId, cancellationToken);
+
+        foreach (var taskId in taskIds.Except(taskIdsInProject))
+        {
+            return ClientResponse<SprintDetailViewModel>.Failed($"Task with id {taskId} is not in sprint project");
+        }
+
+        await UnitOfWork.Tasks.AssignTasksToSprint(taskIds, sprint.Id, cancellationToken);
 
         var result = await UnitOfWork.Sprints.GetSprintDetailAsync(workspaceKey, sprint.Id, cancellationToken);
 
