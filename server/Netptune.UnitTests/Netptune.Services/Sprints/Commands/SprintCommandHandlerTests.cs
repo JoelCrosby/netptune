@@ -3,6 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.Sprints;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -196,23 +197,22 @@ public class SprintCommandHandlerTests
         var request = new AddTasksToSprintRequest { TaskIds = [firstTask.Id, firstTask.Id, secondTask.Id] };
         var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId);
 
-        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
-            .Returns(sprint);
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), false, TestContext.Current.CancellationToken)
-            .Returns([firstTask, secondTask]);
+        UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(new SprintTaskAssignmentTarget(sprint.Id, sprint.Status, sprint.WorkspaceId, sprint.ProjectId));
+        UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([firstTask.Id, secondTask.Id]);
+        UnitOfWork.Tasks.GetValidTaskIdsInProject(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, sprint.ProjectId, TestContext.Current.CancellationToken)
+            .Returns([firstTask.Id, secondTask.Id]);
         UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
             .Returns(sprintViewModel);
 
         var result = await handler.Handle(new AddTasksToSprintCommand(sprint.Id, request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
-        firstTask.SprintId.Should().Be(sprint.Id);
-        secondTask.SprintId.Should().Be(sprint.Id);
-        await UnitOfWork.Tasks.Received(1).GetAllByIdAsync(
+        await UnitOfWork.Tasks.Received(1).AssignTasksToSprint(
             Arg.Is<IEnumerable<int>>(ids => ids.SequenceEqual(new[] { firstTask.Id, secondTask.Id })),
-            false,
+            sprint.Id,
             TestContext.Current.CancellationToken);
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.Assign);
     }
 
@@ -223,10 +223,12 @@ public class SprintCommandHandlerTests
         var sprint = CreateSprint(status: SprintStatus.Planning, projectId: 20);
         var task = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: 21);
 
-        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
-            .Returns(sprint);
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), false, TestContext.Current.CancellationToken)
-            .Returns([task]);
+        UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(new SprintTaskAssignmentTarget(sprint.Id, sprint.Status, sprint.WorkspaceId, sprint.ProjectId));
+        UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([task.Id]);
+        UnitOfWork.Tasks.GetValidTaskIdsInProject(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, sprint.ProjectId, TestContext.Current.CancellationToken)
+            .Returns([]);
 
         var result = await handler.Handle(
             new AddTasksToSprintCommand(sprint.Id, new AddTasksToSprintRequest { TaskIds = [task.Id] }),
@@ -236,6 +238,7 @@ public class SprintCommandHandlerTests
         result.Message.Should().Be("Task with id 10 is not in sprint project");
         task.SprintId.Should().BeNull();
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        await UnitOfWork.Tasks.DidNotReceive().AssignTasksToSprint(Arg.Any<IEnumerable<int>>(), Arg.Any<int>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]

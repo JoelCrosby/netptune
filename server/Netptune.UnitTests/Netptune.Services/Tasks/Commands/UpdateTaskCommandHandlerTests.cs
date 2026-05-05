@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -65,10 +66,22 @@ public class UpdateTaskCommandHandlerTests
 
     private void SetupHandlerDependencies(UpdateProjectTaskRequest request, ProjectTask task, TaskViewModel viewModel)
     {
-        UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: Arg.Any<CancellationToken>()).Returns(task);
-        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(viewModel);
-        UnitOfWork.BoardGroups.GetBoardGroupsForProjectTask(Arg.Any<int>(), cancellationToken: Arg.Any<CancellationToken>()).Returns(AutoFixtures.BoardGroups);
-        UnitOfWork.Boards.GetDefaultBoardInProject(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(AutoFixtures.Board);
+        var oldViewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            Description = task.Description,
+            Status = task.Status,
+            ProjectId = task.ProjectId,
+            Priority = task.Priority,
+            EstimateType = task.EstimateType,
+            EstimateValue = task.EstimateValue,
+        };
+
+        UnitOfWork.Tasks.GetTaskForUpdate(request.Id, Arg.Any<CancellationToken>()).Returns(task);
+        UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(oldViewModel, viewModel);
+        UnitOfWork.BoardGroups.GetDefaultTaskTarget(Arg.Any<int>(), Arg.Any<BoardGroupType>(), Arg.Any<CancellationToken>())
+            .Returns(new BoardGroupTaskTarget(1, "Group", BoardGroupType.Todo, 7));
         UnitOfWork.InvokeTransaction();
     }
 
@@ -106,7 +119,7 @@ public class UpdateTaskCommandHandlerTests
     public async Task Update_ShouldReturnFailed_WhenIdNotFound()
     {
         var request = Fixture.Build<UpdateProjectTaskRequest>().Create();
-        UnitOfWork.Tasks.GetAsync(request.Id, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Tasks.GetTaskViewModel(request.Id, TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 

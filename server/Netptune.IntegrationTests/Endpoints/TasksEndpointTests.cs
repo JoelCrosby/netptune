@@ -6,6 +6,8 @@ using FluentAssertions;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Activity;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.TestData;
 
@@ -337,6 +339,16 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+
+        var boardView = await GetBoardView("neovim");
+        boardView.Groups
+            .Single(group => group.Id == request.NewGroupId)
+            .Tasks.Should()
+            .Contain(task => task.Id == request.TaskId);
+
+        var activity = await GetActivity(EntityType.Task, request.TaskId, ActivityType.Move);
+        activity.Should().NotBeNull();
+        activity.Meta.Should().NotBeNull();
     }
 
     [Fact]
@@ -376,5 +388,40 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    private async Task<BoardView> GetBoardView(string boardIdentifier)
+    {
+        var response = await Client.GetAsync($"api/boards/view/{boardIdentifier}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        return result.Payload!;
+    }
+
+    private async Task<ActivityViewModel?> GetActivity(EntityType entityType, int entityId, ActivityType activityType)
+    {
+        for (var attempt = 0; attempt < 10; attempt++)
+        {
+            var response = await Client.GetAsync($"api/activity/{entityType}/{entityId}");
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<ActivityViewModel>>>();
+            var activity = result.Payload?.FirstOrDefault(item => item.Type == activityType);
+
+            if (activity is not null)
+            {
+                return activity;
+            }
+
+            await Task.Delay(100);
+        }
+
+        return null;
     }
 }

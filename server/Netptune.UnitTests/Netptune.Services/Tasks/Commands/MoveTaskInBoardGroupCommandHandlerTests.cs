@@ -1,8 +1,9 @@
 using FluentAssertions;
 
-using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
@@ -26,6 +27,32 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         Handler = new(UnitOfWork, Activity);
     }
 
+    private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)
+    {
+        UnitOfWork.InvokeTransaction<BoardGroupTaskTarget>();
+        UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, TestContext.Current.CancellationToken)
+            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7));
+        UnitOfWork.Tasks.UpdateTaskStatus(request.TaskId, Arg.Any<ProjectTaskStatus>(), TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
+        UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
+                request.NewGroupId,
+                request.TaskId,
+                request.CurrentIndex,
+                TestContext.Current.CancellationToken)
+            .Returns(((double?)0D, (double?)2D));
+    }
+
+    private void SetupSameGroup(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)
+    {
+        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
+        UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
+                request.NewGroupId,
+                request.TaskId,
+                request.CurrentIndex,
+                TestContext.Current.CancellationToken)
+            .Returns(((double?)0D, (double?)2D));
+    }
+
     [Fact]
     public async Task MoveTaskInBoardGroup_ShouldReturnCorrectly_WhenInputValid()
     {
@@ -39,15 +66,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         };
 
         var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
-        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
-        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
-
-        UnitOfWork.InvokeTransaction<BoardGroup>();
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroupA);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(taskInGroups);
-        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        SetupTransfer(request, taskInGroupA);
 
         var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -67,15 +86,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         };
 
         var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
-        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
-        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
-
-        UnitOfWork.InvokeTransaction<BoardGroup>();
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroupA);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(taskInGroups);
-        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        SetupTransfer(request, taskInGroupA);
 
         await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -95,15 +106,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         };
 
         var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
-        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
-        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
-
-        UnitOfWork.InvokeTransaction<BoardGroup>();
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroupA);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(taskInGroups);
-        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        SetupTransfer(request, taskInGroupA);
 
         await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
@@ -123,15 +126,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         };
 
         var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
-        var taskInGroupB = AutoFixtures.ProjectTaskInBoardGroup;
-        var taskInGroups = new List<ProjectTaskInBoardGroup> { taskInGroupA, taskInGroupB };
-
-        UnitOfWork.InvokeTransaction<BoardGroup>();
-        UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroupA);
-        UnitOfWork.ProjectTasksInGroups.GetProjectTasksInGroup(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(taskInGroups);
-        UnitOfWork.BoardGroups.GetTasksInGroup(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTasks);
-        UnitOfWork.BoardGroups.GetAsync(request.NewGroupId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
-        UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        SetupSameGroup(request, taskInGroupA);
 
         var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
