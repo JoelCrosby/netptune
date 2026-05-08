@@ -11,16 +11,11 @@ builder
         options.HelmChartName = "netptune-app";
     });
 
-var password = builder.AddParameter("password", "password");
 var postgres = builder
     .AddPostgres("postgres")
-    .WithPassword(password)
     .WithDataVolume()
     .WithPgWeb()
-    .WithEnvironment(container =>
-    {
-        container.EnvironmentVariables["POSTGRES_PASSWORD"] = "password";
-    })
+
     .WithHostPort(5432)
     .WithExternalHttpEndpoints()
     .WithLifetime(ContainerLifetime.Persistent);
