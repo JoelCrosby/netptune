@@ -16,7 +16,7 @@ using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Authentication;
+using Netptune.Authentication;
 
 using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
@@ -26,7 +26,7 @@ using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Services.Authentication;
+namespace Netptune.UnitTests.Netptune.Authentication;
 
 public class AuthenticationServiceTests
 {

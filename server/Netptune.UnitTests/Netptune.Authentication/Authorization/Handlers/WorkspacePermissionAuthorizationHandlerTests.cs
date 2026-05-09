@@ -9,15 +9,15 @@ using Netptune.Core.Cache;
 using Netptune.Core.Models;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Authorization.Handlers;
-using Netptune.Services.Authorization.Requirements;
+using Netptune.Authentication.Authorization.Handlers;
+using Netptune.Authentication.Authorization.Requirements;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Services.Authorization.Handlers;
+namespace Netptune.UnitTests.Netptune.Authentication.Authorization.Handlers;
 
 public class WorkspacePermissionAuthorizationHandlerTests
 {
