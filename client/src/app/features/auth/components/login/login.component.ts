@@ -24,6 +24,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { LoginGithubComponent } from './login-github.component';
+import { LoginGoogleComponent } from './login-google.component';
+import { LoginMicrosoftComponent } from './login-microsoft.component';
 import { selectBuildInfo } from '@app/core/store/meta/meta.selectors';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
@@ -40,6 +42,8 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
     StrokedButtonComponent,
     FormField,
     LoginGithubComponent,
+    LoginGoogleComponent,
+    LoginMicrosoftComponent,
     ButtonLinkComponent,
     BuildNumberComponent,
     TurnstileComponent,
@@ -124,6 +128,8 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
       <div class="border-border my-2 border-t"></div>
 
       <app-login-github />
+      <app-login-google />
+      <app-login-microsoft />
     </form>
     <app-build-number />
   </app-auth-page-container> `,

@@ -65,6 +65,12 @@ builder.Services.AddNeptuneAuthentication(options =>
     options.GitHubClientId = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID");
     options.GitHubSecret = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_SECRET");
     options.GitHubCallback = configuration.GetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK");
+    options.GoogleClientId = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_CLIENT_ID");
+    options.GoogleSecret = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_SECRET");
+    options.GoogleCallback = configuration.GetEnvironmentVariable("NETPTUNE_GOOGLE_CALLBACK");
+    options.MicrosoftClientId = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_CLIENT_ID");
+    options.MicrosoftSecret = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_SECRET");
+    options.MicrosoftCallback = configuration.GetEnvironmentVariable("NETPTUNE_MICROSOFT_CALLBACK");
 });
 
 builder.AddNetptuneCache(options =>

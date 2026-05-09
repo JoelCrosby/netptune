@@ -36,6 +36,12 @@ public static class AuthEndpoints
             .RequireAuthorization(AuthenticationSchemes.Github);
         group.MapPost("/provider-login-redirect", HandleProviderLoginRedirect)
             .RequireAuthorization(AuthenticationSchemes.Github);
+        group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
+        group.MapGet("/google-login-callback", HandleGoogleLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Google);
+        group.MapGet("/microsoft-login", HandleMicrosoftLogin).AllowAnonymous();
+        group.MapGet("/microsoft-login-callback", HandleMicrosoftLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Microsoft);
 
         return builder;
     }
@@ -243,6 +249,78 @@ public static class AuthEndpoints
         HttpContext context)
     {
         var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Github);
+
+        if (!result.IsSuccess) return Results.Unauthorized();
+
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        var redirect = hosting.ClientOrigin
+            .AppendPathSegments("/auth/auth-provider-login")
+            .SetQueryParams(new
+            {
+                displayName = result.Ticket?.DisplayName,
+                email = result.Ticket?.EmailAddress,
+                pictureUrl = result.Ticket?.PictureUrl,
+                userId = result.Ticket?.UserId,
+                expires = result.Ticket?.Expires.ToUniversalTime().ToString("O"),
+            });
+
+        return Results.Redirect(redirect);
+    }
+
+    public static IResult HandleGoogleLogin(HttpContext context)
+    {
+        context.Request.Scheme = Uri.UriSchemeHttps;
+
+        return Results.Challenge(new AuthenticationProperties
+        {
+            RedirectUri = "/api/auth/google-login-callback",
+            IsPersistent = true,
+        }, new[] { AuthenticationSchemes.Google });
+    }
+
+    public static async Task<IResult> HandleGoogleLoginCallback(
+        INetptuneAuthService authenticationService,
+        IHostingService hosting,
+        HttpContext context)
+    {
+        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Google);
+
+        if (!result.IsSuccess) return Results.Unauthorized();
+
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+
+        var redirect = hosting.ClientOrigin
+            .AppendPathSegments("/auth/auth-provider-login")
+            .SetQueryParams(new
+            {
+                displayName = result.Ticket?.DisplayName,
+                email = result.Ticket?.EmailAddress,
+                pictureUrl = result.Ticket?.PictureUrl,
+                userId = result.Ticket?.UserId,
+                expires = result.Ticket?.Expires.ToUniversalTime().ToString("O"),
+            });
+
+        return Results.Redirect(redirect);
+    }
+
+    public static IResult HandleMicrosoftLogin(HttpContext context)
+    {
+        context.Request.Scheme = Uri.UriSchemeHttps;
+
+        return Results.Challenge(new AuthenticationProperties
+        {
+            RedirectUri = "/api/auth/microsoft-login-callback",
+            IsPersistent = true,
+        }, new[] { AuthenticationSchemes.Microsoft });
+    }
+
+    public static async Task<IResult> HandleMicrosoftLoginCallback(
+        INetptuneAuthService authenticationService,
+        IHostingService hosting,
+        HttpContext context)
+    {
+        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Microsoft);
 
         if (!result.IsSuccess) return Results.Unauthorized();
 

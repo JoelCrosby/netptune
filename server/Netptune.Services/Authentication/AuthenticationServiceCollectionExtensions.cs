@@ -2,7 +2,9 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -132,6 +134,35 @@ public static class AuthenticationServiceCollectionExtensions
                 context.Identity?.AddClaim(new Claim("Provider-Picture-Url", user.AvatarUrl.ToString()));
             };
         });
+
+        services.AddAuthentication()
+            .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+            {
+                options.ClientId = authenticationOptions.GoogleClientId;
+                options.ClientSecret = authenticationOptions.GoogleSecret;
+                options.CallbackPath = authenticationOptions.GoogleCallback;
+                options.SaveTokens = true;
+                options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Events.OnCreatingTicket = context =>
+                {
+                    var pictureUrl = context.User.GetProperty("picture").GetString();
+
+                    if (pictureUrl is not null)
+                    {
+                        context.Identity?.AddClaim(new Claim("Provider-Picture-Url", pictureUrl));
+                    }
+
+                    return Task.CompletedTask;
+                };
+            })
+            .AddMicrosoftAccount(MicrosoftAccountDefaults.AuthenticationScheme, options =>
+            {
+                options.ClientId = authenticationOptions.MicrosoftClientId;
+                options.ClientSecret = authenticationOptions.MicrosoftSecret;
+                options.CallbackPath = authenticationOptions.MicrosoftCallback;
+                options.SaveTokens = true;
+                options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
 
         services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
     }
