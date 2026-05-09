@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
+    <ProjectReference Include="..\Netptune.Authentication\Netptune.Authentication.csproj" />
     <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />
   </ItemGroup>
 

@@ -7,7 +7,7 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Services.Authentication;
+using Netptune.Authentication;
 
 namespace Netptune.App.Endpoints;
 

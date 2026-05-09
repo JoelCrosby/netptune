@@ -15,8 +15,8 @@ using Netptune.Events;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
-using Netptune.Services.Authentication;
-using Netptune.Services.Authorization;
+using Netptune.Authentication;
+using Netptune.Authentication.Authorization;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 

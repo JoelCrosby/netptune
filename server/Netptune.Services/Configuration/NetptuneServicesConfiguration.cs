@@ -30,7 +30,6 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<IWebService, WebService>();
         services.AddTransient<IHtmlDocumentService, HtmlDocumentService>();
 
-        services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IAncestorService, AncestorService>();
 
         services.AddTransient<IActivityLogger, ActivityLogger>();
