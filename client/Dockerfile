@@ -1,4 +1,4 @@
-FROM node:25-alpine AS build
+FROM node:26-alpine AS build
 ARG COMMIT
 ARG GITHUB_REF
 ARG BUILD_NUMBER
@@ -6,6 +6,7 @@ ARG RUN_ID
 RUN apk upgrade --no-cache && npm install -g pnpm
 WORKDIR /client
 COPY package*.json ./
+COPY pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
