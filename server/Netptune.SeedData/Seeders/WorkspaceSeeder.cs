@@ -18,13 +18,15 @@ public sealed class WorkspaceSeeder : ISeeder
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
-        context.Workspaces.AddRange(Data.Select((w, i) => new Workspace
+        var owner = context.Users.First(u => u.Email == "joel@netptune.co.uk");
+
+        context.Workspaces.AddRange(Data.Select((w, _) => new Workspace
         {
             Name = w.Name,
             Slug = w.Slug,
             Description = w.Description,
             MetaInfo = new WorkspaceMeta { Color = w.Color },
-            Owner = context.Users[i % context.Users.Count],
+            Owner = owner,
         }));
 
         await dbContext.Workspaces.AddRangeAsync(context.Workspaces, ct);
