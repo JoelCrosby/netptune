@@ -38,4 +38,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     IRefreshTokenRepository RefreshTokens { get; }
 
     IAncestorRepository Ancestors { get; }
+
+    IWorkspaceInviteRepository WorkspaceInvites { get; }
 }

@@ -5,4 +5,6 @@ public class WorkspaceInvite
     public string Email { get; init; } = null!;
 
     public int WorkspaceId { get; init; }
+
+    public string Code { get; init; } = null!;
 }

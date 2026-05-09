@@ -1,12 +1,12 @@
 using Flurl;
 using Mediator;
-using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
 using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
+using Netptune.Core.Relationships;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -23,7 +23,6 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
     private readonly IIdentityService Identity;
     private readonly IEmailService Email;
     private readonly IHostingService Hosting;
-    private readonly IInviteCache InviteCache;
     private readonly IActivityLogger Activity;
 
     public InviteUsersToWorkspaceCommandHandler(
@@ -31,14 +30,12 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         IIdentityService identity,
         IEmailService email,
         IHostingService hosting,
-        IInviteCache inviteCache,
         IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Email = email;
         Hosting = hosting;
-        InviteCache = inviteCache;
         Activity = activity;
     }
 
@@ -57,12 +54,17 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         var newUserIds = userIds.Except(existingUsers.Select(x => x.Id)).ToHashSet();
 
         await UnitOfWork.Users.InviteUsersToWorkspace(newUserIds, workspace.Id, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
 
         var existingUserEmails = existingUsers.Select(user => user.Email!.IdentityNormalize()).ToHashSet();
         var usersToInvite = emailList.Where(email => !existingUserEmails.Contains(email)).Select(e => e.ToLowerInvariant()).ToHashSet();
 
-        await SendUserInviteEmails(usersToInvite, workspace);
+        var currentUserId = Identity.GetCurrentUserId();
+
+        var invites = await CreateOrRefreshInvites(usersToInvite, workspace.Id, currentUserId, cancellationToken);
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        await SendUserInviteEmails(invites, workspace);
 
         Activity.LogWith<UserMembershipActivityMeta>(options =>
         {
@@ -76,35 +78,67 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
         return new InviteUserResponse { Emails = usersToInvite.ToList() };
     }
 
-    private Task SendUserInviteEmails(IEnumerable<string> emails, Workspace workspace)
+    private async Task<List<WorkspaceInvite>> CreateOrRefreshInvites(IEnumerable<string> emails, int workspaceId, string? invitedByUserId, CancellationToken cancellationToken)
     {
         var emailList = emails.ToList();
+        var existing = await UnitOfWork.WorkspaceInvites.GetPendingByEmailRange(emailList, workspaceId, cancellationToken);
+        var existingByEmail = existing.ToDictionary(x => x.Email);
 
-        var key = Guid.NewGuid().ToString().Replace("-", "").ToLowerInvariant();
+        var now = DateTime.UtcNow;
+        var expiry = now.AddDays(7);
 
-        foreach (var email in emailList)
+        foreach (var invite in existing)
         {
-            InviteCache.Create(key, new() { Email = email, WorkspaceId = workspace.Id });
+            invite.Code = GenerateCode();
+            invite.ExpiresAt = expiry;
         }
 
-        var uri = Hosting.ClientOrigin
-            .AppendPathSegments("auth", "register")
-            .SetQueryParam("code", key, true)
-            .SetQueryParam("refer", "invite");
+        var newInvites = emailList
+            .Where(email => !existingByEmail.ContainsKey(email))
+            .Select(email => new WorkspaceInvite
+            {
+                Email = email,
+                WorkspaceId = workspaceId,
+                Code = GenerateCode(),
+                InvitedByUserId = invitedByUserId,
+                CreatedAt = now,
+                ExpiresAt = expiry,
+            })
+            .ToList();
 
-        var sendTo = emailList.Select(e => new SendTo { Address = e, DisplayName = e }).ToList();
+        await UnitOfWork.WorkspaceInvites.AddRangeAsync(newInvites, cancellationToken);
 
-        return Email.Send(new SendMultipleEmailModel
-        {
-            SendTo = sendTo,
-            Name = "-name-",
-            Action = "Go to Workspace",
-            Link = uri,
-            Reason = "workspace invite",
-            Message = "Hi you've been invited to join the -workspace- workspace in Netptune.",
-            Subject = "Netptune workspace invitation.",
-            PreHeader = "Hi you've been invited to join the -workspace- in Netptune.",
-            RawTextContent = $"Hi you've been invited to join the -workspace- in Netptune. Click the link below to start. \n\n {uri}",
-        });
+        return [..existing, ..newInvites];
     }
+
+    private Task SendUserInviteEmails(List<WorkspaceInvite> invites, Workspace workspace)
+    {
+        if (invites.Count == 0) return Task.CompletedTask;
+
+        var tasks = invites.Select(invite =>
+        {
+            var uri = Hosting.ClientOrigin
+                .AppendPathSegments("auth", "register")
+                .SetQueryParam("code", invite.Code, true)
+                .SetQueryParam("refer", "invite");
+
+            return Email.Send(new SendEmailModel
+            {
+                SendTo = new SendTo { Address = invite.Email, DisplayName = invite.Email },
+                Name = "-name-",
+                Action = "Go to Workspace",
+                Link = uri,
+                Reason = "workspace invite",
+                Message = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune.",
+                Subject = "Netptune workspace invitation.",
+                PreHeader = $"Hi you've been invited to join {workspace.Name} in Netptune.",
+                RawTextContent = $"Hi you've been invited to join the {workspace.Name} workspace in Netptune. Click the link below to start. \n\n {uri}",
+            });
+        });
+
+        return Task.WhenAll(tasks);
+    }
+
+    private static string GenerateCode() =>
+        Guid.NewGuid().ToString().Replace("-", "").ToLowerInvariant();
 }

@@ -1,6 +1,5 @@
 using FluentAssertions;
 
-using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Messaging;
@@ -24,30 +23,38 @@ public class InviteUsersToWorkspaceCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEmailService Email = Substitute.For<IEmailService>();
     private readonly IHostingService Hosting = Substitute.For<IHostingService>();
-    private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public InviteUsersToWorkspaceCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Email, Hosting, InviteCache, Activity);
+        Handler = new(UnitOfWork, Identity, Email, Hosting, Activity);
+    }
+
+    private void SetupValidWorkspace(string workspaceKey, Workspace workspace,
+        List<AppUser> users, List<AppUser> existingUsers,
+        List<WorkspaceInvite>? pendingInvites = null)
+    {
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
+        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(users);
+        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(existingUsers);
+        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns([]);
+        UnitOfWork.WorkspaceInvites.GetPendingByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(pendingInvites ?? []);
     }
 
     [Fact]
-    public async Task InviteUsersToWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    public async Task InviteUsersToWorkspace_ShouldReturnSuccess_WhenInputValid()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
         var users = new List<AppUser> { AutoFixtures.AppUser };
         var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
-        Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        SetupValidWorkspace(workspaceKey, workspace, users, existingUsers);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["user@email.com"]),
+            TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -56,17 +63,13 @@ public class InviteUsersToWorkspaceCommandHandlerTests
     public async Task InviteUsersToWorkspace_ReturnsFailure_WhenWorkspaceNotFound()
     {
         const string workspaceKey = "workspaceKey";
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).ReturnsNull();
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["user@email.com"]),
+            TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
@@ -78,69 +81,91 @@ public class InviteUsersToWorkspaceCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string>()), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand([]),
+            TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
-    public async Task InviteUsersToWorkspace_ShouldSendEmails_WhenInputValid()
+    public async Task InviteUsersToWorkspace_ShouldSendEmail_ForEachNewInvite()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
 
-        Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        SetupValidWorkspace(workspaceKey, workspace, [], []);
 
-        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["user1@email.com", "user2@email.com"]),
+            TestContext.Current.CancellationToken);
 
-        await Email.Received(1).Send(Arg.Any<SendMultipleEmailModel>());
+        await Email.Received(2).Send(Arg.Any<SendEmailModel>());
     }
 
     [Fact]
-    public async Task InviteUsersToWorkspace_ShouldNotInvite_ExistingUsers()
+    public async Task InviteUsersToWorkspace_ShouldNotSendEmail_ForExistingWorkspaceMembers()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { new() { Id = "userId", Email = "user@email.com" } };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
+        var existingMember = new AppUser { Id = "userId", Email = "member@email.com" };
 
-        Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        SetupValidWorkspace(workspaceKey, workspace, [existingMember], [existingMember]);
 
-        var result = await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com", "existinguser@email.com" }), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["member@email.com", "newuser@email.com"]),
+            TestContext.Current.CancellationToken);
 
-        result.Payload?.Emails.Should().Equal(new List<string> { "user@email.com" });
+        result.Payload!.Emails.Should().ContainSingle("newuser@email.com");
+        await Email.Received(1).Send(Arg.Any<SendEmailModel>());
     }
 
     [Fact]
-    public async Task InviteUsersToWorkspace_ShouldCallCompleteAsync_WhenValidId()
+    public async Task InviteUsersToWorkspace_ShouldRefreshExistingPendingInvite_NotCreateDuplicate()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var workspaceAppUsers = new List<WorkspaceAppUser> { AutoFixtures.WorkspaceAppUser };
-        var users = new List<AppUser> { AutoFixtures.AppUser };
-        var existingUsers = new List<AppUser> { new() { Id = "userId", Email = "existinguser@email.com" } };
+        var existingInvite = new WorkspaceInvite { Email = "pending@email.com", WorkspaceId = workspace.Id, Code = "oldcode" };
 
-        Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.InviteUsersToWorkspace(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(workspaceAppUsers);
-        UnitOfWork.Users.GetByEmailRange(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(users);
-        UnitOfWork.Users.IsUserInWorkspaceRange(Arg.Any<IEnumerable<string>>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(existingUsers);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(workspace);
+        SetupValidWorkspace(workspaceKey, workspace, [], [], [existingInvite]);
 
-        await Handler.Handle(new InviteUsersToWorkspaceCommand(new List<string> { "user@email.com" }), TestContext.Current.CancellationToken);
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["pending@email.com"]),
+            TestContext.Current.CancellationToken);
+
+        await UnitOfWork.WorkspaceInvites.DidNotReceive().AddAsync(Arg.Any<WorkspaceInvite>(), Arg.Any<CancellationToken>());
+        existingInvite.Code.Should().NotBe("oldcode");
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldCallAddRangeAsync_ForNewInvitees()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+
+        SetupValidWorkspace(workspaceKey, workspace, [], []);
+
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["new1@email.com", "new2@email.com"]),
+            TestContext.Current.CancellationToken);
+
+        await UnitOfWork.WorkspaceInvites.Received(1)
+            .AddRangeAsync(Arg.Is<IEnumerable<WorkspaceInvite>>(list => list.Count() == 2), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task InviteUsersToWorkspace_ShouldCallCompleteAsync()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+
+        SetupValidWorkspace(workspaceKey, workspace, [], []);
+
+        await Handler.Handle(
+            new InviteUsersToWorkspaceCommand(["user@email.com"]),
+            TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
     }

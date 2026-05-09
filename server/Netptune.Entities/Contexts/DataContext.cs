@@ -41,6 +41,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = null!;
     public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; } = null!;
     public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = null!;
+    public DbSet<WorkspaceInvite> WorkspaceInvites { get; set; } = null!;
 
     public DataContext() { }
 

@@ -43,7 +43,12 @@ import { RouterLink } from '@angular/router';
         {{ user().email }}
       </a>
 
-      @if (user().isWorkspaceOwner) {
+      @if (user().isPending) {
+        <div
+          class="bg-muted text-muted-foreground mr-1.5 rounded-full px-1.5 py-0.5 text-sm">
+          Pending
+        </div>
+      } @else if (user().isWorkspaceOwner) {
         <div
           class="bg-primary/10 text-primary mr-1.5 rounded-full px-1.5 py-0.5 text-sm">
           Owner
@@ -61,6 +66,7 @@ export class UserListItemComponent {
   );
 
   routerLink = computed(() => {
+    if (this.user().isPending) return null;
     return this.canReadUsers() ? ['.', this.user().id] : null;
   });
 }

@@ -7,7 +7,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
 
@@ -56,7 +56,10 @@ export class UsersEffects {
       switchMap(({ emailAddresses }) =>
         this.usersService.inviteUsersToWorkspace(emailAddresses).pipe(
           tap(() => this.snackbar.open('Invite(s) Sent')),
-          map(() => actions.inviteUsersToWorkspaceSuccess({ emailAddresses })),
+          mergeMap(() => [
+            actions.inviteUsersToWorkspaceSuccess({ emailAddresses }),
+            actions.loadUsers(),
+          ]),
           catchError((error) =>
             of(actions.inviteUsersToWorkspaceFail({ error }))
           )
@@ -75,6 +78,19 @@ export class UsersEffects {
             actions.toggleUserPermissionSuccess({ userId, permission })
           ),
           catchError((error) => of(actions.toggleUserPermissionFail({ error })))
+        )
+      )
+    );
+  });
+
+  resendInvite$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.resendInvite),
+      switchMap(({ email }) =>
+        this.usersService.resendInvite(email).pipe(
+          tap(() => this.snackbar.open('Invite resent')),
+          map(() => actions.resendInviteSuccess()),
+          catchError((error) => of(actions.resendInviteFail({ error })))
         )
       )
     );

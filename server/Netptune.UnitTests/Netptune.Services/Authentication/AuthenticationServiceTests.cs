@@ -14,11 +14,13 @@ using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Authentication;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Authentication;
+
+using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
+using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -35,7 +37,6 @@ public class AuthenticationServiceTests
     private readonly SignInManager<AppUser> SignInManager;
     private readonly IEmailService Email = Substitute.For<IEmailService>();
     private readonly IHttpContextAccessor ContextAccessor = Substitute.For<IHttpContextAccessor>();
-    private readonly IInviteCache InviteCache = Substitute.For<IInviteCache>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IMediator Mediator = Substitute.For<IMediator>();
@@ -83,7 +84,6 @@ public class AuthenticationServiceTests
             SignInManager,
             Email,
             ContextAccessor,
-            InviteCache,
             Identity,
             UnitOfWork,
             Mediator,
@@ -290,7 +290,7 @@ public class AuthenticationServiceTests
             AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
-        InviteCache.Get("invalid-code").ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("invalid-code").ReturnsNull();
 
         var result = await Service.Register(request);
 
@@ -328,7 +328,7 @@ public class AuthenticationServiceTests
     public async Task Register_ShouldAddToWorkspace_WhenInviteCodeIsValid()
     {
         var user = AutoFixtures.AppUser;
-        var invite = new WorkspaceInvite { Email = user.Email!, WorkspaceId = 42 };
+        var invite = new RelationshipInvite { Email = user.Email!, WorkspaceId = 42, Code = "valid-code" };
         var request = new RegisterRequest
         {
             Email = user.Email!,
@@ -339,7 +339,7 @@ public class AuthenticationServiceTests
             AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
-        InviteCache.Get("valid-code").Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code").Returns(invite);
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
         UserManager.CreateAsync(Arg.Any<AppUser>(), request.Password).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
@@ -353,7 +353,7 @@ public class AuthenticationServiceTests
         result.IsSuccess.Should().BeTrue();
         await UnitOfWork.WorkspaceUsers.Received(1).AddAsync(Arg.Is<WorkspaceAppUser>(w => w.WorkspaceId == 42), Arg.Any<CancellationToken>());
         await UnitOfWork.Received().CompleteAsync(Arg.Any<CancellationToken>());
-        InviteCache.Received(1).Remove("valid-code");
+        await UnitOfWork.WorkspaceInvites.Received(1).Accept("valid-code", Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -654,20 +654,21 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task ValidateInviteCode_ShouldReturnInvite_WhenCodeIsValid()
     {
-        var invite = new WorkspaceInvite { Email = "user@example.com", WorkspaceId = 1 };
+        var invite = new RelationshipInvite { Email = "user@example.com", WorkspaceId = 1, Code = "valid-code" };
 
-        InviteCache.Get("valid-code").Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code").Returns(invite);
 
         var result = await Service.ValidateInviteCode("valid-code");
 
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(invite);
+        result!.Email.Should().Be(invite.Email);
+        result.WorkspaceId.Should().Be(invite.WorkspaceId);
     }
 
     [Fact]
     public async Task ValidateInviteCode_ShouldReturnNull_WhenCodeIsExpiredOrInvalid()
     {
-        InviteCache.Get("expired-code").ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("expired-code").ReturnsNull();
 
         var result = await Service.ValidateInviteCode("expired-code");
 

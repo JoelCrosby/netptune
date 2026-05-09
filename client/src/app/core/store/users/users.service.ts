@@ -32,6 +32,12 @@ export class UsersService {
     });
   }
 
+  resendInvite(email: string) {
+    return this.http.post<ClientResponse>(`api/users/resend-invite`, {
+      emailAddresses: [email],
+    });
+  }
+
   toggleUserPermission(userId: string, permission: string) {
     return this.http.post<ClientResponse>(`api/users/toggle-permission`, {
       userId,

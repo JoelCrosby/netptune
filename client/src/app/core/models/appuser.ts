@@ -18,4 +18,5 @@ export interface AppUser {
 
 export interface WorkspaceAppUser extends AppUser {
   isWorkspaceOwner: boolean;
+  isPending?: boolean;
 }

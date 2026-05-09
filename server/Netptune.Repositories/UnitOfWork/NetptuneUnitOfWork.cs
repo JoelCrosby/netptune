@@ -25,6 +25,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public INotificationRepository Notifications { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
     public IAncestorRepository Ancestors { get; }
+    public IWorkspaceInviteRepository WorkspaceInvites { get; }
 
     public NetptuneUnitOfWork(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
     {
@@ -45,5 +46,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Notifications = new NotificationRepository(context, connectionFactory);
         RefreshTokens = new RefreshTokenRepository(context, connectionFactory);
         Ancestors = new AncestorRepository(connectionFactory);
+        WorkspaceInvites = new WorkspaceInviteRepository(context, connectionFactory);
     }
 }

@@ -3,9 +3,12 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { DialogService } from '@core/services/dialog.service';
-import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
+import {
+  removeUsersFromWorkspace,
+  resendInvite,
+} from '@core/store/users/users.actions';
 import { selectAllUsers } from '@core/store/users/users.selectors';
-import { LucideEllipsisVertical, LucideTrash2 } from '@lucide/angular';
+import { LucideEllipsisVertical, LucideTrash2, LucideSend } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';
@@ -22,12 +25,13 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     TooltipDirective,
     LucideEllipsisVertical,
     LucideTrash2,
+    LucideSend,
     DropdownMenuComponent,
     MenuItemComponent,
   ],
   template: `
     <app-list>
-      @for (user of users(); track user.id) {
+      @for (user of users(); track user.email) {
         <app-user-list-item
           [user]="user"
           class="mb-0.75 block overflow-hidden rounded-sm">
@@ -43,6 +47,14 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           </button>
 
           <app-dropdown-menu #menu xPosition="before">
+            @if (user.isPending) {
+              <button
+                app-menu-item
+                (click)="onResendClicked(user); menu.close()">
+                <svg lucideSend class="h-4 w-4"></svg>
+                <span>Resend invite</span>
+              </button>
+            }
             @if (!user.isWorkspaceOwner) {
               <button
                 app-menu-item
@@ -68,5 +80,11 @@ export class UserListComponent {
 
     const emailAddresses = [user.email];
     this.store.dispatch(removeUsersFromWorkspace({ emailAddresses }));
+  }
+
+  onResendClicked(user: WorkspaceAppUser) {
+    if (!user?.email) return;
+
+    this.store.dispatch(resendInvite({ email: user.email }));
   }
 }

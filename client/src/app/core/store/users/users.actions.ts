@@ -65,6 +65,20 @@ export const removeUsersFromWorkspaceFail = createAction(
   props<{ error: HttpErrorResponse | Error }>()
 );
 
+// Resend invite
+
+export const resendInvite = createAction(
+  '[Users] Resend Invite',
+  props<{ email: string }>()
+);
+
+export const resendInviteSuccess = createAction('[Users] Resend Invite Success');
+
+export const resendInviteFail = createAction(
+  '[Users] Resend Invite Fail',
+  props<{ error: HttpErrorResponse | Error }>()
+);
+
 // Toggle user permission
 
 export const toggleUserPermission = createAction(

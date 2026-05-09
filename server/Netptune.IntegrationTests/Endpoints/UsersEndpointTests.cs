@@ -132,7 +132,7 @@ public sealed class UsersEndpointTests
     {
         var request = new InviteUsersRequest
         {
-            EmailAddresses = new () { "janedoe@gmail.com" },
+            EmailAddresses = ["janedoe@gmail.com"],
         };
 
         var response = await Client.PostAsJsonAsync("api/users/invite", request);
@@ -146,11 +146,87 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
+    public async Task Invite_ShouldAppearAsPendingInUserList()
+    {
+        const string inviteEmail = "pending-user@gmail.com";
+
+        await Client.PostAsJsonAsync("api/users/invite", new InviteUsersRequest
+        {
+            EmailAddresses = [inviteEmail],
+        });
+
+        var response = await Client.GetAsync("api/users");
+        var users = await response.Content.ReadFromJsonAsync<List<WorkspaceUserViewModel>>();
+
+        users.Should().Contain(u => u.Email == inviteEmail && u.IsPending);
+    }
+
+    [Fact]
+    public async Task Invite_ShouldRefreshPendingInvite_WhenInvitingSameEmailTwice()
+    {
+        const string inviteEmail = "repeat-invite@gmail.com";
+
+        var request = new InviteUsersRequest { EmailAddresses = [inviteEmail] };
+
+        await Client.PostAsJsonAsync("api/users/invite", request);
+        var secondResponse = await Client.PostAsJsonAsync("api/users/invite", request);
+
+        secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var users = await (await Client.GetAsync("api/users")).Content.ReadFromJsonAsync<List<WorkspaceUserViewModel>>();
+        users!.Count(u => u.Email == inviteEmail).Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ResendInvite_ShouldReturnCorrectly_WhenPendingInviteExists()
+    {
+        const string inviteEmail = "resend-target@gmail.com";
+
+        await Client.PostAsJsonAsync("api/users/invite", new InviteUsersRequest
+        {
+            EmailAddresses = [inviteEmail],
+        });
+
+        var response = await Client.PostAsJsonAsync("api/users/resend-invite", new InviteUsersRequest
+        {
+            EmailAddresses = [inviteEmail],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ResendInvite_ShouldReturnBadRequest_WhenNoPendingInviteExists()
+    {
+        var response = await Client.PostAsJsonAsync("api/users/resend-invite", new InviteUsersRequest
+        {
+            EmailAddresses = ["no-invite-for-this@gmail.com"],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ResendInvite_ShouldReturnBadRequest_WhenEmailListIsEmpty()
+    {
+        var response = await Client.PostAsJsonAsync("api/users/resend-invite", new InviteUsersRequest
+        {
+            EmailAddresses = [],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task RemoveFromWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = new InviteUsersRequest
         {
-            EmailAddresses = new () { SeedData.Users.Last().Email },
+            EmailAddresses = [SeedData.Users.Last().Email],
         };
 
         var response = await Client.PostAsJsonAsync("api/users/remove", request);

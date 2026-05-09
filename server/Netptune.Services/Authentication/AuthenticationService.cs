@@ -22,12 +22,14 @@ using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
 using Netptune.Core.Models.Messaging;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Workspaces.Commands;
+
+using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
+using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
 
 namespace Netptune.Services.Authentication;
 
@@ -37,7 +39,6 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly UserManager<AppUser> UserManager;
     private readonly IEmailService Email;
     private readonly IHttpContextAccessor ContextAccessor;
-    private readonly IInviteCache InviteCache;
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IMediator Mediator;
@@ -54,7 +55,6 @@ public class NetptuneAuthService : INetptuneAuthService
         SignInManager<AppUser> signInManager,
         IEmailService email,
         IHttpContextAccessor contextAccessor,
-        IInviteCache inviteCache,
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
         IMediator mediator,
@@ -64,7 +64,6 @@ public class NetptuneAuthService : INetptuneAuthService
         UserManager = userManager;
         Email = email;
         ContextAccessor = contextAccessor;
-        InviteCache = inviteCache;
         Identity = identity;
         UnitOfWork = unitOfWork;
         Mediator = mediator;
@@ -214,9 +213,9 @@ public class NetptuneAuthService : INetptuneAuthService
                 Permissions = permissions,
             }, CancellationToken.None);
 
-            await UnitOfWork.CompleteAsync();
+            await UnitOfWork.WorkspaceInvites.Accept(model.InviteCode!, CancellationToken.None);
 
-            InviteCache.Remove(model.InviteCode);
+            await UnitOfWork.CompleteAsync();
         }
 
         await Mediator.Send(new CreateWorkspaceForNewUserCommand(new()
@@ -481,8 +480,17 @@ public class NetptuneAuthService : INetptuneAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public Task<WorkspaceInvite?> ValidateInviteCode(string code)
+    public async Task<WorkspaceInvite?> ValidateInviteCode(string code)
     {
-        return InviteCache.Get(code);
+        var invite = await UnitOfWork.WorkspaceInvites.GetByCode(code);
+
+        if (invite is null) return null;
+
+        return new WorkspaceInvite
+        {
+            Email = invite.Email,
+            WorkspaceId = invite.WorkspaceId,
+            Code = invite.Code,
+        };
     }
 }

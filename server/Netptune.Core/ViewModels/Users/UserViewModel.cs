@@ -28,4 +28,6 @@ public class UserViewModel
 public class WorkspaceUserViewModel : UserViewModel
 {
     public WorkspaceRole Role { get; init; }
+
+    public bool IsPending { get; init; }
 }
