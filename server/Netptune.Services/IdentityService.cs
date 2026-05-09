@@ -29,18 +29,23 @@ public class IdentityService : IIdentityService
 
     public string GetUserName()
     {
-        if (TryGetClaimValue("urn:github:name", out var githubUserName))
+        if (TryGetClaimValue("urn:github:name", out var githubUserName)) return githubUserName;
+
+        if (TryGetClaimValue(ClaimTypes.GivenName, out var givenName))
         {
-            return githubUserName;
+            var familyName = TryGetClaimValue(ClaimTypes.Surname, out var sn) ? sn : string.Empty;
+            return $"{givenName} {familyName}".Trim();
         }
 
         return GetClaimValue(ClaimTypes.Name);
     }
 
-    public string GetPictureUrl()
+    public string? GetPictureUrl()
     {
-        return GetClaimValue("Provider-Picture-Url");
+        return TryGetClaimValue("Provider-Picture-Url", out var url) ? url : null;
     }
+
+    public string GetProviderKey() => GetClaimValue(ClaimTypes.NameIdentifier);
 
     public Task<AppUser> GetCurrentUser()
     {

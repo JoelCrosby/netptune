@@ -242,7 +242,7 @@ public static class AuthEndpoints
         IHostingService hosting,
         HttpContext context)
     {
-        var result = await authenticationService.LogInViaProvider();
+        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Github);
 
         if (!result.IsSuccess) return Results.Unauthorized();
 

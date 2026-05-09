@@ -12,7 +12,9 @@ public interface IIdentityService
 
     string GetUserName();
 
-    string GetPictureUrl();
+    string? GetPictureUrl();
+
+    string GetProviderKey();
 
     string GetWorkspaceKey();
 

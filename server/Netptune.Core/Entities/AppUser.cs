@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
-using Netptune.Core.Authentication;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Users;
@@ -18,8 +17,6 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
     public string? PictureUrl { get; set; }
 
     public string DisplayName => GetDisplayName();
-
-    public AuthenticationProvider AuthenticationProvider { get; set; }
 
     private string GetDisplayName()
     {

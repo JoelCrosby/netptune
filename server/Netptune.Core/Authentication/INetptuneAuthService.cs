@@ -12,7 +12,7 @@ public interface INetptuneAuthService
 
     Task<LoginResult> Refresh(RefreshTokenRequest request);
 
-    Task<LoginResult> LogInViaProvider();
+    Task<LoginResult> LogInViaProvider(string providerScheme);
 
     Task<RegisterResult> Register(RegisterRequest model);
 

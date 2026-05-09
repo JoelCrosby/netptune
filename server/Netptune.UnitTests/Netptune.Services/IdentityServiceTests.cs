@@ -199,16 +199,46 @@ public class IdentityServiceTests
     }
 
     [Fact]
-    public void GetPictureUrl_ShouldReturnThrow_WhenClaimNotAvailable()
+    public void GetPictureUrl_ShouldReturnNull_WhenClaimNotAvailable()
     {
         HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
 
-        var act = () => Service.GetPictureUrl().Throws<AuthenticationException>();
+        var result = Service.GetPictureUrl();
 
-        act.Should().Throw<AuthenticationException>();
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetUserName_ShouldReturnGivenPlusFamilyName_WhenGivenNameClaimAvailable()
+    {
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        {
+            new ClaimsIdentity(new []
+            {
+                new Claim(ClaimTypes.GivenName, "Jane"),
+                new Claim(ClaimTypes.Surname, "Smith"),
+            }),
+        }));
+
+        var result = Service.GetUserName();
+
+        result.Should().Be("Jane Smith");
+    }
+
+    [Fact]
+    public void GetProviderKey_ShouldReturnCorrectly_WhenClaimAvailable()
+    {
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        {
+            new ClaimsIdentity(new [] { new Claim(ClaimTypes.NameIdentifier, "provider-key-123") }),
+        }));
+
+        var result = Service.GetProviderKey();
+
+        result.Should().Be("provider-key-123");
     }
 
     [Fact]

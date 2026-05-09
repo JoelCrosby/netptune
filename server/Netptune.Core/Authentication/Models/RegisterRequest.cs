@@ -10,5 +10,7 @@ public class RegisterRequest : TokenRequest
 
     public string? PictureUrl { get; init; }
 
-    public AuthenticationProvider AuthenticationProvider { get; init; }
+    public string? OAuthProvider { get; init; }
+
+    public string? OAuthProviderKey { get; init; }
 }

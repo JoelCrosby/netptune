@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
-using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
@@ -175,14 +174,16 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task LogInViaProvider_ShouldReturnSuccess_WhenUserExists()
     {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
 
         Identity.GetCurrentUserEmail().Returns(user.Email!);
-        Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
-        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        Identity.GetProviderKey().Returns(providerKey);
+        UserManager.FindByLoginAsync(providerScheme, providerKey).Returns(user);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
 
-        var result = await Service.LogInViaProvider();
+        var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
@@ -191,22 +192,46 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task LogInViaProvider_ShouldRegisterUser_WhenUserDoesNotExist()
     {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
 
         Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
         Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
         Identity.GetPictureUrl().Returns(user.PictureUrl);
 
-        UserManager.FindByEmailAsync(user.Email!)
+        UserManager.FindByLoginAsync(providerScheme, providerKey)
             .Returns(null, user);
+        UserManager.FindByEmailAsync(user.Email!).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).Returns(null, user);
 
         UserManager.CreateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
+        UserManager.AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("confirmation-token");
 
-        var result = await Service.LogInViaProvider();
+        var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldReturnFailure_WhenEmailBelongsToDifferentProvider()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
+        var user = AutoFixtures.AppUser;
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
     }
 
     // Register
@@ -221,7 +246,6 @@ public class AuthenticationServiceTests
             Password = "password123",
             Firstname = user.Firstname,
             Lastname = user.Lastname,
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
@@ -237,7 +261,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task Register_ShouldReturnFailure_WhenPasswordIsNullAndNotGitHub()
+    public async Task Register_ShouldReturnFailure_WhenPasswordIsNullAndNoOAuthProvider()
     {
         var request = new RegisterRequest
         {
@@ -245,7 +269,6 @@ public class AuthenticationServiceTests
             Password = null,
             Firstname = "John",
             Lastname = "Doe",
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UserManager.FindByEmailAsync(request.Email).ReturnsNull();
@@ -266,7 +289,6 @@ public class AuthenticationServiceTests
             Password = "password123",
             Firstname = "John",
             Lastname = "Doe",
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UserManager.FindByEmailAsync(request.Email).Returns(existingUser);
@@ -287,7 +309,6 @@ public class AuthenticationServiceTests
             Firstname = "John",
             Lastname = "Doe",
             InviteCode = "invalid-code",
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UnitOfWork.WorkspaceInvites.GetByCode("invalid-code").ReturnsNull();
@@ -299,8 +320,10 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task Register_ShouldCreateUserWithoutPassword_WhenProviderIsGitHub()
+    public async Task Register_ShouldCreateUserWithoutPassword_WhenOAuthProviderIsSet()
     {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
         var user = AutoFixtures.AppUser;
         var request = new RegisterRequest
         {
@@ -308,11 +331,13 @@ public class AuthenticationServiceTests
             Password = null,
             Firstname = user.Firstname,
             Lastname = user.Lastname,
-            AuthenticationProvider = AuthenticationProvider.GitHub,
+            OAuthProvider = providerScheme,
+            OAuthProviderKey = providerKey,
         };
 
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
         UserManager.CreateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
+        UserManager.AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
         SignInManager.SignInAsync(Arg.Any<AppUser>(), false).Returns(Task.CompletedTask);
         UserManager.UpdateAsync(Arg.Any<AppUser>()).Returns(IdentityResult.Success);
@@ -322,6 +347,8 @@ public class AuthenticationServiceTests
         result.IsSuccess.Should().BeTrue();
         await UserManager.Received(1).CreateAsync(Arg.Any<AppUser>());
         await UserManager.DidNotReceive().CreateAsync(Arg.Any<AppUser>(), Arg.Any<string>());
+        await UserManager.Received(1).AddLoginAsync(Arg.Any<AppUser>(), Arg.Is<UserLoginInfo>(l =>
+            l.LoginProvider == providerScheme && l.ProviderKey == providerKey));
     }
 
     [Fact]
@@ -336,7 +363,6 @@ public class AuthenticationServiceTests
             Firstname = user.Firstname,
             Lastname = user.Lastname,
             InviteCode = "valid-code",
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UnitOfWork.WorkspaceInvites.GetByCode("valid-code").Returns(invite);
@@ -366,7 +392,6 @@ public class AuthenticationServiceTests
             Password = "password123",
             Firstname = user.Firstname,
             Lastname = user.Lastname,
-            AuthenticationProvider = AuthenticationProvider.Netptune,
         };
 
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);

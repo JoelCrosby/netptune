@@ -123,27 +123,40 @@ public class NetptuneAuthService : INetptuneAuthService
         return LoginResult.Success(ticket);
     }
 
-    public async Task<LoginResult> LogInViaProvider()
+    public async Task<LoginResult> LogInViaProvider(string providerScheme)
     {
         var email = Identity.GetCurrentUserEmail();
-        var user = await UserManager.FindByEmailAsync(email);
+        var providerKey = Identity.GetProviderKey();
+
+        var user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
 
         if (user is null)
         {
+            var existingByEmail = await UserManager.FindByEmailAsync(email);
+
+            if (existingByEmail is not null)
+            {
+                return LoginResult.Failed("An account with this email already exists. Please sign in using your original login method.");
+            }
+
+            var name = Identity.GetUserName();
+            var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
             var registerRequest = new RegisterRequest
             {
                 Email = email,
-                Firstname = Identity.GetUserName().Split(" ").FirstOrDefault()!,
-                Lastname = Identity.GetUserName().Split(" ").LastOrDefault()!,
+                Firstname = nameParts.ElementAtOrDefault(0) ?? string.Empty,
+                Lastname = nameParts.ElementAtOrDefault(1) ?? string.Empty,
                 PictureUrl = Identity.GetPictureUrl(),
                 Password = null,
-                AuthenticationProvider = AuthenticationProvider.GitHub,
+                OAuthProvider = providerScheme,
+                OAuthProviderKey = providerKey,
             };
 
             await Register(registerRequest);
-        }
 
-        user = await UserManager.FindByEmailAsync(email);
+            user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
+        }
 
         if (user is null) throw new InvalidOperationException("user login failed");
 
@@ -172,7 +185,7 @@ public class NetptuneAuthService : INetptuneAuthService
             return RegisterResult.Failed("Invite code is invalid/expired.");
         }
 
-        if (model.Password is null && model.AuthenticationProvider != AuthenticationProvider.GitHub)
+        if (model.Password is null && model.OAuthProvider is null)
         {
             return RegisterResult.Failed("Invalid request.");
         }
@@ -193,11 +206,9 @@ public class NetptuneAuthService : INetptuneAuthService
             PictureUrl = model.PictureUrl,
         };
 
-        var result = model.AuthenticationProvider switch
-        {
-            AuthenticationProvider.GitHub => await UserManager.CreateAsync(user),
-            _ => await UserManager.CreateAsync(user, model.Password!),
-        };
+        var result = model.OAuthProvider is not null
+            ? await UserManager.CreateAsync(user)
+            : await UserManager.CreateAsync(user, model.Password!);
 
         if (invite is not null)
         {
@@ -239,6 +250,12 @@ public class NetptuneAuthService : INetptuneAuthService
         if (appUser is null)
         {
             throw new InvalidOperationException("Invalid request.");
+        }
+
+        if (model.OAuthProvider is not null && model.OAuthProviderKey is not null)
+        {
+            var loginInfo = new UserLoginInfo(model.OAuthProvider, model.OAuthProviderKey, model.OAuthProvider);
+            await UserManager.AddLoginAsync(appUser, loginInfo);
         }
 
         await LogNewlyRegisteredUserIn(appUser);

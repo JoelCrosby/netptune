@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Netptune.Core.Authentication;
 using Netptune.Core.Entities;
 
 namespace Netptune.Entities.EntityMaps;
@@ -23,10 +22,5 @@ public class AppUserEntityMap : IEntityTypeConfiguration<AppUser>
         builder
             .Property(user => user.PictureUrl)
             .HasMaxLength(2048);
-
-        builder
-            .Property(user => user.AuthenticationProvider)
-            .HasDefaultValue(AuthenticationProvider.Netptune)
-            .IsRequired();
     }
 }

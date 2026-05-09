@@ -20,17 +20,16 @@ public static class AuthorizationServiceCollectionExtensions
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .Build())
+            .AddPolicy(AuthenticationSchemes.Github, builder => builder
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthenticationSchemes.Github)
+                .Build())
             .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
-                .Build())
-            .AddPolicy(NetptunePolicies.Github, builder => builder
-                .AddAuthenticationSchemes(AuthenticationSchemes.Github)
-                .AddRequirements(new GithubRequirement())
                 .Build());
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, WorkspacePermissionResourceAuthorizationHandler>();
-        services.AddScoped<IAuthorizationHandler, GithubAuthorizationHandler>();
     }
 }
