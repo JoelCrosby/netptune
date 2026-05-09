@@ -1,0 +1,129 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Authentication;
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Http;
+
+using Netptune.Core.Cache;
+using Netptune.Core.Entities;
+using Netptune.Core.Services;
+
+namespace Netptune.Authentication;
+
+public class IdentityService : IIdentityService
+{
+    private readonly IUserCache UserCache;
+    private readonly IWorkspaceCache WorkspaceCache;
+    private readonly IHttpContextAccessor Context;
+
+    public IdentityService(IUserCache userCache, IWorkspaceCache workspaceCache, IHttpContextAccessor context)
+    {
+        UserCache = userCache;
+        WorkspaceCache = workspaceCache;
+        Context = context;
+    }
+
+    public string GetCurrentUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
+
+    public string GetCurrentUserEmail() => GetClaimValue(ClaimTypes.Email);
+
+    public string GetUserName()
+    {
+        if (TryGetClaimValue("urn:github:name", out var githubUserName)) return githubUserName;
+
+        if (TryGetClaimValue(ClaimTypes.GivenName, out var givenName))
+        {
+            var familyName = TryGetClaimValue(ClaimTypes.Surname, out var sn) ? sn : string.Empty;
+            return $"{givenName} {familyName}".Trim();
+        }
+
+        return GetClaimValue(ClaimTypes.Name);
+    }
+
+    public string? GetPictureUrl()
+    {
+        return TryGetClaimValue("Provider-Picture-Url", out var url) ? url : null;
+    }
+
+    public string GetProviderKey() => GetClaimValue(ClaimTypes.NameIdentifier);
+
+    public Task<AppUser> GetCurrentUser()
+    {
+        return UserCache.Get(GetCurrentUserId())!;
+    }
+
+    public string GetWorkspaceKey()
+    {
+        var context = Context.HttpContext;
+
+        if (context is null)
+        {
+            throw new Exception("HttpContext was null");
+        }
+
+        if (context.Request.Headers.TryGetValue("workspace", out var workspace))
+        {
+            return workspace!;
+        }
+
+        throw new Exception("request context did not contain a 'workspace' header.");
+    }
+
+    public string? TryGetWorkspaceKey()
+    {
+        var context = Context.HttpContext;
+
+        if  (context is null) return null;
+
+        if (context.Request.Headers.TryGetValue("workspace", out var workspace))
+        {
+            return workspace!;
+        }
+
+        return null;
+    }
+
+    public async Task<int> GetWorkspaceId()
+    {
+        var id = await WorkspaceCache.GetIdBySlug(GetWorkspaceKey());
+
+        if (id is null)
+        {
+            throw new Exception("Failed to get workspace from cache.");
+        }
+
+        return id.Value;
+    }
+
+    private bool TryGetClaimValue(string type, [MaybeNullWhen(false)] out string value)
+    {
+        var claimsPrincipal = Context.HttpContext?.User;
+
+        var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+        var result = claim?.Value;
+
+        if (result is null)
+        {
+            value = default;
+            return false;
+        }
+
+        value = result;
+        return true;
+    }
+
+    private string GetClaimValue(string type)
+    {
+        var claimsPrincipal = Context.HttpContext?.User;
+
+        var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+        var result = claim?.Value;
+
+        if (result is null)
+        {
+            throw new AuthenticationException($"user does not have value for claim of type {type}");
+        }
+
+        return result;
+    }
+}
