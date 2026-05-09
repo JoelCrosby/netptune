@@ -17,7 +17,6 @@ import {
 import { FormValueControl } from '@angular/forms/signals';
 import {
   LucideChevronDown,
-  LucideChevronRight,
   LucideDynamicIcon,
   LucideIconInput,
 } from '@lucide/angular';
@@ -30,12 +29,7 @@ import { FormSelectService } from './form-select.service';
   templateUrl: './form-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectService],
-  imports: [
-    LucideDynamicIcon,
-    LucideChevronDown,
-    LucideChevronRight,
-    FormSelectDropdownComponent,
-  ],
+  imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue | null>
@@ -50,7 +44,9 @@ export class FormSelectComponent<TValue>
 
   readonly changed = output<TValue>();
   readonly input = viewChild.required<ElementRef>('input');
-  readonly options = contentChildren(FormSelectOptionComponent);
+  readonly options = contentChildren<FormSelectOptionComponent<TValue>>(
+    FormSelectOptionComponent
+  );
   readonly submitted = output<string>();
 
   public readonly dropdown = viewChild.required(FormSelectDropdownComponent);

@@ -12,7 +12,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
     <div class="inline-flex flex-row-reverse items-center">
       @for (user of users(); track trackByUsers($index, user)) {
         <div
-          class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 not-last:-ml-3 hover:z-100"
+          class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 not-last:-ml-3 hover:z-100"
           [class.border-transparent]="!user.selected"
           [class.border-primary]="user.selected"
           [style.z-index]="user.selected ? 99 : null">

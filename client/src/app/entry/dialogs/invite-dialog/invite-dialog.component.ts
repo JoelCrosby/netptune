@@ -13,6 +13,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { LucideUserRoundPlus } from '@lucide/angular';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -34,12 +35,15 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
           [formField]="inviteForm.email"
           label="Invitee Email"
           maxLength="128"
-          type="email">
+          type="email"
+          [icon]="lucideUserRoundPlus">
         </app-form-input>
 
-        <div class="max-h-[496px] min-h-[128px] overflow-y-auto">
+        <div class="max-h-124 min-h-32 overflow-y-auto">
           @for (user of users(); track user) {
-            <div class="px-4">{{ user }}</div>
+            <div class="border-border rounded-sm border px-4 py-2">
+              {{ user }}
+            </div>
           } @empty {
             <div class="app-list-message">
               Email addresses entered below will show here.
@@ -55,6 +59,8 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     </div> `,
 })
 export class InviteDialogComponent {
+  lucideUserRoundPlus = LucideUserRoundPlus;
+
   private dialogRef =
     inject<DialogRef<string[], InviteDialogComponent>>(DialogRef);
 

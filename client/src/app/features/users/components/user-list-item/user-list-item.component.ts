@@ -1,6 +1,3 @@
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { ListLinkItemComponent } from '@static/components/list/list-link-item.component';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,17 +5,21 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { netptunePermissions } from '@core/auth/permissions';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CheckboxComponent, AvatarComponent, ListLinkItemComponent],
+  imports: [CheckboxComponent, AvatarComponent, RouterLink],
   template: `
-    <app-list-link-item [link]="routerLink()">
+    <div
+      class="bg-card flex h-10 cursor-pointer items-center gap-2 overflow-hidden transition-colors duration-200 ease-in-out">
       <ng-content />
 
       <app-checkbox class="my-auto flex-none"></app-checkbox>
@@ -30,15 +31,17 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
           size="sm" />
       </div>
 
-      <div
+      <a
+        [routerLink]="routerLink()"
         class="w-45 flex-none overflow-hidden text-sm text-ellipsis whitespace-nowrap">
         {{ user().displayName }}
-      </div>
+      </a>
 
-      <div
+      <a
+        [routerLink]="routerLink()"
         class="text-foreground/60 flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
         {{ user().email }}
-      </div>
+      </a>
 
       @if (user().isWorkspaceOwner) {
         <div
@@ -46,7 +49,7 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
           Owner
         </div>
       }
-    </app-list-link-item>
+    </div>
   `,
 })
 export class UserListItemComponent {

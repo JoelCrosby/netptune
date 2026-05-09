@@ -1,4 +1,3 @@
-import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
@@ -6,7 +5,7 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import { DialogService } from '@core/services/dialog.service';
 import { removeUsersFromWorkspace } from '@core/store/users/users.actions';
 import { selectAllUsers } from '@core/store/users/users.selectors';
-import { LucideGripVertical, LucideTrash2 } from '@lucide/angular';
+import { LucideEllipsisVertical, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';
@@ -20,9 +19,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     ListComponent,
     UserListItemComponent,
     IconButtonComponent,
-    CdkDragHandle,
     TooltipDirective,
-    LucideGripVertical,
+    LucideEllipsisVertical,
     LucideTrash2,
     DropdownMenuComponent,
     MenuItemComponent,
@@ -30,15 +28,18 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   template: `
     <app-list>
       @for (user of users(); track user.id) {
-        <app-user-list-item [user]="user">
+        <app-user-list-item
+          [user]="user"
+          class="mb-0.75 block overflow-hidden rounded-sm">
           <button
             class="w-10 flex-none"
-            cdkDragHandle
             app-icon-button
             aria-label="more"
-            appTooltip="click for more options. click and hold to drag task"
+            appTooltip="click for more options"
             (click)="menu.toggle($any($event.currentTarget))">
-            <svg lucideGripVertical class="text-foreground/30 h-4 w-4"></svg>
+            <svg
+              lucideEllipsisVertical
+              class="text-foreground/30 h-4 w-4"></svg>
           </button>
 
           <app-dropdown-menu #menu xPosition="before">
