@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.JobServer\Netptune.JobServer.csproj" />
+    <ProjectReference Include="..\Netptune.SeedData\Netptune.SeedData.csproj" />
   </ItemGroup>
 
   <ItemGroup>

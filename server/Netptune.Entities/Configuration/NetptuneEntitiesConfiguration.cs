@@ -36,7 +36,7 @@ public static class NetptuneEntitiesConfiguration
         services.Configure(configuration);
 
         services.AddHostedService<HostedDatabaseService>();
-        services.AddDbContext<DataContext>(options =>
+        services.AddDbContextPool<DataContext>(options =>
         {
             options
                 .UseNpgsql(netptuneEntitiesOptions.ConnectionString, npgsql =>

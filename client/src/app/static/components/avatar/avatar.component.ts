@@ -34,7 +34,6 @@ export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
         [class.font-bold!]="useLargeText()">
         @if (imageUrl()) {
           <img
-            crossorigin="anonymous"
             class="h-full w-full object-cover"
             [src]="imageUrl()"
             [alt]="name()" />

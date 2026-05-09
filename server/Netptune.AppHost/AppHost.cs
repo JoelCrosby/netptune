@@ -34,14 +34,20 @@ var cache = builder
     .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
+var seedData = builder
+    .AddProject<Projects.Netptune_SeedData>("seed-data")
+    .WithPostgres(postgresdb);
+
 var jobs = builder
     .AddProject<Projects.Netptune_JobServer>("jobs")
+    .WaitForCompletion(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats);
 
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
+    .WaitForCompletion(seedData)
     .WithJobServer(jobs)
     .WithCache(cache)
     .WithPostgres(postgresdb)
