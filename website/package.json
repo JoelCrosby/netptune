@@ -16,18 +16,18 @@
     "@solidjs/start": "2.0.0-alpha.2",
     "@solidjs/vite-plugin-nitro-2": "^0.2.0",
     "lucide-solid": "^1.8.0",
-    "solid-js": "^1.9.5",
+    "solid-js": "^1.9.12",
     "vite": "^7.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.7",
+    "@tailwindcss/vite": "^4.3.0",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",
-    "eslint": "^9.39.4",
+    "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-solid": "^0.14.5",
     "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.7.2",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.0.7"
   },
   "engines": {

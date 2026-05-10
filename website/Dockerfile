@@ -1,19 +1,21 @@
-FROM node:25-alpine AS build
+FROM node:26-alpine AS build
 RUN apk upgrade --no-cache && npm install -g pnpm
 WORKDIR /src
 COPY package*.json ./
+COPY pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
+ENV CI=true
 RUN pnpm build
 
-FROM node:25-alpine AS final
+FROM node:26-alpine AS final
 RUN apk upgrade --no-cache
-COPY --from=build /src/.output /usr/share/nginx/html
+COPY --from=build /src/.output /app
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /app
 ENV PORT="80"
 EXPOSE 80
 
