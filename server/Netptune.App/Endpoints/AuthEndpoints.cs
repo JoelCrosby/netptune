@@ -32,13 +32,13 @@ public static class AuthEndpoints
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapPost("/logout", HandleLogout).RequireAuthorization();
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
-        group.MapGet("/github-login-callback", HandleGithubLoginCallback)
+        group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
         group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
-        group.MapGet("/google-login-callback", HandleGoogleLoginCallback)
+        group.MapGet("/google-login-redirect", HandleGoogleLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Google);
         group.MapGet("/microsoft-login", HandleMicrosoftLogin).AllowAnonymous();
-        group.MapGet("/microsoft-login-callback", HandleMicrosoftLoginCallback)
+        group.MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Microsoft);
 
         return builder;
@@ -236,7 +236,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/github-login-callback",
+            RedirectUri = "/api/auth/github-login-redirect",
             IsPersistent = true,
         }, new[] { AuthenticationSchemes.Github });
     }
@@ -259,7 +259,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/google-login-callback",
+            RedirectUri = "/api/auth/google-login-redirect",
             IsPersistent = true,
         }, new[] { AuthenticationSchemes.Google });
     }
@@ -282,7 +282,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/microsoft-login-callback",
+            RedirectUri = "/api/auth/microsoft-login-redirect",
             IsPersistent = true,
         }, new[] { AuthenticationSchemes.Microsoft });
     }
