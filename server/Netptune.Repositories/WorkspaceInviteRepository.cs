@@ -36,7 +36,7 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
         var normalized = email.Trim().IdentityNormalize();
 
         return Entities
-            .Where(x => x.Email == normalized && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
+            .Where(x => x.Email.ToUpper() == normalized && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -45,7 +45,7 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
         var normalized = emails.Select(e => e.Trim().IdentityNormalize()).ToHashSet();
 
         return Entities
-            .Where(x => normalized.Contains(x.Email) && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
+            .Where(x => normalized.Contains(x.Email.ToUpper()) && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
             .ToListAsync(cancellationToken);
     }
 
@@ -66,7 +66,7 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
         var normalized = email.Trim().IdentityNormalize();
 
         var invites = await Entities
-            .Where(x => x.Email == normalized && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
+            .Where(x => x.Email.ToUpper() == normalized && x.WorkspaceId == workspaceId && x.AcceptedAt == null)
             .ToListAsync(cancellationToken);
 
         Entities.RemoveRange(invites);
