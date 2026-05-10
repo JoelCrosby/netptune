@@ -87,5 +87,5 @@ jobs:
 
       - name: Restart deployments
         run: |
-          kubectl --kubeconfig kubeconfig.yaml rollout restart deployment/api-deployment deployment/jobs-deployment deployment/client-deployment
-          kubectl --kubeconfig kubeconfig.yaml rollout status deployment/api-deployment deployment/jobs-deployment deployment/client-deployment
+          kubectl --kubeconfig kubeconfig.yaml rollout restart deployment/api-deployment deployment/jobs-deployment deployment/client-deployment deployment/website-deployment
+          kubectl --kubeconfig kubeconfig.yaml rollout status deployment/api-deployment deployment/jobs-deployment deployment/client-deployment deployment/website-deployment
