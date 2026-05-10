@@ -32,6 +32,8 @@ spec:
               protocol: "TCP"
               containerPort: 80
           imagePullPolicy: "Always"
+          resources:
+{{- toYaml .Values.website.resources | nindent 12 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: "netptune-app"

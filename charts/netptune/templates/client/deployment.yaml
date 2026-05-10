@@ -42,6 +42,8 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 3
+          resources:
+{{- toYaml .Values.parameters.client.resources | nindent 12 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: "netptune-app"
