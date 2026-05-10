@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "server/Netptune.AppHost/Netptune.AppHost.csproj"
+  }
+}

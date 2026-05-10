@@ -4,13 +4,6 @@ using Netptune.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder
-    .AddKubernetesEnvironment("k8s")
-    .WithProperties(options =>
-    {
-        options.HelmChartName = "netptune-app";
-    });
-
 var postgres = builder
     .AddPostgres("postgres")
     .WithDataVolume()
