@@ -102,6 +102,26 @@ export default function ConfigurationPage() {
             <td class={td}>No</td>
             <td class={td}>GitHub OAuth App client secret.</td>
           </tr>
+          <tr class={tr}>
+            <td class={tdMono}>NETPTUNE_GOOGLE_CLIENT_ID</td>
+            <td class={td}>No</td>
+            <td class={td}>Google OAuth client ID. Leave blank to disable Google login.</td>
+          </tr>
+          <tr class={tr}>
+            <td class={tdMono}>NETPTUNE_GOOGLE_SECRET</td>
+            <td class={td}>No</td>
+            <td class={td}>Google OAuth client secret.</td>
+          </tr>
+          <tr class={tr}>
+            <td class={tdMono}>NETPTUNE_MICROSOFT_CLIENT_ID</td>
+            <td class={td}>No</td>
+            <td class={td}>Microsoft OAuth App client ID. Leave blank to disable Microsoft login.</td>
+          </tr>
+          <tr class={tr}>
+            <td class={tdMono}>NETPTUNE_MICROSOFT_SECRET</td>
+            <td class={td}>No</td>
+            <td class={td}>Microsoft OAuth App client secret.</td>
+          </tr>
         </tbody>
       </DocTable>
 
@@ -376,6 +396,13 @@ export default function ConfigurationPage() {
               ['secrets.api.signing_key', 'NETPTUNE_SIGNING_KEY'],
               ['secrets.api.github_client_id', 'NETPTUNE_GITHUB_CLIENT_ID'],
               ['secrets.api.github_secret', 'NETPTUNE_GITHUB_SECRET'],
+              ['secrets.api.github_callback', 'NETPTUNE_GITHUB_CALLBACK'],
+              ['secrets.api.google_client_id', 'NETPTUNE_GOOGLE_CLIENT_ID'],
+              ['secrets.api.google_secret', 'NETPTUNE_GOOGLE_SECRET'],
+              ['secrets.api.google_callback', 'NETPTUNE_GOOGLE_CALLBACK'],
+              ['secrets.api.microsoft_client_id', 'NETPTUNE_MICROSOFT_CLIENT_ID'],
+              ['secrets.api.microsoft_secret', 'NETPTUNE_MICROSOFT_SECRET'],
+              ['secrets.api.microsoft_callback', 'NETPTUNE_MICROSOFT_CALLBACK'],
               ['secrets.api.sendgrid_api_key', 'SEND_GRID_API_KEY'],
               ['secrets.api.s3_bucket_name', 'NETPTUNE_S3_BUCKET_NAME'],
               ['secrets.api.s3_region', 'NETPTUNE_S3_REGION'],

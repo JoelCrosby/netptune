@@ -127,6 +127,16 @@ export default function DocsOverview() {
             <td class={td}>Social login via GitHub</td>
             <td class={td}>Optional</td>
           </tr>
+          <tr class={tr}>
+            <td class={tdFirst}>Google OAuth App</td>
+            <td class={td}>Social login via Google</td>
+            <td class={td}>Optional</td>
+          </tr>
+          <tr class={tr}>
+            <td class={tdFirst}>Microsoft OAuth App</td>
+            <td class={td}>Social login via Microsoft</td>
+            <td class={td}>Optional</td>
+          </tr>
         </tbody>
       </DocTable>
 
@@ -141,7 +151,7 @@ export default function DocsOverview() {
           each={[
             'SendGrid account with an API key and a verified sender email address',
             'S3-compatible storage — an AWS S3 bucket or a self-hosted MinIO instance',
-            'GitHub OAuth App credentials (optional, for GitHub login)',
+            'GitHub, Google, or Microsoft OAuth App credentials (optional, for social login)',
           ]}
         >
           {(item) => (

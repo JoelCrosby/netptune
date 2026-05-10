@@ -19,7 +19,7 @@ export default function Hero() {
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" href="#">
+          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/get-started">
             Get started for free
             <ArrowRight size={16} />
           </Button>

@@ -5,9 +5,10 @@ import {
   ShieldCheck,
   Paperclip,
   MessageSquare,
-  GitBranch,
+  LogIn,
   Star,
   Server,
+  Timer,
 } from 'lucide-solid';
 import type { Feature } from '~/types/feature';
 
@@ -43,9 +44,14 @@ export const featureGridItems: Feature[] = [
     description: 'Discussion threads on every task',
   },
   {
-    icon: GitBranch,
-    title: 'GitHub OAuth',
-    description: 'Sign in with GitHub or email',
+    icon: Timer,
+    title: 'Sprints',
+    description: 'Time-boxed sprints with task counts and status tracking',
+  },
+  {
+    icon: LogIn,
+    title: 'OAuth sign-in',
+    description: 'Sign in with GitHub, Google, or Microsoft',
   },
   {
     icon: Star,

@@ -32,7 +32,7 @@ export default function SelfHostSection() {
               <Button
                 variant="outline"
                 size="md"
-                href="#"
+                href="/docs"
                 class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-white dark:border-white/20 dark:text-white/70"
               >
                 Read the docs
