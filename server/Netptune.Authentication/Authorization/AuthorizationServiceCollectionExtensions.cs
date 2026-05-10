@@ -24,6 +24,14 @@ public static class AuthorizationServiceCollectionExtensions
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthenticationSchemes.Github)
                 .Build())
+            .AddPolicy(AuthenticationSchemes.Google, builder => builder
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthenticationSchemes.Google)
+                .Build())
+            .AddPolicy(AuthenticationSchemes.Microsoft, builder => builder
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthenticationSchemes.Microsoft)
+                .Build())
             .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
