@@ -61,7 +61,7 @@ export class WorkspaceListItemComponent implements OnInit {
   }
 
   onGotToClicked() {
-    this.workspaceService.setWorkspace(this.workspace().slug ?? null);
+    this.workspaceService.setWorkspace(this.workspace().slug);
     this.router.navigate(['/', this.workspace().slug, 'projects']);
   }
 

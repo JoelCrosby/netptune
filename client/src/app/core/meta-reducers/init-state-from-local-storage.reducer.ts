@@ -1,4 +1,4 @@
-import { Action, ActionReducer, INIT, UPDATE } from '@ngrx/store';
+import { Action, ActionReducer, INIT } from '@ngrx/store';
 import { environment } from '@env/environment';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AppState } from '@core/core.state';
@@ -11,7 +11,7 @@ export const initStateFromLocalStorage =
   (state, action) => {
     const newState = reducer(state, action);
 
-    if ([INIT.toString(), UPDATE.toString()].includes(action.type)) {
+    if (action.type === INIT.toString()) {
       const mergedState = {
         ...newState,
         ...LocalStorageService.loadInitialState(),

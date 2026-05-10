@@ -32,9 +32,7 @@ public static class AuthEndpoints
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapPost("/logout", HandleLogout).RequireAuthorization();
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
-        group.MapGet("/provider-login-redirect", HandleProviderLoginRedirect)
-            .RequireAuthorization(AuthenticationSchemes.Github);
-        group.MapPost("/provider-login-redirect", HandleProviderLoginRedirect)
+        group.MapGet("/github-login-callback", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
         group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
         group.MapGet("/google-login-callback", HandleGoogleLoginCallback)
@@ -238,34 +236,21 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/provider-login-redirect",
+            RedirectUri = "/api/auth/github-login-callback",
             IsPersistent = true,
-        }, new[] { "GitHub" });
+        }, new[] { AuthenticationSchemes.Github });
     }
 
-    public static async Task<IResult> HandleProviderLoginRedirect(
+    public static Task<IResult> HandleGithubLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
         HttpContext context)
     {
-        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Github);
-
-        if (!result.IsSuccess) return Results.Unauthorized();
-
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
-
-        var redirect = hosting.ClientOrigin
-            .AppendPathSegments("/auth/auth-provider-login")
-            .SetQueryParams(new
-            {
-                displayName = result.Ticket?.DisplayName,
-                email = result.Ticket?.EmailAddress,
-                pictureUrl = result.Ticket?.PictureUrl,
-                userId = result.Ticket?.UserId,
-                expires = result.Ticket?.Expires.ToUniversalTime().ToString("O"),
-            });
-
-        return Results.Redirect(redirect);
+        return HandleProviderLoginCallback(
+            authenticationService,
+            hosting,
+            context,
+            AuthenticationSchemes.Github);
     }
 
     public static IResult HandleGoogleLogin(HttpContext context)
@@ -279,29 +264,16 @@ public static class AuthEndpoints
         }, new[] { AuthenticationSchemes.Google });
     }
 
-    public static async Task<IResult> HandleGoogleLoginCallback(
+    public static Task<IResult> HandleGoogleLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
         HttpContext context)
     {
-        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Google);
-
-        if (!result.IsSuccess) return Results.Unauthorized();
-
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
-
-        var redirect = hosting.ClientOrigin
-            .AppendPathSegments("/auth/auth-provider-login")
-            .SetQueryParams(new
-            {
-                displayName = result.Ticket?.DisplayName,
-                email = result.Ticket?.EmailAddress,
-                pictureUrl = result.Ticket?.PictureUrl,
-                userId = result.Ticket?.UserId,
-                expires = result.Ticket?.Expires.ToUniversalTime().ToString("O"),
-            });
-
-        return Results.Redirect(redirect);
+        return HandleProviderLoginCallback(
+            authenticationService,
+            hosting,
+            context,
+            AuthenticationSchemes.Google);
     }
 
     public static IResult HandleMicrosoftLogin(HttpContext context)
@@ -310,17 +282,30 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/microsoft-callback",
+            RedirectUri = "/api/auth/microsoft-login-callback",
             IsPersistent = true,
         }, new[] { AuthenticationSchemes.Microsoft });
     }
 
-    public static async Task<IResult> HandleMicrosoftLoginCallback(
+    public static Task<IResult> HandleMicrosoftLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
         HttpContext context)
     {
-        var result = await authenticationService.LogInViaProvider(AuthenticationSchemes.Microsoft);
+        return HandleProviderLoginCallback(
+            authenticationService,
+            hosting,
+            context,
+            AuthenticationSchemes.Microsoft);
+    }
+
+    private static async Task<IResult> HandleProviderLoginCallback(
+        INetptuneAuthService authenticationService,
+        IHostingService hosting,
+        HttpContext context,
+        string providerScheme)
+    {
+        var result = await authenticationService.LogInViaProvider(providerScheme);
 
         if (!result.IsSuccess) return Results.Unauthorized();
 

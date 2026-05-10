@@ -11,7 +11,7 @@ export interface Workspace extends Basemodel {
 
   metaInfo?: WorkspaceMeta;
 
-  slug?: string;
+  slug: string;
 
   isPublic?: boolean;
 }
