@@ -23,6 +23,7 @@ public sealed class BoardGroupTaskSeeder : ISeeder
                 {
                     ProjectTask = tasks[i],
                     BoardGroup = groups[i % groups.Count],
+                    // ReSharper disable once PossibleLossOfFraction
                     SortOrder = i / groups.Count,
                 });
             }

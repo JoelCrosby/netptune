@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Netptune.Authentication\Netptune.Authentication.csproj" />
+    <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
     <ProjectReference Include="..\Netptune.Cache\Netptune.Cache.csproj" />
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />

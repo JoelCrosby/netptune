@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity.Authentication;
 
 public class GithubUserResponse
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Netptune.Authentication.Authorization.Requirements;
+namespace Netptune.Identity.Authorization.Requirements;
 
 public class WorkspacePermissionRequirement : IAuthorizationRequirement
 {

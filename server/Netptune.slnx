@@ -20,13 +20,13 @@
     <Project Path="Netptune.TestData/Netptune.TestData.csproj" />
     <Project Path="Netptune.UnitTests/Netptune.UnitTests.csproj" />
   </Folder>
-  <Project Path="Netptune.Authentication/Netptune.Authentication.csproj" />
   <Project Path="Netptune.App/Netptune.App.csproj" />
   <Project Path="Netptune.AppHost/Netptune.AppHost.csproj" />
   <Project Path="Netptune.Cache/Netptune.Cache.csproj" />
   <Project Path="Netptune.Core/Netptune.Core.csproj" />
   <Project Path="Netptune.Entities/Netptune.Entities.csproj" />
   <Project Path="Netptune.Events/Netptune.Events.csproj" />
+  <Project Path="Netptune.Identity\Netptune.Identity.csproj" />
   <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
   <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />
   <Project Path="Netptune.Repositories/Netptune.Repositories.csproj">

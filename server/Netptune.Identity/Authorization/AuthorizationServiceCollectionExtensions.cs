@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
-using Netptune.Authentication;
-using Netptune.Authentication.Authorization.Handlers;
-using Netptune.Authentication.Authorization.Requirements;
+using Netptune.Identity.Authentication;
+using Netptune.Identity.Authorization.Handlers;
+using Netptune.Identity.Authorization.Requirements;
 
-namespace Netptune.Authentication.Authorization;
+namespace Netptune.Identity.Authorization;
 
 public static class AuthorizationServiceCollectionExtensions
 {

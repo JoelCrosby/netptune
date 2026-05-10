@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-using Netptune.Authentication.Authorization.Requirements;
+using Netptune.Identity.Authorization.Requirements;
 
-namespace Netptune.Authentication.Authorization;
+namespace Netptune.Identity.Authorization;
 
 public class NetptuneAuthorizationPolicyProvider : IAuthorizationPolicyProvider
 {

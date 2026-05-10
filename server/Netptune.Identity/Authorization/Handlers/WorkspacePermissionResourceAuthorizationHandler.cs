@@ -4,9 +4,9 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Authentication.Authorization.Requirements;
+using Netptune.Identity.Authorization.Requirements;
 
-namespace Netptune.Authentication.Authorization.Handlers;
+namespace Netptune.Identity.Authorization.Handlers;
 
 public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHandler<WorkspacePermissionRequirement>
 {

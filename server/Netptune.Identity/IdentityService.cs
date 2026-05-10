@@ -8,7 +8,7 @@ using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity;
 
 public class IdentityService : IIdentityService
 {

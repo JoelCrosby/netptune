@@ -7,7 +7,7 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Authentication;
+using Netptune.Identity.Authentication;
 
 namespace Netptune.App.Endpoints;
 
@@ -20,9 +20,11 @@ public static class AuthEndpoints
         group.MapPost("/login", HandleLogin)
             .AllowAnonymous()
             .RequireRateLimiting("auth");
+
         group.MapPost("/register", HandleRegister)
             .AllowAnonymous()
             .RequireRateLimiting("register");
+
         group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
         group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
         group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();
@@ -31,12 +33,15 @@ public static class AuthEndpoints
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapPost("/logout", HandleLogout).RequireAuthorization();
+
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
+
         group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
         group.MapGet("/google-login-redirect", HandleGoogleLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Google);
+
         group.MapGet("/microsoft-login", HandleMicrosoftLogin).AllowAnonymous();
         group.MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Microsoft);
@@ -238,7 +243,7 @@ public static class AuthEndpoints
         {
             RedirectUri = "/api/auth/github-login-redirect",
             IsPersistent = true,
-        }, new[] { AuthenticationSchemes.Github });
+        }, [AuthenticationSchemes.Github]);
     }
 
     public static Task<IResult> HandleGithubLoginCallback(
@@ -261,7 +266,7 @@ public static class AuthEndpoints
         {
             RedirectUri = "/api/auth/google-login-redirect",
             IsPersistent = true,
-        }, new[] { AuthenticationSchemes.Google });
+        }, [AuthenticationSchemes.Google]);
     }
 
     public static Task<IResult> HandleGoogleLoginCallback(
@@ -284,7 +289,7 @@ public static class AuthEndpoints
         {
             RedirectUri = "/api/auth/microsoft-login-redirect",
             IsPersistent = true,
-        }, new[] { AuthenticationSchemes.Microsoft });
+        }, [AuthenticationSchemes.Microsoft]);
     }
 
     public static Task<IResult> HandleMicrosoftLoginCallback(
@@ -307,9 +312,12 @@ public static class AuthEndpoints
     {
         var result = await authenticationService.LogInViaProvider(providerScheme);
 
-        if (!result.IsSuccess) return Results.Unauthorized();
+        if (!result.IsSuccess || result.Ticket is null)
+        {
+            return Results.Unauthorized();
+        }
 
-        CookieHelper.SetAuthCookies(context.Response, result.Ticket!);
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket);
 
         var redirect = hosting.ClientOrigin
             .AppendPathSegments("/auth/auth-provider-login")

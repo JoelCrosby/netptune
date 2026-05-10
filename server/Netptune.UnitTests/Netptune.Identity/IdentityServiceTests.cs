@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
 using Netptune.Core.Cache;
-using Netptune.Authentication;
+using Netptune.Identity;
 
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -15,7 +15,7 @@ using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Authentication;
+namespace Netptune.UnitTests.Netptune.Identity;
 
 public class IdentityServiceTests
 {

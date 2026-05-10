@@ -12,21 +12,20 @@ using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
-using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Authentication;
-
-using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
-using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
+using Netptune.Identity.Authentication;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Authentication;
+using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
+using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
+
+namespace Netptune.UnitTests.Netptune.Identity.Authentication;
 
 public class AuthenticationServiceTests
 {
@@ -311,7 +310,7 @@ public class AuthenticationServiceTests
             InviteCode = "invalid-code",
         };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("invalid-code").ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("invalid-code", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Service.Register(request);
 
@@ -365,7 +364,7 @@ public class AuthenticationServiceTests
             InviteCode = "valid-code",
         };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("valid-code").Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", TestContext.Current.CancellationToken).Returns(invite);
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
         UserManager.CreateAsync(Arg.Any<AppUser>(), request.Password).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
@@ -681,19 +680,19 @@ public class AuthenticationServiceTests
     {
         var invite = new RelationshipInvite { Email = "user@example.com", WorkspaceId = 1, Code = "valid-code" };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("valid-code").Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", TestContext.Current.CancellationToken).Returns(invite);
 
         var result = await Service.ValidateInviteCode("valid-code");
 
         result.Should().NotBeNull();
-        result!.Email.Should().Be(invite.Email);
+        result.Email.Should().Be(invite.Email);
         result.WorkspaceId.Should().Be(invite.WorkspaceId);
     }
 
     [Fact]
     public async Task ValidateInviteCode_ShouldReturnNull_WhenCodeIsExpiredOrInvalid()
     {
-        UnitOfWork.WorkspaceInvites.GetByCode("expired-code").ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("expired-code", TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Service.ValidateInviteCode("expired-code");
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity.Authentication;
 
 public class NetptuneAuthenticationOptions
 {

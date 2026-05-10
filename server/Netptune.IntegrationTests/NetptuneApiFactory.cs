@@ -10,7 +10,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
-using Netptune.Authentication.Authorization.Requirements;
+using Netptune.Identity.Authorization.Requirements;
 using Netptune.TestData;
 using Testcontainers.Nats;
 using Testcontainers.PostgreSql;

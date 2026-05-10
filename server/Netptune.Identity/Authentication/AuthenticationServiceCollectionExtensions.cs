@@ -15,7 +15,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity.Authentication;
 
 public static class AuthenticationServiceCollectionExtensions
 {

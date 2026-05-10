@@ -28,10 +28,9 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Workspaces.Commands;
 
-using RelationshipInvite = Netptune.Core.Relationships.WorkspaceInvite;
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity.Authentication;
 
 public class NetptuneAuthService : INetptuneAuthService
 {

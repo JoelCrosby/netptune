@@ -3,7 +3,7 @@ using AspNet.Security.OAuth.GitHub;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 
-namespace Netptune.Authentication;
+namespace Netptune.Identity.Authentication;
 
 public static class AuthenticationSchemes
 {
