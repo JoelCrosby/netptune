@@ -310,7 +310,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/microsoft-login-callback",
+            RedirectUri = "/api/auth/microsoft-callback",
             IsPersistent = true,
         }, new[] { AuthenticationSchemes.Microsoft });
     }
