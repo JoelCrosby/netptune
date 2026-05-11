@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
-using Netptune.Services.Audit.Commands;
-using Netptune.Services.Audit.Queries;
+using Netptune.Handlers.Audit.Commands;
+using Netptune.Handlers.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
 

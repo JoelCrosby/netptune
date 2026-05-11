@@ -1,0 +1,101 @@
+using AutoFixture;
+
+using FluentAssertions;
+
+using Netptune.Core.Entities;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
+using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Projects;
+using Netptune.Handlers.Projects.Commands;
+
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
+
+using Xunit;
+
+namespace Netptune.UnitTests.Netptune.Handlers.Projects.Commands;
+
+public class CreateProjectCommandHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly CreateProjectCommandHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+
+    public CreateProjectCommandHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity, Activity);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var request = Fixture.Build<AddProjectRequest>().Create();
+        var viewModel = Fixture.Build<ProjectViewModel>()
+            .With(x => x.Name, request.Name)
+            .With(x => x.Description, request.Description)
+            .Create();
+        var workspace = AutoFixtures.Workspace;
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+        UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
+        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+
+        var result = await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
+
+        result.Should().NotBeNull();
+        result.Payload.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.Description.Should().Be(request.Description);
+        result.Payload.Key.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
+    {
+        var request = Fixture.Build<AddProjectRequest>().Create();
+        var viewModel = Fixture.Build<ProjectViewModel>()
+            .With(x => x.Name, request.Name)
+            .With(x => x.Description, request.Description)
+            .Create();
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
+        UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
+        UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
+        UnitOfWork.Projects.GetProjectViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
+
+        await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
+    {
+        var request = Fixture.Build<AddProjectRequest>().Create();
+
+        Identity.GetWorkspaceKey().Returns("key");
+        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+
+        UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
+        UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+
+        var result = await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+}

@@ -9,9 +9,6 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.4.0" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
-    <PackageReference Include="Flurl" Version="4.0.0" />
-    <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-    <PackageReference Include="Polly" Version="8.6.6" />
   </ItemGroup>
 
   <ItemGroup>

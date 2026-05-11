@@ -1,0 +1,43 @@
+using Mediator;
+using Netptune.Core.Enums;
+using Netptune.Core.Events.Tasks;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Activity;
+using Netptune.Core.UnitOfWork;
+
+namespace Netptune.Handlers.Tasks.Commands;
+
+public sealed record ReassignTasksCommand(ReassignTasksRequest Request) : IRequest<ClientResponse>;
+
+public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksCommand, ClientResponse>
+{
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IActivityLogger Activity;
+
+    public ReassignTasksCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    {
+        UnitOfWork = unitOfWork;
+        Activity = activity;
+    }
+
+    public async ValueTask<ClientResponse> Handle(ReassignTasksCommand request, CancellationToken cancellationToken)
+    {
+        var req = request.Request;
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
+        var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
+
+        await UnitOfWork.Tasks.AssignTasksToUser(taskIds, req.AssigneeId, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        Activity.LogWithMany<AssignActivityMeta>(options =>
+        {
+            options.EntityIds = taskIds;
+            options.EntityType = EntityType.Task;
+            options.Type = ActivityType.Assign;
+            options.Meta = new AssignActivityMeta { AssigneeId = req.AssigneeId };
+        });
+
+        return ClientResponse.Success;
+    }
+}

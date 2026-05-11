@@ -1,0 +1,32 @@
+using FluentAssertions;
+
+using Netptune.Core.UnitOfWork;
+using Netptune.Handlers.Workspaces.Queries;
+
+using NSubstitute;
+
+using Xunit;
+
+namespace Netptune.UnitTests.Netptune.Handlers.Workspaces.Queries;
+
+public class GetWorkspaceQueryHandlerTests
+{
+    private readonly GetWorkspaceQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+
+    public GetWorkspaceQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork);
+    }
+
+    [Fact]
+    public async Task GetWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var workspace = AutoFixtures.Workspace;
+        UnitOfWork.Workspaces.GetBySlug("slug", cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
+
+        var result = await Handler.Handle(new GetWorkspaceQuery("slug"), TestContext.Current.CancellationToken);
+
+        result.Should().BeEquivalentTo(workspace);
+    }
+}

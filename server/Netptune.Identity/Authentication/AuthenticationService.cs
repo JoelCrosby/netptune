@@ -26,7 +26,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Services.Workspaces.Commands;
+using Netptune.Handlers.Workspaces.Commands;
 
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
 

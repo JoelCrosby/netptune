@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
   </ItemGroup>
 

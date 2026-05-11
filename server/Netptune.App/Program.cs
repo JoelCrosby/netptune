@@ -12,6 +12,7 @@ using Netptune.Cache;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
+using Netptune.Handlers;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
@@ -112,10 +113,7 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
-builder.Services.AddMediator(options =>
-{
-    options.ServiceLifetime = ServiceLifetime.Transient;
-});
+builder.Services.AddNetptuneHandlers();
 
 builder.Services.AddRateLimiter(options =>
 {

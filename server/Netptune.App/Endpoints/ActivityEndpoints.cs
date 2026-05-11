@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
-using Netptune.Services.Activity.Queries;
+using Netptune.Handlers.Activity.Queries;
 
 namespace Netptune.App.Endpoints;
 

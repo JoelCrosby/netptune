@@ -18,24 +18,20 @@ public static class NetptuneServicesConfiguration
     {
         ConfigureServices(services, action);
 
+        services.AddHttpClient();
         services.AddMemoryCache();
         services.AddHttpContextAccessor();
 
         services.AddTransient<IHostingService, HostingService>();
-
         services.AddTransient<IPublicWorkspaceService, PublicWorkspaceService>();
-
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();
         services.AddTransient<IWebService, WebService>();
         services.AddTransient<IHtmlDocumentService, HtmlDocumentService>();
+        services.AddTransient<IActivityLogger, ActivityLogger>();
+        services.AddTransient<ITurnstileService, TurnstileService>();
 
         services.AddScoped<IAncestorService, AncestorService>();
-
-        services.AddTransient<IActivityLogger, ActivityLogger>();
-
-        services.AddHttpClient();
-        services.AddTransient<ITurnstileService, TurnstileService>();
     }
 
     private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)

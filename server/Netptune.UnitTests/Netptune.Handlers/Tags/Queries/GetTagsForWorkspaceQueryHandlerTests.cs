@@ -1,0 +1,54 @@
+using AutoFixture;
+
+using FluentAssertions;
+
+using Netptune.Core.Services;
+using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Tags;
+using Netptune.Handlers.Tags.Queries;
+
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
+
+using Xunit;
+
+namespace Netptune.UnitTests.Netptune.Handlers.Tags.Queries;
+
+public class GetTagsForWorkspaceQueryHandlerTests
+{
+    private readonly Fixture Fixture = new();
+    private readonly GetTagsForWorkspaceQueryHandler Handler;
+    private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+
+    public GetTagsForWorkspaceQueryHandlerTests()
+    {
+        Handler = new(UnitOfWork, Identity);
+    }
+
+    [Fact]
+    public async Task GetTagsForWorkspace_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var tags = new List<TagViewModel> { Fixture.Create<TagViewModel>() };
+
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
+        UnitOfWork.Tags.GetViewModelsForWorkspace(1, TestContext.Current.CancellationToken).Returns(tags);
+
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), TestContext.Current.CancellationToken);
+
+        result.Should().NotBeEmpty();
+        result.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetTagsForWorkspace_ShouldReturnNull_WhenWorkspaceNotFound()
+    {
+        Identity.GetWorkspaceKey().Returns("key");
+        UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).ReturnsNull();
+
+        var result = await Handler.Handle(new GetTagsForWorkspaceQuery(), TestContext.Current.CancellationToken);
+
+        result.Should().BeNull();
+    }
+}

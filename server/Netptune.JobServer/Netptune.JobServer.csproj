@@ -22,7 +22,6 @@
     <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
-    <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
     <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
   </ItemGroup>

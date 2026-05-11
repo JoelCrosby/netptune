@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Tags.Commands;
-using Netptune.Services.Tags.Queries;
+using Netptune.Handlers.Tags.Commands;
+using Netptune.Handlers.Tags.Queries;
 
 namespace Netptune.App.Endpoints;
 

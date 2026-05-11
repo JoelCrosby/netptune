@@ -2,8 +2,8 @@ using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services;
-using Netptune.Services.Notifications.Commands;
-using Netptune.Services.Notifications.Queries;
+using Netptune.Handlers.Notifications.Commands;
+using Netptune.Handlers.Notifications.Queries;
 
 namespace Netptune.App.Endpoints;
 

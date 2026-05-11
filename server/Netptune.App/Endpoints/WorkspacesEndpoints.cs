@@ -2,8 +2,8 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
-using Netptune.Services.Workspaces.Commands;
-using Netptune.Services.Workspaces.Queries;
+using Netptune.Handlers.Workspaces.Commands;
+using Netptune.Handlers.Workspaces.Queries;
 
 namespace Netptune.App.Endpoints;
 

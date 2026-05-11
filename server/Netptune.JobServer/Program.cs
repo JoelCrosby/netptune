@@ -6,7 +6,6 @@ using Netptune.JobServer.Services;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
-using Netptune.Services.Configuration;
 using Netptune.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,12 +22,6 @@ builder.AddNetptuneCache(options =>
 
 builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
-
-builder.Services.AddNetptuneServices(options =>
-{
-    options.ClientOrigin = builder.Configuration.GetRequiredValue("Origin");
-    options.ContentRootPath = builder.Environment.ContentRootPath;
-});
 
 builder.Services.AddCloudflareEmailService(options =>
 {
