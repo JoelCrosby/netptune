@@ -310,7 +310,7 @@ public class AuthenticationServiceTests
             InviteCode = "invalid-code",
         };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("invalid-code", TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("invalid-code", Arg.Any<CancellationToken>()).ReturnsNull();
 
         var result = await Service.Register(request);
 
@@ -364,7 +364,7 @@ public class AuthenticationServiceTests
             InviteCode = "valid-code",
         };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", TestContext.Current.CancellationToken).Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", Arg.Any<CancellationToken>()).Returns(invite);
         UserManager.FindByEmailAsync(request.Email).Returns(null, user);
         UserManager.CreateAsync(Arg.Any<AppUser>(), request.Password).Returns(IdentityResult.Success);
         UserManager.GenerateEmailConfirmationTokenAsync(Arg.Any<AppUser>()).Returns("email-token");
@@ -680,7 +680,7 @@ public class AuthenticationServiceTests
     {
         var invite = new RelationshipInvite { Email = "user@example.com", WorkspaceId = 1, Code = "valid-code" };
 
-        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", TestContext.Current.CancellationToken).Returns(invite);
+        UnitOfWork.WorkspaceInvites.GetByCode("valid-code", Arg.Any<CancellationToken>()).Returns(invite);
 
         var result = await Service.ValidateInviteCode("valid-code");
 
@@ -692,7 +692,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task ValidateInviteCode_ShouldReturnNull_WhenCodeIsExpiredOrInvalid()
     {
-        UnitOfWork.WorkspaceInvites.GetByCode("expired-code", TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.WorkspaceInvites.GetByCode("expired-code", Arg.Any<CancellationToken>()).ReturnsNull();
 
         var result = await Service.ValidateInviteCode("expired-code");
 
