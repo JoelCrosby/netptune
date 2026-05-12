@@ -14,6 +14,10 @@ namespace Netptune.App.Endpoints;
 
 public static class AuthEndpoints
 {
+    private const string GithubLoginCompletePath = "/api/auth/github-login-complete";
+    private const string GoogleLoginCompletePath = "/api/auth/google-login-complete";
+    private const string MicrosoftLoginCompletePath = "/api/auth/microsoft-login-complete";
+
     public static RouteGroupBuilder MapAuthEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("auth");
@@ -38,13 +42,19 @@ public static class AuthEndpoints
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
+        group.MapGet("/github-login-complete", HandleGithubLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Github);
 
         group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
         group.MapGet("/google-login-redirect", HandleGoogleLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Google);
+        group.MapGet("/google-login-complete", HandleGoogleLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Google);
 
         group.MapGet("/microsoft-login", HandleMicrosoftLogin).AllowAnonymous();
         group.MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Microsoft);
+        group.MapGet("/microsoft-login-complete", HandleMicrosoftLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Microsoft);
 
         return builder;
@@ -242,7 +252,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/github-login-redirect",
+            RedirectUri = GithubLoginCompletePath,
             IsPersistent = true,
         }, [AuthenticationSchemes.Github]);
     }
@@ -265,7 +275,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/google-login-redirect",
+            RedirectUri = GoogleLoginCompletePath,
             IsPersistent = true,
         }, [AuthenticationSchemes.Google]);
     }
@@ -288,7 +298,7 @@ public static class AuthEndpoints
 
         return Results.Challenge(new AuthenticationProperties
         {
-            RedirectUri = "/api/auth/microsoft-login-redirect",
+            RedirectUri = MicrosoftLoginCompletePath,
             IsPersistent = true,
         }, [AuthenticationSchemes.Microsoft]);
     }

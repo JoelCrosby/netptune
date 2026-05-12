@@ -51,6 +51,9 @@ public sealed class AuthExternalProviderEndpointTests
     }
 
     [Theory]
+    [InlineData("api/auth/github-login-complete", "GitHub")]
+    [InlineData("api/auth/google-login-complete", "Google")]
+    [InlineData("api/auth/microsoft-login-complete", "Microsoft")]
     [InlineData("api/auth/github-login-redirect", "GitHub")]
     [InlineData("api/auth/google-login-redirect", "Google")]
     [InlineData("api/auth/microsoft-login-redirect", "Microsoft")]
@@ -91,7 +94,7 @@ public sealed class AuthExternalProviderEndpointTests
     [Fact]
     public async Task ProviderLoginRedirect_ShouldReturnUnauthorized_WhenEmailBelongsToExistingUserWithDifferentLogin()
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-redirect");
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-complete");
         request.Headers.Add("x-test-auth-email", SeedData.Users.First().Email);
         request.Headers.Add("x-test-auth-provider-key", $"github-conflict-{Guid.NewGuid():N}");
         request.Headers.Add("x-test-auth-name", "Conflicting User");
