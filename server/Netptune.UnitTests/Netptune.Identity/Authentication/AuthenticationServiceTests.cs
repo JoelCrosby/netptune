@@ -1,3 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+
 using FluentAssertions;
 
 using Mediator;
@@ -41,11 +46,13 @@ public class AuthenticationServiceTests
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
 
+    private const string SigningKey = "test-signing-key-that-is-long-enough-for-hmac-sha256";
+
     public AuthenticationServiceTests()
     {
         Environment.SetEnvironmentVariable(
             "NETPTUNE_SIGNING_KEY",
-             "test-signing-key-that-is-long-enough-for-hmac-sha256");
+            SigningKey);
 
         Configuration["Tokens:Issuer"].Returns("test-issuer");
         Configuration["Tokens:ExpireDays"].Returns("7");
@@ -89,6 +96,12 @@ public class AuthenticationServiceTests
         );
     }
 
+    private static string HashToken(string token)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        return Convert.ToHexString(bytes);
+    }
+
     // LogIn
 
     [Fact]
@@ -107,6 +120,28 @@ public class AuthenticationServiceTests
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
         result.Ticket!.EmailAddress.Should().Be(user.Email);
+    }
+
+    [Fact]
+    public async Task LogIn_ShouldIssueJwtWithExpectedIssuerAudienceAndClaims_WhenCredentialsAreValid()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new TokenRequest { Email = user.Email!, Password = "password" };
+
+        UserManager.FindByEmailAsync(request.Email).Returns(user);
+        SignInManager.CheckPasswordSignInAsync(user, request.Password, false)
+            .Returns(SignInResult.Success);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+
+        var result = await Service.LogIn(request);
+
+        var token = new JwtSecurityTokenHandler().ReadJwtToken(result.Ticket!.Token.Should().BeOfType<string>().Subject);
+
+        token.Issuer.Should().Be("test-issuer");
+        token.Audiences.Should().Contain("test-issuer");
+        token.Claims.Should().Contain(c => c.Type == ClaimTypes.NameIdentifier && c.Value == user.Id);
+        token.Claims.Should().Contain(c => c.Type == ClaimTypes.Email && c.Value == user.Email);
+        token.ValidTo.Should().BeAfter(DateTime.UtcNow.AddDays(6));
     }
 
     [Fact]
@@ -166,6 +201,103 @@ public class AuthenticationServiceTests
         await Service.LogIn(request);
 
         await UserManager.Received(1).UpdateAsync(user);
+    }
+
+    // Refresh
+
+    [Fact]
+    public async Task Refresh_ShouldReturnSuccessAndRotateToken_WhenRefreshTokenIsActive()
+    {
+        const string rawRefreshToken = "refresh-token";
+        var hashedToken = HashToken(rawRefreshToken);
+        var user = AutoFixtures.AppUser;
+        var existingToken = new RefreshToken
+        {
+            Token = hashedToken,
+            UserId = user.Id,
+            Created = DateTime.UtcNow.AddDays(-1),
+            Expires = DateTime.UtcNow.AddDays(1),
+        };
+
+        UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+
+        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+
+        result.IsSuccess.Should().BeTrue();
+        result.Ticket.Should().NotBeNull();
+        result.Ticket!.UserId.Should().Be(user.Id);
+        result.Ticket.RefreshToken.Should().NotBe(rawRefreshToken);
+
+        await UnitOfWork.RefreshTokens.Received(1).RevokeAsync(hashedToken, Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.Received(1).RemoveExpiredAsync(user.Id, Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.Received(1).AddAsync(Arg.Is<RefreshToken>(token =>
+            token.UserId == user.Id &&
+            token.Token != rawRefreshToken &&
+            token.Expires > DateTime.UtcNow), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldReturnFailure_WhenTokenIsMissing()
+    {
+        const string rawRefreshToken = "missing-token";
+        var hashedToken = HashToken(rawRefreshToken);
+
+        UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).ReturnsNull();
+
+        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Invalid or expired refresh token");
+        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().RemoveExpiredAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldReturnFailure_WhenTokenIsExpired()
+    {
+        const string rawRefreshToken = "expired-token";
+        var hashedToken = HashToken(rawRefreshToken);
+        var existingToken = new RefreshToken
+        {
+            Token = hashedToken,
+            UserId = "user-123",
+            Created = DateTime.UtcNow.AddDays(-31),
+            Expires = DateTime.UtcNow.AddSeconds(-1),
+        };
+
+        UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
+
+        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Invalid or expired refresh token");
+        await UserManager.DidNotReceive().FindByIdAsync(Arg.Any<string>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Refresh_ShouldReturnFailure_WhenTokenUserNoLongerExists()
+    {
+        const string rawRefreshToken = "orphaned-token";
+        var hashedToken = HashToken(rawRefreshToken);
+        var existingToken = new RefreshToken
+        {
+            Token = hashedToken,
+            UserId = "missing-user",
+            Created = DateTime.UtcNow,
+            Expires = DateTime.UtcNow.AddDays(1),
+        };
+
+        UnitOfWork.RefreshTokens.GetByTokenAsync(hashedToken, Arg.Any<CancellationToken>()).Returns(existingToken);
+        UserManager.FindByIdAsync(existingToken.UserId).ReturnsNull();
+
+        var result = await Service.Refresh(new RefreshTokenRequest { RefreshToken = rawRefreshToken });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Invalid or expired refresh token");
+        await UnitOfWork.RefreshTokens.DidNotReceive().RevokeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.RefreshTokens.DidNotReceive().RemoveExpiredAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     // LogInViaProvider
@@ -667,6 +799,25 @@ public class AuthenticationServiceTests
         httpContext.User.Returns(principal);
         ContextAccessor.HttpContext.Returns(httpContext);
         UserManager.GetUserAsync(principal).ReturnsNull();
+
+        var result = await Service.CurrentUser();
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CurrentUser_ShouldReturnNull_WhenWorkspacePermissionsAreMissing()
+    {
+        var user = AutoFixtures.AppUser;
+        var httpContext = Substitute.For<HttpContext>();
+        var principal = new System.Security.Claims.ClaimsPrincipal();
+        const string workspaceKey = "workspace-key";
+
+        httpContext.User.Returns(principal);
+        ContextAccessor.HttpContext.Returns(httpContext);
+        UserManager.GetUserAsync(principal).Returns(user);
+        Identity.TryGetWorkspaceKey().Returns(workspaceKey);
+        WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).ReturnsNull();
 
         var result = await Service.CurrentUser();
 
