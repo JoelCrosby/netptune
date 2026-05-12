@@ -351,7 +351,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task LogInViaProvider_ShouldReturnFailure_WhenEmailBelongsToDifferentProvider()
+    public async Task LogInViaProvider_ShouldLinkLoginAndReturnSuccess_WhenEmailBelongsToExistingUser()
     {
         const string providerScheme = "GitHub";
         const string providerKey = "github-123";
@@ -362,10 +362,43 @@ public class AuthenticationServiceTests
 
         UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        UserManager.AddLoginAsync(user, Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Ticket.Should().NotBeNull();
+        result.Ticket!.UserId.Should().Be(user.Id);
+        await UserManager.Received(1).AddLoginAsync(user, Arg.Is<UserLoginInfo>(login =>
+            login.LoginProvider == providerScheme &&
+            login.ProviderKey == providerKey &&
+            login.ProviderDisplayName == providerScheme));
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldReturnFailure_WhenExistingEmailCannotBeLinked()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
+        var user = AutoFixtures.AppUser;
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        UserManager.AddLoginAsync(user, Arg.Any<UserLoginInfo>())
+            .Returns(IdentityResult.Failed(new IdentityError
+            {
+                Code = "DuplicateLogin",
+                Description = "Login already exists",
+            }));
 
         var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Login already exists");
     }
 
     // Register

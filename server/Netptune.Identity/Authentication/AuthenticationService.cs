@@ -152,38 +152,55 @@ public class NetptuneAuthService : INetptuneAuthService
 
             if (existingByEmail is not null)
             {
-                Logger.LogWarning(
-                    "External provider login matched an existing email with a different login method. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
+                Logger.LogInformation(
+                    "External provider login matched an existing email and will link the provider login. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
                     providerScheme,
                     existingByEmail.Id,
                     ContextAccessor.HttpContext?.Request.Path.Value);
 
-                return LoginResult.Failed("An account with this email already exists. Please sign in using your original login method.");
+                var loginInfo = new UserLoginInfo(providerScheme, providerKey, providerScheme);
+                var linkResult = await UserManager.AddLoginAsync(existingByEmail, loginInfo);
+
+                if (!linkResult.Succeeded)
+                {
+                    Logger.LogWarning(
+                        "External provider login could not be linked to the existing email account. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Errors: {Errors}; Path: {Path}",
+                        providerScheme,
+                        existingByEmail.Id,
+                        Join(linkResult.Errors.Select(error => error.Code)),
+                        ContextAccessor.HttpContext?.Request.Path.Value);
+
+                    return LoginResult.Failed(string.Join(", ", linkResult.Errors.Select(error => error.Description)));
+                }
+
+                user = existingByEmail;
             }
-
-            var name = Identity.GetUserName();
-            var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-
-            var registerRequest = new RegisterRequest
+            else
             {
-                Email = email,
-                Firstname = nameParts.ElementAtOrDefault(0) ?? string.Empty,
-                Lastname = nameParts.ElementAtOrDefault(1) ?? string.Empty,
-                PictureUrl = Identity.GetPictureUrl(),
-                Password = null,
-                OAuthProvider = providerScheme,
-                OAuthProviderKey = providerKey,
-            };
+                var name = Identity.GetUserName();
+                var nameParts = name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
-            await Register(registerRequest);
+                var registerRequest = new RegisterRequest
+                {
+                    Email = email,
+                    Firstname = nameParts.ElementAtOrDefault(0) ?? string.Empty,
+                    Lastname = nameParts.ElementAtOrDefault(1) ?? string.Empty,
+                    PictureUrl = Identity.GetPictureUrl(),
+                    Password = null,
+                    OAuthProvider = providerScheme,
+                    OAuthProviderKey = providerKey,
+                };
 
-            user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
+                await Register(registerRequest);
 
-            Logger.LogInformation(
-                "External provider registration completed. Provider: {Provider}; UserCreated: {UserCreated}; Path: {Path}",
-                providerScheme,
-                user is not null,
-                ContextAccessor.HttpContext?.Request.Path.Value);
+                user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
+
+                Logger.LogInformation(
+                    "External provider registration completed. Provider: {Provider}; UserCreated: {UserCreated}; Path: {Path}",
+                    providerScheme,
+                    user is not null,
+                    ContextAccessor.HttpContext?.Request.Path.Value);
+            }
         }
 
         if (user is null)

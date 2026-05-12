@@ -92,7 +92,7 @@ public sealed class AuthExternalProviderEndpointTests
     }
 
     [Fact]
-    public async Task ProviderLoginRedirect_ShouldReturnUnauthorized_WhenEmailBelongsToExistingUserWithDifferentLogin()
+    public async Task ProviderLoginRedirect_ShouldLinkProviderAndRedirect_WhenEmailBelongsToExistingUser()
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-complete");
         request.Headers.Add("x-test-auth-email", SeedData.Users.First().Email);
@@ -102,6 +102,17 @@ public sealed class AuthExternalProviderEndpointTests
         var response = await Client.SendAsync(request);
         var content = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized, content);
+        response.StatusCode.Should().Be(HttpStatusCode.Redirect, content);
+
+        var location = response.Headers.Location;
+        location.Should().NotBeNull();
+        location!.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/auth-provider-login");
+
+        var query = QueryHelpers.ParseQuery(location.Query);
+        query["email"].ToString().Should().Be(SeedData.Users.First().Email);
+
+        response.Headers.TryGetValues("Set-Cookie", out var cookies).Should().BeTrue();
+        cookies!.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
+        cookies.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
     }
 }
