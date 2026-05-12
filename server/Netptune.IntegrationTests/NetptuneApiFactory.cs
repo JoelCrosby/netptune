@@ -17,6 +17,8 @@ using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using Xunit;
 
+using ExternalAuthenticationSchemes = Netptune.Identity.Authentication.AuthenticationSchemes;
+
 [assembly: AssemblyFixture(typeof(NetptuneFixture))]
 
 namespace Netptune.IntegrationTests;
@@ -48,6 +50,9 @@ public sealed class NetptuneFixture : IAsyncLifetime
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.RemoveAll<IAuthorizationPolicyProvider>();
+                    services.AddSingleton<IAuthorizationPolicyProvider, TestAuthorizationPolicyProvider>();
+
                     services.AddTransient<IPolicyEvaluator>(serviceProvider => new TestPolicyEvaluator(
                         ActivatorUtilities.CreateInstance<PolicyEvaluator>(serviceProvider)));
 
@@ -63,6 +68,18 @@ public sealed class NetptuneFixture : IAsyncLifetime
                         options.AddPolicy(NetptunePolicies.Workspace, config => config.RequireAuthenticatedUser()
                             .AddAuthenticationSchemes(TestAuthenticationHandler.AuthenticationScheme)
                             .AddRequirements(new WorkspaceRequirement())
+                            .Build());
+
+                        options.AddPolicy(ExternalAuthenticationSchemes.Github, config => config.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(ExternalAuthenticationSchemes.Github)
+                            .Build());
+
+                        options.AddPolicy(ExternalAuthenticationSchemes.Google, config => config.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(ExternalAuthenticationSchemes.Google)
+                            .Build());
+
+                        options.AddPolicy(ExternalAuthenticationSchemes.Microsoft, config => config.RequireAuthenticatedUser()
+                            .AddAuthenticationSchemes(ExternalAuthenticationSchemes.Microsoft)
                             .Build());
                     });
 
@@ -80,7 +97,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
     private static void LoadEnvironmentVariables()
     {
-        Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test");
+        Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test-signing-key-that-is-long-enough-for-hmac-sha256");
         Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CLIENT_ID", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_SECRET", "test");
         Environment.SetEnvironmentVariable("NETPTUNE_GITHUB_CALLBACK", "/test-github-callback");
@@ -114,9 +131,11 @@ public sealed class NetptuneFixture : IAsyncLifetime
         return ValueTask.CompletedTask;
     }
 
-    public HttpClient CreateNetptuneClient()
+    public HttpClient CreateNetptuneClient(WebApplicationFactoryClientOptions? options = null)
     {
-        var client = WebApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
+        var client = options is null
+            ? WebApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler())
+            : WebApplicationFactory.CreateClient(options);
 
         client.DefaultRequestHeaders.Authorization = new ("TestScheme");
         client.DefaultRequestHeaders.Add("workspace", "netptune");
