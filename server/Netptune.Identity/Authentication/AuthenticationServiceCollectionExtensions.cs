@@ -105,6 +105,7 @@ public static class AuthenticationServiceCollectionExtensions
             options.ClientId = authenticationOptions.GitHubClientId;
             options.ClientSecret = authenticationOptions.GitHubSecret;
             options.CallbackPath = authenticationOptions.GitHubCallback;
+            options.SignInScheme = IdentityConstants.ExternalScheme;
             options.Scope.Add("read:user");
             options.Scope.Add("urn:github:name");
             options.Scope.Add("user:email");
@@ -142,6 +143,7 @@ public static class AuthenticationServiceCollectionExtensions
                 options.ClientId = authenticationOptions.GoogleClientId;
                 options.ClientSecret = authenticationOptions.GoogleSecret;
                 options.CallbackPath = authenticationOptions.GoogleCallback;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
                 options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Events.OnCreatingTicket = context =>
@@ -161,6 +163,7 @@ public static class AuthenticationServiceCollectionExtensions
                 options.ClientId = authenticationOptions.MicrosoftClientId;
                 options.ClientSecret = authenticationOptions.MicrosoftSecret;
                 options.CallbackPath = authenticationOptions.MicrosoftCallback;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
                 options.SaveTokens = true;
                 options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
             });

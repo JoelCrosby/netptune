@@ -1,6 +1,7 @@
 using Flurl;
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 using Netptune.App.Utility;
 using Netptune.Core.Authentication;
@@ -311,6 +312,8 @@ public static class AuthEndpoints
         string providerScheme)
     {
         var result = await authenticationService.LogInViaProvider(providerScheme);
+
+        await context.SignOutAsync(IdentityConstants.ExternalScheme);
 
         if (!result.IsSuccess || result.Ticket is null)
         {
