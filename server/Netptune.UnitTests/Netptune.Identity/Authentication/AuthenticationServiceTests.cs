@@ -10,6 +10,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
@@ -45,6 +46,7 @@ public class AuthenticationServiceTests
     private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
+    private readonly ILogger<NetptuneAuthService> Logger = Substitute.For<ILogger<NetptuneAuthService>>();
 
     private const string SigningKey = "test-signing-key-that-is-long-enough-for-hmac-sha256";
 
@@ -92,7 +94,8 @@ public class AuthenticationServiceTests
             Identity,
             UnitOfWork,
             Mediator,
-            WorkspacePermissionCache
+            WorkspacePermissionCache,
+            Logger
         );
     }
 

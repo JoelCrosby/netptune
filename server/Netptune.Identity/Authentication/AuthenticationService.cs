@@ -10,6 +10,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 using Netptune.Core.Authentication;
@@ -42,6 +43,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IMediator Mediator;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
+    private readonly ILogger<NetptuneAuthService> Logger;
 
     private readonly string Issuer;
     private readonly string SecurityKey;
@@ -57,7 +59,8 @@ public class NetptuneAuthService : INetptuneAuthService
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
         IMediator mediator,
-        IWorkspacePermissionCache workspacePermissionCache)
+        IWorkspacePermissionCache workspacePermissionCache,
+        ILogger<NetptuneAuthService> logger)
     {
         SignInManager = signInManager;
         UserManager = userManager;
@@ -67,6 +70,7 @@ public class NetptuneAuthService : INetptuneAuthService
         UnitOfWork = unitOfWork;
         Mediator = mediator;
         WorkspacePermissionCache = workspacePermissionCache;
+        Logger = logger;
 
         Issuer = configuration.GetRequiredValue("Tokens:Issuer");
         ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
@@ -127,14 +131,33 @@ public class NetptuneAuthService : INetptuneAuthService
         var email = Identity.GetCurrentUserEmail();
         var providerKey = Identity.GetProviderKey();
 
+        Logger.LogInformation(
+            "External provider login started. Provider: {Provider}; HasEmailClaim: {HasEmailClaim}; HasProviderKeyClaim: {HasProviderKeyClaim}; Path: {Path}; AuthenticatedIdentities: {AuthenticatedIdentities}",
+            providerScheme,
+            !string.IsNullOrWhiteSpace(email),
+            !string.IsNullOrWhiteSpace(providerKey),
+            ContextAccessor.HttpContext?.Request.Path.Value,
+            Join(ContextAccessor.HttpContext?.User.Identities.Select(identity => $"{identity.AuthenticationType}:{identity.IsAuthenticated}")));
+
         var user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
 
         if (user is null)
         {
+            Logger.LogInformation(
+                "External provider login did not match an existing provider login. Provider: {Provider}; Path: {Path}",
+                providerScheme,
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
             var existingByEmail = await UserManager.FindByEmailAsync(email);
 
             if (existingByEmail is not null)
             {
+                Logger.LogWarning(
+                    "External provider login matched an existing email with a different login method. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
+                    providerScheme,
+                    existingByEmail.Id,
+                    ContextAccessor.HttpContext?.Request.Path.Value);
+
                 return LoginResult.Failed("An account with this email already exists. Please sign in using your original login method.");
             }
 
@@ -155,9 +178,23 @@ public class NetptuneAuthService : INetptuneAuthService
             await Register(registerRequest);
 
             user = await UserManager.FindByLoginAsync(providerScheme, providerKey);
+
+            Logger.LogInformation(
+                "External provider registration completed. Provider: {Provider}; UserCreated: {UserCreated}; Path: {Path}",
+                providerScheme,
+                user is not null,
+                ContextAccessor.HttpContext?.Request.Path.Value);
         }
 
-        if (user is null) throw new InvalidOperationException("user login failed");
+        if (user is null)
+        {
+            Logger.LogError(
+                "External provider login could not find the user after registration. Provider: {Provider}; Path: {Path}",
+                providerScheme,
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
+            throw new InvalidOperationException("user login failed");
+        }
 
         user.LastLoginTime = DateTime.UtcNow;
 
@@ -165,7 +202,22 @@ public class NetptuneAuthService : INetptuneAuthService
 
         var ticket = await GenerateTicket(user);
 
+        Logger.LogInformation(
+            "External provider login succeeded. Provider: {Provider}; UserId: {UserId}; Path: {Path}",
+            providerScheme,
+            user.Id,
+            ContextAccessor.HttpContext?.Request.Path.Value);
+
         return LoginResult.Success(ticket);
+    }
+
+    private static string Join(IEnumerable<string>? values)
+    {
+        if (values is null) return "<none>";
+
+        var joined = string.Join(", ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+        return string.IsNullOrWhiteSpace(joined) ? "<none>" : joined;
     }
 
     public async Task<RegisterResult> Register(RegisterRequest model)
