@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 
+using Netptune.Core.Responses.Common;
 using Netptune.TestData;
 
 using Xunit;
@@ -15,6 +16,8 @@ namespace Netptune.IntegrationTests.Endpoints;
 public sealed class AuthExternalProviderEndpointTests
 {
     private readonly HttpClient Client;
+    private readonly HttpClient AuthenticatedClient;
+    private readonly HttpClient UnauthenticatedClient;
 
     public AuthExternalProviderEndpointTests(NetptuneFixture fixture)
     {
@@ -23,6 +26,11 @@ public sealed class AuthExternalProviderEndpointTests
             AllowAutoRedirect = false,
         });
         Client.DefaultRequestHeaders.Remove("workspace");
+
+        AuthenticatedClient = fixture.CreateNetptuneClient();
+
+        UnauthenticatedClient = fixture.CreateNetptuneClient();
+        UnauthenticatedClient.DefaultRequestHeaders.Remove("Authorization");
     }
 
     [Theory]
@@ -119,6 +127,42 @@ public sealed class AuthExternalProviderEndpointTests
             cookies.Should().NotContain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
             cookies.Should().NotContain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
         }
+    }
+
+    [Fact]
+    public async Task GetLoginProviders_ShouldReturnOkWithCorrectShape()
+    {
+        var response = await AuthenticatedClient.GetAsync("api/auth/login-providers");
+        var content = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, content);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetLoginProviders_ShouldReturnProvider_AfterLinkingOne()
+    {
+        using var providerRequest = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-complete");
+        var unique = Guid.NewGuid().ToString("N")[..8];
+        providerRequest.Headers.Add("x-test-auth-email", SeedData.Users.First().Email);
+        providerRequest.Headers.Add("x-test-auth-provider-key", $"github-link-providers-{unique}");
+        providerRequest.Headers.Add("x-test-auth-name", "Linked User");
+
+        var providerResponse = await Client.SendAsync(providerRequest);
+        var token = QueryHelpers.ParseQuery(providerResponse.Headers.Location!.Query)["token"].ToString();
+
+        var linkResponse = await AuthenticatedClient.PostAsJsonAsync("api/auth/link-provider", new { token });
+        linkResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var response = await AuthenticatedClient.GetAsync("api/auth/login-providers");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().Contain("GitHub");
     }
 
     [Fact]

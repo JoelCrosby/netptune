@@ -984,4 +984,37 @@ public class AuthenticationServiceTests
 
         result.Should().BeNull();
     }
+
+    // GetLoginProviders
+
+    [Fact]
+    public async Task GetLoginProviders_ShouldReturnProviderNames_WhenUserHasLinkedProviders()
+    {
+        var user = AutoFixtures.AppUser;
+        var logins = new List<UserLoginInfo>
+        {
+            new("GitHub", "github-key-123", "GitHub"),
+            new("Google", "google-key-456", "Google"),
+        };
+
+        Identity.GetCurrentUser().Returns(user);
+        UserManager.GetLoginsAsync(user).Returns(logins);
+
+        var result = await Service.GetLoginProviders();
+
+        result.Should().BeEquivalentTo(["GitHub", "Google"]);
+    }
+
+    [Fact]
+    public async Task GetLoginProviders_ShouldReturnEmptyList_WhenUserHasNoLinkedProviders()
+    {
+        var user = AutoFixtures.AppUser;
+
+        Identity.GetCurrentUser().Returns(user);
+        UserManager.GetLoginsAsync(user).Returns([]);
+
+        var result = await Service.GetLoginProviders();
+
+        result.Should().BeEmpty();
+    }
 }
