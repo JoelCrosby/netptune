@@ -80,6 +80,13 @@ const reducer = createReducer(
     })
   ),
 
+  // Load Login Providers
+
+  on(
+    actions.loadLoginProvidersSuccess,
+    (state, { providers }): ProfileState => ({ ...state, loginProviders: providers })
+  ),
+
   // Upload Profile Picture
 
   on(

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { ClientResponse } from '@core/models/client-response';
 import { UploadResponse } from '@core/models/upload-result';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -26,5 +27,11 @@ export class ProfileService {
       'api/storage/profile-picture',
       data
     );
+  }
+
+  getLoginProviders() {
+    return this.http
+      .get<ClientResponse<string[]>>('api/auth/login-providers')
+      .pipe(map((r) => r.payload ?? []));
   }
 }

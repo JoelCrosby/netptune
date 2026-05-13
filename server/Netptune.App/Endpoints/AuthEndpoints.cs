@@ -7,6 +7,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Identity.Authentication;
 
@@ -39,6 +40,7 @@ public static class AuthEndpoints
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapPost("/logout", HandleLogout).RequireAuthorization();
         group.MapPost("/link-provider", HandleLinkProvider).RequireAuthorization();
+        group.MapGet("/login-providers", HandleGetLoginProviders).RequireAuthorization();
 
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
@@ -245,6 +247,12 @@ public static class AuthEndpoints
     {
         CookieHelper.ClearAuthCookies(context.Response);
         return Results.Ok();
+    }
+
+    public static async Task<IResult> HandleGetLoginProviders(INetptuneAuthService authenticationService)
+    {
+        var providers = await authenticationService.GetLoginProviders();
+        return Results.Ok(ClientResponse<IList<string>>.Success(providers));
     }
 
     public static async Task<IResult> HandleLinkProvider(

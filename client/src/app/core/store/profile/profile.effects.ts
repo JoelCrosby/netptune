@@ -109,4 +109,18 @@ export class ProfileEffects {
       )
     );
   });
+
+  loadLoginProviders$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadProfile),
+      switchMap(() =>
+        this.profileService.getLoginProviders().pipe(
+          map((providers) => actions.loadLoginProvidersSuccess({ providers })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadLoginProvidersFail({ error }))
+          )
+        )
+      )
+    );
+  });
 }

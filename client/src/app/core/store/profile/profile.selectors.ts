@@ -33,3 +33,8 @@ export const selectChangePasswordError = createSelector(
   selectProfileFeature,
   (state: ProfileState) => state.changePasswordError?.message
 );
+
+export const selectLoginProviders = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => state.loginProviders ?? []
+);

@@ -31,4 +31,6 @@ public interface INetptuneAuthService
     Task<CurrentUserResponse?> CurrentUser();
 
     Task<WorkspaceInvite?> ValidateInviteCode(string code);
+
+    Task<IList<string>> GetLoginProviders();
 }

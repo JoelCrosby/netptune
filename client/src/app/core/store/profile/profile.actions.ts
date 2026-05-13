@@ -51,6 +51,20 @@ export const changePasswordFail = createAction(
   props<{ error: HttpErrorResponse | Error }>()
 );
 
+// Load Login Providers
+
+export const loadLoginProviders = createAction('[Profile] Load Login Providers');
+
+export const loadLoginProvidersSuccess = createAction(
+  '[Profile] Load Login Providers Success',
+  props<{ providers: string[] }>()
+);
+
+export const loadLoginProvidersFail = createAction(
+  '[Profile] Load Login Providers Fail',
+  props<{ error: HttpErrorResponse | Error }>()
+);
+
 // Upload Profile Image
 
 export const uploadProfilePicture = createAction(

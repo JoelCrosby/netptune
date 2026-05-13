@@ -10,6 +10,7 @@ export interface ProfileState {
   updateProfileLoading: boolean;
   changePasswordLoading: boolean;
   changePasswordError?: HttpErrorResponse | Error;
+  loginProviders?: string[];
 }
 
 export const initialState: ProfileState = {

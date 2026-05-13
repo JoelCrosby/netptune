@@ -698,4 +698,12 @@ public class NetptuneAuthService : INetptuneAuthService
             Code = invite.Code,
         };
     }
+
+    public async Task<IList<string>> GetLoginProviders()
+    {
+        var user = await Identity.GetCurrentUser();
+        var logins = await UserManager.GetLoginsAsync(user);
+
+        return logins.Select(l => l.LoginProvider).ToList();
+    }
 }
