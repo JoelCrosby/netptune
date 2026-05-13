@@ -27,8 +27,8 @@
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

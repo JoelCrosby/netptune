@@ -17,7 +17,6 @@ public sealed class AuthExternalProviderEndpointTests
 {
     private readonly HttpClient Client;
     private readonly HttpClient AuthenticatedClient;
-    private readonly HttpClient UnauthenticatedClient;
 
     public AuthExternalProviderEndpointTests(NetptuneFixture fixture)
     {
@@ -29,8 +28,8 @@ public sealed class AuthExternalProviderEndpointTests
 
         AuthenticatedClient = fixture.CreateNetptuneClient();
 
-        UnauthenticatedClient = fixture.CreateNetptuneClient();
-        UnauthenticatedClient.DefaultRequestHeaders.Remove("Authorization");
+        HttpClient unauthenticatedClient = fixture.CreateNetptuneClient();
+        unauthenticatedClient.DefaultRequestHeaders.Remove("Authorization");
     }
 
     [Theory]
@@ -48,7 +47,7 @@ public sealed class AuthExternalProviderEndpointTests
 
         var location = response.Headers.Location;
         location.Should().NotBeNull();
-        location!.Host.Should().Contain(expectedHost);
+        location.Host.Should().Contain(expectedHost);
 
         var query = QueryHelpers.ParseQuery(location.Query);
         query["client_id"].Should().ContainSingle("test");
@@ -86,7 +85,7 @@ public sealed class AuthExternalProviderEndpointTests
 
         var location = response.Headers.Location;
         location.Should().NotBeNull();
-        location!.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/auth-provider-login");
+        location.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/auth-provider-login");
 
         var query = QueryHelpers.ParseQuery(location.Query);
         query["displayName"].ToString().Should().Be(displayName);
@@ -96,8 +95,9 @@ public sealed class AuthExternalProviderEndpointTests
         query["expires"].ToString().Should().NotBeNullOrWhiteSpace();
 
         response.Headers.TryGetValues("Set-Cookie", out var cookies).Should().BeTrue();
-        cookies!.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
-        cookies.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
+        var values = cookies?.ToList();
+        values.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
+        values.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public sealed class AuthExternalProviderEndpointTests
 
         var location = response.Headers.Location;
         location.Should().NotBeNull();
-        location!.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/link-provider");
+        location.GetLeftPart(UriPartial.Path).Should().Be("http://localhost:6400/auth/link-provider");
 
         var query = QueryHelpers.ParseQuery(location.Query);
         query["provider"].ToString().Should().Be("GitHub");
@@ -124,8 +124,10 @@ public sealed class AuthExternalProviderEndpointTests
 
         if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
         {
-            cookies.Should().NotContain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
-            cookies.Should().NotContain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
+            var values = cookies.ToList();
+
+            values.Should().NotContain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
+            values.Should().NotContain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
         }
     }
 
@@ -176,7 +178,7 @@ public sealed class AuthExternalProviderEndpointTests
         var providerResponse = await Client.SendAsync(providerRequest);
         var location = providerResponse.Headers.Location;
         location.Should().NotBeNull();
-        var token = QueryHelpers.ParseQuery(location!.Query)["token"].ToString();
+        var token = QueryHelpers.ParseQuery(location.Query)["token"].ToString();
         token.Should().NotBeNullOrWhiteSpace();
 
         var response = await Client.PostAsJsonAsync("api/auth/link-provider", new { token });
@@ -184,8 +186,11 @@ public sealed class AuthExternalProviderEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, content);
         response.Headers.TryGetValues("Set-Cookie", out var cookies).Should().BeTrue();
-        cookies!.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
-        cookies.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
+
+        var values = cookies?.ToList();
+
+        values.Should().Contain(cookie => cookie.StartsWith("access_token=", StringComparison.Ordinal));
+        values.Should().Contain(cookie => cookie.StartsWith("refresh_token=", StringComparison.Ordinal));
 
         var reuseResponse = await Client.PostAsJsonAsync("api/auth/link-provider", new { token });
         reuseResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

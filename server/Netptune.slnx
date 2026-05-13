@@ -5,12 +5,9 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Solution Items/">
-    <File Path="../.dockerignore" />
     <File Path="../.editorconfig" />
     <File Path="../.gitignore" />
     <File Path="../LICENSE.txt" />
-    <File Path="../netptune-client.code-workspace" />
-    <File Path="../netptune-server.code-workspace" />
     <File Path="../README.md" />
     <File Path="global.json" />
   </Folder>

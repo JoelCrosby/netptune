@@ -25,7 +25,7 @@ public class NetptuneAuthorizationPolicyProviderTests
         var policy = await provider.GetPolicyAsync("ConfiguredPolicy");
 
         policy.Should().NotBeNull();
-        policy!.Requirements.OfType<ClaimsAuthorizationRequirement>()
+        policy.Requirements.OfType<ClaimsAuthorizationRequirement>()
             .Should()
             .ContainSingle(requirement => requirement.ClaimType == "configured");
         policy.Requirements.OfType<WorkspacePermissionRequirement>().Should().BeEmpty();
@@ -40,7 +40,7 @@ public class NetptuneAuthorizationPolicyProviderTests
         var policy = await provider.GetPolicyAsync(policyName);
 
         policy.Should().NotBeNull();
-        policy!.AuthenticationSchemes.Should().ContainSingle(JwtBearerDefaults.AuthenticationScheme);
+        policy.AuthenticationSchemes.Should().ContainSingle(JwtBearerDefaults.AuthenticationScheme);
         policy.Requirements.OfType<WorkspaceRequirement>().Should().ContainSingle();
         policy.Requirements.OfType<WorkspacePermissionRequirement>()
             .Should()

@@ -903,7 +903,7 @@ public class AuthenticationServiceTests
     {
         var user = AutoFixtures.AppUser;
         var httpContext = Substitute.For<HttpContext>();
-        var principal = new System.Security.Claims.ClaimsPrincipal();
+        var principal = new ClaimsPrincipal();
         const string workspaceKey = "workspace-key";
 
         httpContext.User.Returns(principal);
@@ -929,7 +929,7 @@ public class AuthenticationServiceTests
     public async Task CurrentUser_ShouldReturnNull_WhenUserManagerReturnsNull()
     {
         var httpContext = Substitute.For<HttpContext>();
-        var principal = new System.Security.Claims.ClaimsPrincipal();
+        var principal = new ClaimsPrincipal();
 
         httpContext.User.Returns(principal);
         ContextAccessor.HttpContext.Returns(httpContext);
@@ -945,7 +945,7 @@ public class AuthenticationServiceTests
     {
         var user = AutoFixtures.AppUser;
         var httpContext = Substitute.For<HttpContext>();
-        var principal = new System.Security.Claims.ClaimsPrincipal();
+        var principal = new ClaimsPrincipal();
         const string workspaceKey = "workspace-key";
 
         httpContext.User.Returns(principal);
