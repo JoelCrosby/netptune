@@ -16,5 +16,6 @@ spec:
   ports:
     - name: "http"
       protocol: "TCP"
+      appProtocol: "kubernetes.io/h2c"
       port: {{ .Values.parameters.api.port_http | int }}
       targetPort: {{ .Values.parameters.api.port_http | int }}
