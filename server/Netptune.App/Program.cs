@@ -1,6 +1,5 @@
 using System.Threading.RateLimiting;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -57,7 +56,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddSingleton<BuildInfo>();
-builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationFailureLoggingMiddlewareResultHandler>();
 builder.Services.AddSingleton<IBoardEventService, BoardEventService>();
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
 

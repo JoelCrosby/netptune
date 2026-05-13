@@ -258,42 +258,23 @@ public static class AuthEndpoints
     public static async Task<IResult> HandleLinkProvider(
         INetptuneAuthService authenticationService,
         HttpContext context,
-        LinkProviderRequest request,
-        ILoggerFactory loggerFactory)
+        LinkProviderRequest request)
     {
-        var logger = loggerFactory.CreateLogger("Netptune.App.Endpoints.AuthExternalProvider");
-
-        logger.LogInformation(
-            "External auth link completion started. Path: {Path}; AuthenticatedIdentities: {UserIdentities}",
-            context.Request.Path.Value,
-            Join(context.User.Identities.Select(identity => $"{identity.AuthenticationType}:{identity.IsAuthenticated}")));
-
         var result = await authenticationService.LinkProvider(request);
 
         if (!result.IsSuccess || result.Ticket is null)
         {
-            logger.LogWarning(
-                "External auth link completion failed. Path: {Path}; FailureMessage: {FailureMessage}",
-                context.Request.Path.Value,
-                result.Message);
-
             return Results.Unauthorized();
         }
 
         CookieHelper.SetAuthCookies(context.Response, result.Ticket);
 
-        logger.LogInformation(
-            "External auth link completion succeeded. Path: {Path}; UserId: {UserId}",
-            context.Request.Path.Value,
-            result.Ticket.UserId);
-
         return Results.Ok(result.Ticket.ToUserResponse());
     }
 
-    public static IResult HandleGithubLogin(HttpContext context, ILoggerFactory loggerFactory)
+    public static IResult HandleGithubLogin(HttpContext context)
     {
         context.Request.Scheme = Uri.UriSchemeHttps;
-        LogProviderChallenge(loggerFactory, context, AuthenticationSchemes.Github, GithubLoginCompletePath);
 
         return Results.Challenge(new AuthenticationProperties
         {
@@ -305,21 +286,18 @@ public static class AuthEndpoints
     public static Task<IResult> HandleGithubLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
-        HttpContext context,
-        ILoggerFactory loggerFactory)
+        HttpContext context)
     {
         return HandleProviderLoginCallback(
             authenticationService,
             hosting,
             context,
-            loggerFactory,
             AuthenticationSchemes.Github);
     }
 
-    public static IResult HandleGoogleLogin(HttpContext context, ILoggerFactory loggerFactory)
+    public static IResult HandleGoogleLogin(HttpContext context)
     {
         context.Request.Scheme = Uri.UriSchemeHttps;
-        LogProviderChallenge(loggerFactory, context, AuthenticationSchemes.Google, GoogleLoginCompletePath);
 
         return Results.Challenge(new AuthenticationProperties
         {
@@ -331,21 +309,18 @@ public static class AuthEndpoints
     public static Task<IResult> HandleGoogleLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
-        HttpContext context,
-        ILoggerFactory loggerFactory)
+        HttpContext context)
     {
         return HandleProviderLoginCallback(
             authenticationService,
             hosting,
             context,
-            loggerFactory,
             AuthenticationSchemes.Google);
     }
 
-    public static IResult HandleMicrosoftLogin(HttpContext context, ILoggerFactory loggerFactory)
+    public static IResult HandleMicrosoftLogin(HttpContext context)
     {
         context.Request.Scheme = Uri.UriSchemeHttps;
-        LogProviderChallenge(loggerFactory, context, AuthenticationSchemes.Microsoft, MicrosoftLoginCompletePath);
 
         return Results.Challenge(new AuthenticationProperties
         {
@@ -357,14 +332,12 @@ public static class AuthEndpoints
     public static Task<IResult> HandleMicrosoftLoginCallback(
         INetptuneAuthService authenticationService,
         IHostingService hosting,
-        HttpContext context,
-        ILoggerFactory loggerFactory)
+        HttpContext context)
     {
         return HandleProviderLoginCallback(
             authenticationService,
             hosting,
             context,
-            loggerFactory,
             AuthenticationSchemes.Microsoft);
     }
 
@@ -372,32 +345,14 @@ public static class AuthEndpoints
         INetptuneAuthService authenticationService,
         IHostingService hosting,
         HttpContext context,
-        ILoggerFactory loggerFactory,
         string providerScheme)
     {
-        var logger = loggerFactory.CreateLogger("Netptune.App.Endpoints.AuthExternalProvider");
-
-        logger.LogInformation(
-            "External auth completion endpoint started. Provider: {Provider}; Path: {Path}; QueryKeys: {QueryKeys}; CookieNames: {CookieNames}; UserIdentities: {UserIdentities}; ClaimTypes: {ClaimTypes}",
-            providerScheme,
-            context.Request.Path.Value,
-            Join(context.Request.Query.Keys),
-            Join(context.Request.Cookies.Keys),
-            Join(context.User.Identities.Select(identity => $"{identity.AuthenticationType}:{identity.IsAuthenticated}")),
-            Join(context.User.Claims.Select(claim => claim.Type).Distinct()));
-
         var result = await authenticationService.LogInViaProvider(providerScheme);
 
         await context.SignOutAsync(IdentityConstants.ExternalScheme);
 
         if (result.IsLinkRequired && result.ExternalLoginLink is not null)
         {
-            logger.LogInformation(
-                "External auth completion requires account linking. Provider: {Provider}; Path: {Path}; Email: {Email}",
-                providerScheme,
-                context.Request.Path.Value,
-                result.ExternalLoginLink.Email);
-
             var linkRedirect = hosting.ClientOrigin
                 .AppendPathSegments("/auth/link-provider")
                 .SetQueryParams(new
@@ -412,23 +367,10 @@ public static class AuthEndpoints
 
         if (!result.IsSuccess || result.Ticket is null)
         {
-            logger.LogWarning(
-                "External auth completion failed. Provider: {Provider}; Path: {Path}; FailureMessage: {FailureMessage}",
-                providerScheme,
-                context.Request.Path.Value,
-                result.Message);
-
             return Results.Unauthorized();
         }
 
         CookieHelper.SetAuthCookies(context.Response, result.Ticket);
-
-        logger.LogInformation(
-            "External auth completion succeeded. Provider: {Provider}; Path: {Path}; UserId: {UserId}; CookieAuthIssued: {CookieAuthIssued}",
-            providerScheme,
-            context.Request.Path.Value,
-            result.Ticket.UserId,
-            true);
 
         var redirect = hosting.ClientOrigin
             .AppendPathSegments("/auth/auth-provider-login")
@@ -442,31 +384,5 @@ public static class AuthEndpoints
             });
 
         return Results.Redirect(redirect);
-    }
-
-    private static void LogProviderChallenge(
-        ILoggerFactory loggerFactory,
-        HttpContext context,
-        string providerScheme,
-        string completionPath)
-    {
-        var logger = loggerFactory.CreateLogger("Netptune.App.Endpoints.AuthExternalProvider");
-
-        logger.LogInformation(
-            "External auth challenge started. Provider: {Provider}; RequestScheme: {RequestScheme}; Host: {Host}; Path: {Path}; CompletionPath: {CompletionPath}; QueryKeys: {QueryKeys}; CookieNames: {CookieNames}",
-            providerScheme,
-            context.Request.Scheme,
-            context.Request.Host.Value,
-            context.Request.Path.Value,
-            completionPath,
-            Join(context.Request.Query.Keys),
-            Join(context.Request.Cookies.Keys));
-    }
-
-    private static string Join(IEnumerable<string?> values)
-    {
-        var joined = string.Join(", ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
-
-        return string.IsNullOrWhiteSpace(joined) ? "<none>" : joined;
     }
 }
