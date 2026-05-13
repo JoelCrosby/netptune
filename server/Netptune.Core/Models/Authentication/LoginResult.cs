@@ -10,11 +10,20 @@ public sealed class LoginResult
 
     public string? Message { get; }
 
-    private LoginResult(bool success, AuthenticationTicket? ticket, string? message = null)
+    public ExternalLoginLink? ExternalLoginLink { get; }
+
+    public bool IsLinkRequired => ExternalLoginLink is not null;
+
+    private LoginResult(
+        bool success,
+        AuthenticationTicket? ticket,
+        string? message = null,
+        ExternalLoginLink? externalLoginLink = null)
     {
         IsSuccess = success;
         Ticket = ticket;
         Message = message;
+        ExternalLoginLink = externalLoginLink;
     }
 
     public static LoginResult Success(AuthenticationTicket ticket)
@@ -25,5 +34,10 @@ public sealed class LoginResult
     public static LoginResult Failed(string? message = null)
     {
         return new(false, null, message);
+    }
+
+    public static LoginResult LinkRequired(ExternalLoginLink externalLoginLink)
+    {
+        return new(false, null, externalLoginLink: externalLoginLink);
     }
 }

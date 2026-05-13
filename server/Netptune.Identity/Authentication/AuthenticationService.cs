@@ -5,6 +5,7 @@ using System.Text;
 
 using Flurl;
 
+using Microsoft.Extensions.Caching.Distributed;
 using Mediator;
 
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,7 @@ using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
+using Netptune.Core.Cache.Common;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
@@ -44,6 +46,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly IMediator Mediator;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
     private readonly ILogger<NetptuneAuthService> Logger;
+    private readonly ICacheProvider Cache;
 
     private readonly string Issuer;
     private readonly string SecurityKey;
@@ -60,7 +63,8 @@ public class NetptuneAuthService : INetptuneAuthService
         INetptuneUnitOfWork unitOfWork,
         IMediator mediator,
         IWorkspacePermissionCache workspacePermissionCache,
-        ILogger<NetptuneAuthService> logger)
+        ILogger<NetptuneAuthService> logger,
+        ICacheProvider cache)
     {
         SignInManager = signInManager;
         UserManager = userManager;
@@ -71,6 +75,7 @@ public class NetptuneAuthService : INetptuneAuthService
         Mediator = mediator;
         WorkspacePermissionCache = workspacePermissionCache;
         Logger = logger;
+        Cache = cache;
 
         Issuer = configuration.GetRequiredValue("Tokens:Issuer");
         ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
@@ -153,27 +158,16 @@ public class NetptuneAuthService : INetptuneAuthService
             if (existingByEmail is not null)
             {
                 Logger.LogInformation(
-                    "External provider login matched an existing email and will link the provider login. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
+                    "External provider login matched an existing email and requires explicit provider linking. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
                     providerScheme,
                     existingByEmail.Id,
                     ContextAccessor.HttpContext?.Request.Path.Value);
 
-                var loginInfo = new UserLoginInfo(providerScheme, providerKey, providerScheme);
-                var linkResult = await UserManager.AddLoginAsync(existingByEmail, loginInfo);
-
-                if (!linkResult.Succeeded)
-                {
-                    Logger.LogWarning(
-                        "External provider login could not be linked to the existing email account. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Errors: {Errors}; Path: {Path}",
-                        providerScheme,
-                        existingByEmail.Id,
-                        Join(linkResult.Errors.Select(error => error.Code)),
-                        ContextAccessor.HttpContext?.Request.Path.Value);
-
-                    return LoginResult.Failed(string.Join(", ", linkResult.Errors.Select(error => error.Description)));
-                }
-
-                user = existingByEmail;
+                return await CreateExternalLoginLinkResult(
+                    existingByEmail,
+                    providerScheme,
+                    providerKey,
+                    email);
             }
             else
             {
@@ -228,6 +222,84 @@ public class NetptuneAuthService : INetptuneAuthService
         return LoginResult.Success(ticket);
     }
 
+    public async Task<LoginResult> LinkProvider(LinkProviderRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Token))
+        {
+            return LoginResult.Failed("External login link is invalid or expired.");
+        }
+
+        var cacheKey = GetPendingExternalLoginCacheKey(request.Token);
+        var pending = await Cache.GetValueAsync<PendingExternalLogin>(cacheKey);
+
+        if (pending is null)
+        {
+            Logger.LogWarning(
+                "External provider link failed because pending link was missing or expired. Path: {Path}",
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
+            return LoginResult.Failed("External login link is invalid or expired.");
+        }
+
+        var currentUserId = Identity.GetCurrentUserId();
+
+        if (!string.Equals(currentUserId, pending.ExistingUserId, StringComparison.Ordinal))
+        {
+            Logger.LogWarning(
+                "External provider link failed because the authenticated user did not match the pending link user. Provider: {Provider}; PendingUserId: {PendingUserId}; CurrentUserId: {CurrentUserId}; Path: {Path}",
+                pending.Provider,
+                pending.ExistingUserId,
+                currentUserId,
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
+            return LoginResult.Failed("External login link does not belong to the signed-in account.");
+        }
+
+        var user = await UserManager.FindByIdAsync(pending.ExistingUserId);
+
+        if (user is null)
+        {
+            Logger.LogWarning(
+                "External provider link failed because the existing user was not found. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
+                pending.Provider,
+                pending.ExistingUserId,
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
+            return LoginResult.Failed("External login link is invalid or expired.");
+        }
+
+        var loginInfo = new UserLoginInfo(pending.Provider, pending.ProviderKey, pending.Provider);
+        var linkResult = await UserManager.AddLoginAsync(user, loginInfo);
+
+        if (!linkResult.Succeeded)
+        {
+            Logger.LogWarning(
+                "External provider login could not be linked to the signed-in account. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Errors: {Errors}; Path: {Path}",
+                pending.Provider,
+                pending.ExistingUserId,
+                Join(linkResult.Errors.Select(error => error.Code)),
+                ContextAccessor.HttpContext?.Request.Path.Value);
+
+            return LoginResult.Failed(string.Join(", ", linkResult.Errors.Select(error => error.Description)));
+        }
+
+        await Cache.RemoveAsync(cacheKey);
+
+        user.LastLoginTime = DateTime.UtcNow;
+
+        await UserManager.UpdateAsync(user);
+
+        var ticket = await GenerateTicket(user);
+
+        Logger.LogInformation(
+            "External provider login linked successfully. Provider: {Provider}; UserId: {UserId}; Path: {Path}",
+            pending.Provider,
+            user.Id,
+            ContextAccessor.HttpContext?.Request.Path.Value);
+
+        return LoginResult.Success(ticket);
+    }
+
     private static string Join(IEnumerable<string>? values)
     {
         if (values is null) return "<none>";
@@ -235,6 +307,54 @@ public class NetptuneAuthService : INetptuneAuthService
         var joined = string.Join(", ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
 
         return string.IsNullOrWhiteSpace(joined) ? "<none>" : joined;
+    }
+
+    private async Task<LoginResult> CreateExternalLoginLinkResult(
+        AppUser existingUser,
+        string providerScheme,
+        string providerKey,
+        string email)
+    {
+        var token = GenerateSecureToken();
+        var cacheKey = GetPendingExternalLoginCacheKey(token);
+
+        await Cache.SetAsync(cacheKey, new PendingExternalLogin
+        {
+            ExistingUserId = existingUser.Id,
+            Provider = providerScheme,
+            ProviderKey = providerKey,
+            Email = email,
+            DisplayName = Identity.GetUserName(),
+            PictureUrl = Identity.GetPictureUrl(),
+            Created = DateTime.UtcNow,
+        }, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
+        });
+
+        Logger.LogInformation(
+            "External provider pending link was created. Provider: {Provider}; ExistingUserId: {ExistingUserId}; Path: {Path}",
+            providerScheme,
+            existingUser.Id,
+            ContextAccessor.HttpContext?.Request.Path.Value);
+
+        return LoginResult.LinkRequired(new ExternalLoginLink
+        {
+            Token = token,
+            Provider = providerScheme,
+            Email = email,
+        });
+    }
+
+    private static string GenerateSecureToken()
+    {
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        return Convert.ToHexString(bytes).ToLowerInvariant();
+    }
+
+    private static string GetPendingExternalLoginCacheKey(string token)
+    {
+        return $"auth:external-link:{HashToken(token)}";
     }
 
     public async Task<RegisterResult> Register(RegisterRequest model)

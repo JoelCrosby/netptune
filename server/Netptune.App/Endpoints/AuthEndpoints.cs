@@ -38,6 +38,7 @@ public static class AuthEndpoints
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
         group.MapPost("/logout", HandleLogout).RequireAuthorization();
+        group.MapPost("/link-provider", HandleLinkProvider).RequireAuthorization();
 
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
@@ -246,6 +247,41 @@ public static class AuthEndpoints
         return Results.Ok();
     }
 
+    public static async Task<IResult> HandleLinkProvider(
+        INetptuneAuthService authenticationService,
+        HttpContext context,
+        LinkProviderRequest request,
+        ILoggerFactory loggerFactory)
+    {
+        var logger = loggerFactory.CreateLogger("Netptune.App.Endpoints.AuthExternalProvider");
+
+        logger.LogInformation(
+            "External auth link completion started. Path: {Path}; AuthenticatedIdentities: {UserIdentities}",
+            context.Request.Path.Value,
+            Join(context.User.Identities.Select(identity => $"{identity.AuthenticationType}:{identity.IsAuthenticated}")));
+
+        var result = await authenticationService.LinkProvider(request);
+
+        if (!result.IsSuccess || result.Ticket is null)
+        {
+            logger.LogWarning(
+                "External auth link completion failed. Path: {Path}; FailureMessage: {FailureMessage}",
+                context.Request.Path.Value,
+                result.Message);
+
+            return Results.Unauthorized();
+        }
+
+        CookieHelper.SetAuthCookies(context.Response, result.Ticket);
+
+        logger.LogInformation(
+            "External auth link completion succeeded. Path: {Path}; UserId: {UserId}",
+            context.Request.Path.Value,
+            result.Ticket.UserId);
+
+        return Results.Ok(result.Ticket.ToUserResponse());
+    }
+
     public static IResult HandleGithubLogin(HttpContext context, ILoggerFactory loggerFactory)
     {
         context.Request.Scheme = Uri.UriSchemeHttps;
@@ -345,6 +381,26 @@ public static class AuthEndpoints
         var result = await authenticationService.LogInViaProvider(providerScheme);
 
         await context.SignOutAsync(IdentityConstants.ExternalScheme);
+
+        if (result.IsLinkRequired && result.ExternalLoginLink is not null)
+        {
+            logger.LogInformation(
+                "External auth completion requires account linking. Provider: {Provider}; Path: {Path}; Email: {Email}",
+                providerScheme,
+                context.Request.Path.Value,
+                result.ExternalLoginLink.Email);
+
+            var linkRedirect = hosting.ClientOrigin
+                .AppendPathSegments("/auth/link-provider")
+                .SetQueryParams(new
+                {
+                    provider = result.ExternalLoginLink.Provider,
+                    email = result.ExternalLoginLink.Email,
+                    token = result.ExternalLoginLink.Token,
+                });
+
+            return Results.Redirect(linkRedirect);
+        }
 
         if (!result.IsSuccess || result.Ticket is null)
         {

@@ -9,12 +9,14 @@ using Mediator;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
+using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
@@ -47,6 +49,7 @@ public class AuthenticationServiceTests
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly ILogger<NetptuneAuthService> Logger = Substitute.For<ILogger<NetptuneAuthService>>();
+    private readonly ICacheProvider Cache = Substitute.For<ICacheProvider>();
 
     private const string SigningKey = "test-signing-key-that-is-long-enough-for-hmac-sha256";
 
@@ -95,7 +98,8 @@ public class AuthenticationServiceTests
             UnitOfWork,
             Mediator,
             WorkspacePermissionCache,
-            Logger
+            Logger,
+            Cache
         );
     }
 
@@ -351,7 +355,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task LogInViaProvider_ShouldLinkLoginAndReturnSuccess_WhenEmailBelongsToExistingUser()
+    public async Task LogInViaProvider_ShouldReturnLinkRequired_WhenEmailBelongsToExistingUser()
     {
         const string providerScheme = "GitHub";
         const string providerKey = "github-123";
@@ -359,13 +363,60 @@ public class AuthenticationServiceTests
 
         Identity.GetCurrentUserEmail().Returns(user.Email!);
         Identity.GetProviderKey().Returns(providerKey);
+        Identity.GetUserName().Returns($"{user.Firstname} {user.Lastname}");
+        Identity.GetPictureUrl().Returns(user.PictureUrl);
 
         UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
         UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        Cache.SetAsync(
+                Arg.Any<string>(),
+                Arg.Any<PendingExternalLogin>(),
+                Arg.Any<DistributedCacheEntryOptions>())
+            .Returns(Task.CompletedTask);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        result.IsLinkRequired.Should().BeTrue();
+        result.ExternalLoginLink.Should().NotBeNull();
+        result.ExternalLoginLink!.Provider.Should().Be(providerScheme);
+        result.ExternalLoginLink.Email.Should().Be(user.Email);
+        result.ExternalLoginLink.Token.Should().NotBeNullOrWhiteSpace();
+        await Cache.Received(1).SetAsync(
+            Arg.Is<string>(key => key.StartsWith("auth:external-link:", StringComparison.Ordinal)),
+            Arg.Is<PendingExternalLogin>(pending =>
+                pending.ExistingUserId == user.Id &&
+                pending.Provider == providerScheme &&
+                pending.ProviderKey == providerKey &&
+                pending.Email == user.Email),
+            Arg.Is<DistributedCacheEntryOptions>(options =>
+                options.AbsoluteExpirationRelativeToNow == TimeSpan.FromMinutes(10)));
+        await UserManager.DidNotReceive().AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>());
+    }
+
+    [Fact]
+    public async Task LinkProvider_ShouldReturnSuccess_WhenPendingLinkBelongsToCurrentUser()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-123";
+        const string token = "pending-link-token";
+        var user = AutoFixtures.AppUser;
+        var pending = new PendingExternalLogin
+        {
+            ExistingUserId = user.Id,
+            Provider = providerScheme,
+            ProviderKey = providerKey,
+            Email = user.Email!,
+            Created = DateTime.UtcNow,
+        };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).Returns(pending);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.AddLoginAsync(user, Arg.Any<UserLoginInfo>()).Returns(IdentityResult.Success);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
 
-        var result = await Service.LogInViaProvider(providerScheme);
+        var result = await Service.LinkProvider(new LinkProviderRequest { Token = token });
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
@@ -374,20 +425,63 @@ public class AuthenticationServiceTests
             login.LoginProvider == providerScheme &&
             login.ProviderKey == providerKey &&
             login.ProviderDisplayName == providerScheme));
+        await Cache.Received(1).RemoveAsync(GetExternalLinkCacheKey(token));
     }
 
     [Fact]
-    public async Task LogInViaProvider_ShouldReturnFailure_WhenExistingEmailCannotBeLinked()
+    public async Task LinkProvider_ShouldReturnFailure_WhenPendingLinkIsMissing()
     {
-        const string providerScheme = "GitHub";
-        const string providerKey = "github-123";
+        const string token = "missing-link-token";
+
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).ReturnsNull();
+
+        var result = await Service.LinkProvider(new LinkProviderRequest { Token = token });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login link is invalid or expired.");
+        await UserManager.DidNotReceive().AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>());
+    }
+
+    [Fact]
+    public async Task LinkProvider_ShouldReturnFailure_WhenCurrentUserDoesNotMatchPendingLink()
+    {
+        const string token = "wrong-user-link-token";
+        var pending = new PendingExternalLogin
+        {
+            ExistingUserId = "expected-user",
+            Provider = "GitHub",
+            ProviderKey = "github-123",
+            Email = "user@example.com",
+            Created = DateTime.UtcNow,
+        };
+
+        Identity.GetCurrentUserId().Returns("different-user");
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).Returns(pending);
+
+        var result = await Service.LinkProvider(new LinkProviderRequest { Token = token });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login link does not belong to the signed-in account.");
+        await UserManager.DidNotReceive().AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>());
+    }
+
+    [Fact]
+    public async Task LinkProvider_ShouldReturnFailure_WhenExistingEmailCannotBeLinked()
+    {
+        const string token = "failed-link-token";
         var user = AutoFixtures.AppUser;
+        var pending = new PendingExternalLogin
+        {
+            ExistingUserId = user.Id,
+            Provider = "GitHub",
+            ProviderKey = "github-123",
+            Email = user.Email!,
+            Created = DateTime.UtcNow,
+        };
 
-        Identity.GetCurrentUserEmail().Returns(user.Email!);
-        Identity.GetProviderKey().Returns(providerKey);
-
-        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
-        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+        Identity.GetCurrentUserId().Returns(user.Id);
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).Returns(pending);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.AddLoginAsync(user, Arg.Any<UserLoginInfo>())
             .Returns(IdentityResult.Failed(new IdentityError
             {
@@ -395,10 +489,15 @@ public class AuthenticationServiceTests
                 Description = "Login already exists",
             }));
 
-        var result = await Service.LogInViaProvider(providerScheme);
+        var result = await Service.LinkProvider(new LinkProviderRequest { Token = token });
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Login already exists");
+    }
+
+    private static string GetExternalLinkCacheKey(string token)
+    {
+        return $"auth:external-link:{HashToken(token)}";
     }
 
     // Register

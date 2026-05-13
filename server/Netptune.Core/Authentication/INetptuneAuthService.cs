@@ -14,6 +14,8 @@ public interface INetptuneAuthService
 
     Task<LoginResult> LogInViaProvider(string providerScheme);
 
+    Task<LoginResult> LinkProvider(LinkProviderRequest request);
+
     Task<RegisterResult> Register(RegisterRequest model);
 
     Task<RegisterResult> ConfirmEmail(string userId, string code);

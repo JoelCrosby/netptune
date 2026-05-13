@@ -22,6 +22,7 @@ import {
 } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth.service';
 import * as actions from './auth.actions';
+import { hasPendingProviderLink } from '@app/core/auth/pending-provider-link';
 import { selectIsAuthenticated } from './auth.selectors';
 
 export const AUTH_KEY = 'AUTH';
@@ -94,10 +95,23 @@ export class AuthEffects implements OnInitEffects {
       return this.actions$.pipe(
         ofType(actions.loginSuccess),
         debounceTime(debounce, scheduler),
+        filter(() => !hasPendingProviderLink()),
         switchMap(() => this.router.navigate(['/workspaces'])),
         map(() => loadWorkspaces())
       );
     }
+  );
+
+  returnToProviderLink$ = createEffect(
+    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
+      return this.actions$.pipe(
+        ofType(actions.loginSuccess),
+        debounceTime(debounce, scheduler),
+        filter(() => hasPendingProviderLink()),
+        tap(() => void this.router.navigate(['/auth/link-provider']))
+      );
+    },
+    { dispatch: false }
   );
 
   loadWorkspacesAfterRefresh$ = createEffect(

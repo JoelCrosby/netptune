@@ -4,6 +4,7 @@ import { RegisterRequest } from '@app/core/models/register-request';
 import { ClientResponse } from '../models/client-response';
 import {
   AuthCodeRequest,
+  LinkProviderRequest,
   LoginResponse,
   ResetPasswordRequest,
   UserResponse,
@@ -48,5 +49,9 @@ export class AuthService {
 
   logout() {
     return this.http.post('api/auth/logout', null);
+  }
+
+  linkProvider(request: LinkProviderRequest) {
+    return this.http.post<LoginResponse>('api/auth/link-provider', request);
   }
 }

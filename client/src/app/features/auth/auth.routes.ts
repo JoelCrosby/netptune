@@ -50,5 +50,9 @@ export const routes: Routes = [
       authProviderResult: authProvider,
     },
   },
+  {
+    path: 'link-provider',
+    loadComponent: () => import('./components/link-provider/link-provider.component').then((m) => m.LinkProviderComponent),
+  },
   { path: '**', redirectTo: 'login' },
 ];

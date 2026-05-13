@@ -58,6 +58,10 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
+export interface LinkProviderRequest {
+  token: string;
+}
+
 export interface WorkspaceInvite {
   email?: string;
   workspaceId?: string;
