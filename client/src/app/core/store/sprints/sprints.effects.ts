@@ -7,7 +7,7 @@ import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { EMPTY, forkJoin, of } from 'rxjs';
+import { EMPTY, Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './sprints.actions';
 import { SprintsService } from './sprints.service';
@@ -186,23 +186,8 @@ export class SprintsEffects {
   completeSprintWithReassignment$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.completeSprintWithReassignment),
-      switchMap(({ sprintId, incompleteTaskIds, targetSprintId }) => {
-        const reassign$ =
-          incompleteTaskIds.length === 0
-            ? of(null)
-            : targetSprintId !== undefined
-              ? this.sprintsService
-                  .addTasks(targetSprintId, { taskIds: incompleteTaskIds })
-                  .pipe(unwrapClientReposne())
-              : forkJoin(
-                  incompleteTaskIds.map((taskId) =>
-                    this.sprintsService
-                      .removeTask(sprintId, taskId)
-                      .pipe(unwrapClientReposne())
-                  )
-                );
-
-        return reassign$.pipe(
+      switchMap(({ sprintId, incompleteTaskIds, targetSprintId }) =>
+        this.reassignIncompleteTasks(sprintId, incompleteTaskIds, targetSprintId).pipe(
           switchMap(() =>
             this.sprintsService.complete(sprintId).pipe(unwrapClientReposne())
           ),
@@ -211,10 +196,30 @@ export class SprintsEffects {
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprintFail({ error }))
           )
-        );
-      })
+        )
+      )
     );
   });
+
+  private reassignIncompleteTasks(
+    sprintId: number,
+    taskIds: number[],
+    targetSprintId: number | undefined
+  ): Observable<unknown> {
+    if (taskIds.length === 0) return of(null);
+
+    if (targetSprintId !== undefined) {
+      return this.sprintsService
+        .addTasks(targetSprintId, { taskIds })
+        .pipe(unwrapClientReposne());
+    }
+
+    return forkJoin(
+      taskIds.map((taskId) =>
+        this.sprintsService.removeTask(sprintId, taskId).pipe(unwrapClientReposne())
+      )
+    );
+  }
 
   addTasksToSprint$ = createEffect(() => {
     return this.actions$.pipe(
