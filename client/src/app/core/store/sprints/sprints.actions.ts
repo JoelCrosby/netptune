@@ -138,3 +138,8 @@ export const removeTaskFromSprint = createAction(
   '[Sprints] Remove Task From Sprint',
   props<{ sprintId: number; taskId: number }>()
 );
+
+export const completeSprintWithReassignment = createAction(
+  '[Sprints] Complete Sprint With Reassignment',
+  props<{ sprintId: number; incompleteTaskIds: number[]; targetSprintId?: number }>()
+);

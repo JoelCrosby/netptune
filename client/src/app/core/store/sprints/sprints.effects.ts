@@ -7,7 +7,7 @@ import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './sprints.actions';
 import { SprintsService } from './sprints.service';
@@ -180,6 +180,39 @@ export class SprintsEffects {
           )
         )
       )
+    );
+  });
+
+  completeSprintWithReassignment$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.completeSprintWithReassignment),
+      switchMap(({ sprintId, incompleteTaskIds, targetSprintId }) => {
+        const reassign$ =
+          incompleteTaskIds.length === 0
+            ? of(null)
+            : targetSprintId !== undefined
+              ? this.sprintsService
+                  .addTasks(targetSprintId, { taskIds: incompleteTaskIds })
+                  .pipe(unwrapClientReposne())
+              : forkJoin(
+                  incompleteTaskIds.map((taskId) =>
+                    this.sprintsService
+                      .removeTask(sprintId, taskId)
+                      .pipe(unwrapClientReposne())
+                  )
+                );
+
+        return reassign$.pipe(
+          switchMap(() =>
+            this.sprintsService.complete(sprintId).pipe(unwrapClientReposne())
+          ),
+          tap(() => this.snackbar.open('Sprint completed')),
+          map((sprint) => actions.updateSprintSuccess({ sprint })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.updateSprintFail({ error }))
+          )
+        );
+      })
     );
   });
 

@@ -13,7 +13,6 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import {
-  completeSprint,
   deleteSprint,
   loadSprintDetail,
   startSprint,
@@ -32,6 +31,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
+import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 
@@ -121,7 +121,7 @@ import { SprintTaskListComponent } from '../../components/sprint-task-list.compo
                   type="button"
                   class="ml-2"
                   [disabled]="updateLoading()"
-                  (click)="onComplete(sprint.id)">
+                  (click)="onComplete(sprint)">
                   Complete Sprint
                 </button>
               }
@@ -221,9 +221,12 @@ export class SprintDetailViewComponent {
     this.store.dispatch(startSprint({ sprintId }));
   }
 
-  onComplete(sprintId?: number) {
-    if (!sprintId) return;
-    this.store.dispatch(completeSprint({ sprintId }));
+  onComplete(sprint: SprintDetailViewModel) {
+    if (!sprint.id) return;
+    this.dialog.open(SprintCompletionDialogComponent, {
+      width: '520px',
+      data: sprint,
+    });
   }
 
   onDelete(sprint: SprintDetailViewModel) {
