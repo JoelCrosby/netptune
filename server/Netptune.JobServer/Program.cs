@@ -1,5 +1,6 @@
 using Netptune.Cache;
 using Netptune.Core.Extensions;
+using Netptune.Search;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
 using Netptune.JobServer.Services;
@@ -39,8 +40,11 @@ builder.Services.AddS3StorageService(options =>
     options.SecretAccessKey = builder.Configuration.GetEnvironmentVariable("NETPTUNE_S3_SECRET_ACCESS_KEY");
 });
 
+builder.AddNetptuneSearch();
+
 builder.Services.AddHostedService<QueueConsumerService>();
 builder.Services.AddHostedService<AuditRetentionJob>();
+builder.Services.AddHostedService<SearchSeedService>();
 
 builder.Services.AddNetptuneMessageQueue(builder.Configuration.GetNetptuneNatsConnectionString());
 

@@ -10,6 +10,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.np-command-palette-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
 :root {
   --border-radius: 8px;
   --border-radius-small: 3px;

@@ -27,6 +27,11 @@ var cache = builder
     .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
+var meilisearch = builder
+    .AddMeilisearch("meilisearch")
+    .WithDataVolume()
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var seedData = builder
     .AddProject<Projects.Netptune_SeedData>("seed-data")
     .WithPostgres(postgresdb);
@@ -36,7 +41,9 @@ var jobs = builder
     .WaitForCompletion(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)
-    .WithNats(nats);
+    .WithNats(nats)
+    .WaitFor(meilisearch)
+    .WithReference(meilisearch);
 
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
@@ -45,6 +52,8 @@ var api = builder
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats)
+    .WaitFor(meilisearch)
+    .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

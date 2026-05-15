@@ -11,6 +11,8 @@ persistence:
     size: "40Gi"
   monitoring:
     size: "40Gi"
+  meilisearch:
+    size: "10Gi"
 
 headlamp:
   enabled: true
@@ -113,6 +115,8 @@ secrets:
     cookie_secret: ""
   postgres:
     postgres_password: ""
+  meilisearch:
+    master_key: ""
   cache:
     cache_password: ""
   jobs:

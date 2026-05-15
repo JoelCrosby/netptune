@@ -8,11 +8,18 @@ import { Store } from '@ngrx/store';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
 import { ShellNavbarComponent } from './shell-navbar.component';
+import { CommandPaletteComponent } from './command-palette/command-palette.component';
+import { GlobalCommandsService } from './global-commands.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ShellService],
-  imports: [RouterOutlet, ShellSidebarComponent, ShellNavbarComponent],
+  providers: [ShellService, GlobalCommandsService],
+  imports: [
+    RouterOutlet,
+    ShellSidebarComponent,
+    ShellNavbarComponent,
+    CommandPaletteComponent,
+  ],
   styles: `
     .expanded {
       grid-template-columns: 247px auto;
@@ -37,6 +44,8 @@ import { ShellNavbarComponent } from './shell-navbar.component';
         <router-outlet />
       </main>
     </div>
+
+    <app-command-palette></app-command-palette>
   `,
 })
 export class ShellComponent {
@@ -44,6 +53,7 @@ export class ShellComponent {
   private router = inject(Router);
 
   shell = inject(ShellService);
+  readonly globalCommands = inject(GlobalCommandsService);
   authenticated = this.store.selectSignal(selectIsAuthenticated);
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
 

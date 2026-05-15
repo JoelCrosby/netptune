@@ -1,0 +1,78 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "meilisearch-statefulset"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "meilisearch"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  serviceName: "meilisearch-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "meilisearch"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "meilisearch"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      containers:
+        - name: "meilisearch"
+          image: "getmeili/meilisearch:v1.10"
+          envFrom:
+            - secretRef:
+                name: "meilisearch-secrets"
+          env:
+            - name: "MEILI_ENV"
+              value: "production"
+            - name: "MEILI_DB_PATH"
+              value: "/meili_data"
+          ports:
+            - name: "http"
+              protocol: "TCP"
+              containerPort: 7700
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: "meilisearch-data"
+              mountPath: "/meili_data"
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "http"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              memory: "512Mi"
+  volumeClaimTemplates:
+    - metadata:
+        name: "meilisearch-data"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.meilisearch.size }}"
+  updateStrategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxUnavailable: 1

@@ -18,7 +18,9 @@ using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
 using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization;
+using Netptune.Search;
 using Netptune.Services.Configuration;
+
 using Netptune.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -94,6 +96,8 @@ builder.Services.AddNetptuneServices(options =>
     options.ClientOrigin = configuration.GetRequiredValue("Origin");
     options.ContentRootPath = builder.Environment.ContentRootPath;
 });
+
+builder.AddNetptuneSearch();
 
 builder.Services.AddCloudflareEmailService(options =>
 {
@@ -200,6 +204,7 @@ apiGroup.MapTasksEndpoints();
 apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
 apiGroup.MapPublicEndpoints();
+apiGroup.MapSearchEndpoints();
 
 apiGroup.MapExportEndpoints()
     .RequireRateLimiting("import-export");

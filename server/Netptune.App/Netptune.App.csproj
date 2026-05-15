@@ -43,6 +43,7 @@
     <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
+    <ProjectReference Include="..\Netptune.Search\Netptune.Search.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
     <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
