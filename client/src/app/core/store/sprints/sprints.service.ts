@@ -46,6 +46,11 @@ export class SprintsService {
     return this.http.get<TaskViewModel[]>('api/tasks', { params });
   }
 
+  backlogTasks() {
+    const params = new HttpParams().set('noSprint', true).set('take', 200);
+    return this.http.get<TaskViewModel[]>('api/tasks', { params });
+  }
+
   post(request: AddSprintRequest) {
     return this.http.post<ClientResponse<SprintViewModel>>(
       'api/sprints',

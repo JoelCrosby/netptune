@@ -113,6 +113,33 @@ const reducer = createReducer(
     })
   ),
   on(
+    actions.loadBacklogTasks,
+    (state): SprintsState => ({ ...state, backlogTasksLoading: true })
+  ),
+  on(
+    actions.loadBacklogTasksSuccess,
+    (state, { tasks }): SprintsState => ({
+      ...state,
+      backlogTasks: tasks,
+      backlogTasksLoading: false,
+    })
+  ),
+  on(
+    actions.loadBacklogTasksFail,
+    (state, { error }): SprintsState => ({
+      ...state,
+      loadingError: error,
+      backlogTasksLoading: false,
+    })
+  ),
+  on(
+    actions.removeTaskFromBacklog,
+    (state, { taskId }): SprintsState => ({
+      ...state,
+      backlogTasks: state.backlogTasks.filter((t) => t.id !== taskId),
+    })
+  ),
+  on(
     actions.createSprint,
     (state): SprintsState => ({
       ...state,

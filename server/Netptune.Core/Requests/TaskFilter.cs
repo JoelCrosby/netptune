@@ -18,6 +18,8 @@ public sealed class TaskFilter
 
     public string[] Assignees { get; init; } = [];
 
+    public bool? NoSprint { get; init; }
+
     public int? Take { get; init; }
 
     public string? Cursor { get; init; }

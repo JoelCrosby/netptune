@@ -160,6 +160,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                   AND (@projectId IS NULL OR pt.project_id = @projectId)
                   AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
                   AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
+                  AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
                   AND (CARDINALITY(@statuses) = 0 OR pt.status = ANY(@statuses))
                   AND (CARDINALITY(@assignees) = 0 OR EXISTS (
                       SELECT 1
@@ -230,6 +231,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             projectId = filter.ProjectId,
             sprintId = filter.SprintId,
             excludeSprintId = filter.ExcludeSprintId,
+            noSprint = filter.NoSprint ?? false,
             statuses,
             tags,
             assignees,

@@ -143,3 +143,27 @@ export const completeSprintWithReassignment = createAction(
   '[Sprints] Complete Sprint With Reassignment',
   props<{ sprintId: number; incompleteTaskIds: number[]; targetSprintId?: number }>()
 );
+
+export const initBacklogView = createAction('[Sprints] Init Backlog View');
+
+export const assignBacklogTask = createAction(
+  '[Sprints] Assign Backlog Task',
+  props<{ taskId: number; sprintId: number }>()
+);
+
+export const loadBacklogTasks = createAction('[Sprints] Load Backlog Tasks');
+
+export const loadBacklogTasksSuccess = createAction(
+  '[Sprints] Load Backlog Tasks Success',
+  props<{ tasks: TaskViewModel[] }>()
+);
+
+export const loadBacklogTasksFail = createAction(
+  '[Sprints] Load Backlog Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+export const removeTaskFromBacklog = createAction(
+  '[Sprints] Remove Task From Backlog',
+  props<{ taskId: number }>()
+);

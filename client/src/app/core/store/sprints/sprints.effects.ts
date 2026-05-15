@@ -221,6 +221,49 @@ export class SprintsEffects {
     );
   }
 
+  initBacklogView$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.initBacklogView),
+      switchMap(() => [
+        actions.loadBacklogTasks(),
+        actions.loadSprints({ filter: { take: 100 } }),
+      ])
+    );
+  });
+
+  assignBacklogTask$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.assignBacklogTask),
+      switchMap(({ taskId, sprintId }) =>
+        this.sprintsService.addTasks(sprintId, { taskIds: [taskId] }).pipe(
+          unwrapClientReposne(),
+          tap(() => this.snackbar.open('Task added to sprint')),
+          switchMap((sprint) => [
+            actions.loadSprintDetailSuccess({ sprint }),
+            actions.removeTaskFromBacklog({ taskId }),
+          ]),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.updateSprintFail({ error }))
+          )
+        )
+      )
+    );
+  });
+
+  loadBacklogTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.loadBacklogTasks),
+      switchMap(() =>
+        this.sprintsService.backlogTasks().pipe(
+          map((tasks) => actions.loadBacklogTasksSuccess({ tasks })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.loadBacklogTasksFail({ error }))
+          )
+        )
+      )
+    );
+  });
+
   addTasksToSprint$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.addTasksToSprint),

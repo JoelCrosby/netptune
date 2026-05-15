@@ -55,6 +55,7 @@ type StatusFilter = SprintStatus | null;
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
       <app-page-header title="Sprints">
+        <a app-flat-button [routerLink]="['backlog']">Backlog</a>
         @if (canCreate()) {
           <button app-flat-button color="primary" (click)="onOpenCreateDialog()">
             <svg lucidePlus class="h-4 w-4"></svg>

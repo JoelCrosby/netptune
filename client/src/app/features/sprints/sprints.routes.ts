@@ -12,6 +12,14 @@ export const routes: Routes = [
     canActivate: [sprintsReadGuard],
   },
   {
+    path: 'backlog',
+    loadComponent: () =>
+      import('./views/sprint-backlog-view/sprint-backlog-view.component').then(
+        (m) => m.SprintBacklogViewComponent
+      ),
+    canActivate: [sprintsReadGuard],
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./views/sprint-detail-view/sprint-detail-view.component').then(

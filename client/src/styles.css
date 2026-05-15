@@ -38,6 +38,7 @@
   --color-board-group: var(--board-group);
   --color-app-bar: var(--app-bar);
   --color-status-bar: var(--status-bar);
+  --color-muted: var(--muted);
 
   --radius: var(--border-radius);
   --radius-sm: var(--border-radius-small);
@@ -53,6 +54,9 @@
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 0, 0, 0;
   --foreground: rgba(var(--foreground-rgb), 0.87);
+
+  --muted: rgba(var(--foreground-rgb), 0.76);
+
   --seconday-background: rgba(255, 255, 255, 1);
   --dialog-background: rgba(255, 255, 255);
 
@@ -106,6 +110,9 @@
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
   --foreground: rgba(var(--foreground-rgb));
+
+  --muted: rgba(var(--foreground-rgb), 0.68);
+
   --seconday-background: rgba(11, 11, 11, 1);
   --dialog-background: rgba(10, 10, 10, 1);
 
