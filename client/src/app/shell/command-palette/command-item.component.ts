@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { LucideZap } from '@lucide/angular';
 import { Command } from '@core/services/command-registry.service';
 
@@ -9,14 +14,16 @@ import { Command } from '@core/services/command-registry.service';
   template: `
     <button
       type="button"
-      class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground"
+      class="aria-selected:bg-accent aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
       [attr.aria-selected]="selected() || null"
       (click)="activate.emit(command())"
       (mouseenter)="hover.emit()">
       <svg lucideZap class="h-4 w-4 shrink-0 opacity-50"></svg>
       <span class="flex-1 truncate text-left">{{ command().label }}</span>
       @if (command().shortcut) {
-        <span class="ml-auto text-xs tracking-widest text-muted-foreground">{{ command().shortcut }}</span>
+        <span class="text-muted-foreground ml-auto tracking-widest">{{
+          command().shortcut
+        }}</span>
       }
     </button>
   `,

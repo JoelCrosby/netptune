@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { LucideClock } from '@lucide/angular';
 import { RecentItem } from './recent-items.service';
 
@@ -9,7 +14,7 @@ import { RecentItem } from './recent-items.service';
   template: `
     <button
       type="button"
-      class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground"
+      class="aria-selected:bg-accent aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
       [attr.aria-selected]="selected() || null"
       (click)="activate.emit(item())"
       (mouseenter)="hover.emit()">

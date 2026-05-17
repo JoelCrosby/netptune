@@ -59,3 +59,8 @@
   border-radius: 4px;
   z-index: 32;
 }
+
+.cdk-overlay-backdrop, .np-command-palette-backdrop  {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}

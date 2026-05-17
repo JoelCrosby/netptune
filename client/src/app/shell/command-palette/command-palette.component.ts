@@ -17,7 +17,10 @@ import { FormsModule } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { LucideSearch } from '@lucide/angular';
-import { Command, CommandRegistry } from '@core/services/command-registry.service';
+import {
+  Command,
+  CommandRegistry,
+} from '@core/services/command-registry.service';
 import { SearchService } from '@core/services/search.service';
 import { SearchResult } from '@core/models/search-result';
 import { CommandPaletteService } from './command-palette.service';
@@ -44,7 +47,7 @@ type PaletteItem =
   template: `
     <ng-template #dialogTmpl>
       <div
-        class="bg-background text-popover-foreground border-border flex w-full flex-col overflow-hidden rounded-md border shadow-md"
+        class="bg-board-group text-popover-foreground border-border flex w-full flex-col overflow-hidden rounded-md border shadow-md"
         role="dialog"
         aria-modal="true"
         aria-label="Command Palette">
@@ -53,7 +56,7 @@ type PaletteItem =
           <input
             #searchInput
             type="text"
-            class="placeholder:text-muted-foreground flex h-11 w-full bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            class="placeholder:text-muted-foreground flex h-11 w-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50"
             [placeholder]="inputPlaceholder()"
             [ngModel]="queryValue()"
             (ngModelChange)="onQueryChange($event)"
@@ -61,10 +64,14 @@ type PaletteItem =
             spellcheck="false" />
         </div>
 
-        <div class="max-h-75 overflow-x-hidden overflow-y-auto p-1">
+        <div class="max-h-120 overflow-x-hidden overflow-y-auto p-1">
           @if (items().length === 0) {
             <p class="text-muted-foreground py-6 text-center text-sm">
-              {{ queryValue() ? 'No results found.' : 'Type to search or use > for commands.' }}
+              {{
+                queryValue()
+                  ? 'No results found.'
+                  : 'Type to search or use > for commands.'
+              }}
             </p>
           }
 
@@ -86,7 +93,9 @@ type PaletteItem =
 
           @if (commandItems().length > 0 && !searchOnlyMode()) {
             <div class="overflow-hidden p-1">
-              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">Actions</p>
+              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
+                Actions
+              </p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
                 <app-command-item
                   [command]="cmd"
@@ -102,8 +111,14 @@ type PaletteItem =
               <div class="bg-border -mx-1 my-1 h-px"></div>
             }
             <div class="overflow-hidden p-1">
-              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">Results</p>
-              @for (result of searchResultItems(); track result.url; let idx = $index) {
+              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
+                Results
+              </p>
+              @for (
+                result of searchResultItems();
+                track result.url;
+                let idx = $index
+              ) {
                 <app-search-result-item
                   [result]="result"
                   [selected]="selectedIndex() === searchOffset() + idx"
@@ -136,7 +151,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
   commandOnlyMode = computed(() => this.queryValue().startsWith('>'));
   searchOnlyMode = computed(
-    () => this.queryValue().startsWith('#') || this.queryValue().startsWith('@'),
+    () => this.queryValue().startsWith('#') || this.queryValue().startsWith('@')
   );
 
   inputPlaceholder = computed(() => {
@@ -148,10 +163,10 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
   });
 
   recentItems = computed(() =>
-    !this.queryValue() ? this.recentService.getRecent() : [],
+    !this.queryValue() ? this.recentService.getRecent() : []
   );
   showRecentGroup = computed(
-    () => !this.queryValue() && this.recentItems().length > 0,
+    () => !this.queryValue() && this.recentItems().length > 0
   );
 
   commandItems = computed<Command[]>(() => {
@@ -212,7 +227,9 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
           this.queryValue.set('');
           this.selectedIndex.set(0);
           this.search.query.set('');
-          this.overlayRef.overlayElement.querySelector<HTMLInputElement>('input')?.focus();
+          this.overlayRef.overlayElement
+            .querySelector<HTMLInputElement>('input')
+            ?.focus();
         }, 0);
       } else if (this.overlayRef.hasAttached()) {
         this.overlayRef.detach();
