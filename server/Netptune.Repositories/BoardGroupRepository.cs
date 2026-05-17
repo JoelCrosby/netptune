@@ -44,8 +44,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         int boardId,
         string? searchTerm = null,
         int? sprintId = null,
-        CancellationToken cancellationToken = default,
-        int? take = null)
+        CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -54,7 +53,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         var searchQuery = searchTerm is null
             ? null
             : "AND to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase)";
-        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(@$"
                 WITH board_groups_for_board AS (
@@ -89,7 +87,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     WHERE (@sprintId IS NULL OR pt.sprint_id = @sprintId)
                       {searchQuery}
                     ORDER BY bg.sort_order, ptibg.sort_order, pt.id
-                    LIMIT @limit
                 )
                 SELECT b.id
                      , b.name              AS board_name
@@ -139,7 +136,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          LEFT JOIN workspaces w on b.workspace_id = w.id
                          LEFT JOIN projects p on b.project_id = p.id
                 WHERE b.id = @boardId
-            ", new { boardId, searchPhrase, sprintId, limit }, cancellationToken: cancellationToken));
+            ", new { boardId, searchPhrase, sprintId }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
         var meta = results.ReadFirstOrDefault<BoardViewMetaRowMap>();
@@ -248,14 +245,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
             return result;
         });
-    }
-
-    public Task<List<BoardViewGroup>?> GetBoardViewGroups(
-        int boardId,
-        string? searchTerm,
-        CancellationToken cancellationToken)
-    {
-        return GetBoardViewGroups(boardId, searchTerm, null, cancellationToken);
     }
 
     public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)

@@ -16,13 +16,7 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
         int boardId,
         string? searchTerm = null,
         int? sprintId = null,
-        CancellationToken cancellationToken = default,
-        int? take = null);
-
-    Task<List<BoardViewGroup>?> GetBoardViewGroups(
-        int boardId,
-        string? searchTerm,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
