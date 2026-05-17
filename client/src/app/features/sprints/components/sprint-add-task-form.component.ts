@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { addTasksToSprint } from '@core/store/sprints/sprints.actions';
 import {
@@ -69,7 +75,10 @@ export class SprintAddTaskFormComponent {
     if (!sprintId || !this.selectedTaskId) return;
 
     this.store.dispatch(
-      addTasksToSprint({ sprintId, request: { taskIds: [this.selectedTaskId] } })
+      addTasksToSprint({
+        sprintId,
+        request: { taskIds: [this.selectedTaskId] },
+      })
     );
     this.selectedTaskId = undefined;
   }

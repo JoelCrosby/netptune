@@ -19,7 +19,7 @@ export interface BacklogGroup {
   template: `
     <div class="flex flex-col gap-2">
       <div class="flex items-center gap-2">
-        <h2 class="text-sm font-semibold uppercase tracking-wide">
+        <h2 class="text-sm font-semibold tracking-wide uppercase">
           {{ group().label }}
         </h2>
         <span class="bg-muted rounded-full px-2 py-0.5 text-xs font-medium">
@@ -30,9 +30,7 @@ export interface BacklogGroup {
       <div class="bg-board-group p-2">
         <app-card class="min-h-0! p-0!">
           @for (task of group().tasks; track task.id) {
-            <app-sprint-backlog-task-row
-              [task]="task"
-              [sprints]="sprints()" />
+            <app-sprint-backlog-task-row [task]="task" [sprints]="sprints()" />
           } @empty {
             <div class="text-muted p-6 text-center text-sm">
               No {{ group().label | lowercase }} tasks in the backlog.

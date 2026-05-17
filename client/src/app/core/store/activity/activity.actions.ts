@@ -19,12 +19,20 @@ export const loadMoreActivity = createAction(
 
 export const loadActivitySuccess = createAction(
   '[Activity] Load Activity Success',
-  props<{ activities: ActivityViewModel[]; nextCursor?: string; pageSize: number }>()
+  props<{
+    activities: ActivityViewModel[];
+    nextCursor?: string;
+    pageSize: number;
+  }>()
 );
 
 export const loadMoreActivitySuccess = createAction(
   '[Activity] Load More Activity Success',
-  props<{ activities: ActivityViewModel[]; nextCursor?: string; pageSize: number }>()
+  props<{
+    activities: ActivityViewModel[];
+    nextCursor?: string;
+    pageSize: number;
+  }>()
 );
 
 export const loadActivityFail = createAction(

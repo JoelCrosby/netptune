@@ -187,7 +187,11 @@ export class SprintsEffects {
     return this.actions$.pipe(
       ofType(actions.completeSprintWithReassignment),
       switchMap(({ sprintId, incompleteTaskIds, targetSprintId }) =>
-        this.reassignIncompleteTasks(sprintId, incompleteTaskIds, targetSprintId).pipe(
+        this.reassignIncompleteTasks(
+          sprintId,
+          incompleteTaskIds,
+          targetSprintId
+        ).pipe(
           switchMap(() =>
             this.sprintsService.complete(sprintId).pipe(unwrapClientReposne())
           ),
@@ -216,7 +220,9 @@ export class SprintsEffects {
 
     return forkJoin(
       taskIds.map((taskId) =>
-        this.sprintsService.removeTask(sprintId, taskId).pipe(unwrapClientReposne())
+        this.sprintsService
+          .removeTask(sprintId, taskId)
+          .pipe(unwrapClientReposne())
       )
     );
   }

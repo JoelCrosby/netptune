@@ -53,7 +53,9 @@ export const changePasswordFail = createAction(
 
 // Load Login Providers
 
-export const loadLoginProviders = createAction('[Profile] Load Login Providers');
+export const loadLoginProviders = createAction(
+  '[Profile] Load Login Providers'
+);
 
 export const loadLoginProvidersSuccess = createAction(
   '[Profile] Load Login Providers Success',

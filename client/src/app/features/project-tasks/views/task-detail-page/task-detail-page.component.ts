@@ -30,7 +30,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-task-detail-page',
   template: `
     @if (task(); as task) {
-      <div class="mx-auto max-w-4xl py-8 px-4">
+      <div class="mx-auto max-w-4xl px-4 py-8">
         <div class="mb-1 flex flex-row items-center justify-end gap-4">
           @if (task.sprintName) {
             <app-sprint-badge
@@ -51,7 +51,7 @@ import { ActivatedRoute } from '@angular/router';
           <app-task-detail-comments />
           <app-task-detail-description />
         </div>
-        <div class="flex justify-end mt-7">
+        <div class="mt-7 flex justify-end">
           <app-task-dates [task]="task" />
         </div>
       </div>

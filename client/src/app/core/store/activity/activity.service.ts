@@ -16,28 +16,25 @@ import { map } from 'rxjs/operators';
 export class ActivityService {
   private http = inject(HttpClient);
 
-  get(
-    entityType: EntityType,
-    entityId: number,
-    query?: CursorQuery
-  ) {
+  get(entityType: EntityType, entityId: number, query?: CursorQuery) {
     const params = appendCursorParams(new HttpParams(), {
       take: query?.take ?? DEFAULT_PAGE_SIZE,
       cursor: query?.cursor,
     });
 
     return this.http
-      .get<ClientResponse<ActivityViewModel[]>>(
-        `api/activity/${entityType}/${entityId}`,
-        { params, observe: 'response' }
-      )
+      .get<
+        ClientResponse<ActivityViewModel[]>
+      >(`api/activity/${entityType}/${entityId}`, { params, observe: 'response' })
       .pipe(
-        map((response): CursorPage<ActivityViewModel> => ({
-          ...cursorPageFromHeaders(
-            response.body?.payload ?? [],
-            response.headers
-          ),
-        }))
+        map(
+          (response): CursorPage<ActivityViewModel> => ({
+            ...cursorPageFromHeaders(
+              response.body?.payload ?? [],
+              response.headers
+            ),
+          })
+        )
       );
   }
 }

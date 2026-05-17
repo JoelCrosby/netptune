@@ -141,7 +141,11 @@ export const removeTaskFromSprint = createAction(
 
 export const completeSprintWithReassignment = createAction(
   '[Sprints] Complete Sprint With Reassignment',
-  props<{ sprintId: number; incompleteTaskIds: number[]; targetSprintId?: number }>()
+  props<{
+    sprintId: number;
+    incompleteTaskIds: number[];
+    targetSprintId?: number;
+  }>()
 );
 
 export const initBacklogView = createAction('[Sprints] Init Backlog View');

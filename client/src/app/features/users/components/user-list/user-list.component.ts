@@ -8,7 +8,11 @@ import {
   resendInvite,
 } from '@core/store/users/users.actions';
 import { selectAllUsers } from '@core/store/users/users.selectors';
-import { LucideEllipsisVertical, LucideTrash2, LucideSend } from '@lucide/angular';
+import {
+  LucideEllipsisVertical,
+  LucideTrash2,
+  LucideSend,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ListComponent } from '@static/components/list/list.component';
 import { UserListItemComponent } from '../user-list-item/user-list-item.component';

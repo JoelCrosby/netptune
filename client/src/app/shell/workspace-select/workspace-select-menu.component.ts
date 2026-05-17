@@ -31,7 +31,7 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
             autocomplete="off" />
         }
         <div
-          class="custom-scroll max-h-54 overflow-y-auto py-[.4rem] pl-[.4rem] [scrollbar-gutter:stable]">
+          class="custom-scroll max-h-54 [scrollbar-gutter:stable] overflow-y-auto py-[.4rem] pl-[.4rem]">
           @for (option of filteredOptions(); track option.id) {
             <div
               class="hover:bg-hover my-[.2rem] flex h-9.5 cursor-pointer items-center rounded-sm px-2 font-[inherit] text-sm"

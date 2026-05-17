@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { CardComponent } from '@static/components/card/card.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
@@ -20,7 +25,9 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
         </app-card>
         <app-card class="min-h-0! p-4!">
           <div class="text-muted mb-2 text-sm">In Progress</div>
-          <div class="text-2xl font-semibold">{{ sprint().activeTaskCount }}</div>
+          <div class="text-2xl font-semibold">
+            {{ sprint().activeTaskCount }}
+          </div>
         </app-card>
         <app-card class="min-h-0! p-4!">
           <div class="text-muted mb-2 text-sm">Complete</div>

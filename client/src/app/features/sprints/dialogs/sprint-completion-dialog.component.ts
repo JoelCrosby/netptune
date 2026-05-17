@@ -43,7 +43,9 @@ type MoveMode = 'backlog' | 'sprint';
     <div class="flex flex-col gap-4">
       @if (incompleteTasks().length > 0) {
         <p class="text-muted text-sm">
-          <strong class="text-foreground">{{ incompleteTasks().length }}</strong>
+          <strong class="text-foreground">{{
+            incompleteTasks().length
+          }}</strong>
           incomplete {{ incompleteTasks().length === 1 ? 'task' : 'tasks' }} in
           this sprint.
         </p>
@@ -206,7 +208,7 @@ export class SprintCompletionDialogComponent {
   onConfirm() {
     if (!this.sprint.id) return;
 
-    const incompleteTaskIds = this.incompleteTasks().map((t) => t.id!);
+    const incompleteTaskIds = this.incompleteTasks().map((t) => t.id);
     const targetSprintId =
       this.moveMode() === 'sprint' && incompleteTaskIds.length > 0
         ? (this.targetSprintId() ?? undefined)

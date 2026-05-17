@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
@@ -35,7 +41,9 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
           {{ statusLabel(task().status) }}
         </span>
         @if (task().priority !== null && task().priority !== undefined) {
-          <span class="text-xs font-medium" [class]="priorityClass(task().priority!)">
+          <span
+            class="text-xs font-medium"
+            [class]="priorityClass(task().priority!)">
             {{ priorityLabel(task().priority!) }}
           </span>
         }

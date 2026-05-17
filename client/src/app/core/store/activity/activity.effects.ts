@@ -3,7 +3,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { asyncScheduler, of } from 'rxjs';
-import { catchError, debounceTime, filter, map, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import * as actions from './activity.actions';
 import { ActivityService } from './activity.service';
 import { HttpErrorResponse } from '@angular/common/http';

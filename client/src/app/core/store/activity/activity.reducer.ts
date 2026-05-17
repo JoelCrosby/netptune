@@ -10,7 +10,11 @@ const reducer = createReducer(
 
   on(
     actions.loadActivity,
-    (state): ActivityState => ({ ...state, loading: true, nextCursor: undefined })
+    (state): ActivityState => ({
+      ...state,
+      loading: true,
+      nextCursor: undefined,
+    })
   ),
   on(
     actions.loadMoreActivity,

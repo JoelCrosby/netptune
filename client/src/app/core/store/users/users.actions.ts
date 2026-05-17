@@ -72,7 +72,9 @@ export const resendInvite = createAction(
   props<{ email: string }>()
 );
 
-export const resendInviteSuccess = createAction('[Users] Resend Invite Success');
+export const resendInviteSuccess = createAction(
+  '[Users] Resend Invite Success'
+);
 
 export const resendInviteFail = createAction(
   '[Users] Resend Invite Fail',

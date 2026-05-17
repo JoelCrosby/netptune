@@ -57,7 +57,10 @@ type StatusFilter = SprintStatus | null;
       <app-page-header title="Sprints">
         <a app-flat-button [routerLink]="['backlog']">Backlog</a>
         @if (canCreate()) {
-          <button app-flat-button color="primary" (click)="onOpenCreateDialog()">
+          <button
+            app-flat-button
+            color="primary"
+            (click)="onOpenCreateDialog()">
             <svg lucidePlus class="h-4 w-4"></svg>
             New Sprint
           </button>
@@ -134,7 +137,10 @@ type StatusFilter = SprintStatus | null;
                       {{ sprint.taskCount }}
                       {{ sprint.taskCount === 1 ? 'task' : 'tasks' }}
                     </span>
-                    <a app-flat-button color="primary" [routerLink]="[sprint.id]">
+                    <a
+                      app-flat-button
+                      color="primary"
+                      [routerLink]="[sprint.id]">
                       Open
                     </a>
                   </div>
@@ -174,7 +180,9 @@ export class SprintsViewComponent {
   readonly filteredSprints = computed(() => {
     const status = this.selectedStatus();
     const sprints = this.sprints();
-    return status === null ? sprints : sprints.filter((s) => s.status === status);
+    return status === null
+      ? sprints
+      : sprints.filter((s) => s.status === status);
   });
 
   readonly statusTabs = computed((): TabItem[] => {
@@ -193,7 +201,8 @@ export class SprintsViewComponent {
       {
         label: 'Completed',
         value: SprintStatus.completed,
-        badge: sprints.filter((s) => s.status === SprintStatus.completed).length,
+        badge: sprints.filter((s) => s.status === SprintStatus.completed)
+          .length,
       },
       {
         label: 'All',
@@ -238,15 +247,24 @@ export class SprintsViewComponent {
     const diff = Math.ceil((end.getTime() - today.getTime()) / 86_400_000);
 
     if (diff < 0) {
-      return { label: `${Math.abs(diff)}d overdue`, classes: 'bg-red-100 text-red-700' };
+      return {
+        label: `${Math.abs(diff)}d overdue`,
+        classes: 'bg-red-100 text-red-700',
+      };
     }
     if (diff === 0) {
       return { label: 'Due today', classes: 'bg-orange-100 text-orange-700' };
     }
     if (diff <= 3) {
-      return { label: `${diff}d left`, classes: 'bg-orange-100 text-orange-700' };
+      return {
+        label: `${diff}d left`,
+        classes: 'bg-orange-100 text-orange-700',
+      };
     }
-    return { label: `${diff}d left`, classes: 'bg-neutral-100 text-neutral-600' };
+    return {
+      label: `${diff}d left`,
+      classes: 'bg-neutral-100 text-neutral-600',
+    };
   }
 
   onOpenCreateDialog() {
@@ -254,7 +272,10 @@ export class SprintsViewComponent {
   }
 
   onOpenEditDialog(sprint: SprintViewModel) {
-    this.dialog.open(EditSprintDialogComponent, { width: '520px', data: sprint });
+    this.dialog.open(EditSprintDialogComponent, {
+      width: '520px',
+      data: sprint,
+    });
   }
 
   onDelete(sprint: SprintViewModel) {

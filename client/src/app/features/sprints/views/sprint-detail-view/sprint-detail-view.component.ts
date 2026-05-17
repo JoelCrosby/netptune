@@ -1,9 +1,5 @@
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -191,7 +187,9 @@ export class SprintDetailViewComponent {
     }
   }
 
-  daysChip(sprint: SprintDetailViewModel): { label: string; classes: string } | null {
+  daysChip(
+    sprint: SprintDetailViewModel
+  ): { label: string; classes: string } | null {
     if (sprint.status !== SprintStatus.active) return null;
 
     const today = new Date();
@@ -201,19 +199,31 @@ export class SprintDetailViewComponent {
     const diff = Math.ceil((end.getTime() - today.getTime()) / 86_400_000);
 
     if (diff < 0) {
-      return { label: `${Math.abs(diff)}d overdue`, classes: 'bg-red-100 text-red-700' };
+      return {
+        label: `${Math.abs(diff)}d overdue`,
+        classes: 'bg-red-100 text-red-700',
+      };
     }
     if (diff === 0) {
       return { label: 'Due today', classes: 'bg-orange-100 text-orange-700' };
     }
     if (diff <= 3) {
-      return { label: `${diff}d left`, classes: 'bg-orange-100 text-orange-700' };
+      return {
+        label: `${diff}d left`,
+        classes: 'bg-orange-100 text-orange-700',
+      };
     }
-    return { label: `${diff}d left`, classes: 'bg-neutral-100 text-neutral-600' };
+    return {
+      label: `${diff}d left`,
+      classes: 'bg-neutral-100 text-neutral-600',
+    };
   }
 
   onEdit(sprint: SprintDetailViewModel) {
-    this.dialog.open(EditSprintDialogComponent, { width: '520px', data: sprint });
+    this.dialog.open(EditSprintDialogComponent, {
+      width: '520px',
+      data: sprint,
+    });
   }
 
   onStart(sprintId?: number) {
