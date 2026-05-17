@@ -1,4 +1,3 @@
-import { DIALOG_DATA } from '@angular/cdk/dialog';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,28 +11,26 @@ import {
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { TaskDetailCommentsComponent } from './task-detail-comments.component';
-import { TaskDetailDescriptionComponent } from './task-detail-description.component';
-import { TaskDetailHeaderComponent } from './task-detail-header.component';
-import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
-import { TaskDetailTagsComponent } from './task-detail-tags.component';
-import { TaskDetailActionsComponent } from './task-detail-actions.component';
-import { TaskDetailService } from './task-detail.service';
+import { TaskDetailCommentsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-comments.component';
+import { TaskDetailDescriptionComponent } from '@entry/dialogs/task-detail-dialog/task-detail-description.component';
+import { TaskDetailHeaderComponent } from '@entry/dialogs/task-detail-dialog/task-detail-header.component';
+import { TaskDetailPropertiesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-properties.component';
+import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-tags.component';
+import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
+import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-task-detail-dialog',
+  selector: 'app-task-detail-page',
   template: `
     @if (task(); as task) {
-      <div>
+      <div class="mx-auto max-w-4xl py-8 px-4">
         <div class="mb-1 flex flex-row items-center justify-end gap-4">
           @if (task.sprintName) {
             <app-sprint-badge
@@ -46,27 +43,20 @@ import { TaskDetailService } from './task-detail.service';
           <app-task-scope-id [id]="task.systemId" />
           <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
         </div>
-
-        <app-task-detail-header />
-
-        <div class="flex flex-row gap-12 px-6">
-          <div class="flex w-64 grow flex-col">
-            <app-task-detail-tags />
-            <app-task-detail-description />
-            <app-task-detail-comments />
-          </div>
-
-          <div class="bg-card/40 mt-4 flex flex-col gap-6 rounded px-6 pb-6">
-            <app-task-detail-properties />
-            <app-task-detail-actions />
-          </div>
+        <div class="flex flex-col gap-6 px-12">
+          <app-task-detail-header />
+          <app-task-detail-properties />
+          <app-task-detail-actions />
+          <app-task-detail-tags />
+          <app-task-detail-comments />
+          <app-task-detail-description />
+        </div>
+        <div class="flex justify-end mt-7">
+          <app-task-dates [task]="task" />
         </div>
       </div>
-      <div app-dialog-actions align="start">
-        <app-task-dates [task]="task" />
-      </div>
     } @else {
-      <div class="flex h-243.5 flex-col items-center justify-center">
+      <div class="flex h-full flex-col items-center justify-center">
         <app-spinner diameter="64" />
       </div>
     }
@@ -75,7 +65,6 @@ import { TaskDetailService } from './task-detail.service';
   imports: [
     LucideCheck,
     ActivityMenuComponent,
-    DialogActionsDirective,
     SpinnerComponent,
     SprintBadgeComponent,
     TaskDates,
@@ -89,19 +78,15 @@ import { TaskDetailService } from './task-detail.service';
   ],
   providers: [TaskDetailService],
 })
-export class TaskDetailDialogComponent implements OnDestroy {
-  data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
+export class TaskDetailPageComponent implements OnDestroy {
   store = inject(Store);
-
-  public static width = '972px';
+  route = inject(ActivatedRoute);
 
   entityType = EntityType.task;
-
   task = this.store.selectSignal(selectDetailTask);
-  hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
 
   constructor() {
-    const systemId: string = this.data.systemId;
+    const systemId: string = this.route.snapshot.params['systemId'];
     this.store.dispatch(loadTaskDetails({ systemId }));
   }
 

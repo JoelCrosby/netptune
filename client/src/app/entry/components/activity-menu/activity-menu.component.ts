@@ -24,13 +24,13 @@ import { LucideActivity } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
-import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-activity-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    StrokedButtonComponent,
+    IconButtonComponent,
     TooltipDirective,
     LucideActivity,
     AvatarComponent,
@@ -38,7 +38,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     ActivityPipe,
   ],
   template: `<button
-      app-stroked-button
+      app-icon-button
       appTooltip="Show activity"
       (click)="toggleMenu()">
       <svg lucideActivity aria-hidden="false" aria-label="Show activity"></svg>
@@ -81,7 +81,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 
           @if (canLoadMore()) {
             <div class="flex justify-center px-3 pt-3">
-              <button app-stroked-button (click)="loadMore()">
+              <button app-ghost-button (click)="loadMore()">
                 <span>Load more</span>
               </button>
             </div>
