@@ -23,7 +23,8 @@
   --color-warn: var(--warn);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --color-secondary-background: var(--seconday-background);
+  --color-secondary-background: var(--secondary-background);
+  --color-secondary-background-hover: var(--secondary-background-hover);
   --color-dialog-background: var(--dialog-background);
   --color-border: var(--border);
   --color-hover: var(--hover);
@@ -58,6 +59,8 @@
   --muted: rgba(var(--foreground-rgb), 0.76);
 
   --seconday-background: rgba(255, 255, 255, 1);
+  --secondary-background-hover: rgba(248, 248, 248, 1);
+
   --dialog-background: rgba(255, 255, 255);
 
   --scrollbar-foreground: rgba(0, 0, 0, .2);
@@ -109,12 +112,14 @@
   --background-rgb: 0, 0, 0;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 255, 255, 255;
-  --foreground: rgba(var(--foreground-rgb));
+  --foreground: rgba(var(--foreground-rgb), 0.8);
 
   --muted: rgba(var(--foreground-rgb), 0.68);
 
-  --seconday-background: rgba(11, 11, 11, 1);
-  --dialog-background: rgba(10, 10, 10, 1);
+  --secondary-background: rgba(12, 12, 12, 1);
+  --secondary-background-hover: rgba(18, 18, 18, 1);
+
+  --dialog-background: rgba(2, 2, 2, 1);
 
   --scrollbar-foreground: rgba(255, 255, 255, .2);
 

@@ -34,20 +34,23 @@ import { TaskDetailService } from './task-detail.service';
   template: `
     @if (task(); as task) {
       <div>
-        <div class="mb-1 flex flex-row items-center justify-end gap-4">
-          @if (task.sprintName) {
-            <app-sprint-badge
-              [name]="task.sprintName"
-              [status]="task.sprintStatus" />
-          }
-          @if (task.status === 1) {
-            <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
-          }
-          <app-task-scope-id [id]="task.systemId" />
-          <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
-        </div>
+        <div
+          class="mb-1 flex flex-row items-center justify-between gap-4 pr-6 pl-2">
+          <app-task-detail-header />
 
-        <app-task-detail-header />
+          <div class="flex items-center gap-4">
+            @if (task.sprintName) {
+              <app-sprint-badge
+                [name]="task.sprintName"
+                [status]="task.sprintStatus" />
+            }
+            @if (task.status === 1) {
+              <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
+            }
+            <app-task-scope-id [id]="task.systemId" />
+            <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
+          </div>
+        </div>
 
         <div class="flex flex-row gap-12 px-6">
           <div class="flex w-64 grow flex-col">

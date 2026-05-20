@@ -54,7 +54,7 @@
 
 .form-select-dropdown {
   border: 1px solid var(--border);
-  background-color: var(--seconday-background);
+  background-color: var(--secondary-background);
   cursor: pointer;
   display: flex;
   flex-direction: column;

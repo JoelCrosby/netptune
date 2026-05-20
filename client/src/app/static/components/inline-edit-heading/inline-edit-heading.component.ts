@@ -17,7 +17,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
     <div
       #editable
       tabindex="0"
-      class="font-overpass w-full rounded px-4 py-4 text-3xl transition-colors outline-none"
+      class="font-overpass w-full rounded px-4 py-4 text-2xl transition-colors outline-none"
       [attr.contenteditable]="isEditing() ? 'plaintext-only' : null"
       [class.cursor-text]="!disabled() && !isReadonly()"
       [class.hover:bg-black/5]="!disabled() && !isReadonly()"

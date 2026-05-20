@@ -43,7 +43,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       <button
         #profileTrigger
         type="button"
-        class="focus-visible:ring-primary focus-visible:ring-offset-background inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="focus-visible:ring-primary focus-visible:ring-offset-background block h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         aria-haspopup="menu"
         [attr.aria-label]="profileMenuLabel()"
         (click)="profileMenu.toggle(profileTrigger)">

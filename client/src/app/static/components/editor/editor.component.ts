@@ -33,7 +33,10 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-editor',
-  template: '<div class="editor rounded mb-4" #editorJs></div>',
+  template: `<div class="editor mb-4 rounded" #editorJs></div>`,
+  host: {
+    class: 'bg-secondary-background',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [

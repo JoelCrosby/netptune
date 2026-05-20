@@ -16,7 +16,7 @@
   transition: background-color .24s ease-out, border-color .14s ease-out;
   width: inherit;
   max-width: inherit;
-  background-color: var(--seconday-background);
+  background-color: var(--secondary-background);
 }
 
 .nept-form-control .form-control-content {

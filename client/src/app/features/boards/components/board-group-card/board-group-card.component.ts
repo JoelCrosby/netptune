@@ -84,14 +84,16 @@ import { SprintBadgeComponent } from '@static/components/sprint-badge.component'
           </span>
         }
 
-        @for (assignee of task().assignees; track assignee.id) {
-          <app-avatar
-            size="sm"
-            class="task-card-user-chip"
-            [name]="assignee.displayName"
-            [imageUrl]="assignee.pictureUrl">
-          </app-avatar>
-        }
+        <div class="flex items-center gap-1">
+          @for (assignee of task().assignees; track assignee.id) {
+            <app-avatar
+              size="sm"
+              class="task-card-user-chip"
+              [name]="assignee.displayName"
+              [imageUrl]="assignee.pictureUrl">
+            </app-avatar>
+          }
+        </div>
       </div>
     </div>
   </app-card> `,

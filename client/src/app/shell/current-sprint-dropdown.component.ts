@@ -21,6 +21,7 @@ import {
 } from '@core/store/sprints/sprints.selectors';
 import {
   LucideCalendarDays,
+  LucideCalendarFold,
   LucideCheck,
   LucideChevronDown,
   LucideFilterX,
@@ -42,6 +43,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     LucideCheck,
     LucideChevronDown,
     LucideFilterX,
+    LucideCalendarFold,
   ],
   template: `
     @if (canReadSprints() && currentSprintsLoaded()) {
@@ -111,10 +113,11 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       } @else {
         <a
           app-button-link
-          variant="outlined"
-          color="neutral"
-          class="mr-4 h-7 min-h-6"
+          variant="filled"
+          color="contrast"
+          class="tems-center mr-2 flex h-4 justify-center"
           [routerLink]="['./sprints']">
+          <svg lucideCalendarFold class="w-4"></svg>
           Start Sprint
         </a>
       }

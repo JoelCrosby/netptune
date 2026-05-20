@@ -1,3 +1,5 @@
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,39 +11,37 @@ import {
   input,
   viewChild,
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EntityType } from '@core/models/entity-type';
 import * as ActivityActions from '@core/store/activity/activity.actions';
 import {
   selectActivities,
-  selectActivityCanLoadMore,
   selectActivitiesLoaded,
+  selectActivityCanLoadMore,
 } from '@core/store/activity/activity.selectors';
-import { LucideActivity } from '@lucide/angular';
+import { LucideLogs } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
-import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-activity-menu',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    IconButtonComponent,
+    FlatButtonComponent,
     TooltipDirective,
-    LucideActivity,
+    LucideLogs,
     AvatarComponent,
     SpinnerComponent,
     ActivityPipe,
   ],
   template: `<button
-      app-icon-button
+      app-flat-button
       appTooltip="Show activity"
       (click)="toggleMenu()">
-      <svg lucideActivity aria-hidden="false" aria-label="Show activity"></svg>
+      <svg lucideLogs aria-hidden="false" aria-label="Show activity"></svg>
     </button>
 
     <ng-template #menuTemplate>

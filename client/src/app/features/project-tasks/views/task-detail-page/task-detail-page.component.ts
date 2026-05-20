@@ -31,7 +31,8 @@ import { ActivatedRoute } from '@angular/router';
   template: `
     @if (task(); as task) {
       <div class="mx-auto max-w-4xl px-4 py-8">
-        <div class="mb-1 flex flex-row items-center justify-end gap-4">
+        <div
+          class="mb-1 flex flex-row items-center justify-end gap-4 pr-6 pl-2">
           @if (task.sprintName) {
             <app-sprint-badge
               [name]="task.sprintName"

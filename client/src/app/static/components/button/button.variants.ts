@@ -2,7 +2,7 @@ import { cva, cx, type CxOptions } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
 export type ButtonVariant = 'text' | 'filled' | 'outlined';
-export type ButtonColor = 'primary' | 'warn' | 'neutral';
+export type ButtonColor = 'primary' | 'warn' | 'neutral' | 'contrast';
 export type ButtonColorInput = ButtonColor | '';
 export type FlatButtonColor = ButtonColor | 'ghost';
 export type IconButtonColor = ButtonColor | 'default';
@@ -38,6 +38,7 @@ export const buttonHostVariants = cva(
         primary: '',
         warn: '',
         neutral: '',
+        contrast: '',
       },
     },
     compoundVariants: [
@@ -132,6 +133,8 @@ export const buttonLinkVariants = cva(
         primary: 'focus-visible:ring-primary',
         warn: 'focus-visible:ring-warn',
         neutral: 'focus-visible:ring-foreground',
+        contrast:
+          'bg-foreground hover:bg-foreground/90 text-background focus-visible:ring-foreground',
       },
     },
     compoundVariants: [
@@ -200,6 +203,8 @@ export const flatButtonVariants = cva(
           'bg-foreground/10 text-foreground hover:bg-foreground/15 focus-visible:ring-foreground',
         ghost:
           'bg-transparent text-foreground hover:bg-foreground/10 active:bg-foreground/20 focus-visible:ring-foreground',
+        contrast:
+          'text-background bg-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
       },
     },
     defaultVariants: {
@@ -217,6 +222,8 @@ export const strokedButtonVariants = cva(
         warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
         neutral:
           'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+        contrast:
+          'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
       },
     },
     defaultVariants: {
@@ -233,6 +240,8 @@ export const iconButtonVariants = cva(
         primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
         warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
         neutral:
+          'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+        contrast:
           'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
       },
     },

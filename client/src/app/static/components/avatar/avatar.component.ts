@@ -5,43 +5,55 @@ import {
   input,
 } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { AvatarPipe } from '@static/pipes/avatar.pipe';
 
-export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+const avatarVariants = cva(
+  'font-avatar flex flex-col items-center justify-center overflow-hidden rounded-full font-medium tracking-[0.8px] whitespace-nowrap select-none',
+  {
+    variants: {
+      size: {
+        sm: 'h-6 max-h-6 w-6 max-w-6 text-xs',
+        md: 'h-8 max-h-8 w-8 max-w-8 text-xs',
+        lg: 'h-12 max-h-12 w-12 max-w-12 text-xs',
+        xl: 'h-24 max-h-24 w-24 max-w-24 text-xl font-bold',
+      },
+    },
+    defaultVariants: {
+      size: 'sm',
+    },
+  }
+);
+
+export type AvatarSize = NonNullable<
+  VariantProps<typeof avatarVariants>['size']
+>;
 
 @Component({
   selector: 'app-avatar',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, AvatarPipe],
   template: `
-    @if (pixelSize(); as pixelSize) {
-      <div
-        class="font-avatar inline-flex flex-col items-center justify-center overflow-hidden rounded-full text-xs font-medium tracking-[0.8px] whitespace-nowrap select-none"
-        [style.height]="pixelSize"
-        [style.max-height]="pixelSize"
-        [style.width]="pixelSize"
-        [style.max-width]="pixelSize"
-        [style.background-color]="imageUrl() ? null : backgroundColor"
-        [style.color]="color"
-        [class.avatar-border]="border()"
-        [class.border]="border()"
-        [class.border-2]="border()"
-        [class.border-forground]="border()"
-        [appTooltip]="tooltip() && name() ? name() : ''"
-        [class.text-xl!]="useLargeText()"
-        [class.font-bold!]="useLargeText()">
-        @if (imageUrl()) {
-          <img
-            class="h-full w-full object-cover"
-            [src]="imageUrl()"
-            [alt]="name()" />
-        } @else {
-          {{ name() | avatar }}
-        }
-      </div>
-    }
+    <div
+      [class]="className()"
+      [style.background-color]="imageUrl() ? null : backgroundColor"
+      [style.color]="color"
+      [class.avatar-border]="border()"
+      [class.border]="border()"
+      [class.border-2]="border()"
+      [class.border-forground]="border()"
+      [appTooltip]="tooltip() && name() ? name() : ''">
+      @if (imageUrl()) {
+        <img
+          class="h-full w-full object-cover"
+          [src]="imageUrl()"
+          [alt]="name()" />
+      } @else {
+        {{ name() | avatar }}
+      }
+    </div>
   `,
 })
 export class AvatarComponent {
@@ -54,19 +66,5 @@ export class AvatarComponent {
   backgroundColor = avatarColors[0];
   color = '#fff';
 
-  useLargeText = computed(() => Number(this.size()) >= 40);
-  pixelSize = computed(() => {
-    switch (this.size()) {
-      case 'sm':
-        return '24px';
-      case 'md':
-        return '32px';
-      case 'lg':
-        return '48px';
-      case 'xl':
-        return '96px';
-      default:
-        return '24px';
-    }
-  });
+  className = computed(() => avatarVariants({ size: this.size() }));
 }

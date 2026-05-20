@@ -24,9 +24,9 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
         <app-page-header-back-link />
       </div>
 
-      <div class="ml-auto flex items-center justify-end gap-2 py-2">
-        <app-command-palette-button />
+      <div class="ml-auto flex items-center justify-end gap-3 py-2">
         <app-current-sprint-dropdown />
+        <app-command-palette-button />
         <app-notification-bell />
         <app-profile-menu />
       </div>
