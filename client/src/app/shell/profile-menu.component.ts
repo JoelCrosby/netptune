@@ -11,7 +11,8 @@ import {
 } from '@app/core/store/auth/auth.selectors';
 import { logout } from '@core/store/auth/auth.actions';
 import { netptunePermissions } from '@core/auth/permissions';
-import { changeTheme } from '@core/store/settings/settings.actions';
+import { APPEARANCE_THEME } from '@core/models/user-preferences';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   LucideLogOut,
@@ -110,6 +111,7 @@ export class ProfileMenuComponent {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly preferences = inject(UserPreferencesService);
 
   readonly user = this.store.selectSignal(selectCurrentUser);
   readonly effectiveTheme = this.store.selectSignal(selectEffectiveTheme);
@@ -140,9 +142,13 @@ export class ProfileMenuComponent {
 
   toggleTheme(menu: DropdownMenuComponent) {
     menu.close();
-    this.store.dispatch(
-      changeTheme({ theme: this.isDarkTheme() ? 'light' : 'dark' })
-    );
+    this.preferences
+      .updateValue(
+        APPEARANCE_THEME,
+        'global',
+        this.isDarkTheme() ? 'light' : 'dark'
+      )
+      .subscribe();
   }
 
   logOut(menu: DropdownMenuComponent) {

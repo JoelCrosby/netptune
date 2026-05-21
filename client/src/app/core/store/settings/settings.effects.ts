@@ -1,8 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { selectSettingsFeature } from '@core/core.state';
-import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { merge, of } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
@@ -19,20 +16,6 @@ export const SETTINGS_KEY = 'SETTINGS';
 export class SettingsEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private store = inject(Store);
-  private localStorageService = inject(LocalStorageService);
-
-  persistSettings$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(actions.changeTheme),
-        concatLatestFrom(() => this.store.select(selectSettingsFeature)),
-        tap(([_, settings]) =>
-          this.localStorageService.setItem(SETTINGS_KEY, settings)
-        )
-      );
-    },
-    { dispatch: false }
-  );
 
   updateTheme$ = createEffect(
     () => {

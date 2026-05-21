@@ -5,12 +5,12 @@ import {
   HostListener,
   OnDestroy,
   TemplateRef,
-  ViewChild,
   ViewContainerRef,
   computed,
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -133,7 +133,8 @@ type PaletteItem =
   `,
 })
 export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('dialogTmpl') private dialogTmpl!: TemplateRef<unknown>;
+  private readonly dialogTmpl =
+    viewChild.required<TemplateRef<unknown>>('dialogTmpl');
 
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
@@ -163,7 +164,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
   });
 
   recentItems = computed(() =>
-    !this.queryValue() ? this.recentService.getRecent() : []
+    !this.queryValue() ? this.recentService.items() : []
   );
   showRecentGroup = computed(
     () => !this.queryValue() && this.recentItems().length > 0
@@ -220,6 +221,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
     effect(() => {
       if (this.palette.isOpen()) {
+        this.recentService.ensureLoaded();
         if (this.portal && !this.overlayRef.hasAttached()) {
           this.overlayRef.attach(this.portal);
         }
@@ -238,7 +240,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.dialogTmpl, this.vcr);
+    this.portal = new TemplatePortal(this.dialogTmpl(), this.vcr);
   }
 
   ngOnDestroy() {
@@ -313,6 +315,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
       title: result.title,
       url: result.url,
       type: result.type,
+      entityId: result.id.toString(),
     });
     void this.router.navigateByUrl(result.url);
   }

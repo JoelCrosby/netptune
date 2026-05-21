@@ -10,6 +10,7 @@ import { ShellService } from './shell.service';
 import { ShellNavbarComponent } from './shell-navbar.component';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,8 +55,13 @@ export class ShellComponent {
 
   shell = inject(ShellService);
   readonly globalCommands = inject(GlobalCommandsService);
+  readonly preferences = inject(UserPreferencesService);
   authenticated = this.store.selectSignal(selectIsAuthenticated);
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
+
+  constructor() {
+    this.preferences.load();
+  }
 
   onSidenavClosedStart() {
     this.store.dispatch(toggleSideMenu());
