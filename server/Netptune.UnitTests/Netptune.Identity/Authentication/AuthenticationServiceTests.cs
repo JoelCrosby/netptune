@@ -19,6 +19,7 @@ using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
+using Netptune.Core.Models.Messaging;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -665,7 +666,7 @@ public class AuthenticationServiceTests
 
         await Service.Register(request);
 
-        await Email.Received(1).Send(Arg.Any<Core.Models.Messaging.SendEmailModel>());
+        await Email.Received(1).Send(Arg.Any<SendEmailModel>());
     }
 
     // ConfirmEmail
@@ -748,7 +749,7 @@ public class AuthenticationServiceTests
 
         await Service.RequestPasswordReset(request);
 
-        await Email.Received(1).Send(Arg.Any<Core.Models.Messaging.SendEmailModel>());
+        await Email.Received(1).Send(Arg.Any<SendEmailModel>());
     }
 
     [Fact]
@@ -772,7 +773,7 @@ public class AuthenticationServiceTests
 
         await Service.RequestPasswordReset(request);
 
-        await Email.DidNotReceive().Send(Arg.Any<Core.Models.Messaging.SendEmailModel>());
+        await Email.DidNotReceive().Send(Arg.Any<SendEmailModel>());
     }
 
     // ResetPassword
