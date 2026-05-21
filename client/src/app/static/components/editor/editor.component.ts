@@ -78,11 +78,27 @@ export class EditorComponent
     this.editor?.destroy?.();
   }
 
-  writeValue(obj: string) {
-    const parsed = obj ? JSON.parse(obj) : null;
-    const intialValue = parsed as OutputData;
+  writeValue(value: string) {
+    try {
+      const parsed = value ? JSON.parse(value) : null;
+      const intialValue = parsed as OutputData;
 
-    this.createEditor(intialValue);
+      this.createEditor(intialValue);
+    } catch {
+      console.log('writeValue catch', value);
+
+      this.createEditor({
+        time: Date.now(),
+        blocks: [
+          {
+            data: {
+              text: value,
+            },
+            type: 'paragraph',
+          },
+        ],
+      });
+    }
   }
 
   createEditor(initialValue: OutputData | null = null) {

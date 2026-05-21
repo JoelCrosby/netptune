@@ -14,7 +14,7 @@ import { Command } from '@core/services/command-registry.service';
   template: `
     <button
       type="button"
-      class="aria-selected:bg-accent aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
+      class="aria-selected:bg-accent/10 aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
       [attr.aria-selected]="selected() || null"
       (click)="activate.emit(command())"
       (mouseenter)="hover.emit()">

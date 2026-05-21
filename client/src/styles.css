@@ -18,6 +18,7 @@
 
 @theme inline {
   --color-primary: var(--primary);
+  --color-accent: var(--primary);
   --color-primary-selected: var(--primary-selected);
   --color-primary-selected-hover: var(--primary-selected-hover);
   --color-warn: var(--warn);
@@ -25,6 +26,7 @@
   --color-background: var(--background);
   --color-secondary-background: var(--secondary-background);
   --color-secondary-background-hover: var(--secondary-background-hover);
+  --color-form-field-background: var(--form-field-background);
   --color-dialog-background: var(--dialog-background);
   --color-border: var(--border);
   --color-hover: var(--hover);
@@ -58,8 +60,10 @@
 
   --muted: rgba(var(--foreground-rgb), 0.76);
 
-  --seconday-background: rgba(255, 255, 255, 1);
-  --secondary-background-hover: rgba(248, 248, 248, 1);
+  --form-field-background: rgba(255, 255, 255, 1);
+
+  --secondary-background: rgba(240, 240, 240, 1);
+  --secondary-background-hover: rgba(232, 232, 232, 1);
 
   --dialog-background: rgba(255, 255, 255);
 
@@ -115,6 +119,8 @@
   --foreground: rgba(var(--foreground-rgb), 0.8);
 
   --muted: rgba(var(--foreground-rgb), 0.68);
+
+  --form-field-background: rgba(12, 12, 12, 1);
 
   --secondary-background: rgba(12, 12, 12, 1);
   --secondary-background-hover: rgba(18, 18, 18, 1);
