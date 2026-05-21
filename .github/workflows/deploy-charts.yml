@@ -49,6 +49,7 @@ jobs:
             --set "ingress.tls.email=${{ secrets.TLS_EMAIL }}" \
             --set "parameters.client.api_url=http://api-service:7400" \
             --set "secrets.postgres.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
+            --set "secrets.meilisearch.master_key=${{ secrets.NETPTUNE_MEILISEARCH_MASTER_KEY }}" \
             --set "secrets.cache.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.api.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.api.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
