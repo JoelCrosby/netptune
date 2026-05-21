@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using Meilisearch;
 
 using Netptune.Core.Models.Search;
@@ -13,45 +15,69 @@ public sealed class SearchSeedService : BackgroundService
     private readonly IMeilisearchService SearchService;
     private readonly MeilisearchClient Client;
     private readonly IServiceScopeFactory ScopeFactory;
-    private readonly IHostEnvironment Environment;
     private readonly ILogger<SearchSeedService> Logger;
 
     public SearchSeedService(
         IMeilisearchService searchService,
         MeilisearchClient client,
         IServiceScopeFactory scopeFactory,
-        IHostEnvironment environment,
         ILogger<SearchSeedService> logger)
     {
         SearchService = searchService;
         Client = client;
         ScopeFactory = scopeFactory;
-        Environment = environment;
         Logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!Environment.IsDevelopment()) return;
+        var timer = Stopwatch.StartNew();
 
-        await SearchService.EnsureIndexSettingsAsync(stoppingToken);
+        Logger.LogInformation("[Search] seed service starting");
 
-        if (!await NeedsSeedingAsync(stoppingToken)) return;
+        try
+        {
+            Logger.LogInformation("[Search] ensuring index settings");
+            await SearchService.EnsureIndexSettingsAsync(stoppingToken);
 
-        Logger.LogInformation("[Search] seeding indexes");
+            if (!await NeedsSeedingAsync(stoppingToken))
+            {
+                Logger.LogInformation("[Search] indexes already contain documents, skipping seed");
+                return;
+            }
 
-        using var scope = ScopeFactory.CreateScope();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+            Logger.LogInformation("[Search] seeding indexes");
 
-        var workspaces = await unitOfWork.Workspaces.GetWorkspaces(stoppingToken);
-        var slugs = workspaces.Select(w => w.Slug).ToList();
+            using var scope = ScopeFactory.CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
 
-        await IndexTasksAsync(unitOfWork, slugs, stoppingToken);
-        await IndexProjectsAsync(unitOfWork, slugs, stoppingToken);
-        await IndexBoardsAsync(unitOfWork, slugs, stoppingToken);
-        await IndexSprintsAsync(unitOfWork, slugs, stoppingToken);
+            var workspaces = await unitOfWork.Workspaces.GetWorkspaces(stoppingToken);
+            var slugs = workspaces.Select(w => w.Slug).ToList();
 
-        Logger.LogInformation("[Search] seeding complete");
+            Logger.LogInformation("[Search] found {WorkspaceCount} workspaces for seeding", slugs.Count);
+
+            var taskCount = await SeedIndexAsync("tasks", () => IndexTasksAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+            var projectCount = await SeedIndexAsync("projects", () => IndexProjectsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+            var boardCount = await SeedIndexAsync("boards", () => IndexBoardsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+            var sprintCount = await SeedIndexAsync("sprints", () => IndexSprintsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+
+            Logger.LogInformation(
+                "[Search] seeding complete in {ElapsedMs}ms: {TaskCount} tasks, {ProjectCount} projects, {BoardCount} boards, {SprintCount} sprints",
+                timer.ElapsedMilliseconds,
+                taskCount,
+                projectCount,
+                boardCount,
+                sprintCount);
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            Logger.LogWarning("[Search] seeding cancelled after {ElapsedMs}ms", timer.ElapsedMilliseconds);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[Search] seeding failed after {ElapsedMs}ms", timer.ElapsedMilliseconds);
+            throw;
+        }
     }
 
     private async Task<bool> NeedsSeedingAsync(CancellationToken ct)
@@ -59,20 +85,102 @@ public sealed class SearchSeedService : BackgroundService
         try
         {
             var stats = await Client.Index("tasks").GetStatsAsync(ct);
+            Logger.LogInformation("[Search] tasks index contains {DocumentCount} documents", stats.NumberOfDocuments);
             return stats.NumberOfDocuments == 0;
         }
         catch (MeilisearchApiError ex) when (ex.Code == "index_not_found")
         {
+            Logger.LogInformation("[Search] tasks index does not exist, seeding required");
             return true;
         }
     }
 
-    private async Task IndexTasksAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
+    private async Task<int> SeedIndexAsync(string indexName, Func<Task<int>> seedIndex, CancellationToken ct)
+    {
+        var timer = Stopwatch.StartNew();
+
+        Logger.LogInformation("[Search] seeding {IndexName} index", indexName);
+
+        try
+        {
+            var count = await seedIndex();
+
+            Logger.LogInformation(
+                "[Search] seeded {IndexName} index with {DocumentCount} documents in {ElapsedMs}ms",
+                indexName,
+                count,
+                timer.ElapsedMilliseconds);
+
+            return count;
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[Search] failed seeding {IndexName} index after {ElapsedMs}ms", indexName, timer.ElapsedMilliseconds);
+            throw;
+        }
+    }
+
+    private async Task IndexBatchesAsync<T>(string indexName, IReadOnlyCollection<T> docs, CancellationToken ct)
+    {
+        if (docs.Count == 0)
+        {
+            Logger.LogInformation("[Search] no documents to index for {IndexName}", indexName);
+            return;
+        }
+
+        var totalBatches = (int)Math.Ceiling((double)docs.Count / BatchSize);
+        var batchNumber = 0;
+        var indexed = 0;
+
+        foreach (var batch in docs.Chunk(BatchSize))
+        {
+            batchNumber++;
+
+            try
+            {
+                await SearchService.IndexDocumentsAsync(indexName, batch, ct);
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(
+                    ex,
+                    "[Search] failed indexing batch {BatchNumber}/{TotalBatches} for {IndexName}; {IndexedCount}/{DocumentCount} documents indexed",
+                    batchNumber,
+                    totalBatches,
+                    indexName,
+                    indexed,
+                    docs.Count);
+
+                throw;
+            }
+
+            indexed += batch.Length;
+
+            Logger.LogInformation(
+                "[Search] indexed batch {BatchNumber}/{TotalBatches} for {IndexName}; {IndexedCount}/{DocumentCount} documents indexed",
+                batchNumber,
+                totalBatches,
+                indexName,
+                indexed,
+                docs.Count);
+        }
+    }
+
+    private async Task<int> IndexTasksAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
     {
         var docs = new List<TaskSearchDocument>();
 
         foreach (var slug in slugs)
         {
+            Logger.LogInformation("[Search] loading task documents for workspace {WorkspaceSlug}", slug);
             var tasks = await unitOfWork.Tasks.GetTasksAsync(slug, cancellationToken: ct);
 
             docs.AddRange(tasks.Select(t => new TaskSearchDocument
@@ -91,18 +199,19 @@ public sealed class SearchSeedService : BackgroundService
             }));
         }
 
-        foreach (var batch in docs.Chunk(BatchSize))
-        {
-            await SearchService.IndexDocumentsAsync("tasks", batch, ct);
-        }
+        Logger.LogInformation("[Search] loaded {DocumentCount} task documents", docs.Count);
+        await IndexBatchesAsync("tasks", docs, ct);
+
+        return docs.Count;
     }
 
-    private async Task IndexProjectsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
+    private async Task<int> IndexProjectsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
     {
         var docs = new List<ProjectSearchDocument>();
 
         foreach (var slug in slugs)
         {
+            Logger.LogInformation("[Search] loading project documents for workspace {WorkspaceSlug}", slug);
             var projects = await unitOfWork.Projects.GetProjects(slug, ct);
 
             docs.AddRange(projects.Select(p => new ProjectSearchDocument
@@ -117,18 +226,19 @@ public sealed class SearchSeedService : BackgroundService
             }));
         }
 
-        foreach (var batch in docs.Chunk(BatchSize))
-        {
-            await SearchService.IndexDocumentsAsync("projects", batch, ct);
-        }
+        Logger.LogInformation("[Search] loaded {DocumentCount} project documents", docs.Count);
+        await IndexBatchesAsync("projects", docs, ct);
+
+        return docs.Count;
     }
 
-    private async Task IndexBoardsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
+    private async Task<int> IndexBoardsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
     {
         var docs = new List<BoardSearchDocument>();
 
         foreach (var slug in slugs)
         {
+            Logger.LogInformation("[Search] loading board documents for workspace {WorkspaceSlug}", slug);
             var boards = await unitOfWork.Boards.GetBoards(slug, isReadonly: true, ct);
 
             docs.AddRange(boards.Select(b => new BoardSearchDocument
@@ -143,18 +253,19 @@ public sealed class SearchSeedService : BackgroundService
             }));
         }
 
-        foreach (var batch in docs.Chunk(BatchSize))
-        {
-            await SearchService.IndexDocumentsAsync("boards", batch, ct);
-        }
+        Logger.LogInformation("[Search] loaded {DocumentCount} board documents", docs.Count);
+        await IndexBatchesAsync("boards", docs, ct);
+
+        return docs.Count;
     }
 
-    private async Task IndexSprintsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
+    private async Task<int> IndexSprintsAsync(INetptuneUnitOfWork unitOfWork, List<string> slugs, CancellationToken ct)
     {
         var docs = new List<SprintSearchDocument>();
 
         foreach (var slug in slugs)
         {
+            Logger.LogInformation("[Search] loading sprint documents for workspace {WorkspaceSlug}", slug);
             var sprints = await unitOfWork.Sprints.GetSprintsAsync(slug, cancellationToken: ct);
 
             docs.AddRange(sprints.Select(s => new SprintSearchDocument
@@ -170,9 +281,9 @@ public sealed class SearchSeedService : BackgroundService
             }));
         }
 
-        foreach (var batch in docs.Chunk(BatchSize))
-        {
-            await SearchService.IndexDocumentsAsync("sprints", batch, ct);
-        }
+        Logger.LogInformation("[Search] loaded {DocumentCount} sprint documents", docs.Count);
+        await IndexBatchesAsync("sprints", docs, ct);
+
+        return docs.Count;
     }
 }
