@@ -34,6 +34,8 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
 
     public DbSet<Notification> Notifications { get; set; } = null!;
+    public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;
+    public DbSet<CommandPaletteRecentItem> CommandPaletteRecentItems { get; set; } = null!;
 
     // relational data models
     public DbSet<WorkspaceAppUser> WorkspaceAppUsers { get; set; } = null!;

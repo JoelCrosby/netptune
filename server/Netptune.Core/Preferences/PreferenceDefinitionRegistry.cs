@@ -1,0 +1,91 @@
+using System.Text.Json;
+
+namespace Netptune.Core.Preferences;
+
+public interface IPreferenceDefinitionRegistry
+{
+    IReadOnlyList<PreferenceDefinitionGroup> GetGroups();
+
+    PreferenceDefinition? Find(string key);
+}
+
+public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
+{
+    private readonly IReadOnlyList<PreferenceGroupDefinition> Groups =
+    [
+        new()
+        {
+            Key = "appearance",
+            Label = "Appearance",
+            Order = 5,
+        },
+        new()
+        {
+            Key = "commandPalette",
+            Label = "Command Palette",
+            Order = 10,
+        },
+    ];
+
+    private readonly IReadOnlyList<PreferenceDefinition> Definitions =
+    [
+        new()
+        {
+            Key = PreferenceKeys.AppearanceTheme,
+            GroupKey = "appearance",
+            Label = "Theme",
+            ControlType = "select",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement("light"),
+            AllowedScopes = [PreferenceScopes.Global],
+            Options =
+            [
+                new() { Value = "light", Label = "Light" },
+                new() { Value = "dark", Label = "Dark" },
+            ],
+            Order = 10,
+        },
+        new()
+        {
+            Key = PreferenceKeys.CommandPaletteRecentItemsScope,
+            GroupKey = "commandPalette",
+            Label = "Recent items scope",
+            ControlType = "select",
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement("workspace"),
+            AllowedScopes = [PreferenceScopes.Global, PreferenceScopes.Workspace],
+            Options =
+            [
+                new() { Value = "workspace", Label = "Current workspace" },
+                new() { Value = "global", Label = "All workspaces" },
+            ],
+            Order = 10,
+        },
+    ];
+
+    public IReadOnlyList<PreferenceDefinitionGroup> GetGroups()
+    {
+        return Groups
+            .OrderBy(group => group.Order)
+            .ThenBy(group => group.Key, StringComparer.Ordinal)
+            .Select(group => new PreferenceDefinitionGroup
+            {
+                Key = group.Key,
+                Label = group.Label,
+                Order = group.Order,
+                Preferences = Definitions
+                    .Where(definition => definition.GroupKey == group.Key)
+                    .OrderBy(definition => definition.Order)
+                    .ThenBy(definition => definition.Key, StringComparer.Ordinal)
+                    .ToList(),
+            })
+            .Where(group => group.Preferences.Count > 0)
+            .ToList();
+    }
+
+    public PreferenceDefinition? Find(string key)
+    {
+        return Definitions.FirstOrDefault(definition =>
+            string.Equals(definition.Key, key, StringComparison.Ordinal));
+    }
+}

@@ -23,6 +23,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public ITagRepository Tags { get; }
     public IActivityLogRepository ActivityLogs { get; }
     public INotificationRepository Notifications { get; }
+    public IUserPreferenceRepository UserPreferences { get; }
+    public ICommandPaletteRecentItemRepository CommandPaletteRecentItems { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
     public IAncestorRepository Ancestors { get; }
     public IWorkspaceInviteRepository WorkspaceInvites { get; }
@@ -44,6 +46,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Tags = new TagRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
         Notifications = new NotificationRepository(context, connectionFactory);
+        UserPreferences = new UserPreferenceRepository(context, connectionFactory);
+        CommandPaletteRecentItems = new CommandPaletteRecentItemRepository(context, connectionFactory);
         RefreshTokens = new RefreshTokenRepository(context, connectionFactory);
         Ancestors = new AncestorRepository(connectionFactory);
         WorkspaceInvites = new WorkspaceInviteRepository(context, connectionFactory);

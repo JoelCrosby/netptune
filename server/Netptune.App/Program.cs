@@ -10,6 +10,7 @@ using Netptune.App.Services;
 using Netptune.App.Utility;
 using Netptune.Cache;
 using Netptune.Core.Extensions;
+using Netptune.Core.Preferences;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
 using Netptune.Handlers;
@@ -60,6 +61,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddSingleton<BuildInfo>();
 builder.Services.AddSingleton<IBoardEventService, BoardEventService>();
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
+builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
 builder.Services.AddNeptuneAuthorization();
@@ -205,6 +207,8 @@ apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
 apiGroup.MapPublicEndpoints();
 apiGroup.MapSearchEndpoints();
+apiGroup.MapUserPreferencesEndpoints();
+apiGroup.MapCommandPaletteEndpoints();
 
 apiGroup.MapExportEndpoints()
     .RequireRateLimiting("import-export");
