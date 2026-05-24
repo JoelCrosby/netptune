@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "start client",
+      "command": "pnpm",
+      "type": "shell",
+      "args": ["start"],
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "start server",
+      "command": "dotnet",
+      "type": "shell",
+      "args": ["run"],
+      "options": {
+        "cwd": "${workspaceFolder}/server/Netptune.AppHost"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "start client and server",
+      "dependsOn": ["start client", "start server"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}

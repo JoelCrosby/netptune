@@ -17,7 +17,11 @@
     "**/.vite": true,
     "**/.solid-start": true,
     "**/.output": true,
-    "**/.nitro": true
+    "**/.nitro": true,
+    "**/*.rpyc": true,
+    "**/*.rpa": true,
+    "**/*.rpymc": true,
+    "**/cache/": true
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,
