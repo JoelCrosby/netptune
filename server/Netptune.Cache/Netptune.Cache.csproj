@@ -11,8 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Aspire.StackExchange.Redis" Version="13.3.0" />
-      <PackageReference Include="StackExchange.Redis" Version="2.13.1" />
+      <PackageReference Include="Aspire.StackExchange.Redis" Version="13.4.0" />
+      <PackageReference Include="StackExchange.Redis" Version="2.13.17" />
     </ItemGroup>
 
 </Project>

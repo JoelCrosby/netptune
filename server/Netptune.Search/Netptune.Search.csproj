@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Aspire.Meilisearch" Version="13.3.0" />
+    <PackageReference Include="CommunityToolkit.Aspire.Meilisearch" Version="13.4.0" />
     <PackageReference Include="MeiliSearch" Version="0.18.0" />
   </ItemGroup>
 
