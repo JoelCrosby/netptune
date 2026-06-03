@@ -84,7 +84,10 @@ jobs:
             --set "secrets.headlamp.github_client_id=${{ secrets.HEADLAMP_GITHUB_CLIENT_ID }}" \
             --set "secrets.headlamp.github_client_secret=${{ secrets.HEADLAMP_GITHUB_CLIENT_SECRET }}" \
             --set "secrets.headlamp.cookie_secret=${{ secrets.HEADLAMP_COOKIE_SECRET }}" \
-            --set "secrets.grafana.admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}"
+            --set "secrets.grafana.admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}" \
+            --set "secrets.dbgate.github_client_id=${{ secrets.DBGATE_GITHUB_CLIENT_ID }}" \
+            --set "secrets.dbgate.github_client_secret=${{ secrets.DBGATE_GITHUB_CLIENT_SECRET }}" \
+            --set "secrets.dbgate.cookie_secret=${{ secrets.DBGATE_COOKIE_SECRET }}"
 
       - name: Restart deployments
         run: |

@@ -8,6 +8,7 @@ var postgres = builder
     .AddPostgres("postgres")
     .WithDataVolume()
     .WithPgWeb()
+    .WithDbGate()
 
     .WithHostPort(5432)
     .WithExternalHttpEndpoints()

@@ -93,6 +93,19 @@ spec:
         namespaces:
           from: Same
     {{- end }}
+    {{- if .Values.dbgate.enabled }}
+    - name: https-dbgate
+      port: 8443
+      protocol: HTTPS
+      hostname: "{{ .Values.dbgate.host }}"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: "dbgate-tls"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    {{- end }}
     {{- if .Values.prometheus.enabled }}
     - name: https-prometheus
       port: 8443

@@ -1,0 +1,25 @@
+{{- if .Values.dbgate.enabled }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: dbgate
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "dbgate"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  parentRefs:
+    - name: netptune-gateway
+      sectionName: https-dbgate
+  hostnames:
+    - "{{ .Values.dbgate.host }}"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: dbgate-oauth2-proxy-service
+          port: 4180
+{{- end }}

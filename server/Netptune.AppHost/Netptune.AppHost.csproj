@@ -22,6 +22,7 @@
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.0" />
     <PackageReference Include="Aspire.Hosting.Valkey" Version="13.4.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Meilisearch" Version="13.4.0" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.4.0" />
   </ItemGroup>
 
 </Project>
