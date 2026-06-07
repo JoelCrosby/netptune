@@ -29,6 +29,7 @@ import {
   LucideUserPlus,
   LucideUsers,
   LucideUserX,
+  LucideWorkflow,
 } from '@lucide/angular';
 import { netptunePermissions } from './permissions';
 
@@ -270,6 +271,18 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'notifications.update',
       label: 'Manage Notifications',
       icon: LucideBellDot,
+    },
+  },
+  automations: {
+    read: {
+      key: 'automations.read',
+      label: 'View Automations',
+      icon: LucideWorkflow,
+    },
+    manage: {
+      key: 'automations.manage',
+      label: 'Manage Automations',
+      icon: LucideWorkflow,
     },
   },
   storage: {

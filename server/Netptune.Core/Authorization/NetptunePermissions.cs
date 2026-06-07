@@ -101,6 +101,12 @@ public static class NetptunePermissions
         public const string Update = "notifications.update";
     }
 
+    public static class Automations
+    {
+        public const string Read = "automations.read";
+        public const string Manage = "automations.manage";
+    }
+
     public static class Storage
     {
         public const string UploadProfilePicture = "storage.upload_profile_picture";

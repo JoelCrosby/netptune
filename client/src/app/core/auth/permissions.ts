@@ -74,6 +74,10 @@ export const netptunePermissions = {
     read: 'notifications.read',
     update: 'notifications.update',
   },
+  automations: {
+    read: 'automations.read',
+    manage: 'automations.manage',
+  },
   storage: {
     uploadProfilePicture: 'storage.upload_profile_picture',
     uploadMedia: 'storage.upload_media',

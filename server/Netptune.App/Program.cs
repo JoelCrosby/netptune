@@ -193,6 +193,7 @@ apiGroup.MapBoardEventsEndpoints();
 apiGroup.MapNotificationsEndpoints();
 apiGroup.MapActivityEndpoints();
 apiGroup.MapAuditEndpoints();
+apiGroup.MapAutomationsEndpoints();
 apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
 apiGroup.MapBoardsEndpoints();

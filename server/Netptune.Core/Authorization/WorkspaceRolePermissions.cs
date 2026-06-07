@@ -60,6 +60,8 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Members.Invite,
         NetptunePermissions.Members.Remove,
         NetptunePermissions.Tasks.Import,
+        NetptunePermissions.Automations.Read,
+        NetptunePermissions.Automations.Manage,
     };
 
     private static readonly IReadOnlySet<string> OwnerPermissions = new HashSet<string>(AdminPermissions)
