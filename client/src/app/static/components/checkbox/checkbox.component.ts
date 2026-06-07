@@ -13,7 +13,7 @@ import { LucideCheck } from '@lucide/angular';
   imports: [LucideCheck],
   template: `
     <label
-      class="flex cursor-pointer items-center justify-center gap-4"
+      class="flex cursor-pointer items-center gap-4"
       [class.cursor-not-allowed]="disabled()">
       <div
         class="flex min-h-5 min-w-5 items-center justify-center rounded-[3px] border-2 transition-colors duration-150"
