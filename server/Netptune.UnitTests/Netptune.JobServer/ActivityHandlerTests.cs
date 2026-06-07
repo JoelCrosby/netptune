@@ -4,12 +4,11 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 using Netptune.JobServer.Handlers;
 
 using NSubstitute;
-
-using StackExchange.Redis;
 
 using Xunit;
 
@@ -22,8 +21,7 @@ public class ActivityHandlerTests
     private readonly ActivityHandler Handler;
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IConnectionMultiplexer Redis = Substitute.For<IConnectionMultiplexer>();
-    private readonly ISubscriber Subscriber = Substitute.For<ISubscriber>();
+    private readonly INotificationEventPublisher NotificationEvents = Substitute.For<INotificationEventPublisher>();
 
     private const int WorkspaceId = 1;
     private const int EntityId = 99;
@@ -39,12 +37,6 @@ public class ActivityHandlerTests
 
     public ActivityHandlerTests()
     {
-        Redis.GetSubscriber(Arg.Any<object?>()).Returns(Subscriber);
-
-        Subscriber
-            .PublishAsync(Arg.Any<RedisChannel>(), Arg.Any<RedisValue>(), Arg.Any<CommandFlags>())
-            .Returns(1L);
-
         UnitOfWork.Ancestors
             .GetProjectTaskAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
@@ -84,7 +76,11 @@ public class ActivityHandlerTests
             .AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
-        Handler = new(UnitOfWork, Redis);
+        NotificationEvents
+            .PublishManyAsync(Arg.Any<IEnumerable<UserNotificationEvent>>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        Handler = new(UnitOfWork, NotificationEvents);
     }
 
     private ActivityEvent BuildEvent(string? userId = null, int? workspaceId = null) =>
@@ -134,7 +130,9 @@ public class ActivityHandlerTests
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.Notifications.DidNotReceive().AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), TestContext.Current.CancellationToken);
-        await Subscriber.DidNotReceive().PublishAsync(Arg.Any<RedisChannel>(), Arg.Any<RedisValue>(), Arg.Any<CommandFlags>());
+        await NotificationEvents.DidNotReceive().PublishManyAsync(
+            Arg.Any<IEnumerable<UserNotificationEvent>>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -189,26 +187,19 @@ public class ActivityHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldPublishToRedis_ForEachRecipient()
+    public async Task Handle_ShouldPublishNotificationEvent_ForEachRecipient()
     {
         var message = new ActivityMessage(BuildEvent());
 
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await Subscriber.Received(1).PublishAsync(
-            Arg.Is<RedisChannel>(c => c == RedisChannel.Literal($"notifications:{OtherUserId1}")),
-            Arg.Any<RedisValue>(),
-            Arg.Any<CommandFlags>());
-
-        await Subscriber.Received(1).PublishAsync(
-            Arg.Is<RedisChannel>(c => c == RedisChannel.Literal($"notifications:{OtherUserId2}")),
-            Arg.Any<RedisValue>(),
-            Arg.Any<CommandFlags>());
-
-        await Subscriber.DidNotReceive().PublishAsync(
-            Arg.Is<RedisChannel>(c => c == RedisChannel.Literal($"notifications:{ActorUserId}")),
-            Arg.Any<RedisValue>(),
-            Arg.Any<CommandFlags>());
+        await NotificationEvents.Received(1).PublishManyAsync(
+            Arg.Is<IEnumerable<UserNotificationEvent>>(events =>
+                events.Count() == 2 &&
+                events.Any(e => e.UserId == OtherUserId1 && e.Event.IsRead == false) &&
+                events.Any(e => e.UserId == OtherUserId2 && e.Event.IsRead == false) &&
+                events.All(e => e.UserId != ActorUserId)),
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

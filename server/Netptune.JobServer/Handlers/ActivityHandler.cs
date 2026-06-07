@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 using Mediator;
 
@@ -7,26 +6,22 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 
-using StackExchange.Redis;
-
 namespace Netptune.JobServer.Handlers;
-
-[JsonSerializable(typeof(JobNotificationEvent))]
-internal partial class ActivityHandlerSerializerContext : JsonSerializerContext;
-
-public record JobNotificationEvent(int NotificationId, bool IsRead);
 
 public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IConnectionMultiplexer Redis;
+    private readonly INotificationEventPublisher NotificationEvents;
 
-    public ActivityHandler(INetptuneUnitOfWork unitOfWork, IConnectionMultiplexer redis)
+    public ActivityHandler(
+        INetptuneUnitOfWork unitOfWork,
+        INotificationEventPublisher notificationEvents)
     {
         UnitOfWork = unitOfWork;
-        Redis = redis;
+        NotificationEvents = notificationEvents;
     }
 
     public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
@@ -122,7 +117,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         await UnitOfWork.Notifications.AddRangeAsync(allNotifications, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        await PublishNotificationEventsAsync(allNotifications);
+        await PublishNotificationEventsAsync(allNotifications, cancellationToken);
     }
 
     private static JsonDocument? BuildMeta(ActivityEvent activity)
@@ -163,20 +158,15 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         };
     }
 
-    private Task PublishNotificationEventsAsync(List<Notification> notifications)
+    private Task PublishNotificationEventsAsync(
+        List<Notification> notifications,
+        CancellationToken cancellationToken)
     {
-        var subscriber = Redis.GetSubscriber();
-        var tasks = new List<Task>();
+        var events = notifications.Select(notification =>
+            new UserNotificationEvent(
+                notification.UserId,
+                new NotificationEvent(notification.Id, false)));
 
-        foreach (var notification in notifications)
-        {
-            var channel = RedisChannel.Literal($"notifications:{notification.UserId}");
-            var payload = new JobNotificationEvent(notification.Id, false);
-            var json = JsonSerializer.Serialize(payload, ActivityHandlerSerializerContext.Default.JobNotificationEvent);
-
-            tasks.Add(subscriber.PublishAsync(channel, json));
-        }
-
-        return Task.WhenAll(tasks);
+        return NotificationEvents.PublishManyAsync(events, cancellationToken);
     }
 }

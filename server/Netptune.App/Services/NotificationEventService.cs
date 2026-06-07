@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Netptune.Core.Services.Notifications;
+
 using StackExchange.Redis;
 
 namespace Netptune.App.Services;
-
-public record NotificationEvent(int NotificationId, bool IsRead);
 
 [JsonSerializable(typeof(NotificationEvent))]
 internal partial class NotificationEventSerializerContext : JsonSerializerContext;
@@ -19,7 +19,8 @@ public interface INotificationEventService
 
 public class NotificationEventService(
     ILogger<NotificationEventService> logger,
-    IConnectionMultiplexer connection) : INotificationEventService
+    IConnectionMultiplexer connection,
+    INotificationEventPublisher publisher) : INotificationEventService
 {
     private static RedisChannel ChannelForUser(string userId) =>
         RedisChannel.Literal($"notifications:{userId}");
@@ -72,10 +73,6 @@ public class NotificationEventService(
 
     public Task PublishAsync(string userId, NotificationEvent notificationEvent)
     {
-        var json = JsonSerializer.Serialize(
-            notificationEvent,
-            NotificationEventSerializerContext.Default.NotificationEvent);
-
-        return connection.GetSubscriber().PublishAsync(ChannelForUser(userId), json);
+        return publisher.PublishAsync(userId, notificationEvent);
     }
 }
