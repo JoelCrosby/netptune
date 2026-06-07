@@ -1,4 +1,5 @@
 using Netptune.Cache;
+using Netptune.Automation;
 using Netptune.Core.Extensions;
 using Netptune.Search;
 using Netptune.Entities.Configuration;
@@ -43,6 +44,7 @@ builder.Services.AddS3StorageService(options =>
 builder.AddNetptuneSearch();
 
 builder.Services.AddHostedService<QueueConsumerService>();
+builder.Services.AddNetptuneAutomation(builder.Configuration);
 builder.Services.AddHostedService<AuditRetentionJob>();
 builder.Services.AddHostedService<SearchSeedService>();
 

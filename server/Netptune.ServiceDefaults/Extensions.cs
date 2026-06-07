@@ -51,11 +51,14 @@ public static class Extensions
                 metrics
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                    .AddRuntimeInstrumentation()
+                    .AddMeter("Netptune.Automation");
             })
             .WithTracing(tracing =>
             {
-                tracing.AddSource(builder.Environment.ApplicationName)
+                tracing
+                    .AddSource(builder.Environment.ApplicationName)
+                    .AddSource("Netptune.Automation")
                     .AddAspNetCoreInstrumentation(t =>
                         // Exclude health check requests from tracing
                         t.Filter = context =>

@@ -12,6 +12,7 @@
     <File Path="global.json" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="Netptune.Automation.Tests/Netptune.Automation.Tests.csproj" />
     <Project Path="Netptune.IntegrationTests/Netptune.IntegrationTests.csproj" />
     <Project Path="Netptune.SeedData/Netptune.SeedData.csproj" />
     <Project Path="Netptune.TestData/Netptune.TestData.csproj" />
@@ -19,6 +20,7 @@
   </Folder>
   <Project Path="Netptune.App/Netptune.App.csproj" />
   <Project Path="Netptune.AppHost/Netptune.AppHost.csproj" />
+  <Project Path="Netptune.Automation/Netptune.Automation.csproj" />
   <Project Path="Netptune.Cache/Netptune.Cache.csproj" />
   <Project Path="Netptune.Core/Netptune.Core.csproj" />
   <Project Path="Netptune.Entities/Netptune.Entities.csproj" />

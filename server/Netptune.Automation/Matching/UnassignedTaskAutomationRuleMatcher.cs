@@ -1,0 +1,123 @@
+using System.Diagnostics;
+
+using Microsoft.Extensions.Logging;
+
+using Netptune.Automation.Configuration;
+using Netptune.Automation.Diagnostics;
+using Netptune.Automation.Models;
+using Netptune.Core.Enums;
+using Netptune.Core.UnitOfWork;
+
+namespace Netptune.Automation.Matching;
+
+internal sealed class UnassignedTaskAutomationRuleMatcher
+{
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly ILogger<UnassignedTaskAutomationRuleMatcher> Logger;
+
+    public UnassignedTaskAutomationRuleMatcher(
+        INetptuneUnitOfWork unitOfWork,
+        ILogger<UnassignedTaskAutomationRuleMatcher> logger)
+    {
+        UnitOfWork = unitOfWork;
+        Logger = logger;
+    }
+
+    internal async Task<List<PendingAutomationExecution>> Match(CancellationToken cancellationToken)
+    {
+        var activity = Activity.Current;
+
+        Logger.LogInformation("Evaluating scheduled unassigned-task automation rules");
+
+        var rules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
+            AutomationTriggerType.TaskUnassignedFor,
+            cancellationToken: cancellationToken);
+
+        Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskUnassignedFor, rules.Count);
+        activity?.SetTag("automation.rules.evaluated", rules.Count);
+
+        var ruleDefinitions = rules
+            .Select(rule => new { Rule = rule, DurationDays = ConfigReader.ReadInt(rule.TriggerConfig, "durationDays") })
+            .Where(rule => rule.DurationDays is >= 1)
+            .Select(rule => new UnassignedRuleDefinition(rule.Rule, rule.DurationDays.GetValueOrDefault()))
+            .ToList();
+
+        var invalidRuleCount = rules.Count - ruleDefinitions.Count;
+        if (invalidRuleCount > 0)
+        {
+            Logger.LogWarning(
+                "Skipped {InvalidRuleCount} unassigned-task automation rules with missing or invalid durationDays",
+                invalidRuleCount);
+            Telemetry.RecordRulesSkipped(AutomationTriggerType.TaskUnassignedFor, invalidRuleCount, "invalid_config");
+        }
+
+        if (ruleDefinitions.Count == 0)
+        {
+            Logger.LogDebug("No configured unassigned-task automation rules were eligible for evaluation");
+            return [];
+        }
+
+        var now = DateTime.UtcNow;
+        var workspaceIds = ruleDefinitions.Select(rule => rule.Rule.WorkspaceId).Distinct().ToList();
+        var broadestCutoff = now.AddDays(-ruleDefinitions.Min(rule => rule.DurationDays));
+
+        var tasks = await UnitOfWork.Tasks.GetUnassignedAutomationCandidates(
+            workspaceIds,
+            broadestCutoff,
+            cancellationToken);
+
+        activity?.SetTag("automation.rules.configured", ruleDefinitions.Count);
+        activity?.SetTag("automation.workspaces.evaluated", workspaceIds.Count);
+        activity?.SetTag("automation.tasks.candidate", tasks.Count);
+
+        Logger.LogInformation(
+            "Found {CandidateTaskCount} candidate unassigned tasks across {WorkspaceCount} workspaces for {RuleCount} automation rules",
+            tasks.Count,
+            workspaceIds.Count,
+            ruleDefinitions.Count);
+
+        var rulesByWorkspace = ruleDefinitions
+            .GroupBy(rule => rule.Rule.WorkspaceId)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        var runDate = now.ToString("yyyy-MM-dd");
+        var executions = new List<PendingAutomationExecution>();
+
+        foreach (var task in tasks)
+        {
+            if (!rulesByWorkspace.TryGetValue(task.WorkspaceId, out var workspaceRules)) continue;
+
+            var taskTimestamp = task.UpdatedAt ?? task.CreatedAt;
+
+            foreach (var rule in workspaceRules)
+            {
+                if (taskTimestamp > now.AddDays(-rule.DurationDays)) continue;
+
+                var actorUserId = rule.Rule.OwnerId ?? rule.Rule.CreatedByUserId ?? task.OwnerId;
+
+                if (actorUserId is null)
+                {
+                    Logger.LogWarning("Automation rule {RuleId} skipped task {TaskId}: no actor user id", rule.Rule.Id, task.Id);
+                    Telemetry.RecordRunsSkipped(AutomationTriggerType.TaskUnassignedFor, 1, "missing_actor");
+                    continue;
+                }
+
+                executions.Add(new PendingAutomationExecution(
+                    rule.Rule,
+                    task,
+                    actorUserId,
+                    $"rule:{rule.Rule.Id}:task:{task.Id}:unassigned:{runDate}"));
+            }
+        }
+
+        Telemetry.RecordRulesMatched(AutomationTriggerType.TaskUnassignedFor, executions.Count);
+        activity?.SetTag("automation.rules.matched", executions.Count);
+
+        Logger.LogInformation(
+            "Matched {MatchedRuleCount} scheduled unassigned-task automation executions from {CandidateTaskCount} candidate tasks",
+            executions.Count,
+            tasks.Count);
+
+        return executions;
+    }
+}
