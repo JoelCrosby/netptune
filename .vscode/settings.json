@@ -49,7 +49,7 @@
     "**/.angular/**": true
   },
   "dotnet.defaultSolution": "server/Netptune.sln",
-    "[typescript]": {
+  "[typescript]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -60,16 +60,21 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[scss]": {
+  "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "css.customData": [".vscode/tailwind.json"],
-  "scss.lint.unknownAtRules": "ignore",
   "[html]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "css.customData": [".vscode/tailwind.json"],
   "tailwindCSS.includeLanguages": {
     "plaintext": "html"
-  }
+  },
+  "js/ts.preferences.quoteStyle": "single",
+  "js/ts.preferences.importModuleSpecifier": "shortest",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.experimental.useTsgo": true,
+  "files.insertFinalNewline": true,
+  "css.validate": false
 }
