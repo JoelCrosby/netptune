@@ -6,6 +6,7 @@ using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
@@ -21,10 +22,13 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     private readonly MoveTaskInBoardGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public MoveTaskInBoardGroupCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Identity.GetCurrentUserId().Returns("user-1");
+        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
     }
 
     private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)

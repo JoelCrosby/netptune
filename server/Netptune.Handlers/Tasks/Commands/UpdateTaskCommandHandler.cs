@@ -1,10 +1,12 @@
 using Mediator;
 using Microsoft.Extensions.Logging;
 using Netptune.Core.Enums;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -18,12 +20,21 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
     private readonly ILogger<UpdateTaskCommandHandler> Logger;
+    private readonly IEventPublisher EventPublisher;
+    private readonly IIdentityService Identity;
 
-    public UpdateTaskCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity, ILogger<UpdateTaskCommandHandler> logger)
+    public UpdateTaskCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IActivityLogger activity,
+        ILogger<UpdateTaskCommandHandler> logger,
+        IEventPublisher eventPublisher,
+        IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
         Logger = logger;
+        EventPublisher = eventPublisher;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -69,7 +80,24 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         ProjectTaskDiff.Create(old, response).LogDiff(Activity, response.Id);
 
+        if (old.Status != response.Status && response.WorkspaceId is not null)
+        {
+            await PublishStatusChanged(old, response);
+        }
+
         return ClientResponse<TaskViewModel>.Success(response);
+    }
+
+    private Task PublishStatusChanged(TaskViewModel old, TaskViewModel current)
+    {
+        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        {
+            WorkspaceId = current.WorkspaceId!.Value,
+            TaskId = current.Id,
+            ActorUserId = Identity.GetCurrentUserId(),
+            OldStatus = old.Status,
+            NewStatus = current.Status,
+        });
     }
 
     private async Task PutTaskInBoardGroup(ProjectTaskStatus status, Core.Entities.ProjectTask result, CancellationToken cancellationToken)

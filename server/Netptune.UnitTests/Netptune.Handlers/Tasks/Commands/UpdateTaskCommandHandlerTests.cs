@@ -9,6 +9,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -27,11 +28,14 @@ public class UpdateTaskCommandHandlerTests
     private readonly UpdateTaskCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly ILogger<UpdateTaskCommandHandler> Logger = Substitute.For<ILogger<UpdateTaskCommandHandler>>();
 
     public UpdateTaskCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity, Logger);
+        Identity.GetCurrentUserId().Returns("user-1");
+        Handler = new(UnitOfWork, Activity, Logger, EventPublisher, Identity);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)

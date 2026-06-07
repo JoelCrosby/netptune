@@ -5,6 +5,7 @@ using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
@@ -16,11 +17,19 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
+    private readonly IIdentityService Identity;
 
-    public MoveTaskInBoardGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public MoveTaskInBoardGroupCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher,
+        IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        EventPublisher = eventPublisher;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse> Handle(MoveTaskInBoardGroupCommand request, CancellationToken cancellationToken)
@@ -34,6 +43,8 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
     private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
     {
+        var oldTask = await UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, cancellationToken);
+
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
             var newGroup = await UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, cancellationToken);
@@ -80,6 +91,13 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
         });
 
+        var newStatus = boardGroup.Type.GetTaskStatusFromGroupType();
+
+        if (oldTask is not null && oldTask.Status != newStatus && oldTask.WorkspaceId is not null)
+        {
+            await PublishStatusChanged(oldTask.Id, oldTask.WorkspaceId.Value, oldTask.Status, newStatus);
+        }
+
         return ClientResponse.Success;
     }
 
@@ -119,5 +137,21 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             cancellationToken);
 
         return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
+    }
+
+    private Task PublishStatusChanged(
+        int taskId,
+        int workspaceId,
+        ProjectTaskStatus oldStatus,
+        ProjectTaskStatus newStatus)
+    {
+        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        {
+            WorkspaceId = workspaceId,
+            TaskId = taskId,
+            ActorUserId = Identity.GetCurrentUserId(),
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+        });
     }
 }

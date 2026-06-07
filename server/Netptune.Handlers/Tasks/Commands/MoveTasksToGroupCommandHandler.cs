@@ -4,6 +4,7 @@ using Netptune.Core.Events.Tasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
@@ -15,11 +16,19 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
+    private readonly IIdentityService Identity;
 
-    public MoveTasksToGroupCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public MoveTasksToGroupCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher,
+        IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        EventPublisher = eventPublisher;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse> Handle(MoveTasksToGroupCommand request, CancellationToken cancellationToken)
@@ -31,9 +40,13 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
         var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
+        var oldTasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, true, cancellationToken);
+        var newStatus = boardGroup.Type.GetTaskStatusFromGroupType();
 
         await UnitOfWork.Transaction(async () =>
         {
+            await UnitOfWork.Tasks.UpdateTaskStatuses(taskIds, newStatus, cancellationToken);
+
             await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds, cancellationToken);
 
             var baseSortOrder = await UnitOfWork.BoardGroups.GetMaxTaskSortOrder(boardGroup.Id, cancellationToken) + 1;
@@ -57,6 +70,31 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
         });
 
+        foreach (var oldTask in oldTasks.Where(task => task.Status != newStatus))
+        {
+            await PublishStatusChanged(
+                oldTask.Id,
+                oldTask.WorkspaceId,
+                oldTask.Status,
+                newStatus);
+        }
+
         return ClientResponse.Success;
+    }
+
+    private Task PublishStatusChanged(
+        int taskId,
+        int workspaceId,
+        ProjectTaskStatus oldStatus,
+        ProjectTaskStatus newStatus)
+    {
+        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        {
+            WorkspaceId = workspaceId,
+            TaskId = taskId,
+            ActorUserId = Identity.GetCurrentUserId(),
+            OldStatus = oldStatus,
+            NewStatus = newStatus,
+        });
     }
 }

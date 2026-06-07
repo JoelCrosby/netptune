@@ -27,7 +27,9 @@ public sealed class NetptuneFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:18.3").Build();
     private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.0-alpine").Build();
-    private readonly NatsContainer NatsContainer = new NatsBuilder("nats:alpine").Build();
+    private readonly NatsContainer NatsContainer = new NatsBuilder("nats:alpine")
+        .WithCommand("-js")
+        .Build();
 
     private WebApplicationFactory<Program> WebApplicationFactory { get; }
 
