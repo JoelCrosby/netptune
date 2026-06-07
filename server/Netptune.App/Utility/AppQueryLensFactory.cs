@@ -1,38 +1,32 @@
-using EFQueryLens.Core;
-
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
 
-namespace EFQueryLens.Core
+namespace Netptune.App.Utility;
+
+public interface IQueryLensDbContextFactory<out TContext>
+    where TContext : DbContext
 {
-    public interface IQueryLensDbContextFactory<out TContext>
-        where TContext : DbContext
-    {
-        TContext CreateOfflineContext();
-    }
+    TContext CreateOfflineContext();
 }
 
 
-namespace Netptune.App.Utility
+// ReSharper disable once UnusedType.Global
+public sealed class AppQueryLensFactory : IQueryLensDbContextFactory<DataContext>
 {
-    // ReSharper disable once UnusedType.Global
-    public sealed class AppQueryLensFactory : IQueryLensDbContextFactory<DataContext>
+    public DataContext CreateOfflineContext()
     {
-        public DataContext CreateOfflineContext()
-        {
-            const string connectionString = "Host=ef_querylens_offline;Database=ef_querylens_offline;Username=ef_querylens_offline;Password=ef_querylens_offline";
-            var options = new DbContextOptionsBuilder<DataContext>()
-                .UseNpgsql(connectionString, npgsql =>
-                {
-                    npgsql.MapEnum<WorkspaceRole>();
-                    npgsql.MapEnum<SprintStatus>();
-                })
-                .Options;
+        const string connectionString = "Host=ef_querylens_offline;Database=ef_querylens_offline;Username=ef_querylens_offline;Password=ef_querylens_offline";
+        var options = new DbContextOptionsBuilder<DataContext>()
+            .UseNpgsql(connectionString, npgsql =>
+            {
+                npgsql.MapEnum<WorkspaceRole>();
+                npgsql.MapEnum<SprintStatus>();
+            })
+            .Options;
 
-            return new DataContext(options);
-        }
+        return new DataContext(options);
     }
 }
