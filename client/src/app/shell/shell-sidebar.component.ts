@@ -19,6 +19,7 @@ import {
   LucideSquareCheckBig,
   LucideTable2,
   LucideUsers,
+  LucideWorkflow,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -104,6 +105,10 @@ export class ShellSidebarComponent {
     selectHasPermission(netptunePermissions.sprints.read)
   );
 
+  canReadAutomations = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.automations.read)
+  );
+
   links = computed(() => {
     const links = [];
 
@@ -124,6 +129,14 @@ export class ShellSidebarComponent {
         icon: LucideSquareCheckBig,
       },
     ];
+
+    if (this.canReadAutomations()) {
+      primaryLinks.push({
+        label: 'Automations',
+        value: ['./automations'],
+        icon: LucideWorkflow,
+      });
+    }
 
     if (this.canReadSprints()) {
       primaryLinks.splice(2, 0, {

@@ -1,19 +1,34 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import {
+  Injectable,
+  OnDestroy,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 import { Router } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class GlobalCommandsService implements OnDestroy {
   private router = inject(Router);
   private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
+  private store = inject(Store);
+  private canReadAutomations = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.automations.read)
+  );
+  private automationCommandRegistered = false;
 
   private readonly commandIds = [
     'nav.projects',
     'nav.tasks',
     'nav.boards',
     'nav.sprints',
+    'nav.automations',
     'nav.users',
     'nav.settings',
   ];
@@ -73,6 +88,32 @@ export class GlobalCommandsService implements OnDestroy {
         execute: () => this.navigate('settings'),
       },
     ]);
+
+    effect(() => {
+      const canRead = this.canReadAutomations();
+
+      if (canRead && !this.automationCommandRegistered) {
+        untracked(() =>
+          this.registry.register([
+            {
+              id: 'nav.automations',
+              label: 'Go to Automations',
+              group: 'navigation',
+              icon: 'workflow',
+              shortcut: 'G A',
+              keywords: ['automations', 'automation', 'rules', 'workflow'],
+              execute: () => this.navigate('automations'),
+            },
+          ])
+        );
+        this.automationCommandRegistered = true;
+      }
+
+      if (!canRead && this.automationCommandRegistered) {
+        untracked(() => this.registry.unregister(['nav.automations']));
+        this.automationCommandRegistered = false;
+      }
+    });
   }
 
   ngOnDestroy() {

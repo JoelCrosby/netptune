@@ -77,6 +77,12 @@ export const routes: Routes = [
         data: { title: 'Tasks' },
       },
       {
+        path: 'automations',
+        loadChildren: () => import('./features/automations/automations.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Automations' },
+      },
+      {
         path: 'boards',
         loadChildren: () => import('./features/boards/boards.routes').then((m) => m.routes),
         runGuardsAndResolvers: 'always',

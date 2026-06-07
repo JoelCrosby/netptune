@@ -1,0 +1,211 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import { Store } from '@ngrx/store';
+import { LucidePlus } from '@lucide/angular';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CardComponent } from '@static/components/card/card.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { EMPTY, finalize, switchMap } from 'rxjs';
+import {
+  AutomationStat,
+  AutomationStatGridComponent,
+} from '../../components/automation-stat-grid.component';
+import { AutomationRulesTableComponent } from '../../components/automation-rules-table.component';
+import {
+  AutomationRuleListItem,
+  AutomationRunStatus,
+} from '../../models/automation.models';
+import { AutomationsService } from '../../services/automations.service';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterLink,
+    PageContainerComponent,
+    PageHeaderComponent,
+    SpinnerComponent,
+    CardComponent,
+    FlatButtonComponent,
+    StrokedButtonComponent,
+    AutomationStatGridComponent,
+    AutomationRulesTableComponent,
+    LucidePlus,
+  ],
+  template: `
+    <app-page-container [centerPage]="true" [marginBottom]="true">
+      <app-page-header title="Automations">
+        @if (canManage()) {
+          <a app-flat-button color="primary" [routerLink]="['new']">
+            <svg lucidePlus class="h-4 w-4"></svg>
+            Create Automation
+          </a>
+        }
+      </app-page-header>
+
+      @if (loading()) {
+        <div class="flex h-full flex-col items-center justify-center">
+          <app-spinner diameter="32px" />
+        </div>
+      } @else if (error()) {
+        <app-card class="min-h-0! p-6! text-center">
+          <p class="mb-4 text-sm text-red-500">Failed to load automations.</p>
+          <button app-stroked-button type="button" (click)="load()">
+            Try Again
+          </button>
+        </app-card>
+      } @else if (rules().length) {
+        <div class="flex flex-col gap-4">
+          <app-automation-stat-grid [stats]="stats()" />
+          <app-automation-rules-table
+            [rules]="rules()"
+            [canManage]="canManage()"
+            [busyId]="busyId()"
+            (toggleRule)="onToggle($event)"
+            (editRule)="onEdit($event)"
+            (deleteRule)="onDelete($event)" />
+        </div>
+      } @else {
+        <app-card class="min-h-0! p-8! text-center">
+          <h2 class="text-lg font-semibold">No automations yet</h2>
+          <p class="text-muted mx-auto mt-2 max-w-xl text-sm">
+            Workspace automations can watch task workflow events and apply the
+            same follow-up every time.
+          </p>
+          @if (canManage()) {
+            <a
+              app-flat-button
+              color="primary"
+              class="mt-5"
+              [routerLink]="['new']">
+              <svg lucidePlus class="h-4 w-4"></svg>
+              Create Automation
+            </a>
+          }
+        </app-card>
+      }
+    </app-page-container>
+  `,
+})
+export class AutomationsViewComponent {
+  private service = inject(AutomationsService);
+  private confirmation = inject(ConfirmationService);
+  private snackbar = inject(SnackbarService);
+  private store = inject(Store);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
+
+  readonly rules = signal<AutomationRuleListItem[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal(false);
+  readonly busyId = signal<number | null>(null);
+  readonly canManage = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.automations.manage)
+  );
+
+  readonly enabledCount = computed(
+    () => this.rules().filter((rule) => rule.isEnabled).length
+  );
+  readonly recentFailureCount = computed(
+    () =>
+      this.rules().filter(
+        (rule) => rule.lastRun?.status === AutomationRunStatus.failed
+      ).length
+  );
+  readonly stats = computed<AutomationStat[]>(() => [
+    { label: 'Rules', value: this.rules().length },
+    { label: 'Enabled', value: this.enabledCount() },
+    { label: 'Recent failures', value: this.recentFailureCount() },
+  ]);
+
+  constructor() {
+    this.load();
+  }
+
+  load() {
+    this.loading.set(true);
+    this.error.set(false);
+
+    this.service
+      .getRulesWithLastRun()
+      .pipe(
+        finalize(() => this.loading.set(false)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (rules) => this.rules.set(rules),
+        error: () => this.error.set(true),
+      });
+  }
+
+  onToggle(rule: AutomationRuleListItem) {
+    this.busyId.set(rule.id);
+    const request = rule.isEnabled
+      ? this.service.disable(rule.id)
+      : this.service.enable(rule.id);
+
+    request
+      .pipe(
+        finalize(() => this.busyId.set(null)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.open(
+            rule.isEnabled ? 'Automation disabled' : 'Automation enabled'
+          );
+          this.load();
+        },
+        error: () => this.snackbar.error('Automation could not be updated'),
+      });
+  }
+
+  onEdit(rule: AutomationRuleListItem) {
+    void this.router.navigate([rule.id, 'edit'], { relativeTo: this.route });
+  }
+
+  onDelete(rule: AutomationRuleListItem) {
+    this.confirmation
+      .open({
+        title: 'Delete Automation',
+        message: `Delete "${rule.name}"? This cannot be undone.`,
+        acceptLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        color: 'warn',
+      })
+      .pipe(
+        switchMap((confirmed) => {
+          if (!confirmed) {
+            return EMPTY;
+          }
+
+          this.busyId.set(rule.id);
+          return this.service.delete(rule.id);
+        }),
+        finalize(() => this.busyId.set(null)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Automation deleted');
+          this.load();
+        },
+        error: () => this.snackbar.error('Automation could not be deleted'),
+      });
+  }
+}
