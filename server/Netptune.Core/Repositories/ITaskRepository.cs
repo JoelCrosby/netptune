@@ -12,6 +12,13 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<ProjectTask?> GetTaskForUpdate(int id, CancellationToken cancellationToken = default);
 
+    Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectTask>> GetUnassignedAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        DateTime cutoff,
+        CancellationToken cancellationToken = default);
+
     Task<ProjectTask?> GetTask(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
     Task<int?> GetTaskInternalId(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
@@ -29,6 +36,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
     Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, CancellationToken cancellationToken = default);
 
     Task<int> UpdateTaskStatus(int id, ProjectTaskStatus status, CancellationToken cancellationToken = default);
+
+    Task<int> UpdateTaskStatuses(IEnumerable<int> ids, ProjectTaskStatus status, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetValidTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default);
 

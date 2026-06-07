@@ -19,5 +19,25 @@ public class FlagEntityMap : WorkspaceEntityMap<Flag, int>
         builder
             .Property(flag => flag.Description)
             .HasMaxLength(int.MaxValue);
+
+        builder
+            .Property(flag => flag.EntityType)
+            .HasConversion<int?>()
+            .IsRequired(false);
+
+        builder
+            .Property(flag => flag.EntityId)
+            .IsRequired(false);
+
+        builder
+            .Property(flag => flag.AutomationRuleId)
+            .IsRequired(false);
+
+        builder
+            .HasIndex(flag => new { flag.WorkspaceId, flag.EntityType, flag.EntityId });
+
+        builder
+            .HasIndex(flag => new { flag.AutomationRuleId, flag.EntityType, flag.EntityId })
+            .IsUnique();
     }
 }

@@ -46,6 +46,35 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    public Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Project)
+            .Include(task => task.Workspace)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(task => task.Id == id && !task.IsDeleted, cancellationToken);
+    }
+
+    public Task<List<ProjectTask>> GetUnassignedAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        DateTime cutoff,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Project)
+            .Include(task => task.Workspace)
+            .Where(task =>
+                workspaceIds.Contains(task.WorkspaceId) &&
+                !task.IsDeleted &&
+                !task.ProjectTaskAppUsers.Any() &&
+                (task.UpdatedAt ?? task.CreatedAt) <= cutoff)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<TaskViewModel?> GetTaskViewModel(int taskId, CancellationToken cancellationToken = default)
     {
         return Entities
@@ -585,6 +614,19 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Where(task => task.Id == id && !task.IsDeleted)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(task => task.Status, status)
+                .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    public Task<int> UpdateTaskStatuses(IEnumerable<int> ids, ProjectTaskStatus status, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        if (idList.Count == 0) return Task.FromResult(0);
+
+        return Entities
+            .Where(task => idList.Contains(task.Id) && !task.IsDeleted)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(task => task.Status, status)
                 .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);

@@ -22,6 +22,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IReactionRepository Reactions { get; }
     public ITagRepository Tags { get; }
     public IActivityLogRepository ActivityLogs { get; }
+    public IAutomationRepository Automations { get; }
+    public IFlagRepository Flags { get; }
     public INotificationRepository Notifications { get; }
     public IUserPreferenceRepository UserPreferences { get; }
     public ICommandPaletteRecentItemRepository CommandPaletteRecentItems { get; }
@@ -45,6 +47,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Reactions = new ReactionRepository(context, connectionFactory);
         Tags = new TagRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
+        Automations = new AutomationRepository(context, connectionFactory);
+        Flags = new FlagRepository(context, connectionFactory);
         Notifications = new NotificationRepository(context, connectionFactory);
         UserPreferences = new UserPreferenceRepository(context, connectionFactory);
         CommandPaletteRecentItems = new CommandPaletteRecentItemRepository(context, connectionFactory);

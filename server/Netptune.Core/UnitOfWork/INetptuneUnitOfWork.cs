@@ -33,6 +33,10 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IActivityLogRepository ActivityLogs { get; }
 
+    IAutomationRepository Automations { get; }
+
+    IFlagRepository Flags { get; }
+
     INotificationRepository Notifications { get; }
 
     IUserPreferenceRepository UserPreferences { get; }
