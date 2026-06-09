@@ -9,7 +9,7 @@ import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
     class="flex flex-col"
     [class.mx-auto]="centerPage()"
     [class.w-full]="centerPage()"
-    [class.max-w-[1200px]]="centerPage()">
+    [class.max-w-[1360px]]="centerPage()">
     <div class="h-[0.8rem] shrink-0">
       @if (showProgress()) {
         <app-progress-bar mode="indeterminate" />
@@ -29,5 +29,5 @@ export class PageContainerComponent {
   readonly showProgress = input<boolean | null>(false);
   readonly marginBottom = input<boolean | null>(false);
   readonly fullHeight = input<boolean | null>(true);
-  readonly centerPage = input<boolean | null>(false);
+  readonly centerPage = input<boolean | null>(true);
 }
