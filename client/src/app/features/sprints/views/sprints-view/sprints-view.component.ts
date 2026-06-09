@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CardListComponent } from '@app/static/components/card/card-list.component';
 import { netptunePermissions } from '@core/auth/permissions';
 import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
@@ -18,8 +19,8 @@ import {
   selectAllSprints,
   selectSprintsLoading,
 } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
 import { LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular';
+import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { CardComponent } from '@static/components/card/card.component';
@@ -51,6 +52,7 @@ type StatusFilter = SprintStatus | null;
     LucidePlus,
     LucidePencil,
     LucideTrash2,
+    CardListComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -78,74 +80,69 @@ type StatusFilter = SprintStatus | null;
             [value]="selectedStatus()"
             (changed)="onStatusChanged($event)" />
 
-          <div class="flex flex-col gap-3">
+          <app-card-list>
             @for (sprint of filteredSprints(); track sprint.id) {
-              <div class="bg-board-group p-2">
-                <app-card class="min-h-0! gap-3 p-4!">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="min-w-0 flex-1">
-                      <div class="flex flex-wrap items-center gap-2">
-                        <h2 class="text-xl font-semibold">{{ sprint.name }}</h2>
+              <app-card class="min-h-0! gap-3 p-4!">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h2 class="text-xl font-semibold">{{ sprint.name }}</h2>
+                      <span
+                        class="rounded px-2 py-0.5 text-xs font-semibold"
+                        [class]="statusClasses(sprint.status)">
+                        {{ statusLabel(sprint.status) }}
+                      </span>
+                      @if (daysChip(sprint); as chip) {
                         <span
-                          class="rounded px-2 py-0.5 text-xs font-semibold"
-                          [class]="statusClasses(sprint.status)">
-                          {{ statusLabel(sprint.status) }}
+                          class="rounded px-2 py-0.5 text-xs font-medium"
+                          [class]="chip.classes">
+                          {{ chip.label }}
                         </span>
-                        @if (daysChip(sprint); as chip) {
-                          <span
-                            class="rounded px-2 py-0.5 text-xs font-medium"
-                            [class]="chip.classes">
-                            {{ chip.label }}
-                          </span>
-                        }
-                      </div>
-                      <p class="text-muted mt-1 text-sm">
-                        {{ sprint.projectName }} ·
-                        {{ sprint.startDate | date: 'mediumDate' }} –
-                        {{ sprint.endDate | date: 'mediumDate' }}
-                      </p>
-                    </div>
-
-                    <div class="flex shrink-0 items-center gap-1">
-                      @if (canUpdate()) {
-                        <button
-                          app-icon-button
-                          type="button"
-                          title="Edit sprint"
-                          (click)="onOpenEditDialog(sprint)">
-                          <svg lucidePencil class="h-4 w-4"></svg>
-                        </button>
-                      }
-                      @if (canUpdate()) {
-                        <button
-                          app-icon-button
-                          type="button"
-                          title="Delete sprint"
-                          (click)="onDelete(sprint)">
-                          <svg lucideTrash2 class="h-4 w-4"></svg>
-                        </button>
                       }
                     </div>
+                    <p class="text-muted mt-1 text-sm">
+                      {{ sprint.projectName }} ·
+                      {{ sprint.startDate | date: 'mediumDate' }} –
+                      {{ sprint.endDate | date: 'mediumDate' }}
+                    </p>
                   </div>
 
-                  @if (sprint.goal) {
-                    <p class="text-sm">{{ sprint.goal }}</p>
-                  }
-
-                  <div class="flex items-center justify-between gap-4">
-                    <span class="text-muted text-xs">
-                      {{ sprint.taskCount }}
-                      {{ sprint.taskCount === 1 ? 'task' : 'tasks' }}
-                    </span>
-                    <a
-                      app-flat-button
-                      color="primary"
-                      [routerLink]="[sprint.id]">
-                      Open
-                    </a>
+                  <div class="flex shrink-0 items-center gap-1">
+                    @if (canUpdate()) {
+                      <button
+                        app-icon-button
+                        type="button"
+                        title="Edit sprint"
+                        (click)="onOpenEditDialog(sprint)">
+                        <svg lucidePencil class="h-4 w-4"></svg>
+                      </button>
+                    }
+                    @if (canUpdate()) {
+                      <button
+                        app-icon-button
+                        type="button"
+                        title="Delete sprint"
+                        (click)="onDelete(sprint)">
+                        <svg lucideTrash2 class="h-4 w-4"></svg>
+                      </button>
+                    }
                   </div>
-                </app-card>
-              </div>
+                </div>
+
+                @if (sprint.goal) {
+                  <p class="text-sm">{{ sprint.goal }}</p>
+                }
+
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-muted text-xs">
+                    {{ sprint.taskCount }}
+                    {{ sprint.taskCount === 1 ? 'task' : 'tasks' }}
+                  </span>
+                  <a app-flat-button color="primary" [routerLink]="[sprint.id]">
+                    Open
+                  </a>
+                </div>
+              </app-card>
             } @empty {
               <app-card class="min-h-0! p-6! text-center">
                 @if (selectedStatus() !== null) {
@@ -155,7 +152,7 @@ type StatusFilter = SprintStatus | null;
                 }
               </app-card>
             }
-          </div>
+          </app-card-list>
         </div>
       }
     </app-page-container>

@@ -27,7 +27,7 @@ export interface BacklogGroup {
         </span>
       </div>
 
-      <div class="bg-board-group p-2">
+      <div class="p-2">
         <app-card class="min-h-0! p-0!">
           @for (task of group().tasks; track task.id) {
             <app-sprint-backlog-task-row [task]="task" [sprints]="sprints()" />

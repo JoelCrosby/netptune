@@ -31,6 +31,7 @@
   --color-border: var(--border);
   --color-hover: var(--hover);
   --color-card: var(--card);
+  --color-board-group-card: var(--board-group-card);
   --color-card-warn: var(--card-warn);
   --color-card-warn-hover: var(--card-warn-hover);
   --color-card-selected: var(--card-selected);
@@ -97,6 +98,7 @@
   --toolbar-btn-background-hover: rgba(var(--board-group-rgb), .8);
 
   --card: #fff;
+  --board-group-card: #fff;
   --card-warn: #ffe5e5;
   --card-warn-hover: #fad0d0;
   --card-selected: #f0ebf8;
@@ -155,7 +157,8 @@
   --app-bar: #272727;
   --hover: rgba(255, 255, 255, .06);
 
-  --card: rgb(26, 26, 26);
+  --card: rgb(10, 10, 10);
+  --board-group-card: rgb(26, 26, 26);
   --card-warn: #472d2d;
   --card-warn-hover: #694040;
   --card-selected: #3f3454;

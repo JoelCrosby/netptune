@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -7,8 +7,9 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
     <ng-content name="app-card-header" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class:
+      'shadow-sm flex flex-col p-6 rounded-sm border border-border bg-card min-h-24 overflow-hidden',
+  },
 })
-export class CardComponent {
-  @HostBinding('class') className =
-    'shadow-sm flex flex-col p-6 rounded-sm border border-border bg-card flex min-h-[96px] rounded-sm p-[1.6rem] overflow-hidden';
-}
+export class CardComponent {}

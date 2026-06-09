@@ -1,17 +1,11 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   input,
 } from '@angular/core';
-import { Selected } from '@core/models/selected';
-import { BoardViewTask } from '@core/models/view-models/board-view';
-import { CardComponent } from '@static/components/card/card.component';
-
-import { LucideCheck, LucideFlag } from '@lucide/angular';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { NgClass } from '@angular/common';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
 import {
   TaskPriority,
@@ -19,14 +13,17 @@ import {
   taskPriorityColors,
   taskPriorityLabels,
 } from '@core/enums/task-priority';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { Selected } from '@core/models/selected';
+import { BoardViewTask } from '@core/models/view-models/board-view';
+import { LucideCheck, LucideFlag } from '@lucide/angular';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-board-group-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CardComponent,
     AvatarComponent,
     TaskScopeIdComponent,
     LucideFlag,
@@ -35,8 +32,8 @@ import { SprintBadgeComponent } from '@static/components/sprint-badge.component'
     TooltipDirective,
     SprintBadgeComponent,
   ],
-  template: `<app-card
-    class="mb-[.3rem] flex cursor-pointer flex-col items-start overflow-hidden p-2! text-[14px] tracking-[.1px]"
+  template: `<div
+    class="border-border bg-board-group-card mb-[.3rem] flex min-h-24 cursor-pointer flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
     [class.selected]="task().selected"
     [ngClass]="priorityClasses()">
     <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
@@ -96,7 +93,7 @@ import { SprintBadgeComponent } from '@static/components/sprint-badge.component'
         </div>
       </div>
     </div>
-  </app-card> `,
+  </div> `,
 })
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();

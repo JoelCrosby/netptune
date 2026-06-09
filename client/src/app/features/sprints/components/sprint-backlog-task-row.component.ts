@@ -14,6 +14,8 @@ import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
@@ -23,7 +25,13 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     class:
       'border-border flex items-center justify-between gap-4 border-b p-4 last:border-b-0',
   },
-  imports: [RouterLink, FlatButtonComponent, TaskScopeIdComponent],
+  imports: [
+    RouterLink,
+    FlatButtonComponent,
+    FormSelectComponent,
+    FormSelectOptionComponent,
+    TaskScopeIdComponent,
+  ],
   template: `
     <div class="min-w-0 flex-1">
       <div class="flex flex-wrap items-center gap-2">
@@ -53,15 +61,18 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
     @if (sprints().length > 0) {
       <div class="flex shrink-0 items-center gap-2">
-        <select
-          class="border-border bg-background rounded border px-2 py-1.5 text-sm"
-          [value]="selectedSprintId() ?? ''"
-          (change)="onSprintSelected($event)">
-          <option value="" disabled>Assign to sprint…</option>
+        <app-form-select
+          class="w-52 text-sm [&_.nept-form-control]:mb-0"
+          label=""
+          placeholder="Assign to sprint..."
+          [value]="selectedSprintId() ?? null"
+          (changed)="onSprintSelected($event)">
           @for (sprint of sprints(); track sprint.id) {
-            <option [value]="sprint.id">{{ sprint.name }}</option>
+            <app-form-select-option [value]="sprint.id">
+              {{ sprint.name }}
+            </app-form-select-option>
           }
-        </select>
+        </app-form-select>
         <button
           app-flat-button
           color="primary"
@@ -83,8 +94,7 @@ export class SprintBacklogTaskRowComponent {
 
   readonly selectedSprintId = signal<number | undefined>(undefined);
 
-  onSprintSelected(event: Event) {
-    const sprintId = Number((event.target as HTMLSelectElement).value);
+  onSprintSelected(sprintId: number) {
     this.selectedSprintId.set(sprintId);
   }
 
