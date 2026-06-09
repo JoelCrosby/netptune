@@ -4,6 +4,23 @@ import { EntityType } from '@core/models/entity-type';
 export enum AutomationTriggerType {
   taskStatusChanged = 0,
   taskUnassignedFor = 1,
+  taskChanged = 2,
+}
+
+export enum TaskChangeField {
+  name = 0,
+  description = 1,
+  status = 2,
+  assignees = 3,
+  owner = 4,
+  priority = 5,
+  estimate = 6,
+}
+
+export enum AssigneeChangeMode {
+  addedOrRemoved = 0,
+  added = 1,
+  removed = 2,
 }
 
 export enum AutomationActionType {
@@ -19,7 +36,9 @@ export enum AutomationRunStatus {
 
 export interface AutomationTrigger {
   type: AutomationTriggerType;
+  fields?: TaskChangeField[] | null;
   status?: TaskStatus | null;
+  assigneeChangeMode?: AssigneeChangeMode | null;
   durationDays?: number | null;
 }
 

@@ -30,6 +30,8 @@ import {
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
+  AssigneeChangeMode,
+  TaskChangeField,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 
@@ -77,7 +79,9 @@ import { AutomationsService } from '../../services/automations.service';
 
             <app-automation-trigger-editor
               [(triggerType)]="triggerType"
+              [(taskFields)]="taskFields"
               [(status)]="status"
+              [(assigneeChangeMode)]="assigneeChangeMode"
               [(durationDays)]="durationDays" />
 
             <app-automation-actions-editor
@@ -122,8 +126,10 @@ export class AutomationFormViewComponent {
 
   name = '';
   isEnabled = true;
-  triggerType = AutomationTriggerType.taskStatusChanged;
+  triggerType = AutomationTriggerType.taskChanged;
+  taskFields: TaskChangeField[] = [TaskChangeField.status];
   status = TaskStatus.complete;
+  assigneeChangeMode = AssigneeChangeMode.addedOrRemoved;
   durationDays = '3';
 
   constructor() {
@@ -224,8 +230,16 @@ export class AutomationFormViewComponent {
   private populate(rule: AutomationRule) {
     this.name = rule.name;
     this.isEnabled = rule.isEnabled;
-    this.triggerType = rule.trigger.type;
+    this.triggerType =
+      rule.trigger.type === AutomationTriggerType.taskStatusChanged
+        ? AutomationTriggerType.taskChanged
+        : rule.trigger.type;
+    this.taskFields = rule.trigger.fields?.length
+      ? rule.trigger.fields
+      : [TaskChangeField.status];
     this.status = rule.trigger.status ?? TaskStatus.complete;
+    this.assigneeChangeMode =
+      rule.trigger.assigneeChangeMode ?? AssigneeChangeMode.addedOrRemoved;
     this.durationDays = String(rule.trigger.durationDays ?? 3);
     this.actions.set(
       rule.actions.length
@@ -264,6 +278,14 @@ export class AutomationFormViewComponent {
 
     const trigger = this.buildTrigger();
     if (
+      trigger.type === AutomationTriggerType.taskChanged &&
+      !trigger.fields?.length
+    ) {
+      this.validationError.set('Choose at least one task field to watch.');
+      return null;
+    }
+
+    if (
       trigger.type === AutomationTriggerType.taskUnassignedFor &&
       (!Number.isFinite(trigger.durationDays) ||
         (trigger.durationDays ?? 0) < 1 ||
@@ -282,18 +304,26 @@ export class AutomationFormViewComponent {
   }
 
   private buildTrigger(): AutomationTrigger {
-    if (this.triggerType === AutomationTriggerType.taskStatusChanged) {
+    if (this.triggerType === AutomationTriggerType.taskChanged) {
+      const fields = [...new Set(this.taskFields)];
+
       return {
-        type: AutomationTriggerType.taskStatusChanged,
-        status: this.status,
+        type: AutomationTriggerType.taskChanged,
+        fields,
+        status: fields.includes(TaskChangeField.status) ? this.status : null,
+        assigneeChangeMode: fields.includes(TaskChangeField.assignees)
+          ? this.assigneeChangeMode
+          : null,
         durationDays: null,
       };
     }
 
     return {
       type: AutomationTriggerType.taskUnassignedFor,
+      fields: null,
       durationDays: Number(this.durationDays),
       status: null,
+      assigneeChangeMode: null,
     };
   }
 

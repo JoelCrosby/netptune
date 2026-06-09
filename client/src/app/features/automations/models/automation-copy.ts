@@ -1,17 +1,38 @@
 import { taskStatusLabels, TaskStatus } from '@core/enums/project-task-status';
 import { EntityType } from '@core/models/entity-type';
 import { entityTypeToString } from '@core/transforms/entity-type';
+import { isNotNullOrUndefined } from '@core/util/nullish';
+import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   AutomationAction,
   AutomationActionType,
   AutomationRunStatus,
   AutomationTrigger,
   AutomationTriggerType,
+  AssigneeChangeMode,
+  TaskChangeField,
 } from './automation.models';
 
 export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.taskStatusChanged]: 'Task status changes',
   [AutomationTriggerType.taskUnassignedFor]: 'Task is unassigned',
+  [AutomationTriggerType.taskChanged]: 'Task changes',
+};
+
+export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
+  [TaskChangeField.name]: 'Name',
+  [TaskChangeField.description]: 'Description',
+  [TaskChangeField.status]: 'Status',
+  [TaskChangeField.assignees]: 'Assignees',
+  [TaskChangeField.owner]: 'Owner',
+  [TaskChangeField.priority]: 'Priority',
+  [TaskChangeField.estimate]: 'Estimate',
+};
+
+export const assigneeChangeModeLabels: Record<AssigneeChangeMode, string> = {
+  [AssigneeChangeMode.addedOrRemoved]: 'Added or removed',
+  [AssigneeChangeMode.added]: 'Added',
+  [AssigneeChangeMode.removed]: 'Removed',
 };
 
 export const actionTypeLabels: Record<AutomationActionType, string> = {
@@ -27,11 +48,36 @@ export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
 
 export function describeAutomationTrigger(trigger: AutomationTrigger): string {
   switch (trigger.type) {
+    case AutomationTriggerType.taskChanged:
+      return describeTaskChangedTrigger(trigger);
     case AutomationTriggerType.taskStatusChanged:
       return `When a task changes to ${statusLabel(trigger.status)}`;
     case AutomationTriggerType.taskUnassignedFor:
       return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
   }
+}
+
+function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
+  const fields = trigger.fields?.length
+    ? trigger.fields.map((field) => taskChangeFieldLabels[field])
+    : ['selected fields'];
+  const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
+
+  if (
+    trigger.fields?.includes(TaskChangeField.status) &&
+    isNotNullOrUndefined(trigger.status)
+  ) {
+    return `When a task's ${fieldText} changes, with status becoming ${statusLabel(trigger.status)}`;
+  }
+
+  if (
+    trigger.fields?.includes(TaskChangeField.assignees) &&
+    isNotNullOrUndefined(trigger.assigneeChangeMode)
+  ) {
+    return `When a task's ${fieldText} changes, with assignees ${toLowerText(assigneeChangeModeLabels[trigger.assigneeChangeMode])}`;
+  }
+
+  return `When a task's ${fieldText} changes`;
 }
 
 export function describeAutomationAction(action: AutomationAction): string {
@@ -61,9 +107,9 @@ export function describeAutomationRule(
 }
 
 export function statusLabel(status: TaskStatus | null | undefined): string {
-  return status === null || status === undefined
-    ? 'a selected status'
-    : taskStatusLabels[status];
+  return isNotNullOrUndefined(status)
+    ? taskStatusLabels[status]
+    : 'a selected status';
 }
 
 export function runStatusClass(status: AutomationRunStatus): string {
@@ -81,7 +127,7 @@ export function entityTargetLabel(
   entityType: EntityType | null | undefined,
   entityId: number | null | undefined
 ): string {
-  if (entityType === null || entityType === undefined) return 'Workspace';
+  if (!isNotNullOrUndefined(entityType)) return 'Workspace';
 
   const label = entityTypeToString(entityType);
   return entityId ? `${label} #${entityId}` : label;
