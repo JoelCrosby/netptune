@@ -164,6 +164,9 @@ export class AutomationFormViewComponent {
       message: type === AutomationActionType.notifyTaskAssignees ? '' : null,
       flagName: type === AutomationActionType.flagTask ? '' : null,
       flagDescription: type === AutomationActionType.flagTask ? '' : null,
+      status:
+        type === AutomationActionType.updateTask ? TaskStatus.inProgress : null,
+      priority: null,
     });
   }
 
@@ -276,6 +279,20 @@ export class AutomationFormViewComponent {
       return null;
     }
 
+    const invalidUpdate = actions.some(
+      (action) =>
+        action.type === AutomationActionType.updateTask &&
+        action.status === null &&
+        action.priority === null
+    );
+
+    if (invalidUpdate) {
+      this.validationError.set(
+        'Task update actions need a status or priority.'
+      );
+      return null;
+    }
+
     const trigger = this.buildTrigger();
     if (
       trigger.type === AutomationTriggerType.taskChanged &&
@@ -342,6 +359,14 @@ export class AutomationFormViewComponent {
         action.type === AutomationActionType.flagTask
           ? action.flagDescription?.trim() || null
           : null,
+      status:
+        action.type === AutomationActionType.updateTask
+          ? (action.status ?? null)
+          : null,
+      priority:
+        action.type === AutomationActionType.updateTask
+          ? (action.priority ?? null)
+          : null,
     }));
   }
 
@@ -352,6 +377,8 @@ export class AutomationFormViewComponent {
       message: '',
       flagName: null,
       flagDescription: null,
+      status: null,
+      priority: null,
     };
   }
 

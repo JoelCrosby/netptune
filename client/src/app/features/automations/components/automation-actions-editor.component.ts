@@ -4,8 +4,15 @@ import {
   input,
   output,
 } from '@angular/core';
+import {
+  TaskStatus,
+  taskStatusLabels,
+  taskStatusOptions,
+} from '@core/enums/project-task-status';
+import { TaskPriority, taskPriorityOptions } from '@core/enums/task-priority';
 import { LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { CardComponent } from '@static/components/card/card.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -37,6 +44,7 @@ export interface AutomationActionUpdate {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
+    CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
@@ -101,7 +109,7 @@ export interface AutomationActionUpdate {
                           patch: { message: $event },
                         })
                       " />
-                  } @else {
+                  } @else if (action.type === automationActionType.flagTask) {
                     <div class="grid gap-3 md:grid-cols-2">
                       <app-form-input
                         label="Flag name"
@@ -122,6 +130,74 @@ export interface AutomationActionUpdate {
                             patch: { flagDescription: $event },
                           })
                         " />
+                    </div>
+                  } @else {
+                    <div class="grid gap-4 md:grid-cols-2">
+                      <div class="flex flex-col gap-3">
+                        <app-checkbox
+                          [checked]="hasStatusUpdate(action)"
+                          (changed)="
+                            actionUpdated.emit({
+                              clientId: action.clientId,
+                              patch: {
+                                status: $event ? defaultTaskStatus : null,
+                              },
+                            })
+                          ">
+                          Set status
+                        </app-checkbox>
+                        @if (hasStatusUpdate(action)) {
+                          <app-form-select
+                            label="Status"
+                            [value]="action.status ?? null"
+                            (changed)="
+                              actionUpdated.emit({
+                                clientId: action.clientId,
+                                patch: { status: $event },
+                              })
+                            ">
+                            @for (status of taskStatuses; track status) {
+                              <app-form-select-option [value]="status">
+                                {{ taskStatusLabel(status) }}
+                              </app-form-select-option>
+                            }
+                          </app-form-select>
+                        }
+                      </div>
+                      <div class="flex flex-col gap-3">
+                        <app-checkbox
+                          [checked]="hasPriorityUpdate(action)"
+                          (changed)="
+                            actionUpdated.emit({
+                              clientId: action.clientId,
+                              patch: {
+                                priority: $event ? defaultTaskPriority : null,
+                              },
+                            })
+                          ">
+                          Set priority
+                        </app-checkbox>
+                        @if (hasPriorityUpdate(action)) {
+                          <app-form-select
+                            label="Priority"
+                            [value]="action.priority ?? null"
+                            (changed)="
+                              actionUpdated.emit({
+                                clientId: action.clientId,
+                                patch: { priority: $event },
+                              })
+                            ">
+                            @for (
+                              priority of taskPriorities;
+                              track priority.value
+                            ) {
+                              <app-form-select-option [value]="priority.value">
+                                {{ priority.label }}
+                              </app-form-select-option>
+                            }
+                          </app-form-select>
+                        }
+                      </div>
                     </div>
                   }
                 </div>
@@ -147,7 +223,12 @@ export class AutomationActionsEditorComponent {
   readonly actionTypes = [
     AutomationActionType.notifyTaskAssignees,
     AutomationActionType.flagTask,
+    AutomationActionType.updateTask,
   ];
+  readonly taskStatuses = taskStatusOptions;
+  readonly taskPriorities = taskPriorityOptions;
+  readonly defaultTaskStatus = TaskStatus.inProgress;
+  readonly defaultTaskPriority = TaskPriority.none;
 
   readonly actions = input.required<EditableAutomationAction[]>();
 
@@ -158,5 +239,17 @@ export class AutomationActionsEditorComponent {
 
   actionTypeLabel(type: AutomationActionType): string {
     return actionTypeLabels[type];
+  }
+
+  taskStatusLabel(status: (typeof taskStatusOptions)[number]): string {
+    return taskStatusLabels[status];
+  }
+
+  hasStatusUpdate(action: AutomationAction): boolean {
+    return action.status !== null && action.status !== undefined;
+  }
+
+  hasPriorityUpdate(action: AutomationAction): boolean {
+    return action.priority !== null && action.priority !== undefined;
   }
 }

@@ -1,4 +1,5 @@
 import { TaskStatus } from '@core/enums/project-task-status';
+import { TaskPriority } from '@core/enums/task-priority';
 import { EntityType } from '@core/models/entity-type';
 
 export enum AutomationTriggerType {
@@ -26,6 +27,7 @@ export enum AssigneeChangeMode {
 export enum AutomationActionType {
   notifyTaskAssignees = 0,
   flagTask = 1,
+  updateTask = 2,
 }
 
 export enum AutomationRunStatus {
@@ -49,6 +51,8 @@ export interface AutomationAction {
   message?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
+  status?: TaskStatus | null;
+  priority?: TaskPriority | null;
 }
 
 export interface AutomationRule {
@@ -86,6 +90,8 @@ export interface AutomationActionRequest {
   message?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
+  status?: TaskStatus | null;
+  priority?: TaskPriority | null;
 }
 
 export interface AutomationRuleListItem extends AutomationRule {
