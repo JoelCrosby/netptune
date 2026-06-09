@@ -102,11 +102,13 @@ internal sealed class UnassignedTaskAutomationRuleMatcher
                     continue;
                 }
 
-                executions.Add(new PendingAutomationExecution(
-                    rule.Rule,
-                    task,
-                    actorUserId,
-                    $"rule:{rule.Rule.Id}:task:{task.Id}:unassigned:{runDate}"));
+                executions.Add(new PendingAutomationExecution
+                {
+                    Rule = rule.Rule,
+                    Task = task,
+                    ActorUserId = actorUserId,
+                    IdempotencyKey = $"rule:{rule.Rule.Id}:task:{task.Id}:unassigned:{runDate}",
+                });
             }
         }
 

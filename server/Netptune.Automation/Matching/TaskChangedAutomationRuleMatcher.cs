@@ -73,11 +73,13 @@ internal sealed class TaskChangedAutomationRuleMatcher
 
         var executions = rules
             .Where(rule => Matches(rule, message))
-            .Select(rule => new PendingAutomationExecution(
-                rule,
-                task,
-                message.ActorUserId,
-                $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}"))
+            .Select(rule => new PendingAutomationExecution
+            {
+                Rule = rule,
+                Task = task,
+                ActorUserId = message.ActorUserId,
+                IdempotencyKey = $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}",
+            })
             .ToList();
 
         Telemetry.RecordRulesMatched(AutomationTriggerType.TaskChanged, executions.Count);
