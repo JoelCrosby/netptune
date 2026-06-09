@@ -5,6 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
@@ -18,10 +19,8 @@ import { TaskListComponent } from '@project-tasks/components/task-list/task-list
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { netptunePermissions } from '@core/auth/permissions';
 
 @Component({
-  templateUrl: './project-tasks-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
@@ -29,6 +28,25 @@ import { netptunePermissions } from '@core/auth/permissions';
     SpinnerComponent,
     TaskListComponent,
   ],
+  template: `<app-page-container>
+    @if (canCreateTasks()) {
+      <app-page-header
+        title="Tasks"
+        actionTitle="Create Task"
+        (actionClick)="showAddModal()"
+        [overflowActions]="secondaryActions" />
+    } @else {
+      <app-page-header title="Tasks" [overflowActions]="secondaryActions" />
+    }
+
+    @if (loading()) {
+      <div class="flex h-full flex-col items-center justify-center">
+        <app-spinner diameter="32px" />
+      </div>
+    } @else {
+      <app-task-list />
+    }
+  </app-page-container> `,
 })
 export class ProjectTasksViewComponent implements OnDestroy {
   dialog = inject(DialogService);
