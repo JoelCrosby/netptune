@@ -2,23 +2,35 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  computed,
   input,
 } from '@angular/core';
+import { twMerge } from 'tailwind-merge';
+
+const defaultContainerClass = 'border-border rounded border custom-scroll';
+const defaultTableClass = 'w-full text-sm custom-scroll';
 
 @Component({
   selector: 'app-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div [class]="containerClass()">
-      <table [class]="tableClass()">
+    <div [class]="mergedContainerClass()">
+      <table [class]="mergedTableClass()">
         <ng-content />
       </table>
     </div>
   `,
 })
 export class TableComponent {
-  readonly containerClass = input('border-border overflow-auto rounded border');
-  readonly tableClass = input('w-full text-sm');
+  readonly containerClass = input('');
+  readonly tableClass = input('');
+
+  protected readonly mergedContainerClass = computed(() =>
+    twMerge(defaultContainerClass, this.containerClass())
+  );
+  protected readonly mergedTableClass = computed(() =>
+    twMerge(defaultTableClass, this.tableClass())
+  );
 }
 
 @Directive({
