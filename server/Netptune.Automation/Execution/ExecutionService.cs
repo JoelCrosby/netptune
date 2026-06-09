@@ -11,55 +11,54 @@ namespace Netptune.Automation.Execution;
 
 public interface IExecutionService
 {
-    Task ExecuteStatusChangedRules(TaskStatusChangedMessage message, CancellationToken cancellationToken);
+    Task ExecuteTaskChangedRules(TaskChangedMessage message, CancellationToken cancellationToken);
 
     Task ExecuteUnassignedRules(CancellationToken cancellationToken);
 }
 
 internal sealed class ExecutionService : IExecutionService
 {
-    private readonly StatusChangedAutomationRuleMatcher StatusChangedMatcher;
+    private readonly TaskChangedAutomationRuleMatcher TaskChangedMatcher;
     private readonly UnassignedTaskAutomationRuleMatcher UnassignedTaskMatcher;
     private readonly RuleExecutor RuleExecutor;
     private readonly ILogger<ExecutionService> Logger;
 
     public ExecutionService(
-        StatusChangedAutomationRuleMatcher statusChangedMatcher,
+        TaskChangedAutomationRuleMatcher taskChangedMatcher,
         UnassignedTaskAutomationRuleMatcher unassignedTaskMatcher,
         RuleExecutor ruleExecutor,
         ILogger<ExecutionService> logger)
     {
-        StatusChangedMatcher = statusChangedMatcher;
+        TaskChangedMatcher = taskChangedMatcher;
         UnassignedTaskMatcher = unassignedTaskMatcher;
         RuleExecutor = ruleExecutor;
         Logger = logger;
     }
 
-    public async Task ExecuteStatusChangedRules(TaskStatusChangedMessage message, CancellationToken cancellationToken)
+    public async Task ExecuteTaskChangedRules(TaskChangedMessage message, CancellationToken cancellationToken)
     {
         using var activity = Telemetry.StartActivity(
-            "automation.execute_status_changed_rules",
-            AutomationTriggerType.TaskStatusChanged);
+            "automation.execute_task_changed_rules",
+            AutomationTriggerType.TaskChanged);
         var startedAt = Stopwatch.GetTimestamp();
 
         activity?.SetTag("task.id", message.TaskId);
         activity?.SetTag("workspace.id", message.WorkspaceId);
         activity?.SetTag("automation.event_id", message.EventId.ToString());
-        activity?.SetTag("automation.old_status", message.OldStatus.ToString());
-        activity?.SetTag("automation.new_status", message.NewStatus.ToString());
+        activity?.SetTag("automation.changed_fields", string.Join(",", message.Changes.Select(change => change.Field)));
 
         try
         {
-            var executions = await StatusChangedMatcher.Match(message, cancellationToken);
+            var executions = await TaskChangedMatcher.Match(message, cancellationToken);
 
-            await RuleExecutor.Execute(AutomationTriggerType.TaskStatusChanged, executions, cancellationToken);
+            await RuleExecutor.Execute(AutomationTriggerType.TaskChanged, executions, cancellationToken);
         }
         catch (Exception ex)
         {
             Telemetry.MarkFailed(activity, ex);
             Logger.LogError(
                 ex,
-                "Task status automation execution failed for task {TaskId} in workspace {WorkspaceId}",
+                "Task-change automation execution failed for task {TaskId} in workspace {WorkspaceId}",
                 message.TaskId,
                 message.WorkspaceId);
             throw;
@@ -67,7 +66,7 @@ internal sealed class ExecutionService : IExecutionService
         finally
         {
             Telemetry.RecordExecutionDuration(
-                AutomationTriggerType.TaskStatusChanged,
+                AutomationTriggerType.TaskChanged,
                 Stopwatch.GetElapsedTime(startedAt));
         }
     }

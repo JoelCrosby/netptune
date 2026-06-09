@@ -57,6 +57,32 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenTaskChangedTriggerMissingFields()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Task changed notification",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("field");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenFlagActionMissingFlagName()
     {
         var request = new AutomationRuleRequest
@@ -101,7 +127,8 @@ public class CreateAutomationRuleCommandHandlerTests
             Name = " Done notification ",
             Trigger = new AutomationTriggerRequest
             {
-                Type = AutomationTriggerType.TaskStatusChanged,
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
                 Status = ProjectTaskStatus.Complete,
             },
             Actions =

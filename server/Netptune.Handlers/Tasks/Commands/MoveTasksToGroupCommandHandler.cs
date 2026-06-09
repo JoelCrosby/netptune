@@ -72,7 +72,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
         foreach (var oldTask in oldTasks.Where(task => task.Status != newStatus))
         {
-            await PublishStatusChanged(
+            await PublishTaskChanged(
                 oldTask.Id,
                 oldTask.WorkspaceId,
                 oldTask.Status,
@@ -82,19 +82,21 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         return ClientResponse.Success;
     }
 
-    private Task PublishStatusChanged(
+    private Task PublishTaskChanged(
         int taskId,
         int workspaceId,
         ProjectTaskStatus oldStatus,
         ProjectTaskStatus newStatus)
     {
-        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        return EventPublisher.Dispatch(new TaskChangedMessage
         {
             WorkspaceId = workspaceId,
             TaskId = taskId,
             ActorUserId = Identity.GetCurrentUserId(),
-            OldStatus = oldStatus,
-            NewStatus = newStatus,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, oldStatus, newStatus),
+            ],
         });
     }
 }

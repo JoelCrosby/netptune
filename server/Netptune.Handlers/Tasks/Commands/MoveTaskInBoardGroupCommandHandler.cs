@@ -95,7 +95,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
         if (oldTask is not null && oldTask.Status != newStatus && oldTask.WorkspaceId is not null)
         {
-            await PublishStatusChanged(oldTask.Id, oldTask.WorkspaceId.Value, oldTask.Status, newStatus);
+            await PublishTaskChanged(oldTask.Id, oldTask.WorkspaceId.Value, oldTask.Status, newStatus);
         }
 
         return ClientResponse.Success;
@@ -139,19 +139,21 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
         return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
     }
 
-    private Task PublishStatusChanged(
+    private Task PublishTaskChanged(
         int taskId,
         int workspaceId,
         ProjectTaskStatus oldStatus,
         ProjectTaskStatus newStatus)
     {
-        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        return EventPublisher.Dispatch(new TaskChangedMessage
         {
             WorkspaceId = workspaceId,
             TaskId = taskId,
             ActorUserId = Identity.GetCurrentUserId(),
-            OldStatus = oldStatus,
-            NewStatus = newStatus,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, oldStatus, newStatus),
+            ],
         });
     }
 }

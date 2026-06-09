@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Enums;
 using Netptune.Core.Entities;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
@@ -237,5 +238,36 @@ public class UpdateTaskCommandHandlerTests
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().NotContain(ActivityType.ModifyEstimate);
+    }
+
+    [Fact]
+    public async Task Update_ShouldDispatchTaskChangedEvent_WhenNameChanges()
+    {
+        var request = Fixture.Build<UpdateProjectTaskRequest>()
+            .With(req => req.Name, "Updated name")
+            .Create();
+        var task = BuildTask();
+        task.Name = "Original name";
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = "Updated name",
+            Description = task.Description,
+            Status = task.Status,
+            WorkspaceId = 123,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<TaskChangedMessage>(message =>
+            message.WorkspaceId == 123 &&
+            message.TaskId == task.Id &&
+            message.ActorUserId == "user-1" &&
+            message.Changes.Any(change =>
+                change.Field == TaskChangeField.Name &&
+                change.OldValue == "Original name" &&
+                change.NewValue == "Updated name")));
     }
 }

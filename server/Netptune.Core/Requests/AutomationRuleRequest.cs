@@ -17,7 +17,11 @@ public record AutomationTriggerRequest
 {
     public AutomationTriggerType Type { get; init; }
 
+    public List<TaskChangeField>? Fields { get; init; }
+
     public ProjectTaskStatus? Status { get; init; }
+
+    public AssigneeChangeMode? AssigneeChangeMode { get; init; }
 
     public int? DurationDays { get; init; }
 }

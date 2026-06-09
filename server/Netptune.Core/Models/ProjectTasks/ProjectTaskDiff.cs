@@ -7,30 +7,49 @@ namespace Netptune.Core.Models.ProjectTasks;
 
 public record ValueDiff<T>
 {
-    public bool Modified;
+    public bool Modified { get; init; }
 
-    public T? NewValue;
+    public T? OldValue { get; init; }
+
+    public T? NewValue { get; init; }
 }
 
 public record ProjectTaskDiff
 {
-    private ValueDiff<string> Name = null!;
+    public ValueDiff<string> Name { get; init; } = null!;
 
-    private ValueDiff<string> Description = null!;
+    public ValueDiff<string> Description { get; init; } = null!;
 
-    private ValueDiff<ProjectTaskStatus> Status = null!;
+    public ValueDiff<ProjectTaskStatus> Status { get; init; } = null!;
 
-    private ValueDiff<TaskPriority> Priority = null!;
+    public ValueDiff<TaskPriority> Priority { get; init; } = null!;
 
-    private ValueDiff<EstimateType> Estimate = null!;
+    public ValueDiff<EstimateType> Estimate { get; init; } = null!;
 
-    private AssigneeDiff Assignees = null!;
+    public AssigneeDiff Assignees { get; init; } = null!;
 
-    private record AssigneeDiff
+    public bool HasChanges => ChangedFields.Any();
+
+    public IEnumerable<TaskChangeField> ChangedFields
     {
-        public bool Modified;
-        public List<string> Added = [];
-        public List<string> Removed = [];
+        get
+        {
+            if (Name.Modified) yield return TaskChangeField.Name;
+            if (Description.Modified) yield return TaskChangeField.Description;
+            if (Status.Modified) yield return TaskChangeField.Status;
+            if (Priority.Modified) yield return TaskChangeField.Priority;
+            if (Estimate.Modified) yield return TaskChangeField.Estimate;
+            if (Assignees.Modified) yield return TaskChangeField.Assignees;
+        }
+    }
+
+    public record AssigneeDiff
+    {
+        public bool Modified { get; init; }
+
+        public List<string> Added { get; init; } = [];
+
+        public List<string> Removed { get; init; } = [];
     }
 
     public static ProjectTaskDiff Create(TaskViewModel old, TaskViewModel updated)
@@ -60,26 +79,31 @@ public record ProjectTaskDiff
             Name = new ValueDiff<string>
             {
                 Modified = nameChanged,
+                OldValue = old.Name,
                 NewValue = nameValue,
             },
             Description = new ValueDiff<string>
             {
                 Modified = descriptionChanged,
+                OldValue = old.Description,
                 NewValue = descriptionValue,
             },
             Status = new ValueDiff<ProjectTaskStatus>
             {
                 Modified = statusChanged,
+                OldValue = old.Status,
                 NewValue = statusValue,
             },
             Priority = new ValueDiff<TaskPriority>
             {
                 Modified = priorityChanged,
+                OldValue = old.Priority ?? TaskPriority.None,
                 NewValue = priorityValue,
             },
             Estimate = new ValueDiff<EstimateType>
             {
                 Modified = estimateChanged,
+                OldValue = old.EstimateType ?? EstimateType.StoryPoints,
                 NewValue = estimateTypeValue,
             },
             Assignees = new AssigneeDiff
@@ -89,6 +113,43 @@ public record ProjectTaskDiff
                 Removed = removedAssignees,
             },
         };
+    }
+
+    public List<TaskFieldChange> ToTaskFieldChanges()
+    {
+        var changes = new List<TaskFieldChange>();
+
+        if (Name.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Name, Name.OldValue, Name.NewValue));
+        }
+
+        if (Description.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Description, Description.OldValue, Description.NewValue));
+        }
+
+        if (Status.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Status, Status.OldValue, Status.NewValue));
+        }
+
+        if (Priority.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Priority, Priority.OldValue, Priority.NewValue));
+        }
+
+        if (Estimate.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Estimate, Estimate.OldValue, Estimate.NewValue));
+        }
+
+        if (Assignees.Modified)
+        {
+            changes.Add(TaskFieldChange.Assignees(Assignees.Added, Assignees.Removed));
+        }
+
+        return changes;
     }
 
     public void LogDiff(IActivityLogger activity, int entityId)

@@ -43,7 +43,7 @@ public static class ServiceCollectionExtensions
         options.Validate();
 
         services.AddSingleton(Options.Create(options));
-        services.AddScoped<StatusChangedAutomationRuleMatcher>();
+        services.AddScoped<TaskChangedAutomationRuleMatcher>();
         services.AddScoped<UnassignedTaskAutomationRuleMatcher>();
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();

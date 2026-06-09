@@ -82,6 +82,22 @@ internal static class AutomationTestData
         }, actionType);
     }
 
+    public static async Task<AutomationRule> CreateTaskChangedRule(
+        DataContext db,
+        AutomationScenario scenario,
+        IReadOnlyCollection<TaskChangeField> fields,
+        ProjectTaskStatus? status = null,
+        AssigneeChangeMode? assigneeChangeMode = null,
+        AutomationActionType actionType = AutomationActionType.FlagTask)
+    {
+        return await CreateRule(db, scenario, AutomationTriggerType.TaskChanged, new
+        {
+            fields,
+            status,
+            assigneeChangeMode,
+        }, actionType);
+    }
+
     public static async Task<AutomationRule> CreateUnassignedRule(
         DataContext db,
         AutomationScenario scenario,

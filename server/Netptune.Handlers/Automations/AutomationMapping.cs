@@ -33,6 +33,12 @@ internal static class AutomationMapping
     {
         return trigger.Type switch
         {
+            AutomationTriggerType.TaskChanged => JsonSerializer.SerializeToDocument(new
+            {
+                fields = trigger.Fields,
+                status = trigger.Status,
+                assigneeChangeMode = trigger.AssigneeChangeMode,
+            }, JsonOptions.Default),
             AutomationTriggerType.TaskStatusChanged => JsonSerializer.SerializeToDocument(new
             {
                 status = trigger.Status,
@@ -66,9 +72,17 @@ internal static class AutomationMapping
     {
         return type switch
         {
+            AutomationTriggerType.TaskChanged => new AutomationTriggerViewModel
+            {
+                Type = type,
+                Fields = ReadEnumList<TaskChangeField>(config, "fields"),
+                Status = ReadEnum<ProjectTaskStatus>(config, "status"),
+                AssigneeChangeMode = ReadEnum<AssigneeChangeMode>(config, "assigneeChangeMode"),
+            },
             AutomationTriggerType.TaskStatusChanged => new AutomationTriggerViewModel
             {
                 Type = type,
+                Fields = [TaskChangeField.Status],
                 Status = ReadEnum<ProjectTaskStatus>(config, "status"),
             },
             AutomationTriggerType.TaskUnassignedFor => new AutomationTriggerViewModel
@@ -152,6 +166,38 @@ internal static class AutomationMapping
         }
 
         return null;
+    }
+
+    private static List<TEnum> ReadEnumList<TEnum>(JsonDocument? document, string property)
+        where TEnum : struct, Enum
+    {
+        if (document is null ||
+            !document.RootElement.TryGetProperty(property, out var element) ||
+            element.ValueKind != JsonValueKind.Array)
+        {
+            return [];
+        }
+
+        var values = new List<TEnum>();
+
+        foreach (var item in element.EnumerateArray())
+        {
+            if (item.ValueKind == JsonValueKind.Number &&
+                item.TryGetInt32(out var intValue) &&
+                Enum.IsDefined(typeof(TEnum), intValue))
+            {
+                values.Add((TEnum)(object)intValue);
+                continue;
+            }
+
+            if (item.ValueKind == JsonValueKind.String &&
+                Enum.TryParse<TEnum>(item.GetString(), true, out var enumValue))
+            {
+                values.Add(enumValue);
+            }
+        }
+
+        return values;
     }
 
     private static int? ReadInt(JsonDocument? document, string property)

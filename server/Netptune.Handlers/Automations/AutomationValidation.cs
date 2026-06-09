@@ -14,6 +14,14 @@ internal static class AutomationValidation
 
         var triggerError = request.Trigger.Type switch
         {
+            AutomationTriggerType.TaskChanged when request.Trigger.Fields is null || request.Trigger.Fields.Count == 0 =>
+                "Task changed automations require at least one field.",
+            AutomationTriggerType.TaskChanged when request.Trigger.Status is not null &&
+                                                    !request.Trigger.Fields.Contains(TaskChangeField.Status) =>
+                "Task changed automations can only set status when watching the status field.",
+            AutomationTriggerType.TaskChanged when request.Trigger.AssigneeChangeMode is not null &&
+                                                    !request.Trigger.Fields.Contains(TaskChangeField.Assignees) =>
+                "Task changed automations can only set assigneeChangeMode when watching the assignees field.",
             AutomationTriggerType.TaskStatusChanged when request.Trigger.Status is null =>
                 "Task status changed automations require a status.",
             AutomationTriggerType.TaskUnassignedFor when request.Trigger.DurationDays is null or < 1 or > 365 =>

@@ -78,25 +78,26 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         if (response is null) return ClientResponse<TaskViewModel>.NotFound;
 
-        ProjectTaskDiff.Create(old, response).LogDiff(Activity, response.Id);
+        var diff = ProjectTaskDiff.Create(old, response);
 
-        if (old.Status != response.Status && response.WorkspaceId is not null)
+        diff.LogDiff(Activity, response.Id);
+
+        if (diff.HasChanges && response.WorkspaceId is not null)
         {
-            await PublishStatusChanged(old, response);
+            await PublishTaskChanged(response, diff);
         }
 
         return ClientResponse<TaskViewModel>.Success(response);
     }
 
-    private Task PublishStatusChanged(TaskViewModel old, TaskViewModel current)
+    private Task PublishTaskChanged(TaskViewModel current, ProjectTaskDiff diff)
     {
-        return EventPublisher.Dispatch(new TaskStatusChangedMessage
+        return EventPublisher.Dispatch(new TaskChangedMessage
         {
             WorkspaceId = current.WorkspaceId!.Value,
             TaskId = current.Id,
             ActorUserId = Identity.GetCurrentUserId(),
-            OldStatus = old.Status,
-            NewStatus = current.Status,
+            Changes = diff.ToTaskFieldChanges(),
         });
     }
 
