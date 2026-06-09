@@ -47,6 +47,8 @@ internal static class AutomationValidation
             {
                 AutomationActionType.FlagTask when string.IsNullOrWhiteSpace(action.FlagName) =>
                     "Flag task actions require flagName.",
+                AutomationActionType.UpdateTask when action.Status is null && action.Priority is null =>
+                    "Update task actions require status or priority.",
                 _ => null,
             };
 

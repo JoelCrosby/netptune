@@ -114,6 +114,37 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_updates_task_for_matching_rule()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, ProjectTaskStatus.New);
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.UpdateTask);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var task = await scope.Db.ProjectTasks.SingleAsync(TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        task.Status.Should().Be(ProjectTaskStatus.Complete);
+        task.Priority.Should().Be(TaskPriority.High);
+        task.ModifiedByUserId.Should().Be(scenario.Owner.Id);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_supports_legacy_status_changed_rules()
     {
         await using var scope = await Fixture.CreateScope();

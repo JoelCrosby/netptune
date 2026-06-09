@@ -66,6 +66,7 @@ internal sealed class RuleExecutor
             plan.Runs,
             plan.NotificationPlans,
             flags,
+            plan.TaskUpdatePlans,
             cancellationToken);
 
         await NotificationPublisher.Publish(triggerType, notifications, cancellationToken);

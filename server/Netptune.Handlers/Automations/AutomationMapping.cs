@@ -64,6 +64,11 @@ internal static class AutomationMapping
                 flagName = action.FlagName,
                 flagDescription = action.FlagDescription,
             }, JsonOptions.Default),
+            AutomationActionType.UpdateTask => JsonSerializer.SerializeToDocument(new
+            {
+                status = action.Status,
+                priority = action.Priority,
+            }, JsonOptions.Default),
             _ => null,
         };
     }
@@ -112,6 +117,14 @@ internal static class AutomationMapping
                 SortOrder = action.SortOrder,
                 FlagName = ReadString(action.Config, "flagName"),
                 FlagDescription = ReadString(action.Config, "flagDescription"),
+            },
+            AutomationActionType.UpdateTask => new AutomationActionViewModel
+            {
+                Id = action.Id,
+                Type = action.Type,
+                SortOrder = action.SortOrder,
+                Status = ReadEnum<ProjectTaskStatus>(action.Config, "status"),
+                Priority = ReadEnum<TaskPriority>(action.Config, "priority"),
             },
             _ => new AutomationActionViewModel
             {

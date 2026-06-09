@@ -47,4 +47,8 @@ public record AutomationActionViewModel
     public string? FlagName { get; init; }
 
     public string? FlagDescription { get; init; }
+
+    public ProjectTaskStatus? Status { get; init; }
+
+    public TaskPriority? Priority { get; init; }
 }

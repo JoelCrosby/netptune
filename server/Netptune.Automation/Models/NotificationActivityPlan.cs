@@ -2,7 +2,11 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Automation.Models;
 
-internal sealed record NotificationActivityPlan(
-    PendingAutomationExecution Execution,
-    ActivityLog Activity,
-    List<string> RecipientUserIds);
+internal sealed record NotificationActivityPlan
+{
+    public required PendingAutomationExecution Execution { get; init; }
+
+    public required ActivityLog Activity { get; init; }
+
+    public required List<string> RecipientUserIds { get; init; }
+}

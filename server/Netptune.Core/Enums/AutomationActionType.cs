@@ -4,4 +4,5 @@ public enum AutomationActionType
 {
     NotifyTaskAssignees = 0,
     FlagTask = 1,
+    UpdateTask = 2,
 }

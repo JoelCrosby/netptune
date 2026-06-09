@@ -24,6 +24,7 @@ internal sealed class ActionPlanner
         var runs = new List<AutomationRun>(executions.Count);
         var notificationPlans = new List<NotificationActivityPlan>();
         var flagPlans = new List<FlagPlan>();
+        var taskUpdatePlans = new List<TaskUpdatePlan>();
 
         foreach (var execution in executions)
         {
@@ -60,6 +61,9 @@ internal sealed class ActionPlanner
                         case AutomationActionType.FlagTask:
                             flagPlans.Add(new FlagPlan(execution, action));
                             break;
+                        case AutomationActionType.UpdateTask:
+                            AddTaskUpdatePlan(taskUpdatePlans, execution, action);
+                            break;
                         default:
                             Logger.LogWarning(
                                 "Automation rule {RuleId} has unsupported action type {ActionType}",
@@ -80,7 +84,39 @@ internal sealed class ActionPlanner
             runs.Add(run);
         }
 
-        return new ActionPlan(runs, notificationPlans, flagPlans);
+        return new ActionPlan
+        {
+            Runs = runs,
+            NotificationPlans = notificationPlans,
+            FlagPlans = flagPlans,
+            TaskUpdatePlans = taskUpdatePlans,
+        };
+    }
+
+    private void AddTaskUpdatePlan(
+        List<TaskUpdatePlan> plans,
+        PendingAutomationExecution execution,
+        AutomationAction action)
+    {
+        var status = ConfigReader.ReadEnum<ProjectTaskStatus>(action.Config, "status");
+        var priority = ConfigReader.ReadEnum<TaskPriority>(action.Config, "priority");
+
+        if (status is null && priority is null)
+        {
+            Logger.LogDebug(
+                "Automation rule {RuleId} skipped task update action for task {TaskId}: no task fields configured",
+                execution.Rule.Id,
+                execution.Task.Id);
+            return;
+        }
+
+        plans.Add(new TaskUpdatePlan
+        {
+            Execution = execution,
+            Action = action,
+            Status = status,
+            Priority = priority,
+        });
     }
 
     private void AddNotificationPlan(
@@ -128,7 +164,12 @@ internal sealed class ActionPlanner
             }, JsonOptions.Default),
         };
 
-        plans.Add(new NotificationActivityPlan(execution, activity, recipientIds));
+        plans.Add(new NotificationActivityPlan
+        {
+            Execution = execution,
+            Activity = activity,
+            RecipientUserIds = recipientIds,
+        });
 
         Logger.LogDebug(
             "Automation rule {RuleId} planned notification activity for task {TaskId} with {RecipientCount} recipients",

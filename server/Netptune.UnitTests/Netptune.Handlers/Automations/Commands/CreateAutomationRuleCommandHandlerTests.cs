@@ -110,6 +110,33 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenUpdateTaskActionMissingFields()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Unassigned task update",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskUnassignedFor,
+                DurationDays = 3,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.UpdateTask,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("status or priority");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldCreateRule_WhenRequestValid()
     {
         AutomationRule? savedRule = null;

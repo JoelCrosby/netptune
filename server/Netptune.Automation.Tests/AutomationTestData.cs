@@ -158,6 +158,11 @@ internal static class AutomationTestData
                 flagName = "Needs attention",
                 flagDescription = "Flagged by test automation",
             }),
+            AutomationActionType.UpdateTask => JsonSerializer.SerializeToDocument(new
+            {
+                status = ProjectTaskStatus.Complete,
+                priority = TaskPriority.High,
+            }),
             _ => JsonSerializer.SerializeToDocument(new { }),
         };
     }
