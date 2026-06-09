@@ -1,16 +1,12 @@
 name: Test
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - "server/**"
-      - ".github/workflows/test.yml"
   pull_request:
     branches: [ main ]
     paths:
       - "server/**"
       - ".github/workflows/test.yml"
+  workflow_dispatch:
 
 jobs:
   unit-tests:

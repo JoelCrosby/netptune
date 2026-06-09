@@ -1,28 +1,341 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows:
-      - Build App Image
-      - Build Client Image
-      - Build Jobs Image
-      - Build Website Image
-    branches: [main]
-    types: [completed]
   push:
     branches: [main]
     paths:
+      - "server/**"
+      - "client/**"
+      - "website/**"
       - "charts/**"
       - ".github/workflows/deploy-charts.yml"
 
 concurrency:
-  group: deploy-production
+  group: deploy-production-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  REGISTRY: ghcr.io
+  APP_IMAGE_NAME: ${{ github.repository_owner }}/netptune
+  CLIENT_IMAGE_NAME: ${{ github.repository_owner }}/netptune-client
+  JOBS_IMAGE_NAME: ${{ github.repository_owner }}/netptune-jobs
+  WEBSITE_IMAGE_NAME: ${{ github.repository_owner }}/netptune-website
+
 jobs:
-  deploy:
+  changes:
+    name: Detect Changes
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+    outputs:
+      server: ${{ steps.filter.outputs.server }}
+      client: ${{ steps.filter.outputs.client }}
+      website: ${{ steps.filter.outputs.website }}
+      charts: ${{ steps.filter.outputs.charts }}
+      deploy: ${{ steps.filter.outputs.deploy }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed areas
+        id: filter
+        run: |
+          before="${{ github.event.before }}"
+          after="${{ github.sha }}"
+
+          if [[ "$before" =~ ^0+$ ]] || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            before="$(git rev-list --max-parents=0 "$after")"
+          fi
+
+          server=false
+          client=false
+          website=false
+          charts=false
+
+          while IFS= read -r path; do
+            case "$path" in
+              server/*) server=true ;;
+              client/*) client=true ;;
+              website/*) website=true ;;
+              charts/*) charts=true ;;
+            esac
+          done < <(git diff --name-only "$before" "$after")
+
+          deploy=false
+          if [[ "$server" == true || "$client" == true || "$website" == true || "$charts" == true ]]; then
+            deploy=true
+          fi
+
+          {
+            echo "server=$server"
+            echo "client=$client"
+            echo "website=$website"
+            echo "charts=$charts"
+            echo "deploy=$deploy"
+          } >> "$GITHUB_OUTPUT"
+
+  test-server:
+    name: Test Server
+    needs: changes
+    if: ${{ needs.changes.outputs.server == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore unit tests
+        run: dotnet restore Netptune.UnitTests/Netptune.UnitTests.csproj
+
+      - name: Build unit tests
+        run: dotnet build Netptune.UnitTests/Netptune.UnitTests.csproj --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test --project Netptune.UnitTests/Netptune.UnitTests.csproj --no-build --configuration Release
+
+      - name: Restore integration tests
+        run: dotnet restore Netptune.IntegrationTests/Netptune.IntegrationTests.csproj
+
+      - name: Build integration tests
+        run: dotnet build Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-restore --configuration Release
+
+      - name: Run integration tests
+        run: dotnet test --project Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-build --configuration Release
+
+  build-app:
+    name: Build App Image
+    needs: [changes, test-server]
+    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.APP_IMAGE_NAME }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: server/Netptune.App/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+            GITHUB_REF=${{ github.ref }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+            RUN_ID=${{ github.run_id }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-jobs:
+    name: Build Jobs Image
+    needs: [changes, test-server]
+    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.JOBS_IMAGE_NAME }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: server/Netptune.JobServer/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+            GITHUB_REF=${{ github.ref }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+            RUN_ID=${{ github.run_id }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-client:
+    name: Build Client Image
+    needs: changes
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./client
+          file: client/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+            GITHUB_REF=${{ github.ref }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+            RUN_ID=${{ github.run_id }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-website:
+    name: Build Website Image
+    needs: changes
+    if: ${{ needs.changes.outputs.website == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.WEBSITE_IMAGE_NAME }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./website
+          file: website/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy
+    needs: [changes, test-server, build-app, build-jobs, build-client, build-website]
+    if: |
+      ${{
+        always() &&
+        needs.changes.outputs.deploy == 'true' &&
+        (needs.test-server.result == 'success' || needs.test-server.result == 'skipped') &&
+        (needs.build-app.result == 'success' || needs.build-app.result == 'skipped') &&
+        (needs.build-jobs.result == 'success' || needs.build-jobs.result == 'skipped') &&
+        (needs.build-client.result == 'success' || needs.build-client.result == 'skipped') &&
+        (needs.build-website.result == 'success' || needs.build-website.result == 'skipped')
+      }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -40,7 +353,10 @@ jobs:
 
       - name: Deploy
         run: |
-          helm upgrade netptune-app charts/netptune/ \
+          helm upgrade --install netptune-app charts/netptune/ \
+            --atomic \
+            --wait \
+            --timeout 10m \
             --kubeconfig kubeconfig.yaml \
             --namespace default \
             --set ingress.enabled=true \
@@ -90,6 +406,35 @@ jobs:
             --set "secrets.dbgate.cookie_secret=${{ secrets.DBGATE_COOKIE_SECRET }}"
 
       - name: Restart deployments
+        env:
+          SERVER_CHANGED: ${{ needs.changes.outputs.server }}
+          CLIENT_CHANGED: ${{ needs.changes.outputs.client }}
+          WEBSITE_CHANGED: ${{ needs.changes.outputs.website }}
+          CHARTS_CHANGED: ${{ needs.changes.outputs.charts }}
         run: |
-          kubectl --kubeconfig kubeconfig.yaml rollout restart deployment/api-deployment deployment/jobs-deployment deployment/client-deployment deployment/website-deployment
-          kubectl --kubeconfig kubeconfig.yaml rollout status deployment/api-deployment deployment/jobs-deployment deployment/client-deployment deployment/website-deployment
+          deployments=()
+
+          if [[ "$SERVER_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
+            deployments+=(api-deployment jobs-deployment)
+          fi
+
+          if [[ "$CLIENT_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
+            deployments+=(client-deployment)
+          fi
+
+          if [[ "$WEBSITE_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
+            deployments+=(website-deployment)
+          fi
+
+          if [[ "${#deployments[@]}" -eq 0 ]]; then
+            echo "No application deployments need a restart."
+            exit 0
+          fi
+
+          for deployment in "${deployments[@]}"; do
+            kubectl --kubeconfig kubeconfig.yaml --namespace default rollout restart "deployment/$deployment"
+          done
+
+          for deployment in "${deployments[@]}"; do
+            kubectl --kubeconfig kubeconfig.yaml --namespace default rollout status "deployment/$deployment" --timeout 5m
+          done
