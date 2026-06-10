@@ -16,6 +16,9 @@ import { LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CardComponent } from '@static/components/card/card.component';
+import { CardHeaderComponent } from '@static/components/card/card-header.component';
+import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -40,6 +43,9 @@ import { AutomationsService } from '../../services/automations.service';
     PageHeaderComponent,
     SpinnerComponent,
     CardComponent,
+    CardHeaderComponent,
+    CardSubtitleComponent,
+    CardTitleComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     AutomationStatGridComponent,
@@ -81,11 +87,13 @@ import { AutomationsService } from '../../services/automations.service';
         </div>
       } @else {
         <app-card class="min-h-0! p-8! text-center">
-          <h2 class="text-lg font-semibold">No automations yet</h2>
-          <p class="text-muted mx-auto mt-2 max-w-xl text-sm">
-            Workspace automations can watch task workflow events and apply the
-            same follow-up every time.
-          </p>
+          <app-card-header>
+            <app-card-title>No automations yet</app-card-title>
+            <app-card-subtitle>
+              Workspace automations can watch task workflow events and apply the
+              same follow-up every time.
+            </app-card-subtitle>
+          </app-card-header>
           @if (canManage()) {
             <a
               app-flat-button

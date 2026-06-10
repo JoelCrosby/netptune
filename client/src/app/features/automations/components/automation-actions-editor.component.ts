@@ -15,6 +15,9 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { CardComponent } from '@static/components/card/card.component';
+import { CardHeaderComponent } from '@static/components/card/card-header.component';
+import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -44,6 +47,9 @@ export interface AutomationActionUpdate {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
+    CardHeaderComponent,
+    CardSubtitleComponent,
+    CardTitleComponent,
     CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
@@ -56,14 +62,15 @@ export interface AutomationActionUpdate {
   ],
   template: `
     <app-card class="min-h-0! p-5!">
+      <app-card-header>
+        <app-card-title>Then</app-card-title>
+        <app-card-subtitle>
+          Add the follow-up actions in the order they should run.
+        </app-card-subtitle>
+      </app-card-header>
+
       <div class="flex flex-col gap-4">
         <div class="flex items-start justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-semibold">Then</h2>
-            <p class="text-muted text-sm">
-              Add the follow-up actions in the order they should run.
-            </p>
-          </div>
           <button
             app-stroked-button
             type="button"

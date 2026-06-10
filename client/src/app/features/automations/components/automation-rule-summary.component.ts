@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CardHeaderComponent } from '@static/components/card/card-header.component';
+import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
 import {
   describeAutomationActions,
   describeAutomationRule,
@@ -12,14 +15,15 @@ import {
 @Component({
   selector: 'app-automation-rule-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CardHeaderComponent, CardSubtitleComponent, CardTitleComponent],
   template: `
     <div class="flex flex-col gap-3">
-      <div>
-        <h2 class="text-sm font-semibold">Rule Preview</h2>
-        <p class="text-foreground/80 mt-1 text-sm">
+      <app-card-header>
+        <app-card-title>Rule Preview</app-card-title>
+        <app-card-subtitle>
           {{ ruleSummary() }}
-        </p>
-      </div>
+        </app-card-subtitle>
+      </app-card-header>
 
       <div class="grid gap-3 md:grid-cols-2">
         <div class="border-border rounded border p-3">

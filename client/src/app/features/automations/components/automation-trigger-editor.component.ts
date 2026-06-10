@@ -5,6 +5,9 @@ import {
   TaskStatus,
 } from '@core/enums/project-task-status';
 import { CardComponent } from '@static/components/card/card.component';
+import { CardHeaderComponent } from '@static/components/card/card-header.component';
+import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
+import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -25,6 +28,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
+    CardHeaderComponent,
+    CardSubtitleComponent,
+    CardTitleComponent,
     CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
@@ -32,14 +38,14 @@ import {
   ],
   template: `
     <app-card class="min-h-0! p-5!">
-      <div class="flex flex-col gap-4">
-        <div>
-          <h2 class="text-lg font-semibold">When</h2>
-          <p class="text-muted text-sm">
-            Choose the task event this automation watches.
-          </p>
-        </div>
+      <app-card-header>
+        <app-card-title>When</app-card-title>
+        <app-card-subtitle>
+          Choose the task event this automation watches.
+        </app-card-subtitle>
+      </app-card-header>
 
+      <div class="flex flex-col gap-4">
         <app-form-select label="Trigger" [(value)]="triggerType">
           @for (type of triggerTypes; track type) {
             <app-form-select-option [value]="type">
