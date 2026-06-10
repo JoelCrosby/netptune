@@ -32,20 +32,33 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
 
     public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
-        pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
-
-        return Context.WorkspaceAppUsers
+        var query = Context.WorkspaceAppUsers
             .Include(x => x.User)
             .Where(x => x.Workspace.Slug == workspaceKey)
             .OrderBy(x => x.User.Firstname)
             .ThenBy(x => x.User.Lastname)
             .ThenBy(x => x.UserId)
+            .IsReadonly(isReadonly);
+
+        if (pageRequest is null)
+        {
+            return query.ToListAsync(cancellationToken);
+        }
+
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+
+        return query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .IsReadonly(isReadonly)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> CountWorkspaceAppUsers(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(x => x.Workspace.Slug == workspaceKey)
+            .CountAsync(cancellationToken);
     }
 
     public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)

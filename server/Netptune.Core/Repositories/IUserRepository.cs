@@ -19,6 +19,8 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
+    Task<int> CountWorkspaceAppUsers(string workspaceKey, CancellationToken cancellationToken = default);
+
     Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
     Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey, CancellationToken cancellationToken = default);

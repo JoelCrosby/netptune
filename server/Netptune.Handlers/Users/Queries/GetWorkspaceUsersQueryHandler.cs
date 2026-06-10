@@ -1,15 +1,16 @@
 using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Handlers.Users.Queries;
 
-public sealed record GetWorkspaceUsersQuery(PageRequest? Page = null) : IRequest<List<WorkspaceUserViewModel>>;
+public sealed record GetWorkspaceUsersQuery(PageRequest? Page = null) : IRequest<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>;
 
-public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspaceUsersQuery, List<WorkspaceUserViewModel>>
+public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspaceUsersQuery, ClientResponse<PagedResponse<WorkspaceUserViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -20,34 +21,52 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
         Identity = identity;
     }
 
-    public async ValueTask<List<WorkspaceUserViewModel>> Handle(GetWorkspaceUsersQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<PagedResponse<WorkspaceUserViewModel>>> Handle(GetWorkspaceUsersQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken, request.Page);
-
-        var results = workspaceAppUsers.ConvertAll(user => user.ToWorkspaceViewModel());
+        var pageRequest = request.Page ?? new PageRequest();
+        var page = pageRequest.GetPage();
+        var pageSize = pageRequest.GetPageSize();
+        var skip = (page - 1) * pageSize;
 
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
-        if (workspace is not null)
+        if (workspace is null)
         {
-            var pendingInvites = await UnitOfWork.WorkspaceInvites.GetPendingByWorkspace(workspace.Id, cancellationToken);
-
-            var existingEmails = results.Select(u => u.Email?.ToUpperInvariant()).ToHashSet();
-
-            var pendingViewModels = pendingInvites
-                .Where(invite => !existingEmails.Contains(invite.Email.ToUpperInvariant()))
-                .Select(invite => new WorkspaceUserViewModel
-                {
-                    Email = invite.Email,
-                    DisplayName = invite.Email,
-                    Role = WorkspaceRole.Member,
-                    IsPending = true,
-                });
-
-            results.AddRange(pendingViewModels);
+            return new PagedResponse<WorkspaceUserViewModel>([], page, pageSize, 0);
         }
 
-        return results;
+        var memberCount = await UnitOfWork.Users.CountWorkspaceAppUsers(workspaceKey, cancellationToken);
+        var pendingCount = await UnitOfWork.WorkspaceInvites.CountPendingByWorkspaceExcludingMembers(workspace.Id, cancellationToken);
+        var totalCount = memberCount + pendingCount;
+        var items = new List<WorkspaceUserViewModel>(pageSize);
+
+        if (skip < memberCount)
+        {
+            var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken, pageRequest);
+            items.AddRange(workspaceAppUsers.ConvertAll(user => user.ToWorkspaceViewModel()));
+        }
+
+        var remaining = pageSize - items.Count;
+
+        if (remaining > 0)
+        {
+            var pendingSkip = Math.Max(0, skip - memberCount);
+            var pendingInvites = await UnitOfWork.WorkspaceInvites.GetPendingByWorkspaceExcludingMembers(
+                workspace.Id,
+                pendingSkip,
+                remaining,
+                cancellationToken);
+
+            items.AddRange(pendingInvites.Select(invite => new WorkspaceUserViewModel
+            {
+                Email = invite.Email,
+                DisplayName = invite.Email,
+                Role = WorkspaceRole.Member,
+                IsPending = true,
+            }));
+        }
+
+        return new PagedResponse<WorkspaceUserViewModel>(items, page, pageSize, totalCount);
     }
 }

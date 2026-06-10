@@ -29,9 +29,13 @@ public sealed class UsersEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<List<UserViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
 
-        result.Should().NotBeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(50);
+        result.Payload.TotalCount.Should().BeGreaterThanOrEqualTo(result.Payload.Items.Count);
     }
 
     [Fact]
@@ -156,9 +160,10 @@ public sealed class UsersEndpointTests
         });
 
         var response = await Client.GetAsync("api/users");
-        var users = await response.Content.ReadFromJsonAsync<List<WorkspaceUserViewModel>>();
+        var users = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
 
-        users.Should().Contain(u => u.Email == inviteEmail && u.IsPending);
+        users.IsSuccess.Should().BeTrue();
+        users.Payload!.Items.Should().Contain(u => u.Email == inviteEmail && u.IsPending);
     }
 
     [Fact]
@@ -173,8 +178,9 @@ public sealed class UsersEndpointTests
 
         secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var users = await (await Client.GetAsync("api/users")).Content.ReadFromJsonAsync<List<WorkspaceUserViewModel>>();
-        users!.Count(u => u.Email == inviteEmail).Should().Be(1);
+        var users = await (await Client.GetAsync("api/users")).Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceUserViewModel>>>();
+        users.IsSuccess.Should().BeTrue();
+        users.Payload!.Items.Count(u => u.Email == inviteEmail).Should().Be(1);
     }
 
     [Fact]

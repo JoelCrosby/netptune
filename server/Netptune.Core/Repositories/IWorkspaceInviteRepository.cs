@@ -9,6 +9,14 @@ public interface IWorkspaceInviteRepository : IRepository<WorkspaceInvite, int>
 
     Task<List<WorkspaceInvite>> GetPendingByWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<int> CountPendingByWorkspaceExcludingMembers(int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<WorkspaceInvite>> GetPendingByWorkspaceExcludingMembers(
+        int workspaceId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken = default);
+
     Task<WorkspaceInvite?> GetPendingByEmail(string email, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<WorkspaceInvite>> GetPendingByEmailRange(IEnumerable<string> emails, int workspaceId, CancellationToken cancellationToken = default);

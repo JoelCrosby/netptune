@@ -31,6 +31,27 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
             .ToListAsync(cancellationToken);
     }
 
+    public Task<int> CountPendingByWorkspaceExcludingMembers(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return PendingByWorkspaceExcludingMembers(workspaceId)
+            .CountAsync(cancellationToken);
+    }
+
+    public Task<List<WorkspaceInvite>> GetPendingByWorkspaceExcludingMembers(
+        int workspaceId,
+        int skip,
+        int take,
+        CancellationToken cancellationToken = default)
+    {
+        return PendingByWorkspaceExcludingMembers(workspaceId)
+            .OrderBy(x => x.Email)
+            .ThenBy(x => x.Id)
+            .Skip(skip)
+            .Take(take)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<WorkspaceInvite?> GetPendingByEmail(string email, int workspaceId, CancellationToken cancellationToken = default)
     {
         var normalized = email.Trim().IdentityNormalize();
@@ -70,5 +91,16 @@ public class WorkspaceInviteRepository : Repository<DataContext, WorkspaceInvite
             .ToListAsync(cancellationToken);
 
         Entities.RemoveRange(invites);
+    }
+
+    private IQueryable<WorkspaceInvite> PendingByWorkspaceExcludingMembers(int workspaceId)
+    {
+        return Entities
+            .Where(invite =>
+                invite.WorkspaceId == workspaceId &&
+                invite.AcceptedAt == null &&
+                !Context.WorkspaceAppUsers.Any(user =>
+                    user.WorkspaceId == workspaceId &&
+                    user.User.NormalizedEmail == invite.Email.ToUpper()));
     }
 }
