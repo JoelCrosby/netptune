@@ -4,6 +4,7 @@ import {
   AuditLogFilter,
   AuditLogViewModel,
 } from '@core/models/view-models/audit-log-view-model';
+import { DEFAULT_PAGE_SIZE } from '@core/models/pagination';
 import { AuditService } from '@core/store/audit/audit.service';
 import { Logger } from '@core/util/logger';
 import { tapResponse } from '@ngrx/operators';
@@ -29,7 +30,7 @@ interface AuditState {
 }
 
 const initialState: AuditState = {
-  filter: { page: 1, pageSize: 50 },
+  filter: { page: 1, pageSize: DEFAULT_PAGE_SIZE },
   items: [],
   summary: [],
   totalCount: 0,
@@ -42,6 +43,7 @@ export const AuditStore = signalStore(
   withState(initialState),
   withComputed(({ filter }) => ({
     currentPage: computed(() => filter().page ?? 1),
+    pageSize: computed(() => filter().pageSize ?? DEFAULT_PAGE_SIZE),
   })),
   withMethods((store, auditService = inject(AuditService)) => ({
     load: rxMethod<AuditLogFilter>(
@@ -82,13 +84,20 @@ export const AuditStore = signalStore(
       )
     ),
     applyFilters(from?: string, to?: string) {
-      patchState(store, { filter: { from, to, page: 1, pageSize: 50 } });
+      patchState(store, {
+        filter: { from, to, page: 1, pageSize: DEFAULT_PAGE_SIZE },
+      });
     },
     reset() {
-      patchState(store, { filter: { page: 1, pageSize: 50 } });
+      patchState(store, {
+        filter: { page: 1, pageSize: DEFAULT_PAGE_SIZE },
+      });
     },
     goToPage(page: number) {
       patchState(store, { filter: { ...store.filter(), page } });
+    },
+    setPageSize(pageSize: number) {
+      patchState(store, { filter: { ...store.filter(), page: 1, pageSize } });
     },
   })),
   withHooks({

@@ -4,7 +4,14 @@ import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { ActivityTypePipe } from '@static/pipes/activity-type.pipe';
 import { EntityTypePipe } from '@static/pipes/entity-type.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import {
+  TableComponent,
+  TableEmptyCellDirective,
+  TableHeaderRowDirective,
+  TableHeadDirective,
+  TablePaginationComponent,
+  TableRowDirective,
+} from '@static/components/table/table.component';
 
 @Component({
   selector: 'app-audit-table',
@@ -13,7 +20,12 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     ActivityTypePipe,
     EntityTypePipe,
     PrettyDatePipe,
-    StrokedButtonComponent,
+    TableComponent,
+    TableEmptyCellDirective,
+    TableHeaderRowDirective,
+    TableHeadDirective,
+    TablePaginationComponent,
+    TableRowDirective,
   ],
   template: `
     @if (state.loading()) {
@@ -23,91 +35,67 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         Failed to load audit log.
       </p>
     } @else {
-      <div
-        class="border-border overflow-auto rounded border"
-        style="height: calc(100vh - 42rem)">
-        <table class="w-full text-sm">
-          <thead class="bg-background border-border sticky top-0 z-10 border-b">
-            <tr class="text-left text-xs font-medium tracking-wide uppercase">
-              <th class="px-4 py-3">Timestamp</th>
-              <th class="px-4 py-3">Actor</th>
-              <th class="px-4 py-3">Action</th>
-              <th class="px-4 py-3">Entity</th>
-              <th class="px-4 py-3">Context</th>
+      <app-table containerClass="h-[calc(100vh-42rem)] overflow-auto">
+        <thead appTableHead [sticky]="true">
+          <tr appTableHeaderRow>
+            <th class="px-4 py-3">Timestamp</th>
+            <th class="px-4 py-3">Actor</th>
+            <th class="px-4 py-3">Action</th>
+            <th class="px-4 py-3">Entity</th>
+            <th class="px-4 py-3">Context</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of state.items(); track row.id) {
+            <tr appTableRow>
+              <td
+                class="text-foreground/70 px-4 py-2.5 font-mono text-xs whitespace-nowrap">
+                {{ row.occurredAt | prettyDate }}
+              </td>
+              <td class="px-4 py-2.5 font-medium">
+                {{ row.userDisplayName }}
+              </td>
+              <td class="px-4 py-2.5">
+                <span
+                  [class]="
+                    'rounded px-2 py-0.5 text-xs font-medium ' +
+                    pillClass(row.type)
+                  ">
+                  {{ row.type | activityType }}
+                </span>
+              </td>
+              <td class="text-foreground/80 px-4 py-2.5">
+                {{ row.entityType | entityType }}
+                @if (row.entityId) {
+                  <span class="text-foreground/50"> #{{ row.entityId }}</span>
+                }
+              </td>
+              <td class="text-foreground/60 px-4 py-2.5 text-xs">
+                @if (row.projectSlug) {
+                  <span>{{ row.projectSlug }}</span>
+                }
+                @if (row.boardSlug) {
+                  <span class="ml-1">/ {{ row.boardSlug }}</span>
+                }
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            @for (row of state.items(); track row.id) {
-              <tr
-                class="border-border hover:bg-foreground/5 border-b transition-colors">
-                <td
-                  class="text-foreground/70 px-4 py-2.5 font-mono text-xs whitespace-nowrap">
-                  {{ row.occurredAt | prettyDate }}
-                </td>
-                <td class="px-4 py-2.5 font-medium">
-                  {{ row.userDisplayName }}
-                </td>
-                <td class="px-4 py-2.5">
-                  <span
-                    [class]="
-                      'rounded px-2 py-0.5 text-xs font-medium ' +
-                      pillClass(row.type)
-                    ">
-                    {{ row.type | activityType }}
-                  </span>
-                </td>
-                <td class="text-foreground/80 px-4 py-2.5">
-                  {{ row.entityType | entityType }}
-                  @if (row.entityId) {
-                    <span class="text-foreground/50"> #{{ row.entityId }}</span>
-                  }
-                </td>
-                <td class="text-foreground/60 px-4 py-2.5 text-xs">
-                  @if (row.projectSlug) {
-                    <span>{{ row.projectSlug }}</span>
-                  }
-                  @if (row.boardSlug) {
-                    <span class="ml-1">/ {{ row.boardSlug }}</span>
-                  }
-                </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td
-                  colspan="5"
-                  class="text-foreground/50 px-4 py-12 text-center">
-                  No audit events found.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+          } @empty {
+            <tr>
+              <td appTableEmptyCell colspan="5">No audit events found.</td>
+            </tr>
+          }
+        </tbody>
 
-      @if (state.totalPages() > 1) {
-        <div class="mt-4 flex items-center justify-between text-sm">
-          <span class="text-foreground/60">
-            Page {{ state.currentPage() }} of {{ state.totalPages() }} ({{
-              state.totalCount()
-            }}
-            events)
-          </span>
-          <div class="flex gap-2">
-            <button
-              app-stroked-button
-              [disabled]="state.currentPage() <= 1"
-              (click)="state.goToPage(state.currentPage() - 1)">
-              Previous
-            </button>
-            <button
-              app-stroked-button
-              [disabled]="state.currentPage() >= state.totalPages()"
-              (click)="state.goToPage(state.currentPage() + 1)">
-              Next
-            </button>
-          </div>
-        </div>
-      }
+        <app-table-pagination
+          itemLabel="events"
+          [page]="state.currentPage()"
+          [pageSize]="state.pageSize()"
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          [totalItems]="state.totalCount()"
+          [totalPages]="state.totalPages()"
+          (pageChange)="state.goToPage($event)"
+          (pageSizeChange)="state.setPageSize($event)" />
+      </app-table>
     }
   `,
 })
