@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import * as RouteSelectors from '@core/core.route.selectors';
@@ -9,6 +10,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
 import {
@@ -29,10 +31,19 @@ import { ProjectTasksHubService } from './tasks.hub.service';
 import { ProjectTasksService } from './tasks.service';
 import { clearState } from '../activity/activity.actions';
 import {
+  selectSelectedAssignees,
+  selectSelectedTaskStatuses,
   selectProjectTasksFilter,
+  selectTaskSearchTerm,
   selectTasksPage,
   selectTasksPageSize,
 } from './tasks.selectors';
+import { selectSelectedTags } from '../tags/tags.selectors';
+import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
+import {
+  buildTaskFilterRouteParams,
+  parseTaskFilterRouteParams,
+} from './task-filter-route-params';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -42,6 +53,8 @@ export class ProjectTasksEffects {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
@@ -78,21 +91,89 @@ export class ProjectTasksEffects {
     );
   });
 
-  reloadProjectTasksOnFilterChange$ = createEffect(() => {
+  updateProjectTasksFilter$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
         actions.setSearchTerm,
         actions.toggleSelectedStatus,
         actions.toggleSelectedAssignee,
         TagActions.toggleSelectedTag,
-        TagActions.setSelectedTags,
         SprintActions.setSprintTaskFilter
       ),
-      concatLatestFrom(() =>
-        this.store.select(RouteSelectors.selectIsTasksRoute)
+      concatLatestFrom(() => [
+        this.store.select(selectTaskSearchTerm),
+        this.store.select(selectSelectedTags),
+        this.store.select(selectSelectedAssignees),
+        this.store.select(selectSelectedTaskStatuses),
+        this.store.select(selectSelectedSprintFilterId),
+        this.store.select(RouteSelectors.selectIsTaskListRoute),
+        this.route.queryParamMap,
+      ]),
+      filter(([action, , , , , , isTaskListRoute, paramMap]) => {
+        if (!isTaskListRoute) return false;
+
+        if (action.type === SprintActions.setSprintTaskFilter.type) {
+          return (
+            parseTaskFilterRouteParams(paramMap).sprintId !== action.sprintId
+          );
+        }
+
+        return true;
+      }),
+      map(([, term, tags, users, statuses, sprintId]) =>
+        buildTaskFilterRouteParams(
+          {
+            term,
+            tags,
+            users,
+            statuses,
+            sprintId,
+          },
+          { includeStatuses: true }
+        )
       ),
-      filter(([, isTasksRoute]) => isTasksRoute),
-      map(() => actions.setProjectTasksPage({ page: 1 }))
+      map((params) => actions.updateProjectTasksFilter({ params }))
+    );
+  });
+
+  onUpdateProjectTasksFilter$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.updateProjectTasksFilter),
+        switchMap(({ params }) =>
+          this.router.navigate([], {
+            queryParams: params,
+          })
+        )
+      );
+    },
+    { dispatch: false }
+  );
+
+  onTaskListRouterNavigated$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATED),
+      concatLatestFrom(() => [
+        this.store.select(RouteSelectors.selectIsTaskListRoute),
+        this.route.queryParamMap,
+      ]),
+      filter(([, isTaskListRoute]) => isTaskListRoute),
+      switchMap(([, , paramMap]) => {
+        const filters = parseTaskFilterRouteParams(paramMap);
+
+        return of(
+          TagActions.setSelectedTags({ selectedTags: filters.tags ?? [] }),
+          actions.hydrateProjectTaskFiltersFromRoute({
+            term: filters.term ?? null,
+            assigneeIds: filters.users ?? [],
+            statuses: filters.statuses ?? [],
+            tags: filters.tags ?? [],
+            sprintId: filters.sprintId,
+          }),
+          SprintActions.setSprintTaskFilter({ sprintId: filters.sprintId }),
+          actions.loadProjectTasks()
+        );
+      })
     );
   });
 

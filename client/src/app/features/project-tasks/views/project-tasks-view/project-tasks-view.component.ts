@@ -7,7 +7,7 @@ import {
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
-import { exportTasks, loadProjectTasks } from '@core/store/tasks/tasks.actions';
+import { exportTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectTasksLoading } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
@@ -73,8 +73,6 @@ export class ProjectTasksViewComponent implements OnDestroy {
     if (identifier) {
       this.hubService.addToGroup(identifier);
     }
-
-    this.store.dispatch(loadProjectTasks());
   }
 
   ngOnDestroy() {

@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import {
   FormField,
@@ -73,6 +75,22 @@ export class BoardGroupsSearchComponent {
     minLength(schema.term, 2);
     maxLength(schema.term, 64);
   });
+
+  constructor() {
+    effect(() => {
+      const term = this.searchTerm() ?? '';
+
+      untracked(() => {
+        if (this.termForm.term().value() === term) return;
+
+        this.termForm.term().value.set(term);
+
+        if (!term) {
+          this.termForm.term().reset();
+        }
+      });
+    });
+  }
 
   onSubmit() {
     if (!this.termForm.term().value()) {

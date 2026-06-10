@@ -28,6 +28,16 @@ const reducer = createReducer(
     })
   ),
   on(
+    actions.hydrateProjectTaskFiltersFromRoute,
+    (state, { term, assigneeIds, statuses }): TasksState => ({
+      ...state,
+      searchTerm: term,
+      selectedAssignees: assigneeIds,
+      selectedStatuses: statuses,
+      page: 1,
+    })
+  ),
+  on(
     actions.loadProjectTasksFail,
     (state, { error }): TasksState => ({
       ...state,

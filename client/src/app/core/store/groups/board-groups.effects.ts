@@ -15,6 +15,10 @@ import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import {
+  buildTaskFilterRouteParams,
+  parseTaskFilterRouteParams,
+} from '@core/store/tasks/task-filter-route-params';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
@@ -59,31 +63,28 @@ export class BoardGroupsEffects {
       concatLatestFrom(() => [
         this.store.select(RouteSelectors.selectRouterParam('id')),
         this.route.queryParamMap,
-        this.route.queryParams,
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
         this.store.select(selectSelectedSprintFilterId),
       ]),
-      filter(([, , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      switchMap(([_, id, paramMap, params, , selectedSprintFilterId]) => {
-        const sprintId =
-          selectedSprintFilterId ?? getSprintId(paramMap.get('sprintId'));
-        const requestParams = {
-          ...params,
-        };
-
-        if (sprintId !== undefined) {
-          requestParams['sprintId'] = sprintId;
-        } else {
-          delete requestParams['sprintId'];
-        }
+      filter(([, , , isBoardGroupsRoute]) => isBoardGroupsRoute),
+      switchMap(([_, id, paramMap, , selectedSprintFilterId]) => {
+        const routeFilters = parseTaskFilterRouteParams(paramMap);
+        const sprintId = selectedSprintFilterId ?? routeFilters.sprintId;
+        const requestParams = buildTaskFilterRouteParams(
+          {
+            ...routeFilters,
+            sprintId,
+          },
+          { includeStatuses: false }
+        );
 
         return this.boardGroupsService.get(id as string, requestParams).pipe(
           unwrapClientReposne(),
           map((boardGroups) =>
             actions.loadBoardGroupsSuccess({
               boardGroups,
-              selectedIds: paramMap.getAll('users'),
-              searchTerm: paramMap.get('term'),
+              selectedIds: routeFilters.users ?? [],
+              searchTerm: routeFilters.term ?? null,
               sprintId,
             })
           ),
@@ -382,18 +383,17 @@ export class BoardGroupsEffects {
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
       ]),
       filter(([, , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([_, users, tags, term, sprintId]) => {
-        const usersParam = users?.length ? users : undefined;
-        const tagsParam = tags?.length ? tags : undefined;
-        const termParam = term;
-
-        return {
-          users: usersParam,
-          tags: tagsParam,
-          term: termParam,
-          sprintId,
-        };
-      }),
+      map(([_, users, tags, term, sprintId]) =>
+        buildTaskFilterRouteParams(
+          {
+            users,
+            tags,
+            term,
+            sprintId,
+          },
+          { includeStatuses: false }
+        )
+      ),
       map((params) => actions.updateBoardFilter({ params }))
     );
   });
@@ -489,11 +489,3 @@ const DELETE_SELECTED_TASKS_CONFIRMATION: ConfirmDialogOptions = {
   message: 'Are you sure you want to delete the selected tasks?',
   title: 'Delete Selected Tasks',
 };
-
-function getSprintId(value: string | null): number | undefined {
-  if (!value) return undefined;
-
-  const sprintId = Number(value);
-
-  return Number.isFinite(sprintId) ? sprintId : undefined;
-}

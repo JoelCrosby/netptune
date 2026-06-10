@@ -42,6 +42,11 @@ export const selectIsTasksRoute = createSelector(
   }
 );
 
+export const selectIsTaskListRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) => /^\/[^/?#]+\/tasks(?:[?#].*)?$/.test(state ?? '')
+);
+
 export const selectSideBarTransparent = createSelector(
   selectRouterReducerState,
   (state: RouterStateUrl) => state?.transparentSidebar

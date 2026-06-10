@@ -10,6 +10,7 @@ import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { TaskStatus } from '@core/enums/project-task-status';
+import { Params } from '@angular/router';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -43,6 +44,22 @@ export const loadProjectTasksSuccess = createAction(
 export const loadProjectTasksFail = createAction(
   '[ProjectTasks] Load ProjectTasks Fail',
   props<{ error: HttpErrorResponse }>()
+);
+
+export const hydrateProjectTaskFiltersFromRoute = createAction(
+  '[ProjectTasks] Hydrate ProjectTask Filters From Route',
+  props<{
+    term?: string | null;
+    assigneeIds: string[];
+    statuses: TaskStatus[];
+    tags: string[];
+    sprintId?: number;
+  }>()
+);
+
+export const updateProjectTasksFilter = createAction(
+  '[ProjectTasks] Update ProjectTasks Filter',
+  props<{ params: Params }>()
 );
 
 // Create Task
