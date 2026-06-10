@@ -7,8 +7,16 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import {
   removeUsersFromWorkspace,
   resendInvite,
+  setUsersPage,
+  setUsersPageSize,
 } from '@core/store/users/users.actions';
-import { selectAllUsers } from '@core/store/users/users.selectors';
+import {
+  selectAllUsers,
+  selectUsersPage,
+  selectUsersPageSize,
+  selectUsersTotalCount,
+  selectUsersTotalPages,
+} from '@core/store/users/users.selectors';
 import {
   LucideEllipsisVertical,
   LucideTrash2,
@@ -25,6 +33,7 @@ import {
   TableEmptyCellDirective,
   TableHeaderRowDirective,
   TableHeadDirective,
+  TablePaginationComponent,
   TableRowDirective,
 } from '@static/components/table/table.component';
 
@@ -46,11 +55,12 @@ import {
     TableEmptyCellDirective,
     TableHeaderRowDirective,
     TableHeadDirective,
+    TablePaginationComponent,
     TableRowDirective,
   ],
   template: `
     <app-table
-      containerClass="h-[calc(100vh-200px)] min-h-16 overflow-auto"
+      containerClass="h-[calc(100vh-253px)] min-h-16 overflow-auto"
       tableClass="min-w-[720px] table-fixed">
       <thead appTableHead [sticky]="true">
         <tr appTableHeaderRow>
@@ -144,6 +154,16 @@ import {
           </tr>
         }
       </tbody>
+
+      <app-table-pagination
+        itemLabel="users"
+        [page]="currentPage()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[25, 50, 100]"
+        [totalItems]="totalCount()"
+        [totalPages]="totalPages()"
+        (pageChange)="goToPage($event)"
+        (pageSizeChange)="setPageSize($event)" />
     </app-table>
   `,
 })
@@ -151,6 +171,10 @@ export class UserListComponent {
   private store = inject(Store);
 
   users = this.store.selectSignal(selectAllUsers);
+  currentPage = this.store.selectSignal(selectUsersPage);
+  pageSize = this.store.selectSignal(selectUsersPageSize);
+  totalCount = this.store.selectSignal(selectUsersTotalCount);
+  totalPages = this.store.selectSignal(selectUsersTotalPages);
   canReadUsers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
   );
@@ -174,5 +198,13 @@ export class UserListComponent {
     if (!user?.email) return;
 
     this.store.dispatch(resendInvite({ email: user.email }));
+  }
+
+  goToPage(page: number) {
+    this.store.dispatch(setUsersPage({ page }));
+  }
+
+  setPageSize(pageSize: number) {
+    this.store.dispatch(setUsersPageSize({ pageSize }));
   }
 }

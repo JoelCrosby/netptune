@@ -8,12 +8,28 @@ export const loadUsers = createAction('[Users] Load Users');
 
 export const loadUsersSuccess = createAction(
   '[Users] Load Users Success ',
-  props<{ users: WorkspaceAppUser[] }>()
+  props<{
+    users: WorkspaceAppUser[];
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+  }>()
 );
 
 export const loadUsersFail = createAction(
   '[Users] Load Users Fail',
   props<{ error: HttpErrorResponse | Error }>()
+);
+
+export const setUsersPageSize = createAction(
+  '[Users] Set Users Page Size',
+  props<{ pageSize: number }>()
+);
+
+export const setUsersPage = createAction(
+  '[Users] Set Users Page',
+  props<{ page: number }>()
 );
 
 export const loadUser = createAction(

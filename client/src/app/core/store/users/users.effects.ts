@@ -5,11 +5,14 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Action, Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { selectUsersPage, selectUsersPageSize } from './users.selectors';
 
 @Injectable()
 export class UsersEffects {
@@ -17,18 +20,39 @@ export class UsersEffects {
   private usersService = inject(UsersService);
   private snackbar = inject(SnackbarService);
   private confirmation = inject(ConfirmationService);
+  private store = inject(Store);
 
   loadUsers$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadUsers),
-      switchMap(() =>
-        this.usersService.getUsersInWorkspace().pipe(
-          map((users) => actions.loadUsersSuccess({ users })),
+      concatLatestFrom(() => [
+        this.store.select(selectUsersPage),
+        this.store.select(selectUsersPageSize),
+      ]),
+      switchMap(([_, page, pageSize]) =>
+        this.usersService.getUsersInWorkspace({ page, pageSize }).pipe(
+          unwrapClientReposne(),
+          map((usersPage) =>
+            actions.loadUsersSuccess({
+              users: usersPage.items,
+              page: usersPage.page,
+              pageSize: usersPage.pageSize,
+              totalCount: usersPage.totalCount,
+              totalPages: usersPage.totalPages,
+            })
+          ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadUsersFail({ error }))
           )
         )
       )
+    );
+  });
+
+  reloadUsersOnPaginationChange$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.setUsersPage, actions.setUsersPageSize),
+      map(() => actions.loadUsers())
     );
   });
 

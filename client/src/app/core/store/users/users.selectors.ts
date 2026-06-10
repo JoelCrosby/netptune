@@ -33,6 +33,26 @@ export const selectUsersLoaded = createSelector(
   (state: UsersState) => state.loaded
 );
 
+export const selectUsersPage = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.page
+);
+
+export const selectUsersPageSize = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.pageSize
+);
+
+export const selectUsersTotalCount = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.totalCount
+);
+
+export const selectUsersTotalPages = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.totalPages
+);
+
 export interface State extends AppState {
   users: UsersState;
 }
