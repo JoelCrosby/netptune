@@ -20,7 +20,7 @@ public sealed class TaskFilter
 
     public bool? NoSprint { get; init; }
 
-    public int? Take { get; init; }
+    public int? Page { get; init; }
 
-    public string? Cursor { get; init; }
+    public int? PageSize { get; init; }
 }

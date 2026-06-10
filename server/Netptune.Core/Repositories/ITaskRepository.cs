@@ -2,6 +2,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Repositories;
@@ -25,7 +26,7 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
-    Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default);
+    Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<int?> GetNextScopeId(int projectId, int increment = 0, CancellationToken cancellationToken = default);
 

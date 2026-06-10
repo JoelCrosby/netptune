@@ -10,6 +10,14 @@ export interface CursorPage<T> {
   pageLimit: number;
 }
 
+export interface Page<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
 export interface CursorQuery {
   take?: number;
   cursor?: string | null;

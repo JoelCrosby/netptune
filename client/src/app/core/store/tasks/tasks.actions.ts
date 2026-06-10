@@ -19,18 +19,25 @@ export const loadProjectTasks = createAction(
   '[ProjectTasks] Load ProjectTasks'
 );
 
-export const loadMoreProjectTasks = createAction(
-  '[ProjectTasks] Load More ProjectTasks'
+export const setProjectTasksPageSize = createAction(
+  '[ProjectTasks] Set ProjectTasks Page Size',
+  props<{ pageSize: number }>()
+);
+
+export const setProjectTasksPage = createAction(
+  '[ProjectTasks] Set ProjectTasks Page',
+  props<{ page: number }>()
 );
 
 export const loadProjectTasksSuccess = createAction(
   '[ProjectTasks] Load ProjectTasks Success',
-  props<{ tasks: TaskViewModel[]; nextCursor?: string; pageSize: number }>()
-);
-
-export const loadMoreProjectTasksSuccess = createAction(
-  '[ProjectTasks] Load More ProjectTasks Success',
-  props<{ tasks: TaskViewModel[]; nextCursor?: string; pageSize: number }>()
+  props<{
+    tasks: TaskViewModel[];
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+  }>()
 );
 
 export const loadProjectTasksFail = createAction(

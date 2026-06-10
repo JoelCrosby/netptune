@@ -93,9 +93,9 @@ export const selectProjectTasksFilter = createSelector(
   })
 );
 
-export const selectTasksNextCursor = createSelector(
+export const selectTasksPage = createSelector(
   selectTasksFeature,
-  (state: TasksState) => state.nextCursor
+  (state: TasksState) => state.page
 );
 
 export const selectTasksPageSize = createSelector(
@@ -103,9 +103,14 @@ export const selectTasksPageSize = createSelector(
   (state: TasksState) => state.pageSize
 );
 
-export const selectTasksCanLoadMore = createSelector(
-  selectTasksNextCursor,
-  (cursor) => !!cursor
+export const selectTasksTotalCount = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.totalCount
+);
+
+export const selectTasksTotalPages = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.totalPages
 );
 
 export const selectTaskAssigneeOptions = createSelector(

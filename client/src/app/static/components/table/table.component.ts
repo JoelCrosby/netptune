@@ -4,9 +4,11 @@ import {
   Directive,
   computed,
   input,
+  model,
   output,
 } from '@angular/core';
 import {
+  LucideCheck,
   LucideChevronLeft,
   LucideChevronRight,
   LucideChevronsLeft,
@@ -60,6 +62,7 @@ export class TableComponent {
     LucideChevronsLeft,
     LucideChevronsRight,
     LucideChevronDown,
+    LucideCheck,
     DropdownMenuComponent,
     MenuItemComponent,
   ],
@@ -96,9 +99,17 @@ export class TableComponent {
               <button
                 app-menu-item
                 type="button"
-                [class.font-semibold]="size === pageSize()"
+                role="menuitemradio"
+                [attr.aria-checked]="size === pageSize()"
+                [class.bg-neutral-100]="size === pageSize()"
+                [class.dark:bg-neutral-800]="size === pageSize()"
                 (click)="selectPageSize(size, pageSizeMenu)">
-                {{ size }}
+                <span class="flex h-4 w-4 shrink-0 items-center justify-center">
+                  @if (size === pageSize()) {
+                    <svg lucideCheck class="h-4 w-4"></svg>
+                  }
+                </span>
+                <span>{{ size }}</span>
               </button>
             }
           </app-dropdown-menu>
@@ -110,15 +121,17 @@ export class TableComponent {
           </span>
 
           <div class="flex items-center gap-1">
-            <button
-              app-icon-button
-              class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
-              type="button"
-              aria-label="Go to first page"
-              [disabled]="isFirstPage()"
-              (click)="goToPage(1)">
-              <svg lucideChevronsLeft class="h-4 w-4"></svg>
-            </button>
+            @if (showBoundaryButtons()) {
+              <button
+                app-icon-button
+                class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
+                type="button"
+                aria-label="Go to first page"
+                [disabled]="isFirstPage()"
+                (click)="goToPage(1)">
+                <svg lucideChevronsLeft class="h-4 w-4"></svg>
+              </button>
+            }
             <button
               app-icon-button
               class="border-border h-8 w-8 rounded border"
@@ -137,15 +150,17 @@ export class TableComponent {
               (click)="goToPage(page() + 1)">
               <svg lucideChevronRight class="h-4 w-4"></svg>
             </button>
-            <button
-              app-icon-button
-              class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
-              type="button"
-              aria-label="Go to last page"
-              [disabled]="isLastPage()"
-              (click)="goToPage(resolvedTotalPages())">
-              <svg lucideChevronsRight class="h-4 w-4"></svg>
-            </button>
+            @if (showBoundaryButtons()) {
+              <button
+                app-icon-button
+                class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
+                type="button"
+                aria-label="Go to last page"
+                [disabled]="isLastPage()"
+                (click)="goToPage(resolvedTotalPages())">
+                <svg lucideChevronsRight class="h-4 w-4"></svg>
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -154,15 +169,15 @@ export class TableComponent {
 })
 export class TablePaginationComponent {
   readonly page = input(1);
-  readonly pageSize = input(10);
+  readonly pageSize = model(10);
   readonly pageSizeOptions = input<number[]>([10, 20, 30, 40, 50]);
   readonly totalItems = input(0);
   readonly totalPages = input<number | null>(null);
   readonly selectedItems = input<number | null>(null);
   readonly itemLabel = input('rows');
+  readonly showBoundaryButtons = input(true);
 
   readonly pageChange = output<number>();
-  readonly pageSizeChange = output<number>();
 
   protected readonly normalizedPageSizeOptions = computed(() =>
     [...new Set([...this.pageSizeOptions(), this.pageSize()])].sort(
@@ -189,7 +204,7 @@ export class TablePaginationComponent {
     menu.close();
 
     if (pageSize !== this.pageSize()) {
-      this.pageSizeChange.emit(pageSize);
+      this.pageSize.set(pageSize);
     }
   }
 

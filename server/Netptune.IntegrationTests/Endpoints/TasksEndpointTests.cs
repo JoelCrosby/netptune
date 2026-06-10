@@ -30,49 +30,52 @@ public sealed class TasksEndpointTests
         var response = await Client.GetAsync("api/tasks");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Headers.GetValues("X-Page-Limit").Should().ContainSingle("50");
 
-        var result = await response.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        result.Should().NotBeEmpty();
-        result.Should().HaveCountLessThanOrEqualTo(50);
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().HaveCountLessThanOrEqualTo(50);
+        result.Payload.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(50);
+        result.Payload.TotalCount.Should().BeGreaterThanOrEqualTo(result.Payload.Items.Count);
     }
 
     [Fact]
-    public async Task Get_ShouldClampTake_WhenTakeExceedsMax()
+    public async Task Get_ShouldClampPageSize_WhenPageSizeExceedsMax()
     {
-        var response = await Client.GetAsync("api/tasks?take=999");
+        var response = await Client.GetAsync("api/tasks?pageSize=999");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Headers.GetValues("X-Page-Limit").Should().ContainSingle("100");
 
-        var result = await response.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        result.Should().NotBeNull();
-        result.Should().HaveCountLessThanOrEqualTo(100);
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.PageSize.Should().Be(100);
+        result.Payload.Items.Should().HaveCountLessThanOrEqualTo(100);
     }
 
     [Fact]
-    public async Task Get_ShouldReturnStableNextPage_WhenCursorProvided()
+    public async Task Get_ShouldReturnStableNextPage_WhenPageProvided()
     {
-        var firstResponse = await Client.GetAsync("api/tasks?take=2");
+        var firstResponse = await Client.GetAsync("api/tasks?page=1&pageSize=2");
 
         firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        firstResponse.Headers.TryGetValues("X-Next-Cursor", out var cursorValues).Should().BeTrue();
 
-        var cursor = cursorValues!.Single();
-        var firstPage = await firstResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var firstPage = await firstResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        firstPage.Should().HaveCount(2);
+        firstPage.IsSuccess.Should().BeTrue();
+        firstPage.Payload!.Items.Should().HaveCount(2);
 
-        var secondResponse = await Client.GetAsync($"api/tasks?take=2&cursor={Uri.EscapeDataString(cursor)}");
+        var secondResponse = await Client.GetAsync("api/tasks?page=2&pageSize=2");
 
         secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var secondPage = await secondResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var secondPage = await secondResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        secondPage.Should().NotBeNull();
-        secondPage.Select(task => task.Id).Should().NotIntersectWith(firstPage.Select(task => task.Id));
+        secondPage.IsSuccess.Should().BeTrue();
+        secondPage.Payload!.Items.Should().NotBeNull();
+        secondPage.Payload.Items.Select(task => task.Id).Should().NotIntersectWith(firstPage.Payload.Items.Select(task => task.Id));
     }
 
     [Fact]
@@ -82,11 +85,11 @@ public sealed class TasksEndpointTests
 
         searchResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var searchResult = await searchResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var searchResult = await searchResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        searchResult.Should().NotBeNull();
-        searchResult.Should().NotBeEmpty();
-        searchResult.Should().OnlyContain(task =>
+        searchResult.IsSuccess.Should().BeTrue();
+        searchResult.Payload!.Items.Should().NotBeEmpty();
+        searchResult.Payload.Items.Should().OnlyContain(task =>
             task.Name.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
             task.ProjectName!.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
             task.Tags.Any(tag => tag.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase)));
@@ -95,21 +98,21 @@ public sealed class TasksEndpointTests
 
         tagResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var tagResult = await tagResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var tagResult = await tagResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        tagResult.Should().NotBeNull();
-        tagResult.Should().NotBeEmpty();
-        tagResult.Should().OnlyContain(task => task.Tags.Contains("Typescript"));
+        tagResult.IsSuccess.Should().BeTrue();
+        tagResult.Payload!.Items.Should().NotBeEmpty();
+        tagResult.Payload.Items.Should().OnlyContain(task => task.Tags.Contains("Typescript"));
 
         var statusResponse = await Client.GetAsync($"api/tasks?statuses={(int)ProjectTaskStatus.Complete}");
 
         statusResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var statusResult = await statusResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var statusResult = await statusResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        statusResult.Should().NotBeNull();
-        statusResult.Should().NotBeEmpty();
-        statusResult.Should().OnlyContain(task => task.Status == ProjectTaskStatus.Complete);
+        statusResult.IsSuccess.Should().BeTrue();
+        statusResult.Payload!.Items.Should().NotBeEmpty();
+        statusResult.Payload.Items.Should().OnlyContain(task => task.Status == ProjectTaskStatus.Complete);
 
         var user = SeedData.Users.ElementAt(0);
         var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
@@ -127,11 +130,11 @@ public sealed class TasksEndpointTests
 
         assigneeResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var assigneeResult = await assigneeResponse.Content.ReadFromJsonAsync<List<TaskViewModel>>();
+        var assigneeResult = await assigneeResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        assigneeResult.Should().NotBeNull();
-        assigneeResult.Should().NotBeEmpty();
-        assigneeResult.Should().OnlyContain(task =>
+        assigneeResult.IsSuccess.Should().BeTrue();
+        assigneeResult.Payload!.Items.Should().NotBeEmpty();
+        assigneeResult.Payload.Items.Should().OnlyContain(task =>
             task.Assignees.Any(assignee => assignee.Id == user.Id));
     }
 

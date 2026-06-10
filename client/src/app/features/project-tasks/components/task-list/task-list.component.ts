@@ -10,7 +10,10 @@ import * as actions from '@core/store/tasks/tasks.actions';
 import {
   selectTaskFiltersActive,
   selectTasks,
-  selectTasksCanLoadMore,
+  selectTasksPage,
+  selectTasksPageSize,
+  selectTasksTotalCount,
+  selectTasksTotalPages,
 } from '@core/store/tasks/tasks.selectors';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
@@ -32,6 +35,7 @@ import {
   TableEmptyCellDirective,
   TableHeaderRowDirective,
   TableHeadDirective,
+  TablePaginationComponent,
   TableRowDirective,
 } from '@static/components/table/table.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
@@ -59,6 +63,7 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
     TableEmptyCellDirective,
     TableHeaderRowDirective,
     TableHeadDirective,
+    TablePaginationComponent,
     TableRowDirective,
     TaskListFiltersComponent,
     TaskStatusPipe,
@@ -210,17 +215,17 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
             </td>
           </tr>
         }
-
-        @if (canLoadMore()) {
-          <tr>
-            <td [attr.colspan]="columnCount()" class="px-4 py-4 text-center">
-              <button app-flat-button type="button" (click)="loadMore()">
-                <span>Load more</span>
-              </button>
-            </td>
-          </tr>
-        }
       </tbody>
+
+      <app-table-pagination
+        itemLabel="tasks"
+        [page]="currentPage()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[25, 50, 100]"
+        [totalItems]="totalCount()"
+        [totalPages]="totalPages()"
+        (pageChange)="goToPage($event)"
+        (pageSizeChange)="setPageSize($event)" />
     </app-table>
   `,
 })
@@ -230,7 +235,10 @@ export class TaskListComponent {
 
   readonly tasks = this.store.selectSignal(selectTasks);
   readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
-  readonly canLoadMore = this.store.selectSignal(selectTasksCanLoadMore);
+  readonly currentPage = this.store.selectSignal(selectTasksPage);
+  readonly pageSize = this.store.selectSignal(selectTasksPageSize);
+  readonly totalCount = this.store.selectSignal(selectTasksTotalCount);
+  readonly totalPages = this.store.selectSignal(selectTasksTotalPages);
   readonly taskStatus = TaskStatus;
 
   readonly canCreate = this.store.selectSignal(
@@ -240,8 +248,12 @@ export class TaskListComponent {
     selectHasPermission(netptunePermissions.tasks.delete)
   );
 
-  loadMore() {
-    this.store.dispatch(actions.loadMoreProjectTasks());
+  goToPage(page: number) {
+    this.store.dispatch(actions.setProjectTasksPage({ page }));
+  }
+
+  setPageSize(pageSize: number) {
+    this.store.dispatch(actions.setProjectTasksPageSize({ pageSize }));
   }
 
   columnCount(): number {

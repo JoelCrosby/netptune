@@ -30,7 +30,7 @@ import { ProjectTasksService } from './tasks.service';
 import { clearState } from '../activity/activity.actions';
 import {
   selectProjectTasksFilter,
-  selectTasksNextCursor,
+  selectTasksPage,
   selectTasksPageSize,
 } from './tasks.selectors';
 
@@ -46,14 +46,21 @@ export class ProjectTasksEffects {
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadProjectTasks),
-      concatLatestFrom(() => this.store.select(selectProjectTasksFilter)),
-      switchMap(([_, taskFilter]) =>
-        this.projectTasksService.get(taskFilter).pipe(
+      concatLatestFrom(() => [
+        this.store.select(selectProjectTasksFilter),
+        this.store.select(selectTasksPage),
+        this.store.select(selectTasksPageSize),
+      ]),
+      switchMap(([_, taskFilter, page, pageSize]) =>
+        this.projectTasksService.get({ ...taskFilter, page, pageSize }).pipe(
+          unwrapClientReposne(),
           map((page) =>
             actions.loadProjectTasksSuccess({
               tasks: page.items,
-              nextCursor: page.nextCursor,
-              pageSize: page.pageLimit,
+              page: page.page,
+              pageSize: page.pageSize,
+              totalCount: page.totalCount,
+              totalPages: page.totalPages,
             })
           ),
           catchError((error: HttpErrorResponse) =>
@@ -64,31 +71,10 @@ export class ProjectTasksEffects {
     );
   });
 
-  loadMoreProjectTasks$ = createEffect(() => {
+  reloadProjectTasksOnPaginationChange$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadMoreProjectTasks),
-      concatLatestFrom(() => [
-        this.store.select(selectProjectTasksFilter),
-        this.store.select(selectTasksNextCursor),
-        this.store.select(selectTasksPageSize),
-      ]),
-      filter(([, , cursor]) => !!cursor),
-      switchMap(([_, taskFilter, cursor, pageSize]) =>
-        this.projectTasksService
-          .get({ ...taskFilter, cursor, take: pageSize })
-          .pipe(
-            map((page) =>
-              actions.loadMoreProjectTasksSuccess({
-                tasks: page.items,
-                nextCursor: page.nextCursor,
-                pageSize: page.pageLimit,
-              })
-            ),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.loadProjectTasksFail({ error }))
-            )
-          )
-      )
+      ofType(actions.setProjectTasksPage, actions.setProjectTasksPageSize),
+      map(() => actions.loadProjectTasks())
     );
   });
 
@@ -106,7 +92,7 @@ export class ProjectTasksEffects {
         this.store.select(RouteSelectors.selectIsTasksRoute)
       ),
       filter(([, isTasksRoute]) => isTasksRoute),
-      map(() => actions.loadProjectTasks())
+      map(() => actions.setProjectTasksPage({ page: 1 }))
     );
   });
 

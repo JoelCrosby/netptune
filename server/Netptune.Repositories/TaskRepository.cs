@@ -10,6 +10,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
@@ -138,7 +139,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
 
-    public async Task<List<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         filter ??= new TaskFilter();
         var search = filter.Search?.Trim().ToLower() ?? string.Empty;
@@ -146,9 +147,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
         var statuses = filter.Statuses.Select(status => (int)status).ToArray();
         var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
-        var take = Math.Clamp(filter.Take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
-        var cursor = new CursorRequest { Cursor = filter.Cursor };
-        var hasCursor = cursor.TryGetCursor(out var cursorUpdatedAt, out var cursorId);
+        var page = Math.Max(filter.Page ?? PaginationDefaults.DefaultPage, 1);
+        var pageSize = Math.Clamp(filter.PageSize ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+        var skip = (page - 1) * pageSize;
 
         using var connection = ConnectionFactory.StartConnection();
 
@@ -179,6 +180,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                            ELSE CONCAT_WS(' ', o.firstname, o.lastname)
                        END AS owner_username
                      , o.picture_url AS owner_picture_url
+                     , COUNT(*) OVER() AS total_count
                 FROM project_tasks pt
                          INNER JOIN workspaces w ON pt.workspace_id = w.id
                          LEFT JOIN projects p ON pt.project_id = p.id
@@ -216,13 +218,12 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                             AND LOWER(t_search.name) LIKE @searchPattern
                       )
                   ))
-                  AND (@hasCursor = FALSE
-                       OR COALESCE(pt.updated_at, pt.created_at) < @cursorUpdatedAt
-                       OR (COALESCE(pt.updated_at, pt.created_at) = @cursorUpdatedAt AND pt.id < @cursorId))
                 ORDER BY COALESCE(pt.updated_at, pt.created_at) DESC, pt.id DESC
-                LIMIT @take
+                LIMIT @pageSize
+                OFFSET @skip
             )
-            SELECT ft.id AS task_id
+            SELECT ft.total_count
+                 , ft.id AS task_id
                  , ft.owner_id
                  , ft.name AS task_name
                  , ft.description AS task_description
@@ -266,13 +267,14 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             assignees,
             search,
             searchPattern,
-            take,
-            hasCursor,
-            cursorUpdatedAt,
-            cursorId,
+            pageSize,
+            skip,
         }, cancellationToken: cancellationToken));
 
-        return RowsToTaskViewModels(rows);
+        var rowList = rows.ToList();
+        var totalCount = rowList.FirstOrDefault()?.Total_Count ?? 0;
+
+        return new PagedResponse<TaskViewModel>(RowsToTaskViewModels(rowList), page, pageSize, totalCount);
     }
 
     private static List<TaskViewModel> RowsToTaskViewModels(IEnumerable<TaskViewRowMap> rows)
@@ -704,6 +706,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
     private sealed class TaskViewRowMap
     {
+        public int Total_Count { get; init; }
+
         public int Task_Id { get; init; }
 
         public string Owner_Id { get; init; } = null!;

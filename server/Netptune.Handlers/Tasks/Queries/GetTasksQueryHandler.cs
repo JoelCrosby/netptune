@@ -1,14 +1,15 @@
 using Mediator;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Handlers.Tasks.Queries;
 
-public sealed record GetTasksQuery(TaskFilter? Filter = null) : IRequest<List<TaskViewModel>>;
+public sealed record GetTasksQuery(TaskFilter? Filter = null) : IRequest<ClientResponse<PagedResponse<TaskViewModel>>>;
 
-public sealed class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, List<TaskViewModel>>
+public sealed class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, ClientResponse<PagedResponse<TaskViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -19,9 +20,11 @@ public sealed class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, List<T
         Identity = identity;
     }
 
-    public ValueTask<List<TaskViewModel>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<PagedResponse<TaskViewModel>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        return new ValueTask<List<TaskViewModel>>(UnitOfWork.Tasks.GetTasksAsync(workspaceKey, request.Filter, true, cancellationToken));
+        var page = await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, request.Filter, true, cancellationToken);
+
+        return page;
     }
 }

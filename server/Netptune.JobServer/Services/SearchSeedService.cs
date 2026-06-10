@@ -183,7 +183,7 @@ public sealed class SearchSeedService : BackgroundService
             Logger.LogInformation("[Search] loading task documents for workspace {WorkspaceSlug}", slug);
             var tasks = await unitOfWork.Tasks.GetTasksAsync(slug, cancellationToken: ct);
 
-            docs.AddRange(tasks.Select(t => new TaskSearchDocument
+            docs.AddRange(tasks.Items.Select(t => new TaskSearchDocument
             {
                 Id = $"task_{t.Id}",
                 TaskId = t.Id,

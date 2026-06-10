@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Services;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Tasks.Queries;
@@ -29,13 +30,15 @@ public class GetTasksQueryHandlerTests
     public async Task GetTasks_ShouldReturnCorrectly_WhenInputValid()
     {
         var tasks = Fixture.Create<List<TaskViewModel>>();
+        var page = new PagedResponse<TaskViewModel>(tasks, 1, 50, tasks.Count);
         const string workspaceKey = "workspaceKey";
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Tasks.GetTasksAsync(workspaceKey, null, true, TestContext.Current.CancellationToken).Returns(tasks);
+        UnitOfWork.Tasks.GetTasksAsync(workspaceKey, null, true, TestContext.Current.CancellationToken).Returns(page);
 
         var result = await Handler.Handle(new GetTasksQuery(), TestContext.Current.CancellationToken);
 
-        result.Should().BeEquivalentTo(tasks);
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().BeEquivalentTo(page);
     }
 }

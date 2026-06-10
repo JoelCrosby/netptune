@@ -42,7 +42,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
     {
         var tasks = await UnitOfWork.Tasks.GetTasksAsync(workspaceSlug, cancellationToken: ct);
 
-        var documents = tasks.Select(t => new TaskSearchDocument
+        var documents = tasks.Items.Select(t => new TaskSearchDocument
         {
             Id = $"task_{t.Id}",
             TaskId = t.Id,
