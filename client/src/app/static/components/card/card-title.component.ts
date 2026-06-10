@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-card-title',
-  template: '<ng-content/>',
+  template: `<h2>
+    <ng-content />
+  </h2>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex text-xl font-medium font-overpass text-foreground',
+  },
 })
-export class CardTitleComponent {
-  @HostBinding('class') className =
-    'mb-3 text-2xl font-medium font-overpass text-foreground flex flex-row justify-between';
-}
+export class CardTitleComponent {}

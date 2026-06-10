@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-card-subtitle',
-  template: '<ng-content/>',
+  template: '<p><ng-content/></p>',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'flex text-sm text-neutral-900 dark:text-white/70',
+  },
 })
-export class CardSubtitleComponent {
-  @HostBinding('class') className =
-    'block rounded-[4px] px-[.4rem] py-[.2rem] h-4 text-[14px] mr-[.6rem] mt-auto text-neutral-900 dark:text-white';
-}
+export class CardSubtitleComponent {}
