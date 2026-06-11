@@ -22,7 +22,7 @@ export const featureHighlights: FeatureHighlight[] = [
           height={290}
           class="mt-6 rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/60 inset-ring-brand dark:border-white/15"
           src="/images/kanban-boards-light.webp"
-          alt="Screenshot of the Netptune kanbanboards"
+          alt="Screenshot of the Netptune kanban boards"
         />
       </picture>
     ),

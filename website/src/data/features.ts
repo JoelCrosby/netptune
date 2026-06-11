@@ -1,4 +1,4 @@
-import { Kanban, Zap, ClipboardList, MessageSquare, FileText, Users } from 'lucide-solid';
+import { Kanban, Zap, ClipboardList, MessageSquare, FileText, Workflow } from 'lucide-solid';
 import type { Feature } from '~/types/feature';
 
 export const features: Feature[] = [
@@ -18,7 +18,7 @@ export const features: Feature[] = [
     icon: ClipboardList,
     title: 'Full audit trails, always',
     description:
-      'Every change is logged automatically — who made it, what changed, and when. 11 tracked activity types give you complete visibility into how your project evolved.',
+      'Every change is logged automatically — who made it, what changed, and when. More than 20 tracked activity types give you complete visibility into how your project evolved.',
   },
   {
     icon: MessageSquare,
@@ -30,12 +30,12 @@ export const features: Feature[] = [
     icon: FileText,
     title: 'Rich task details',
     description:
-      'A powerful editor, file attachments via any S3-compatible store, tags, due dates, and status tracking — without the bloat of tools that try to do everything.',
+      'A powerful editor, file attachments via any S3-compatible store, tags, due dates, priorities, and estimates — without the bloat of tools that try to do everything.',
   },
   {
-    icon: Users,
-    title: 'Role-based access control',
+    icon: Workflow,
+    title: 'Automations that do the busywork',
     description:
-      "Owner, Admin, Member, and Viewer roles per workspace. Everyone sees what they should — and nothing they shouldn't. Separate workspaces for different teams or clients.",
+      'Trigger rules when a task changes status, sits unassigned too long, or has fields updated — then notify assignees, flag the task, or update it automatically.',
   },
 ];

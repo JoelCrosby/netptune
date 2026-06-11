@@ -9,7 +9,7 @@ export const roles: Role[] = [
     dot: 'bg-violet-500',
     permissions: [
       'Manage workspace',
-      'Billing & settings',
+      'Permanently delete workspace',
       'Add / remove members',
       'All admin permissions',
     ],
@@ -21,9 +21,9 @@ export const roles: Role[] = [
       'text-brand bg-violet-50 border-violet-200 dark:text-brand dark:bg-violet-500/10 dark:border-violet-500/20',
     dot: 'bg-brand',
     permissions: [
-      'Create / archive projects',
-      'Manage boards',
-      'Invite members',
+      'Create / delete projects & boards',
+      'Manage automations',
+      'Invite / remove members',
       'All member permissions',
     ],
   },

@@ -6,9 +6,11 @@ import {
   Paperclip,
   MessageSquare,
   LogIn,
-  Star,
   Server,
   Timer,
+  Workflow,
+  Search,
+  FileSpreadsheet,
 } from 'lucide-solid';
 import type { Feature } from '~/types/feature';
 
@@ -49,18 +51,28 @@ export const featureGridItems: Feature[] = [
     description: 'Time-boxed sprints with task counts and status tracking',
   },
   {
+    icon: Workflow,
+    title: 'Automations',
+    description: 'Rules that notify, flag, or update tasks automatically',
+  },
+  {
+    icon: Search,
+    title: 'Instant search',
+    description: 'Find tasks across the workspace from the command palette',
+  },
+  {
+    icon: FileSpreadsheet,
+    title: 'CSV import & export',
+    description: 'Move tasks in or out of any board — no lock-in',
+  },
+  {
     icon: LogIn,
     title: 'OAuth sign-in',
     description: 'Sign in with GitHub, Google, or Microsoft',
   },
   {
-    icon: Star,
-    title: 'Open source',
-    description: 'MIT licensed, fully transparent',
-  },
-  {
     icon: Server,
-    title: 'Self-hostable',
-    description: 'Deploy anywhere — Docker, Kubernetes, bare metal',
+    title: 'Open source & self-hostable',
+    description: 'MIT licensed — deploy on Docker, Kubernetes, or bare metal',
   },
 ];
