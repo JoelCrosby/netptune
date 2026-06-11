@@ -4,7 +4,10 @@ import { SprintStatus } from '@core/enums/sprint-status';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import {
+  unwrapClientPageReposne,
+  unwrapClientReposne,
+} from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { EMPTY, Observable, forkJoin, of } from 'rxjs';
@@ -94,6 +97,7 @@ export class SprintsEffects {
       ofType(actions.loadAvailableSprintTasks),
       switchMap(({ sprintId, projectId }) =>
         this.sprintsService.availableTasks(sprintId, projectId).pipe(
+          unwrapClientPageReposne(),
           map((tasks) => actions.loadAvailableSprintTasksSuccess({ tasks })),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadAvailableSprintTasksFail({ error }))
@@ -261,6 +265,7 @@ export class SprintsEffects {
       ofType(actions.loadBacklogTasks),
       switchMap(() =>
         this.sprintsService.backlogTasks().pipe(
+          unwrapClientPageReposne(),
           map((tasks) => actions.loadBacklogTasksSuccess({ tasks })),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadBacklogTasksFail({ error }))

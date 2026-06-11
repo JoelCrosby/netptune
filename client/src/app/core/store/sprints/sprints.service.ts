@@ -8,6 +8,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { SprintFilter } from './sprints.model';
+import { Page } from '@app/core/models/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class SprintsService {
@@ -43,12 +44,17 @@ export class SprintsService {
       .set('excludeSprintId', sprintId)
       .set('take', 100);
 
-    return this.http.get<TaskViewModel[]>('api/tasks', { params });
+    return this.http.get<ClientResponse<Page<TaskViewModel>>>('api/tasks', {
+      params,
+    });
   }
 
   backlogTasks() {
     const params = new HttpParams().set('noSprint', true).set('take', 200);
-    return this.http.get<TaskViewModel[]>('api/tasks', { params });
+
+    return this.http.get<ClientResponse<Page<TaskViewModel>>>('api/tasks', {
+      params,
+    });
   }
 
   post(request: AddSprintRequest) {
