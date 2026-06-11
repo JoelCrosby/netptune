@@ -47,7 +47,7 @@ import { CardDeleteComponent } from './card-delete.component';
         </app-card-delete>
       </app-card-header>
       <app-card-content>
-        <small>{{ description() }}</small>
+        <small class="text-muted">{{ description() }}</small>
         <small class="text-muted"> {{ subText() }} </small>
 
         <ng-content />

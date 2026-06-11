@@ -6,13 +6,12 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
     <div class="items-basline flex w-full flex-col gap-1">
       <div class="flex items-center justify-between">
         <ng-content select="app-card-title" />
+        <ng-content />
         <ng-content select="app-card-delete" />
       </div>
 
       <ng-content select="app-card-subtitle" />
     </div>
-
-    <ng-content />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
