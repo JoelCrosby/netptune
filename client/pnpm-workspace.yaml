@@ -17,3 +17,4 @@ minimumReleaseAgeExclude:
   - '@angular/forms@22.0.1'
   - '@angular/platform-browser@22.0.1'
   - '@angular/router@22.0.1'
+  - '@angular/cdk@22.0.1'
