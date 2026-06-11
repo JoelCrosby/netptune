@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CardComponent } from '@static/components/card/card.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { AutomationRuleSummaryComponent } from './automation-rule-summary.component';
+import { CardComponent } from '@static/components/card/card.component';
 import {
   AutomationAction,
   AutomationTrigger,
 } from '../models/automation.models';
+import { AutomationRuleSummaryComponent } from './automation-rule-summary.component';
+import { CardContentComponent } from '@app/static/components/card/card-content.component';
 
 @Component({
   selector: 'app-automation-form-preview',
@@ -15,25 +15,25 @@ import {
   imports: [
     CardComponent,
     CardHeaderComponent,
-    CardSubtitleComponent,
     CardTitleComponent,
     AutomationRuleSummaryComponent,
+    CardContentComponent,
   ],
   template: `
-    <aside class="flex flex-col gap-4">
-      <app-card class="min-h-0! p-5!">
-        <app-automation-rule-summary
-          [trigger]="trigger()"
-          [actions]="actions()" />
-      </app-card>
+    <aside class="flex flex-col gap-5">
+      <app-automation-rule-summary
+        [trigger]="trigger()"
+        [actions]="actions()" />
 
-      <app-card class="min-h-0! p-5!">
+      <app-card>
         <app-card-header>
           <app-card-title>Save Preview</app-card-title>
-          <app-card-subtitle>
-            {{ savePreview() }}
-          </app-card-subtitle>
         </app-card-header>
+        <app-card-content>
+          <p
+            class="text-foreground text-sm whitespace-pre-wrap"
+            [innerHtml]="savePreview()"></p>
+        </app-card-content>
       </app-card>
     </aside>
   `,

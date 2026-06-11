@@ -86,12 +86,12 @@ export function describeAutomationAction(action: AutomationAction): string {
   switch (action.type) {
     case AutomationActionType.notifyTaskAssignees:
       return action.message
-        ? `notify assignees: "${action.message}"`
-        : 'notify task assignees';
+        ? `Notify assignees: "${action.message}"`
+        : 'Notify task assignees';
     case AutomationActionType.flagTask:
       return action.flagName
-        ? `flag the task as "${action.flagName}"`
-        : 'flag the task';
+        ? `Flag the task as "${action.flagName}"`
+        : 'Flag the task';
     case AutomationActionType.updateTask:
       return describeUpdateTaskAction(action);
   }
@@ -109,8 +109,8 @@ function describeUpdateTaskAction(action: AutomationAction): string {
   }
 
   return updates.length
-    ? `update the task's ${joinNaturalList(updates)}`
-    : 'update the task';
+    ? `Update the task's ${joinNaturalList(updates)}`
+    : 'Update the task';
 }
 
 export function describeAutomationActions(actions: AutomationAction[]): string {

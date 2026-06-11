@@ -61,7 +61,7 @@ export interface AutomationActionUpdate {
     LucideTrash2,
   ],
   template: `
-    <app-card class="min-h-0! p-5!">
+    <app-card>
       <app-card-header>
         <app-card-title>Then</app-card-title>
         <app-card-subtitle>
@@ -84,9 +84,8 @@ export interface AutomationActionUpdate {
         <div class="flex flex-col gap-3">
           @for (action of actions(); track action.clientId) {
             <div class="border-border rounded border p-4">
-              <div class="flex items-start gap-3">
-                <div
-                  class="grid flex-1 gap-3 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div class="flex flex-col-reverse gap-3">
+                <div class="flex flex-col gap-3">
                   <app-form-select
                     label="Action"
                     [value]="action.type"
@@ -213,6 +212,7 @@ export interface AutomationActionUpdate {
                   app-icon-button
                   type="button"
                   title="Remove action"
+                  class="ml-auto"
                   [disabled]="actions().length === 1"
                   (click)="removeAction.emit(action.clientId)">
                   <svg lucideTrash2 class="h-4 w-4"></svg>

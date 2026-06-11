@@ -93,11 +93,9 @@ import { AutomationsService } from '../../services/automations.service';
             [saving]="saving()"
             (deleteRule)="onDelete($event)" />
 
-          <app-card class="min-h-0! p-5!">
-            <app-automation-rule-summary
-              [trigger]="rule.trigger"
-              [actions]="rule.actions" />
-          </app-card>
+          <app-automation-rule-summary
+            [trigger]="rule.trigger"
+            [actions]="rule.actions" />
 
           <app-automation-detail-stats [rule]="rule" [runs]="runs()" />
 

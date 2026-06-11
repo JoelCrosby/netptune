@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CardComponent } from '@app/static/components/card/card.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
@@ -15,9 +16,14 @@ import {
 @Component({
   selector: 'app-automation-rule-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CardHeaderComponent, CardSubtitleComponent, CardTitleComponent],
+  imports: [
+    CardComponent,
+    CardHeaderComponent,
+    CardSubtitleComponent,
+    CardTitleComponent,
+  ],
   template: `
-    <div class="flex flex-col gap-3">
+    <app-card>
       <app-card-header>
         <app-card-title>Rule Preview</app-card-title>
         <app-card-subtitle>
@@ -25,8 +31,8 @@ import {
         </app-card-subtitle>
       </app-card-header>
 
-      <div class="grid gap-3 md:grid-cols-2">
-        <div class="border-border rounded border p-3">
+      <div class="flex flex-col gap-3">
+        <div class="border-border border-b pb-3">
           <h3
             class="text-muted mb-1 text-xs font-semibold tracking-wide uppercase">
             When
@@ -34,7 +40,7 @@ import {
           <p class="text-sm">{{ triggerSummary() }}</p>
         </div>
 
-        <div class="border-border rounded border p-3">
+        <div>
           <h3
             class="text-muted mb-1 text-xs font-semibold tracking-wide uppercase">
             Then
@@ -42,7 +48,7 @@ import {
           <p class="text-sm">{{ actionsSummary() }}</p>
         </div>
       </div>
-    </div>
+    </app-card>
   `,
 })
 export class AutomationRuleSummaryComponent {

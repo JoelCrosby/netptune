@@ -18,7 +18,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
     CardSubtitleComponent,
   ],
   template: `
-    <app-card class="min-h-0! p-5!">
+    <app-card>
       <app-card-header>
         <app-card-title>Name</app-card-title>
         <app-card-subtitle>

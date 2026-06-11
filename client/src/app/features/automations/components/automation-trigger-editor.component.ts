@@ -1,25 +1,25 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import {
+  TaskStatus,
   taskStatusLabels,
   taskStatusOptions,
-  TaskStatus,
 } from '@core/enums/project-task-status';
-import { CardComponent } from '@static/components/card/card.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
+import { CardComponent } from '@static/components/card/card.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import {
   assigneeChangeModeLabels,
   taskChangeFieldLabels,
   triggerTypeLabels,
 } from '../models/automation-copy';
 import {
-  AutomationTriggerType,
   AssigneeChangeMode,
+  AutomationTriggerType,
   TaskChangeField,
 } from '../models/automation.models';
 
@@ -37,7 +37,7 @@ import {
     FormSelectOptionComponent,
   ],
   template: `
-    <app-card class="min-h-0! p-5!">
+    <app-card>
       <app-card-header>
         <app-card-title>When</app-card-title>
         <app-card-subtitle>
@@ -69,10 +69,9 @@ import {
           </div>
 
           @if (hasTaskField(taskChangeField.status)) {
-            <div class="flex flex-wrap items-end gap-3">
-              <span class="pb-7 text-sm">Status changes to</span>
+            <div class="flex flex-col gap-3">
               <div class="min-w-64 flex-1">
-                <app-form-select label="Status" [(value)]="status">
+                <app-form-select label="Status changes to" [(value)]="status">
                   @for (option of statusOptions; track option) {
                     <app-form-select-option [value]="option">
                       {{ statusLabel(option) }}
@@ -101,10 +100,9 @@ import {
           }
         } @else {
           <div class="flex flex-wrap items-end gap-3">
-            <span class="pb-7 text-sm">Task is unassigned for</span>
-            <div class="w-32">
+            <div class="w-48">
               <app-form-input
-                label="Days"
+                label="Task is unassigned for "
                 name="durationDays"
                 type="number"
                 [required]="true"
