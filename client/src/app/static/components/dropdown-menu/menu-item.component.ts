@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-menu-item]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuItemComponent {
   @HostBinding('class') readonly className =

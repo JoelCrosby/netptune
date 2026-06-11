@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PageHeaderBackLinkComponent } from '@app/static/components/page-header/page-header-back-link.component';
 import { Store } from '@ngrx/store';
 import { ShellService } from './shell.service';
@@ -9,7 +9,6 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
 
 @Component({
   selector: 'app-shell-navbar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeaderBackLinkComponent,
     NotificationBellComponent,

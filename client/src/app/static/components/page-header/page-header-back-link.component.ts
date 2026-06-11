@@ -1,10 +1,5 @@
 import { Location } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { NavigationService } from '@app/core/services/navigation.service';
 import { LucideArrowLeft } from '@lucide/angular';
 
@@ -23,7 +18,6 @@ import { LucideArrowLeft } from '@lucide/angular';
       </a>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideArrowLeft],
 })
 export class PageHeaderBackLinkComponent {

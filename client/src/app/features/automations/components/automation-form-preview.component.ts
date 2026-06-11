@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { CardComponent } from '@static/components/card/card.component';
@@ -11,7 +11,6 @@ import { CardContentComponent } from '@app/static/components/card/card-content.c
 
 @Component({
   selector: 'app-automation-form-preview',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardHeaderComponent,

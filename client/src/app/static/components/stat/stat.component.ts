@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 export type StatValue = number | string;
 
 @Component({
   selector: 'app-stat',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       class="border-border bg-card-header flex min-h-24 flex-col items-start justify-center rounded border p-6 shadow-sm">

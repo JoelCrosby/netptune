@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import {
   disabled,
   email,
@@ -27,7 +21,6 @@ import { SelectProfileImageDialogComponent } from '@profile/components/select-pr
 @Component({
   selector: 'app-update-profile',
   templateUrl: './update-profile.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormField,
     FormInputComponent,

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {
   TaskStatus,
   taskStatusLabels,
@@ -44,7 +39,6 @@ export interface AutomationActionUpdate {
 
 @Component({
   selector: 'app-automation-actions-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardHeaderComponent,

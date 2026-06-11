@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ShellService } from './shell.service';
 
 @Component({
   selector: 'app-shell-menu-link-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block w-full' },
   template: `
     <div

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-auth-page-container',
@@ -33,6 +33,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthPageContainerComponent {}

@@ -1,9 +1,8 @@
 import { CdkDialogContainer, ɵɵCdkPortalOutlet } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-dialog-container',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       :host {

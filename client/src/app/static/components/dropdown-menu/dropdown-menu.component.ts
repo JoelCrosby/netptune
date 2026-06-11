@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
-  ChangeDetectionStrategy,
   Component,
   HostListener,
   inject,
@@ -42,7 +41,6 @@ export type DropdownMenuXPosition = 'before' | 'after';
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkPortal],
 })
 export class DropdownMenuComponent implements OnDestroy {

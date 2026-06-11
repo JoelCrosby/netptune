@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LucidePlus } from '@lucide/angular';
 import { selectBoardIdAndIdentifier } from '@app/core/store/groups/board-groups.selectors';
 import { DialogService } from '@core/services/dialog.service';
@@ -17,7 +17,6 @@ import { Store } from '@ngrx/store';
       <span class="ml-[0.4rem]">Create Group</span>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucidePlus],
 })
 export class CreateBoardGroupComponent {

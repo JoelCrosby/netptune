@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 export interface TabItem {
   label: string;
@@ -13,7 +8,6 @@ export interface TabItem {
 
 @Component({
   selector: 'app-tab-group',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="border-border flex border-b" role="tablist">
       @for (tab of tabs(); track tab.value) {

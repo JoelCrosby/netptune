@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { LucideBell } from '@lucide/angular';
@@ -11,7 +6,6 @@ import { NotificationItemComponent } from './notification-item.component';
 
 @Component({
   selector: 'app-notification-dropdown',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SpinnerComponent, LucideBell, NotificationItemComponent],
   styles: `
     @keyframes dropdown-in {

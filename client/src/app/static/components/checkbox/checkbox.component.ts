@@ -1,15 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  model,
-  output,
-} from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { LucideCheck } from '@lucide/angular';
 
 @Component({
   selector: 'app-checkbox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideCheck],
   template: `
     <label

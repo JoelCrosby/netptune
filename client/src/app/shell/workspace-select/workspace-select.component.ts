@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -69,7 +68,6 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
         (logout)="onlogOutClicked()" />
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [WorkspaceBadgeComponent, WorkspaceSelectMenuComponent],
 })
 export class WorkspaceSelectComponent implements OnDestroy {

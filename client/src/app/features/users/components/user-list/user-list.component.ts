@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -39,7 +39,6 @@ import {
 
 @Component({
   selector: 'app-user-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     AvatarComponent,

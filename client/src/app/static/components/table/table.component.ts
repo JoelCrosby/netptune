@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   Directive,
   computed,
@@ -25,7 +24,6 @@ const defaultTableClass = 'w-full text-sm custom-scroll';
 
 @Component({
   selector: 'app-table',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div [class]="mergedContainerClass()">
       <table [class]="mergedTableClass()">
@@ -54,7 +52,6 @@ export class TableComponent {
 
 @Component({
   selector: 'app-table-pagination',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IconButtonComponent,
     LucideChevronLeft,

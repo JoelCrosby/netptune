@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-  SecurityContext,
-} from '@angular/core';
+import { Component, input, output, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { inject } from '@angular/core';
 import { UserResponse } from '@app/core/store/auth/auth.models';
@@ -33,7 +27,6 @@ export interface CommentSubmitEvent {
 
 @Component({
   selector: 'app-comments-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
     MentionInputComponent,

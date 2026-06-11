@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SnackbarComponent } from './snackbar.component';
 import { SnackbarService } from './snackbar.service';
 
 @Component({
   selector: 'app-snackbar-host',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SnackbarComponent],
   template: `
     @if (service.items().length) {

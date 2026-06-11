@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
@@ -44,7 +44,6 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
 
 @Component({
   selector: 'app-task-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FlatButtonComponent,
     IconButtonComponent,

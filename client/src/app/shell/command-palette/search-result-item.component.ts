@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {
   LucideFolderOpen,
   LucideHash,
@@ -15,7 +10,6 @@ import { SearchResult } from '@core/models/search-result';
 
 @Component({
   selector: 'app-search-result-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideFolderOpen,
     LucideHash,

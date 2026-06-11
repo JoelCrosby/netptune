@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  linkedSignal,
-  signal,
-} from '@angular/core';
+import { Component, inject, linkedSignal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   disabled,
@@ -28,7 +22,6 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
 
 @Component({
   selector: 'app-reset-password',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     ProgressBarComponent,

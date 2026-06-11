@@ -71,7 +71,9 @@ export function buildTaskFilterRouteParams(
   }
 
   if (options.includeStatuses && statuses.length) {
-    queryParams['statuses'] = statuses.map((status) => taskStatusLabels[status]);
+    queryParams['statuses'] = statuses.map(
+      (status) => taskStatusLabels[status]
+    );
   }
 
   return queryParams;

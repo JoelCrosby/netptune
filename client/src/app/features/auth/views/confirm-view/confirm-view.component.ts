@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,6 @@ import { Store } from '@ngrx/store';
 
 @Component({
   templateUrl: './confirm-view.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SpinnerComponent],
 })
 export class ConfirmViewComponent {

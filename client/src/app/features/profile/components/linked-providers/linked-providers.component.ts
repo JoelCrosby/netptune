@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectLoginProviders } from '@app/core/store/profile/profile.selectors';
 
 @Component({
   selector: 'app-linked-providers',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[480px]">
       <p class="text-foreground/60 mb-4 text-sm">

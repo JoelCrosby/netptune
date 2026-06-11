@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
@@ -13,7 +13,6 @@ import { netptunePermissions } from '@core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

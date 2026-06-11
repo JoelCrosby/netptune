@@ -1,16 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-task-list-filter-action',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon, TooltipDirective],
   template: `
     <button [class]="class()" [appTooltip]="label()" (click)="action.emit()">

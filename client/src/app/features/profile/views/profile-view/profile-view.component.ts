@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { logout } from '@app/core/store/auth/auth.actions';
 import { Store } from '@ngrx/store';
@@ -14,7 +14,6 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

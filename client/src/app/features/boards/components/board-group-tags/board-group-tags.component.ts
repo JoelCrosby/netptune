@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
@@ -17,7 +12,6 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-board-group-tags',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     BoardGroupHeaderActionComponent,
     DropdownMenuComponent,

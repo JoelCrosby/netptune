@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, effect, inject, signal, untracked } from '@angular/core';
 import {
   FormField,
   form,
@@ -21,7 +14,6 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-task-list-search',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideX, LucideSearch, TooltipDirective, FormField],
   template: `
     <div

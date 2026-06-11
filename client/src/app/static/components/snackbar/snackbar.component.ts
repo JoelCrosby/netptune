@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import {
   LucideCircleCheck,
   LucideCircleX,
@@ -35,7 +29,6 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
 
 @Component({
   selector: 'app-snackbar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon, LucideX],
   template: `
     <div

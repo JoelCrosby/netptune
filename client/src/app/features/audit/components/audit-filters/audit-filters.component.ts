@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
 import { AuditService } from '@core/store/audit/audit.service';
@@ -14,7 +9,6 @@ import { downloadFile } from '@core/util/download-helper';
 
 @Component({
   selector: 'app-audit-filters',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, FlatButtonComponent, StrokedButtonComponent],
   template: `
     <div class="mb-8 flex flex-wrap items-end gap-3">

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { ShellService } from './shell.service';
@@ -24,7 +24,6 @@ import { ShellService } from './shell.service';
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, LucideChevronLeft, LucideChevronRight],
 })
 export class ShellSidebarCollapseComponent {

@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { LucideZap } from '@lucide/angular';
 import { Command } from '@core/services/command-registry.service';
 
 @Component({
   selector: 'app-command-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideZap],
   template: `
     <button

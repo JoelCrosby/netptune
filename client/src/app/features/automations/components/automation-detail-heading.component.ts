@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { LucideTrash2 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
@@ -12,7 +7,6 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
 
 @Component({
   selector: 'app-automation-detail-heading',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IconButtonComponent,
     PrettyDatePipe,

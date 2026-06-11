@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { openSideMenu } from '@core/store/layout/layout.actions';
 import { selectIsMobileView } from '@core/store/layout/layout.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -16,7 +10,6 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
 
 @Component({
   selector: 'app-page-header',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideMenu,
     FlatButtonComponent,

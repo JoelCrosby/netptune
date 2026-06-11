@@ -1,10 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { FormField, form } from '@angular/forms/signals';
 import { CheckboxComponent } from '@app/static/components/checkbox/checkbox.component';
@@ -28,7 +23,6 @@ export interface ConfirmDialogOptions {
 
 @Component({
   selector: 'app-confirm-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideDynamicIcon,
     CheckboxComponent,

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { toggleSelectedStatus } from '@core/store/tasks/tasks.actions';
 import {
@@ -19,7 +14,6 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
 
 @Component({
   selector: 'app-task-list-status',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TaskListFilterActionComponent,
     DropdownMenuComponent,

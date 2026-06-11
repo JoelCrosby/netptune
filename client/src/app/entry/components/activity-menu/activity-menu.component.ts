@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -28,7 +27,6 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
 
 @Component({
   selector: 'app-activity-menu',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FlatButtonComponent,
     TooltipDirective,

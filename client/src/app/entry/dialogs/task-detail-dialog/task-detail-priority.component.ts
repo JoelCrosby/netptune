@@ -1,11 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import {
   TaskPriority,
   taskPriorityColors,
@@ -21,7 +15,6 @@ import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-priority-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DropdownMenuComponent, MenuItemComponent, NgClass, LucideFlag],
   template: `
     <button

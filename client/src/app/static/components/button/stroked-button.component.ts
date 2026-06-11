@@ -1,16 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  input,
-} from '@angular/core';
+import { Component, HostBinding, input } from '@angular/core';
 import { cn, strokedButtonVariants, type ButtonColor } from './button.variants';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-stroked-button], a[app-stroked-button]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StrokedButtonComponent {
   readonly color = input<ButtonColor>('primary');

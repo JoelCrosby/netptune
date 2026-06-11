@@ -1,16 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 import { StatComponent } from '@static/components/stat/stat.component';
 
 @Component({
   selector: 'app-sprint-stats',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProgressBarComponent, StatComponent],
   template: `
     <div class="flex flex-col gap-6">

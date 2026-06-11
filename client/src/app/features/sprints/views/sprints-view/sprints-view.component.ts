@@ -1,11 +1,5 @@
 import { LowerCasePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CardListComponent } from '@app/static/components/card/card-list.component';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -39,7 +33,6 @@ import { CardHeaderComponent } from '@app/static/components/card/card-header.com
 type StatusFilter = SprintStatus | null;
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LowerCasePipe,
     RouterLink,

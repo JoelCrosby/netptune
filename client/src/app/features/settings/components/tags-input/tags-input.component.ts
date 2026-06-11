@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   model,
@@ -10,7 +9,6 @@ import {
 
 @Component({
   selector: 'app-tags-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `<div class="nept-form-control">
     <div class="form-control-input">

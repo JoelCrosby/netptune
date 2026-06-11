@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
 import { selectUserDetail } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
@@ -6,7 +6,6 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-user-detail',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent, PermissionListComponent],
   template: ` @if (user(); as user) {
       <div class="flex flex-col items-baseline gap-8 pb-96">

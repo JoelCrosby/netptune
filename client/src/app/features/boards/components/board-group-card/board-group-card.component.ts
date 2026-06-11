@@ -1,10 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
 import {
@@ -22,7 +17,6 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
 @Component({
   selector: 'app-board-group-card',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
     TaskScopeIdComponent,

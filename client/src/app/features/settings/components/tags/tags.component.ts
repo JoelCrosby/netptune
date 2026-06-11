@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   effect,
@@ -21,7 +20,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 
 @Component({
   selector: 'app-tags',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TagsInputComponent,
     TooltipDirective,

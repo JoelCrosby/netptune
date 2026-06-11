@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LucideSearch } from '@lucide/angular';
 import { CommandPaletteService } from './command-palette.service';
 
 @Component({
   selector: 'app-command-palette-button',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideSearch],
   template: `
     <button

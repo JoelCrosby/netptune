@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-card-header',
@@ -13,7 +13,6 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
       <ng-content select="app-card-subtitle" />
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderComponent {
   @HostBinding('class') className = 'flex flex-col items-start';

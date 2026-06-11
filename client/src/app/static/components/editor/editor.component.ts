@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -37,7 +36,6 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
   host: {
     class: 'bg-secondary-background',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {

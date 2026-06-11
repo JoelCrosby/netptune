@@ -51,10 +51,13 @@ export class UserPreferencesService {
 
   updateValue(key: string, scope: PreferenceScope, value: unknown) {
     return this.http
-      .put<PreferenceValueClientResponse>(`api/user-preferences/values/${key}`, {
-        scope,
-        value,
-      })
+      .put<PreferenceValueClientResponse>(
+        `api/user-preferences/values/${key}`,
+        {
+          scope,
+          value,
+        }
+      )
       .pipe(
         tap((response) => {
           if (response.payload) {
@@ -67,9 +70,12 @@ export class UserPreferencesService {
 
   deleteValue(key: string, scope: PreferenceScope) {
     return this.http
-      .delete<PreferenceValueClientResponse>(`api/user-preferences/values/${key}`, {
-        params: { scope },
-      })
+      .delete<PreferenceValueClientResponse>(
+        `api/user-preferences/values/${key}`,
+        {
+          params: { scope },
+        }
+      )
       .pipe(
         tap((response) => {
           if (response.payload) {
@@ -88,7 +94,9 @@ export class UserPreferencesService {
         groups: current.groups.map((group) => ({
           ...group,
           preferences: group.preferences.map((item) =>
-            item.definition.key === preference.definition.key ? preference : item
+            item.definition.key === preference.definition.key
+              ? preference
+              : item
           ),
         })),
       };

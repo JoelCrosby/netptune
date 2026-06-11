@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input.component';
 
 @Component({
@@ -31,7 +26,6 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [InlineEditInputComponent],
 })
 export class PageHeaderTitleComponent {

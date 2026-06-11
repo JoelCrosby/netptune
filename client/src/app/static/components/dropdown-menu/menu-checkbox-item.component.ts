@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { LucideCheck } from '@lucide/angular';
 
 @Component({
@@ -15,7 +15,6 @@ import { LucideCheck } from '@lucide/angular';
     </span>
     <ng-content />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideCheck],
   host: {
     class:

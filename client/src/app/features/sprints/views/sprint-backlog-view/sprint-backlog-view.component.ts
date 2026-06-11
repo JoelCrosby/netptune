@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -25,7 +20,6 @@ import {
 } from '../../components/sprint-backlog-group.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

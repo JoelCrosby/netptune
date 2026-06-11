@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import * as BoardSelectors from '@app/core/store/boards/boards.selectors';
 import { Store } from '@ngrx/store';
@@ -7,7 +7,6 @@ import { BoardsGridCardComponent } from './boards-grid-card.component';
 
 @Component({
   selector: 'app-boards-grid',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardGroupComponent,
     RouterLinkActive,

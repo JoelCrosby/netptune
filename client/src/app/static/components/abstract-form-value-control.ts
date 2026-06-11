@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  model,
-} from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import {
   DisabledReason,
   FormValueControl,
@@ -13,7 +8,6 @@ import {
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AbstractFormValueControl implements FormValueControl<string> {
   readonly name = input<string>('');

@@ -1,6 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -37,7 +36,6 @@ import { firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-workspace-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     FormInputComponent,

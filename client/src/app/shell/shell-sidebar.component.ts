@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  output,
-} from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import {
   selectCurrentUser,
   selectHasPermission,
@@ -75,7 +69,6 @@ interface SidebarLink {
       <app-shell-sidebar-collapse />
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     WorkspaceSelectComponent,
     AvatarComponent,

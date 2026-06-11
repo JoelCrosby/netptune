@@ -2,7 +2,6 @@ import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
   Component,
-  ChangeDetectionStrategy,
   HostListener,
   inject,
   input,
@@ -19,7 +18,6 @@ import { ɵɵCdkPortal } from '@angular/cdk/dialog';
       <ng-content />
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ɵɵCdkPortal],
 })
 export class FormSelectDropdownComponent implements OnDestroy {

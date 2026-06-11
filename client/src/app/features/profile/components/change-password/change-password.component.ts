@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { disabled, FormField, form, required } from '@angular/forms/signals';
 import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
@@ -20,7 +14,6 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormField, FormInputComponent, StrokedButtonComponent],
 })
 export class ChangePasswordComponent {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { selectProjectDetailLoading } from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { ProjectDetailComponent } from '@projects/components/project-detail/project-detail.component';
@@ -7,7 +7,6 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import {
   selectCanCreateComment,
   selectCanDeleteComment,
@@ -39,7 +34,6 @@ import {
       [canCreate]="canCreateComment()">
     </app-comments-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommentsListComponent],
 })
 export class TaskDetailCommentsComponent {

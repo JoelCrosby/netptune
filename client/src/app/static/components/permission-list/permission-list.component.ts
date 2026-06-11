@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { selectUserDetail } from '@app/core/store/users/users.selectors';
 import {
   netptunePermissionLabels,
@@ -27,7 +22,6 @@ interface PermissionGroup {
 
 @Component({
   selector: 'app-permission-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon, CheckboxComponent],
   host: {
     class: 'block w-full rounded ',

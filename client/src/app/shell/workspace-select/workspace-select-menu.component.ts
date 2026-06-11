@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
@@ -61,7 +56,6 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormField, AutofocusDirective, RouterLink, WorkspaceBadgeComponent],
 })
 export class WorkspaceSelectMenuComponent {

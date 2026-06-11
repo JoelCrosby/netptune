@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TooltipPosition } from '../../directives/tooltip.directive';
 
 const ARROW_CLASSES: Record<TooltipPosition, string> = {
@@ -12,7 +12,6 @@ const ARROW_CLASSES: Record<TooltipPosition, string> = {
 
 @Component({
   selector: 'app-tooltip',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="pointer-events-none" role="tooltip">
       <div

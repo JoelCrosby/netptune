@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import * as TagActions from '@core/store/tags/tags.actions';
@@ -17,7 +12,6 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
 
 @Component({
   selector: 'app-task-list-tags',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TaskListFilterActionComponent,
     DropdownMenuComponent,

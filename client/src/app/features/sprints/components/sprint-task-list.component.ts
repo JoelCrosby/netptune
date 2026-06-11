@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
@@ -26,7 +20,6 @@ import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
 
 @Component({
   selector: 'app-sprint-task-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     StrokedButtonComponent,

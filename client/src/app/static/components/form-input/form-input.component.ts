@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  input,
-  output,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
@@ -13,7 +6,6 @@ import { FormErrorComponent } from '../form-error/form-error.component';
 
 @Component({
   selector: 'app-form-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon, FormErrorComponent],
   template: `<div class="nept-form-control" [class.mb-0!]="noMargin()">
     @if (label()) {

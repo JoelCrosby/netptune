@@ -6,7 +6,6 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -83,7 +82,6 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
   imports: [
     PageContainerComponent,

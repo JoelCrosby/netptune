@@ -2,7 +2,6 @@ import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   contentChildren,
@@ -27,7 +26,6 @@ import { FormSelectService } from './form-select.service';
 @Component({
   selector: 'app-form-select',
   templateUrl: './form-select.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectService],
   imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
 })

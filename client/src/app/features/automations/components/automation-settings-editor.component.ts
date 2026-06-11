@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { CardHeaderComponent } from '@app/static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@app/static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@app/static/components/card/card-title.component';
@@ -8,7 +8,6 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 
 @Component({
   selector: 'app-automation-settings-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CheckboxComponent,

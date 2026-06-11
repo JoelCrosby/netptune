@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import {
   TaskStatus,
   taskStatusLabels,
@@ -25,7 +25,6 @@ import {
 
 @Component({
   selector: 'app-automation-trigger-editor',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardHeaderComponent,

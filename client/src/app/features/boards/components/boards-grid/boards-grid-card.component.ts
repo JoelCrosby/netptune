@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { LucideChartColumnBig } from '@lucide/angular';
 import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
@@ -8,7 +8,6 @@ import { CardTitleComponent } from '@static/components/card/card-title.component
 
 @Component({
   selector: 'app-boards-grid-card',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardHeaderImageComponent,
     LucideChartColumnBig,

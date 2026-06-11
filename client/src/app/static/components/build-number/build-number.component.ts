@@ -1,16 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { loadBuildInfo } from '@core/store/meta/meta.actions';
 import { selectBuildInfo } from '@core/store/meta/meta.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-build-number',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `@if (buildInfo(); as buildInfo) {
     <div
       class="fixed right-8 bottom-4 text-xs font-medium tracking-[0.125px] opacity-60">

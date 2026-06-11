@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toggleUserSelection } from '@app/core/store/groups/board-groups.actions';
 import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
 import { AppUser } from '@core/models/appuser';
@@ -26,7 +26,6 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent],
 })
 export class BoardGroupUsersComponent {

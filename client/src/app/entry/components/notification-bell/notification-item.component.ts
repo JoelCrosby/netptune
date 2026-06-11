@@ -1,10 +1,5 @@
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationViewModel } from '@app/core/models/view-models/notification-view-model';
 import { markAsRead } from '@app/core/store/notifications/notifications.actions';
@@ -17,7 +12,6 @@ import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-notification-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent, DatePipe, TooltipDirective],
   template: `
     @if (notification(); as notification) {

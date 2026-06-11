@@ -1,11 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
@@ -28,7 +22,6 @@ type MoveMode = 'backlog' | 'sprint';
 
 @Component({
   selector: 'app-sprint-completion-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     DialogActionsDirective,

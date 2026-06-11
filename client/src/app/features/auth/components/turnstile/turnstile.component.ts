@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   inject,
@@ -16,7 +15,6 @@ import { TurnstileLoaderService } from './turnstile-loader.service';
 
 @Component({
   selector: 'app-turnstile',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex flex-col gap-2">
       <div #turnstileContainer></div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
@@ -13,7 +13,6 @@ import { GlobalCommandsService } from './global-commands.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ShellService, GlobalCommandsService],
   imports: [
     RouterOutlet,

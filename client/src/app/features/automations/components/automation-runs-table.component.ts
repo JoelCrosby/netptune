@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   automationRunStatusLabels,
   entityTargetLabel,
@@ -17,7 +17,6 @@ import {
 
 @Component({
   selector: 'app-automation-runs-table',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PrettyDatePipe,
     TableComponent,

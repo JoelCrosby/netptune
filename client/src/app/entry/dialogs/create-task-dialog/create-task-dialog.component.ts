@@ -1,10 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -26,7 +21,6 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     FormField,

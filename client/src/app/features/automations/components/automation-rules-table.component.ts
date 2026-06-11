@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   LucideCirclePause,
@@ -27,7 +22,6 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
 
 @Component({
   selector: 'app-automation-rules-table',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     IconButtonComponent,

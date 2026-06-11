@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
@@ -17,7 +11,6 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
   selector: 'app-project-list-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, CardListItemComponent],
   template: `
     <a [routerLink]="canUpdateProjects() ? ['.', project().key] : null">

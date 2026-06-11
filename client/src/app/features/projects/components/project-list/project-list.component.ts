@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { deleteProject } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
@@ -8,7 +8,6 @@ import { ProjectListItemComponent } from '../project-list-item/project-list-item
 
 @Component({
   selector: 'app-project-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardListComponent, ProjectListItemComponent],
   template: `
     <app-card-list>

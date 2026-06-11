@@ -1,7 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -41,7 +40,6 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-board-group-task-inline',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, SpinnerComponent, FormField, A11yModule],
   template: `<div
     class="border-border bg-card overflow-hidden rounded-sm border-2 p-[0.4rem]"

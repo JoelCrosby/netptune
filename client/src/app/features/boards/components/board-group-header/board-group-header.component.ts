@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { BoardGroupTagsComponent } from '@boards/components/board-group-tags/board-group-tags.component';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
@@ -7,7 +7,6 @@ import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperat
 
 @Component({
   selector: 'app-board-group-header',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     BoardGroupsSearchComponent,
     BoardGroupUsersComponent,

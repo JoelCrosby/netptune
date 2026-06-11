@@ -1,6 +1,5 @@
 import { Highlightable } from '@angular/cdk/a11y';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostBinding,
@@ -17,7 +16,6 @@ import { FormSelectTagsService } from './form-select-tags.service';
     class: 'nept-form-select-option',
   },
   template: `<ng-content />`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectTagsService<TValue>>(

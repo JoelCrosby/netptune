@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   EstimateType,
@@ -20,7 +15,6 @@ import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-estimate',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DropdownMenuComponent,
     MenuItemComponent,

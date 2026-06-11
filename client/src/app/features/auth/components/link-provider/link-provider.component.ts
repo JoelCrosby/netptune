@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
@@ -23,7 +18,6 @@ import {
 
 @Component({
   selector: 'app-link-provider',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     RouterLink,

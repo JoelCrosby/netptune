@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toggleWorkspaceIsPublic } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
@@ -11,7 +6,6 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 
 @Component({
   selector: 'app-workspace-settings',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FlatButtonComponent],
   template: `<h3 class="font-overpass text-[1.4rem] font-normal">Workspace</h3>
 

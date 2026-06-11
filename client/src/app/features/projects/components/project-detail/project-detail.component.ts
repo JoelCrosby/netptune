@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  signal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import {
   disabled,
   form,
@@ -28,7 +22,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 
 @Component({
   selector: 'app-project-detail',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormInputComponent,
     FormTextAreaComponent,

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -32,7 +26,6 @@ import { AutomationRule, AutomationRun } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     PageContainerComponent,

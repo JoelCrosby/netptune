@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  input,
-} from '@angular/core';
+import { Component, HostBinding, input } from '@angular/core';
 import {
   cn,
   coerceIconButtonColor,
@@ -15,7 +10,6 @@ import {
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-icon-button]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconButtonComponent {
   readonly color = input<IconButtonColor>('default');

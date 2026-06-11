@@ -1,11 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { moveSelectedTasks } from '@app/core/store/groups/board-groups.actions';
 import { selectAllBoardGroups } from '@app/core/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
@@ -16,7 +10,6 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     FlatButtonComponent,

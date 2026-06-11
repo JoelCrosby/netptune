@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
@@ -20,7 +14,6 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
 @Component({
   selector: 'app-sprint-backlog-task-row',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
       'border-border flex items-center justify-between gap-4 border-b p-4 last:border-b-0',

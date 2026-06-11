@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { addTasksToSprint } from '@core/store/sprints/sprints.actions';
 import {
@@ -17,7 +11,6 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
 
 @Component({
   selector: 'app-sprint-add-task-form',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FlatButtonComponent, FormSelectSearchComponent],
   template: `
     <form

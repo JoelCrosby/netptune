@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, input, viewChild } from '@angular/core';
 import { LucideChevronDown } from '@lucide/angular';
 import {
   cn,
@@ -18,7 +12,6 @@ import {
 
 @Component({
   selector: 'app-dropdown-button',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DropdownMenuComponent, LucideChevronDown],
   template: `
     <button

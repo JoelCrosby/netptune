@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   disabled,
   email,
@@ -32,7 +27,6 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
 
 @Component({
   selector: 'app-login',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     ProgressBarComponent,

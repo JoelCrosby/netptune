@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { updateSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
@@ -13,7 +13,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 
 @Component({
   selector: 'app-edit-sprint-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     DialogActionsDirective,

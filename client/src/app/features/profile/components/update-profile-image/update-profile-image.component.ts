@@ -1,15 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-update-profile-image',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [StrokedButtonComponent],
   template: `<div class="w-full max-[1036px]:mb-16 max-[1036px]:max-w-120">
     <div class="mx-auto my-[1.4rem] flex w-45 flex-col items-center">

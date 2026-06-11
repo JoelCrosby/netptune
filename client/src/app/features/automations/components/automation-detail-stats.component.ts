@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { StatComponent } from '@static/components/stat/stat.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { AutomationRule, AutomationRun } from '../models/automation.models';
 
 @Component({
   selector: 'app-automation-detail-stats',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [StatComponent, PrettyDatePipe],
   template: `
     <div class="grid gap-4 md:grid-cols-3">

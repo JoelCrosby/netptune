@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { TaskListAssigneesComponent } from './task-list-assignees.component';
 import { TaskListFilterSeparatorComponent } from './task-list-filter-separator.component';
 import { TaskListSearchComponent } from './task-list-search.component';
@@ -7,7 +7,6 @@ import { TaskListTagsComponent } from './task-list-tags.component';
 
 @Component({
   selector: 'app-task-list-filters',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TaskListFilterSeparatorComponent,
     TaskListAssigneesComponent,

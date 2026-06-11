@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   StatComponent,
   StatValue,
@@ -11,7 +11,6 @@ export interface AutomationStat {
 
 @Component({
   selector: 'app-automation-stat-grid',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [StatComponent],
   template: `
     <div class="grid gap-3 md:grid-cols-3">

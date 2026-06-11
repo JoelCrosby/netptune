@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  input,
-} from '@angular/core';
+import { Component, HostBinding, input } from '@angular/core';
 import {
   cn,
   flatButtonVariants,
@@ -14,7 +9,6 @@ import {
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-flat-button], a[app-flat-button]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlatButtonComponent {
   readonly color = input<FlatButtonColor>('primary');

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { selectCanDeleteTask } from '@app/core/store/permissions/permissions.selectors';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
@@ -24,7 +24,6 @@ import { TaskDetailService } from './task-detail.service';
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideTrash2, StrokedButtonComponent, TooltipDirective],
 })
 export class TaskDetailActionsComponent {

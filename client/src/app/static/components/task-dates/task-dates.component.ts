@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
@@ -23,7 +23,6 @@ import { PrettyDatePipe } from '../../pipes/pretty-date.pipe';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskDates {
   task = input.required<TaskViewModel>();

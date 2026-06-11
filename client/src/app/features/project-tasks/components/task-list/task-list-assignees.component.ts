@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { toggleSelectedAssignee } from '@core/store/tasks/tasks.actions';
@@ -8,7 +8,6 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-task-list-assignees',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent],
   template: `
     @if (assignees().length) {

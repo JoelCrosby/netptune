@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideDynamicIcon, LucideEllipsis } from '@lucide/angular';
 import { FlatButtonComponent } from '../button/flat-button.component';
@@ -54,7 +49,6 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideEllipsis,
     LucideDynamicIcon,

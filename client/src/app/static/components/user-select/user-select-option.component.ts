@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { AppUser } from '@core/models/appuser';
 import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'app-user-select-option',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent],
   template: `
     <div

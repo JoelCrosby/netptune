@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuditStore } from '@audit/audit-state.service';
 import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { ActivityTypePipe } from '@static/pipes/activity-type.pipe';
@@ -15,7 +15,6 @@ import {
 
 @Component({
   selector: 'app-audit-table',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ActivityTypePipe,
     EntityTypePipe,

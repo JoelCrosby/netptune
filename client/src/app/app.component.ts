@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SnackbarHostComponent } from './static/components/snackbar/snackbar-host.component';
 
@@ -10,7 +10,6 @@ import { SnackbarHostComponent } from './static/components/snackbar/snackbar-hos
       <app-snackbar-host />
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, SnackbarHostComponent],
 })
 export class AppComponent {}

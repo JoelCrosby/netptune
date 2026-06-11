@@ -6,7 +6,6 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ElementRef,
@@ -36,7 +35,6 @@ interface OptionTemplateContext<TOption> {
 @Component({
   selector: 'app-form-select-search',
   templateUrl: './form-select-search.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,

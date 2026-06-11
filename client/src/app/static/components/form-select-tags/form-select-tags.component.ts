@@ -1,7 +1,6 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   contentChildren,
@@ -25,7 +24,6 @@ import { FormSelectTagsService } from './form-select-tags.service';
 
 @Component({
   selector: 'app-form-select-tags',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormSelectTagsService],
   imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
   template: `<div class="nept-form-control">

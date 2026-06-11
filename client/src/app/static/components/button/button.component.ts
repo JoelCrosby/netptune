@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import {
   buttonHostVariants,
   cn,
@@ -28,7 +23,6 @@ export type {
       <ng-content />
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'hostClass()',
     '[attr.aria-disabled]': 'disabled() || null',

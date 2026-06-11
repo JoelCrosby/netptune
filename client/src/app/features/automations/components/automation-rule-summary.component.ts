@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CardComponent } from '@app/static/components/card/card.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
@@ -15,7 +15,6 @@ import {
 
 @Component({
   selector: 'app-automation-rule-summary',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardHeaderComponent,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import {
@@ -16,7 +16,6 @@ import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './users-view.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

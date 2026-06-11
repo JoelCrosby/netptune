@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -32,7 +32,6 @@ import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DatePipe,
     PageContainerComponent,

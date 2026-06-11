@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
 import { LucideCheck } from '@lucide/angular';
@@ -6,7 +6,6 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-color-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, LucideCheck],
   template: `<div class="nept-form-control">
     @if (label()) {

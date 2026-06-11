@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   selectCurrentUser,
@@ -28,7 +23,6 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
 @Component({
   selector: 'app-profile-menu',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
     DropdownMenuComponent,

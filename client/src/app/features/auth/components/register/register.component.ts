@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -33,7 +32,6 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
 
 @Component({
   selector: 'app-register',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     ProgressBarComponent,

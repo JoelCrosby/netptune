@@ -1,10 +1,5 @@
 import { LowerCasePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
@@ -32,7 +27,6 @@ export interface BacklogGroup {
 
 @Component({
   selector: 'app-sprint-backlog-group',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LowerCasePipe,
     RouterLink,

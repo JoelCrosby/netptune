@@ -1,16 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, HostBinding, computed, input } from '@angular/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
 
 @Component({
   selector: 'app-progress-bar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     @keyframes indeterminate-primary {
       0% {

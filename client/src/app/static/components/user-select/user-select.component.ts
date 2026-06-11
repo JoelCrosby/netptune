@@ -1,7 +1,6 @@
 import { CdkPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -26,7 +25,6 @@ type User = AssigneeViewModel | AppUser;
 
 @Component({
   selector: 'app-user-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AvatarComponent,
     AutofocusDirective,

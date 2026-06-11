@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  model,
-} from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
 import {
   selectDetailTask,
@@ -27,7 +22,6 @@ import { EditorComponent } from '@static/components/editor/editor.component';
       [(value)]="description"
       [isReadOnly]="isReadOnly()">
     </app-editor>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [EditorComponent],
 })
 export class TaskDetailDescriptionComponent {

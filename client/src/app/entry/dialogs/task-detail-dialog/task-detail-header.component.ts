@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  model,
-} from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { selectCurrentHubGroupId } from '@app/core/store/hub-context/hub-context.selectors';
 import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
 import {
@@ -21,7 +16,6 @@ import { Store } from '@ngrx/store';
       [(value)]="name"
       [isReadonly]="isReadOnly()" />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [InlineEditHeadingComponent],
 })
 export class TaskDetailHeaderComponent {

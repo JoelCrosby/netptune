@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   selectUserDetail,
   selectUserDetailLoading,
@@ -10,7 +10,6 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

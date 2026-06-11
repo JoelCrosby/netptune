@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
@@ -17,7 +12,6 @@ interface ShellMenuLink {
 
 @Component({
   selector: 'app-shell-menu-link',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLinkActive, RouterLink, TooltipDirective, LucideDynamicIcon],
   host: { class: 'block w-full' },
   template: ` @if (link(); as link) {

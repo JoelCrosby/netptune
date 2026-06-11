@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-login-google',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button
       class="mt-0 flex w-full cursor-pointer appearance-none items-center justify-center rounded-sm border border-[#dadce0] bg-white px-[1.6rem] py-[0.8rem] text-center font-[inherit] text-sm font-medium whitespace-nowrap text-[#3c4043] no-underline transition-colors duration-[140ms] ease-in outline-none hover:bg-[#f8f9fa]"

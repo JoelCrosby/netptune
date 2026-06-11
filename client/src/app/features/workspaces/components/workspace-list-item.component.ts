@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, OnInit, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { Workspace } from '@core/models/workspace';
@@ -19,7 +13,6 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
 
 @Component({
   selector: 'app-workspace-list-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CardListItemComponent, FromNowPipe],
   template: `
     <app-card-list-item

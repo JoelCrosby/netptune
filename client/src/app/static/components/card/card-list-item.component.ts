@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideX } from '@lucide/angular';
 import { FlatButtonComponent } from '../button/flat-button.component';
@@ -16,7 +11,6 @@ import { CardDeleteComponent } from './card-delete.component';
 
 @Component({
   selector: 'app-card-list-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardTitleComponent,

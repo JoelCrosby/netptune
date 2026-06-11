@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
@@ -9,7 +9,6 @@ import { CardComponent } from '@static/components/card/card.component';
 
 @Component({
   selector: 'app-create-workspace-list-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardComponent,
     CardTitleComponent,

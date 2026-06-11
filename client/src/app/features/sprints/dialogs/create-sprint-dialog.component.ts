@@ -1,11 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-} from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { createSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintCreateLoading } from '@core/store/sprints/sprints.selectors';
@@ -21,7 +15,6 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 
 @Component({
   selector: 'app-create-sprint-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     DialogActionsDirective,

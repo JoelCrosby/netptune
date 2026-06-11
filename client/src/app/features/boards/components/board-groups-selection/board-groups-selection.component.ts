@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectPermissions } from '@app/core/store/auth/auth.selectors';
 import {
@@ -30,7 +25,6 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
 
 @Component({
   selector: 'app-board-groups-selection',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TooltipDirective,
     LucideListX,

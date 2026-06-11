@@ -1,7 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -55,7 +54,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
       transition: transform 140ms cubic-bezier(0, 0, 0.2, 1);
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CdkDropList,
     ScrollShadowVericalDirective,

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-} from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -33,7 +27,6 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
 @Component({
   selector: 'app-current-sprint-dropdown',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     ButtonLinkComponent,

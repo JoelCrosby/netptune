@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import {
   buttonLinkVariants,
   cn,
@@ -16,7 +11,6 @@ import {
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'a[app-button-link], button[app-button-link]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': 'className()' },
 })
 export class ButtonLinkComponent {

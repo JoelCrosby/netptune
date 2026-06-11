@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -33,7 +28,6 @@ export type AvatarSize = NonNullable<
 
 @Component({
   selector: 'app-avatar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TooltipDirective, AvatarPipe],
   template: `
     <div

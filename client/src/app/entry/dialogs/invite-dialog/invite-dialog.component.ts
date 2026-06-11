@@ -1,10 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
@@ -17,7 +12,6 @@ import { LucideUserRoundPlus } from '@lucide/angular';
 
 @Component({
   selector: 'app-invite-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     DialogContentComponent,

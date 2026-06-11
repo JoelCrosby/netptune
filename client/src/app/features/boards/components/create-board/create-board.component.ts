@@ -1,6 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -80,7 +79,6 @@ import { map } from 'rxjs/operators';
       </button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     FormInputComponent,

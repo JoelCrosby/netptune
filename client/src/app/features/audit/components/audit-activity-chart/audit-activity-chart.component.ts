@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AuditStore } from '@audit/audit-state.service';
 
 @Component({
   selector: 'app-audit-activity-chart',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgApexchartsModule],
   template: `
     <div class="border-border mb-6 rounded border p-4">

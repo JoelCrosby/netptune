@@ -5,7 +5,6 @@ import {
 } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   TemplateRef,
@@ -15,7 +14,6 @@ import {
 
 @Component({
   selector: 'app-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,

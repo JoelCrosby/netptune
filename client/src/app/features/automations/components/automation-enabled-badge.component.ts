@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-automation-enabled-badge',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <span [class]="'rounded px-2 py-0.5 text-xs font-medium ' + badgeClass()">
       {{ enabled() ? 'Enabled' : 'Disabled' }}

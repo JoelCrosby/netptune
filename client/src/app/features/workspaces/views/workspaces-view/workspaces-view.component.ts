@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { DialogService } from '@core/services/dialog.service';
@@ -10,7 +10,6 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

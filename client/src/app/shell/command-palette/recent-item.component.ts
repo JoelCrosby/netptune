@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { LucideClock } from '@lucide/angular';
 import { RecentItem } from './recent-items.service';
 
 @Component({
   selector: 'app-recent-item',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideClock],
   template: `
     <button

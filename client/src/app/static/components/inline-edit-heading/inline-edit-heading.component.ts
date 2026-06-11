@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -11,7 +10,6 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-inline-edit-heading',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
     <div

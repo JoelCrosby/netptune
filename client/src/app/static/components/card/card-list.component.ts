@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-card-list',
@@ -7,6 +7,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <ng-content />
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardListComponent {}

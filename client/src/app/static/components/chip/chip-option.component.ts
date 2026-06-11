@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-chip-option, button[app-chip-option]',
   template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipOptionComponent {
   @HostBinding('class') className =

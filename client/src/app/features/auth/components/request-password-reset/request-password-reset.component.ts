@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   disabled,
   email,
@@ -24,7 +19,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 
 @Component({
   selector: 'app-request-password-reset',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AuthPageContainerComponent,
     ProgressBarComponent,

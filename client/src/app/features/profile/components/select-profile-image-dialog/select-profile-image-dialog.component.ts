@@ -1,10 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { uploadProfilePicture } from '@app/core/store/profile/profile.actions';
 import { Store } from '@ngrx/store';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -14,7 +9,6 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
 @Component({
   selector: 'app-select-profile-image-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     DialogActionsDirective,

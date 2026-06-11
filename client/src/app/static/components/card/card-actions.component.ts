@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { LucideDynamicIcon } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
 import { HeaderAction } from '@core/types/header-action';
@@ -7,7 +7,6 @@ import { ButtonLinkComponent } from '../button/button-link.component';
 
 @Component({
   selector: 'app-card-actions',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     LucideDynamicIcon,

@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  input,
-  output,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
@@ -13,7 +6,6 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 @Component({
   selector: 'app-form-textarea',
   templateUrl: './form-textarea.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideDynamicIcon],
 })
 export class FormTextAreaComponent extends AbstractFormValueControl {

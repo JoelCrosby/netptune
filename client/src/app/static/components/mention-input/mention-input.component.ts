@@ -1,7 +1,6 @@
 import { CdkPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   inject,
@@ -24,7 +23,6 @@ export interface MentionSubmitEvent {
 
 @Component({
   selector: 'app-mention-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarComponent, CdkPortal, LucideDynamicIcon, FormErrorComponent],
   template: `
     <div class="nept-form-control mb-0!">

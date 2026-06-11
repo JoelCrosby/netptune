@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-} from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import {
   clearTaskDetail,
   loadTaskDetails,
@@ -62,7 +57,6 @@ import { ActivatedRoute } from '@angular/router';
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideCheck,
     ActivityMenuComponent,

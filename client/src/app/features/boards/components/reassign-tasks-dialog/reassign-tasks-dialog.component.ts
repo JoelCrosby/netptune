@@ -1,10 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import * as actions from '@app/core/store/groups/board-groups.actions';
 import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
@@ -17,7 +12,6 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
 @Component({
   selector: 'app-reassign-tasks-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogTitleComponent,
     FlatButtonComponent,

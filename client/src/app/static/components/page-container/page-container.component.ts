@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-page-container',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProgressBarComponent],
   template: `<div
     class="flex flex-col"

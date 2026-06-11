@@ -1,10 +1,5 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-} from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import {
   clearTaskDetail,
   loadTaskDetails,
@@ -74,7 +69,6 @@ import { TaskDetailService } from './task-detail.service';
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideCheck,
     ActivityMenuComponent,

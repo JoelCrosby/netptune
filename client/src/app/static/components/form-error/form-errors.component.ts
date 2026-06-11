@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FieldTree } from '@angular/forms/signals';
 import { FormErrorComponent } from './form-error.component';
 
 @Component({
   selector: 'app-form-errors',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormErrorComponent],
   template: `
     @if (formField(); as field) {

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 import { selectTagNames } from '@app/core/store/tags/tags.selectors';
 import {
@@ -33,7 +28,6 @@ import { Store } from '@ngrx/store';
       }
     </app-form-select-tags>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormSelectTagsComponent, FormSelectTagsOptionComponent],
 })
 export class TaskDetailTagsComponent {

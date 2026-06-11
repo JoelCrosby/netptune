@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { SprintStatus } from '@core/enums/sprint-status';
 
 @Component({
   selector: 'app-sprint-badge',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex max-w-full items-center' },
   template: `
     <span

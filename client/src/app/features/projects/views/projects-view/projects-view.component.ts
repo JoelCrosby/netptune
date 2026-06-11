@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
@@ -13,7 +13,6 @@ import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageContainerComponent,
     PageHeaderComponent,

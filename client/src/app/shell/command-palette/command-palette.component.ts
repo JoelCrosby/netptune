@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   HostListener,
   OnDestroy,
@@ -36,7 +35,6 @@ type PaletteItem =
 
 @Component({
   selector: 'app-command-palette',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     LucideSearch,

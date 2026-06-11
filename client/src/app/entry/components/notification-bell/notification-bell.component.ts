@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -25,7 +24,6 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
 
 @Component({
   selector: 'app-notification-bell',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IconButtonComponent,
     TooltipDirective,

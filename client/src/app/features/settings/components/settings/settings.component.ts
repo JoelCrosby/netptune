@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import {
   COMMAND_PALETTE_RECENT_ITEMS_SCOPE,
@@ -84,7 +79,6 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
       </section>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FlatButtonComponent,
     FormSelectComponent,

@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -16,7 +15,6 @@ import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-inline-edit-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   host: {
     '[class.edit-active]': 'isEditActive()',

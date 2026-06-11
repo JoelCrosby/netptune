@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { CardListComponent } from '@app/static/components/card/card-list.component';
@@ -7,7 +7,6 @@ import { WorkspaceListItemComponent } from './workspace-list-item.component';
 
 @Component({
   selector: 'app-workspace-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CardListComponent,
     WorkspaceListItemComponent,
