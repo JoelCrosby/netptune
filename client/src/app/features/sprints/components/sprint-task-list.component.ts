@@ -13,7 +13,6 @@ import { removeTaskFromSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { CardComponent } from '@static/components/card/card.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
 
@@ -22,65 +21,60 @@ import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
-    CardComponent,
     StrokedButtonComponent,
     TaskScopeIdComponent,
     SprintAddTaskFormComponent,
   ],
   template: `
-    <div class="bg-board-group p-2">
-      <app-card class="min-h-0! p-0!">
-        @if (canManage() && sprint().status !== sprintStatus.completed) {
-          <app-sprint-add-task-form [sprintId]="sprint().id!" />
-        }
+    @if (canManage() && sprint().status !== sprintStatus.completed) {
+      <app-sprint-add-task-form [sprintId]="sprint().id!" />
+    }
 
-        @for (task of sprint().tasks; track task.id) {
-          <div
-            class="border-border flex items-center justify-between gap-4 border-b p-4 last:border-b-0">
-            <div class="min-w-0 flex-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <app-task-scope-id [id]="task.systemId" />
-                <a
-                  class="truncate font-medium"
-                  [routerLink]="['../../tasks', task.systemId]">
-                  {{ task.name }}
-                </a>
-              </div>
-              <div class="mt-1.5 flex flex-wrap items-center gap-2">
-                <span
-                  class="rounded px-1.5 py-0.5 text-xs font-medium"
-                  [class]="statusBadgeClass(task.status)">
-                  {{ statusLabel(task.status) }}
-                </span>
-                @if (task.priority !== null && task.priority !== undefined) {
-                  <span
-                    class="text-xs font-medium"
-                    [class]="priorityClass(task.priority)">
-                    {{ priorityLabel(task.priority) }}
-                  </span>
-                }
-                <span class="text-muted text-xs">{{ task.projectName }}</span>
-              </div>
-            </div>
-
-            @if (canManage() && sprint().status !== sprintStatus.completed) {
-              <button
-                app-stroked-button
-                color="primary"
-                type="button"
-                [disabled]="updateLoading()"
-                (click)="onRemoveTask(task.id)">
-                Remove
-              </button>
+    @for (task of sprint().tasks; track task.id) {
+      <div
+        class="border-border flex items-center justify-between gap-4 border-b p-4 last:border-b-0">
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <app-task-scope-id [id]="task.systemId" />
+            <a
+              class="truncate font-medium"
+              [routerLink]="['../../tasks', task.systemId]">
+              {{ task.name }}
+            </a>
+          </div>
+          <div class="mt-1.5 flex flex-wrap items-center gap-2">
+            <span
+              class="rounded px-1.5 py-0.5 text-xs font-medium"
+              [class]="statusBadgeClass(task.status)">
+              {{ statusLabel(task.status) }}
+            </span>
+            @if (task.priority !== null && task.priority !== undefined) {
+              <span
+                class="text-xs font-medium"
+                [class]="priorityClass(task.priority)">
+                {{ priorityLabel(task.priority) }}
+              </span>
             }
+            <span class="text-muted text-xs">{{ task.projectName }}</span>
           </div>
-        } @empty {
-          <div class="text-muted p-6 text-center text-sm">
-            No tasks in this sprint.
-          </div>
+        </div>
+
+        @if (canManage() && sprint().status !== sprintStatus.completed) {
+          <button
+            app-stroked-button
+            color="primary"
+            type="button"
+            [disabled]="updateLoading()"
+            (click)="onRemoveTask(task.id)">
+            Remove
+          </button>
         }
-      </app-card>
-    </div>
+      </div>
+    } @empty {
+      <div class="text-muted p-6 text-center text-sm">
+        No tasks in this sprint.
+      </div>
+    }
   `,
 })
 export class SprintTaskListComponent {
