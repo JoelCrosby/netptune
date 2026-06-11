@@ -6,8 +6,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: 'Features', href: '#features' },
       { label: 'Self-hosting', href: '#self-host' },
-      { label: 'Changelog', href: '#' },
-      { label: 'Roadmap', href: '#' },
+      { label: 'Changelog', href: 'https://github.com/JoelCrosby/netptune/releases' },
     ],
   },
   {
@@ -16,10 +15,6 @@ export const footerColumns: FooterColumn[] = [
       { label: 'Documentation', href: '/docs' },
       { label: 'Docker Compose', href: '/docs/docker-compose' },
       { label: 'Kubernetes / Helm', href: '/docs/kubernetes' },
-      {
-        label: 'Contributing',
-        href: 'https://github.com/JoelCrosby/netptune/blob/main/CONTRIBUTING.md',
-      },
     ],
   },
   {
@@ -33,8 +28,10 @@ export const footerColumns: FooterColumn[] = [
   {
     heading: 'Legal',
     links: [
-      { label: 'MIT License', href: 'https://github.com/JoelCrosby/netptune/blob/main/LICENSE' },
-      { label: 'Privacy policy', href: '#' },
+      {
+        label: 'MIT License',
+        href: 'https://github.com/JoelCrosby/netptune/blob/main/LICENSE.txt',
+      },
     ],
   },
 ];

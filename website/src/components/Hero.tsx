@@ -28,22 +28,24 @@ export default function Hero() {
           </Button>
         </div>
 
-        <p class="mt-12 text-sm text-slate-400 italic dark:text-white/30">
-          "Built for teams who need real control over their tools and their data."
+        <p class="mt-12 text-sm text-slate-400 dark:text-white/30">
+          Open source · MIT licensed · Free to self-host on your own infrastructure
         </p>
 
-        <picture>
-          <div data-src="screenshot-dark.webp" />
-          <div data-src="screenshot-light.webp" />
-
-          <img
-            width={896}
-            height={513}
-            class="mt-6 rounded-lg border border-neutral-200 shadow-2xl shadow-brand/60 inset-ring-brand dark:border-white/15"
-            src="screenshot-light.webp"
-            alt="Screenshot of the Netptune interface"
-          />
-        </picture>
+        <img
+          width={896}
+          height={513}
+          class="mt-6 rounded-lg border border-neutral-200 shadow-2xl shadow-brand/60 inset-ring-brand dark:hidden"
+          src="/screenshot-light.webp"
+          alt="Screenshot of the Netptune interface"
+        />
+        <img
+          width={896}
+          height={513}
+          class="mt-6 hidden rounded-lg border border-white/15 shadow-2xl shadow-brand/60 inset-ring-brand dark:block"
+          src="/screenshot-dark.webp"
+          alt="Screenshot of the Netptune interface"
+        />
       </div>
     </section>
   );

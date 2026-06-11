@@ -30,12 +30,16 @@ An Open Source self-hostable project management application built for teams. Org
 - **Workspaces** — separate spaces for different teams or organisations, each with their own members and projects
 - **Projects** — group related work and track progress across tasks
 - **Kanban boards** — drag-and-drop task management with customisable columns and groups
-- **Tasks** — create, assign, tag, comment on, and track the status of individual work items
+- **Tasks** — create, assign, tag, comment on, and track status, priority, and estimates on individual work items
+- **Sprints** — time-boxed sprints with task counts and status tracking
+- **Automations** — trigger-based rules that notify assignees, flag tasks, or update fields automatically
 - **Real-time updates** — live board state via Server-Sent Events so all members see changes instantly
+- **Search** — workspace-wide task search powered by Meilisearch, available from the command palette
 - **Activity feed** — per-board audit log of all changes
-- **Authentication** — email/password registration and GitHub OAuth
+- **Authentication** — email/password registration and GitHub, Google, or Microsoft OAuth
 - **User management** — invite and manage workspace members with role-based access
 - **File attachments** — S3-compatible object storage for task attachments
+- **CSV import & export** — move tasks in or out of any board
 - **Background jobs** — async job processing for notifications and heavy operations
 
 ---

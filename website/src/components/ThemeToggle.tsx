@@ -10,7 +10,6 @@ export default function ThemeToggle() {
     const isDark = stored !== null ? stored === 'dark' : prefersDark;
 
     setDark(isDark);
-    swapPictureSources(isDark);
 
     document.documentElement.classList.toggle('dark', isDark);
   });
@@ -20,25 +19,6 @@ export default function ThemeToggle() {
     setDark(isDark);
     document.documentElement.classList.toggle('dark', isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-    swapPictureSources(isDark);
-  }
-
-  function swapPictureSources(isDark: boolean) {
-    const pictures = document.querySelectorAll('picture');
-
-    for (const picture of pictures) {
-      const sources = [...picture.querySelectorAll('div[data-src]')].map(
-        (p) => p.getAttribute('data-src') ?? '',
-      );
-      const img = picture.querySelector('img');
-
-      if (!img) {
-        continue;
-      }
-
-      img.setAttribute('src', isDark ? sources[0] : sources[1]);
-    }
   }
 
   return (

@@ -115,7 +115,9 @@ export default function ConfigurationPage() {
           <tr class={tr}>
             <td class={tdMono}>NETPTUNE_MICROSOFT_CLIENT_ID</td>
             <td class={td}>No</td>
-            <td class={td}>Microsoft OAuth App client ID. Leave blank to disable Microsoft login.</td>
+            <td class={td}>
+              Microsoft OAuth App client ID. Leave blank to disable Microsoft login.
+            </td>
           </tr>
           <tr class={tr}>
             <td class={tdMono}>NETPTUNE_MICROSOFT_SECRET</td>
