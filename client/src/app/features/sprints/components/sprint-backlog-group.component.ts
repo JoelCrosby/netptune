@@ -63,15 +63,15 @@ export interface BacklogGroup {
           <thead appTableHead [sticky]="true">
             <tr appTableHeaderRow>
               <th class="px-4 py-3">Task</th>
-              <th class="w-36 px-4 py-3">Status</th>
+              <th class="w-48 px-4 py-3">Status</th>
               <th class="w-28 px-4 py-3">Priority</th>
               <th class="w-44 px-4 py-3">Project</th>
-              <th class="w-84 px-4 py-3">Assign</th>
+              <th class="w-68 px-4 py-3">Assign</th>
             </tr>
           </thead>
           <tbody>
             @for (task of group().tasks; track task.id) {
-              <tr appTableRow>
+              <tr appTableRow class="bg-card">
                 <td class="min-w-0 px-4 py-2.5 align-middle">
                   <div class="flex min-w-0 items-center gap-2">
                     <app-task-scope-id class="flex-none" [id]="task.systemId" />

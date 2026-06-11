@@ -13,7 +13,7 @@ import { StatComponent } from '@static/components/stat/stat.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProgressBarComponent, StatComponent],
   template: `
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-6">
       <div class="grid gap-3 md:grid-cols-4">
         <app-stat label="Total" [value]="sprint().taskCount" />
         <app-stat label="New" [value]="sprint().newTaskCount" />
@@ -24,7 +24,7 @@ import { StatComponent } from '@static/components/stat/stat.component';
       @if (sprint().taskCount > 0) {
         <div>
           <app-progress-bar [value]="progressPercent()" />
-          <p class="text-muted mt-1 text-right text-xs">
+          <p class="text-foreground mt-2">
             {{ sprint().doneTaskCount }} / {{ sprint().taskCount }} complete
           </p>
         </div>

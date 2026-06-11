@@ -21,7 +21,7 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
   imports: [FlatButtonComponent, FormSelectSearchComponent],
   template: `
     <form
-      class="border-border flex flex-wrap items-center gap-3 border-b p-4"
+      class="border-border flex flex-wrap items-center gap-3 border-b py-4"
       (submit)="onSubmit($event)">
       <app-form-select-search
         class="min-w-64 flex-1"
@@ -39,8 +39,9 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
         app-flat-button
         color="primary"
         type="submit"
+        class="mt-2"
         [disabled]="updateLoading() || !selectedTaskId">
-        Add
+        Add Task to Sprint
       </button>
     </form>
   `,

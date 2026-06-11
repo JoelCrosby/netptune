@@ -42,19 +42,12 @@
         aria-hidden="true"></svg>
     }
 
-    @if (isOpen()) {
-      <svg
-        lucideChevronDown
-        size="42"
-        aria-hidden="true"
-        class="arrow text-foreground/70 mr-4"></svg>
-    } @else {
-      <svg
-        lucideChevronRight
-        size="42"
-        aria-hidden="true"
-        class="arrow text-foreground/70 mr-4"></svg>
-    }
+    <svg
+      lucideChevronDown
+      size="32"
+      aria-hidden="true"
+      class="arrow text-foreground/70 mr-4"
+    />
 
     <app-form-select-dropdown [reference]="dropreference">
       <div

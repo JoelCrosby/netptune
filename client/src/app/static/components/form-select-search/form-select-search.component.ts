@@ -22,7 +22,6 @@ import {
 import { FormValueControl } from '@angular/forms/signals';
 import {
   LucideChevronDown,
-  LucideChevronRight,
   LucideDynamicIcon,
   LucideIconInput,
 } from '@lucide/angular';
@@ -45,7 +44,6 @@ interface OptionTemplateContext<TOption> {
     NgTemplateOutlet,
     LucideDynamicIcon,
     LucideChevronDown,
-    LucideChevronRight,
     FormSelectDropdownComponent,
   ],
 })
@@ -111,6 +109,7 @@ export class FormSelectSearchComponent<TOption, TValue = TOption>
 
   readonly selectedOption = computed(() => {
     const value = this.value();
+
     return (
       this.options().find((option) =>
         this.compareWith()(this.valueWith()(option), value)
