@@ -41,19 +41,6 @@ spec:
         namespaces:
           from: Same
     {{- end }}
-    {{- if .Values.grafana.enabled }}
-    - name: https-grafana
-      port: 8443
-      protocol: HTTPS
-      hostname: "{{ .Values.grafana.host }}"
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: "grafana-tls"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    {{- end }}
     {{- if .Values.headlamp.enabled }}
     - name: https-headlamp
       port: 8443
@@ -102,19 +89,6 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: "dbgate-tls"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    {{- end }}
-    {{- if .Values.prometheus.enabled }}
-    - name: https-prometheus
-      port: 8443
-      protocol: HTTPS
-      hostname: "{{ .Values.prometheus.host }}"
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: "prometheus-tls"
       allowedRoutes:
         namespaces:
           from: Same

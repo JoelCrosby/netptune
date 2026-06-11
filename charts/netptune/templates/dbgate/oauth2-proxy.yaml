@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: "oauth2-proxy"
-          image: "{{ .Values.oauth2Proxy.image }}"
+          image: "{{ (default dict .Values.oauth2Proxy).image | default "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3" }}"
           imagePullPolicy: "IfNotPresent"
           args:
             - "--provider=github"

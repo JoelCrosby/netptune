@@ -23,22 +23,3 @@ metadata:
 spec:
   buffering:
     maxRequestBodyBytes: 52428800
-{{- if or .Values.grafana.enabled .Values.prometheus.enabled }}
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: oauth2-forwardauth
-  labels:
-    app.kubernetes.io/name: "netptune-app"
-    app.kubernetes.io/instance: "{{ .Release.Name }}"
-spec:
-  forwardAuth:
-    address: "https://{{ .Values.headlamp.host }}/oauth2/auth"
-    authResponseHeaders:
-      - X-Auth-Request-User
-      - X-Auth-Request-Email
-    authRequestHeaders:
-      - Cookie
-      - Authorization
-{{- end }}

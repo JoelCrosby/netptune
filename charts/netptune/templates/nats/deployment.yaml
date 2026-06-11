@@ -27,13 +27,8 @@ spec:
           image: "nats:alpine"
           args:
             - "-js"
-            - "-m"
-            - "8222"
           ports:
             - name: "client"
               protocol: "TCP"
               containerPort: 4222
-            - name: "monitoring"
-              protocol: "TCP"
-              containerPort: 8222
           imagePullPolicy: "IfNotPresent"
