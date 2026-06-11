@@ -21,6 +21,9 @@ headlamp:
   oauth2:
     allowed_email_domain: "live.co.uk"
 
+oauth2Proxy:
+  image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3"
+
 pgadmin:
   enabled: false
   image: "dpage/pgadmin4:latest"
