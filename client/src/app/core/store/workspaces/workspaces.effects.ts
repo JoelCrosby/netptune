@@ -6,13 +6,16 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
+import { routerNavigatedAction } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { asyncScheduler, EMPTY, of } from 'rxjs';
 import {
   catchError,
+  distinctUntilChanged,
   filter,
   map,
+  skip,
   switchMap,
   tap,
   throttleTime,
@@ -22,6 +25,7 @@ import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
 import { currentUser } from '@app/core/store/auth/auth.actions';
 import { SseService } from '@core/sse/sse.service';
+import { Workspace } from '@core/models/workspace';
 
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {
@@ -38,6 +42,22 @@ export class WorkspacesEffects implements OnInitEffects {
       concatLatestFrom(() => this.store.select(selectIsAuthenticated)),
       filter(([_, isAuth]) => isAuth),
       map(() => actions.loadWorkspaces())
+    );
+  });
+
+  selectWorkspaceOnRouteChange$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(routerNavigatedAction),
+      map(({ payload }) => getWorkspaceSlug(payload.routerState.url)),
+      filter((slug): slug is string => !!slug),
+      distinctUntilChanged(),
+      skip(1),
+      concatLatestFrom(() => this.store.select(selectCurrentWorkspace)),
+      filter((pair): pair is [string, Workspace] => {
+        const [slug, workspace] = pair;
+        return !!workspace && workspace.slug === slug;
+      }),
+      map(([, workspace]) => actions.selectWorkspace({ workspace }))
     );
   });
 
@@ -199,6 +219,18 @@ export class WorkspacesEffects implements OnInitEffects {
     return actions.initWorkspaces();
   }
 }
+
+const NON_WORKSPACE_ROUTES = new Set(['auth', 'workspaces']);
+
+const getWorkspaceSlug = (url: string): string | null => {
+  const [segment] = url.split('?')[0].split('/').filter(Boolean);
+
+  if (!segment || NON_WORKSPACE_ROUTES.has(segment)) {
+    return null;
+  }
+
+  return decodeURIComponent(segment);
+};
 
 const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: 'Delete',

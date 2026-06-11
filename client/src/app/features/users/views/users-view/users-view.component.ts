@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import {
@@ -11,6 +6,7 @@ import {
   loadUsers,
 } from '@core/store/users/users.actions';
 import { selectUsersLoading } from '@core/store/users/users.selectors';
+import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -28,14 +24,14 @@ import { first } from 'rxjs/operators';
     UserListComponent,
   ],
 })
-export class UsersViewComponent implements OnInit {
+export class UsersViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectUsersLoading);
 
-  ngOnInit() {
-    this.store.dispatch(loadUsers());
+  constructor() {
+    dispatchForWorkspace(() => loadUsers());
   }
 
   onInviteUsers() {

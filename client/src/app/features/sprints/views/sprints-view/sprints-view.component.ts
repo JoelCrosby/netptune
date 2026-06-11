@@ -19,6 +19,7 @@ import {
   selectAllSprints,
   selectSprintsLoading,
 } from '@core/store/sprints/sprints.selectors';
+import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -206,7 +207,7 @@ export class SprintsViewComponent {
   });
 
   constructor() {
-    this.store.dispatch(loadSprints({ filter: { take: 100 } }));
+    dispatchForWorkspace(() => loadSprints({ filter: { take: 100 } }));
   }
 
   onStatusChanged(value: string | number | null) {

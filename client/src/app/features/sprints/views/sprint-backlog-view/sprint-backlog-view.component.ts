@@ -13,6 +13,7 @@ import {
   selectBacklogTasks,
   selectBacklogTasksLoading,
 } from '@core/store/sprints/sprints.selectors';
+import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { CardComponent } from '@static/components/card/card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -114,6 +115,6 @@ export class SprintBacklogViewComponent {
   });
 
   constructor() {
-    this.store.dispatch(initBacklogView());
+    dispatchForWorkspace(() => initBacklogView());
   }
 }

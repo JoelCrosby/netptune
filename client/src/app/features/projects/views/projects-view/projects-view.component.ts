@@ -3,6 +3,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectProjectsLoading } from '@core/store/projects/projects.selectors';
+import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
 import { Store } from '@ngrx/store';
 import { ProjectListComponent } from '@projects/components/project-list/project-list.component';
@@ -50,7 +51,7 @@ export class ProjectsViewComponent {
   );
 
   constructor() {
-    this.store.dispatch(loadProjects());
+    dispatchForWorkspace(() => loadProjects());
   }
 
   showAddModal() {

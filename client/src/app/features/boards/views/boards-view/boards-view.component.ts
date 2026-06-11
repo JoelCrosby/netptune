@@ -5,6 +5,7 @@ import { CreateBoardComponent } from '@boards/components/create-board/create-boa
 import { loadBoards } from '@app/core/store/boards/boards.actions';
 import { selectBoardsLoading } from '@app/core/store/boards/boards.selectors';
 import { DialogService } from '@core/services/dialog.service';
+import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -53,7 +54,7 @@ export class BoardsViewComponent {
   );
 
   constructor() {
-    this.store.dispatch(loadBoards());
+    dispatchForWorkspace(() => loadBoards());
   }
 
   onCreateBoardClicked() {
