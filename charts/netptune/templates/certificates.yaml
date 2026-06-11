@@ -1,0 +1,138 @@
+{{- if and .Values.ingress.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: netptune-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "gateway"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: netptune-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.ingress.host }}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: netptune-app-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "gateway"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: netptune-app-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.ingress.appHost }}"
+{{- end }}
+{{- if and .Values.headlamp.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: headlamp-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "headlamp"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: headlamp-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.headlamp.host }}"
+{{- end }}
+{{- if and .Values.pgadmin.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pgadmin-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "pgadmin"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: pgadmin-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.pgadmin.host }}"
+{{- end }}
+{{- if and .Values.pgweb.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pgweb-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "pgweb"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: pgweb-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.pgweb.host }}"
+{{- end }}
+{{- if and .Values.dbgate.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dbgate-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "dbgate"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: dbgate-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.dbgate.host }}"
+{{- end }}
+{{- if and .Values.website.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: website-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "website"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: website-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.website.host }}"
+{{- end }}

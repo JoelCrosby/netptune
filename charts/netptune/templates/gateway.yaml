@@ -6,8 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/name: "netptune-app"
     app.kubernetes.io/instance: "{{ .Release.Name }}"
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   gatewayClassName: traefik
   listeners:
