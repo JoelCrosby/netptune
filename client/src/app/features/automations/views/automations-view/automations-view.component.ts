@@ -60,7 +60,7 @@ import { AutomationsService } from '../../services/automations.service';
           <app-spinner diameter="32px" />
         </div>
       } @else if (error()) {
-        <app-card class="min-h-0! p-6! text-center">
+        <app-card class="text-center">
           <p class="mb-4 text-sm text-red-500">Failed to load automations.</p>
           <button app-stroked-button type="button" (click)="load()">
             Try Again
@@ -78,7 +78,7 @@ import { AutomationsService } from '../../services/automations.service';
             (deleteRule)="onDelete($event)" />
         </div>
       } @else {
-        <app-card class="min-h-0! p-8! text-center">
+        <app-card class="text-center">
           <app-card-header>
             <app-card-title>No automations yet</app-card-title>
             <app-card-subtitle>
