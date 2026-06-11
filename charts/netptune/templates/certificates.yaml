@@ -76,26 +76,6 @@ spec:
   dnsNames:
     - "{{ .Values.pgadmin.host }}"
 {{- end }}
-{{- if and .Values.pgweb.enabled .Values.ingress.tls.enabled }}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: pgweb-tls
-  labels:
-    app.kubernetes.io/name: "netptune-app"
-    app.kubernetes.io/component: "pgweb"
-    app.kubernetes.io/instance: "{{ .Release.Name }}"
-  annotations:
-    cert-manager.io/issue-temporary-certificate: "true"
-spec:
-  secretName: pgweb-tls
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-    - "{{ .Values.pgweb.host }}"
-{{- end }}
 {{- if and .Values.dbgate.enabled .Values.ingress.tls.enabled }}
 ---
 apiVersion: cert-manager.io/v1

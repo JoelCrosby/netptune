@@ -65,19 +65,6 @@ spec:
         namespaces:
           from: Same
     {{- end }}
-    {{- if .Values.pgweb.enabled }}
-    - name: https-pgweb
-      port: 8443
-      protocol: HTTPS
-      hostname: "{{ .Values.pgweb.host }}"
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: "pgweb-tls"
-      allowedRoutes:
-        namespaces:
-          from: Same
-    {{- end }}
     {{- if .Values.dbgate.enabled }}
     - name: https-dbgate
       port: 8443

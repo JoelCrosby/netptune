@@ -27,11 +27,6 @@ pgadmin:
   image: "dpage/pgadmin4:latest"
   host: "pgadmin.netptune.co.uk"
 
-pgweb:
-  enabled: true
-  image: "sosedoff/pgweb:latest"
-  host: "pgweb.netptune.co.uk"
-
 dbgate:
   enabled: true
   image: "dbgate/dbgate:latest"
@@ -91,10 +86,6 @@ parameters:
     api_url: "http://api-service:7400"
 secrets:
   headlamp:
-    github_client_id: ""
-    github_client_secret: ""
-    cookie_secret: ""
-  pgweb:
     github_client_id: ""
     github_client_secret: ""
     cookie_secret: ""
