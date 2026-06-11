@@ -354,7 +354,7 @@ jobs:
       - name: Deploy
         run: |
           helm upgrade --install netptune-app charts/netptune/ \
-            --atomic \
+            --rollback-on-failure \
             --wait \
             --timeout 10m \
             --kubeconfig kubeconfig.yaml \
