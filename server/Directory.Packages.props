@@ -1,0 +1,73 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.25.2" />
+    <PackageVersion Include="AngleSharp" Version="1.5.0" />
+    <PackageVersion Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.5" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.4.5" />
+    <PackageVersion Include="Aspire.Hosting.Nats" Version="13.4.5" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.5" />
+    <PackageVersion Include="Aspire.Hosting.Valkey" Version="13.4.5" />
+    <PackageVersion Include="Aspire.NATS.Net" Version="13.4.5" />
+    <PackageVersion Include="Aspire.StackExchange.Redis" Version="13.4.5" />
+    <PackageVersion Include="AutoFixture" Version="4.18.1" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Meilisearch" Version="13.4.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.4.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Meilisearch" Version="13.4.0" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
+    <PackageVersion Include="Dapper" Version="2.1.79" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
+    <PackageVersion Include="FluentAssertions" Version="[7.2.2]" />
+    <PackageVersion Include="Flurl" Version="4.0.0" />
+    <PackageVersion Include="Hashids.net" Version="1.7.0" />
+    <PackageVersion Include="Mediator.Abstractions" Version="3.0.2" />
+    <PackageVersion Include="Mediator.SourceGenerator" Version="3.0.2" />
+    <PackageVersion Include="MeiliSearch" Version="0.18.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
+    <PackageVersion Include="Polly" Version="8.6.6" />
+    <PackageVersion Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
+    <PackageVersion Include="RazorLight" Version="2.3.1" />
+    <PackageVersion Include="SendGrid" Version="9.29.3" />
+    <PackageVersion Include="StackExchange.Redis" Version="3.0.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.2" />
+    <PackageVersion Include="Testcontainers" Version="4.12.0" />
+    <PackageVersion Include="Testcontainers.Nats" Version="4.12.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.12.0" />
+    <PackageVersion Include="Testcontainers.Redis" Version="4.12.0" />
+    <PackageVersion Include="shortid" Version="5.1.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0-pre.4" />
+    <PackageVersion Include="xunit.v3" Version="4.0.0-pre.128" />
+  </ItemGroup>
+</Project>

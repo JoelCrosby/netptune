@@ -1,10 +1,7 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.2.4">
+<Project Sdk="Aspire.AppHost.Sdk/13.4.5">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <UserSecretsId>85434c8f-aeb2-41af-aed3-b06a781d8580</UserSecretsId>
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
@@ -16,13 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.4.3" />
-    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.4.3" />
-    <PackageReference Include="Aspire.Hosting.Nats" Version="13.4.3" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.3" />
-    <PackageReference Include="Aspire.Hosting.Valkey" Version="13.4.3" />
-    <PackageReference Include="CommunityToolkit.Aspire.Hosting.Meilisearch" Version="13.4.0" />
-    <PackageReference Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.4.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+    <PackageReference Include="Aspire.Hosting.Nats" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Valkey" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.Meilisearch" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" />
   </ItemGroup>
 
 </Project>
