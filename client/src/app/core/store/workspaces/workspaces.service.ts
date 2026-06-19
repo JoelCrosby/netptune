@@ -18,6 +18,14 @@ export class WorkspacesService {
     });
   }
 
+  getBySlug(slug: string) {
+    return this.http.get<Workspace>(`api/workspaces/${slug}`);
+  }
+
+  getPublicBySlug(slug: string) {
+    return this.http.get<Workspace>(`api/public/workspaces/${slug}`);
+  }
+
   post(request: AddWorkspaceRequest) {
     return this.http.post<ClientResponse<Workspace>>('api/workspaces', request);
   }
