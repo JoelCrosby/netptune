@@ -50,7 +50,7 @@ import {
               [group]="group"
               [sprints]="assignableSprints()" />
           } @empty {
-            <app-card class="min-h-0! p-6! text-center">
+            <app-card class="text-muted min-h-0 text-center">
               The backlog is empty — all tasks are assigned to sprints.
             </app-card>
           }
