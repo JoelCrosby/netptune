@@ -7,7 +7,7 @@ import { Workspace } from '@core/models/workspace';
 import {
   LucideCalendarDays,
   LucideChartNoAxesColumn,
-  LucideIconInput,
+  LucideLogs,
   LucideSettings,
   LucideShield,
   LucideSquareCheckBig,
@@ -19,16 +19,13 @@ import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { netptunePermissions } from '../core/auth/permissions';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
-import { ShellMenuLinkComponent } from './shell-menu-link.component';
+import {
+  ShellMenuLink,
+  ShellMenuLinkComponent,
+} from './shell-menu-link.component';
 import { ShellSidebarCollapseComponent } from './shell-sidebar-collapse.component';
 import { ShellService } from './shell.service';
 import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
-
-interface SidebarLink {
-  label: string;
-  value: string[];
-  icon: LucideIconInput;
-}
 
 @Component({
   selector: 'app-shell-sidebar',
@@ -109,7 +106,7 @@ export class ShellSidebarComponent {
       links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
     }
 
-    const primaryLinks: SidebarLink[] = [
+    const primaryLinks: ShellMenuLink[] = [
       {
         label: 'Projects',
         value: ['./projects'],
@@ -136,6 +133,13 @@ export class ShellSidebarComponent {
         label: 'Sprints',
         value: ['./sprints'],
         icon: LucideCalendarDays,
+        children: [
+          {
+            label: 'Backlog',
+            value: ['./sprints/backlog'],
+            icon: LucideLogs,
+          },
+        ],
       });
     }
 
