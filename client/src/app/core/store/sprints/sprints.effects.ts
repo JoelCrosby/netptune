@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import * as RouteSelectors from '@core/core.route.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import {
@@ -9,9 +11,23 @@ import {
   unwrapClientReposne,
 } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Action, Store } from '@ngrx/store';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { EMPTY, Observable, forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import * as TagActions from '../tags/tags.actions';
+import { selectSelectedTags } from '../tags/tags.selectors';
+import * as TaskActions from '../tasks/tasks.actions';
+import {
+  selectSelectedAssignees,
+  selectSelectedTaskStatuses,
+  selectTaskSearchTerm,
+} from '../tasks/tasks.selectors';
+import {
+  buildTaskFilterRouteParams,
+  parseTaskFilterRouteParams,
+} from '../tasks/task-filter-route-params';
 import * as actions from './sprints.actions';
 import { SprintsService } from './sprints.service';
 
@@ -20,6 +36,9 @@ export class SprintsEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private sprintsService = inject(SprintsService);
   private snackbar = inject(SnackbarService);
+  private store = inject(Store);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   loadSprints$ = createEffect(() => {
     return this.actions$.pipe(
@@ -234,10 +253,70 @@ export class SprintsEffects {
   initBacklogView$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.initBacklogView),
-      switchMap(() => [
-        actions.loadBacklogTasks(),
+      concatLatestFrom(() => this.route.queryParamMap),
+      switchMap(([, paramMap]) => [
+        ...this.backlogFilterHydrationActions(paramMap),
         actions.loadSprints({ filter: { take: 100 } }),
       ])
+    );
+  });
+
+  updateBacklogTaskFilter$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        TaskActions.setSearchTerm,
+        TaskActions.toggleSelectedStatus,
+        TaskActions.toggleSelectedAssignee,
+        TagActions.toggleSelectedTag
+      ),
+      concatLatestFrom(() => [
+        this.store.select(selectTaskSearchTerm),
+        this.store.select(selectSelectedTags),
+        this.store.select(selectSelectedAssignees),
+        this.store.select(selectSelectedTaskStatuses),
+        this.store.select(RouteSelectors.selectIsSprintBacklogRoute),
+      ]),
+      filter(([, , , , , isBacklogRoute]) => isBacklogRoute),
+      map(([, term, tags, users, statuses]) =>
+        buildTaskFilterRouteParams(
+          {
+            term,
+            tags,
+            users,
+            statuses,
+          },
+          { includeStatuses: true }
+        )
+      ),
+      map((params) => actions.updateBacklogTaskFilter({ params }))
+    );
+  });
+
+  onUpdateBacklogTaskFilter$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.updateBacklogTaskFilter),
+        switchMap(({ params }) =>
+          this.router.navigate([], {
+            queryParams: params,
+          })
+        )
+      );
+    },
+    { dispatch: false }
+  );
+
+  onBacklogRouterNavigated$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ROUTER_NAVIGATED),
+      concatLatestFrom(() => [
+        this.store.select(RouteSelectors.selectIsSprintBacklogRoute),
+        this.route.queryParamMap,
+      ]),
+      filter(([, isBacklogRoute]) => isBacklogRoute),
+      switchMap(([, , paramMap]) =>
+        this.backlogFilterHydrationActions(paramMap)
+      )
     );
   });
 
@@ -263,17 +342,47 @@ export class SprintsEffects {
   loadBacklogTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadBacklogTasks),
-      switchMap(() =>
-        this.sprintsService.backlogTasks().pipe(
-          unwrapClientPageReposne(),
-          map((tasks) => actions.loadBacklogTasksSuccess({ tasks })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.loadBacklogTasksFail({ error }))
+      concatLatestFrom(() => [
+        this.store.select(selectTaskSearchTerm),
+        this.store.select(selectSelectedTags),
+        this.store.select(selectSelectedAssignees),
+        this.store.select(selectSelectedTaskStatuses),
+      ]),
+      switchMap(([, searchTerm, tags, assignees, statuses]) =>
+        this.sprintsService
+          .backlogTasks({
+            search: searchTerm?.trim() || undefined,
+            tags: tags.length ? tags : undefined,
+            assignees: assignees.length ? assignees : undefined,
+            statuses: statuses.length ? statuses : undefined,
+          })
+          .pipe(
+            unwrapClientPageReposne(),
+            map((tasks) => actions.loadBacklogTasksSuccess({ tasks })),
+            catchError((error: HttpErrorResponse) =>
+              of(actions.loadBacklogTasksFail({ error }))
+            )
           )
-        )
       )
     );
   });
+
+  private backlogFilterHydrationActions(paramMap: ParamMap): Action[] {
+    const filters = parseTaskFilterRouteParams(paramMap);
+
+    return [
+      TagActions.setSelectedTags({ selectedTags: filters.tags ?? [] }),
+      TaskActions.hydrateProjectTaskFiltersFromRoute({
+        term: filters.term ?? null,
+        assigneeIds: filters.users ?? [],
+        statuses: filters.statuses ?? [],
+        tags: filters.tags ?? [],
+        sprintId: undefined,
+      }),
+      actions.setSprintTaskFilter({ sprintId: undefined }),
+      actions.loadBacklogTasks(),
+    ];
+  }
 
   addTasksToSprint$ = createEffect(() => {
     return this.actions$.pipe(

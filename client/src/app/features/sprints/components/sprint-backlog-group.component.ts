@@ -7,6 +7,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import {
@@ -37,6 +38,7 @@ export interface BacklogGroup {
     SprintBacklogPriorityLabelPipe,
     SprintBacklogPriorityClassPipe,
     RouterLink,
+    AvatarComponent,
     DropdownButtonComponent,
     MenuItemComponent,
     TableComponent,
@@ -60,14 +62,15 @@ export interface BacklogGroup {
       <div class="p-2">
         <app-table
           containerClass="overflow-auto"
-          tableClass="min-w-[880px] table-fixed">
+          tableClass="min-w-[1040px] table-fixed">
           <thead appTableHead [sticky]="true">
             <tr appTableHeaderRow>
               <th class="px-4 py-3">Task</th>
-              <th class="w-48 px-4 py-3">Status</th>
-              <th class="w-28 px-4 py-3">Priority</th>
-              <th class="w-44 px-4 py-3">Project</th>
-              <th class="w-68 px-4 py-3">Assign</th>
+              <th class="w-32 px-4 py-3">Status</th>
+              <th class="w-18 px-4 py-3">Priority</th>
+              <th class="w-32 px-4 py-3">Project</th>
+              <th class="w-28 px-4 py-3">Assignees</th>
+              <th class="w-58 px-4 py-3">Assign</th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +78,9 @@ export interface BacklogGroup {
               <tr appTableRow class="bg-card">
                 <td class="min-w-0 px-4 py-2.5 align-middle">
                   <div class="flex min-w-0 items-center gap-2">
-                    <app-task-scope-id class="flex-none" [id]="task.systemId" />
+                    <app-task-scope-id
+                      class="text-xs2 flex-none"
+                      [id]="task.systemId" />
                     <a
                       class="block min-w-0 truncate font-medium"
                       [routerLink]="['../../tasks', task.systemId]">
@@ -83,9 +88,9 @@ export interface BacklogGroup {
                     </a>
                   </div>
                 </td>
-                <td class="px-4 py-2.5 align-middle">
+                <td class="block truncate px-4 py-2.5 align-middle">
                   <span
-                    class="rounded px-1.5 py-0.5 text-xs font-medium"
+                    class="truncate rounded px-1.5 py-0.5 text-xs font-medium"
                     [class]="task.status | sprintBacklogStatusBadgeClass">
                     {{ task.status | sprintBacklogStatusLabel }}
                   </span>
@@ -106,12 +111,28 @@ export interface BacklogGroup {
                     {{ task.projectName }}
                   </span>
                 </td>
+                <td class="px-4 py-2.5 align-middle">
+                  @if (task.assignees.length) {
+                    <div
+                      class="flex max-w-32 items-center -space-x-2 overflow-hidden">
+                      @for (assignee of task.assignees; track assignee.id) {
+                        <app-avatar
+                          class="ring-card rounded-full ring-2"
+                          size="sm"
+                          [name]="assignee.displayName"
+                          [imageUrl]="assignee.pictureUrl" />
+                      }
+                    </div>
+                  } @else {
+                    <span class="text-muted text-sm">Unassigned</span>
+                  }
+                </td>
                 <td class="px-4 py-1 align-middle">
                   @if (sprints().length > 0) {
                     <app-dropdown-button
                       #assignMenu
                       label="Assign to sprint"
-                      buttonClass="w-52 h-7 text-xs justify-between"
+                      buttonClass="w-42 h-7 text-xs justify-between"
                       color="neutral"
                       xPosition="before"
                       [disabled]="loading()">
@@ -141,7 +162,7 @@ export interface BacklogGroup {
               </tr>
             } @empty {
               <tr>
-                <td appTableEmptyCell colspan="5">
+                <td appTableEmptyCell colspan="6">
                   No {{ group().label | lowercase }} tasks in the backlog.
                 </td>
               </tr>

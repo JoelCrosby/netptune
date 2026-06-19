@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { toggleSelectedAssignee } from '@core/store/tasks/tasks.actions';
@@ -17,7 +17,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
           track trackByAssignee($index, assignee)
         ) {
           <div
-            class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 not-last:-ml-3 hover:z-100"
+            class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 not-last:-ml-3 hover:z-100"
             [class.border-transparent]="!assignee.selected"
             [class.border-primary]="assignee.selected"
             [style.z-index]="assignee.selected ? 99 : null">
@@ -42,7 +42,11 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 export class TaskListAssigneesComponent {
   private readonly store = inject(Store);
 
-  readonly assignees = this.store.selectSignal(selectTaskAssigneeOptions);
+  readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
+  readonly storeAssignees = this.store.selectSignal(selectTaskAssigneeOptions);
+  readonly assignees = computed(
+    () => this.assigneeOptions() ?? this.storeAssignees()
+  );
 
   trackByAssignee(_: number, assignee: Selected<AssigneeViewModel>) {
     return assignee.id;

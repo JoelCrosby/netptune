@@ -58,6 +58,7 @@ export interface TaskListGroup {
 export interface ProjectTasksFilter {
   search?: string | null;
   sprintId?: number;
+  noSprint?: boolean;
   tags?: string[];
   statuses?: TaskStatus[];
   assignees?: string[];

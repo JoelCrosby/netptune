@@ -1,6 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { TaskStatus } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
+import { Selected } from '@core/models/selected';
+import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { initBacklogView } from '@core/store/sprints/sprints.actions';
 import {
@@ -8,8 +10,13 @@ import {
   selectBacklogTasks,
   selectBacklogTasksLoading,
 } from '@core/store/sprints/sprints.selectors';
+import {
+  selectSelectedAssignees,
+  selectTaskFiltersActive,
+} from '@core/store/tasks/tasks.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
+import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
 import { CardComponent } from '@static/components/card/card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -25,6 +32,7 @@ import {
     PageHeaderComponent,
     SpinnerComponent,
     CardComponent,
+    TaskListFiltersComponent,
     SprintBacklogGroupComponent,
   ],
   template: `
@@ -37,6 +45,8 @@ import {
         </div>
       } @else {
         <div class="flex flex-col gap-6">
+          <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
+
           @if (assignableSprints().length === 0) {
             <div
               class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
@@ -51,7 +61,11 @@ import {
               [sprints]="assignableSprints()" />
           } @empty {
             <app-card class="text-muted min-h-0 text-center">
-              The backlog is empty — all tasks are assigned to sprints.
+              {{
+                filtersActive()
+                  ? 'No backlog tasks match these filters.'
+                  : 'The backlog is empty — all tasks are assigned to sprints.'
+              }}
             </app-card>
           }
         </div>
@@ -65,12 +79,36 @@ export class SprintBacklogViewComponent {
   readonly loading = this.store.selectSignal(selectBacklogTasksLoading);
   readonly backlogTasks = this.store.selectSignal(selectBacklogTasks);
   readonly allSprints = this.store.selectSignal(selectAllSprints);
+  readonly selectedAssignees = this.store.selectSignal(selectSelectedAssignees);
+  readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
 
   readonly assignableSprints = computed(() =>
     this.allSprints().filter(
       (s) =>
         s.status === SprintStatus.planning || s.status === SprintStatus.active
     )
+  );
+
+  readonly assigneeOptions = computed(
+    (): Selected<AssigneeViewModel>[] => {
+      const selectedSet = new Set(this.selectedAssignees());
+      const assigneeMap = this.backlogTasks()
+        .flatMap((task) => task.assignees)
+        .reduce((map, assignee) => {
+          if (!map.has(assignee.id)) {
+            map.set(assignee.id, assignee);
+          }
+
+          return map;
+        }, new Map<string, AssigneeViewModel>());
+
+      return Array.from(assigneeMap.values())
+        .sort((a, b) => a.displayName.localeCompare(b.displayName))
+        .map((assignee) => ({
+          ...assignee,
+          selected: selectedSet.has(assignee.id),
+        }));
+    }
   );
 
   readonly groups = computed((): BacklogGroup[] => {

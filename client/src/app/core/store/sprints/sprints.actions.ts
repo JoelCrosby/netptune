@@ -6,6 +6,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { createAction, props } from '@ngrx/store';
+import { Params } from '@angular/router';
 import { SprintFilter } from './sprints.model';
 
 export const clearState = createAction('[Sprints] Clear State');
@@ -149,6 +150,11 @@ export const completeSprintWithReassignment = createAction(
 );
 
 export const initBacklogView = createAction('[Sprints] Init Backlog View');
+
+export const updateBacklogTaskFilter = createAction(
+  '[Sprints] Update Backlog Task Filter',
+  props<{ params: Params }>()
+);
 
 export const assignBacklogTask = createAction(
   '[Sprints] Assign Backlog Task',

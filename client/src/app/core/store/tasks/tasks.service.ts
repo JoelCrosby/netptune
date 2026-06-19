@@ -31,6 +31,10 @@ export class ProjectTasksService {
       params = params.set('sprintId', filter.sprintId);
     }
 
+    if (filter?.noSprint !== undefined) {
+      params = params.set('noSprint', filter.noSprint);
+    }
+
     for (const tag of filter?.tags ?? []) {
       params = params.append('tags', tag);
     }

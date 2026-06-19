@@ -9,6 +9,7 @@ import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-vi
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { SprintFilter } from './sprints.model';
 import { Page } from '@app/core/models/pagination';
+import { ProjectTasksFilter } from '../tasks/tasks.model';
 
 @Injectable({ providedIn: 'root' })
 export class SprintsService {
@@ -49,8 +50,24 @@ export class SprintsService {
     });
   }
 
-  backlogTasks() {
-    const params = new HttpParams().set('noSprint', true).set('take', 200);
+  backlogTasks(filter?: ProjectTasksFilter) {
+    let params = new HttpParams().set('noSprint', true).set('pageSize', 200);
+
+    if (filter?.search) {
+      params = params.set('search', filter.search);
+    }
+
+    for (const tag of filter?.tags ?? []) {
+      params = params.append('tags', tag);
+    }
+
+    for (const status of filter?.statuses ?? []) {
+      params = params.append('statuses', status);
+    }
+
+    for (const assignee of filter?.assignees ?? []) {
+      params = params.append('assignees', assignee);
+    }
 
     return this.http.get<ClientResponse<Page<TaskViewModel>>>('api/tasks', {
       params,

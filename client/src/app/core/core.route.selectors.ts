@@ -47,6 +47,12 @@ export const selectIsTaskListRoute = createSelector(
   (state: string) => /^\/[^/?#]+\/tasks(?:[?#].*)?$/.test(state ?? '')
 );
 
+export const selectIsSprintBacklogRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) =>
+    /^\/[^/?#]+\/sprints\/backlog(?:[?#].*)?$/.test(state ?? '')
+);
+
 export const selectSideBarTransparent = createSelector(
   selectRouterReducerState,
   (state: RouterStateUrl) => state?.transparentSidebar

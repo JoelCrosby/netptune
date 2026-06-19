@@ -1,4 +1,4 @@
-import { LowerCasePipe } from '@angular/common';
+import { DatePipe, LowerCasePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CardListComponent } from '@app/static/components/card/card-list.component';
@@ -41,6 +41,7 @@ type StatusFilter = SprintStatus | null;
     PageContainerComponent,
     PageHeaderComponent,
     SpinnerComponent,
+    DatePipe,
     FlatButtonComponent,
     IconButtonComponent,
     CardComponent,
@@ -121,7 +122,10 @@ type StatusFilter = SprintStatus | null;
                   </div>
                 </app-card-header>
 
-                <div class="flex items-start justify-between gap-4"></div>
+                <p class="text-muted text-sm">
+                  {{ sprint.startDate | date: 'mediumDate' }} &ndash;
+                  {{ sprint.endDate | date: 'mediumDate' }}
+                </p>
 
                 @if (sprint.goal) {
                   <p class="text-sm">{{ sprint.goal }}</p>
